@@ -54,7 +54,6 @@ public class FamiliarStarbuncle extends FamiliarEntity {
                 if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(Starbuncle.carbyColors).contains(color.getName()))
                     return InteractionResult.SUCCESS;
                 setColor(color);
-                syncTag();
                 return InteractionResult.SUCCESS;
             }
 
@@ -66,10 +65,6 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         return this.entityData.get(COLOR);
     }
 
-    public void setColor(DyeColor color){
-        this.entityData.set(COLOR, color.getName());
-        this.getPersistentFamiliarData().color = color.getName();
-    }
 
     @Override
     public PlayState walkPredicate(AnimationEvent event) {

@@ -42,7 +42,6 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
             if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityBookwyrm.COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color);
-            syncTag();
             return InteractionResult.SUCCESS;
         }
 

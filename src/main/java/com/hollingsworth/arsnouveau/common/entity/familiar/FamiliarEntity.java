@@ -212,6 +212,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         tag.putBoolean("terminated", terminatedFamiliar);
         tag.put("familiarData", getPersistentFamiliarData().toTag(new CompoundTag()));
         tag.putString("holderID", holderID);
+        tag.putString("color", this.entityData.get(COLOR));
     }
 
     @Override
@@ -222,6 +223,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         terminatedFamiliar = tag.getBoolean("terminated");
         this.holderID = tag.getString("holderID");
         this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
+        this.entityData.set(COLOR, tag.getString("color"));
         syncAfterPersistentFamiliarInit();
     }
 
@@ -240,8 +242,13 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     }
 
     public void setColor(DyeColor color){
-        this.entityData.set(COLOR, color.getName());
-        this.getPersistentFamiliarData().color = color.getName();
+        setColor(color.getName());
+    }
+
+    public void setColor(String color){
+        this.entityData.set(COLOR, color);
+        this.getPersistentFamiliarData().color = color;
+        syncTag();
     }
 
     /**
@@ -283,7 +290,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public void syncAfterPersistentFamiliarInit(){
         setCustomName(persistentData.name);
         if(persistentData.color != null){
-            setColor(DyeColor.byName(persistentData.color, DyeColor.BLUE));
+            setColor(persistentData.color);
         }
     }
 }
