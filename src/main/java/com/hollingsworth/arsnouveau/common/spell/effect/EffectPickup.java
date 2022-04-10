@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ public class EffectPickup extends AbstractEffect {
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
                 PlayerEntity player = (PlayerEntity) shooter;
-                if(MinecraftForge.EVENT_BUS.post(new PlayerEvent.ItemPickupEvent(player, i, stack)))
+                if(MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i)))
                     continue;
                 if(!stack.isEmpty() && !player.addItem(stack)){
                     i.setPos(player.getX(), player.getY(), player.getZ());
