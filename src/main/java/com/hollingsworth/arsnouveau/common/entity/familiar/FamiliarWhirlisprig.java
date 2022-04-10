@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,11 +16,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -37,23 +36,12 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
             return InteractionResult.PASS;
 
         ItemStack stack = pPlayer.getItemInHand(hand);
-        Item item = stack.getItem();
-        if(Tags.Items.DYES.contains(item)){
-            if(Tags.Items.DYES_GREEN.contains(item) && !getColor().equals("summer")){
-                setColor("summer");
-            }
-            if(Tags.Items.DYES_ORANGE.contains(item) && !getColor().equals("autumn")){
-                setColor("autumn");
-            }
-            if(Tags.Items.DYES_YELLOW.contains(item) && !getColor().equals("spring")){
-                setColor("spring");
-            }
-            if(Tags.Items.DYES_WHITE.contains(item) && !getColor().equals("winter")){
-                setColor("winter");
-            }
-            setColor(this.getEntityData().get(COLOR));
+        String color = Whirlisprig.getColorFromStack(stack);
+        if(color != null && !getColor().equals(color)){
+            this.entityData.set(COLOR, color);
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
-
         return super.interactAt(pPlayer, pVec, hand);
     }
 

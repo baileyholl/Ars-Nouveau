@@ -25,12 +25,12 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.3.0'
+version = '2.3.1'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.18.1'
+archivesBaseName = 'ars_nouveau-1.18.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -44,7 +44,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
-    mappings channel: 'parchment', version: '2021.12.19-1.18.1'
+    mappings channel: 'parchment', version: '2022.03.13-1.18.2'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
@@ -143,9 +143,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.36'
     implementation 'org.jetbrains:annotations:20.1.0'
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.9'
 //    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
 //    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
 //    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
@@ -153,17 +152,17 @@ dependencies {
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
 //    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-61:api")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-61")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-61")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
     compileOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40")
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.10')
-    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
-    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
+    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.13')
+//    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
+//    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
     
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 

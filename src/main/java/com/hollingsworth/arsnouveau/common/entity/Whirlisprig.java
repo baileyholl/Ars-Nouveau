@@ -49,7 +49,6 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -128,34 +127,32 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         return this.entityData.get(COLOR);
     }
 
+    public static String getColorFromStack(ItemStack stack){
+        if(stack.is(Tags.Items.DYES)){
+            if(stack.is(Tags.Items.DYES_GREEN)){
+                return "summer";
+            }else if(stack.is(Tags.Items.DYES_ORANGE)){
+                return "autumn";
+            }else if(stack.is(Tags.Items.DYES_YELLOW)){
+                return "spring";
+            }else if(stack.is(Tags.Items.DYES_WHITE)){
+                return "winter";
+            }
+        }
+        return null;
+    }
+
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
         if(hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !this.entityData.get(TAMED))
             return InteractionResult.PASS;
         
         ItemStack stack = player.getItemInHand(hand);
-        Item item = stack.getItem();
-        if(Tags.Items.DYES.contains(item)){
-            if(Tags.Items.DYES_GREEN.contains(item) && !getColor().equals("summer")){
-                this.entityData.set(COLOR, "summer");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
-            if(Tags.Items.DYES_ORANGE.contains(item) && !getColor().equals("autumn")){
-                this.entityData.set(COLOR, "autumn");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
-            if(Tags.Items.DYES_YELLOW.contains(item) && !getColor().equals("spring")){
-                this.entityData.set(COLOR, "spring");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
-            if(Tags.Items.DYES_WHITE.contains(item) && !getColor().equals("winter")){
-                this.entityData.set(COLOR, "winter");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
+        String color = getColorFromStack(stack);
+        if(color != null && !getColor().equals(color)){
+            this.entityData.set(COLOR, color);
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
 
         if(stack.isEmpty()) {

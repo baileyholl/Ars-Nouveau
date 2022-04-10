@@ -17,4 +17,5 @@ public class MagicTree extends AbstractTreeGrower {
     protected ConfiguredFeature<TreeConfiguration, ?> getConfiguredFeature(Random randomIn, boolean largeHive) {
         return configConfiguredFeature;
     }
+
 }
