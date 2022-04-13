@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +59,7 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
-        event.enqueueWork(WorldEvent::registerFeatures);
+//        event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         //TODO: Restore archwood forest

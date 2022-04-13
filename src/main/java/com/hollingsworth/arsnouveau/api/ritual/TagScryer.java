@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class TagScryer implements IScryer {
     public static final TagScryer INSTANCE = new TagScryer();
@@ -17,14 +17,9 @@ public class TagScryer implements IScryer {
 
     public TagScryer() {}
 
-    public TagScryer(ResourceLocation tagID) {
-        this.tagID = tagID;
-        this.blockTag = BlockTags.getAllTags().getTag(tagID);
-    }
-
     public TagScryer(TagKey<Block> blockTag) {
         this.blockTag = blockTag;
-        this.tagID = blockTag.getName();
+        this.tagID = blockTag.location();
     }
 
     @Override
@@ -36,7 +31,7 @@ public class TagScryer implements IScryer {
     public IScryer fromTag(CompoundTag tag) {
         TagScryer scryer = new TagScryer();
         if(tag.contains("blockTag")){
-            Tag<Block> tag1 = BlockTags.getAllTags().getTag(new ResourceLocation(tag.getString("blockTag")));
+            TagKey<Block> tag1 =  ForgeRegistries.BLOCKS.tags().getTag(new TagKey<Block>(Registry.BLOCK_REGISTRY, new ResourceLocation(tag.getString("blockTag")))).getKey();
             scryer.blockTag = tag1;
         }
         return scryer;

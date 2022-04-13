@@ -6,17 +6,18 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class MagicTree extends AbstractTreeGrower {
 
-    Holder<ConfiguredFeature<TreeConfiguration, ?>> configConfiguredFeature;
-    public MagicTree(Holder<ConfiguredFeature<TreeConfiguration, ?>> configConfiguredFeature){
+    Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature;
+    public MagicTree(Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature){
         this.configConfiguredFeature = configConfiguredFeature;
     }
 
     @Override
     protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(Random randomIn, boolean largeHive) {
-        return configConfiguredFeature;
+        return configConfiguredFeature.get();
     }
 
 }

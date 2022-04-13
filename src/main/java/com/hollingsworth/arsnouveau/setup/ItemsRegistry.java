@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
 import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
@@ -37,6 +39,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 
@@ -281,17 +284,21 @@ public class ItemsRegistry {
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
-            for(Glyph glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().values()){
-                registry.register(glyph);
-                ITEMS.add(glyph);
+            for(Supplier<Glyph> glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().values()){
+                registry.register(glyph.get());
+                ITEMS.add(glyph.get());
             }
 
-            for(RitualTablet ritualParchment : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
-                registry.register(ritualParchment);
-                ITEMS.add(ritualParchment);
+            for(AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()){
+                RitualTablet tablet = new RitualTablet(ArsNouveauAPI.getInstance().getRitualRegistryName(ritual.getID()), ritual);
+                registry.register(tablet);
+                ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getID(), tablet);
+                ITEMS.add(tablet);
             }
 
-            for(FamiliarScript script : ArsNouveauAPI.getInstance().getFamiliarScriptMap().values()){
+            for(AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()){
+                FamiliarScript script = new FamiliarScript(holder);
+                ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.id, script);
                 registry.register(script);
                 ITEMS.add(script);
             }
