@@ -12,7 +12,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,13 +28,13 @@ public class Recipes extends RecipeProvider {
         super(generatorIn);
     }
 
-    public static Tag.Named<Item> SOURCE_GEM_TAG = ItemTags.bind("forge:gems/source");
-    public static Tag.Named<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.bind("forge:storage_blocks/source");
-    public static Tag.Named<Item> ARCHWOOD_LOG_TAG = ItemTags.bind("forge:logs/archwood");
-    public static Tag.Named<Block> DECORATIVE_AN = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
-    public static Tag.Named<Block> MAGIC_SAPLINGS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
-    public static Tag.Named<Block> MAGIC_PLANTS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
-    public static Tag.Named<Item> MAGIC_FOOD = ItemTags.bind("ars_nouveau:magic_food");
+    public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(new ResourceLocation("forge:gems/source"));
+    public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(new ResourceLocation("forge:storage_blocks/source"));
+    public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(new ResourceLocation("forge:logs/archwood"));
+    public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
+    public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
+    public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
+    public static TagKey<Item> MAGIC_FOOD = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food"));
 
     public static Ingredient SOURCE_GEM = Ingredient.of(SOURCE_GEM_TAG);
     public static Ingredient SOURCE_GEM_BLOCK = Ingredient.of(SOURCE_GEM_BLOCK_TAG);

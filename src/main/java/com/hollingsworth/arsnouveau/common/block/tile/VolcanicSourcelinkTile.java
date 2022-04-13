@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -123,7 +123,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         }
     }
 
-    public BlockPos getTagInArea(Tag<Block> block, int range){
+    public BlockPos getTagInArea(TagKey<Block> block, int range){
         AtomicReference<BlockPos> posFound = new AtomicReference<>();
         BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
             blockPos = blockPos.immutable();

@@ -4,13 +4,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class EarthEssence extends ModItem{
             return super.useOn(pContext);
         }
 
-        if(pContext.getLevel().getBlockState(pContext.getClickedPos()).is(Tags.Blocks.DIRT)){
+        if(pContext.getLevel().getBlockState(pContext.getClickedPos()).is(BlockTags.DIRT)){
             pContext.getLevel().setBlock(pContext.getClickedPos(), Blocks.GRASS_BLOCK.defaultBlockState(), 3);
             pContext.getItemInHand().shrink(1);
         }

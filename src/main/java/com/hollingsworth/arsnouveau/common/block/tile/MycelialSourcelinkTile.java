@@ -69,7 +69,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
             mana += 30 * food.getSaturationModifier();
             progress += 1;
 
-            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem()).getBlock()))){
+            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().is(Recipes.MAGIC_PLANTS))){
                 progress += 4;
                 mana += 10;
                 mana *= 2;

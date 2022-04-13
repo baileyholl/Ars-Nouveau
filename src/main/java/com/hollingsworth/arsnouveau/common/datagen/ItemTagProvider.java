@@ -22,20 +22,20 @@ public class ItemTagProvider extends ItemTagsProvider {
     protected void addTags() {
 
 
-        this.tag(ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_food")))
+        this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food")))
                 .add(ItemsRegistry.SOURCE_BERRY_PIE,
                         ItemsRegistry.SOURCE_BERRY_ROLL);
-        this.tag(ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
+        this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
                 .add(Items.DIRT).addTags(Tags.Items.SEEDS);
 
         this.tag(Tags.Items.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
         this.tag(Tags.Items.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
         this.tag(Tags.Items.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
         this.tag(Tags.Items.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
-        this.tag(ItemTags.createOptional(new ResourceLocation("forge", "gems/source")))
+        this.tag(ItemTags.create(new ResourceLocation("forge", "gems/source")))
                 .add(ItemsRegistry.SOURCE_GEM);
 
-        this.tag(ItemTags.createOptional(new ResourceLocation("forge", "logs/archwood")))
+        this.tag(ItemTags.create(new ResourceLocation("forge", "logs/archwood")))
                 .add(BlockRegistry.BLAZING_LOG.asItem(),
                         BlockRegistry.CASCADING_LOG.asItem(),
                         BlockRegistry.VEXING_LOG.asItem(),
@@ -89,12 +89,12 @@ public class ItemTagProvider extends ItemTagsProvider {
 
 
         );
-        this.tag(ItemTags.createOptional(new ResourceLocation("forge", "planks/archwood")))
+        this.tag(ItemTags.create(new ResourceLocation("forge", "planks/archwood")))
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(Tags.Items.SEEDS)
                 .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());
         this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
-        this.tag(ItemTags.createOptional(new ResourceLocation("forge", "storage_blocks/source")))
+        this.tag(ItemTags.create(new ResourceLocation("forge", "storage_blocks/source")))
                 .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
         this.tag(Tags.Items.GEMS).add(ItemsRegistry.SOURCE_GEM);
 

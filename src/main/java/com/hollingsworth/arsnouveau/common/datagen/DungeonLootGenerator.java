@@ -23,7 +23,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
     public DungeonLootGenerator(DataGenerator gen, String modid) {
         super(gen, modid);
     }
-    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, ArsNouveau.MODID);
+    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS.get(), ArsNouveau.MODID);
     public static final RegistryObject<DungeonLootEnhancerModifier.Serializer> DUNGEON_LOOT = GLM.register("dungeon_loot", DungeonLootGenerator.DungeonLootEnhancerModifier.Serializer::new);
 
     @Override

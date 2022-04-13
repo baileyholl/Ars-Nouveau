@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TagScryer implements IScryer {
     public static final TagScryer INSTANCE = new TagScryer();
     ResourceLocation tagID;
-    Tag<Block> blockTag;
+    TagKey<Block> blockTag;
 
     public TagScryer() {}
 
@@ -21,7 +22,7 @@ public class TagScryer implements IScryer {
         this.blockTag = BlockTags.getAllTags().getTag(tagID);
     }
 
-    public TagScryer(Tag.Named<Block> blockTag) {
+    public TagScryer(TagKey<Block> blockTag) {
         this.blockTag = blockTag;
         this.tagID = blockTag.getName();
     }

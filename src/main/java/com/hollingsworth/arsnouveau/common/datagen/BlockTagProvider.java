@@ -6,7 +6,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 public class BlockTagProvider extends BlockTagsProvider {
 
-    public static Tag.Named<Block> IGNORE_TILE =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+    public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
@@ -116,7 +116,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.VEXING_LEAVES
         );
 
-        this.tag(BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative")))
+        this.tag(BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative")))
                 .add(BlockRegistry.AB_SMOOTH_BASKET,
                 BlockRegistry.AB_SMOOTH_CLOVER,
                 BlockRegistry.AB_SMOOTH_HERRING,
@@ -140,7 +140,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.AB_SMOOTH,
                 BlockRegistry.AB_ALTERNATE,
                 BlockRegistry.ARCANE_BRICKS);
-        Tag.Named<Block> HARVEST_FOLIAGE = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/foliage"));
+        TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/foliage"));
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
                 Blocks.RED_MUSHROOM_BLOCK,
@@ -155,7 +155,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.WEEPING_VINES);
 
 
-        Tag.Named<Block> HARVEST_STEMS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
+        TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
         this.tag(HARVEST_STEMS).addTag(BlockTags.LOGS).add(
                 Blocks.MUSHROOM_STEM,
                 Blocks.BAMBOO,
@@ -163,11 +163,11 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.CACTUS);
 
 
-        this.tag(BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable")))
+        this.tag(BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable")))
                 .addTags(HARVEST_FOLIAGE, HARVEST_STEMS);
 
-        Tag.Named<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
-        Tag.Named<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
+        TagKey<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
+        TagKey<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
         this.tag(WHIRLISPRIG_GREATLY_LIKES).add(Blocks.MUSHROOM_STEM,
                 Blocks.BROWN_MUSHROOM_BLOCK,
                 Blocks.RED_MUSHROOM_BLOCK,
@@ -175,8 +175,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.WARPED_WART_BLOCK, Blocks.NETHER_WART_BLOCK);
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
-        Tag.Named<Block> MAGIC_PLANTS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
-        Tag.Named<Block> MAGIC_SAPLINGS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
+        TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
+        TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
         this.tag(MAGIC_SAPLINGS).add(
                 BlockRegistry.BLAZING_SAPLING,
                 BlockRegistry.CASCADING_SAPLING,
@@ -231,7 +231,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE);
         this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
         this.tag(BlockTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
-        this.tag(BlockTags.createOptional(new ResourceLocation("minecraft", "leaves/archwood_leaves")))
+        this.tag(BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves")))
                 .add(BlockRegistry.VEXING_LEAVES,
                         BlockRegistry.CASCADING_LEAVE,
                         BlockRegistry.BLAZING_LEAVES,
