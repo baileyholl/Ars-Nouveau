@@ -66,7 +66,7 @@ public class GlyphButton extends Button {
                     GL11.glDisable(GL11.GL_BLEND);
                 }
             } else {
-                Item glyphItem = ArsNouveauAPI.getInstance().getGlyphItemMap().get(abstractSpellPart.getId());
+                Item glyphItem = ArsNouveauAPI.getInstance().getGlyphItemMap().get(abstractSpellPart.getId()).get();
                 RenderUtils.drawItemAsIcon(glyphItem, ms, x, y, 16, !validationErrors.isEmpty());
             }
 
