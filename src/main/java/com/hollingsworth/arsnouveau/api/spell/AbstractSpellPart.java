@@ -149,6 +149,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return false;
     }
 
+    public boolean isRenderAsIcon() {
+        return true;
+    }
+
     public String getItemID(){
         return "glyph_" + this.getId();
     }

@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
-import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenuUtils;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
@@ -164,7 +164,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
         },
                 getRadialMenuSlots(itemStack),
-                GuiRadialMenuUtils::drawTextureFromResourceLocation,
+                RenderUtils::drawTextureFromResourceLocation,
                 3);
     }
 

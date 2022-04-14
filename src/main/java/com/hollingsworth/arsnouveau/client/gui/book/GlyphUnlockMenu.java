@@ -174,8 +174,8 @@ public class GlyphUnlockMenu extends BaseBook{
             // Set visibility of Cast Methods and Augments
             for(Widget w : renderables) {
                 if(w instanceof GlyphButton glyphButton) {
-                    if (glyphButton.spell_id != null) {
-                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.spell_id);
+                    if (glyphButton.abstractSpellPart.getId() != null) {
+                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getId());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
