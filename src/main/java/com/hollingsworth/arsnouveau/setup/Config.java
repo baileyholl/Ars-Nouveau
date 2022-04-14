@@ -69,7 +69,7 @@ public class Config {
     public static ForgeConfigSpec.ConfigValue<? extends String> CRYSTALLIZER_ITEM;
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
     public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
-
+    public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
     public static boolean isSpellEnabled(String tag){
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpell_map().get(tag);
         return spellPart.ENABLED == null || spellPart.ENABLED.get();
@@ -139,12 +139,15 @@ public class Config {
         MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
         GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
         MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.push("Spells");
         ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceCapOnCast", true);
         ENFORCE_GLYPH_LIMIT_ON_CAST = SERVER_BUILDER.comment("Enforce glyph per spell limit on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceGlyphLimitOnCast", true);
         SERVER_BUILDER.pop();
-
+        SERVER_BUILDER.comment("Items").push("item");
+        SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_CONFIG = SERVER_BUILDER.build();
         RegistryHelper.generateConfig(ArsNouveau.MODID, new ArrayList<>(ArsNouveauAPI.getInstance().getSpell_map().values()));
     }

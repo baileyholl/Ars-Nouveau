@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -197,9 +198,11 @@ public class LootTables {
             if(r.nextDouble() <= modifier.uncommonChance)
                 stacks.add(getRandomItem(UNCOMMON_LOOT));
         }
-        for(int i = 0; i < modifier.rareRolls; i++){
-            if(r.nextDouble() <= modifier.rareChance)
-                stacks.add(getRandomItem(RARE_LOOT));
+        if(Config.SPAWN_TOMES.get()) {
+            for (int i = 0; i < modifier.rareRolls; i++) {
+                if (r.nextDouble() <= modifier.rareChance)
+                    stacks.add(getRandomItem(RARE_LOOT));
+            }
         }
         return stacks;
     }
