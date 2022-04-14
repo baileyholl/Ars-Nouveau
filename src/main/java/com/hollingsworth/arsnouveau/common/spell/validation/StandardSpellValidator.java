@@ -39,13 +39,14 @@ public class StandardSpellValidator implements ISpellValidator {
 
         // Unconditional validators
         validators.add(MAX_ONE_CAST_METHOD);
-        validators.add(GLYPH_OCCURRENCES_POLICY);
 
         // Validators only applicable at crafting time
         if (!enforceCastTimeValidations) {
             // Not enforcing this at cast time so we don't break existing spells with ineffective augments
             validators.add(AUGMENT_COMPATIBILITY);
             validators.add(EFFECT_AUGMENTATION_POLICY);
+            validators.add(GLYPH_OCCURRENCES_POLICY);
+
         }
 
         // Validators only applicable at casting time
@@ -54,6 +55,9 @@ public class StandardSpellValidator implements ISpellValidator {
             validators.add(REQUIRE_CAST_METHOD_START);
             if(Config.ENFORCE_AUGMENT_CAP_ON_CAST.get()){
                 validators.add(EFFECT_AUGMENTATION_POLICY);
+            }
+            if(Config.ENFORCE_GLYPH_LIMIT_ON_CAST.get()){
+                validators.add(GLYPH_OCCURRENCES_POLICY);
             }
         }
 
