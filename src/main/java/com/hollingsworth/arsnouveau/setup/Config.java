@@ -69,6 +69,8 @@ public class Config {
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
     public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
 
+    public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
+
 
     public static boolean isSpellEnabled(String tag){
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
@@ -130,7 +132,7 @@ public class Config {
 
         SERVER_BUILDER.comment("Items").push("item");
         CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);
-
+        SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_CONFIG = SERVER_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
         RegistryHelper.generateConfig(ArsNouveau.MODID, new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values()));
