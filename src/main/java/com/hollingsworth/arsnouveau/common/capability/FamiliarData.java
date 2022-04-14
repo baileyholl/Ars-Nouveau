@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 public class FamiliarData {
     public static final String ENTITY_TAG = "entityTag";
     public AbstractFamiliarHolder familiarHolder;
-    CompoundTag entityTag;
+    public CompoundTag entityTag;
 
     public FamiliarData(String entityID){
         this.familiarHolder = ArsNouveauAPI.getInstance().getFamiliarHolderMap().get(entityID);
@@ -30,6 +30,8 @@ public class FamiliarData {
     }
 
     public IFamiliar getEntity(Level level){
-        return familiarHolder.getSummonEntity(level, entityTag);
+        IFamiliar familiar = familiarHolder.getSummonEntity(level, entityTag);
+        familiar.setHolderID(familiarHolder.id);
+        return familiar;
     }
 }

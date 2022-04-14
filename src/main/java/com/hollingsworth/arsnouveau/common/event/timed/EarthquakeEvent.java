@@ -46,7 +46,7 @@ public class EarthquakeEvent implements ITimedEvent {
                 if(world.getRandom().nextFloat() < 0.5) {
 
                     BlockPos p = posList.get(counter);
-                    FallingBlockEntity blockEntity = new FallingBlockEntity(world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, world.getBlockState(p));
+                    FallingBlockEntity blockEntity = FallingBlockEntity.fall(world, p, world.getBlockState(p));
                     blockEntity.setDeltaMovement(0, 0.5 + ParticleUtil.inRange(-0.1, 0.1), 0.0);
                     world.addFreshEntity(blockEntity);
                 }

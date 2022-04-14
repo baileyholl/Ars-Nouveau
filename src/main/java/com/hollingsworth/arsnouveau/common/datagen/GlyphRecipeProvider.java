@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GlyphRecipeProvider implements DataProvider {
 
@@ -43,7 +42,6 @@ public class GlyphRecipeProvider implements DataProvider {
 
     @Override
     public void run(HashCache cache) throws IOException {
-        List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphItemMap().values().stream().collect(Collectors.toList());
         Path output = this.generator.getOutputFolder();
 
         add(get(AugmentAccelerate.INSTANCE).withItem(Items.POWERED_RAIL).withItem(Items.SUGAR).withItem(Items.CLOCK));

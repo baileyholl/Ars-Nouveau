@@ -46,6 +46,8 @@ public class CapabilityRegistry {
      * @return A lazy optional containing the IMana, if any
      */
     public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity){
+        if(entity == null)
+            return LazyOptional.empty();
         return entity.getCapability(PLAYER_DATA_CAP);
     }
     /**

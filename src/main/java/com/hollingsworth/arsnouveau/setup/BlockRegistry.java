@@ -237,10 +237,10 @@ public class BlockRegistry {
             registry.register(new VolcanicSourcelinkBlock());
             registry.register(new LavaLily());
             registry.register(new SourceBerryBush(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.CASCADING_TREE),SAP_PROP).setRegistryName(LibBlockNames.CASCADING_SAPLING));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.BLAZING_TREE),SAP_PROP).setRegistryName(LibBlockNames.BLAZING_SAPLING));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.VEXING_TREE), SAP_PROP).setRegistryName(LibBlockNames.VEXING_SAPLING));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.FLOURISHING_TREE),SAP_PROP).setRegistryName(LibBlockNames.FLOURISHING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(() -> WorldEvent.CASCADING_TREE),SAP_PROP).setRegistryName(LibBlockNames.CASCADING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(() -> WorldEvent.BLAZING_TREE),SAP_PROP).setRegistryName(LibBlockNames.BLAZING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(() -> WorldEvent.VEXING_TREE), SAP_PROP).setRegistryName(LibBlockNames.VEXING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(() -> WorldEvent.FLOURISHING_TREE),SAP_PROP).setRegistryName(LibBlockNames.FLOURISHING_SAPLING));
             registry.register(new WixieCauldron());
             registry.register(new CreativeSourceJar());
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH));

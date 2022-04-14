@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -54,9 +54,8 @@ public class SylphRenderer extends GeoEntityRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(LivingEntity entity) {
-        if(entity instanceof Whirlisprig){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (((Whirlisprig) entity).getColor().isEmpty() ? "summer" : ((Whirlisprig) entity).getColor())+ ".png");
-        }
+        if(entity instanceof IVariantTextureProvider iVariantTextureProvider)
+            return iVariantTextureProvider.getTexture(entity);
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_summer.png");
     }
 

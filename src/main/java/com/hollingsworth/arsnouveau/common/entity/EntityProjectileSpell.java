@@ -287,7 +287,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     @Override
     protected boolean canHitEntity(Entity entity) {
-        return super.canHitEntity(entity) || EntityTags.SPELL_CAN_HIT.contains(entity.getType());
+        return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
     }
 
     public EntityProjectileSpell(PlayMessages.SpawnEntity packet, Level world){

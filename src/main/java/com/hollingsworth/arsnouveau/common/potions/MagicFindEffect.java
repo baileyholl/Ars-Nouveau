@@ -25,7 +25,7 @@ public class MagicFindEffect extends MobEffect {
         if(level.isClientSide || level.getGameTime() % 60 != 0)
             return;
         for(Entity e : level.getEntities(pLivingEntity, new AABB(pLivingEntity.blockPosition()).inflate(75))){
-            if(e instanceof LivingEntity living && EntityTags.MAGIC_FIND.contains(living.getType())){
+            if(e instanceof LivingEntity living && living.getType().is(EntityTags.MAGIC_FIND)){
                 living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60*20));
             }
         }

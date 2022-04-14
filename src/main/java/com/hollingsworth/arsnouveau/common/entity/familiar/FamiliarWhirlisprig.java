@@ -1,23 +1,48 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener {
+public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider {
     public FamiliarWhirlisprig(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
+    }
+
+
+    @Override
+    public InteractionResult interactAt(Player pPlayer, Vec3 pVec, InteractionHand hand) {
+        if(hand != InteractionHand.MAIN_HAND || pPlayer.getCommandSenderWorld().isClientSide )
+            return InteractionResult.PASS;
+
+        ItemStack stack = pPlayer.getItemInHand(hand);
+        String color = Whirlisprig.getColorFromStack(stack);
+        if(color != null && !getColor().equals(color)){
+            this.entityData.set(COLOR, color);
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
+        }
+        return super.interactAt(pPlayer, pVec, hand);
     }
 
     @Override
@@ -70,4 +95,8 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         return ModEntities.ENTITY_FAMILIAR_SYLPH;
     }
 
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" +(getColor().isEmpty() ? "summer" : getColor()) + ".png");
+    }
 }

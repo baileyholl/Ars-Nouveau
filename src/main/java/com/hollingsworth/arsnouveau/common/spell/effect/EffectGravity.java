@@ -36,9 +36,7 @@ public class EffectGravity extends AbstractEffect {
         for(BlockPos pos1 : posList) {
             if(world.getBlockEntity(pos1) != null || !canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
-
-            FallingBlockEntity blockEntity = new FallingBlockEntity(world,pos1.getX() +0.5, pos1.getY(), pos1.getZ() +0.5, world.getBlockState(pos1));
-            world.addFreshEntity(blockEntity);
+            FallingBlockEntity.fall(world, pos1, world.getBlockState(pos1));
         }
     }
 

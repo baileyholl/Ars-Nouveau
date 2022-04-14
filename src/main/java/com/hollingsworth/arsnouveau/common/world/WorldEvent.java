@@ -2,27 +2,23 @@ package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
@@ -32,13 +28,9 @@ import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.RarityFilter;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 //package com.hollingsworth.arsnouveau.common.world;
 //
@@ -97,9 +89,9 @@ import java.util.Objects;
 //import static com.hollingsworth.arsnouveau.common.world.FeatureLib.*;
 //import static net.minecraft.data.worldgen.Features.*;
 //
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+
 public class WorldEvent {
-    public static ConfiguredFeature<TreeConfiguration, ?> CASCADING_TREE =  Feature.TREE.configured((
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> CASCADING_TREE =  FeatureUtils.register("ars_nouveau:cascade_feature", Feature.TREE, (
             new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),
                     new MagicTrunkPlacer(9, 1, 0),
                     new SupplierBlockStateProvider(LibBlockNames.CASCADING_LEAVES),
@@ -108,21 +100,21 @@ public class WorldEvent {
 
 
 
-    public static ConfiguredFeature<TreeConfiguration, ?> BLAZING_TREE =  Feature.TREE.configured((
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> BLAZING_TREE =  FeatureUtils.register("ars_nouveau:blazing_feature", Feature.TREE, (
             new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.BLAZING_LOG),
                     new MagicTrunkPlacer(9, 1, 0),
                     new SupplierBlockStateProvider(LibBlockNames.BLAZING_LEAVES),
                     new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
                     new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
 
-    public static ConfiguredFeature<TreeConfiguration, ?> FLOURISHING_TREE =  Feature.TREE.configured((
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> FLOURISHING_TREE =  FeatureUtils.register("ars_nouveau:flourishing_feature", Feature.TREE, (
             new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LOG),
                     new MagicTrunkPlacer(9, 1, 0),
                     new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LEAVES),
                     new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
                     new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
 
-    public static ConfiguredFeature<TreeConfiguration, ?> VEXING_TREE =  Feature.TREE.configured((
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> VEXING_TREE =  FeatureUtils.register("ars_nouveau:vexing_feature", Feature.TREE, (
             new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.VEXING_LOG),
                     new MagicTrunkPlacer(9, 1, 0),
                     new SupplierBlockStateProvider(LibBlockNames.VEXING_LEAVES),
@@ -170,27 +162,26 @@ public class WorldEvent {
 //            }
 //        }
 //    };
+    public static Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> PATCH_BERRY_BUSH = FeatureUtils.register("ars_nouveau:patch_berry", Feature.RANDOM_PATCH,
+        FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK,
+                new SimpleBlockConfiguration(BlockStateProvider.simple(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID,LibBlockNames.SOURCEBERRY_BUSH))
+                        .defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK)));
+
+    public static Holder<PlacedFeature> BERRY_BUSH_PATCH_CONFIG = PlacementUtils.register("ars_nouveau:placed_berry", PATCH_BERRY_BUSH, RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
+    public static Holder<PlacedFeature> PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_BLAZING = PlacementUtils.register("ars_nouveau:placed_blazing", BLAZING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_VEXING = PlacementUtils.register("ars_nouveau:placed_vexing", VEXING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", FLOURISHING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING));
+
+    public static Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> MIXED_TREES = FeatureUtils.register("ars_nouveau:random_cascade", Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(List.of(
+            new WeightedPlacedFeature(PLACED_CASCADE, 0.25f),
+            new WeightedPlacedFeature(PLACED_BLAZING, 0.25f),
+            new WeightedPlacedFeature(PLACED_VEXING, 0.25f),
+            new WeightedPlacedFeature(PLACED_FLOURISHING, 0.25f)), PLACED_CASCADE));
+    public static Holder<PlacedFeature> PLACED_MIXED = PlacementUtils.register("ars_nouveau:archwood", MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE.get())));
 
     public static void registerFeatures() {
-        ConfiguredFeature<?, ?> PATCH_BERRY_BUSH = FeatureUtils.register("ars_nouveau:patch_berry", Feature.RANDOM_PATCH.configured(FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK.configured(new SimpleBlockConfiguration(BlockStateProvider.simple(BlockRegistry.SOURCEBERRY_BUSH.defaultBlockState().setValue(SourceBerryBush.AGE, 3)))), List.of(Blocks.GRASS_BLOCK))));
 
-        PlacedFeature BERRY_BUSH_PATCH_CONFIG = PlacementUtils.register("ars_nouveau:placed_berry", PATCH_BERRY_BUSH.placed(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome()));
-
-        float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
-
-        PlacedFeature PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING));
-        PlacedFeature PLACED_BLAZING = PlacementUtils.register("ars_nouveau:placed_blazing", BLAZING_TREE.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING));
-        PlacedFeature PLACED_VEXING = PlacementUtils.register("ars_nouveau:placed_vexing", VEXING_TREE.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING));
-        PlacedFeature PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", FLOURISHING_TREE.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING));
-
-
-        ConfiguredFeature<RandomFeatureConfiguration, ?> CONFIGURED = FeatureUtils.register("ars_nouveau:random_cascade", Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(List.of(
-                new WeightedPlacedFeature(PLACED_CASCADE, 0.25f),
-                new WeightedPlacedFeature(PLACED_BLAZING, 0.25f),
-                new WeightedPlacedFeature(PLACED_VEXING, 0.25f),
-                new WeightedPlacedFeature(PLACED_FLOURISHING, 0.25f)), PLACED_CASCADE)));
-        if(Config.TREE_SPAWN_RATE.get() > 0)
-            PlacementUtils.register("ars_nouveau:archwood",CONFIGURED.placed(VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE.get()))));
 //
 
         //
@@ -276,61 +267,7 @@ public class WorldEvent {
 
     }
 
-    @SubscribeEvent
-    public static void biomeLoad(BiomeLoadingEvent e) {
 
-        if (e.getCategory() == Biome.BiomeCategory.NETHER || e.getCategory() == Biome.BiomeCategory.THEEND)
-            return;
-
-        addMobSpawns(e);
-
-
-        if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) || e.getName().equals(new ResourceLocation(ArsNouveau.MODID, "archwood_forest")))  && Config.SPAWN_BERRIES.get()) {
-            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation("ars_nouveau:placed_berry")))).build();
-        }
-
-        //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName()))).build();
-        if(Config.TREE_SPAWN_RATE.get() > 0)
-            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "archwood"))));
-
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName()))).build();
-//
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.FLOURISHING_SAPLING.getRegistryName()))).build();
-
-//        if(e.getName().equals(archwoodForest.getRegistryName())){
-//            addArchwoodForestFeatures(e);
-//        }
-    }
-//
-    public static void addMobSpawns(BiomeLoadingEvent e){
-        List<Biome.BiomeCategory> categories = Arrays.asList(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.EXTREME_HILLS, Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.SAVANNA, Biome.BiomeCategory.MOUNTAIN);
-
-        if (categories.contains(e.getCategory())) {
-            if (Config.CARBUNCLE_WEIGHT.get() > 0) {
-                e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE, Config.CARBUNCLE_WEIGHT.get(), 1, 1));
-            }
-            if (Config.SYLPH_WEIGHT.get() > 0) {
-                e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
-            }
-        }
-        if (Config.DRYGMY_WEIGHT.get() > 0) {
-            e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY, Config.DRYGMY_WEIGHT.get(), 1, 1));
-        }
-
-        if(!e.getCategory().equals(Biome.BiomeCategory.MUSHROOM) && !e.getCategory().equals(Biome.BiomeCategory.NONE)){
-            if(e.getClimate().temperature <= 0.35f &&  Config.WGUARDIAN_WEIGHT.get() > 0){
-                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
-            }
-            if( Config.WSTALKER_WEIGHT.get() > 0)
-                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_STALKER, Config.WSTALKER_WEIGHT.get(), 3, 3));
-            if( Config.WHUNTER_WEIGHT.get() > 0)
-                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_HUNTER, Config.WHUNTER_WEIGHT.get(), 1, 1));
-        }
-    }
 //
 //    public static void addBlazingForestFeatures(BiomeLoadingEvent e){
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,

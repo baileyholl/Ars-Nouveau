@@ -3,12 +3,16 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
@@ -38,10 +43,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.STRING);
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
 
     public boolean terminatedFamiliar;
+    public String holderID;
+    public PersistentFamiliarData persistentData = new PersistentFamiliarData(new CompoundTag());
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
@@ -61,6 +68,13 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     public double getManaReserveModifier(){
         return manaReserveModifier;
+    }
+
+    @Override
+    public void setCustomName(@Nullable Component pName) {
+        super.setCustomName(pName);
+        persistentData.name = pName;
+        syncTag();
     }
 
     @Override
@@ -138,22 +152,17 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(OWNER_UUID, Optional.empty());
+        this.entityData.define(COLOR, "");
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        if(getOwnerID() != null)
-            tag.putUUID("ownerID", getOwnerID());
-        tag.putBoolean("terminated", terminatedFamiliar);
+    public String getHolderID() {
+        return holderID;
     }
 
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        if(tag.hasUUID("ownerID"))
-            setOwnerID(tag.getUUID("ownerID"));
-        terminatedFamiliar = tag.getBoolean("terminated");
+    @Override // TODO: Make abstract
+    public void setHolderID(String id) {
+        this.holderID = id;
     }
 
     public @Nullable UUID getOwnerID() {
@@ -196,6 +205,30 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     }
 
     @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        if(getOwnerID() != null)
+            tag.putUUID("ownerID", getOwnerID());
+        tag.putBoolean("terminated", terminatedFamiliar);
+        tag.put("familiarData", getPersistentFamiliarData().toTag(new CompoundTag()));
+        tag.putString("holderID", holderID);
+        tag.putString("color", this.entityData.get(COLOR));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if(tag.hasUUID("ownerID"))
+            setOwnerID(tag.getUUID("ownerID"));
+        terminatedFamiliar = tag.getBoolean("terminated");
+        this.holderID = tag.getString("holderID");
+        this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
+        this.entityData.set(COLOR, tag.getString("color"));
+        syncAfterPersistentFamiliarInit();
+    }
+
+
+    @Override
     public void onFamiliarSpawned(FamiliarSummonEvent event) {
         if(level.isClientSide)
             return;
@@ -204,5 +237,60 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             this.terminatedFamiliar = true;
     }
 
-    public void setTagData(@Nullable CompoundTag tag){}
+    public String getColor(){
+        return this.entityData.get(COLOR);
+    }
+
+    public void setColor(DyeColor color){
+        setColor(color.getName());
+    }
+
+    public void setColor(String color){
+        this.entityData.set(COLOR, color);
+        this.getPersistentFamiliarData().color = color;
+        syncTag();
+    }
+
+    /**
+     * Called after the Familiar is returned and summoned from AbstractFamiliarHolder.
+     * @param tag The persistent data tag stored on the player.
+     */
+    public void setTagData(@Nullable CompoundTag tag){
+        this.persistentData = deserializePersistentData(tag != null && tag.contains("familiarData") ? tag.getCompound("familiarData") : new CompoundTag());
+        syncAfterPersistentFamiliarInit();
+
+    }
+
+    /**
+     * Sync the data you want to store from the familiar on the player cap here.
+     * Get the owner from getOwner
+     */
+    public void syncTag(){
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner()).orElse(null);
+        if(cap != null && persistentData != null){
+            cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(new CompoundTag()));
+        }
+    }
+
+    /**
+     * Override and return your own implementation of PersistentData. See FamiliarStarbuncle for an example.
+     */
+    public PersistentFamiliarData deserializePersistentData(CompoundTag tag){
+        return new PersistentFamiliarData(tag);
+    }
+
+    public PersistentFamiliarData getPersistentFamiliarData(){
+        return persistentData;
+    }
+
+    /**
+     * Called once the Persistent Familiar Data has been constructed.
+     * Use this to de-duplify your persistent entity data as it relates to your PersistentFamiliarData.
+     */
+    public void syncAfterPersistentFamiliarInit(){
+        setCustomName(persistentData.name);
+        if(persistentData.color != null){
+            setColor(persistentData.color);
+        }
+    }
 }
