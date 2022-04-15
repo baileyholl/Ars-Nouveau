@@ -164,6 +164,11 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             if (level instanceof ServerLevel serverLevel)
                 ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
         }
+        recipe = null;
+        recipeID = null;
+        craftingTicks = 0;
+        crafting = false;
+        updateBlock();
     }
 
     public void setRecipe(GlyphRecipe recipe, Player player){
