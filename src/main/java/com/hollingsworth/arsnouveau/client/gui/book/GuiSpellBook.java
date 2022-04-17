@@ -357,8 +357,8 @@ public class GuiSpellBook extends BaseBook {
 
         if (button1.validationErrors.isEmpty()) {
             for (CraftingButton b : craftingCells) {
-                if (b.resourceIcon.equals("")) {
-                    b.resourceIcon = button1.abstractSpellPart.getIcon();
+                if (b.abstractSpellPart == null) {
+                    b.abstractSpellPart = button1.abstractSpellPart;
                     b.spellTag = button1.abstractSpellPart.getId();
                     validate();
                     return;
@@ -383,10 +383,10 @@ public class GuiSpellBook extends BaseBook {
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
             slot.spellTag = "";
-            slot.resourceIcon = "";
+            slot.abstractSpellPart = null;
             if (spell_recipe != null && i < spell_recipe.size()){
                 slot.spellTag = spell_recipe.get(i).getId();
-                slot.resourceIcon = spell_recipe.get(i).getIcon();
+                slot.abstractSpellPart = spell_recipe.get(i);
             }
         }
     }
