@@ -74,6 +74,10 @@ public class Config {
 
     public static boolean isSpellEnabled(String tag){
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
+        if(spellPart == null){
+            throw new IllegalArgumentException("Spell Part with id " + tag + " does not exist in registry. Did you pass the right ID?");
+        }
+
         return spellPart.ENABLED == null || spellPart.ENABLED.get();
     }
 

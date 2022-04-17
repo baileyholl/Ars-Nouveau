@@ -397,6 +397,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
+            stack.setTag(getStarbuncleData(this).toTag(new CompoundTag()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
@@ -511,14 +512,23 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
-            stack = getHeldStack();
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            ItemStack charm = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
+            // TODO: Replace with self reference of starbuncle data
+            charm.setTag(getStarbuncleData(this).toTag(new CompoundTag()));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), charm.copy()));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getHeldStack()));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
         return this.isTamed();
+    }
+
+    public static StarbuncleData getStarbuncleData(Starbuncle starbuncle) {
+        CompoundTag starbyTag = new CompoundTag();
+        starbuncle.addAdditionalSaveData(starbyTag);
+        StarbuncleData data = new StarbuncleData(starbyTag);
+        data.name = starbuncle.getCustomName();
+        return data;
     }
 
     private boolean setBehaviors;
@@ -548,13 +558,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             counter++;
         }
 
-        BlockPos oldToPos = NBTUtil.getBlockPos(tag, "to");
-        if (!oldToPos.equals(new BlockPos(0, 0, 0)) && !TO_LIST.contains(oldToPos))
-            TO_LIST.add(oldToPos);
-        //setToPos(NBTUtil.getBlockPos(tag, "to"));
-        BlockPos oldFromPos = NBTUtil.getBlockPos(tag, "from");
-        if (!oldFromPos.equals(new BlockPos(0, 0, 0)) && !FROM_LIST.contains(oldFromPos))
-            FROM_LIST.add(oldFromPos);
 
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
@@ -799,23 +802,68 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         PURPLE,
         GREEN
     }
-
+    //TODO: Replace starbuncle serialization with this
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
-//        List<BlockPos> TO_LIST = new ArrayList<>();
-//        List<BlockPos> FROM_LIST = new ArrayList<>();
-//        List<ItemStack> allowedItems = new ArrayList<>();
-//        List<ItemStack> ignoreItems = new ArrayList<>();
-//        Block pathBlock;
-
+        public List<BlockPos> TO_LIST = new ArrayList<>();
+        public List<BlockPos> FROM_LIST = new ArrayList<>();
+        public List<ItemStack> allowedItems = new ArrayList<>();
+        public List<ItemStack> ignoreItems = new ArrayList<>();
+        public Block pathBlock;
+        public boolean whitelist;
+        public boolean blacklist;
 
 
         public StarbuncleData(CompoundTag tag){
             super(tag);
 
+            FROM_LIST = new ArrayList<>();
+            TO_LIST = new ArrayList<>();
+            int counter = 0;
+
+            while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
+                BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
+                if (!this.FROM_LIST.contains(pos))
+                    this.FROM_LIST.add(pos);
+                counter++;
+            }
+
+            counter = 0;
+            while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
+                BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
+                if (!this.TO_LIST.contains(pos))
+                    this.TO_LIST.add(pos);
+                counter++;
+            }
+            whitelist = tag.getBoolean("whitelist");
+            blacklist = tag.getBoolean("blacklist");
+            if (tag.contains("path")) {
+                pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
+            }
+            allowedItems = NBTUtil.readItems(tag, "allowed_");
+            ignoreItems = NBTUtil.readItems(tag, "ignored_");
         }
 
         public CompoundTag toTag(CompoundTag tag){
             super.toTag(tag);
+            int counter = 0;
+            for (BlockPos p : FROM_LIST) {
+                NBTUtil.storeBlockPos(tag, "from_" + counter, p);
+                counter++;
+            }
+            counter = 0;
+            for (BlockPos p : TO_LIST) {
+                NBTUtil.storeBlockPos(tag, "to_" + counter, p);
+                counter++;
+            }
+            tag.putBoolean("whitelist", whitelist);
+            tag.putBoolean("blacklist", blacklist);
+            if (allowedItems != null && !allowedItems.isEmpty())
+                NBTUtil.writeItems(tag, "allowed_", allowedItems);
+
+            if (ignoreItems != null && !ignoreItems.isEmpty())
+                NBTUtil.writeItems(tag, "ignored_", ignoreItems);
+            if (pathBlock != null)
+                tag.putString("path", pathBlock.getRegistryName().toString());
             return tag;
         }
     }
