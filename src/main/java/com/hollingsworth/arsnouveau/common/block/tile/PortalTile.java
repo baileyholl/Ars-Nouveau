@@ -44,7 +44,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
                     rotationVec != null ? rotationVec.y : e.yRot, rotationVec != null ? rotationVec.x : e.xRot);
             e.xRot = rotationVec != null ? rotationVec.x : e.xRot;
             e.yRot = rotationVec != null ? rotationVec.y : e.yRot;
-            Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX(), e.getY(), e.getZ(), e.xRot, e.yRot));
+            Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.xRot, e.yRot));
             ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
@@ -90,7 +90,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
                 if (rotationVec != null) {
                     e.xRot = rotationVec.x;
                     e.yRot = rotationVec.y;
-                    Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.xRot, e.yRot));
+                    Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, e.xRot, e.yRot));
 
                 }
             }
