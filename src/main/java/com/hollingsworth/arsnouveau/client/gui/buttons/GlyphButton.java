@@ -53,22 +53,7 @@ public class GlyphButton extends Button {
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            if (this.abstractSpellPart.isRenderAsIcon()) {
-                if (this.abstractSpellPart.getIcon() != null && !this.abstractSpellPart.getIcon().equals("")) {
-                    GL11.glEnable(GL11.GL_BLEND);
-                    if (validationErrors.isEmpty()) {
-                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    } else {
-                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.25F);
-                    }
-
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.abstractSpellPart.getIcon()), x, y, 0, 0, 16, 16, 16, 16, ms);
-                    GL11.glDisable(GL11.GL_BLEND);
-                }
-            } else {
-                Item glyphItem = ArsNouveauAPI.getInstance().getGlyphItemMap().get(abstractSpellPart.getId()).get();
-                RenderUtils.drawItemAsIcon(glyphItem, ms, x, y, 16, !validationErrors.isEmpty());
-            }
+            RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x, y, 16, !validationErrors.isEmpty());
 
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getId())) {

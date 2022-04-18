@@ -57,21 +57,7 @@ public class UnlockGlyphButton extends Button {
         if (visible)
         {
             if(this.spellPart != null) {
-                if(!this.spellPart.isRenderAsIcon()) {
-                    RenderUtils.drawItemAsIcon(this.spellPart.glyphItem, ms, x, y, 16, !playerKnows);
-                }
-                else {
-                    GL11.glEnable(GL11.GL_BLEND);
-                    if (playerKnows) {
-                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    } else {
-                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
-                    }
-
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.spellPart.getIcon()), x, y, 0, 0, 16, 16,16,16 , ms);
-                    RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-                    GL11.glDisable(GL11.GL_BLEND);
-                }
+                RenderUtils.drawSpellPart(this.spellPart, ms, x, y, 16, !playerKnows);
                 if(selected)
                     GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16,16,16 , ms);
             }

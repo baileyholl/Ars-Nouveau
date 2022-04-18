@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.utils;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -22,6 +25,14 @@ import org.lwjgl.opengl.GL11;
 public class RenderUtils {
 
     private static final RenderType TRANSLUCENT = RenderType.entityTranslucent(TextureAtlas.LOCATION_BLOCKS);
+
+    public static void drawSpellPart(AbstractSpellPart objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
+        if(!objectToBeDrawn.isRenderAsIcon()) {
+            RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, renderTransparent);
+        } else {
+            RenderUtils.drawTextureFromResourceLocation(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + objectToBeDrawn.getIcon()), poseStack, positionX, positionY, size, renderTransparent);
+        }
+    }
 
     public static void drawItemAsIcon(Item providedItem, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
@@ -67,8 +78,17 @@ public class RenderUtils {
         return renderType -> new TintedVertexConsumer(buffer.getBuffer(TRANSLUCENT), 1.0f, 1.0f, 1.0f, 0.25f);
     }
 
-    public static void drawTextureFromResourceLocation(Object providedResourceLocation, PoseStack stack, int x, int y, int size) {
-        RenderSystem.setShaderTexture(0, (ResourceLocation) providedResourceLocation);
+    public static void drawTextureFromResourceLocation(ResourceLocation providedResourceLocation, PoseStack stack, int x, int y, int size, boolean renderTransparent) {
+        GL11.glEnable(GL11.GL_BLEND);
+        if (renderTransparent) {
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
+        } else {
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+
+        RenderSystem.setShaderTexture(0, providedResourceLocation);
         GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 }

@@ -165,7 +165,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
-                SpellBook::drawSpellPart,
+                RenderUtils::drawSpellPart,
                 3);
     }
 
@@ -189,14 +189,6 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
             radialMenuSlots.add(new RadialMenuSlot<>(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
         }
         return radialMenuSlots;
-    }
-
-    public static void drawSpellPart(AbstractSpellPart objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size) {
-        if(!objectToBeDrawn.isRenderAsIcon()) {
-            RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, false);
-        } else {
-            RenderUtils.drawTextureFromResourceLocation(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + objectToBeDrawn.getIcon()), poseStack, positionX, positionY, size);
-        }
     }
 
     public static class BookCaster extends SpellCaster {
