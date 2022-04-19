@@ -25,7 +25,7 @@ public class FlightEffect extends MobEffect {
     public void applyEffectTick(LivingEntity entity, int p_76394_2_) {
         super.applyEffectTick(entity, p_76394_2_);
         if(entity instanceof Player){
-            ((Player) entity).abilities.mayfly = ((Player) entity).isCreative() || entity.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() > 2;
+            ((Player) entity).abilities.mayfly = (((Player) entity).isCreative() || entity.isSpectator()) || entity.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() > 2;
         }
     }
 
@@ -34,9 +34,10 @@ public class FlightEffect extends MobEffect {
     public void removeAttributeModifiers(LivingEntity entity, AttributeMap p_111187_2_, int p_111187_3_) {
         super.removeAttributeModifiers(entity, p_111187_2_, p_111187_3_);
         if(entity instanceof Player player){
-            player.abilities.mayfly = player.isCreative();
-            player.abilities.flying = player.isCreative();
-            Networking.sendToPlayer(new PacketUpdateFlight(player.isCreative(), player.isCreative()), player);
+            boolean canFly = player.isCreative() || player.isSpectator();
+            player.abilities.mayfly = canFly;
+            player.abilities.flying = canFly;
+            Networking.sendToPlayer(new PacketUpdateFlight(canFly, canFly), player);
         }
     }
 }
