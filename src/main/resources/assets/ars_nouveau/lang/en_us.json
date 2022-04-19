@@ -1023,5 +1023,11 @@
 	"ars_nouveau.gui.settings": "Settings for Dynamic Lighting",
 	"ars_nouveau.settings.title": "Settings",
 	"ars_nouveau.dynamic_lights.button_on": "Dynamic lights are turned on.  This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine.",
-	"ars_nouveau.dynamic_lights.button_off": "Dynamic lights are turned off."
+	"ars_nouveau.dynamic_lights.button_off": "Dynamic lights are turned off.",
+	"block.ars_nouveau.orange_sbed": "Orange Magebloom Bed",
+	"block.ars_nouveau.blue_sbed": "Blue Magebloom Bed",
+	"block.ars_nouveau.green_sbed": "Green Magebloom Bed",
+	"block.ars_nouveau.purple_sbed": "Purple Magebloom Bed",
+	"block.ars_nouveau.red_sbed": "Red Magebloom Bed",
+	"block.ars_nouveau.yellow_sbed": "Yellow Magebloom Bed"
 }

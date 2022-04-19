@@ -86,6 +86,13 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.AS_GOLD_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_MOSAIC));
         getBuilder(LibBlockNames.AS_GOLD_SLAB).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_SLAB));
         getBuilder(LibBlockNames.AS_GOLD_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_STONE));
+
+        getBuilder(LibBlockNames.RED_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.RED_SBED));
+        getBuilder(LibBlockNames.BLUE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.BLUE_SBED));
+        getBuilder(LibBlockNames.GREEN_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GREEN_SBED));
+        getBuilder(LibBlockNames.YELLOW_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.YELLOW_SBED));
+        getBuilder(LibBlockNames.ORANGE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ORANGE_SBED));
+        getBuilder(LibBlockNames.PURPLE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.PURPLE_SBED));
     }
 
 

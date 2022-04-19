@@ -123,4 +123,13 @@ public class LibBlockNames {
     public static final String WHIRLISPRIG_BLOCK = "whirlisprig_flower";
     public static final String INSCRIPTION_BLOCK = "inscription_table";
     public static final String RELAY_COLLECTOR = "relay_collector";
+
+    public static final String RED_SBED = "red_sbed";
+    public static final String YELLOW_SBED = "yellow_sbed";
+    public static final String GREEN_SBED = "green_sbed";
+    public static final String PURPLE_SBED = "purple_sbed";
+    public static final String BLUE_SBED = "blue_sbed";
+    public static final String ORANGE_SBED = "orange_sbed";
+
+
 }

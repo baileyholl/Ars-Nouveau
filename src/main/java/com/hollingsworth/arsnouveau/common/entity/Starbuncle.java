@@ -800,7 +800,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public enum COLORS {
         ORANGE,
         PURPLE,
-        GREEN
+        GREEN,
+        BLUE,
+        RED,
+        YELLOW
     }
     //TODO: Replace starbuncle serialization with this
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {

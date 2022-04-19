@@ -203,6 +203,12 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.RELAY_COLLECTOR) public static RelayCollectorBlock RELAY_COLLECTOR;
     @ObjectHolder(LibBlockNames.RELAY_COLLECTOR) public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
 
+    @ObjectHolder(LibBlockNames.RED_SBED) public static SummonBed RED_SBED;
+    @ObjectHolder(LibBlockNames.BLUE_SBED) public static SummonBed BLUE_SBED;
+    @ObjectHolder(LibBlockNames.GREEN_SBED) public static SummonBed GREEN_SBED;
+    @ObjectHolder(LibBlockNames.ORANGE_SBED) public static SummonBed ORANGE_SBED;
+    @ObjectHolder(LibBlockNames.YELLOW_SBED) public static SummonBed YELLOW_SBED;
+    @ObjectHolder(LibBlockNames.PURPLE_SBED) public static SummonBed PURPLE_SBED;
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
@@ -312,6 +318,13 @@ public class BlockRegistry {
             registry.register(new SpellPrismBlock(LibBlockNames.SPELL_PRISM));
             registry.register(new WhirlisprigFlower(LibBlockNames.WHIRLISPRIG_BLOCK));
             registry.register(new RelayCollectorBlock(LibBlockNames.RELAY_COLLECTOR));
+
+            registry.register(new SummonBed(LibBlockNames.RED_SBED));
+            registry.register(new SummonBed(LibBlockNames.BLUE_SBED));
+            registry.register(new SummonBed(LibBlockNames.GREEN_SBED));
+            registry.register(new SummonBed(LibBlockNames.ORANGE_SBED));
+            registry.register(new SummonBed(LibBlockNames.YELLOW_SBED));
+            registry.register(new SummonBed(LibBlockNames.PURPLE_SBED));
         }
         static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -567,6 +580,12 @@ public class BlockRegistry {
                     return GenericRenderer.getISTER("source_collector");
                 }
             }.setRegistryName(LibBlockNames.RELAY_COLLECTOR));
+            registry.register(getDefaultBlockItem(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED));
+            registry.register(getDefaultBlockItem(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED));
+            registry.register(getDefaultBlockItem(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED));
+            registry.register(getDefaultBlockItem(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED));
+            registry.register(getDefaultBlockItem(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED));
+            registry.register(getDefaultBlockItem(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

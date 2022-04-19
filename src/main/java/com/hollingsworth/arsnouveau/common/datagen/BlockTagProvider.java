@@ -17,6 +17,7 @@ import java.nio.file.Path;
 public class BlockTagProvider extends BlockTagsProvider {
 
     public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+    public static TagKey<Block> SUMMON_BED =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
@@ -261,6 +262,17 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.SCONCE_BLOCK,
                 BlockRegistry.LIGHT_BLOCK
         );
+
+        this.tag(SUMMON_BED).add(
+                BlockRegistry.RED_SBED,
+                BlockRegistry.GREEN_SBED,
+                BlockRegistry.YELLOW_SBED,
+                BlockRegistry.BLUE_SBED,
+                BlockRegistry.ORANGE_SBED,
+                BlockRegistry.PURPLE_SBED
+        );
+
+
 
     }
     protected Path getPath(ResourceLocation p_126514_) {
