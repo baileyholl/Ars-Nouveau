@@ -24,26 +24,26 @@ public class MethodUnderfoot extends AbstractCastMethod {
 
     @Override
     public void onCast(@Nullable ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.UP, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         LivingEntity caster = context.getPlayer();
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.UP, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.UP, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.UP, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
