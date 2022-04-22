@@ -38,6 +38,6 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
     }
 }

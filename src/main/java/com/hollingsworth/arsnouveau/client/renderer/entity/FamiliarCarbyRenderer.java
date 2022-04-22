@@ -82,7 +82,7 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle
 
         @Override
         public ResourceLocation getAnimationFileLocation(FamiliarStarbuncle carbuncle) {
-            return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
+            return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
         }
 
     }

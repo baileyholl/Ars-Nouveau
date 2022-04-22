@@ -2,8 +2,6 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -15,12 +13,14 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.core.util.Color;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
+import software.bernie.geckolib3.util.RenderUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -61,25 +61,30 @@ public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayer
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+
         matrixStackIn.pushPose();
         EntityModelData entityModelData = new EntityModelData();
-        entityModelData.headPitch = headPitch;
-        entityModelData.netHeadYaw = netHeadYaw;
+//        entityModelData.headPitch = headPitch;
+//        entityModelData.netHeadYaw = netHeadYaw;
         GeoModel model = geoModelProvider.getModel(geoModelProvider.getModelLocation(entity));
         AnimationEvent predicate = new AnimationEvent((IAnimatable)entity, limbSwing, limbSwingAmount, partialTicks, !(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F), Collections.singletonList(entityModelData));
-        IBone carbuncle = ((StarbuncleModel)getEntityModel()).getBone("carbuncle");
-        geoModelProvider.setLivingAnimations((IAnimatable) entity, this.getUniqueID((T) entity), predicate);
+        IBone carbuncle = ((StarbuncleModel)getEntityModel()).getBone("starbuncle");
+//        geoModelProvider.setLivingAnimations((IAnimatable) entity, this.getUniqueID((T) entity), predicate);
         IBone head = ((StarbuncleModel)getEntityModel()).getBone("head");
 
-        matrixStackIn.translate((carbuncle.getPositionX())/32f, (carbuncle.getPositionY())/16f ,
-                (carbuncle.getPositionZ()));
+        RenderUtils.translate((GeoBone) head, matrixStackIn);
+        RenderUtils.moveToPivot((GeoBone) head, matrixStackIn);
+        RenderUtils.rotate((GeoBone) head, matrixStackIn);
 
-//        matrixStackIn.translate((double)0f, (double)0.5f, .2D);
-//        matrixStackIn.scale(0.75f, 0.75f, 0.75f);
-
-        Quaternion quaternion = Vector3f.ZP.rotationDegrees(carbuncle.getRotationZ());
-
-        matrixStackIn.mulPose(quaternion);
+//        matrixStackIn.translate((carbuncle.getPositionX())/32f, (carbuncle.getPositionY())/16f ,
+//                (carbuncle.getPositionZ()));
+//
+////        matrixStackIn.translate((double)0f, (double)0.5f, .2D);
+////        matrixStackIn.scale(0.75f, 0.75f, 0.75f);
+//
+//        Quaternion quaternion = Vector3f.ZP.rotationDegrees(carbuncle.getRotationZ());
+//
+//        matrixStackIn.mulPose(quaternion);
        // matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180f));
 
 
