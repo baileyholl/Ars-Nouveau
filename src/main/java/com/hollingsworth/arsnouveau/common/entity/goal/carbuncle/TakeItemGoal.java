@@ -34,6 +34,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         takePos = null;
         unreachable = false;
         startDistance = 0.0;
+        carbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
     @Override
@@ -45,6 +46,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
             startDistance = BlockUtil.distanceFrom(carbuncle.position, takePos);
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
         }
+        carbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
     }
 
 

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.Block;
 
 public class GoToBedGoal extends Goal {
     int ticksSleeping;
@@ -23,6 +24,14 @@ public class GoToBedGoal extends Goal {
     public void start() {
         super.start();
         unreachable = false;
+        starbuncle.getNavigation().stop();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.RESTING;
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
     @Override
@@ -42,13 +51,16 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if(starbuncle.bedPos == null || starbuncle.getValidTakePos() != null) {
+        if(starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || starbuncle.bedPos == null || starbuncle.getValidTakePos() != null) {
             return false;
         }
         if(!starbuncle.getHeldStack().isEmpty() && starbuncle.getValidStorePos(starbuncle.getHeldStack()) != null) {
             return false;
         }
-
+        Block onBlock = starbuncle.level.getBlockState(new BlockPos(starbuncle.bedPos)).getBlock();
+        if(!(onBlock instanceof SummonBed)) {
+            return false;
+        }
         return !(starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).getBlock() instanceof SummonBed);
     }
 

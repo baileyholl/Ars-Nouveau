@@ -35,6 +35,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
         super.stop();
         storePos = null;
         unreachable = false;
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
     @Override
@@ -45,6 +46,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
             starbuncle.getNavigation().tryMoveToBlockPos(storePos, 1.3);
             startDistance = BlockUtil.distanceFrom(starbuncle.position, storePos);
         }
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.STORING_ITEM;
     }
 
     @Override

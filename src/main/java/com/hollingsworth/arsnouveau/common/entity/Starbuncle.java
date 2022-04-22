@@ -41,6 +41,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -75,6 +76,16 @@ import java.util.*;
 
 public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
+    public enum StarbuncleGoalState{
+        FORAGING,
+        HUNTING_ITEM,
+        TAKING_ITEM,
+        STORING_ITEM,
+        RESTING,
+        NONE
+    }
+    public StarbuncleGoalState goalState;
+
     public List<ItemStack> allowedItems = new ArrayList<>(); // Items the carbuncle is allowed to take
     public List<ItemStack> ignoreItems = new ArrayList<>(); // Items the carbuncle will not take
     public Block pathBlock;
@@ -83,6 +94,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
     public BlockPos bedPos;
+    public boolean isHuntingItem;
 
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
@@ -101,6 +113,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
 
     public BlockPos jukeboxPos;
     public boolean partyCarby;
+    public PathNavigation minecraftPathNav;
 
     AnimationFactory manager = new AnimationFactory(this);
 
@@ -123,6 +136,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public MinecoloniesAdvancedPathNavigate getNavigation() {
         if (this.pathNavigate == null) {
             this.pathNavigate = new MinecoloniesAdvancedPathNavigate(this, this.level);
+            this.minecraftPathNav = this.navigation;
             this.navigation = pathNavigate;
             this.pathNavigate.setCanFloat(true);
             this.pathNavigate.setSwimSpeedFactor(2.0);

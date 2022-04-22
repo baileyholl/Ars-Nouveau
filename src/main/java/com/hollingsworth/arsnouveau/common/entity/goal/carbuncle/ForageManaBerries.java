@@ -34,12 +34,14 @@ public class ForageManaBerries extends Goal {
     public void start() {
         super.start();
         timeSpent = 0;
+        entity.goalState = Starbuncle.StarbuncleGoalState.FORAGING;
     }
 
     @Override
     public void stop() {
         super.stop();
         timeSpent = 0;
+        entity.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
     @Override
@@ -81,8 +83,6 @@ public class ForageManaBerries extends Goal {
     public boolean canContinueToUse() {
         if(pos == null)
             return false;
-      //  entity.getNavigation().tryMoveToBlockPos(pos, 1.3);
-       //Path path = entity.getNavigation().createPath(pos, 0)=
         return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof SourceBerryBush && world.getBlockState(pos).getValue(AGE) == 3;
     }
 
