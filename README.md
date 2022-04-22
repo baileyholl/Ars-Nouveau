@@ -17,6 +17,6 @@ dependencies {
 }
 ```
 Current version: 
- [![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fhollingsworth%2Fars_nouveau%2Fars_nouveau-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/hollingsworth/ars_nouveau/ars_nouveau-1.18.1/)
+ [![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fhollingsworth%2Fars_nouveau%2Fars_nouveau-1.18.2%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/hollingsworth/ars_nouveau/ars_nouveau-1.18.2/)
  
 (remove the v)
