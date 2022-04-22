@@ -272,6 +272,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         this.TO_LIST = new ArrayList<>();
         this.entityData.set(TO_POS_SIZE, 0);
         this.entityData.set(FROM_POS_SIZE, 0);
+        this.pathBlock = null;
+        this.bedPos = null;
         PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.cleared"));
     }
 
