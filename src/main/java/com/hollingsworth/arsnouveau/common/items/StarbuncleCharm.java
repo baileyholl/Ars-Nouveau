@@ -39,8 +39,9 @@ public class StarbuncleCharm extends ModItem{
         carbuncle.allowedItems = data.allowedItems;
         carbuncle.ignoreItems = data.ignoreItems;
         carbuncle.pathBlock = data.pathBlock;
-        carbuncle.getEntityData().set(Starbuncle.TO_POS, data.TO_LIST.size());
-        carbuncle.getEntityData().set(Starbuncle.FROM_POS, data.FROM_LIST.size());
+        carbuncle.bedPos = data.bedPos;
+        carbuncle.getEntityData().set(Starbuncle.TO_POS_SIZE, data.TO_LIST.size());
+        carbuncle.getEntityData().set(Starbuncle.FROM_POS_SIZE, data.FROM_LIST.size());
         carbuncle.setCustomName(data.name);
         if(data.color != null)
             carbuncle.getEntityData().set(COLOR, data.color);

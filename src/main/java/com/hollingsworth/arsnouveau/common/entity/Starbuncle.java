@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.AvoidEntityGoalMC;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
@@ -48,6 +49,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -80,11 +82,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public boolean blacklist;
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
+    public BlockPos bedPos;
 
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
-    public static final EntityDataAccessor<Integer> TO_POS = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> FROM_POS = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TO_POS_SIZE = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FROM_POS_SIZE = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
@@ -141,6 +144,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
         animationData.addAnimationController(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "sleepController", 1, this::sleepPredicate));
     }
 
     @Override
@@ -166,6 +170,15 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     private PlayState animationPredicate(AnimationEvent event) {
         if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
+    }
+
+    private <T extends IAnimatable> PlayState sleepPredicate(AnimationEvent<T> event) {
+        Block onBlock = level.getBlockState(new BlockPos(position)).getBlock();
+        if (!event.isMoving() && (onBlock instanceof BedBlock || onBlock instanceof SummonBed)) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("resting"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -216,6 +229,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             super.tick();
         } catch (NoClassDefFoundError error) {
             System.out.println("Starbuncle threaded pathing failed.");
+            System.out.println(this);
             return;
         }
         if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
@@ -256,8 +270,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         this.blacklist = false;
         this.FROM_LIST = new ArrayList<>();
         this.TO_LIST = new ArrayList<>();
-        this.entityData.set(TO_POS, 0);
-        this.entityData.set(FROM_POS, 0);
+        this.entityData.set(TO_POS_SIZE, 0);
+        this.entityData.set(FROM_POS_SIZE, 0);
         PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.cleared"));
     }
 
@@ -268,6 +282,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
             PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.store"));
             setToPos(storedPos);
+        }
+        if(level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.set_bed"));
+            bedPos = storedPos.immutable();
         }
     }
 
@@ -374,6 +392,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         list.add(new WrappedGoal(2, new ForageManaBerries(this)));
         list.add(new WrappedGoal(3, new StoreItemGoal(this)));
         list.add(new WrappedGoal(3, new TakeItemGoal(this)));
+        list.add(new WrappedGoal(4, new GoToBedGoal(this)));
         list.add(new WrappedGoal(8, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.01F)));
         list.add(new WrappedGoal(8, new NonHoggingLook(this, Mob.class, 3.0F, 0.01f)));
         list.add(new WrappedGoal(0, new FloatGoal(this)));
@@ -487,8 +506,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(TAMED, false);
-        this.entityData.define(TO_POS, 0);
-        this.entityData.define(FROM_POS, 0);
+        this.entityData.define(TO_POS_SIZE, 0);
+        this.entityData.define(FROM_POS_SIZE, 0);
         this.entityData.define(COLOR, COLORS.ORANGE.name());
         this.entityData.define(PATH_BLOCK, "");
     }
@@ -579,12 +598,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         if (tag.contains("color"))
             this.entityData.set(COLOR, tag.getString("color"));
 
-        this.entityData.set(TO_POS, TO_LIST.size());
-        this.entityData.set(FROM_POS, FROM_LIST.size());
+        this.entityData.set(TO_POS_SIZE, TO_LIST.size());
+        this.entityData.set(FROM_POS_SIZE, FROM_LIST.size());
         if (tag.contains("path")) {
             pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
             setPathBlockDesc(new TranslatableComponent(pathBlock.getDescriptionId()).getString());
         }
+        bedPos = NBTUtil.getBlockPos(tag, "bed_");
     }
 
 
@@ -621,6 +641,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         tag.putString("color", this.entityData.get(COLOR));
         if (pathBlock != null)
             tag.putString("path", pathBlock.getRegistryName().toString());
+        NBTUtil.storeBlockPos(tag, "bed_", bedPos);
     }
 
     public void removeGoals() {
@@ -631,8 +652,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public void getTooltip(List<Component> tooltip) {
         if (!isTamed())
             return;
-        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS)));
-        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS)));
+        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS_SIZE)));
+        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS_SIZE)));
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
             tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
@@ -778,13 +799,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public void setFromPos(BlockPos fromPos) {
         if (!this.FROM_LIST.contains(fromPos))
             this.FROM_LIST.add(fromPos.immutable());
-        this.entityData.set(FROM_POS, FROM_LIST.size());
+        this.entityData.set(FROM_POS_SIZE, FROM_LIST.size());
     }
 
     public void setToPos(BlockPos toPos) {
         if (!this.TO_LIST.contains(toPos))
             this.TO_LIST.add(toPos.immutable());
-        this.entityData.set(TO_POS, TO_LIST.size());
+        this.entityData.set(TO_POS_SIZE, TO_LIST.size());
     }
 
     public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};
@@ -812,6 +833,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         public List<ItemStack> allowedItems = new ArrayList<>();
         public List<ItemStack> ignoreItems = new ArrayList<>();
         public Block pathBlock;
+        public BlockPos bedPos;
         public boolean whitelist;
         public boolean blacklist;
 
@@ -844,6 +866,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             }
             allowedItems = NBTUtil.readItems(tag, "allowed_");
             ignoreItems = NBTUtil.readItems(tag, "ignored_");
+            bedPos = NBTUtil.getBlockPos(tag, "bed_");
         }
 
         public CompoundTag toTag(CompoundTag tag){
@@ -867,6 +890,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
                 NBTUtil.writeItems(tag, "ignored_", ignoreItems);
             if (pathBlock != null)
                 tag.putString("path", pathBlock.getRegistryName().toString());
+            NBTUtil.storeBlockPos(tag, "bed_", bedPos);
             return tag;
         }
     }
