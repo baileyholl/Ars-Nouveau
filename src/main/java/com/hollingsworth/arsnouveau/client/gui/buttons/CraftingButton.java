@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
@@ -12,9 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import org.lwjgl.opengl.GL11;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +47,7 @@ public class CraftingButton extends GuiImageButton{
             }
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
             if(this.abstractSpellPart != null) {
-                RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x, y, 16, !validationErrors.isEmpty());
+                RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x + 3, y + 2, 16, !validationErrors.isEmpty());
             }
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
 
