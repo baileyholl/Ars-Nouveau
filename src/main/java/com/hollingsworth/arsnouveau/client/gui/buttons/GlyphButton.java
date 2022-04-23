@@ -1,23 +1,19 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -64,6 +60,11 @@ public class GlyphButton extends Button {
                         tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
                     }
                     if (Screen.hasShiftDown()) {
+                        tip.add(new TranslatableComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                        tip.add(new TranslatableComponent("ars_nouveau.schools"));
+                        for(SpellSchool s : spellPart.spellSchools){
+                            tip.add(s.getTextComponent());
+                        }
                         tip.add(spellPart.getBookDescLang());
                     } else {
                         tip.add(new TranslatableComponent("tooltip.ars_nouveau.hold_shift"));
