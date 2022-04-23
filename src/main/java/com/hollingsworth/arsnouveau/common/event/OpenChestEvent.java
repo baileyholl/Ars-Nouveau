@@ -1,29 +1,32 @@
 package com.hollingsworth.arsnouveau.common.event;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraftforge.common.util.FakePlayer;
 
 public class OpenChestEvent implements ITimedEvent {
-    public FakePlayer fakePlayer;
+    ServerLevel level;
     public int duration;
     public BlockPos pos;
+    FakePlayer fakePlayer;
 
-    public OpenChestEvent(FakePlayer fakePlayer, BlockPos pos, int duration){
-        this.fakePlayer = fakePlayer;
+    public OpenChestEvent(ServerLevel level, BlockPos pos, int duration){
         this.duration = duration;
+        this.level = level;
         this.pos = pos;
+        fakePlayer = ANFakePlayer.getPlayer(level);
     }
 
     public void open(){
-        Level world = fakePlayer.level;
         try {
-            if (world.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
+            if (level.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
+                fakePlayer.level = level;
                 fakePlayer.nextContainerCounter();
-                fakePlayer.containerMenu = chestBlockEntity.createMenu(fakePlayer.containerCounter, fakePlayer.inventory, fakePlayer);
                 fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+                fakePlayer.containerMenu = chestBlockEntity.createMenu(fakePlayer.containerCounter, fakePlayer.inventory, fakePlayer);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -31,9 +34,9 @@ public class OpenChestEvent implements ITimedEvent {
     }
 
     public void attemptClose(){
-        Level world = fakePlayer.level;
         try {
-            if (world.getBlockEntity(pos) instanceof ChestBlockEntity) {
+            if (level.getBlockEntity(pos) instanceof ChestBlockEntity) {
+                fakePlayer.level = level;
                 fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                 fakePlayer.containerMenu = null;
             }

@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -69,10 +68,10 @@ public class TakeItemGoal extends ExtendedRangeGoal {
                 carbuncle.level.playSound(null, carbuncle.getX(), carbuncle.getY(), carbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(), 1.0F, 1.0F);
 
-                if (world instanceof ServerLevel) {
+                if (world instanceof ServerLevel serverLevel) {
                     // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     try {
-                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerLevel) world), takePos, 20);
+                        OpenChestEvent event = new OpenChestEvent(serverLevel, takePos, 20);
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
                     } catch (Throwable ignored) {

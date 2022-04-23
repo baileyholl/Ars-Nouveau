@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -73,10 +72,10 @@ public class StoreItemGoal extends ExtendedRangeGoal {
                 if (left.equals(oldStack)) {
                     return;
                 }
-                if (world instanceof ServerLevel) {
+                if (world instanceof ServerLevel serverLevel) {
                     // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     try {
-                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerLevel) world), storePos, 20);
+                        OpenChestEvent event = new OpenChestEvent(serverLevel, storePos, 20);
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
                     } catch (Throwable ignored) {
