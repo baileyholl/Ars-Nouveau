@@ -90,6 +90,11 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     @Override
     public void tick() {
         super.tick();
+        // Retry the valid position
+        if (this.ticksRunning % 100 == 0 && !carbuncle.isPositionValidTake(takePos)) {
+            takePos = null;
+            return;
+        }
         if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.position(), takePos) <= 2d + this.extendedRange){
             World world = carbuncle.level;
             TileEntity tileEntity = world.getBlockEntity(takePos);

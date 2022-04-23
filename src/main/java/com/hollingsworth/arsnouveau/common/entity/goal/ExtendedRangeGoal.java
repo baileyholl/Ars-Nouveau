@@ -4,8 +4,8 @@ import net.minecraft.entity.ai.goal.Goal;
 
 public class ExtendedRangeGoal extends Goal {
 
-    int ticksRunning;
-    final int ticksPerDistance;
+    public int ticksRunning;
+    public int ticksPerDistance;
     public double startDistance;
     public double extendedRange;
 

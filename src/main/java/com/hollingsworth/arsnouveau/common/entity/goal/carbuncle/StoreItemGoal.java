@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -49,6 +50,12 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     @Override
     public void tick() {
         super.tick();
+        // Retry the valid position
+        if (this.ticksRunning % 100 == 0 && entityCarbuncle.isValidStorePos(storePos, entityCarbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID) {
+            storePos = null;
+            return;
+        }
+
         if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.position(), storePos) <= 2D + this.extendedRange) {
             this.entityCarbuncle.getNavigation().stop();
             World world = entityCarbuncle.level;

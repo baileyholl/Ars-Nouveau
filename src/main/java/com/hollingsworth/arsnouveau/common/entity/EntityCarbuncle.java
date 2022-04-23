@@ -39,6 +39,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -94,6 +95,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public BlockPos jukeboxPos;
     public boolean partyCarby;
+    public PathNavigator minecraftNavigator; // Store a syncronous navigator for checking invalid locations
 
     AnimationFactory manager = new AnimationFactory(this);
 
@@ -116,6 +118,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public MinecoloniesAdvancedPathNavigate getNavigation() {
         if (this.pathNavigate == null) {
             this.pathNavigate = new MinecoloniesAdvancedPathNavigate(this, this.level);
+            this.minecraftNavigator = this.navigation;
             this.navigation = pathNavigate;
             this.pathNavigate.setCanFloat(true);
             this.pathNavigate.setSwimSpeedFactor(2.0);
@@ -673,12 +676,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     public BlockPos getValidStorePos(ItemStack stack) {
-        BlockPos returnPos = null;
         if (TO_LIST == null)
-            return returnPos;
+            return null;
+        BlockPos returnPos = null;
         ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
         for (BlockPos b : TO_LIST) {
-            ItemScroll.SortPref pref = canDepositItem(level.getBlockEntity(b), stack);
+            ItemScroll.SortPref pref = isValidStorePos(b, stack);
             // Pick our highest priority
             if (pref.ordinal() > foundPref.ordinal()) {
                 foundPref = pref;
@@ -688,24 +691,35 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return returnPos;
     }
 
+    public ItemScroll.SortPref isValidStorePos(@Nullable BlockPos b, ItemStack stack) {
+        if(stack == null || stack.isEmpty() || b == null)
+            return ItemScroll.SortPref.INVALID;
+        return canDepositItem(level.getBlockEntity(b), stack);
+    }
+
     public BlockPos getValidTakePos() {
         if (FROM_LIST == null)
             return null;
 
         for (BlockPos p : FROM_LIST) {
-            if (level.getBlockEntity(p) == null)
-                continue;
-
-            IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-            if (iItemHandler == null)
-                continue;
-            for (int j = 0; j < iItemHandler.getSlots(); j++) {
-                if (!iItemHandler.getStackInSlot(j).isEmpty() && isValidItem(iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null) {
-                    return p;
-                }
-            }
+            if(isPositionValidTake(p))
+                return p;
         }
         return null;
+    }
+
+    public boolean isPositionValidTake(BlockPos p) {
+        if(p == null || level.getBlockEntity(p) == null)
+            return false;
+        IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        if (iItemHandler == null)
+            return false;
+        for (int j = 0; j < iItemHandler.getSlots(); j++) {
+            if (!iItemHandler.getStackInSlot(j).isEmpty() && isValidItem(iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -13,8 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Optional;
+import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
 
@@ -44,7 +45,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if(entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.02 || !entity.isValidItem(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)))
+        if(entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !entity.isValidItem(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;
@@ -81,13 +82,16 @@ public class ForageManaBerries extends Goal {
     public boolean canContinueToUse() {
         if(pos == null)
             return false;
-      //  entity.getNavigation().tryMoveToBlockPos(pos, 1.3);
-       //Path path = entity.getNavigation().createPath(pos, 0)=
-        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && world.getBlockState(pos).getValue(AGE) == 3;
+        return timeSpent <= 20 * 15 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && world.getBlockState(pos).getValue(AGE) > 1;
     }
 
     public BlockPos getNearbyManaBerry(){
-        Optional<BlockPos> p = BlockPos.findClosestMatch(entity.blockPosition(), 10,3, (b)-> world.getBlockState(b).getBlock() instanceof ManaBerryBush && world.getBlockState(b).getValue(AGE) == 3);
-        return p.orElse(null);
+        List<BlockPos> posList = new ArrayList<>();
+        for(BlockPos blockpos : BlockPos.withinManhattan(entity.blockPosition(), 10, 3, 10)) {
+            if (world.getBlockState(blockpos).getBlock() instanceof ManaBerryBush && world.getBlockState(blockpos).getValue(AGE) > 1) {
+                posList.add(blockpos.immutable());
+            }
+        }
+        return posList.isEmpty() ? null : posList.get(world.random.nextInt(posList.size()));
     }
 }
