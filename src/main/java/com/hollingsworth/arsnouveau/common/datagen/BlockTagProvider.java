@@ -6,7 +6,9 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
@@ -18,7 +20,6 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
     public static TagKey<Block> SUMMON_BED =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
-
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
     }
@@ -271,7 +272,6 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.ORANGE_SBED,
                 BlockRegistry.PURPLE_SBED
         );
-
 
 
     }

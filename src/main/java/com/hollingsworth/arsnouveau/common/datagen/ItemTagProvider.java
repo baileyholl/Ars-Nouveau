@@ -8,12 +8,16 @@ import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemTagProvider extends ItemTagsProvider {
+    public static TagKey<Item> SUMMON_BED_ITEMS =  ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+
     public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_126530_, p_126531_, modId, existingFileHelper);
     }
@@ -117,5 +121,13 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(ItemTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
         this.tag(ItemTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
         this.tag(ItemTags.WOODEN_PRESSURE_PLATES).add(BlockRegistry.ARCHWOOD_PPlate.asItem());
+
+        this.tag(SUMMON_BED_ITEMS).add( BlockRegistry.RED_SBED.asItem(),
+                BlockRegistry.GREEN_SBED.asItem(),
+                BlockRegistry.YELLOW_SBED.asItem(),
+                BlockRegistry.BLUE_SBED.asItem(),
+                BlockRegistry.ORANGE_SBED.asItem(),
+                BlockRegistry.PURPLE_SBED.asItem());
+
     }
 }

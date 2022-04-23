@@ -35,6 +35,11 @@
       "text": "ars_nouveau.page6.starbuncle_charm",
       "title": "ars_nouveau.pathing",
       "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page7.starbuncle_charm",
+      "title": "ars_nouveau.starbuncle_bed",
+      "type": "patchouli:text"
     }
   ]
 }

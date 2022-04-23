@@ -616,6 +616,34 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(BlockRegistry.BLAZING_SAPLING)
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE)
                     .requires(BlockRegistry.VEXING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_blazin_sapling"));
+
+            shapedBuilder(BlockRegistry.ORANGE_SBED)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', ItemsRegistry.MAGE_FIBER)
+                    .define('y', Items.FEATHER)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.RED_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_RED).save(consumer);
+
+            shapelessBuilder(BlockRegistry.GREEN_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_GREEN).save(consumer);
+
+            shapelessBuilder(BlockRegistry.BLUE_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_BLUE).save(consumer);
+
+            shapelessBuilder(BlockRegistry.PURPLE_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_PURPLE).save(consumer);
+
+            shapelessBuilder(BlockRegistry.YELLOW_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_YELLOW).save(consumer);
+
         }
     }
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {

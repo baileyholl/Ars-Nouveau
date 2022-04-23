@@ -891,6 +891,8 @@
 	"ars_nouveau.page4.starbuncle_charm": "To bind a Starbuncle to place items into a chest, use the dominion wand on the Starbuncle and then the inventory. To take items from an inventory, use the wand on the inventory and then the Starbuncle. Starbuncles will move items between as many inventories as you desire. Looking at a Starbuncle will tell you how many chests are being taken from, and input to. Using the Dominion Wand on a Starbuncle while sneaking will reset them.",
 	"ars_nouveau.page5.starbuncle_charm": "You may dictate where items go and may be picked up by using Item Scrolls or Item Frames. A Starbuncle may be given an Item Scroll: Allow or Deny, and will only pickup and move items respecting that filter. Alternatively, you may place an Item Frame on the inventory a Starbuncle is interacting with. You may either place an Item Scroll or a single item directly on the frame. Starbuncle interacting with that inventory will respect item framed filters.",
 	"ars_nouveau.page6.starbuncle_charm": "Using a block on a Starbuncle will set them to prefer that block for pathing between areas, as long as it is on the way. They will also naturally prefer grass paths.",
+	"ars_nouveau.page7.starbuncle_charm": "Starbuncles may be bound to a Magebloom Bed using the Dominion Wand and will rest on the bed when there are no other tasks to be done. Useful for keeping them out of the way, or returning them to a spot where items drop.",
+	"ars_nouveau.starbuncle_bed": "Resting",
 	"ars_nouveau.page1.whirlisprig_charm": "Whirlisprigs are curious nature sprites that are exclusively found in forested areas. Summoned Whirlisprigs can be given a home in the world, and will begin producing natural materials including wood, crops, seeds, and flowers that exist around them. Wild Whirlisprigs can be befriended and will drop Whirlisprig Shards if a tree is grown near them.",
 	"ars_nouveau.page2.whirlisprig_charm": "Whirlisprigs will follow animals, players, and monsters! They will also grow grass around them every once and a while.",
 	"ars_nouveau.page3.whirlisprig_charm": "To summon a Whirlisprig, use a Whirlisprig charm on any flower. Whirlisprigs consider their home to be 10 blocks in any direction from the flower. Whirlisprigs require source nearby to operate, and will only generate items if there is a chest placed next to the flower. You can get your charm back by using Dispel on a Whirlisprig. They may be given orange, yellow, white, or green dye.",
@@ -1029,5 +1031,8 @@
 	"block.ars_nouveau.green_sbed": "Green Magebloom Bed",
 	"block.ars_nouveau.purple_sbed": "Purple Magebloom Bed",
 	"block.ars_nouveau.red_sbed": "Red Magebloom Bed",
-	"block.ars_nouveau.yellow_sbed": "Yellow Magebloom Bed"
+	"block.ars_nouveau.yellow_sbed": "Yellow Magebloom Bed",
+	"ars_nouveau.starbuncle.set_bed": "Set bed.",
+	"ars_nouveau.summon_bed": "Magebloom Bed",
+	"ars_nouveau.page1.summon_bed": "A decorative bed. Starbuncles can be bound to a bed using the Dominion Wand, and they will rest on the bed when there are no other tasks."
 }
