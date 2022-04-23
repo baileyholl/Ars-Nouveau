@@ -71,7 +71,7 @@ public class RadialMenu<T> {
     }
 
     public void drawIcon(T objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size) {
-        this.drawCallback.accept(objectToBeDrawn, poseStack, positionX, positionY, size);
+        this.drawCallback.accept(objectToBeDrawn, poseStack, positionX, positionY, size, false);
     }
 
     public int getOffset() {
