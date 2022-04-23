@@ -33,7 +33,6 @@ public class FindItem extends Goal {
         destList = new ArrayList<>();
         dest = null;
         stuckTicks = 0;
-        starbuncle.isHuntingItem = false;
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
@@ -43,7 +42,6 @@ public class FindItem extends Goal {
         timeFinding = 0;
         itemStuck = false;
         stuckTicks = 0;
-        starbuncle.isHuntingItem = true;
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.HUNTING_ITEM;
     }
 

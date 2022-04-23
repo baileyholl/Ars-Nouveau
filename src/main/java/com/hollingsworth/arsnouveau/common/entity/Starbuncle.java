@@ -94,7 +94,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
     public BlockPos bedPos;
-    public boolean isHuntingItem;
 
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
