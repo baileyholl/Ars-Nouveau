@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
@@ -50,7 +51,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -163,7 +163,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         if(level.getGameTime() % 20 == 0) {
             if (!(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile)) {
                 if (!level.isClientSide) {
-                    this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel) level)), 99);
+                    this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
                 }
             }
         }

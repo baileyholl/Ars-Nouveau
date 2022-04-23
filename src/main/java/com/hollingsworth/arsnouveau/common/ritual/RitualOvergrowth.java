@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class RitualOvergrowth extends AbstractRitual {
                 boolean didWorkOnce = false;
                 for(BlockPos b : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))){
                     if(rand.nextInt(25) == 0)
-                        if(BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), world, b, FakePlayerFactory.getMinecraft((ServerLevel) world))) {
+                        if(BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), world, b, ANFakePlayer.getPlayer((ServerLevel) world))) {
                             didWorkOnce = true;
                         }
                 }

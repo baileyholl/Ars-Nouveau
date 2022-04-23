@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -11,7 +12,6 @@ import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +37,7 @@ public class RitualHealing extends AbstractRitual {
 
                     if(a.getHealth() < a.getMaxHealth() || a.isInvertedHealAndHarm()) {
                         if(a.isInvertedHealAndHarm()){
-                            FakePlayer player1 = FakePlayerFactory.getMinecraft((ServerLevel) getWorld());
+                            FakePlayer player1 = ANFakePlayer.getPlayer((ServerLevel) getWorld());
                             a.hurt(DamageSource.playerAttack(player1).setMagic(), 10.0f);
                         }else{
                             a.heal(10.0f);

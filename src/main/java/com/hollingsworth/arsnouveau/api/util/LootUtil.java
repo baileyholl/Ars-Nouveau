@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class LootUtil {
 
@@ -43,7 +43,7 @@ public class LootUtil {
         return(new LootContext.Builder(world)).withRandom(world.random)
                 .withParameter(LootContextParams.THIS_ENTITY, slainEntity)
                 .withParameter(LootContextParams.ORIGIN, new Vec3(slainEntity.getX(), slainEntity.getY(), slainEntity.getZ()))
-                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, FakePlayerFactory.getMinecraft(world))
+                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, ANFakePlayer.getPlayer(world))
                 .withParameter(LootContextParams.DAMAGE_SOURCE, source).withOptionalParameter(LootContextParams.KILLER_ENTITY, source.getEntity())
                 .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, source.getDirectEntity())
                 .withParameter(LootContextParams.KILLER_ENTITY, player).withLuck( player instanceof Player ? ((Player)player).getLuck() : 1.0f)

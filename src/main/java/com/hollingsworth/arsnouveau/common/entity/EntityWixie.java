@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
@@ -104,7 +105,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     public void tick() {
         super.tick();
         if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel)level)), 99);
+            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel)level)), 99);
         if(!level.isClientSide && inventoryBackoff > 0){
             inventoryBackoff--;
         }

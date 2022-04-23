@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,7 +18,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +63,7 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity){
-        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter);
+        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
         damageSource.setMagic();
         dealDamage(world, shooter, damage, stats, livingEntity, damageSource);
         ((ServerLevel)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,

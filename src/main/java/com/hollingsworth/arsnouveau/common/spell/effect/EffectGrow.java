@@ -1,9 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public class EffectGrow  extends AbstractEffect {
         for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter,  rayTraceResult.getBlockPos(), rayTraceResult, spellStats)){
             ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
             if(BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel) {
-                BoneMealItem.applyBonemeal(stack, world, blockpos, FakePlayerFactory.getMinecraft((ServerLevel) world));
+                BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer((ServerLevel) world));
             }
         }
     }

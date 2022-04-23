@@ -34,7 +34,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -103,7 +102,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public Player getPlayer(LivingEntity entity, ServerLevel world){
-        return entity instanceof Player ? (Player) entity : FakePlayerFactory.getMinecraft(world);
+        return entity instanceof Player ? (Player) entity : ANFakePlayer.getPlayer(world);
     }
 
     public int getBaseHarvestLevel(SpellStats stats){
@@ -115,7 +114,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void dealDamage(Level world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
-        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter;
+        shooter = shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
 
         if((entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0) || totalDamage <= 0)
@@ -136,7 +135,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public DamageSource buildDamageSource(Level world, LivingEntity shooter){
-        shooter = !(shooter instanceof Player) ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter;
+        shooter = !(shooter instanceof Player) ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
         return DamageSource.playerAttack((Player) shooter);
     }
 

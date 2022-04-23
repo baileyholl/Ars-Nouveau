@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +22,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
@@ -46,7 +45,7 @@ public class EffectInteract extends AbstractEffect {
                 ((Animal) e).mobInteract((Player) shooter, InteractionHand.MAIN_HAND);
 
             }else if (shooter instanceof IInteractResponder){
-                FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerLevel)world);
+                FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel)world);
                 fakePlayer.inventory.clearContent();
                 fakePlayer.setPos(e.getX(), e.getY(), e.getZ());
                 ItemStack stack = ((IInteractResponder) shooter).getHeldItem().copy();
