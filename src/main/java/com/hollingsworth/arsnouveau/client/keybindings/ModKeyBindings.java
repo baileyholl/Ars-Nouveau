@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -21,18 +19,13 @@ public class ModKeyBindings {
 
     private static final String CATEGORY = "key.category.ars_nouveau.general";
 
-    public static final KeyBinding OPEN_BOOK = new KeyBinding("key.ars_nouveau.open_book", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
-    public static final KeyBinding OPEN_SPELL_SELECTION = new KeyBinding("key.ars_nouveau.selection_hud", KeyConflictContext.IN_GAME,
-            InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    public static final KeyBinding OPEN_BOOK = new KeyBinding("key.ars_nouveau.open_book", GLFW.GLFW_KEY_C, CATEGORY);
+    public static final KeyBinding OPEN_SPELL_SELECTION = new KeyBinding("key.ars_nouveau.selection_hud", GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyBinding NEXT_SLOT = new KeyBinding("key.ars_nouveau.next_slot",
-            KeyConflictContext.IN_GAME,
-            InputMappings.Type.KEYSYM,
             GLFW.GLFW_KEY_X,
             CATEGORY);
 
     public static final KeyBinding PREVIOUS__SLOT = new KeyBinding("key.ars_nouveau.previous_slot",
-            KeyConflictContext.IN_GAME,
-            InputMappings.Type.KEYSYM,
             GLFW.GLFW_KEY_Z,
             CATEGORY);
 
