@@ -2,15 +2,11 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.geforcemods.securitycraft.SCContent;
-import net.geforcemods.securitycraft.SecurityCraft;
-import net.geforcemods.securitycraft.api.IModuleInventory;
-import net.geforcemods.securitycraft.blockentities.SecurityCameraBlockEntity;
-import net.geforcemods.securitycraft.blocks.SecurityCameraBlock;
-import net.geforcemods.securitycraft.misc.ModuleType;
-import net.geforcemods.securitycraft.network.client.SetCameraView;
-import net.geforcemods.securitycraft.network.server.GiveNightVision;
-import net.geforcemods.securitycraft.network.server.SetCameraPowered;
+import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
+import com.hollingsworth.arsnouveau.common.block.tile.ScryerCrystalTile;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSetCameraView;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
@@ -31,13 +27,13 @@ import net.minecraftforge.network.PacketDistributor;
  * https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/entity/camera/SecurityCamera.java
  */
 public class ScryerCamera extends Entity {
-    protected final double cameraSpeed;
+    public final double cameraSpeed;
     public int screenshotSoundCooldown;
     protected int redstoneCooldown;
     protected int toggleNightVisionCooldown;
     private boolean shouldProvideNightVision;
-    protected float zoomAmount;
-    protected boolean zooming;
+    public float zoomAmount;
+    public boolean zooming;
     private int viewDistance;
     private boolean loadedChunks;
 
@@ -58,8 +54,7 @@ public class ScryerCamera extends Entity {
     public ScryerCamera(Level level, BlockPos pos) {
         this(ModEntities.SCRYER_CAMERA, level);
         BlockEntity var4 = level.getBlockEntity(pos);
-        if (var4 instanceof SecurityCameraBlockEntity) {
-            SecurityCameraBlockEntity cam = (SecurityCameraBlockEntity)var4;
+        if (var4 instanceof ScryerCrystalTile cam) {
             double x = (double)pos.getX() + 0.5D;
             double y = (double)pos.getY() + 0.5D;
             double z = (double)pos.getZ() + 0.5D;
@@ -81,7 +76,7 @@ public class ScryerCamera extends Entity {
 
     private void setInitialPitchYaw() {
         this.setXRot(30.0F);
-        Direction facing = (Direction)this.level.getBlockState(this.blockPosition()).getValue(SecurityCameraBlock.FACING);
+        Direction facing = (Direction)this.level.getBlockState(this.blockPosition()).getValue(ScryerCrystal.FACING);
         if (facing == Direction.NORTH) {
             this.setYRot(180.0F);
         } else if (facing == Direction.WEST) {
@@ -114,27 +109,27 @@ public class ScryerCamera extends Entity {
                 --this.toggleNightVisionCooldown;
             }
 
-            if (this.shouldProvideNightVision) {
-                SecurityCraft.channel.sendToServer(new GiveNightVision());
-            }
-        } else if (this.level.getBlockState(this.blockPosition()).getBlock() != SCContent.SECURITY_CAMERA.get()) {
+//            if (this.shouldProvideNightVision) {
+//                SecurityCraft.channel.sendToServer(new GiveNightVision());
+//            }
+        } else if (this.level.getBlockState(this.blockPosition()).getBlock() != BlockRegistry.SCRYERS_CRYSTAL) {
             this.discard();
         }
 
     }
 
-    public void toggleRedstonePower() {
-        BlockPos pos = this.blockPosition();
-        if (((IModuleInventory)this.level.getBlockEntity(pos)).hasModule(ModuleType.REDSTONE)) {
-            SecurityCraft.channel.sendToServer(new SetCameraPowered(pos, !(Boolean)this.level.getBlockState(pos).getValue(SecurityCameraBlock.POWERED)));
-        }
-
-    }
-
-    public void toggleNightVision() {
-        this.toggleNightVisionCooldown = 30;
-        this.shouldProvideNightVision = !this.shouldProvideNightVision;
-    }
+//    public void toggleRedstonePower() {
+////        BlockPos pos = this.blockPosition();
+////        if (((IModuleInventory)this.level.getBlockEntity(pos)).hasModule(ModuleType.REDSTONE)) {
+////            SecurityCraft.channel.sendToServer(new SetCameraPowered(pos, !(Boolean)this.level.getBlockState(pos).getValue(SecurityCameraBlock.POWERED)));
+////        }
+//
+//    }
+//
+//    public void toggleNightVision() {
+//        this.toggleNightVisionCooldown = 30;
+//        this.shouldProvideNightVision = !this.shouldProvideNightVision;
+//    }
 
     public float getZoomAmount() {
         return this.zoomAmount;
@@ -142,17 +137,7 @@ public class ScryerCamera extends Entity {
 
     public boolean isCameraDown() {
         BlockEntity var2 = this.level.getBlockEntity(this.blockPosition());
-        boolean var10000;
-        if (var2 instanceof SecurityCameraBlockEntity) {
-            SecurityCameraBlockEntity cam = (SecurityCameraBlockEntity)var2;
-            if (cam.down) {
-                var10000 = true;
-                return var10000;
-            }
-        }
-
-        var10000 = false;
-        return var10000;
+        return var2 instanceof ScryerCrystalTile cam && cam.down;
     }
 
     public void setRotation(float yaw, float pitch) {
@@ -163,9 +148,7 @@ public class ScryerCamera extends Entity {
         if (!this.level.isClientSide) {
             this.discardCamera();
             player.camera = player;
-            SecurityCraft.channel.send(PacketDistributor.PLAYER.with(() -> {
-                return player;
-            }), new SetCameraView(player));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSetCameraView(player));
         }
 
     }
@@ -173,8 +156,7 @@ public class ScryerCamera extends Entity {
     public void discardCamera() {
         if (!this.level.isClientSide) {
             BlockEntity var2 = this.level.getBlockEntity(this.blockPosition());
-            if (var2 instanceof SecurityCameraBlockEntity) {
-                SecurityCameraBlockEntity camBe = (SecurityCameraBlockEntity)var2;
+            if (var2 instanceof ScryerCrystalTile camBe) {
                 camBe.stopViewing();
             }
 
