@@ -96,6 +96,7 @@ public class ModEntities {
     public static EntityType<WealdWalker> ENTITY_BLAZING_WEALD = null;
     public static EntityType<WealdWalker> ENTITY_VEXING_WEALD = null;
     public static EntityType<AmethystGolem> AMETHYST_GOLEM = null;
+    public static EntityType<ScryerCamera> SCRYER_CAMERA = null;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -239,6 +240,9 @@ public class ModEntities {
 
             AMETHYST_GOLEM = build(LibEntityNames.AMETHYST_GOLEM, EntityType.Builder.of(AmethystGolem::new, MobCategory.CREATURE)
                     .sized(1.0f, 1.0f).setTrackingRange(10));
+            SCRYER_CAMERA = build(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
+                    .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -273,7 +277,8 @@ public class ModEntities {
                     ENTITY_BLAZING_WEALD,
                     ENTITY_VEXING_WEALD,
                     ENTITY_FLOURISHING_WEALD,
-                    AMETHYST_GOLEM
+                    AMETHYST_GOLEM,
+                    SCRYER_CAMERA
             );
 
 
