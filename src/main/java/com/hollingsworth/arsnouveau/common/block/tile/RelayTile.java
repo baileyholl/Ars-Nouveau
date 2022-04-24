@@ -142,7 +142,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if(level.getGameTime() % 20 != 0)
             return;
 
-        if(fromPos != null){
+        if(fromPos != null && level.isLoaded(fromPos)){
             // Block has been removed
             if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)){
                 fromPos = null;
@@ -157,16 +157,16 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             }
         }
 
-        if(toPos == null)
-            return;
-        if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)){
-            toPos = null;
-            update();
-            return;
-        }
-        AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
-        if(transferSource(this, toTile) > 0){
-            ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+        if(toPos != null && level.isLoaded(toPos)){
+            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)) {
+                toPos = null;
+                update();
+                return;
+            }
+            AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
+            if (transferSource(this, toTile) > 0) {
+                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+            }
         }
     }
 

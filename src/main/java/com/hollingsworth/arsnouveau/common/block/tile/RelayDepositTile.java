@@ -25,6 +25,8 @@ public class RelayDepositTile extends RelayTile {
             for(BlockPos jarPos : posList) {
                 if(this.getSource() == 0)
                     break;
+                if(!level.isLoaded(jarPos))
+                    continue;
 
                 if (jarPos != null && !jarPos.equals(this.getToPos()) && !jarPos.equals(this.getFromPos()) && level.getBlockEntity(jarPos) instanceof SourceJarTile) {
                     transferSource(this, (ISourceTile) level.getBlockEntity(jarPos));

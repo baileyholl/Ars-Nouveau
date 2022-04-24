@@ -74,6 +74,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / toList.size();
         for(BlockPos toPos : toList){
+            if(!level.isLoaded(toPos))
+                continue;
             if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile)){
                 stale.add(toPos);
                 continue;
