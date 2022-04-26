@@ -106,6 +106,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD, (v) -> new WealdWalkerRenderer(v, "vexing_weald"));
 
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM, AmethystGolemRenderer::new);
+        event.registerEntityRenderer(ModEntities.SCRYER_CAMERA,  renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
 
 
     }

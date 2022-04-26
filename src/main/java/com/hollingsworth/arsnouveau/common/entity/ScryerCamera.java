@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryerCrystalTile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -155,16 +156,16 @@ public class ScryerCamera extends Entity {
 
     public void discardCamera() {
         if (!this.level.isClientSide) {
-            BlockEntity var2 = this.level.getBlockEntity(this.blockPosition());
-            if (var2 instanceof ScryerCrystalTile camBe) {
-                camBe.stopViewing();
+
+            if(level.getBlockEntity(this.blockPosition()) instanceof ICameraMountable camMount){
+                camMount.stopViewing();
             }
 
             SectionPos chunkPos = SectionPos.of(this.blockPosition());
-            int viewDistance = this.viewDistance <= 0 ? this.level.getServer().getPlayerList().getViewDistance() : this.viewDistance;
+            int view = this.viewDistance <= 0 ? this.level.getServer().getPlayerList().getViewDistance() : this.viewDistance;
 
-            for(int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; ++x) {
-                for(int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; ++z) {
+            for(int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; ++x) {
+                for(int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; ++z) {
                     ForgeChunkManager.forceChunk((ServerLevel)this.level, ArsNouveau.MODID, this, x, z, false, false);
                 }
             }

@@ -1,14 +1,17 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ScryerCrystalTile extends ModdedTile implements ITickable {
+public class ScryerCrystalTile extends ModdedTile implements ITickable, ICameraMountable {
     public double cameraRotation = 0.0D;
     public boolean addToRotation = true;
     public boolean down = false;
@@ -57,17 +60,22 @@ public class ScryerCrystalTile extends ModdedTile implements ITickable {
         }
     }
 
+    @Override
+    public void mountCamera(Level level, BlockPos pos, Player player) {
+        ICameraMountable.super.mountCamera(level, pos, player);
+    }
+
+    @Override
     public void startViewing() {
         if (this.playersViewing++ == 0) {
             this.level.setBlockAndUpdate(this.worldPosition, (BlockState)this.getBlockState().setValue(ScryerCrystal.BEING_VIEWED, true));
         }
-
     }
 
+    @Override
     public void stopViewing() {
         if (--this.playersViewing == 0) {
             this.level.setBlockAndUpdate(this.worldPosition, (BlockState)this.getBlockState().setValue(ScryerCrystal.BEING_VIEWED, false));
         }
-
     }
 }
