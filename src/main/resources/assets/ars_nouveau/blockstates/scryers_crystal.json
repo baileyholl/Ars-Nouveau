@@ -1,0 +1,48 @@
+{
+  "variants": {
+	"facing=east,being_viewed=false": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "y": 90
+    },
+    "facing=north,being_viewed=false": {
+      "model": "ars_nouveau:block/scryers_crystal"
+    },
+    "facing=south,being_viewed=false": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "y": 180
+    },
+    "facing=west,being_viewed=false": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "y": 270
+    },
+	  "facing=down,being_viewed=false": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "x": 90
+    }, "facing=up,being_viewed=false": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "x": -90
+    },
+		"facing=east,being_viewed=true": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "y": 90
+    },
+    "facing=north,being_viewed=true": {
+      "model": "ars_nouveau:block/scryers_crystal"
+    },
+    "facing=south,being_viewed=true": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "y": 180
+    },
+    "facing=west,being_viewed=true": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "y": 270
+    },
+	  "facing=down,being_viewed=true": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "x": 90
+    }, "facing=up,being_viewed=true": {
+      "model": "ars_nouveau:block/scryers_crystal",
+      "x": -90
+    }
+  }
+}

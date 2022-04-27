@@ -11,6 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,17 +27,21 @@ import org.jetbrains.annotations.Nullable;
 public class ScryerCrystal extends TickableModBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty BEING_VIEWED = BooleanProperty.create("being_viewed");
+
+    public static VoxelShape SOUTH = box(5, 5, 0, 11, 11, 1);
+    public static VoxelShape NORTH = box(5, 5, 0, 11, 11, 1);
+    public static VoxelShape EAST = box(5, 5, 0, 11, 11, 1);
+    public static VoxelShape WEST = box(5, 5, 0, 11, 11, 1);
+    public static VoxelShape UP = box(5, 5, 0, 11, 11, 1);
+    public static VoxelShape DOWN = box(5, 5, 0, 11, 11, 1);
+
     public ScryerCrystal(Properties properties, String registry) {
         super(properties, registry);
+        this.registerDefaultState((this.stateDefinition.any().setValue(FACING, Direction.NORTH)).setValue(BEING_VIEWED, false));
     }
 
     public ScryerCrystal(String registryName) {
-        super(registryName);
-    }
-
-    public ScryerCrystal(Properties properties) {
-        super(properties);
-        this.registerDefaultState((this.stateDefinition.any().setValue(FACING, Direction.NORTH)).setValue(BEING_VIEWED, false));
+        this(defaultProperties().noOcclusion(), registryName);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -45,6 +50,30 @@ public class ScryerCrystal extends TickableModBlock {
 
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
         return Shapes.empty();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        if(pState.getValue(FACING) == Direction.SOUTH){
+            return SOUTH;
+        }
+        if(pState.getValue(FACING) == Direction.NORTH){
+            return NORTH;
+        }
+        if(pState.getValue(FACING) == Direction.EAST){
+            return EAST;
+        }
+        if(pState.getValue(FACING) == Direction.WEST){
+            return WEST;
+        }
+        if(pState.getValue(FACING) == Direction.UP){
+            return UP;
+        }
+        if(pState.getValue(FACING) == Direction.DOWN){
+            return DOWN;
+        }
+
+        return EAST;
     }
 
     @Nullable
@@ -72,5 +101,8 @@ public class ScryerCrystal extends TickableModBlock {
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getClickedFace());
     }
-
+    @Override
+    public RenderShape getRenderShape(BlockState p_149645_1_) {
+        return RenderShape.MODEL;
+    }
 }

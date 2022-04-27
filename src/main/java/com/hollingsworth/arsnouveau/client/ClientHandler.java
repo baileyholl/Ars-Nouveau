@@ -150,6 +150,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WHIRLISPRIG_FLOWER, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_CRYSTAL, RenderType.cutout());
 //        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.INSCRIPTION_TABLE, RenderType.translucent());
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (item, resourceLocation, livingEntity, arg4) -> {

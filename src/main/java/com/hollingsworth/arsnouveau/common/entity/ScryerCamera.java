@@ -40,7 +40,7 @@ public class ScryerCamera extends Entity {
 
     public ScryerCamera(EntityType<ScryerCamera> type, Level level) {
         super(type, level);
-        this.cameraSpeed = 2.0D;
+        this.cameraSpeed = 3.0d;
         this.screenshotSoundCooldown = 0;
         this.redstoneCooldown = 0;
         this.toggleNightVisionCooldown = 0;
@@ -54,11 +54,10 @@ public class ScryerCamera extends Entity {
 
     public ScryerCamera(Level level, BlockPos pos) {
         this(ModEntities.SCRYER_CAMERA, level);
-        BlockEntity var4 = level.getBlockEntity(pos);
-        if (var4 instanceof ScryerCrystalTile cam) {
-            double x = (double)pos.getX() + 0.5D;
-            double y = (double)pos.getY() + 0.5D;
-            double z = (double)pos.getZ() + 0.5D;
+        if (level.getBlockEntity(pos) instanceof ScryerCrystalTile cam) {
+            double x = pos.getX() + 0.5D;
+            double y = pos.getY() + 0.5D;
+            double z = pos.getZ() + 0.5D;
             if (cam.down) {
                 y += 0.25D;
             }
@@ -76,8 +75,7 @@ public class ScryerCamera extends Entity {
     }
 
     private void setInitialPitchYaw() {
-        this.setXRot(30.0F);
-        Direction facing = (Direction)this.level.getBlockState(this.blockPosition()).getValue(ScryerCrystal.FACING);
+        Direction facing = this.level.getBlockState(this.blockPosition()).getValue(ScryerCrystal.FACING);
         if (facing == Direction.NORTH) {
             this.setYRot(180.0F);
         } else if (facing == Direction.WEST) {
