@@ -29,11 +29,11 @@ public class ScryerCrystal extends TickableModBlock {
     public static final BooleanProperty BEING_VIEWED = BooleanProperty.create("being_viewed");
 
     public static VoxelShape SOUTH = box(5, 5, 0, 11, 11, 1);
-    public static VoxelShape NORTH = box(5, 5, 0, 11, 11, 1);
-    public static VoxelShape EAST = box(5, 5, 0, 11, 11, 1);
-    public static VoxelShape WEST = box(5, 5, 0, 11, 11, 1);
-    public static VoxelShape UP = box(5, 5, 0, 11, 11, 1);
-    public static VoxelShape DOWN = box(5, 5, 0, 11, 11, 1);
+    public static VoxelShape NORTH = box(5, 5, 15, 11, 11, 16);
+    public static VoxelShape EAST = box(0,5,5,1,11,11);
+    public static VoxelShape WEST =  box(15,5,5,16,11,11);
+    public static VoxelShape UP = box(5,0,5,11,1,11);
+    public static VoxelShape DOWN = box(5,15,5,11,16,11);
 
     public ScryerCrystal(Properties properties, String registry) {
         super(properties, registry);
