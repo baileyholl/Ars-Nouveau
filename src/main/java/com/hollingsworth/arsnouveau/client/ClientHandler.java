@@ -63,7 +63,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.WHIRLISPRIG_TILE, WhirlisprigFlowerRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
-        event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_EYE_TILE, ScryerEyeRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_EYE_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
 
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,

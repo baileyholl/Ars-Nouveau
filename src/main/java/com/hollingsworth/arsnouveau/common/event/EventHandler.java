@@ -30,6 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -117,6 +118,11 @@ public class EventHandler {
         if(event.phase == TickEvent.Phase.END){
             ClientInfo.ticksInGame++;
         }
+    }
+
+    @SubscribeEvent
+    public static void clientTickEnd(RenderLevelLastEvent event){
+        ClientInfo.partialTicks = event.getPartialTick();
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
