@@ -5,13 +5,13 @@
       "item": "ars_nouveau:purple_archwood_log"
     },
     {
-      "item": "ars_nouveau:wilden_horn"
+      "tag": "ars_nouveau:wilden_drop"
     },
     {
-      "item": "ars_nouveau:wilden_spike"
+      "tag": "ars_nouveau:wilden_drop"
     },
     {
-      "item": "ars_nouveau:wilden_wing"
+      "tag": "ars_nouveau:wilden_drop"
     },
     {
       "item": "minecraft:lapis_block"

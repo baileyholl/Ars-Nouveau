@@ -17,6 +17,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class ItemTagProvider extends ItemTagsProvider {
     public static TagKey<Item> SUMMON_BED_ITEMS =  ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+    public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(new ResourceLocation("forge:gems/source"));
+    public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(new ResourceLocation("forge:storage_blocks/source"));
+    public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(new ResourceLocation("forge:logs/archwood"));
+    public static TagKey<Item> MAGIC_FOOD = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food"));
+    public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
 
     public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_126530_, p_126531_, modId, existingFileHelper);
@@ -26,20 +31,20 @@ public class ItemTagProvider extends ItemTagsProvider {
     protected void addTags() {
 
 
-        this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food")))
+        this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE,
                         ItemsRegistry.SOURCE_BERRY_ROLL);
         this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
-                .add(Items.DIRT).addTags(Tags.Items.SEEDS);
+                .add(Items.DIRT).addTag(Tags.Items.SEEDS);
 
         this.tag(Tags.Items.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
         this.tag(Tags.Items.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
         this.tag(Tags.Items.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
         this.tag(Tags.Items.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
-        this.tag(ItemTags.create(new ResourceLocation("forge", "gems/source")))
+        this.tag(SOURCE_GEM_TAG)
                 .add(ItemsRegistry.SOURCE_GEM);
 
-        this.tag(ItemTags.create(new ResourceLocation("forge", "logs/archwood")))
+        this.tag(ARCHWOOD_LOG_TAG)
                 .add(BlockRegistry.BLAZING_LOG.asItem(),
                         BlockRegistry.CASCADING_LOG.asItem(),
                         BlockRegistry.VEXING_LOG.asItem(),
@@ -98,7 +103,7 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(Tags.Items.SEEDS)
                 .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());
         this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
-        this.tag(ItemTags.create(new ResourceLocation("forge", "storage_blocks/source")))
+        this.tag(SOURCE_GEM_BLOCK_TAG)
                 .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
         this.tag(Tags.Items.GEMS).add(ItemsRegistry.SOURCE_GEM);
 
@@ -121,6 +126,10 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(ItemTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
         this.tag(ItemTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
         this.tag(ItemTags.WOODEN_PRESSURE_PLATES).add(BlockRegistry.ARCHWOOD_PPlate.asItem());
+
+        this.tag(WILDEN_DROP_TAG).add(ItemsRegistry.WILDEN_HORN,
+                ItemsRegistry.WILDEN_SPIKE,
+                ItemsRegistry.WILDEN_WING);
 
         this.tag(SUMMON_BED_ITEMS).add( BlockRegistry.RED_SBED.asItem(),
                 BlockRegistry.GREEN_SBED.asItem(),
