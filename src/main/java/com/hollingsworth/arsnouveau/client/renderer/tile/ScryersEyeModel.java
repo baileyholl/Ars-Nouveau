@@ -45,7 +45,7 @@ public class ScryersEyeModel extends AnimatedGeoModel<ScryersEyeTile> {
         while(f1 < -(float)Math.PI) {
             f1 += ((float)Math.PI * 2F);
         }
-        float f2 = pBlockEntity.oRot + f1 * ClientInfo.partialTicks - 4.6f;
+        float f2 = pBlockEntity.oRot + f1 * ClientInfo.partialTicks - 4.7f;
         eye.setRotationY(-f2);
         eye.setPositionY((Mth.sin((float) ((ClientInfo.ticksInGame + ClientInfo.partialTicks)/ 10.0f)))/2f);
     }
