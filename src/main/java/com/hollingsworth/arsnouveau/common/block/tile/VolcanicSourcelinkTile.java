@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.datagen.Recipes;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -78,7 +78,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         if(i.getItem() == BlockRegistry.BLAZING_LOG.asItem()){
             source += 100;
             progress += 5;
-        }else if(i.is(Recipes.ARCHWOOD_LOG_TAG)){
+        }else if(i.is(ItemTagProvider.ARCHWOOD_LOG_TAG)){
             source += 50;
             progress += 3;
         }

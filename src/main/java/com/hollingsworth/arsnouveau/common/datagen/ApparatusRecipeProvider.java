@@ -880,7 +880,7 @@ public class ApparatusRecipeProvider implements DataProvider {
         List<Ingredient> reactiveIngredients = new ArrayList<>();
         reactiveIngredients.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
         reactiveIngredients.add(Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
-        reactiveIngredients.add(Ingredient.of(Recipes.SOURCE_GEM_BLOCK_TAG));
+        reactiveIngredients.add(Recipes.SOURCE_GEM_BLOCK);
         addRecipe(new ReactiveEnchantmentRecipe(reactiveIngredients, 3000));
 
         List<Ingredient> spellWriteList = new ArrayList<>();

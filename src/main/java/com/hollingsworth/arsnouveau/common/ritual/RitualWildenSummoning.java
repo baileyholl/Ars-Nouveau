@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.WILDEN_DROP_TAG;
 import static com.hollingsworth.arsnouveau.common.lib.RitualLib.WILDEN_SUMMON;
 
 public class RitualWildenSummoning extends AbstractRitual {
@@ -25,17 +27,11 @@ public class RitualWildenSummoning extends AbstractRitual {
             if(!isBossSpawn()){
                 int wild = rand.nextInt(3);
                 BlockPos summonPos = getPos().above().east(rand.nextInt(3) - rand.nextInt(6)).north(rand.nextInt(3) - rand.nextInt(6));
-                Mob mobEntity;
-                switch (wild){
-                    case 0:
-                        mobEntity = new WildenStalker(getWorld());
-                        break;
-                    case 1:
-                        mobEntity = new WildenGuardian(getWorld());
-                        break;
-                    default:
-                        mobEntity = new WildenHunter(getWorld());
-                }
+                Mob mobEntity = switch (wild) {
+                    case 0 -> new WildenStalker(getWorld());
+                    case 1 -> new WildenGuardian(getWorld());
+                    default -> new WildenHunter(getWorld());
+                };
                 summon(mobEntity, summonPos);
                 if (getProgress() >= 15) {
                     setFinished();
@@ -73,8 +69,7 @@ public class RitualWildenSummoning extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        Item item = stack.getItem();
-        return item == ItemsRegistry.WILDEN_SPIKE || item == ItemsRegistry.WILDEN_WING || item == ItemsRegistry.WILDEN_HORN;
+        return stack.is(WILDEN_DROP_TAG);
     }
 
     @Override

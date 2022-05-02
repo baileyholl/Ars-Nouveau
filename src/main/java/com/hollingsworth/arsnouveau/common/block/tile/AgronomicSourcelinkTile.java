@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
-import com.hollingsworth.arsnouveau.common.datagen.Recipes;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -38,7 +38,7 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
         int mana = 20;
 
-        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_PLANTS)) {
+        if(event.getWorld().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_PLANTS)) {
             mana += 25;
         }
         if(event.getWorld() instanceof Level)
@@ -48,7 +48,7 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     @SubscribeEvent
     public static void treeGrow(SaplingGrowTreeEvent event) {
         int mana = 50;
-        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_SAPLINGS)) {
+        if(event.getWorld().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_SAPLINGS)) {
             mana += 50;
         }
         if(event.getWorld() instanceof Level)
