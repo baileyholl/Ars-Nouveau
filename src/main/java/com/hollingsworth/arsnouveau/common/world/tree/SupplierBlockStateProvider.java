@@ -4,12 +4,20 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 
 public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider{
     public SupplierBlockStateProvider(String path) {
-        super(ArsNouveau.MODID, path);
+        this(ArsNouveau.MODID, path);
     }
+    public SupplierBlockStateProvider(ResourceLocation path) {
+        super(path);
+    }
+    public SupplierBlockStateProvider(String modid, String path) {
+        super(modid, path);
+    }
+
 
     public static final Codec<SupplierBlockStateProvider> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("key").forGetter(d -> d.key.getPath()))
