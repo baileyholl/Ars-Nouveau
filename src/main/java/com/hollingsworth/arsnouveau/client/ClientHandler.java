@@ -98,6 +98,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_JABBERWOG, BookwyrmRenderer::new); //avoid REI crash
         event.registerEntityRenderer( ModEntities.LINGER_SPELL,
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD, (v) -> new WealdWalkerRenderer(v, "cascading_weald"));

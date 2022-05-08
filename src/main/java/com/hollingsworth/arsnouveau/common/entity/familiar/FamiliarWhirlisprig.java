@@ -38,7 +38,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         ItemStack stack = pPlayer.getItemInHand(hand);
         String color = Whirlisprig.getColorFromStack(stack);
         if(color != null && !getColor().equals(color)){
-            this.entityData.set(COLOR, color);
+            setColor(color);
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }
@@ -53,7 +53,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         if(getOwner() != null && getOwner().equals(event.getEntity())) {
             int cost = event.spell.getCastingCost();
             for(AbstractSpellPart part : event.spell.recipe){
-                if(part.getSchools().contains(SpellSchools.ELEMENTAL_EARTH)){
+                if(SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)){
                     cost -= part.getConfigCost() * .5;
                 }
             }
