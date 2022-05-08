@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    runtimeOnly fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-[MC_VERSION]:[VERSION]")
+    implementation fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-[MC_VERSION]:[VERSION]")
 }
 ```
 
