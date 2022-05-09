@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
@@ -59,6 +62,23 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = carbuncle.getHeldStack();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) carbuncle.getOnPos().asLong());
+            stack.popPose();
+            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
+        }
+        if(bone.getName().equals("head")){
+            stack.pushPose();
+            RenderUtils.moveToPivot(bone, stack);
+            RenderUtils.rotate(bone, stack);
+            RenderUtils.translate(bone,stack);
+            //TODO fetch from the Starbuncle instead of being fixed
+            ItemStack itemstack = ItemsRegistry.STARBUNCLE_SHADES.getDefaultInstance();
+            if (itemstack.getItem() instanceof ICosmeticItem cosmetic) {
+                Vec3 t = cosmetic.getTranslations();
+                Vec3 s = cosmetic.getScaling();
+                stack.translate(t.x,t.y,t.z);
+                stack.scale((float) s.x, (float) s.y, (float) s.z);
+                Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) carbuncle.getOnPos().asLong());
+            }
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }

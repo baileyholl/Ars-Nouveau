@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 public class LibItemNames {
 
+    public static final String STARBUNCLE_SHADES = "carbuncle_shades";
     public static final String BLANK_GLYPH = "blank_glyph";
 
     public static final String MAGE_FIBER = "magebloom_fiber";
