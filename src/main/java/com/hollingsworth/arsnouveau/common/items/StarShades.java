@@ -18,7 +18,7 @@ public class StarShades extends ModItem implements ICosmeticItem {
     //scaling applied to the renderer
     @Override
     public Vec3 getScaling() {
-        return new Vec3(0,0,0);
+        return new Vec3(1.0,1.0,1.0);
     }
 
 }

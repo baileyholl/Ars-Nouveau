@@ -540,6 +540,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         return this.getMainHandItem();
     }
 
+    //TODO synced data instead of being fixed
+    public ItemStack getHeadCosmetic(){
+        return ItemsRegistry.STARBUNCLE_SHADES.getDefaultInstance();
+    }
+
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         if (this.isRemoved())

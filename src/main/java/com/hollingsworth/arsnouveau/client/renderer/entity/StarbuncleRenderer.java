@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -70,8 +69,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             RenderUtils.moveToPivot(bone, stack);
             RenderUtils.rotate(bone, stack);
             RenderUtils.translate(bone,stack);
-            //TODO fetch from the Starbuncle instead of being fixed
-            ItemStack itemstack = ItemsRegistry.STARBUNCLE_SHADES.getDefaultInstance();
+            ItemStack itemstack = carbuncle.getHeadCosmetic();
             if (itemstack.getItem() instanceof ICosmeticItem cosmetic) {
                 Vec3 t = cosmetic.getTranslations();
                 Vec3 s = cosmetic.getScaling();
