@@ -599,7 +599,12 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED));
             registry.register(getDefaultBlockItem(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED));
             registry.register(getDefaultBlockItem(BlockRegistry.SCRYERS_CRYSTAL, LibBlockNames.SCRYERS_CRYSTAL));
-            registry.register(getDefaultBlockItem(BlockRegistry.SCRYERS_EYE, LibBlockNames.SCRYERS_EYE));
+            registry.register(new RendererBlockItem(BlockRegistry.SCRYERS_EYE, ItemsRegistry.defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return ScryerEyeRenderer::getISTER;
+                }
+            }.setRegistryName(LibBlockNames.SCRYERS_EYE));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

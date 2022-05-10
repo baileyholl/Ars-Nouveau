@@ -33,6 +33,7 @@ public class PacketMountCamera {
 
     public static void onMessage(PacketMountCamera message, Supplier<NetworkEvent.Context> ctx) {
         (ctx.get()).enqueueWork(() -> {
+            // Resolve serverside
             BlockPos pos = message.pos;
             ServerPlayer player = (ctx.get()).getSender();
             Level level = player.level;

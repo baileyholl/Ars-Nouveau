@@ -130,6 +130,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.WATER_ESSENCE)public static ModItem WATER_ESSENCE;
     @ObjectHolder(LibItemNames.AMETHYST_GOLEM_CHARM)public static AmethystGolemCharm AMETHYST_GOLEM_CHARM;
     @ObjectHolder(LibItemNames.ANNOTATED_CODEX)public static AnnotatedCodex ANNOTATED_CODEX;
+    @ObjectHolder(LibItemNames.SCRYER_SCROLL)public static ScryerScroll SCRYER_SCROLL;
 
     public static FoodProperties SOURCE_BERRY_FOOD = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_PIE_FOOD = (new FoodProperties.Builder()).nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEat().build();
@@ -280,7 +281,8 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new DowsingRod(LibItemNames.DOWSING_ROD),
                     new AmethystGolemCharm().withTooltip(new TranslatableComponent("tooltip.ars_nouveau.amethyst_charm")),
-                    new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX)
+                    new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX),
+                    new ScryerScroll(LibItemNames.SCRYER_SCROLL),
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

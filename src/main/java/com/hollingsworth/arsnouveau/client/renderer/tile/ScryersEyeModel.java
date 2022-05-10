@@ -22,7 +22,7 @@ public class ScryersEyeModel extends AnimatedGeoModel<ScryersEyeTile> {
 
     @Override
     public ResourceLocation getTextureLocation(ScryersEyeTile object) {
-        return object.playerNear ? SQUINTING : IDLE;
+        return object != null && object.playerNear ? SQUINTING : IDLE;
     }
 
     @Override

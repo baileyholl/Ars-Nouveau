@@ -1034,5 +1034,9 @@
 	"block.ars_nouveau.yellow_sbed": "Yellow Magebloom Bed",
 	"ars_nouveau.starbuncle.set_bed": "Set bed.",
 	"ars_nouveau.summon_bed": "Magebloom Bed",
-	"ars_nouveau.page1.summon_bed": "A decorative bed. Starbuncles can be bound to a bed using the Dominion Wand, and they will rest on the bed when there are no other tasks."
+	"ars_nouveau.page1.summon_bed": "A decorative bed. Starbuncles can be bound to a bed using the Dominion Wand, and they will rest on the bed when there are no other tasks.",
+	"block.ars_nouveau.scryers_eye": "Scryer's Eye",
+	"block.ars_nouveau.scryers_crystal": "Scryer's Crystal",
+	"item.ars_nouveau.scryer_scroll": "Scryer's Scroll",
+	"ars_nouveau.scryers_eye.no_pos": "No position set on scroll."
 }

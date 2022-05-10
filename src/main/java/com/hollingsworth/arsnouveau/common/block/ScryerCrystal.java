@@ -84,7 +84,7 @@ public class ScryerCrystal extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pLevel.getBlockEntity(pPos) instanceof ScryerCrystalTile scryerCrystalTile){
+        if(pLevel.getBlockEntity(pPos) instanceof ScryerCrystalTile scryerCrystalTile && pPlayer.getItemInHand(pHand).isEmpty() & pHand == InteractionHand.MAIN_HAND){
             scryerCrystalTile.mountCamera(pLevel, pPos, pPlayer);
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryersEyeTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -32,5 +33,8 @@ public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersEyeTile> {
     public void render(ScryersEyeTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(tile, partialTicks, stack, bufferIn, packedLightIn);
 
+    }
+    public static GenericItemRenderer getISTER(){
+        return new GenericItemRenderer(new ScryersEyeModel());
     }
 }

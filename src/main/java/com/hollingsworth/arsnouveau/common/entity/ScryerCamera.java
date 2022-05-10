@@ -40,7 +40,7 @@ public class ScryerCamera extends Entity {
 
     public ScryerCamera(EntityType<ScryerCamera> type, Level level) {
         super(type, level);
-        this.cameraSpeed = 3.0d;
+        this.cameraSpeed = 3.3d;
         this.screenshotSoundCooldown = 0;
         this.redstoneCooldown = 0;
         this.toggleNightVisionCooldown = 0;
