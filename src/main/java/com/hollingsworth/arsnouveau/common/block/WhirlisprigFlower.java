@@ -9,12 +9,14 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -36,7 +38,7 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
     }
 
     public WhirlisprigFlower(String string) {
-        this(defaultProperties().noOcclusion(), string);
+        this(Block.Properties.of(Material.PLANT).sound(SoundType.SPORE_BLOSSOM).noOcclusion().strength(2.0f, 6.0f), string);
     }
 
     VoxelShape shape = Stream.of(

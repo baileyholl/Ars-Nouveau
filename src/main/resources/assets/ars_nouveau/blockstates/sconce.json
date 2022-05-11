@@ -14,14 +14,6 @@
 		"facing=east": {
 			"model": "ars_nouveau:block/sconce",
 			"y": 90
-		},
-		"facing=up": {
-			"model": "ars_nouveau:block/sconce",
-			"x": -90
-		},
-		"facing=down": {
-			"model": "ars_nouveau:block/sconce",
-			"x": 90
 		}
 	}
 }
