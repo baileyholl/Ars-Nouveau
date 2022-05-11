@@ -72,6 +72,7 @@ public class ScryersEye extends TickableModBlock{
             }
         }
         if(slots.isEmpty()){
+            PortUtil.sendMessage(pPlayer, new TranslatableComponent("ars_nouveau.scryers_eye.no_scrolls"));
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu(new RadialMenu<>((int scroll) -> {

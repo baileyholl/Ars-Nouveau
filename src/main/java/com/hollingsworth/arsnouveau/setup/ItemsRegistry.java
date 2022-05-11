@@ -279,10 +279,10 @@ public class ItemsRegistry {
                     new FireEssence(LibItemNames.FIRE_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.MANIPULATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new DowsingRod(LibItemNames.DOWSING_ROD),
+                    new DowsingRod(LibItemNames.DOWSING_ROD).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.dowsing_rod")),
                     new AmethystGolemCharm().withTooltip(new TranslatableComponent("tooltip.ars_nouveau.amethyst_charm")),
                     new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX),
-                    new ScryerScroll(LibItemNames.SCRYER_SCROLL),
+                    new ScryerScroll(LibItemNames.SCRYER_SCROLL).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.scryer_scroll")),
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

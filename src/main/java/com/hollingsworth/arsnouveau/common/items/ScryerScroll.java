@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -41,11 +41,11 @@ public class ScryerScroll extends ModItem{
 
     @Override
     public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
         ScryerScrollData data = new ScryerScrollData(stack);
         if(data.pos != null) {
-            tooltip2.add(new TextComponent("Pos: " + data.pos.getX() + ", " + data.pos.getY() + ", " + data.pos.getZ()));
+            tooltip2.add(new TranslatableComponent("ars_nouveau.scryer_scroll.bound", data.pos.getX() + ", " + data.pos.getY() + ", " + data.pos.getZ()));
         }
+        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
 
     public static class ScryerScrollData{
