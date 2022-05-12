@@ -376,7 +376,6 @@ public class BlockRegistry {
 
             IForgeRegistry<Item> registry = itemRegistryEvent.getRegistry();
             Item berry = new BlockItem(BlockRegistry.SOURCEBERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)).setRegistryName(LibItemNames.SOURCE_BERRY);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(berry, 0.3f);
             registry.register(berry);
             registry.register(new BlockItem(BlockRegistry.MAGE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.MAGE_BLOCK));
             registry.register(new BlockItem(BlockRegistry.LIGHT_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.LIGHT_BLOCK));
