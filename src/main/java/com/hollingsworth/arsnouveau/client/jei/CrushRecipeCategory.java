@@ -91,8 +91,8 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     public void setIngredients(CrushRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> inputs = new ArrayList<>();
         inputs.add( Arrays.asList(o.input.getItems()));
-        iIngredients.setInputLists(VanillaTypes.ITEM,inputs);
-        iIngredients.setOutputs(VanillaTypes.ITEM, o.outputs.stream().map(c -> c.stack).collect(Collectors.toList()));
+        iIngredients.setInputLists(VanillaTypes.ITEM_STACK,inputs);
+        iIngredients.setOutputs(VanillaTypes.ITEM_STACK, o.outputs.stream().map(c -> c.stack).collect(Collectors.toList()));
     }
 
     @Override
@@ -100,13 +100,14 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
         int index = 0;
         this.outputs = o.outputs;
         recipeLayout.getItemStacks().init(index, true, 6, 5);
-        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM_STACK).get(0));
         index++;
 
-        for(int i = 0; i < ingredients.getOutputs(VanillaTypes.ITEM).size(); i++){
+        for(int i = 0; i < ingredients.getOutputs(VanillaTypes.ITEM_STACK).size(); i++){
             recipeLayout.getItemStacks().init(index, true, 60, 5+ 16 * i);
-            recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(i));
+            recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(i));
             index++;
         }
     }
+
 }

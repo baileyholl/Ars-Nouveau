@@ -59,7 +59,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
     }
 
     @Override
-    public Class getRecipeClass() {
+    public Class<ImbuementRecipe> getRecipeClass() {
         return ImbuementRecipe.class;
     }
 
@@ -91,8 +91,8 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
         for(Ingredient i : o.pedestalItems){
             itemStacks.add(Arrays.asList(i.getItems()));
         }
-        iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        iIngredients.setOutput(VanillaTypes.ITEM, o.output);
+        iIngredients.setInputLists(VanillaTypes.ITEM_STACK, itemStacks);
+        iIngredients.setOutput(VanillaTypes.ITEM_STACK, o.output);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
         recipeLayout.getItemStacks().set(0, Arrays.asList(recipe.input.getItems()));
 
         int index = 1;
-        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM);
+        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM_STACK);
         if(pedestalList.size() > 0) {
             pedestalList = pedestalList.subList(1, pedestalList.size());
             double angleBetweenEach = 360.0 / pedestalList.size();
@@ -115,7 +115,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
             }
         }
         recipeLayout.getItemStacks().init(index, false, 86, 10);
-        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
 
     }
 }

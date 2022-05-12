@@ -90,8 +90,8 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
         for(Ingredient i : o.pedestalItems){
             itemStacks.add(Arrays.asList(i.getItems()));
         }
-        iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        iIngredients.setOutput(VanillaTypes.ITEM, o.result);
+        iIngredients.setInputLists(VanillaTypes.ITEM_STACK, itemStacks);
+        iIngredients.setOutput(VanillaTypes.ITEM_STACK, o.result);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
         recipeLayout.getItemStacks().set(0, Arrays.asList(apparatusRecipe.reagent.getItems()));
 
         int index = 1;
-        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM);
+        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM_STACK);
         if(pedestalList.size() > 0) {
             pedestalList = pedestalList.subList(1, pedestalList.size());
             double angleBetweenEach = 360.0 / pedestalList.size();
@@ -114,7 +114,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
             }
         }
         recipeLayout.getItemStacks().init(index, false, 86, 10);
-        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
     }
 
     public static Vec2 rotatePointAbout(Vec2 in, Vec2 about, double degrees) {

@@ -92,23 +92,23 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
         for(Ingredient i : o.inputs){
             itemStacks.add(Arrays.asList(i.getItems()));
         }
-        iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        iIngredients.setOutput(VanillaTypes.ITEM, o.output);
+        iIngredients.setInputLists(VanillaTypes.ITEM_STACK, itemStacks);
+        iIngredients.setOutput(VanillaTypes.ITEM_STACK, o.output);
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, GlyphRecipe apparatusRecipe, IIngredients ingredients) {
         int index = 0;
-        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM).size();
+        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM_STACK).size();
         Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
-        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM)) {
+        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM_STACK)) {
             recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
             recipeLayout.getItemStacks().set(index, o);
             index += 1;
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
         recipeLayout.getItemStacks().init(index, false, 86, 10);
-        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
     }
 }
