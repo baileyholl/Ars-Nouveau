@@ -12,6 +12,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +41,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     public CrushRecipeCategory(IGuiHelper helper){
         this.helper = helper;
         background = helper.createBlankDrawable(60,50);
-        icon = helper.createDrawableIngredient(new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE)));
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE).getDefaultInstance());
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {
@@ -56,7 +58,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public Class getRecipeClass() {
+    public Class<? extends CrushRecipe> getRecipeClass() {
         return CrushRecipe.class;
     }
 
@@ -76,7 +78,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void draw(CrushRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(CrushRecipe recipe, @Nonnull IRecipeSlotsView slotsView, @Nonnull PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,30, 6);
         Font renderer = Minecraft.getInstance().font;

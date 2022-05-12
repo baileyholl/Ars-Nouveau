@@ -53,13 +53,12 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
 
-
         List<GlyphRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
         List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE);
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for(Recipe i : manager.getRecipes()){
+        for(Recipe<?> i : manager.getRecipes()){
             if(i instanceof GlyphRecipe){
                 recipeList.add((GlyphRecipe) i);
             }

@@ -11,6 +11,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +40,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     public EnchantingApparatusRecipeCategory(IGuiHelper helper){
         this.helper = helper;
         background = helper.createBlankDrawable(114,108);
-        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {
@@ -55,7 +57,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     }
 
     @Override
-    public Class getRecipeClass() {
+    public Class<EnchantingApparatusRecipe> getRecipeClass() {
         return EnchantingApparatusRecipe.class;
     }
 
@@ -75,7 +77,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     }
 
     @Override
-    public void draw(EnchantingApparatusRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(EnchantingApparatusRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         if(recipe.consumesSource())
             renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.sourceCost), 0.0f,100f, 10);
