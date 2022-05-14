@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.camera.CameraController;
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import net.minecraft.client.CameraType;
@@ -60,7 +61,7 @@ public class PacketSetCameraView {
                     OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, false);
                     OverlayRegistry.enableOverlay(ForgeIngameGui.JUMP_BAR_ELEMENT, false);
                     OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, false);
-//                    OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, true);
+                    OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, true);
 //                    OverlayRegistry.enableOverlay(ClientHandler.hotbarBindOverlay, false);
                 }
             }
