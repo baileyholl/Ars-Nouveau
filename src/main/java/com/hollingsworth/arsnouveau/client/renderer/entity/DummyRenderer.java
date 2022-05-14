@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -36,14 +37,13 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
 
 
-    public DummyRenderer(EntityRendererProvider.Context  p_i46103_1_, boolean p_i46103_2_) {
-          super(p_i46103_1_, new PlayerModel(p_i46103_1_.bakeLayer(ModelLayers.PLAYER_SLIM), p_i46103_2_), 0.5F);
-//        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel(0.5F), new HumanoidModel(1.0F)));
-//        this.addLayer(new ItemInHandLayer<>(this));
-//        this.addLayer(new ArrowLayer(this));
-//
-//        this.addLayer(new CustomHeadLayer(this));
-//        this.addLayer(new ElytraLayer<>(this));
+    public DummyRenderer(EntityRendererProvider.Context  context, boolean slim) {
+          super(context, new PlayerModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
+          this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
+          this.addLayer(new ItemInHandLayer<>(this));
+          this.addLayer(new ArrowLayer<>(context,this));
+          this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+          this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
 //        this.addLayer(new SpinAttackEffectLayer<>(this));
 //        this.addLayer(new BeeStingerLayer<>(this));
     }
