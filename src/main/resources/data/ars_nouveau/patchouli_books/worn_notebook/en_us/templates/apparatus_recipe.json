@@ -30,6 +30,7 @@
     },{
       "type": "patchouli:item",
       "item": "#output",
+      "link_recipe": true,
       "framed": true,
       "x": 49,
       "y": 116

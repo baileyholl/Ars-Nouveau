@@ -23,7 +23,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,15 +33,21 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Random;
 
-public class BasicSpellTurret extends TickableModBlock {
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
+public class BasicSpellTurret extends TickableModBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -48,7 +56,7 @@ public class BasicSpellTurret extends TickableModBlock {
 
     public BasicSpellTurret(Properties properties, String registry) {
         super(properties, registry);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
+        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
     }
 
     public BasicSpellTurret() {
@@ -89,7 +97,7 @@ public class BasicSpellTurret extends TickableModBlock {
     }
 
     public void shootSpell(ServerLevel world, BlockPos pos ) {
-        BasicSpellTurretTile tile = (BasicSpellTurretTile) world.getBlockEntity(pos);
+        if (! (world.getBlockEntity(pos) instanceof BasicSpellTurretTile tile)) return;
         ISpellCaster caster = tile.getSpellCaster();
         if(caster.getSpell().isEmpty())
             return;
@@ -148,10 +156,24 @@ public class BasicSpellTurret extends TickableModBlock {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
-    @Nullable
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
+    }
+
+    @Nonnull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+        }
+        return stateIn;
     }
 
     @Override
@@ -178,6 +200,7 @@ public class BasicSpellTurret extends TickableModBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, TRIGGERED);
+        builder.add(WATERLOGGED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -192,4 +215,13 @@ public class BasicSpellTurret extends TickableModBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BasicSpellTurretTile(pos, state);
     }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return shape;
+    }
+
+    //kept is as simple as possible for compat. with other turrets, needed for waterlogged. Does not keep track of turret direction
+    static final VoxelShape shape = Block.box(4.6, 4.6, 4.6, 11.6, 11.6, 11.6);
+
 }

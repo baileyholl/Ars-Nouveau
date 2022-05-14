@@ -74,6 +74,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static StarbuncleCharm STARBUNCLE_CHARM;
     @ObjectHolder("debug")public static Debug debug;
     @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
+    @ObjectHolder(LibItemNames.STARBUNCLE_SHADES)public static ModItem STARBUNCLE_SHADES;
+
     @ObjectHolder(LibItemNames.WHIRLISPRIG_CHARM)public static WhirlisprigCharm WHIRLISPRIG_CHARM;
     @ObjectHolder(LibItemNames.WHIRLISPRIG_SHARDS)public static ModItem WHIRLISPRIG_SHARDS;
     @ObjectHolder(LibItemNames.SOURCE_GEM)public static ModItem SOURCE_GEM;
@@ -150,7 +152,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.DULL_TRINKET).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new ModItem(LibItemNames.BLAZE_FIBER),
                     new ModItem(LibItemNames.END_FIBER),
-                    new CompostableItem(LibItemNames.MAGE_BLOOM, 0.65F).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
+                    new ModItem(LibItemNames.MAGE_BLOOM).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
                     new ModItem(LibItemNames.MAGE_FIBER),
                     new ModItem(LibItemNames.MUNDANE_BELT).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
@@ -178,6 +180,7 @@ public class ItemsRegistry {
                     new WornNotebook().withTooltip(new TranslatableComponent("tooltip.worn_notebook")),
                     new StarbuncleCharm(),
                     new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(new TranslatableComponent("tooltip.starbuncle_shard")),
+                    new StarShades(LibItemNames.STARBUNCLE_SHADES),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override

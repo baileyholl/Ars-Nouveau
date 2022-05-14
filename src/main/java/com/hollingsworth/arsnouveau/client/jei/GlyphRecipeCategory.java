@@ -12,6 +12,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +43,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
     public GlyphRecipeCategory(IGuiHelper helper){
         this.helper = helper;
         background = helper.createBlankDrawable(114,108);
-        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.SCRIBES_BLOCK));
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockRegistry.SCRIBES_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {
@@ -79,7 +81,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
     }
 
     @Override
-    public void draw(GlyphRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(GlyphRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f,100f, 10);
     }
@@ -90,23 +92,23 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
         for(Ingredient i : o.inputs){
             itemStacks.add(Arrays.asList(i.getItems()));
         }
-        iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        iIngredients.setOutput(VanillaTypes.ITEM, o.output);
+        iIngredients.setInputLists(VanillaTypes.ITEM_STACK, itemStacks);
+        iIngredients.setOutput(VanillaTypes.ITEM_STACK, o.output);
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, GlyphRecipe apparatusRecipe, IIngredients ingredients) {
         int index = 0;
-        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM).size();
+        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM_STACK).size();
         Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
-        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM)) {
+        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM_STACK)) {
             recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
             recipeLayout.getItemStacks().set(index, o);
             index += 1;
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
         recipeLayout.getItemStacks().init(index, false, 86, 10);
-        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
     }
 }

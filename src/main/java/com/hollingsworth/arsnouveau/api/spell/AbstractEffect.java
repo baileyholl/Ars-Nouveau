@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -114,21 +115,28 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void dealDamage(Level world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
-        shooter = shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
+        if (!(world instanceof ServerLevel server)) return;
+        shooter = shooter == null ? ANFakePlayer.getPlayer(server) : shooter;
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
 
-        if((entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0) || totalDamage <= 0)
+        SpellDamageEvent event = new SpellDamageEvent(source, shooter, entity, totalDamage);
+        MinecraftForge.EVENT_BUS.post(event);
+
+        source = event.damageSource;
+        totalDamage = event.damage;
+
+        if (entity instanceof LivingEntity living && living.getHealth() <= 0 || totalDamage <= 0 || event.isCanceled())
             return;
 
         entity.hurt(source, totalDamage);
-        Player playerContext = shooter instanceof Player ? (Player) shooter : ANFakePlayer.getPlayer((ServerLevel) world);
-        if(!(entity instanceof LivingEntity mob) )
+        Player playerContext = shooter instanceof Player ? (Player) shooter : ANFakePlayer.getPlayer(server);
+        if (!(entity instanceof LivingEntity mob))
             return;
-        if(mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)){
+        if (mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)){
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack(playerContext));
+            LootContext.Builder lootContext = LootUtil.getLootingContext(server,shooter, mob, looting, DamageSource.playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
-            LootTable loottable = world.getServer().getLootTables().get(lootTable);
+            LootTable loottable = server.getServer().getLootTables().get(lootTable);
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
             items.forEach(mob::spawnAtLocation);
         }

@@ -16,9 +16,13 @@ import java.util.function.Supplier;
 public class StrippableLog extends RotatedPillarBlock {
     Supplier<Block> strippedState;
     public StrippableLog(Properties properties, String registryName, Supplier<Block> stateSupplier) {
+        this(properties,stateSupplier);
+        setRegistryName(registryName);
+    }
+
+    public StrippableLog(Properties properties, Supplier<Block> stateSupplier) {
         super(properties);
         this.strippedState = stateSupplier;
-        setRegistryName(registryName);
     }
 
     @Nullable

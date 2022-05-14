@@ -156,8 +156,8 @@ dependencies {
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
-    compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.5.174:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.5.174")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.0.194:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.0.194")
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
