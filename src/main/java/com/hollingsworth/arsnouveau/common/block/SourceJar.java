@@ -44,13 +44,12 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);
 
     public SourceJar() {
-        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.SOURCE_JAR);
-        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
-
+        this(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.SOURCE_JAR);
     }
 
     public SourceJar(Properties properties, String registryName){
         super(properties, registryName);
+        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
     @Override
