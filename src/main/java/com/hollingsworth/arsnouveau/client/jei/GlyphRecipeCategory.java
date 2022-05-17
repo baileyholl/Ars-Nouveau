@@ -32,6 +32,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.client.jei.EnchantingApparatusRecipeCategory.rotatePointAbout;
 
+@SuppressWarnings("removal")
 public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     public IDrawable background;

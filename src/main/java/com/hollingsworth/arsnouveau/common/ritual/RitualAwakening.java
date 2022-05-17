@@ -35,6 +35,15 @@ public class RitualAwakening extends AbstractRitual {
 
     public void findTargets(Level world){
         for(BlockPos p : BlockPos.betweenClosed(getPos().east(3).south(3).below(1), getPos().west(3).north(3).above(1))){
+
+            //faster check first
+            if(world.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
+                world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+                entity = ModEntities.AMETHYST_GOLEM;
+                foundPos = p;
+                return;
+            }
+
             Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG || b.getBlock() == BlockRegistry.BLAZING_LEAVES);
             if(blazing.size() >= 50){
                 entity = ModEntities.ENTITY_BLAZING_WEALD;
@@ -62,12 +71,6 @@ public class RitualAwakening extends AbstractRitual {
                 entity = ModEntities.ENTITY_CASCADING_WEALD;
                 foundPos = p;
                 destroyTree(world, cascading);
-                return;
-            }
-            if(world.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
-                world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
-                entity = ModEntities.AMETHYST_GOLEM;
-                foundPos = p;
                 return;
             }
 

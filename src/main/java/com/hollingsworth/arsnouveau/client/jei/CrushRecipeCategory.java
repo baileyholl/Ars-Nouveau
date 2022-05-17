@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@SuppressWarnings("removal")
 public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "crush");
 

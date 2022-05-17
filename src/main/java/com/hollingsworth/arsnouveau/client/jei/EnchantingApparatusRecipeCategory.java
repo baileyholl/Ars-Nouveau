@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("removal")
 public class EnchantingApparatusRecipeCategory implements IRecipeCategory<EnchantingApparatusRecipe> {
     public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "apparatus");
 

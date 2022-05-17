@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.client.jei.EnchantingApparatusRecipeCategory.rotatePointAbout;
 
+@SuppressWarnings("removal")
 public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe> {
     public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "imbuement");
 

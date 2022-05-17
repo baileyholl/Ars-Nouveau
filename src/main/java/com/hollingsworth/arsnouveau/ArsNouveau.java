@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +35,8 @@ public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
     public static IProxy proxy = DistExecutor.runForDist(()-> ClientProxy::new, () -> ServerProxy::new);
     public static boolean caelusLoaded = false;
+    public static boolean terrablenderLoaded = false;
+
 
     public static CreativeModeTab itemGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), MODID) {
         @Override
@@ -44,6 +47,7 @@ public class ArsNouveau {
 
     public ArsNouveau(){
         caelusLoaded = ModList.get().isLoaded("caelus");
+        terrablenderLoaded = ModList.get().isLoaded("terrablender");
         APIRegistry.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
@@ -60,13 +64,16 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
-//        event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         //TODO: Restore archwood forest
-        if(false && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
-           // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
+        if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0){
+            event.enqueueWork(Terrablender::registerBiomes);
         }
+
+        /* old
+        event.enqueueWork(WorldEvent::registerFeatures);
+        */
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event){

@@ -125,9 +125,8 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
-    maven {
-        url "https://maven.blamejared.com"
-    }
+    maven { url "https://maven.blamejared.com" }
+    maven { url "https://maven.minecraftforge.net/" }
     maven {
         url "https://www.cursemaven.com"
         content {
@@ -162,6 +161,8 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
     implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.13')
+    implementation /*compileOnly*/ fg.deobf('com.github.glitchfiend:TerraBlender-forge:1.18.2-1.1.0.99')
+
 //    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
     

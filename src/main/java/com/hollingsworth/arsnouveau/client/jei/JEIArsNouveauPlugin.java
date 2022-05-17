@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 @JeiPlugin
+@SuppressWarnings("removal") //TODO Update RecipeCategories to new methods
 public class JEIArsNouveauPlugin implements IModPlugin {
 
     @Override
