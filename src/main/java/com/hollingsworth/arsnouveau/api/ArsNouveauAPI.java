@@ -22,8 +22,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -107,7 +111,21 @@ public class ArsNouveauAPI {
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
         glyphItemMap.put(id, part::getGlyph);
+
+        //register the spell part's config in
+        ForgeConfigSpec spec;
+        ForgeConfigSpec.Builder spellBuilder = new ForgeConfigSpec.Builder();
+        part.buildConfig(spellBuilder);
+        spec = spellBuilder.build();
+        part.CONFIG = spec;
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, part.CONFIG, ArsNouveau.MODID + "/" + part.getId() +".toml");
+
         return spellpartMap.put(id, part);
+    }
+
+    static{
+        //think we just gotta ensure the path exists once
+        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID), ArsNouveau.MODID);
     }
 
     public AbstractSpellPart registerSpell(AbstractSpellPart part){
