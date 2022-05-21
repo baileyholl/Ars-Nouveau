@@ -34,7 +34,7 @@ public class RitualAwakening extends AbstractRitual {
     }
 
     public void findTargets(Level world){
-        for(BlockPos p : BlockPos.betweenClosed(getPos().east(3).south(3).below(1), getPos().west(3).north(3).above(1))){
+        for(BlockPos p : BlockPos.withinManhattan(getPos(), 3, 1, 3)){
             Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG || b.getBlock() == BlockRegistry.BLAZING_LEAVES);
             if(blazing.size() >= 50){
                 entity = ModEntities.ENTITY_BLAZING_WEALD;
