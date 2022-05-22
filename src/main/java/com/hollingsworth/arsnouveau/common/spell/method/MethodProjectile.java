@@ -3,10 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.method;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,7 +51,7 @@ public class MethodProjectile extends AbstractCastMethod {
             projectiles.add(spell);
         }
 
-        float velocity = 1.0f + stats.getBuffCount(AugmentAccelerate.INSTANCE);
+        float velocity = Math.max(0.1f, 1.0f + stats.getAccMultiplier() / 2);
 
         for(EntityProjectileSpell proj : projectiles) {
             proj.shoot(shooter, shooter.xRot, shooter.yRot, 0.0F, velocity, 0.8f);
@@ -140,7 +137,7 @@ public class MethodProjectile extends AbstractCastMethod {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE, AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override

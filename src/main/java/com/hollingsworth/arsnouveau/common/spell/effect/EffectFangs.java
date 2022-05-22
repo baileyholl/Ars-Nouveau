@@ -49,7 +49,7 @@ public class EffectFangs extends AbstractEffect {
         double d0 = Math.min(targetY, shooter.getY());
         double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
         float f = (float)Mth.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
-        int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE);
+        int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE); //no decelerate support atm
         double durationModifier = spellStats.getDurationMultiplier();
         // Create fangs in an AOE around the caster
         if(rayTraceResult instanceof EntityHitResult && shooter.equals(((EntityHitResult) rayTraceResult).getEntity())){

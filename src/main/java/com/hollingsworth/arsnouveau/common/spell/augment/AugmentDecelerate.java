@@ -1,28 +1,28 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 
-public class AugmentAccelerate extends AbstractAugment {
+public class AugmentDecelerate extends AbstractAugment {
 
-    public static AugmentAccelerate INSTANCE = new AugmentAccelerate();
+    public static AugmentDecelerate INSTANCE = new AugmentDecelerate();
 
-    private AugmentAccelerate() {
-        super(GlyphLib.AugmentAccelerateID, "Accelerate");
+    public AugmentDecelerate() {
+        super(GlyphLib.AugmentDecelerateID, "Decelerate");
     }
 
     @Override
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
-        builder.addAccelerationModifier(1.0F);
+        builder.addAccelerationModifier(-0.5F);
         return super.applyModifiers(builder, spellPart);
     }
 
     @Override
     public int getDefaultManaCost() {
-        return 10;
+        return -5;
     }
 
     @Override
@@ -32,6 +32,6 @@ public class AugmentAccelerate extends AbstractAugment {
 
     @Override
     public String getBookDescription() {
-        return "Increases the speed of projectile spells.";
+        return "Decreases the speed of projectile spells.";
     }
 }

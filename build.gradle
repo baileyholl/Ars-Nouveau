@@ -152,7 +152,7 @@ dependencies {
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
 //    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
-//    runtimeOnly fg.deobf("curse.maven:elemental-561470:3753653") // Ars Elemental
+    runtimeOnly fg.deobf("curse.maven:elemental-561470:3791098") // Ars Elemental
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
