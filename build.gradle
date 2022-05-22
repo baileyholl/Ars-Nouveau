@@ -164,7 +164,7 @@ dependencies {
     implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.13')
 //    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
-    runtimeOnly fg.deobf("curse.maven:exp-560595:3721969")
+//    runtimeOnly fg.deobf("curse.maven:exp-560595:3721969") // TMG
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
     runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.18.1-3.0.0.2")
