@@ -47,7 +47,7 @@ public class GlyphUnlockMenu extends BaseBook{
     public List<UnlockGlyphButton> glyphButtons = new ArrayList<>();
     public NoShadowTextField searchBar;
     public String previousString = "";
-    int maxPerPage = 96;
+    int maxPerPage = 78;
     int tier1Row = 0;
     int tier2Row = 0;
     int tier3Row = 0;
@@ -72,7 +72,10 @@ public class GlyphUnlockMenu extends BaseBook{
         this.displayedGlyphs = new ArrayList<>(allParts);
         this.scribesPos = pos;
     }
-
+    SelectableButton all;
+    SelectableButton tier1;
+    SelectableButton tier2;
+    SelectableButton tier3;
     @Override
     public void init() {
         super.init();
@@ -83,12 +86,12 @@ public class GlyphUnlockMenu extends BaseBook{
         searchBar.setBordered(false);
         searchBar.setTextColor(12694931);
         searchBar.onClear = (val) -> {
-            this.onSearchChanged("");
+            this.onSearchChanged("", filterSelected);
             return null;
         };
         if(searchBar.getValue().isEmpty())
             searchBar.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.search").getString());
-        searchBar.setResponder(this::onSearchChanged);
+        searchBar.setResponder((val) -> this.onSearchChanged(val, filterSelected));
         addRenderableWidget(searchBar);
         addRenderableWidget(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
@@ -106,15 +109,15 @@ public class GlyphUnlockMenu extends BaseBook{
             itemButtons.add(cell);
         }
 
-        SelectableButton all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
+        all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
                 new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, new TranslatableComponent("ars_nouveau.all_glyphs").getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.all_glyphs"));
         all.isSelected = true;
-        SelectableButton tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
+        tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
                 new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 1).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 1));
 
-        SelectableButton tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
+        tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
                 new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) ->  this.setFilter(Filter.TIER2, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 2).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 2));
-        SelectableButton tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
+        tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
                 new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) ->  this.setFilter(Filter.TIER3, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 3).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 3));
         filterButtons.add(all);
         filterButtons.add(tier2);
@@ -126,12 +129,14 @@ public class GlyphUnlockMenu extends BaseBook{
     }
 
     public void setFilter(Filter filter, SelectableButton button, String displayTitle){
+        displayedGlyphs = allParts;
         for(SelectableButton b : filterButtons){
             b.isSelected = false;
         }
         this.filterSelected = filter;
         button.isSelected = true;
         this.orderingTitle = displayTitle;
+        onSearchChanged(this.searchBar.value, filterSelected);
         resetPageState();
     }
 
@@ -157,27 +162,24 @@ public class GlyphUnlockMenu extends BaseBook{
         Minecraft.getInstance().setScreen(new GlyphUnlockMenu(scribePos));
     }
 
-    public void onSearchChanged(String str){
-        if(str.equals(previousString))
-            return;
+    public void onSearchChanged(String str, Filter filter){
         previousString = str;
-
         if (!str.isEmpty()) {
             searchBar.setSuggestion("");
             displayedGlyphs = new ArrayList<>();
 
             for (AbstractSpellPart spellPart : allParts) {
-                if (spellPart.getLocaleName().toLowerCase().contains(str.toLowerCase())) {
+                if (spellPart.getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase())) {
                     displayedGlyphs.add(spellPart);
                 }
             }
-            // Set visibility of Cast Methods and Augments
+
             for(Widget w : renderables) {
                 if(w instanceof GlyphButton glyphButton) {
                     if (glyphButton.abstractSpellPart.getId() != null) {
                         AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getId());
                         if (part != null) {
-                            glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
+                            glyphButton.visible = part.getLocaleName().toLowerCase().contains(searchBar.value.toLowerCase());
                         }
                     }
                 }
@@ -192,6 +194,7 @@ public class GlyphUnlockMenu extends BaseBook{
                 }
             }
         }
+        displayedGlyphs = applyFilter(displayedGlyphs);
         resetPageState();
     }
 
@@ -219,12 +222,9 @@ public class GlyphUnlockMenu extends BaseBook{
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
         List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
-        sorted = applyFilter(sorted);
         sorted.sort(COMPARE_TIER_THEN_NAME);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
         int adjustedXPlaced = 0;
-        int totalRowsPlaced = 0;
-        int row_offset = page == 0 ? 2 : 0;
         tier1Row = 0;
         adjustedRowsPlaced++;
         for(int i = 0; i < sorted.size(); i++){
@@ -232,7 +232,7 @@ public class GlyphUnlockMenu extends BaseBook{
 
             if (adjustedXPlaced >= PER_ROW) {
                 adjustedRowsPlaced++;
-                totalRowsPlaced++;
+
                 adjustedXPlaced = 0;
             }
 
