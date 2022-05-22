@@ -34,9 +34,7 @@ public class RitualAwakening extends AbstractRitual {
     }
 
     public void findTargets(Level world){
-        for(BlockPos p : BlockPos.betweenClosed(getPos().east(3).south(3).below(1), getPos().west(3).north(3).above(1))){
-
-            //faster check first
+        for(BlockPos p : BlockPos.withinManhattan(getPos(), 3, 1, 3)){
             if(world.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
                 world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
                 entity = ModEntities.AMETHYST_GOLEM;
