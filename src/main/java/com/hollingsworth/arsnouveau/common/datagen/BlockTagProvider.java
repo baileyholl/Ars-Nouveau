@@ -23,6 +23,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
     public static TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/foliage"));
     public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
+    public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
@@ -273,6 +274,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.ORANGE_SBED,
                 BlockRegistry.PURPLE_SBED
         );
+        this.tag(BREAK_BLACKLIST);
 
 
     }
