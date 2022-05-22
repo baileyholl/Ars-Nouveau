@@ -22,7 +22,7 @@ public class AugmentDecelerate extends AbstractAugment {
 
     @Override
     public int getDefaultManaCost() {
-        return -5;
+        return 5;
     }
 
     @Override
