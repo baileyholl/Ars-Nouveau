@@ -33,7 +33,7 @@ public class MethodOrbit extends AbstractCastMethod {
             wardProjectile.setOwnerID(shooter.getId());
             wardProjectile.setOffset(i);
             wardProjectile.setAccelerates(stats.getBuffCount(AugmentAccelerate.INSTANCE));
-            wardProjectile.setAoe(stats.getBuffCount(AugmentAOE.INSTANCE));
+            wardProjectile.setAoe((float)stats.getAoeMultiplier());
             wardProjectile.extendTimes = stats.getBuffCount(AugmentExtendTime.INSTANCE) - stats.getBuffCount(AugmentDurationDown.INSTANCE);
             wardProjectile.setTotal(total);
             wardProjectile.setColor(resolver.spellContext.colors);

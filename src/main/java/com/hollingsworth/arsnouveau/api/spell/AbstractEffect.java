@@ -293,11 +293,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     protected Set<AbstractAugment> getPotionAugments() {
-        return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentAmplify.INSTANCE);
     }
 
     protected Set<AbstractAugment> getSummonAugments() {
-        return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 }

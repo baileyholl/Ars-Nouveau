@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.MirrorRenderer;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -88,7 +89,10 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
 
     @Override
     public SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
-        return builder.addDurationModifier(1.0D);
+        if(spellPart!= EffectDelay.INSTANCE) {
+            builder.addDurationModifier(1.0D);
+        }
+        return builder;
     }
 
     @Override

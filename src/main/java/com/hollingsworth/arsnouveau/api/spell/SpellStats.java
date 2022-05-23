@@ -27,6 +27,10 @@ public class SpellStats {
 
     private double durationMultiplier;
 
+
+
+    private double aoeMultiplier;
+
     private List<AbstractAugment> augments;
 
     private List<ItemStack> modifierItems;
@@ -51,8 +55,8 @@ public class SpellStats {
     public List<Component> addTooltip(List<Component> components){
         if(this.damageModifier != 0.0d)
             components.add(new TranslatableComponent("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-        if(this.durationMultiplier != 0.0d)
-            components.add(new TranslatableComponent("tooltip.ars_nouveau.duration_modifier", this.durationMultiplier).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
+        if(this.getDurationMultiplier() != 0.0d)
+            components.add(new TranslatableComponent("tooltip.ars_nouveau.duration_modifier", this.getDurationMultiplier()).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
         if(this.amplification != 0.0d)
             components.add(new TranslatableComponent("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
 
@@ -62,6 +66,8 @@ public class SpellStats {
     public double getAmpMultiplier() {
         return amplification;
     }
+
+    public double getAoeMultiplier(){return aoeMultiplier;}
 
     public void setAmpMultiplier(double amplification) {
         this.amplification = amplification;
@@ -75,12 +81,13 @@ public class SpellStats {
         this.damageModifier = damageModifier;
     }
 
+
     public double getDurationMultiplier() {
         return durationMultiplier;
     }
 
     public void setDurationMultiplier(double durationMultiplier) {
-        this.durationMultiplier = durationMultiplier;
+            this.durationMultiplier = durationMultiplier;
     }
 
     public List<AbstractAugment> getAugments() {
@@ -176,8 +183,19 @@ public class SpellStats {
             return this;
         }
 
+        public Builder setAOE(double aoe){
+            spellStats.aoeMultiplier = aoe;
+            return this;
+        }
+
+        public Builder addAOE(double aoe){
+            spellStats.aoeMultiplier += aoe;
+            return this;
+        }
+
+        @Deprecated(forRemoval = true)
         public Builder setDurationModifier(double duration){
-            spellStats.durationMultiplier = duration;
+                spellStats.durationMultiplier = duration;
             return this;
         }
 

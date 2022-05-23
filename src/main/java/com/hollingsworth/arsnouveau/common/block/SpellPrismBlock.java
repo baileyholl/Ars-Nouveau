@@ -38,9 +38,10 @@ public class SpellPrismBlock extends ModBlock {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
-        float velocity = 0.5f + 0.1f * Math.min(2, spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE));
 
-        spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), velocity, 0);
+        //float velocity = 0.5f + 0.1f * Math.min(2, spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE));
+
+        spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), (float) spell.getDeltaMovement().length(), 0);
         for(Direction d : Direction.values()){
             BlockPos adjacentPos = pos.relative(d);
             if(world.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock){

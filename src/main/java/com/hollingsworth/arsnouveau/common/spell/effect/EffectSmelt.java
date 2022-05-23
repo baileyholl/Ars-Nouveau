@@ -40,18 +40,18 @@ public class EffectSmelt extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
-        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
-        int maxItemSmelt = 4 * (1 + aoeBuff + pierceBuff);
+        int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getEntity().blockPosition()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
-        int maxItemSmelt = 4 * (1 + aoeBuff + pierceBuff);
+        int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);

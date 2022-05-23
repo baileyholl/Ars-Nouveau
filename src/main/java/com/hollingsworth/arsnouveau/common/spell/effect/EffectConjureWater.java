@@ -41,8 +41,8 @@ public class EffectConjureWater extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult,aoeBuff, spellStats.getBuffCount(AugmentPierce.INSTANCE));
+        double aoeBuff = spellStats.getAoeMultiplier();
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, aoeBuff, spellStats.getBuffCount(AugmentPierce.INSTANCE));
         if(world.dimensionType().ultraWarm())
             return;
         for(BlockPos pos1 : posList) {

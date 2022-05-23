@@ -31,7 +31,7 @@ public class EffectLinger extends AbstractEffect {
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         Spell newSpell = new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
-        entityLingeringSpell.setAoe(spellStats.getBuffCount(AugmentAOE.INSTANCE));
+        entityLingeringSpell.setAoe((float)spellStats.getAoeMultiplier());
         entityLingeringSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
         entityLingeringSpell.setAccelerates(spellStats.getBuffCount(AugmentAccelerate.INSTANCE));
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
@@ -61,7 +61,7 @@ public class EffectLinger extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+        return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
     @Override
