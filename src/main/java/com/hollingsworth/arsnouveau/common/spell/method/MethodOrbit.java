@@ -32,9 +32,9 @@ public class MethodOrbit extends AbstractCastMethod {
             wardProjectile.wardedEntity = shooter;
             wardProjectile.setOwnerID(shooter.getId());
             wardProjectile.setOffset(i);
-            wardProjectile.setAccelerates(stats.getBuffCount(AugmentAccelerate.INSTANCE));
+            wardProjectile.setAccelerates((int) stats.getAccMultiplier());
             wardProjectile.setAoe(stats.getBuffCount(AugmentAOE.INSTANCE));
-            wardProjectile.extendTimes = stats.getBuffCount(AugmentExtendTime.INSTANCE) - stats.getBuffCount(AugmentDurationDown.INSTANCE);
+            wardProjectile.extendTimes = (int) stats.getDurationMultiplier();
             wardProjectile.setTotal(total);
             wardProjectile.setColor(resolver.spellContext.colors);
             world.addFreshEntity(wardProjectile);
@@ -103,7 +103,7 @@ public class MethodOrbit extends AbstractCastMethod {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAccelerate.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentExtendTime.INSTANCE,
+        return augmentSetOf(AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentExtendTime.INSTANCE,
                 AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
     }
 }
