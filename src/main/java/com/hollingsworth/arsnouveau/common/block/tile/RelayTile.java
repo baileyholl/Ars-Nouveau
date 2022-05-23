@@ -191,13 +191,9 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         super.saveAdditional(tag);
         if(toPos != null) {
             NBTUtil.storeBlockPos(tag, "to", toPos);
-        }else{
-            NBTUtil.removeBlockPos(tag, "to");
         }
         if(fromPos != null) {
             NBTUtil.storeBlockPos(tag, "from", fromPos);
-        }else{
-            NBTUtil.removeBlockPos(tag, "from");
         }
         tag.putBoolean("disabled", disabled);
     }
