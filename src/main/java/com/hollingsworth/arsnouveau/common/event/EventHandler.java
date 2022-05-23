@@ -119,6 +119,7 @@ public class EventHandler {
         }
     }
 
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(TickEvent.PlayerTickEvent event){
         if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT)) {

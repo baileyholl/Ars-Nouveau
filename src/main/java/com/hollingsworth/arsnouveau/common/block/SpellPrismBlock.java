@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDecelerate;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +39,8 @@ public class SpellPrismBlock extends ModBlock {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
-        float velocity = 0.5f + 0.1f * Math.min(2, spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE));
+        float acceleration = (spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE) - spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE) * 0.5F);
+        float velocity = Math.max(0.1f, 0.5f + 0.1f * Math.min(2, acceleration));
 
         spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), velocity, 0);
         for(Direction d : Direction.values()){

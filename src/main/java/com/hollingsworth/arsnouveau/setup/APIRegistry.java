@@ -38,6 +38,7 @@ public class APIRegistry {
         registerSpell(EffectFangs.INSTANCE);
         registerSpell(EffectSummonVex.INSTANCE);
         registerSpell(AugmentAccelerate.INSTANCE);
+        registerSpell(AugmentDecelerate.INSTANCE);
         registerSpell(AugmentSplit.INSTANCE);
         registerSpell(AugmentAmplify.INSTANCE);
         registerSpell(AugmentAOE.INSTANCE);

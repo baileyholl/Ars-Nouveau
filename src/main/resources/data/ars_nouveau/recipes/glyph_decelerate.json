@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:soul_sand"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:cobweb"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:clock"
+      }
+    }
+  ],
+  "exp": 55,
+  "output": "ars_nouveau:glyph_decelerate"
+}
