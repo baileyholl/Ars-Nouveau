@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
@@ -8,6 +9,13 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.geforcemods.securitycraft.util.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -17,15 +25,24 @@ import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraft.client.renderer.entity.WolfRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -63,6 +80,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.WHIRLISPRIG_TILE, WhirlisprigFlowerRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
+        event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_EYE_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
 
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,
@@ -107,10 +125,11 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD, (v) -> new WealdWalkerRenderer(v, "vexing_weald"));
 
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM, AmethystGolemRenderer::new);
+        event.registerEntityRenderer(ModEntities.SCRYER_CAMERA,  renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
 
 
     }
-
+    public static IIngameOverlay cameraOverlay;
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
 //
@@ -150,7 +169,9 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WHIRLISPRIG_FLOWER, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.INSCRIPTION_TABLE, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_CRYSTAL, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_EYE, RenderType.cutout());
+
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
@@ -167,6 +188,9 @@ public class ClientHandler {
                 }
             });
         });
+
+        cameraOverlay = OverlayRegistry.registerOverlayTop("ars_nouveau:camera_overlay", ClientHandler::cameraOverlay);
+        OverlayRegistry.enableOverlay(cameraOverlay, false);
     }
 
     @SubscribeEvent
@@ -187,6 +211,42 @@ public class ClientHandler {
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
                         ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
                         : -1, BlockRegistry.POTION_JAR);
+    }
+
+    public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
+        Minecraft mc = Minecraft.getInstance();
+
+        Level level = mc.level;
+        BlockPos pos = mc.cameraEntity.blockPosition();
+        Window window = mc.getWindow();
+        if (!mc.options.renderDebug) {
+            BlockEntity var10 = level.getBlockEntity(pos);
+            if (var10 instanceof ICameraMountable be) {
+                Font font = Minecraft.getInstance().font;
+                Options settings = Minecraft.getInstance().options;
+                BlockState state = level.getBlockState(pos);
+                TranslatableComponent lookAround = Utils.localize("gui.securitycraft:camera.lookAround", new Object[]{settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage()});
+                TranslatableComponent exit = Utils.localize("gui.securitycraft:camera.exit", new Object[]{settings.keyShift.getTranslatedKeyMessage()});
+                font.drawShadow(pose, lookAround, (float)(window.getGuiScaledWidth() - font.width(lookAround) - 8), (float)(window.getGuiScaledHeight() - 80), 16777215);
+                font.drawShadow(pose, exit, (float)(window.getGuiScaledWidth() - font.width(exit) - 8), (float)(window.getGuiScaledHeight() - 70), 16777215);
+
+//                font.drawShadow(pose, redstone, (float)(window.getGuiScaledWidth() - font.width(redstone) - 8), (float)(window.getGuiScaledHeight() - 40), hasRedstoneModule ? 16777215 : 16724855);
+//                font.drawShadow(pose, REDSTONE_NOTE, (float)(window.getGuiScaledWidth() - font.width(REDSTONE_NOTE) - 8), (float)(window.getGuiScaledHeight() - 30), hasRedstoneModule ? 16777215 : 16724855);
+//                RenderSystem._setShaderTexture(0, CAMERA_DASHBOARD);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//                gui.blit(pose, 5, 0, 0, 0, 90, 20);
+//                gui.blit(pose, window.getGuiScaledWidth() - 70, 5, 190, 0, 65, 30);
+                if (!mc.player.hasEffect(MobEffects.NIGHT_VISION)) {
+//                    gui.blit(pose, 28, 4, 90, 12, 16, 11);
+                } else {
+//                    RenderSystem._setShaderTexture(0, NIGHT_VISION);
+//                    GuiComponent.blit(pose, 27, -1, 0.0F, 0.0F, 18, 18, 18, 18);
+//                    RenderSystem._setShaderTexture(0, CAMERA_DASHBOARD);
+                }
+
+
+            }
+        }
     }
 
 }

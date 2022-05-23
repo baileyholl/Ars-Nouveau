@@ -145,14 +145,6 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.0.36'
     implementation 'org.jetbrains:annotations:20.1.0'
-//    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
-//    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
-//    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
-//    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
-//    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
-//    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
-//    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
-//    runtimeOnly fg.deobf("curse.maven:elemental-561470:3753653") // Ars Elemental
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
@@ -162,9 +154,14 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
     implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.13')
+
 //    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
 //    runtimeOnly fg.deobf("curse.maven:exp-560595:3721969") // TMG
+
+    runtimeOnly fg.deobf("curse.maven:exp-64760:3696873") // Securitycraft
+    compileOnly fg.deobf("curse.maven:exp-64760:3696873")
+
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
     runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.18.1-3.0.0.2")

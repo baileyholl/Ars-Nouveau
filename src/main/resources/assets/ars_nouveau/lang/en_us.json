@@ -1034,5 +1034,13 @@
 	"block.ars_nouveau.yellow_sbed": "Yellow Magebloom Bed",
 	"ars_nouveau.starbuncle.set_bed": "Set bed.",
 	"ars_nouveau.summon_bed": "Magebloom Bed",
-	"ars_nouveau.page1.summon_bed": "A decorative bed. Starbuncles can be bound to a bed using the Dominion Wand, and they will rest on the bed when there are no other tasks."
+	"ars_nouveau.page1.summon_bed": "A decorative bed. Starbuncles can be bound to a bed using the Dominion Wand, and they will rest on the bed when there are no other tasks.",
+	"block.ars_nouveau.scryers_eye": "Scryer's Eye",
+	"block.ars_nouveau.scryers_crystal": "Scryer's Crystal",
+	"item.ars_nouveau.scryer_scroll": "Scryer's Scroll",
+	"ars_nouveau.scryers_eye.no_pos": "No position set on scroll.",
+	"ars_nouveau.scryers_eye.no_scrolls": "No scrolls found nearby. Place a linked Scryer's Scroll on a nearby pedestal.",
+	"ars_nouveau.scryer_scroll.bound": "Bound to %s.",
+	"tooltip.ars_nouveau.scryer_scroll": "Use on a Scryer's Crystal to bind the location to this scroll.",
+	"tooltip.ars_nouveau.dowsing_rod": "Grants Magic Find and Scrying on use, causing magical creatures to glow and Amethyst to be revealed through blocks."
 }

@@ -1,0 +1,16 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"floating": {
+			"loop": true,
+			"bones": {
+				"eye": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time*60)*.50", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
