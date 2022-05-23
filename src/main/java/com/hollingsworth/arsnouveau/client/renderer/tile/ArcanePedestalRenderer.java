@@ -39,9 +39,12 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         }
 
         ItemEntity entityItem = tileEntityIn.entity;
-        x = x + .5;
-        y = y + 0.9;
-        z = z +.5;
-        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer);
+        matrixStack.pushPose();
+        tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
+        entityItem.setYHeadRot(tileEntityIn.frames);
+        entityItem.age = (int) tileEntityIn.frames;
+        Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,matrixStack, iRenderTypeBuffer,i);
+
+        matrixStack.popPose();
     }
 }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,6 +24,7 @@ public class ClientEventHandler
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelLastEvent event)
     {
+        ClientInfo.partialTicks = event.getPartialTick();
         if (DEBUG_DRAW)
         {
             Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
