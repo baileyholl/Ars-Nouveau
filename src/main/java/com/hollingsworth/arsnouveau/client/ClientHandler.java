@@ -9,10 +9,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.geforcemods.securitycraft.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
@@ -28,14 +25,12 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -215,38 +210,31 @@ public class ClientHandler {
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
         Minecraft mc = Minecraft.getInstance();
-
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();
-        Window window = mc.getWindow();
         if (!mc.options.renderDebug) {
             BlockEntity var10 = level.getBlockEntity(pos);
             if (var10 instanceof ICameraMountable be) {
                 Font font = Minecraft.getInstance().font;
                 Options settings = Minecraft.getInstance().options;
-                BlockState state = level.getBlockState(pos);
-                TranslatableComponent lookAround = Utils.localize("gui.securitycraft:camera.lookAround", new Object[]{settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage()});
-                TranslatableComponent exit = Utils.localize("gui.securitycraft:camera.exit", new Object[]{settings.keyShift.getTranslatedKeyMessage()});
-                font.drawShadow(pose, lookAround, (float)(window.getGuiScaledWidth() - font.width(lookAround) - 8), (float)(window.getGuiScaledHeight() - 80), 16777215);
-                font.drawShadow(pose, exit, (float)(window.getGuiScaledWidth() - font.width(exit) - 8), (float)(window.getGuiScaledHeight() - 70), 16777215);
-
-//                font.drawShadow(pose, redstone, (float)(window.getGuiScaledWidth() - font.width(redstone) - 8), (float)(window.getGuiScaledHeight() - 40), hasRedstoneModule ? 16777215 : 16724855);
-//                font.drawShadow(pose, REDSTONE_NOTE, (float)(window.getGuiScaledWidth() - font.width(REDSTONE_NOTE) - 8), (float)(window.getGuiScaledHeight() - 30), hasRedstoneModule ? 16777215 : 16724855);
-//                RenderSystem._setShaderTexture(0, CAMERA_DASHBOARD);
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-//                gui.blit(pose, 5, 0, 0, 0, 90, 20);
-//                gui.blit(pose, window.getGuiScaledWidth() - 70, 5, 190, 0, 65, 30);
-                if (!mc.player.hasEffect(MobEffects.NIGHT_VISION)) {
-//                    gui.blit(pose, 28, 4, 90, 12, 16, 11);
-                } else {
-//                    RenderSystem._setShaderTexture(0, NIGHT_VISION);
-//                    GuiComponent.blit(pose, 27, -1, 0.0F, 0.0F, 18, 18, 18, 18);
-//                    RenderSystem._setShaderTexture(0, CAMERA_DASHBOARD);
-                }
-
-
+                TranslatableComponent lookAround = localize("ars_nouveau.camera.move", new Object[]{settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage()});
+                TranslatableComponent exit = localize("ars_nouveau.camera.exit", new Object[]{settings.keyShift.getTranslatedKeyMessage()});
+                font.drawShadow(pose,lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40 , 0xFFFFFF);
+                font.drawShadow(pose,exit, 10, mc.getWindow().getGuiScaledHeight() - 30 , 0xFFFFFF);
             }
         }
+    }
+
+    public static TranslatableComponent localize(String key, Object... params) {
+        for(int i = 0; i < params.length; ++i) {
+            Object var5 = params[i];
+            if (var5 instanceof TranslatableComponent) {
+                TranslatableComponent component = (TranslatableComponent)var5;
+                params[i] = localize(component.getKey(), component.getArgs());
+            }
+        }
+
+        return new TranslatableComponent(key, params);
     }
 
 }

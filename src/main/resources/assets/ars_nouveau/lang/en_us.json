@@ -1044,5 +1044,7 @@
 	"ars_nouveau.scryers_eye.no_scrolls": "No scrolls found nearby. Place a linked Scryer's Scroll on a nearby pedestal.",
 	"ars_nouveau.scryer_scroll.bound": "Bound to %s.",
 	"tooltip.ars_nouveau.scryer_scroll": "Use on a Scryer's Crystal to bind the location to this scroll.",
-	"tooltip.ars_nouveau.dowsing_rod": "Grants Magic Find and Scrying on use, causing magical creatures to glow and Amethyst to be revealed through blocks."
+	"tooltip.ars_nouveau.dowsing_rod": "Grants Magic Find and Scrying on use, causing magical creatures to glow and Amethyst to be revealed through blocks.",
+	"ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
+	"ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit"
 }
