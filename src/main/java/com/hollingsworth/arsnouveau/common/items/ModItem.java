@@ -47,10 +47,6 @@ public class ModItem extends Item {
         return rarity != null ? rarity : super.getRarity(stack);
     }
 
-    public ItemStack getStack(){
-        return new ItemStack(this);
-    }
-
     /**
      * allows items to add custom lines of information to the mouseover description
      */

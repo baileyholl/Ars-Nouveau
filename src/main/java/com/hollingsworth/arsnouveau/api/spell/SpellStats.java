@@ -23,6 +23,8 @@ import java.util.List;
 public class SpellStats {
     private double amplification;
 
+    private float acceleration;
+
     private double damageModifier;
 
     private double durationMultiplier;
@@ -71,6 +73,14 @@ public class SpellStats {
 
     public void setAmpMultiplier(double amplification) {
         this.amplification = amplification;
+    }
+
+    public float getAccMultiplier() {
+        return acceleration;
+    }
+
+    public void setAccMultiplier(float acceleration){
+        this.acceleration = acceleration;
     }
 
     public double getDamageModifier() {
@@ -201,6 +211,16 @@ public class SpellStats {
 
         public Builder addDurationModifier(double duration){
             spellStats.durationMultiplier += duration;
+            return this;
+        }
+
+        public Builder setAccelerationModifier(float acceleration){
+            spellStats.acceleration = acceleration;
+            return this;
+        }
+
+        public Builder addAccelerationModifier(float acceleration){
+            spellStats.acceleration += acceleration;
             return this;
         }
 

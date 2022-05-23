@@ -5,17 +5,23 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
-    "light.LevelRendererMixin",
-    "light.LightEntityMixin",
+    "camera.ClientChunkCacheMixin",
+    "camera.LevelRendererMixin",
+    "camera.MinecraftMixin",
+    "light.ClientMixin",
     "light.EntityRendererMixin",
-    "light.ClientMixin"
+    "light.LevelRendererMixin",
+    "light.LightEntityMixin"
   ],
   "mixins": [
+    "ExpInvokerMixin",
+    "PotionRecipeMixin",
+    "camera.ChunkMapMixin",
+    "camera.PlayerListMixin",
+    "camera.TrackedEntityMixin",
     "elytra.ClientElytraMixin",
     "elytra.ElytraPlayerMixin",
-    "ExpInvokerMixin",
-    "elytra.MixinLivingEntity",
-    "PotionRecipeMixin"
+    "elytra.MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

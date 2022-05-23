@@ -11,5 +11,6 @@ public class ClientInfo {
 
     public static CompoundTag persistentData = new CompoundTag();
     public static int ticksInGame = 0;
+    public static float partialTicks = 0.0f;
     public static List<BlockPos> scryingPositions = new ArrayList<>();
 }

@@ -45,6 +45,7 @@ public class GlyphRecipeProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
 
         add(get(AugmentAccelerate.INSTANCE).withItem(Items.POWERED_RAIL).withItem(Items.SUGAR).withItem(Items.CLOCK));
+        add(get(AugmentDecelerate.INSTANCE).withItem(Items.SOUL_SAND).withItem(Items.COBWEB).withItem(Items.CLOCK));
         add(get(AugmentAmplify.INSTANCE).withItem(Items.DIAMOND_PICKAXE));
         add(get(AugmentAOE.INSTANCE).withItem(Items.FIREWORK_STAR));
         add(get(AugmentDampen.INSTANCE).withItem(Items.NETHER_BRICK));
