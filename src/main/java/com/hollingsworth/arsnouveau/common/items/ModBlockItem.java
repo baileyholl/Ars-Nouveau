@@ -1,13 +1,12 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -15,29 +14,20 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModItem extends Item {
+public class ModBlockItem extends BlockItem {
     public List<Component> tooltip = new ArrayList<>();
     public Rarity rarity;
 
-    public ModItem(Properties properties) {
-        super(properties);
+    public ModBlockItem(Block pBlock, Properties pProperties) {
+        super(pBlock, pProperties);
     }
 
-    public ModItem(Properties properties, String registryName){
-        this(properties);
-        setRegistryName(ArsNouveau.MODID, registryName);
-    }
-
-    public ModItem(String registryName){
-        this(ItemsRegistry.defaultItemProperties(), registryName);
-    }
-
-    public ModItem withTooltip(Component tip){
+    public ModBlockItem withTooltip(Component tip){
         tooltip.add(tip);
         return this;
     }
 
-    public ModItem withRarity(Rarity rarity){
+    public ModBlockItem withRarity(Rarity rarity){
         this.rarity = rarity;
         return this;
     }

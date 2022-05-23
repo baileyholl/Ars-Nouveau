@@ -6,14 +6,18 @@ import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
+import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -603,11 +607,11 @@ public class BlockRegistry {
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                     return ScryerEyeRenderer::getISTER;
                 }
-            }.setRegistryName(LibBlockNames.SCRYERS_EYE));
+            }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.scryers_eye").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))).setRegistryName(LibBlockNames.SCRYERS_EYE));
         }
 
-        public static Item getDefaultBlockItem(Block block, String registry){
-            return new BlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
+        public static ModBlockItem getDefaultBlockItem(Block block, String registry){
+            return (ModBlockItem) new ModBlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
         }
 
         @SubscribeEvent
