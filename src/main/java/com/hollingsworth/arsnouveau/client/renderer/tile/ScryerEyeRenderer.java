@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
-import com.hollingsworth.arsnouveau.common.block.tile.ScryersEyeTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersEyeTile> {
+public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersOculusTile> {
     ScryersEyeModel model;
     public ScryerEyeRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, ScryersEyeModel model) {
         super(rendererDispatcherIn, model);
@@ -20,7 +20,7 @@ public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersEyeTile> {
     }
 
     @Override
-    public void render(GeoModel model, ScryersEyeTile pBlockEntity, float pPartialTick, RenderType type, PoseStack pPoseStack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void render(GeoModel model, ScryersOculusTile pBlockEntity, float pPartialTick, RenderType type, PoseStack pPoseStack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         super.render(model, pBlockEntity, pPartialTick, type, pPoseStack, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
@@ -30,7 +30,7 @@ public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersEyeTile> {
     }
 
     @Override
-    public void render(ScryersEyeTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(ScryersOculusTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(tile, partialTicks, stack, bufferIn, packedLightIn);
 
     }

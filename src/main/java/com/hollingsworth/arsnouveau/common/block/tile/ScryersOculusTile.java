@@ -14,7 +14,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Random;
 
-public class ScryersEyeTile extends ModdedTile implements IAnimatable, ITickable {
+public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITickable {
     public int time;
     public float flip;
     public float oFlip;
@@ -27,12 +27,12 @@ public class ScryersEyeTile extends ModdedTile implements IAnimatable, ITickable
     public float tRot;
     public boolean playerNear;
     private static final Random RANDOM = new Random();
-    public ScryersEyeTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public ScryersOculusTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
-    public ScryersEyeTile(BlockPos pos, BlockState state) {
-        this(BlockRegistry.SCRYERS_EYE_TILE, pos, state);
+    public ScryersOculusTile(BlockPos pos, BlockState state) {
+        this(BlockRegistry.SCRYERS_OCULUS_TILE, pos, state);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ScryersEyeTile extends ModdedTile implements IAnimatable, ITickable
         }
     }
 
-    public static void bookAnimationTick(Level pLevel, BlockPos pPos, BlockState pState, ScryersEyeTile pBlockEntity) {
+    public static void bookAnimationTick(Level pLevel, BlockPos pPos, BlockState pState, ScryersOculusTile pBlockEntity) {
         pBlockEntity.oOpen = pBlockEntity.open;
         pBlockEntity.oRot = pBlockEntity.rot;
         Player player = pLevel.getNearestPlayer((double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, 5.0D, false);

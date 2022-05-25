@@ -132,6 +132,6 @@ public class LibBlockNames {
     public static final String ORANGE_SBED = "orange_sbed";
 
 
-    public static final String SCRYERS_EYE = "scryers_eye";
+    public static final String SCRYERS_OCULUS = "scryers_oculus";
     public static final String SCRYERS_CRYSTAL = "scryers_crystal";
 }

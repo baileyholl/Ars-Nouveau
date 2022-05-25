@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -897,6 +898,14 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withResult(BlockRegistry.RELAY_COLLECTOR)
                 .withReagent(BlockRegistry.RELAY)
                 .withPedestalItem(4,Ingredient.of(Tags.Items.CHESTS))
+                .build());
+
+        addRecipe(builder().withResult(BlockRegistry.SCRYERS_OCULUS)
+                .withReagent(Items.ENDER_EYE)
+                .withPedestalItem(Blocks.OBSERVER)
+                .withPedestalItem(Items.SPYGLASS)
+                .withPedestalItem(Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .build());
     }
 

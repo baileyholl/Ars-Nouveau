@@ -615,6 +615,9 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(BlockRegistry.YELLOW_SBED)
                     .requires(ItemTagProvider.SUMMON_BED_ITEMS)
                     .requires(Tags.Items.DYES_YELLOW).save(consumer);
+            shapelessBuilder(BlockRegistry.SCRYERS_CRYSTAL)
+                    .requires(Items.ENDER_EYE)
+                    .requires(Recipes.SOURCE_GEM).save(consumer);
 
         }
     }
