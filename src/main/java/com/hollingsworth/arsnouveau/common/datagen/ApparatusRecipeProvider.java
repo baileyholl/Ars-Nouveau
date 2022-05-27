@@ -631,7 +631,7 @@ public class ApparatusRecipeProvider implements DataProvider {
 
 
         addRecipe(builder()
-                .withPedestalItem(2, ItemsRegistry.WATER_ESSENCE)
+                .withPedestalItem(1, ItemsRegistry.WATER_ESSENCE)
                 .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.RESPIRATION, 1, 3000));
         addRecipe(builder()
@@ -650,7 +650,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 2, 3500));
 

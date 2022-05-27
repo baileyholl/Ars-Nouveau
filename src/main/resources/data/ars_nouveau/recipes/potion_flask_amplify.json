@@ -50,5 +50,6 @@
   "output": {
     "item": "ars_nouveau:potion_flask_amplify"
   },
-  "sourceCost": 0
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
 }
