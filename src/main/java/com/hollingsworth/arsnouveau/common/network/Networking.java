@@ -182,6 +182,11 @@ public class Networking {
                 PacketSetCameraView::encode,
                 PacketSetCameraView::decode,
                 PacketSetCameraView::onMessage);
+        INSTANCE.registerMessage(nextID(),
+                PacketSyncLitEntities.class,
+                PacketSyncLitEntities::toBytes,
+                PacketSyncLitEntities::new,
+                PacketSyncLitEntities::handle);
 
     }
 
