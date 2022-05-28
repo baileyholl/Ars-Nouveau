@@ -89,9 +89,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
 
     @Override
     public SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
-        if(spellPart!= EffectDelay.INSTANCE) {
-            builder.addDurationModifier(1.0D);
-        }
+        builder.addDurationModifier(1.0D);
         return builder;
     }
 
