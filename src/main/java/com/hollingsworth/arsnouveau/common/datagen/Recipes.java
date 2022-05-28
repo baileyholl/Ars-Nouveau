@@ -619,6 +619,8 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.ENDER_EYE)
                     .requires(Recipes.SOURCE_GEM).save(consumer);
 
+            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
+            shapelessBuilder(ItemsRegistry.SPELL_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
         }
     }
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {

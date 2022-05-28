@@ -425,7 +425,7 @@ public class PatchouliProvider implements DataProvider {
                 , getPath(AUTOMATION, "summon_bed"));
 
         addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
-        addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_OCULUS));
+        addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
         addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, new CraftingPage(ItemsRegistry.SCRYER_SCROLL));
     }
 
