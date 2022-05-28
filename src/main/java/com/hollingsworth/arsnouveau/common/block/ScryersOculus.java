@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.hollingsworth.arsnouveau.common.block.tile.ScryersEyeTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import com.hollingsworth.arsnouveau.common.items.ScryerScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketMountCamera;
@@ -31,16 +31,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScryersEye extends TickableModBlock{
-    public ScryersEye(Properties properties, String registry) {
+public class ScryersOculus extends TickableModBlock{
+    public ScryersOculus(Properties properties, String registry) {
         super(properties, registry);
     }
 
-    public ScryersEye(String registryName) {
+    public ScryersOculus(String registryName) {
         this(defaultProperties().noOcclusion(), registryName);
     }
 
-    public ScryersEye(Properties properties) {
+    public ScryersOculus(Properties properties) {
         super(properties);
     }
 
@@ -88,6 +88,6 @@ public class ScryersEye extends TickableModBlock{
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ScryersEyeTile(pPos ,pState);
+        return new ScryersOculusTile(pPos ,pState);
     }
 }

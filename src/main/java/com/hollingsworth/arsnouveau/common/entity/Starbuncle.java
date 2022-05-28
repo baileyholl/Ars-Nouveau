@@ -174,7 +174,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
 
     private PlayState dancePredicate(AnimationEvent event) {
         if (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master2"));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -283,6 +283,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         this.blacklist = false;
         this.FROM_LIST = new ArrayList<>();
         this.TO_LIST = new ArrayList<>();
+        this.allowedItems = new ArrayList<>();
+        this.ignoreItems = new ArrayList<>();
         this.entityData.set(TO_POS_SIZE, 0);
         this.entityData.set(FROM_POS_SIZE, 0);
         this.pathBlock = null;

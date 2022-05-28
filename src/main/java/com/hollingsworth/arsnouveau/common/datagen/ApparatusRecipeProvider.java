@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -630,7 +631,7 @@ public class ApparatusRecipeProvider implements DataProvider {
 
 
         addRecipe(builder()
-                .withPedestalItem(2, ItemsRegistry.WATER_ESSENCE)
+                .withPedestalItem(1, ItemsRegistry.WATER_ESSENCE)
                 .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.RESPIRATION, 1, 3000));
         addRecipe(builder()
@@ -649,7 +650,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 2, 3500));
 
@@ -897,6 +898,14 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withResult(BlockRegistry.RELAY_COLLECTOR)
                 .withReagent(BlockRegistry.RELAY)
                 .withPedestalItem(4,Ingredient.of(Tags.Items.CHESTS))
+                .build());
+
+        addRecipe(builder().withResult(BlockRegistry.SCRYERS_OCULUS)
+                .withReagent(Items.ENDER_EYE)
+                .withPedestalItem(Blocks.OBSERVER)
+                .withPedestalItem(Items.SPYGLASS)
+                .withPedestalItem(Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .build());
     }
 

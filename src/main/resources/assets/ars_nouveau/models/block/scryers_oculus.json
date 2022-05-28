@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+	"textures": {
+    "all": "ars_nouveau:blocks/scryers_eye_idle"
+  }
+}

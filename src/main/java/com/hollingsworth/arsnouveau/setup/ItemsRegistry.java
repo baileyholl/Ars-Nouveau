@@ -82,7 +82,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static AllowItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static DenyItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.MIMIC_ITEM_SCROLL)public static MimicItemScroll MIMIC_ITEM_SCROLL;
-    @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
+    @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static BlankParchmentItem BLANK_PARCHMENT;
     @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
@@ -216,7 +216,7 @@ public class ItemsRegistry {
                     new AllowItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new DenyItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new MimicItemScroll(LibItemNames.MIMIC_ITEM_SCROLL),
-                    new ModItem(LibItemNames.BLANK_PARCHMENT),
+                    new BlankParchmentItem(LibItemNames.BLANK_PARCHMENT),
                     new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslatableComponent("tooltip.wixie_shard")),
                     new Wand(),
                     new VoidJar(),

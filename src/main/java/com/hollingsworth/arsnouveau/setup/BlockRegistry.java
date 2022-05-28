@@ -216,8 +216,8 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
-    @ObjectHolder(LibBlockNames.SCRYERS_EYE) public static ScryersEye SCRYERS_EYE;
-    @ObjectHolder(LibBlockNames.SCRYERS_EYE) public static BlockEntityType<ScryersEyeTile> SCRYERS_EYE_TILE;
+    @ObjectHolder(LibBlockNames.SCRYERS_OCULUS) public static ScryersOculus SCRYERS_OCULUS;
+    @ObjectHolder(LibBlockNames.SCRYERS_OCULUS) public static BlockEntityType<ScryersOculusTile> SCRYERS_OCULUS_TILE;
 
     @ObjectHolder(LibBlockNames.SCRYERS_CRYSTAL) public static ScryerCrystal SCRYERS_CRYSTAL;
     @ObjectHolder(LibBlockNames.SCRYERS_CRYSTAL) public static BlockEntityType<ScryerCrystalTile> SCRYER_CRYSTAL_TILE;
@@ -335,7 +335,7 @@ public class BlockRegistry {
             registry.register(new SummonBed(LibBlockNames.ORANGE_SBED));
             registry.register(new SummonBed(LibBlockNames.YELLOW_SBED));
             registry.register(new SummonBed(LibBlockNames.PURPLE_SBED));
-            registry.register(new ScryersEye(LibBlockNames.SCRYERS_EYE));
+            registry.register(new ScryersOculus(LibBlockNames.SCRYERS_OCULUS));
             registry.register(new ScryerCrystal(LibBlockNames.SCRYERS_CRYSTAL));
         }
         static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
@@ -382,7 +382,7 @@ public class BlockRegistry {
             registry.register(BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             registry.register(BlockEntityType.Builder.of(WhirlisprigTile::new, BlockRegistry.WHIRLISPRIG_FLOWER).build(null).setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
             registry.register(BlockEntityType.Builder.of(RelayCollectorTile::new, BlockRegistry.RELAY_COLLECTOR).build(null).setRegistryName(LibBlockNames.RELAY_COLLECTOR));
-            registry.register(BlockEntityType.Builder.of(ScryersEyeTile::new, BlockRegistry.SCRYERS_EYE).build(null).setRegistryName(LibBlockNames.SCRYERS_EYE));
+            registry.register(BlockEntityType.Builder.of(ScryersOculusTile::new, BlockRegistry.SCRYERS_OCULUS).build(null).setRegistryName(LibBlockNames.SCRYERS_OCULUS));
             registry.register(BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null).setRegistryName(LibBlockNames.SCRYERS_CRYSTAL));
 
         }
@@ -602,12 +602,12 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED));
             registry.register(getDefaultBlockItem(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED));
             registry.register(getDefaultBlockItem(BlockRegistry.SCRYERS_CRYSTAL, LibBlockNames.SCRYERS_CRYSTAL));
-            registry.register(new RendererBlockItem(BlockRegistry.SCRYERS_EYE, ItemsRegistry.defaultItemProperties()) {
+            registry.register(new RendererBlockItem(BlockRegistry.SCRYERS_OCULUS, ItemsRegistry.defaultItemProperties()) {
                 @Override
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                     return ScryerEyeRenderer::getISTER;
                 }
-            }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.scryers_eye").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))).setRegistryName(LibBlockNames.SCRYERS_EYE));
+            }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))).setRegistryName(LibBlockNames.SCRYERS_OCULUS));
         }
 
         public static ModBlockItem getDefaultBlockItem(Block block, String registry){
