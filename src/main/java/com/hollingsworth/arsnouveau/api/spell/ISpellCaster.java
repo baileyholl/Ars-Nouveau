@@ -132,20 +132,20 @@ public interface ISpellCaster {
 
 
         if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
-            resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn);
-            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
+            if(resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn))
+                playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
             UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
-            resolver.onCastOnBlock(context);
-            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
+            if(resolver.onCastOnBlock(context))
+                playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        resolver.onCast(stack,playerIn,worldIn);
-        playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
+        if(resolver.onCast(stack,playerIn,worldIn))
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
