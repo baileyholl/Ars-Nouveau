@@ -32,7 +32,7 @@ public class EffectFlare extends AbstractEffect {
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        int range = 3 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double range = 3 + spellStats.getAoeMultiplier();
         int fireSec = (int) (5.0 + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
         DamageSource source =  buildDamageSource(world, shooter).setIsFire();
         if(livingEntity.isOnFire()){
@@ -40,7 +40,7 @@ public class EffectFlare extends AbstractEffect {
             ((ServerLevel)world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
             for(Entity e : world.getEntities(shooter, new AABB(
-                    livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
+                    livingEntity.position().add(range,range,range), livingEntity.position().subtract(range,range,range)))){
                 if(e.equals(livingEntity) || !(e instanceof LivingEntity))
                     continue;
                 dealDamage(world, shooter, damage, spellStats, e, source);

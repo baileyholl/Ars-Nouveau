@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
@@ -31,10 +32,11 @@ public class EffectPickup extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos pos = new BlockPos(rayTraceResult.getLocation());
-        int expansion = 2 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double expansion = 2 + spellStats.getAoeMultiplier();
+        Vec3 posVec = new Vec3(pos.getX(),pos.getY(),pos.getZ());
 
-        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(pos.east(expansion).north(expansion).above(expansion),
-                pos.west(expansion).south(expansion).below(expansion)));
+        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(
+                posVec.add(expansion,expansion,expansion), posVec.subtract(expansion,expansion,expansion)));
         for(ItemEntity i : entityList){
 
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
@@ -51,8 +53,8 @@ public class EffectPickup extends AbstractEffect {
                 i.setItem(iPickupResponder.onPickup(i.getItem()));
             }
         }
-        List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(pos.east(expansion).north(expansion).above(expansion),
-                pos.west(expansion).south(expansion).below(expansion)));
+        List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
+                posVec.add(expansion,expansion,expansion), posVec.subtract(expansion,expansion,expansion)));
         for(ExperienceOrb i : orbList){
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 Player player = (Player) shooter;

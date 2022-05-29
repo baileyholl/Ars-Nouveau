@@ -29,7 +29,7 @@ public class EffectEvaporate extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
         BlockPos pos = rayTraceResult.getBlockPos();
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
             evaporate(world, p);
             for(Direction d : Direction.values()){
                 evaporate(world, p.relative(d));

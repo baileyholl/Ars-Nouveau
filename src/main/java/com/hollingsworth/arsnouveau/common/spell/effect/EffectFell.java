@@ -41,7 +41,7 @@ public class EffectFell extends AbstractEffect {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {
-            Set<BlockPos> list = getTree(world, blockPos, GENERIC_INT.get()+ AOE_BONUS.get() * spellStats.getBuffCount(AugmentAOE.INSTANCE));
+            Set<BlockPos> list = getTree(world, blockPos, (int) (GENERIC_INT.get() + Math.round(AOE_BONUS.get() * spellStats.getAoeMultiplier())));
             world.levelEvent(2001, blockPos, Block.getId(state));
             list.forEach(listPos -> {
                 if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))

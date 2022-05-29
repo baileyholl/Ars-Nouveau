@@ -26,7 +26,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     public static final EntityDataAccessor<Integer> OWNER_UUID = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> OFFSET = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> AOE = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> TOTAL = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public int extendTimes;
 
@@ -72,11 +72,16 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         return entityData.get(ACCELERATES);
     }
 
+    @Deprecated(forRemoval = true)
     public void setAoe(int aoe){
+        entityData.set(AOE, (float) aoe);
+    }
+
+    public void setAoe(float aoe){
         entityData.set(AOE, aoe);
     }
 
-    public int getAoe(){
+    public float getAoe(){
         return entityData.get(AOE);
     }
 
@@ -158,7 +163,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         this.entityData.define(OWNER_UUID, 0);
         this.entityData.define(OFFSET, 0);
         this.entityData.define(ACCELERATES, 0);
-        this.entityData.define(AOE, 0);
+        this.entityData.define(AOE, 0f);
         this.entityData.define(TOTAL, 0);
     }
 
@@ -167,7 +172,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         super.addAdditionalSaveData(tag);
         tag.putInt("left", ticksLeft);
         tag.putInt("offset", getOffset());
-        tag.putInt("aoe", getAoe());
+        tag.putFloat("aoe", getAoe());
         tag.putInt("accelerate", getAccelerates());
         tag.putInt("total", getTotal());
         tag.putInt("ownerID", getOwnerID());
@@ -178,7 +183,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         super.readAdditionalSaveData(tag);
         this.ticksLeft = tag.getInt("left");
         setOffset(tag.getInt("offset"));
-        setAoe(tag.getInt("aoe"));
+        setAoe(tag.getFloat("aoe"));
         setAccelerates(tag.getInt("accelerate"));
         setOwnerID(tag.getInt("ownerID"));
         setTotal(tag.getInt("total"));
