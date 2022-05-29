@@ -144,7 +144,7 @@ public class SpellResolver {
                 if(MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Pre(world, shooter, result, spell, spellContext, effect)))
                     continue;
                 effect.onResolve(result, world, shooter, stats, spellContext);
-                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, result, spell, spellContext, effect))
+                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, result, spell, spellContext, effect));
             }
         }
         MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, result, spell, spellContext));
