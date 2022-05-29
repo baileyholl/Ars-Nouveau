@@ -141,10 +141,10 @@ public class SpellResolver {
                     .addItemsFromEntity(shooter)
                     .build(part, result, world, shooter, spellContext);
             if(part instanceof AbstractEffect effect){
-                if(MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Pre(world, shooter, result, spell, spellContext, effect)))
+                if(MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Pre(world, shooter, result, spell, spellContext, effect, stats)))
                     continue;
                 effect.onResolve(result, world, shooter, stats, spellContext);
-                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, result, spell, spellContext, effect));
+                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, result, spell, spellContext, effect, stats));
             }
         }
         MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, result, spell, spellContext));
