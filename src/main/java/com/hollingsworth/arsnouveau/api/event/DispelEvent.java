@@ -5,11 +5,14 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+@Cancelable
+// TODO: 1.19 create Pre and Post events
 public class DispelEvent extends Event {
     public HitResult rayTraceResult;
     public Level world;
