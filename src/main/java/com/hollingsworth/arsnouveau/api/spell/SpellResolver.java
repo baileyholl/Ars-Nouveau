@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
@@ -139,8 +140,11 @@ public class SpellResolver {
                     .setAugments(augments)
                     .addItemsFromEntity(shooter)
                     .build(part, result, world, shooter, spellContext);
-            if(part instanceof AbstractEffect){
-                ((AbstractEffect) part).onResolve(result, world, shooter, stats, spellContext);
+            if(part instanceof AbstractEffect effect){
+                if(MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Pre(world, shooter, result, spell, spellContext, effect)))
+                    continue;
+                effect.onResolve(result, world, shooter, stats, spellContext);
+                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, result, spell, spellContext, effect))
             }
         }
         MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, result, spell, spellContext));
