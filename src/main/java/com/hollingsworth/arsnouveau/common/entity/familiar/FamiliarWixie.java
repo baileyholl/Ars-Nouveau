@@ -1,17 +1,27 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -23,11 +33,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener {
+public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener, IVariantTextureProvider {
     public int debuffCooldown;
 
     public FamiliarWixie(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
+    }
+
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+            return InteractionResult.SUCCESS;
+
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (player.getMainHandItem().is(Tags.Items.DYES)) {
+            DyeColor color = DyeColor.getColor(stack);
+            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityWixie.COLORS).contains(color.getName()))
+                return InteractionResult.SUCCESS;
+            setColor(color);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
     }
 
     public void potionEvent(PotionEvent.PotionAddedEvent event) {
@@ -77,6 +105,14 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
         }
+    }
+
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        String color = getEntityData().get(COLOR).toLowerCase();
+        if(color.isEmpty())
+            color = "blue";
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color +".png");
     }
 
     public static class DebuffTargetGoal extends Goal {
