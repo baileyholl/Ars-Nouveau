@@ -24,7 +24,8 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         if(pInteractionTarget instanceof Starbuncle starbuncle){
-
+            starbuncle.setHeadCosmetic(pStack.split(1));
+            return InteractionResult.SUCCESS;
         }
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
     }
@@ -32,7 +33,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     //translation applied to the renderer
     @Override
     public Vec3 getTranslations() {
-        return new Vec3(0, 0.25, -0.155);
+        return new Vec3(0, -.26, .17);
     }
 
     //scaling applied to the renderer
@@ -46,7 +47,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IItemRenderProperties() {
-            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel("starbuncle_shades"));
+            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel("starbuncle_shades", "items")).withTranslucency();
 
             @Override
             public BlockEntityWithoutLevelRenderer getItemStackRenderer() {

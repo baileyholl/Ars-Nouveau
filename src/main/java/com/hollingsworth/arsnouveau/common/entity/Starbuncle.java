@@ -103,6 +103,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> PATH_BLOCK = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<ItemStack> HEAD_COSMETIC = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.ITEM_STACK);
 
     private int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
@@ -382,17 +383,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         return Boolean.TRUE.equals(this.entityData.get(TAMED)) ? getTamedGoals() : getUntamedGoals();
     }
 
-
-    public BlockPos getHome() {
-        if (FROM_LIST.isEmpty() && !TO_LIST.isEmpty())
-            return TO_LIST.get(0);
-        if (TO_LIST.isEmpty() && !FROM_LIST.isEmpty())
-            return FROM_LIST.get(0);
-        if (!TO_LIST.isEmpty())
-            return FROM_LIST.get(0);
-        return null;
-    }
-
     @Override
     protected float getWaterSlowDown() {
         return 0.875f;
@@ -527,6 +517,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         this.entityData.define(FROM_POS_SIZE, 0);
         this.entityData.define(COLOR, COLORS.ORANGE.name());
         this.entityData.define(PATH_BLOCK, "");
+        this.entityData.define(HEAD_COSMETIC, ItemStack.EMPTY);
     }
 
     @Override
@@ -544,7 +535,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
 
     //TODO synced data instead of being fixed
     public ItemStack getHeadCosmetic(){
-        return ItemsRegistry.STARBUNCLE_SHADES.getDefaultInstance();
+        return this.entityData.get(HEAD_COSMETIC);
+    }
+
+    public void setHeadCosmetic(ItemStack stack){
+        if(!stack.isEmpty())
+            this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(HEAD_COSMETIC)));
+        this.entityData.set(HEAD_COSMETIC, stack);
     }
 
     @Override
@@ -578,8 +575,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
 
+        if(tag.contains("headCosmetic"))
+            this.entityData.set(HEAD_COSMETIC, ItemStack.of(tag.getCompound("headCosmetic")));
+
         if (tag.contains("held"))
             setHeldStack(ItemStack.of((CompoundTag) tag.get("held")));
+
         FROM_LIST = new ArrayList<>();
         TO_LIST = new ArrayList<>();
         int counter = 0;
@@ -641,7 +642,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             getHeldStack().save(itemTag);
             tag.put("held", itemTag);
         }
-
+        if(!this.entityData.get(HEAD_COSMETIC).isEmpty()) {
+            CompoundTag cosmeticTag = new CompoundTag();
+            this.entityData.get(HEAD_COSMETIC).save(cosmeticTag);
+            tag.put("headCosmetic", cosmeticTag);
+        }
         int counter = 0;
         for (BlockPos p : FROM_LIST) {
             NBTUtil.storeBlockPos(tag, "from_" + counter, p);
