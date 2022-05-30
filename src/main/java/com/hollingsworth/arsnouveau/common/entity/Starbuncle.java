@@ -290,6 +290,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         this.entityData.set(FROM_POS_SIZE, 0);
         this.pathBlock = null;
         this.bedPos = null;
+        setHeadCosmetic(ItemStack.EMPTY);
         PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.cleared"));
     }
 
@@ -427,6 +428,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
+            if(!this.getHeadCosmetic().isEmpty()){
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeadCosmetic().copy()));
+            }
         }
         super.die(source);
     }
@@ -533,15 +537,18 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         return this.getMainHandItem();
     }
 
-    //TODO synced data instead of being fixed
     public ItemStack getHeadCosmetic(){
         return this.entityData.get(HEAD_COSMETIC);
     }
 
     public void setHeadCosmetic(ItemStack stack){
-        if(!stack.isEmpty())
+        if(!this.entityData.get(HEAD_COSMETIC).isEmpty())
             this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(HEAD_COSMETIC)));
         this.entityData.set(HEAD_COSMETIC, stack);
+    }
+
+    public boolean isPickupDisabled(){
+        return this.getHeadCosmetic().getItem() == ItemsRegistry.STARBUNCLE_SHADES;
     }
 
     @Override
@@ -555,6 +562,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
             charm.setTag(getStarbuncleData(this).toTag(new CompoundTag()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), charm.copy()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getHeldStack()));
+            if(!this.getHeadCosmetic().isEmpty()){
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeadCosmetic().copy()));
+            }
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }

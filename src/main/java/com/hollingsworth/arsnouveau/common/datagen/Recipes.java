@@ -621,6 +621,11 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
             shapelessBuilder(ItemsRegistry.SPELL_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
+            shapedBuilder(ItemsRegistry.STARBUNCLE_SHADES)
+                    .pattern("xyx")
+                    .define('x', Items.TINTED_GLASS)
+                    .define('y', ItemsRegistry.SOURCE_GEM)
+                    .save(consumer);
         }
     }
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {

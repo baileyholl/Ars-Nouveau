@@ -427,6 +427,7 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
         addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
         addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, new CraftingPage(ItemsRegistry.SCRYER_SCROLL));
+        addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
     }
 
     public String getLangPath(String name, int count){
