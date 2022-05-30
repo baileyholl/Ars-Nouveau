@@ -2,13 +2,13 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.common.block.tile.ScryersEyeTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class ScryersEyeModel extends AnimatedGeoModel<ScryersEyeTile> {
+public class ScryersEyeModel extends AnimatedGeoModel<ScryersOculusTile> {
     public static ResourceLocation SQUINTING = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_squinting.png");
     public static ResourceLocation ALERT = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_alert.png");
     public static ResourceLocation IDLE = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_idle.png");
@@ -16,23 +16,23 @@ public class ScryersEyeModel extends AnimatedGeoModel<ScryersEyeTile> {
     public static final ResourceLocation anim = new ResourceLocation(ArsNouveau.MODID , "animations/scryers_eye_animations.json");
     public static final ResourceLocation model = new ResourceLocation(ArsNouveau.MODID , "geo/scryers_eye.geo.json");
     @Override
-    public ResourceLocation getModelLocation(ScryersEyeTile object) {
+    public ResourceLocation getModelLocation(ScryersOculusTile object) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ScryersEyeTile object) {
+    public ResourceLocation getTextureLocation(ScryersOculusTile object) {
         return object != null && object.playerNear ? SQUINTING : IDLE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(ScryersEyeTile animatable) {
+    public ResourceLocation getAnimationFileLocation(ScryersOculusTile animatable) {
         return anim;
     }
 
 
     @Override
-    public void setLivingAnimations(ScryersEyeTile pBlockEntity, Integer uniqueID) {
+    public void setLivingAnimations(ScryersOculusTile pBlockEntity, Integer uniqueID) {
         super.setLivingAnimations(pBlockEntity, uniqueID);
         IBone eye = this.getAnimationProcessor().getBone("eye");
         if(eye == null)

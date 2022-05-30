@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +33,8 @@ public class EffectDispel extends AbstractEffect {
             LivingEntity entity = (LivingEntity) rayTraceResult.getEntity();
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
+            if(MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext)))
+                return;
             for(MobEffectInstance e : array){
                 if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
                     entity.removeEffect(e.getEffect());
@@ -40,7 +42,6 @@ public class EffectDispel extends AbstractEffect {
             if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.isRemoved()){
                 ((IDispellable) entity).onDispel(shooter);
             }
-            MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext));
         }
     }
 

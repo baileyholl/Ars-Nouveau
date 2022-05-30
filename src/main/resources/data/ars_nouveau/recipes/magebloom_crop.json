@@ -30,5 +30,6 @@
   "output": {
     "item": "ars_nouveau:magebloom_crop"
   },
-  "sourceCost": 0
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
 }

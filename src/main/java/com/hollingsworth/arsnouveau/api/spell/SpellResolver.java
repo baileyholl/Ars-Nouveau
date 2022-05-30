@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
@@ -83,16 +84,6 @@ public class SpellResolver {
         return SpellUtil.postEvent(new SpellCastEvent(entity, spell, spellContext));
     }
 
-    public void onCast(ItemStack stack, LivingEntity livingEntity, Level world){
-        if(canCast(livingEntity) && !postEvent(livingEntity)) {
-            SpellStats stats = new SpellStats.Builder()
-                    .setAugments(spell.getAugments(0, livingEntity))
-                    .addItemsFromEntity(livingEntity)
-                    .build(castType, null, world, livingEntity, spellContext);
-            castType.onCast(stack, livingEntity, world, stats, spellContext, this);
-        }
-    }
-
     private SpellStats getCastStats(LivingEntity caster, @Nullable HitResult result){
         return new SpellStats.Builder()
                 .setAugments(spell.getAugments(0, caster))
@@ -100,19 +91,36 @@ public class SpellResolver {
                 .build(castType, result, caster.level, caster, spellContext);
     }
 
-    public void onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster){
-        if(canCast(caster) && !postEvent(caster))
-            castType.onCastOnBlock(blockRayTraceResult, caster,getCastStats(caster, blockRayTraceResult), spellContext, this);
+    public boolean onCast(ItemStack stack, LivingEntity livingEntity, Level world){
+        if(canCast(livingEntity) && !postEvent(livingEntity)) {
+            castType.onCast(stack, livingEntity, world, getCastStats(livingEntity, null), spellContext, this);
+            return true;
+        }
+        return false;
     }
 
-    public void onCastOnBlock(UseOnContext context){
-        if(canCast(context.getPlayer()) && !postEvent(context.getPlayer()))
-            castType.onCastOnBlock(context,getCastStats(context.getPlayer(),context.hitResult), spellContext, this);
+    public boolean onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster){
+        if(canCast(caster) && !postEvent(caster)) {
+            castType.onCastOnBlock(blockRayTraceResult, caster, getCastStats(caster, blockRayTraceResult), spellContext, this);
+            return true;
+        }
+        return false;
     }
 
-    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, InteractionHand hand){
-        if(canCast(playerIn) && !postEvent(playerIn))
+    public boolean onCastOnBlock(UseOnContext context){
+        if(canCast(context.getPlayer()) && !postEvent(context.getPlayer())) {
+            castType.onCastOnBlock(context, getCastStats(context.getPlayer(), context.hitResult), spellContext, this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, InteractionHand hand){
+        if(canCast(playerIn) && !postEvent(playerIn)) {
             castType.onCastOnEntity(stack, playerIn, target, hand, getCastStats(playerIn, new EntityHitResult(target)), spellContext, this);
+            return true;
+        }
+        return false;
     }
 
     public void onResolveEffect(Level world, LivingEntity shooter, HitResult result){
@@ -139,8 +147,11 @@ public class SpellResolver {
                     .setAugments(augments)
                     .addItemsFromEntity(shooter)
                     .build(part, result, world, shooter, spellContext);
-            if(part instanceof AbstractEffect){
-                ((AbstractEffect) part).onResolve(result, world, shooter, stats, spellContext);
+            if(part instanceof AbstractEffect effect){
+                if(MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Pre(world, shooter, result, spell, spellContext, effect, stats)))
+                    continue;
+                effect.onResolve(result, world, shooter, stats, spellContext);
+                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, result, spell, spellContext, effect, stats));
             }
         }
         MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, result, spell, spellContext));

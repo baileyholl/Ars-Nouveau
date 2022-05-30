@@ -62,7 +62,7 @@ public class EffectExchange extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult result, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result,  spellStats.getBuffCount(AugmentAOE.INSTANCE),  spellStats.getBuffCount(AugmentPierce.INSTANCE));
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result,  spellStats.getAoeMultiplier(),  spellStats.getBuffCount(AugmentPierce.INSTANCE));
         BlockState origState = world.getBlockState(result.getBlockPos());
         Player playerEntity = getPlayer(shooter, (ServerLevel) world);
         List<ItemStack> list = playerEntity.inventory.items;

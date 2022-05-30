@@ -34,7 +34,7 @@ public class EffectExplosion extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
-        double intensity = BASE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + AOE_BONUS.get() * spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double intensity = BASE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + AOE_BONUS.get() * spellStats.getAoeMultiplier();
         int dampen = spellStats.getBuffCount(AugmentDampen.INSTANCE);
         intensity -= 0.5 * dampen;
         Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.NONE  : Explosion.BlockInteraction.DESTROY;

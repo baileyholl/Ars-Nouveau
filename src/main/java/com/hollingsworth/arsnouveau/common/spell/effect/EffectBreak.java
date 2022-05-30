@@ -53,7 +53,7 @@ public class EffectBreak extends AbstractEffect {
         BlockPos pos = rayTraceResult.getBlockPos();
         BlockState state;
 
-        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
         ItemStack stack = spellStats.hasBuff(AugmentSensitive.INSTANCE) ? new ItemStack(Items.SHEARS) : getStack(shooter);

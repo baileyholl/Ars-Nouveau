@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 public class EntityLingeringSpell extends EntityProjectileSpell{
 
     public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> AOE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public double extendedTime;
@@ -69,10 +69,11 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     }
 
     public void castSpells(){
-        int aoe = getAoe();
+        float aoe = getAoe();
+        int flatAoe = Math.round(aoe);
         if(!level.isClientSide && age % (20 - 2* getAccelerates()) == 0){
             if(isSensitive()){
-                for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(aoe).north(aoe), blockPosition().west(aoe).south(aoe))){
+                for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))){
                     spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
@@ -106,7 +107,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
 
     @Override
     public void playParticles() {
-        ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), getAoe(), 5, 20);
+        ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), Math.round(getAoe()), 5, 20);
         ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0),10);
     }
 
@@ -135,13 +136,21 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
         return entityData.get(ACCELERATES);
     }
 
-    public void setAoe(int aoe){
+
+    public void setAoe(float aoe){
         entityData.set(AOE, aoe);
     }
-
-    public int getAoe(){
-        return (this.isSensitive() ? 1 : 3) + entityData.get(AOE) ;
+    //for compat
+    @Deprecated
+    public void setAoe(int aoe){
+        entityData.set(AOE, (float)aoe);
     }
+
+    //for compat
+    public float getAoe(){
+        return (this.isSensitive() ? 1 : 3) + entityData.get(AOE);
+    }
+
 
     public void setLanded(boolean landed){
         entityData.set(LANDED, landed);
@@ -163,7 +172,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(ACCELERATES, 0);
-        entityData.define(AOE, 0);
+        entityData.define(AOE, 0f);
         entityData.define(LANDED, false);
         entityData.define(SENSITIVE, false);
     }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.light;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -28,7 +29,10 @@ public class LightManager {
 
     private final static Set<LambDynamicLight> dynamicLightSources = new HashSet<>();
     private final static ReentrantReadWriteLock lightSourcesLock = new ReentrantReadWriteLock();
+
     public static long lastUpdate = System.currentTimeMillis();
+
+    public static List<Integer> jarHoldingEntityList = new ArrayList<>();
     public static int lastUpdateCount = 0;
     private static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
@@ -44,7 +48,8 @@ public class LightManager {
                     }
                 }
             }
-            return 0;
+
+            return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
         register(ModEntities.ENTITY_FLYING_ITEM, (p -> 10));
         register(ModEntities.ENTITY_FOLLOW_PROJ, (p -> 10));
@@ -165,6 +170,7 @@ public class LightManager {
                 it.lambdynlights$scheduleTrackedChunksRebuild(Minecraft.getInstance().levelRenderer);
             }
         }
+        LightManager.jarHoldingEntityList = new ArrayList<>();
 
         lightSourcesLock.writeLock().unlock();
     }

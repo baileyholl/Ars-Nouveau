@@ -1,0 +1,15 @@
+{
+  "name": "block.ars_nouveau.scryers_oculus",
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:scryers_oculus",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.scryers_oculus",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:scryers_oculus",
+      "type": "ars_nouveau:apparatus_recipe"
+    }
+  ]
+}

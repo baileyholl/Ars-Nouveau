@@ -38,7 +38,7 @@ public class EffectColdSnap extends AbstractEffect {
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        int range = 3 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        double range = 3 + spellStats.getAoeMultiplier();
         int snareSec = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
         if(!canDamage(livingEntity))
@@ -46,7 +46,7 @@ public class EffectColdSnap extends AbstractEffect {
 
         damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
 
-        for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
+        for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.position().add(range,range,range), livingEntity.position().subtract(range,range,range)))){
             if(e.equals(livingEntity) || e.equals(shooter))
                 continue;
             if(canDamage(e)){

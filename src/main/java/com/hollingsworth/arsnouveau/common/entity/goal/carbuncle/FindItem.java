@@ -56,11 +56,15 @@ public class FindItem extends Goal {
 
     @Override
     public boolean canContinueToUse() {
+        if(starbuncle.isPickupDisabled())
+            return false;
         return timeFinding <= 20 * 15 && !itemStuck && !starbuncle.isStuck && starbuncle.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean canUse() {
+        if(starbuncle.isPickupDisabled())
+            return false;
         ItemStack itemstack = starbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
         itemStuck = false;

@@ -57,7 +57,7 @@ public class ManaUtil {
         }
 
         int tier = mana.getBookTier();
-        int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+        int numGlyphs = mana.getGlyphBonus();
         max += numGlyphs * Config.GLYPH_MAX_BONUS.get();
         max += tier * Config.TIER_MAX_BONUS.get();
 
@@ -89,7 +89,7 @@ public class ManaUtil {
         }
 
         int tier = mana.getBookTier();
-        double numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+        double numGlyphs = mana.getGlyphBonus();
         regen += numGlyphs * Config.GLYPH_REGEN_BONUS.get();
         regen += tier;
         if(e.getEffect(ModPotions.MANA_REGEN_EFFECT) != null)

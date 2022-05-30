@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -35,15 +36,19 @@ public class ScryerScroll extends ModItem{
         if(pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
             ScryerScrollData data = new ScryerScrollData(pContext.getItemInHand());
             data.setPos(pContext.getClickedPos(), pContext.getItemInHand());
+            PortUtil.sendMessage(pContext.getPlayer(), new TranslatableComponent("ars_nouveau.scryer_scroll.bound", pContext.getClickedPos().getX() + ", " + pContext.getClickedPos().getY() + ", " + pContext.getClickedPos().getZ()));
         }
         return super.useOn(pContext);
     }
+
 
     @Override
     public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         ScryerScrollData data = new ScryerScrollData(stack);
         if(data.pos != null) {
             tooltip2.add(new TranslatableComponent("ars_nouveau.scryer_scroll.bound", data.pos.getX() + ", " + data.pos.getY() + ", " + data.pos.getZ()));
+        }else{
+            tooltip2.add(new TranslatableComponent("ars_nouveau.scryer_scroll.craft"));
         }
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }

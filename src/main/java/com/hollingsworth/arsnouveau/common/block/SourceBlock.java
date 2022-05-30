@@ -34,6 +34,7 @@ public abstract class SourceBlock extends TickableModBlock {
                         tile.addSource(1000);
                         if(!player.isCreative())
                             player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
+                        return InteractionResult.SUCCESS;
                     }
                     return super.use(state, worldIn, pos, player, handIn, hit);
                 }else if(player.getItemInHand(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getItemInHand(handIn).getItem()).getFluid() == Fluids.EMPTY){
@@ -41,13 +42,17 @@ public abstract class SourceBlock extends TickableModBlock {
                         if(player.getItemInHand(handIn).getCount() == 1){
                             player.setItemInHand(handIn, new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE));
                             tile.removeSource(1000);
+                            return InteractionResult.SUCCESS;
                         }else if(player.addItem(new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE))) {
                             player.getItemInHand(handIn).shrink(1);
                             tile.removeSource(1000);
+                            return InteractionResult.SUCCESS;
                         }
+
                     }else if(tile.getSource() >= 1000 && player.getItemInHand(handIn).getCount() == 1){
                         tile.removeSource(1000);
                         player.setItemInHand(player.getUsedItemHand(),new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE));
+                        return InteractionResult.SUCCESS;
                     }
                 }
             }

@@ -24,10 +24,11 @@
     },
     {
       "entity": "ars_nouveau:wilden_boss",
+      "text": "ars_nouveau.page6.wilden",
       "type": "patchouli:entity"
     },
     {
-      "text": "ars_nouveau.page6.wilden",
+      "text": "ars_nouveau.page7.wilden",
       "type": "patchouli:text"
     }
   ]

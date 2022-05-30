@@ -270,8 +270,8 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EntityPage(ModEntities.WILDEN_HUNTER.getRegistryName().toString()).withText(getLangPath("wilden", 3)))
                 .withPage(new EntityPage(ModEntities.WILDEN_STALKER.getRegistryName().toString()).withText(getLangPath("wilden", 4)))
                 .withPage(new EntityPage(ModEntities.WILDEN_GUARDIAN.getRegistryName().toString()).withText(getLangPath("wilden", 5)))
-                .withPage(new EntityPage(ModEntities.WILDEN_BOSS.getRegistryName().toString()))
-                .withPage(new TextPage(getLangPath("wilden", 6))), getPath(RESOURCES, "wilden"));
+                .withPage(new EntityPage(ModEntities.WILDEN_BOSS.getRegistryName().toString()).withText(getLangPath("wilden", 6)))
+                .withPage(new TextPage(getLangPath("wilden", 7))), getPath(RESOURCES, "wilden"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
                 .withLocalizedText()
@@ -423,6 +423,11 @@ public class PatchouliProvider implements DataProvider {
                         .withPage(new CraftingPage(BlockRegistry.GREEN_SBED).withRecipe2(BlockRegistry.YELLOW_SBED))
                         .withPage(new CraftingPage(BlockRegistry.RED_SBED).withRecipe2(BlockRegistry.PURPLE_SBED))
                 , getPath(AUTOMATION, "summon_bed"));
+
+        addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
+        addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
+        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, new CraftingPage(ItemsRegistry.SCRYER_SCROLL));
+        addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
     }
 
     public String getLangPath(String name, int count){
