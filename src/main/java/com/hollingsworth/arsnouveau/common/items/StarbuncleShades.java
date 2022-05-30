@@ -33,7 +33,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     //translation applied to the renderer
     @Override
     public Vec3 getTranslations() {
-        return new Vec3(0, -.26, .17);
+        return new Vec3(0, -.259, .165);
     }
 
     //scaling applied to the renderer
