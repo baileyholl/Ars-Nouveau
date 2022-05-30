@@ -85,7 +85,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
         event.registerEntityRenderer(ModEntities.ALLY_VEX, RenderAllyVex::new);
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, StarbuncleRenderer::new);
-        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, SylphRenderer::new);
+        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, WhirlisprigRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         event.registerEntityRenderer(ModEntities.WILDEN_STALKER,renderManager -> new com.hollingsworth.arsnouveau.client.renderer.entity.GenericRenderer(renderManager, new WildenStalkerModel()));
         event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
@@ -107,7 +107,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, FamiliarCarbyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY, DrygmyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH, SylphRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH, WhirlisprigRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);

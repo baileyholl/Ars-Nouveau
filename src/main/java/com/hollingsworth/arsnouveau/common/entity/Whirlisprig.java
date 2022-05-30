@@ -89,7 +89,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     private boolean setBehaviors;
 
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        if(event.isMoving()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+        }else{
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        }
         return PlayState.CONTINUE;
     }
 

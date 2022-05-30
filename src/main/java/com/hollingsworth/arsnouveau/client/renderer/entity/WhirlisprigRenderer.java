@@ -21,10 +21,10 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class SylphRenderer extends GeoEntityRenderer {
+public class WhirlisprigRenderer extends GeoEntityRenderer {
 
-    public SylphRenderer(EntityRendererProvider.Context manager) {
-        super(manager, new SylphModel());
+    public WhirlisprigRenderer(EntityRendererProvider.Context manager) {
+        super(manager, new WhirlisprigModel());
     }
 
     @Override
@@ -36,8 +36,8 @@ public class SylphRenderer extends GeoEntityRenderer {
         Random rand = ParticleUtil.r;
         Vec3 particlePos = entityIn.position();
 
-        IBone sylph = ((SylphModel) getGeoModelProvider()).getBone("sylph");
-        IBone propellers = ((SylphModel) getGeoModelProvider()).getBone("propellers");
+        IBone sylph = ((WhirlisprigModel) getGeoModelProvider()).getBone("sylph");
+        IBone propellers = ((WhirlisprigModel) getGeoModelProvider()).getBone("propellers");
 
         float offsetY = sylph.getPositionY() / 9f;
         float roteAngle = propellers.getRotationY() / 4;
