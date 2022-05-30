@@ -74,7 +74,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static StarbuncleCharm STARBUNCLE_CHARM;
     @ObjectHolder("debug")public static Debug debug;
     @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
-    @ObjectHolder(LibItemNames.STARBUNCLE_SHADES)public static ModItem STARBUNCLE_SHADES;
+    @ObjectHolder(LibItemNames.STARBUNCLE_SHADES)public static StarbuncleShades STARBUNCLE_SHADES;
 
     @ObjectHolder(LibItemNames.WHIRLISPRIG_CHARM)public static WhirlisprigCharm WHIRLISPRIG_CHARM;
     @ObjectHolder(LibItemNames.WHIRLISPRIG_SHARDS)public static ModItem WHIRLISPRIG_SHARDS;
@@ -181,7 +181,7 @@ public class ItemsRegistry {
                     new WornNotebook().withTooltip(new TranslatableComponent("tooltip.worn_notebook")),
                     new StarbuncleCharm(),
                     new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(new TranslatableComponent("tooltip.starbuncle_shard")),
-                    new StarShades(LibItemNames.STARBUNCLE_SHADES),
+                    new StarbuncleShades(LibItemNames.STARBUNCLE_SHADES).withTooltip(new TranslatableComponent("tooltip.starbuncle_shades")),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -32,7 +32,7 @@ public class MageBlockRenderer extends GeoBlockRenderer<MageBlockTile> {
         matrixStackIn.popPose();
     }
 
-    public static GenericItemRenderer getISTER() {
-        return new GenericItemRenderer(model);
+    public static GenericItemBlockRenderer getISTER() {
+        return new GenericItemBlockRenderer(model);
     }
 }
