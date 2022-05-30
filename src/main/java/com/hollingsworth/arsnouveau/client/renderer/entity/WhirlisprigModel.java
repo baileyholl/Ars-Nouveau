@@ -10,7 +10,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class SylphModel extends AnimatedGeoModel<IAnimatable> {
+public class WhirlisprigModel extends AnimatedGeoModel<IAnimatable> {
 
     @Override
     public void setLivingAnimations(IAnimatable entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
@@ -33,6 +33,6 @@ public class SylphModel extends AnimatedGeoModel<IAnimatable> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(IAnimatable entitySylph) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/sylph_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID , "animations/whirlisprig_animations.json");
     }
 }
