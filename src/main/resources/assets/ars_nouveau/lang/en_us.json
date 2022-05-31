@@ -1055,5 +1055,6 @@
 	"ars_nouveau.scryer_scroll.craft": "Created by using a Blank Parchment on a Scry Crystal.",
 	"item.ars_nouveau.starbuncle_shades": "Starbuncle Shades",
 	"tooltip.starbuncle_shades": "Using these on a Starbuncle will increase their coolness, but disable their ability to pickup items off the ground or pick Sourceberries.",
-	"ars_nouveau.page.starbuncle_shades": "Using these on a Starbuncle will disable their ability to pick up items off the ground or pick Sourceberries. Wanding the starbuncle will drop the glasses."
+	"ars_nouveau.page.starbuncle_shades": "Using these on a Starbuncle will disable their ability to pick up items off the ground or pick Sourceberries. Wanding the starbuncle will drop the glasses.",
+	"entity.ars_nouveau.ally_vex": "Summoned Vex"
 }

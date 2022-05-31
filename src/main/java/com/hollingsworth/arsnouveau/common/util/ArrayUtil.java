@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.util;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,5 +17,9 @@ public class ArrayUtil {
             ar[index] = ar[i];
             ar[i] = a;
         }
+    }
+
+    public static <T> T getRandomElement(List<T> list){
+        return list.get(ThreadLocalRandom.current().nextInt(list.size()));
     }
 }

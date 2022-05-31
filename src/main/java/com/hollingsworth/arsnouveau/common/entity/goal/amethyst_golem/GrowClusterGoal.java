@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
+import com.hollingsworth.arsnouveau.common.util.ArrayUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.function.Supplier;
 
@@ -29,11 +29,7 @@ public class GrowClusterGoal extends Goal {
         super.tick();
         usingTicks--;
         if(pathPos != null){
-            Path path = golem.getNavigation().createPath(pathPos, 1);
-            if(path != null){
-                golem.getNavigation().moveTo(path, 1.3f);
-            }
-
+            golem.getNavigation().tryMoveToBlockPos(pathPos, 1.3f);
             if(BlockUtil.distanceFrom(golem.blockPosition(), pathPos) <= 2){
                 golem.setImbueing(true);
                 golem.setImbuePos(pathPos);
@@ -49,13 +45,10 @@ public class GrowClusterGoal extends Goal {
     public void start() {
         usingTicks = 120;
         isDone = false;
-        for(BlockPos p : golem.buddingBlocks){
-            Path path = golem.getNavigation().createPath(p, 2);
-            if(path != null && path.canReach()) {
-                pathPos = p;
-                break;
-            }
-        }
+        BlockPos p = ArrayUtil.getRandomElement(golem.buddingBlocks);
+        golem.getNavigation().tryMoveToBlockPos(p, 1f);
+        pathPos = p;
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.GROW;
     }
 
     public void growCluster(){
@@ -76,6 +69,7 @@ public class GrowClusterGoal extends Goal {
     @Override
     public void stop() {
         golem.setImbueing(false);
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.NONE;
     }
 
     @Override

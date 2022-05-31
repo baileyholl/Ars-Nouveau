@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.function.Supplier;
 
@@ -31,10 +30,7 @@ public class ConvertBuddingGoal extends Goal {
     public void tick() {
         super.tick();
         usingTicks--;
-        Path path = golem.getNavigation().createPath(targetCluster, 1);
-        if(path != null){
-            golem.getNavigation().moveTo(path, 1.3f);
-        }
+        golem.getNavigation().tryMoveToBlockPos(targetCluster, 1.0f);
         if(usingTicks <= 0){
             isDone = true;
             convert();
@@ -67,11 +63,13 @@ public class ConvertBuddingGoal extends Goal {
                 break;
             }
         }
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.CONVERT;
     }
 
     @Override
     public void stop() {
         golem.setImbueing(false);
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.NONE;
     }
 
     @Override
@@ -81,6 +79,6 @@ public class ConvertBuddingGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return canUse.get() && golem.convertCooldown <= 0 && golem.amethystBlocks.size() > 0;
+        return canUse.get() && golem.convertCooldown <= 0 && !golem.amethystBlocks.isEmpty();
     }
 }
