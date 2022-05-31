@@ -6,7 +6,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -25,6 +24,7 @@ public class PickupAmethystGoal extends Goal {
         this.canUse = canUse;
     }
 
+
     @Override
     public boolean canContinueToUse() {
         return targetEntity != null && !isDone;
@@ -40,12 +40,13 @@ public class PickupAmethystGoal extends Goal {
             collectStacks();
             return;
         }
-        if(targetEntity == null)
+
+        if(targetEntity == null || targetEntity.isRemoved() || targetEntity.getItem().getItem() != Items.AMETHYST_SHARD){
+            isDone = true;
             return;
-        Path path = golem.getNavigation().createPath(targetEntity, 2);
-        if(path != null){
-            golem.getNavigation().moveTo(path, 1.3f);
         }
+        golem.getNavigation().tryMoveToBlockPos(targetEntity.blockPosition(), 1.0f);
+
         if(BlockUtil.distanceFrom(golem.blockPosition(), targetEntity.blockPosition()) <= 1.5){
             collectStacks();
             isDone = true;
@@ -73,18 +74,27 @@ public class PickupAmethystGoal extends Goal {
     }
 
     @Override
+    public void stop() {
+        isDone = false;
+        usingTicks = 80;
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.NONE;
+        golem.pickupCooldown = 60 + golem.getRandom().nextInt(10);
+    }
+
+    @Override
     public void start() {
         this.isDone = false;
         this.usingTicks = 80;
         for(ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))){
-            Path path = golem.getNavigation().createPath(entity.blockPosition(), 2);
-            if(path != null && path.canReach() && entity.getItem().getItem() == Items.AMETHYST_SHARD){
+            if(entity.getItem().getItem() == Items.AMETHYST_SHARD){
+                golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
                 targetEntity = entity;
-                return;
+                break;
             }
         }
         if(targetEntity == null)
             isDone = true;
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.PICKUP;
     }
 
     @Override

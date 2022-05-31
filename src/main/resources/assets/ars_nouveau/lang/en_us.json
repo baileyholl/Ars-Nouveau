@@ -880,7 +880,7 @@
 	"ars_nouveau.page4.bookwyrm_charm": "To disable this strict mode, use a Dominion Wand, however using multiple specialized Bookwyrms is recommended. While Bookwyrms cannot pickup blocks on their own, they may store items in chests that are next to the Lectern using the Item Pickup spell. Conversely, Bookwyrms may place blocks and interact with the world using Items. You may give an item or block to the Bookwyrm, and it will use the item directly from the chests adjacent to the lectern.",
 	"ars_nouveau.page5.bookwyrm_charm": "The range of the Bookwyrm can be extended by using a Dominion Wand on the lectern while sneaking.",
 	"ars_nouveau.page.dominion_wand": "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay.",
-	"ars_nouveau.page1.drygmy_charm": "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it!",
+	"ars_nouveau.page1.drygmy_charm": "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.",
 	"ars_nouveau.page2.drygmy_charm": "A Drygmy can also produce experience gems!",
 	"ars_nouveau.page3.drygmy_charm": "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.",
 	"ars_nouveau.page4.drygmy_charm": "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home.",
@@ -1055,5 +1055,6 @@
 	"ars_nouveau.scryer_scroll.craft": "Created by using a Blank Parchment on a Scry Crystal.",
 	"item.ars_nouveau.starbuncle_shades": "Starbuncle Shades",
 	"tooltip.starbuncle_shades": "Using these on a Starbuncle will increase their coolness, but disable their ability to pickup items off the ground or pick Sourceberries.",
-	"ars_nouveau.page.starbuncle_shades": "Using these on a Starbuncle will disable their ability to pick up items off the ground or pick Sourceberries. Wanding the starbuncle will drop the glasses."
+	"ars_nouveau.page.starbuncle_shades": "Using these on a Starbuncle will disable their ability to pick up items off the ground or pick Sourceberries. Wanding the starbuncle will drop the glasses.",
+	"entity.ars_nouveau.ally_vex": "Summoned Vex"
 }

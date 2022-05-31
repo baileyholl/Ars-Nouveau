@@ -16,10 +16,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.HorseRenderer;
-import net.minecraft.client.renderer.entity.LightningBoltRenderer;
-import net.minecraft.client.renderer.entity.TippableArrowRenderer;
-import net.minecraft.client.renderer.entity.WolfRenderer;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
@@ -82,11 +79,11 @@ public class ClientHandler {
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer( ModEntities.ENTITY_FOLLOW_PROJ,
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
-        event.registerEntityRenderer(ModEntities.ALLY_VEX, RenderAllyVex::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, EvokerFangsRenderer::new);
+        event.registerEntityRenderer(ModEntities.ALLY_VEX, VexRenderer::new);
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, StarbuncleRenderer::new);
         event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, WhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, (t) -> new TextureVariantRenderer(t, new WixieModel()));
         event.registerEntityRenderer(ModEntities.WILDEN_STALKER,renderManager -> new com.hollingsworth.arsnouveau.client.renderer.entity.GenericRenderer(renderManager, new WildenStalkerModel()));
         event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
         event.registerEntityRenderer(ModEntities.WILDEN_HUNTER, WildenRenderer::new);
@@ -99,16 +96,16 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_RITUAL,
                 renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW, TippableArrowRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE,(t) -> new TextureVariantRenderer(t, new WixieModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY, DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY, DrygmyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY, (t) -> new TextureVariantRenderer(t, new DrygmyModel()));
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL, renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, FamiliarCarbyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY, DrygmyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY,  (t) -> new TextureVariantRenderer(t, new DrygmyModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH, WhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, (t) -> new TextureVariantRenderer(t, new WixieModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_JABBERWOG, BookwyrmRenderer::new); //avoid REI crash

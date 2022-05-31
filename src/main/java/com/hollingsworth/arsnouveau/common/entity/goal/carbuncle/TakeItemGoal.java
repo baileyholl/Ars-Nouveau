@@ -16,15 +16,15 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.EnumSet;
 
 public class TakeItemGoal extends ExtendedRangeGoal {
-    Starbuncle carbuncle;
+    Starbuncle starbuncle;
     BlockPos takePos;
     boolean unreachable;
 
 
-    public TakeItemGoal(Starbuncle carbuncle) {
+    public TakeItemGoal(Starbuncle starbuncle) {
         super(25);
         this.setFlags(EnumSet.of(Flag.MOVE));
-        this.carbuncle = carbuncle;
+        this.starbuncle = starbuncle;
     }
 
     @Override
@@ -33,24 +33,27 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         takePos = null;
         unreachable = false;
         startDistance = 0.0;
-        carbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
     @Override
     public void start() {
         super.start();
-        takePos = carbuncle.getValidTakePos();
+        takePos = starbuncle.getValidTakePos();
         unreachable = false;
-        if (carbuncle.isTamed() && takePos != null && carbuncle.getHeldStack().isEmpty()) {
-            startDistance = BlockUtil.distanceFrom(carbuncle.position, takePos);
+        if (starbuncle.isTamed() && takePos != null && starbuncle.getHeldStack().isEmpty()) {
+            startDistance = BlockUtil.distanceFrom(starbuncle.position, takePos);
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
         }
-        carbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
+        if (takePos == null) {
+            starbuncle.setBackOff(60 + starbuncle.level.random.nextInt(60));
+        }
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
     }
 
 
     public void getItem() {
-        Level world = carbuncle.level;
+        Level world = starbuncle.level;
         if (world.getBlockEntity(takePos) == null)
             return;
         IItemHandler iItemHandler = world.getBlockEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
@@ -58,15 +61,15 @@ public class TakeItemGoal extends ExtendedRangeGoal {
             return;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
             if (!iItemHandler.getStackInSlot(j).isEmpty()) {
-                int count = carbuncle.getMaxTake(iItemHandler.getStackInSlot(j));
+                int count = starbuncle.getMaxTake(iItemHandler.getStackInSlot(j));
                 if (count <= 0)
                     continue;
-                carbuncle.getValidStorePos(iItemHandler.getStackInSlot(j));
+                starbuncle.getValidStorePos(iItemHandler.getStackInSlot(j));
 
-                carbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
+                starbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
 
-                carbuncle.level.playSound(null, carbuncle.getX(), carbuncle.getY(), carbuncle.getZ(),
-                        SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(), 1.0F, 1.0F);
+                starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
+                        SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
 
                 if (world instanceof ServerLevel serverLevel) {
                     // Potential bug with OpenJDK causing irreproducible noClassDef errors
@@ -83,8 +86,8 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     }
 
     public void setPath(double x, double y, double z, double speedIn) {
-        carbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
-        if (carbuncle.getNavigation().getPath() != null && !carbuncle.getNavigation().getPath().canReach()) {
+        starbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
+        if (starbuncle.getNavigation().getPath() != null && !starbuncle.getNavigation().getPath().canReach()) {
             unreachable = true;
         }
     }
@@ -93,12 +96,12 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
         // Retry the valid position
-        if (this.ticksRunning % 100 == 0 && !carbuncle.isPositionValidTake(takePos)) {
+        if (this.ticksRunning % 100 == 0 && !starbuncle.isPositionValidTake(takePos)) {
             takePos = null;
             return;
         }
-        if (carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.position(), takePos) <= 2d + this.extendedRange) {
-            Level world = carbuncle.level;
+        if (starbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(starbuncle.position(), takePos) <= 2d + this.extendedRange) {
+            Level world = starbuncle.level;
             BlockEntity tileEntity = world.getBlockEntity(takePos);
             if (tileEntity == null)
                 return;
@@ -109,19 +112,19 @@ public class TakeItemGoal extends ExtendedRangeGoal {
             }
         }
 
-        if (takePos != null && carbuncle.getHeldStack().isEmpty()) {
+        if (takePos != null && starbuncle.getHeldStack().isEmpty()) {
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.3D);
         }
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.getBackOff() == 0 && carbuncle.isTamed() && takePos != null;
+        return !unreachable && !starbuncle.isStuck && starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed() && takePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.getBackOff() == 0 && carbuncle.isTamed();
+        return !starbuncle.isStuck && starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed();
     }
 
     @Override

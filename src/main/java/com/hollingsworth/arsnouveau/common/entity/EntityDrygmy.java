@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -23,9 +25,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -37,10 +42,11 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -51,21 +57,24 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable {
+public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable, IVariantTextureProvider {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> BEING_TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HOLDING_ESSENCE = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Integer> CHANNELING_ENTITY = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.STRING);
 
     public int channelCooldown;
     private boolean setBehaviors;
     public BlockPos homePos;
     public int tamingTime;
+    public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
     protected int getExperienceReward(Player player) {
@@ -96,6 +105,23 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+            return InteractionResult.SUCCESS;
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (player.getMainHandItem().is(Tags.Items.DYES)) {
+            DyeColor color = DyeColor.getColor(stack);
+            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
+                return InteractionResult.SUCCESS;
+            this.entityData.set(COLOR, color.getName());
+            player.getMainHandItem().shrink(1);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -179,6 +205,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         this.entityData.define(HOLDING_ESSENCE, false);
         this.entityData.define(CHANNELING_ENTITY, -1);
         this.entityData.define(BEING_TAMED, false);
+        this.entityData.define(COLOR, "brown");
     }
 
     public boolean holdingEssence(){
@@ -287,6 +314,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         tag.putInt("cooldown", channelCooldown);
         tag.putInt("taming", tamingTime);
         tag.putBoolean("beingTamed", this.entityData.get(BEING_TAMED));
+        tag.putString("color", this.entityData.get(COLOR));
     }
 
     @Override
@@ -302,11 +330,21 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         channelCooldown = tag.getInt("cooldown");
         this.tamingTime = tag.getInt("taming");
         entityData.set(BEING_TAMED, tag.getBoolean("beingTamed"));
+        if (tag.contains("color"))
+            this.entityData.set(COLOR, tag.getString("color"));
     }
 
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
     public void tryResetGoals(){
         this.goalSelector.availableGoals = new LinkedHashSet<>();
         this.addGoalsAfterConstructor();
+    }
+
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        String color = getEntityData().get(COLOR).toLowerCase();
+        if(color.isEmpty())
+            color = "brown";
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color +".png");
     }
 }
