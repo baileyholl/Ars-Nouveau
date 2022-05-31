@@ -41,6 +41,9 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     public void start() {
         super.start();
         storePos = starbuncle.getValidStorePos(starbuncle.getHeldStack());
+        if (storePos == null) {
+            starbuncle.setBackOff(60 + starbuncle.level.random.nextInt(60));
+        }
         if (storePos != null && !starbuncle.getHeldStack().isEmpty()) {
             starbuncle.getNavigation().tryMoveToBlockPos(storePos, 1.3);
             startDistance = BlockUtil.distanceFrom(starbuncle.position, storePos);

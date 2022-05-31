@@ -63,7 +63,7 @@ public class FindItem extends Goal {
 
     @Override
     public boolean canUse() {
-        if(starbuncle.isPickupDisabled())
+        if(starbuncle.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
             return false;
         ItemStack itemstack = starbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
@@ -87,8 +87,10 @@ public class FindItem extends Goal {
                 break;
             }
         }
-
-        return dest != null && !starbuncle.isStuck && starbuncle.getHeldStack().isEmpty() && !nearbyItems().isEmpty();
+        if(dest == null){
+            starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
+        }
+        return dest != null && !starbuncle.isStuck  && !nearbyItems().isEmpty();
     }
 
     @Override
