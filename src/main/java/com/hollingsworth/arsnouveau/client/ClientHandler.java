@@ -86,7 +86,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ALLY_VEX, RenderAllyVex::new);
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, StarbuncleRenderer::new);
         event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, WhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, (t) -> new TextureVariantRenderer(t, new WixieModel()));
         event.registerEntityRenderer(ModEntities.WILDEN_STALKER,renderManager -> new com.hollingsworth.arsnouveau.client.renderer.entity.GenericRenderer(renderManager, new WildenStalkerModel()));
         event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
         event.registerEntityRenderer(ModEntities.WILDEN_HUNTER, WildenRenderer::new);
@@ -99,16 +99,16 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_RITUAL,
                 renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW, TippableArrowRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE,(t) -> new TextureVariantRenderer(t, new WixieModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY, DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY, DrygmyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY, (t) -> new TextureVariantRenderer(t, new DrygmyModel()));
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL, renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, FamiliarCarbyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY, DrygmyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY,  (t) -> new TextureVariantRenderer(t, new DrygmyModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH, WhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, (t) -> new TextureVariantRenderer(t, new WixieModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_JABBERWOG, BookwyrmRenderer::new); //avoid REI crash
