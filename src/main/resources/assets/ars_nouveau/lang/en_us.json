@@ -1027,5 +1027,5 @@
 	"ars_nouveau.glyph_name.name": "Glyph of Naming",
 	"ars_nouveau.glyph_desc.name": "Names an entity after the set Spell Name. Can be overridden with a name tag in the hotbar.",
 	"ars_nouveau.glyph_name.summon_undead": "Glyph of Summon Undead",
-	"ars_nouveau.glyph_desc.summon_undead": "Calls forth an augmentable skeleton to your aid!"
+	"ars_nouveau.glyph_desc.summon_undead": "Calls forth an augmentable skeleton to your aid!  Try using augments to improve them!"
 }
