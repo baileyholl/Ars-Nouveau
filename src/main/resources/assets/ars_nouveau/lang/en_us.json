@@ -1056,5 +1056,10 @@
 	"item.ars_nouveau.starbuncle_shades": "Starbuncle Shades",
 	"tooltip.starbuncle_shades": "Using these on a Starbuncle will increase their coolness, but disable their ability to pickup items off the ground or pick Sourceberries.",
 	"ars_nouveau.page.starbuncle_shades": "Using these on a Starbuncle will disable their ability to pick up items off the ground or pick Sourceberries. Wanding the starbuncle will drop the glasses.",
-	"entity.ars_nouveau.ally_vex": "Summoned Vex"
+	"entity.ars_nouveau.ally_vex": "Summoned Vex",
+	"ars_nouveau.scryers_eye.no_scrolls": "Place a Scryer's Scroll on a nearby pedestal.",
+	"ars_nouveau.camera.not_loaded": "The block has been removed or is not chunk loaded.",
+	"ars_nouveau.page.support_mod": "Support Ars Nouveau!",
+	"ars_nouveau.patreon": "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, and more!",
+	"ars_nouveau.patreon_text": "Patreon"
 }

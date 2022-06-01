@@ -14,9 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class ANServerPlayerMixin {
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;absMoveTo(DDDFF)V"))
     private void an_tick(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
-        System.out.println("fire");
         if (!CameraUtil.isPlayerMountedOnCamera(player)) {
-            System.out.println("move to");
             player.absMoveTo(x, y, z, yaw, pitch);
         }
     }
