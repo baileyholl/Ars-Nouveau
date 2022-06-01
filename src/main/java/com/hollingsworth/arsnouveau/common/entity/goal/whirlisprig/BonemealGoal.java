@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
             if(this.timeGrowing <= 0){
                 sylph.timeSinceBonemeal = 0;
                 ItemStack stack = new ItemStack(Items.BONE_MEAL);
-                BoneMealItem.applyBonemeal(stack, world, growPos, FakePlayerFactory.getMinecraft(world));
+                BoneMealItem.applyBonemeal(stack, world, growPos, ANFakePlayer.getPlayer(world));
             }
         }
     }

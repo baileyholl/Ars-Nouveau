@@ -34,6 +34,7 @@ public class GlyphLib {
     public static final String EffectHarvestID = "harvest";
     public static final String EffectLeapID = "leap";
     public static final String AugmentAccelerateID = "accelerate";
+    public static final String AugmentDecelerateID = "decelerate";
     public static final String AugmentExtendTimeID = "extend_time";
     public static final String AugmentPierceID = "pierce";
     public static final String AugmentAOEID = "aoe";

@@ -167,6 +167,27 @@ public class Networking {
                 PacketSetSound::toBytes,
                 PacketSetSound::new,
                 PacketSetSound::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketMountCamera.class,
+                PacketMountCamera::encode,
+                PacketMountCamera::decode,
+                PacketMountCamera::onMessage);
+        INSTANCE.registerMessage(nextID(),
+                PacketDismountCamera.class,
+                PacketDismountCamera::encode,
+                PacketDismountCamera::decode,
+                PacketDismountCamera::onMessage);
+        INSTANCE.registerMessage(nextID(),
+                PacketSetCameraView.class,
+                PacketSetCameraView::encode,
+                PacketSetCameraView::decode,
+                PacketSetCameraView::onMessage);
+        INSTANCE.registerMessage(nextID(),
+                PacketSyncLitEntities.class,
+                PacketSyncLitEntities::toBytes,
+                PacketSyncLitEntities::new,
+                PacketSyncLitEntities::handle);
+
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){

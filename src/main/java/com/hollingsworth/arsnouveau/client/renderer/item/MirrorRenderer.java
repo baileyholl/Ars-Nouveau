@@ -11,7 +11,7 @@ public class MirrorRenderer extends GeoItemRenderer<EnchantersMirror> {
         super(model);
     }
 
-    public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(model);
+    public static GenericItemBlockRenderer getISTER(){
+        return new GenericItemBlockRenderer(model);
     }
 }

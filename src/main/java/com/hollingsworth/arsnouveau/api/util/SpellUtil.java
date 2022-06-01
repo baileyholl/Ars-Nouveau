@@ -35,10 +35,14 @@ public class SpellUtil {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1, -1);
     }
 
+    public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, double aoeBonus) {
+        return calcAOEBlocks(caster, origin, mop, (int) (1 + Math.floor(aoeBonus)), (int) (1 + Math.ceil(aoeBonus)), 1, -1);
+    }
+
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, SpellStats stats) {
-        int aoeBonus = stats.getBuffCount(AugmentAOE.INSTANCE);
+        double aoeBonus = stats.getAoeMultiplier();
         int pierceBonus = stats.getBuffCount(AugmentPierce.INSTANCE);
-        return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1 + pierceBonus, -1);
+        return calcAOEBlocks(caster, origin, mop, aoeBonus,  pierceBonus);
     }
 
     public static boolean isCorrectHarvestLevel(int strength, BlockState state) {
@@ -64,6 +68,10 @@ public class SpellUtil {
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int aoeBonus, int pierceBonus) {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1 + pierceBonus, -1);
+    }
+
+    public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, double aoeBonus, int pierceBonus) {
+        return calcAOEBlocks(caster, origin, mop, (int) (1 + Math.floor(aoeBonus)), (int) (1 + Math.ceil(aoeBonus)), 1 + pierceBonus, -1);
     }
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {

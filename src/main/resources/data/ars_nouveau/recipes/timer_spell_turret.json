@@ -15,5 +15,6 @@
   "output": {
     "item": "ars_nouveau:timer_spell_turret"
   },
-  "sourceCost": 0
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
 }

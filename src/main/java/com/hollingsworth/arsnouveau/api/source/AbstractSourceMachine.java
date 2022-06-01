@@ -26,12 +26,15 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt(SOURCE_TAG, getSource());
         tag.putInt(MAX_SOURCE_TAG, getMaxSource());
     }
 
     @Override
     public int setSource(int source) {
+        if(this.source == source)
+            return this.source;
         this.source = source;
         if(this.source > this.getMaxSource())
             this.source = this.getMaxSource();
@@ -53,6 +56,8 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int removeSource(int source) {
+        if(source == 0)
+            return this.getSource();
         this.setSource(this.getSource() - source);
         update();
         return this.getSource();
@@ -66,7 +71,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     public boolean update(){
         if(this.worldPosition != null && this.level != null){
-            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 2);
+            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 3);
             return true;
         }
         return false;

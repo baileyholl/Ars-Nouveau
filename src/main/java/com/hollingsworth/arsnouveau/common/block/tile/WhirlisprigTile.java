@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -39,9 +39,9 @@ import java.util.stream.Collectors;
 
 public class WhirlisprigTile extends SummoningTile implements IAnimatable {
 
-    public static Tag.Named<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
-    public static Tag.Named<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
-    public static Tag.Named<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
+    public static TagKey<Block> KINDA_LIKES =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
+    public static TagKey<Block> GREATLY_LIKES =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
+    public static TagKey<Item> DENIED_DROP =  ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
     public List<ItemStack> ignoreItems = new ArrayList<>();
     public int ticksToNextEval;
     public int moodScore;
@@ -100,7 +100,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
     }
 
     public boolean isValidReward(ItemStack stack){
-        if (DENIED_DROP.contains(stack.getItem()))
+        if (stack.is(DENIED_DROP))
             return false;
         if (ignoreItems == null || ignoreItems.isEmpty())
             return true;

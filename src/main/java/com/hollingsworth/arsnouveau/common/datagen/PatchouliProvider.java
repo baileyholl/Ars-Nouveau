@@ -161,7 +161,8 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 4)).withTitle("ars_nouveau.item_transport"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 5)).withTitle("ars_nouveau.filtering"))
-                .withPage(new TextPage(getLangPath("starbuncle_charm", 6)).withTitle("ars_nouveau.pathing")), getPath(AUTOMATION, "starbuncle_charm"));
+                .withPage(new TextPage(getLangPath("starbuncle_charm", 6)).withTitle("ars_nouveau.pathing"))
+                .withPage(new TextPage(getLangPath("starbuncle_charm", 7)).withTitle("ars_nouveau.starbuncle_bed")), getPath(AUTOMATION, "starbuncle_charm"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DRYGMY_CHARM)
                 .withLocalizedText()
@@ -269,8 +270,8 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EntityPage(ModEntities.WILDEN_HUNTER.getRegistryName().toString()).withText(getLangPath("wilden", 3)))
                 .withPage(new EntityPage(ModEntities.WILDEN_STALKER.getRegistryName().toString()).withText(getLangPath("wilden", 4)))
                 .withPage(new EntityPage(ModEntities.WILDEN_GUARDIAN.getRegistryName().toString()).withText(getLangPath("wilden", 5)))
-                .withPage(new EntityPage(ModEntities.WILDEN_BOSS.getRegistryName().toString()))
-                .withPage(new TextPage(getLangPath("wilden", 6))), getPath(RESOURCES, "wilden"));
+                .withPage(new EntityPage(ModEntities.WILDEN_BOSS.getRegistryName().toString()).withText(getLangPath("wilden", 6)))
+                .withPage(new TextPage(getLangPath("wilden", 7))), getPath(RESOURCES, "wilden"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
                 .withLocalizedText()
@@ -403,8 +404,8 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
                 .withIcon(ItemsRegistry.SPELL_PARCHMENT)
-                .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community"))
-                .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")), getPath(MOD_NEWS, "mod_news"));
+                .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community")),
+                getPath(MOD_NEWS, "mod_news"));
 
         addBasicItem(ItemsRegistry.DOWSING_ROD, EQUIPMENT, new CraftingPage(ItemsRegistry.DOWSING_ROD));
 
@@ -417,6 +418,23 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("amethyst_golem_charm", 5)).withTitle("ars_nouveau.amethyst_storage")),
                 getPath(AUTOMATION, "amethyst_golem_charm"));
         addBasicItem(ItemsRegistry.ANNOTATED_CODEX, EQUIPMENT, new CraftingPage(ItemsRegistry.ANNOTATED_CODEX));
+        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ORANGE_SBED).withName("ars_nouveau.summon_bed").withLocalizedText("summon_bed")
+                .withPage(new CraftingPage(BlockRegistry.ORANGE_SBED).withRecipe2(BlockRegistry.BLUE_SBED))
+                        .withPage(new CraftingPage(BlockRegistry.GREEN_SBED).withRecipe2(BlockRegistry.YELLOW_SBED))
+                        .withPage(new CraftingPage(BlockRegistry.RED_SBED).withRecipe2(BlockRegistry.PURPLE_SBED))
+                , getPath(AUTOMATION, "summon_bed"));
+
+        addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
+        addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
+        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
+        addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
+
+        addPage(new PatchouliBuilder(MOD_NEWS, "support_mod")
+                .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
+                .withPage(new LinkPage("https://www.patreon.com/arsnouveau", "ars_nouveau.patreon_text", "ars_nouveau.patreon"))
+                .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")),
+                getPath(MOD_NEWS, "support_mod"));
+
     }
 
     public String getLangPath(String name, int count){
@@ -434,8 +452,10 @@ public class PatchouliProvider implements DataProvider {
     public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage){
         PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
-                .withPage(new TextPage("ars_nouveau.page." + item.asItem().getRegistryName().getPath()))
-                .withPage(recipePage);
+                .withPage(new TextPage("ars_nouveau.page." + item.asItem().getRegistryName().getPath()));
+        if(recipePage != null){
+            builder.withPage(recipePage);
+        }
         this.pages.add(new PatchouliPage(builder, getPath(category, item.asItem().getRegistryName())));
     }
 

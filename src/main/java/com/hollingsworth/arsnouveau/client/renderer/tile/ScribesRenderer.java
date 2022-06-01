@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -75,14 +75,14 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
             }
 
             if(direction == Direction.SOUTH){
-                stack.mulPose(Vector3f.YP.rotationDegrees(90));
-                stack.translate(-1, 0, 0);
+                stack.mulPose(Vector3f.YP.rotationDegrees(270));
+                stack.translate(-1, 0, -1);
             }
 
             if(direction == Direction.WEST){
-                stack.mulPose(Vector3f.YP.rotationDegrees(90));
-                stack.translate(-1, 0, 0);
+                stack.mulPose(Vector3f.YP.rotationDegrees(270));
 
+                stack.translate(0, 0, -2);
             }
 
             if(direction == Direction.EAST){
@@ -151,8 +151,8 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         }
     }
 
-    public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(model);
+    public static GenericItemBlockRenderer getISTER(){
+        return new GenericItemBlockRenderer(model);
     }
 
     @Override

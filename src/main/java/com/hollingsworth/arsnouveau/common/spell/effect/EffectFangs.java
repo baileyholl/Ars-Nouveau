@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityEvokerFangs;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +17,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ public class EffectFangs extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(shooter == null && spellContext.castingTile != null) {
-            shooter = FakePlayerFactory.getMinecraft((ServerLevel) world);
+            shooter = ANFakePlayer.getPlayer((ServerLevel) world);
             BlockPos pos = spellContext.castingTile.getBlockPos();
             shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
@@ -49,7 +49,7 @@ public class EffectFangs extends AbstractEffect {
         double d0 = Math.min(targetY, shooter.getY());
         double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
         float f = (float)Mth.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
-        int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE);
+        int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE); //no decelerate support atm
         double durationModifier = spellStats.getDurationMultiplier();
         // Create fangs in an AOE around the caster
         if(rayTraceResult instanceof EntityHitResult && shooter.equals(((EntityHitResult) rayTraceResult).getEntity())){

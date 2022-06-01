@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.datagen.Recipes;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -69,7 +70,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
             mana += 30 * food.getSaturationModifier();
             progress += 1;
 
-            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem()).getBlock()))){
+            if(i.is(ItemTagProvider.MAGIC_FOOD) || (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().is(BlockTagProvider.MAGIC_PLANTS))){
                 progress += 4;
                 mana += 10;
                 mana *= 2;

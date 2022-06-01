@@ -37,7 +37,7 @@ public class EffectSummonSteed extends AbstractEffect {
 
         int ticks = (int) (20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         Vec3 hit = rayTraceResult.getLocation();
-        for(int i = 0; i < 1 + spellStats.getBuffCount(AugmentAOE.INSTANCE); i++){
+        for(int i = 0; i < 1 + Math.round(spellStats.getAoeMultiplier()); i++){
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;

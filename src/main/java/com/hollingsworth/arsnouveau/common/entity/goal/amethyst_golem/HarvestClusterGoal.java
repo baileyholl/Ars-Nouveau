@@ -89,11 +89,13 @@ public class HarvestClusterGoal extends Goal {
         harvestableList = new ArrayList<>(golem.buddingBlocks);
         Collections.shuffle(harvestableList);
         tickTime = 130;
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.HARVEST;
     }
 
     @Override
     public void stop() {
         golem.setStomping(false);
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.NONE;
     }
 
     @Override

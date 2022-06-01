@@ -21,6 +21,8 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
         if(entity.partyCarby)
             return;
         IBone head = this.getAnimationProcessor().getBone("head");
+        if(customPredicate == null)
+            return;
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
@@ -38,6 +40,6 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
     }
 }

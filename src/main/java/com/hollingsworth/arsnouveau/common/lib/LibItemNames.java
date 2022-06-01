@@ -2,15 +2,10 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 public class LibItemNames {
 
+    public static final String STARBUNCLE_SHADES = "starbuncle_shades";
     public static final String BLANK_GLYPH = "blank_glyph";
 
     public static final String MAGE_FIBER = "magebloom_fiber";
-
-    public static final String MAGIC_CLAY = "magic_clay";
-
-    public static final String MARVELOUS_CLAY = "marvelous_clay";
-
-    public static final String MYTHICAL_CLAY = "mythical_clay";
 
     public static final String BUCKET_OF_SOURCE = "bucket_of_source";
 
@@ -20,7 +15,6 @@ public class LibItemNames {
     public static final String APPRENTICE_SPELL_BOOK = "apprentice_spell_book";
     public static final String ARCHMAGE_SPELL_BOOK = "archmage_spell_book";
 
-    public static final String ARCANE_BRICK = "arcane_brick";
     public static final String MAGE_BLOOM = "magebloom";
     public static final String BLAZE_FIBER = "blaze_fiber";
 
@@ -34,8 +28,6 @@ public class LibItemNames {
     public static final String BELT_OF_UNSTABLE_GIFTS = "belt_of_unstable_gifts";
     public static final String AMULET_OF_MANA_REGEN = "amulet_of_mana_regen";
     public static final String AMULET_OF_MANA_BOOST = "amulet_of_mana_boost";
-    public static final String AMULET_OF_ENVIRONMENTAL_PROTECTION = "amulet_of_environment";
-
 
     public static final String WARP_SCROLL = "warp_scroll";
     public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
@@ -124,5 +116,5 @@ public class LibItemNames {
 
     public static final String DOWSING_ROD = "dowsing_rod";
     public static final String ANNOTATED_CODEX = "annotated_codex";
-
+    public static final String SCRYER_SCROLL = "scryer_scroll";
 }

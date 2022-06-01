@@ -46,6 +46,13 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_MOSAIC);
         registerNormalCube(BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_SLAB);
         registerNormalCube(BlockRegistry.AS_GOLD_STONE, LibBlockNames.AS_GOLD_STONE);
+
+        registerNormalCube(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED);
+        registerNormalCube(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED);
+        registerNormalCube(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED);
+        registerNormalCube(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED);
+        registerNormalCube(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
+        registerNormalCube(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
     }
 
     public void registerNormalCube(Block block, String registry){

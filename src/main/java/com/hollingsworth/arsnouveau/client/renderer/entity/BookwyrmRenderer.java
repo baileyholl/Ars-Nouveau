@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,13 +21,6 @@ public class BookwyrmRenderer extends GeoEntityRenderer {
         super(manager, new BookwyrmModel());
     }
 
-    public ResourceLocation getColor(EntityBookwyrm e){
-        String color = e.getEntityData().get(EntityBookwyrm.COLOR).toLowerCase();
-        if(color.isEmpty())
-            return BLUE;
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color +".png");
-    }
-
     @Override
     public void render(LivingEntity entity, float entityYaw, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
         stack.pushPose();
@@ -38,10 +31,9 @@ public class BookwyrmRenderer extends GeoEntityRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(LivingEntity entity) {
-        if(!(entity instanceof EntityBookwyrm))
-            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
-
-        return getColor((EntityBookwyrm) entity);
+        if(entity instanceof IVariantTextureProvider variantTextureProvider)
+            return variantTextureProvider.getTexture(entity);
+        return BLUE;
     }
 
     @Override

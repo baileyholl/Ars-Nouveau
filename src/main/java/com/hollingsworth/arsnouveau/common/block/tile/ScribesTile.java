@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -79,7 +80,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if(recipeID != null && !recipeID.toString().isEmpty() &&  (recipe == null || !recipe.id.equals(recipeID))){
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
         }
-        if(!level.isClientSide && level.getGameTime() % 8 == 0 && recipe != null){
+        if(!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null){
+            boolean foundStack = false;
             List<ItemEntity> nearbyItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(2));
             for(ItemEntity e : nearbyItems){
                 if(canConsumeItemstack(e.getItem())){
@@ -89,9 +91,12 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                     e.getItem().shrink(1);
                     ParticleUtil.spawnTouchPacket(level, e.getOnPos(), ParticleUtil.defaultParticleColorWrapper());
                     updateBlock();
+                    foundStack = true;
                     break;
                 }
             }
+            if(!foundStack && level.getGameTime() % 20 == 0)
+                checkInventories();
 
             if(getRemainingRequired().isEmpty() && !crafting){
                 crafting = true;
@@ -114,6 +119,40 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
     }
 
+    public void checkInventories(){
+        for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
+            if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).isPresent()) {
+                IItemHandler handler = level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
+                if (handler != null) {
+                    for (int i = 0; i < handler.getSlots(); i++) {
+                        ItemStack stack = handler.getStackInSlot(i);
+                        if (canConsumeItemstack(stack)) {
+                            ItemStack stack1 = handler.extractItem(i, 1, false);
+                            stack1.copy().setCount(1);
+                            consumedStacks.add(stack1);
+                            EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
+                            flyingItem.setStack(stack1);
+                            level.addFreshEntity(flyingItem);
+                            updateBlock();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public boolean consumeStack(ItemStack stack){
+        if(!canConsumeItemstack(stack))
+            return false;
+        ItemStack copyStack = stack.split(1);
+        consumedStacks.add(copyStack);
+        ParticleUtil.spawnTouchPacket(level, getBlockPos().above(), ParticleUtil.defaultParticleColorWrapper());
+        updateBlock();
+        return true;
+    }
+
     public void refundConsumed(){
         for(ItemStack i : consumedStacks){
             ItemEntity entity = new ItemEntity(level, getX(), getY(), getZ(), i);
@@ -125,6 +164,11 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             if (level instanceof ServerLevel serverLevel)
                 ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
         }
+        recipe = null;
+        recipeID = null;
+        craftingTicks = 0;
+        crafting = false;
+        updateBlock();
     }
 
     public void setRecipe(GlyphRecipe recipe, Player player){

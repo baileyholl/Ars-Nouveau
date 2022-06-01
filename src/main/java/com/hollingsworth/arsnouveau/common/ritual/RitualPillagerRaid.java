@@ -38,7 +38,7 @@ public class RitualPillagerRaid extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        return getWorld().getDifficulty() != Difficulty.HARD && getContext().consumedItems.isEmpty() && Tags.Items.GEMS_EMERALD.contains(stack.getItem());
+        return getWorld().getDifficulty() != Difficulty.HARD && getContext().consumedItems.isEmpty() && stack.is(Tags.Items.GEMS_EMERALD);
     }
 
     @Override

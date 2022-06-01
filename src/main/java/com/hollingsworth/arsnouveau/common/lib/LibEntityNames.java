@@ -47,6 +47,7 @@ public class LibEntityNames {
     public static final String BLAZING_WEALD_WALKER = appendWeald("blazing");
     public static final String CASCADING_WEALD_WALKER = appendWeald("cascading");
     public static final String AMETHYST_GOLEM = "amethyst_golem";
+    public static final String SCRYER_CAMERA = "scryer_camera";
 
     public static String appendFamiliar(String fam){
         return "familiar_" + fam;

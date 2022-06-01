@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -14,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 
@@ -44,13 +44,13 @@ public class RitualDig extends AbstractRitual {
     }
 
     public void breakBlock(BlockPos pos){
-        if(!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim( FakePlayerFactory.getMinecraft((ServerLevel) getWorld()), getWorld(), pos)){
+        if(!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim(ANFakePlayer.getPlayer((ServerLevel) getWorld()), getWorld(), pos)){
             return;
         }
         BlockState state = getWorld().getBlockState(pos);
         ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
-        state.getBlock().playerDestroy(getWorld(), FakePlayerFactory.getMinecraft((ServerLevel) getWorld()), pos, getWorld().getBlockState(pos), getWorld().getBlockEntity(pos), stack);
-        destroyBlockSafely(getWorld(), pos, false,  FakePlayerFactory.getMinecraft((ServerLevel) getWorld()));
+        state.getBlock().playerDestroy(getWorld(), ANFakePlayer.getPlayer((ServerLevel) getWorld()), pos, getWorld().getBlockState(pos), getWorld().getBlockEntity(pos), stack);
+        destroyBlockSafely(getWorld(), pos, false,  ANFakePlayer.getPlayer((ServerLevel) getWorld()));
     }
 
     @Override

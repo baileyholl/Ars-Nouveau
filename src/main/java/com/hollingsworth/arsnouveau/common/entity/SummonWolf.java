@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -60,6 +61,11 @@ public class SummonWolf extends Wolf implements ISummon {
 
     @Override
     public boolean canBreed() {
+        return false;
+    }
+
+    @Override
+    public boolean canMate(Animal pOtherAnimal) {
         return false;
     }
 

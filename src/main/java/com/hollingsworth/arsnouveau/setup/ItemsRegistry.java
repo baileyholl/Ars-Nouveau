@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
 import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
@@ -37,6 +39,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 
@@ -71,13 +74,15 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static StarbuncleCharm STARBUNCLE_CHARM;
     @ObjectHolder("debug")public static Debug debug;
     @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
+    @ObjectHolder(LibItemNames.STARBUNCLE_SHADES)public static StarbuncleShades STARBUNCLE_SHADES;
+
     @ObjectHolder(LibItemNames.WHIRLISPRIG_CHARM)public static WhirlisprigCharm WHIRLISPRIG_CHARM;
     @ObjectHolder(LibItemNames.WHIRLISPRIG_SHARDS)public static ModItem WHIRLISPRIG_SHARDS;
     @ObjectHolder(LibItemNames.SOURCE_GEM)public static ModItem SOURCE_GEM;
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static AllowItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static DenyItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.MIMIC_ITEM_SCROLL)public static MimicItemScroll MIMIC_ITEM_SCROLL;
-    @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
+    @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static BlankParchmentItem BLANK_PARCHMENT;
     @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
@@ -127,6 +132,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.WATER_ESSENCE)public static ModItem WATER_ESSENCE;
     @ObjectHolder(LibItemNames.AMETHYST_GOLEM_CHARM)public static AmethystGolemCharm AMETHYST_GOLEM_CHARM;
     @ObjectHolder(LibItemNames.ANNOTATED_CODEX)public static AnnotatedCodex ANNOTATED_CODEX;
+    @ObjectHolder(LibItemNames.SCRYER_SCROLL)public static ScryerScroll SCRYER_SCROLL;
 
     public static FoodProperties SOURCE_BERRY_FOOD = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_PIE_FOOD = (new FoodProperties.Builder()).nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEat().build();
@@ -147,7 +153,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.DULL_TRINKET).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new ModItem(LibItemNames.BLAZE_FIBER),
                     new ModItem(LibItemNames.END_FIBER),
-                    new CompostableItem(LibItemNames.MAGE_BLOOM, 0.65F).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
+                    new ModItem(LibItemNames.MAGE_BLOOM).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
                     new ModItem(LibItemNames.MAGE_FIBER),
                     new ModItem(LibItemNames.MUNDANE_BELT).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
@@ -175,6 +181,7 @@ public class ItemsRegistry {
                     new WornNotebook().withTooltip(new TranslatableComponent("tooltip.worn_notebook")),
                     new StarbuncleCharm(),
                     new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(new TranslatableComponent("tooltip.starbuncle_shard")),
+                    new StarbuncleShades(LibItemNames.STARBUNCLE_SHADES).withTooltip(new TranslatableComponent("tooltip.starbuncle_shades")),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override
@@ -209,7 +216,7 @@ public class ItemsRegistry {
                     new AllowItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new DenyItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new MimicItemScroll(LibItemNames.MIMIC_ITEM_SCROLL),
-                    new ModItem(LibItemNames.BLANK_PARCHMENT),
+                    new BlankParchmentItem(LibItemNames.BLANK_PARCHMENT),
                     new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslatableComponent("tooltip.wixie_shard")),
                     new Wand(),
                     new VoidJar(),
@@ -275,23 +282,28 @@ public class ItemsRegistry {
                     new FireEssence(LibItemNames.FIRE_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.MANIPULATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new DowsingRod(LibItemNames.DOWSING_ROD),
+                    new DowsingRod(LibItemNames.DOWSING_ROD).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.dowsing_rod")),
                     new AmethystGolemCharm().withTooltip(new TranslatableComponent("tooltip.ars_nouveau.amethyst_charm")),
-                    new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX)
+                    new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX),
+                    new ScryerScroll(LibItemNames.SCRYER_SCROLL).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.scryer_scroll")),
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
-            for(Glyph glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().values()){
-                registry.register(glyph);
-                ITEMS.add(glyph);
+            for(Supplier<Glyph> glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().values()){
+                registry.register(glyph.get());
+                ITEMS.add(glyph.get());
             }
 
-            for(RitualTablet ritualParchment : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
-                registry.register(ritualParchment);
-                ITEMS.add(ritualParchment);
+            for(AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()){
+                RitualTablet tablet = new RitualTablet(ArsNouveauAPI.getInstance().getRitualRegistryName(ritual.getID()), ritual);
+                registry.register(tablet);
+                ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getID(), tablet);
+                ITEMS.add(tablet);
             }
 
-            for(FamiliarScript script : ArsNouveauAPI.getInstance().getFamiliarScriptMap().values()){
+            for(AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()){
+                FamiliarScript script = new FamiliarScript(holder);
+                ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.id, script);
                 registry.register(script);
                 ITEMS.add(script);
             }

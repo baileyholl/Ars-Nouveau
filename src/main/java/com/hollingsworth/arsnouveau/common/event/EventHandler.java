@@ -57,6 +57,13 @@ public class EventHandler {
         if (voided) event.setResult(Event.Result.ALLOW);
     }
 
+    @SubscribeEvent(priority= EventPriority.LOWEST)
+    public static void itemPickupEvent( PlayerEvent.ItemPickupEvent event) {
+        Player player = event.getPlayer();
+        ItemStack pickingUp = event.getStack();
+        VoidJar.tryVoiding(player, pickingUp);
+    }
+
 
     @SubscribeEvent
     public static void livingHurtEvent(LivingHurtEvent e){
@@ -111,6 +118,7 @@ public class EventHandler {
             ClientInfo.ticksInGame++;
         }
     }
+
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(TickEvent.PlayerTickEvent event){

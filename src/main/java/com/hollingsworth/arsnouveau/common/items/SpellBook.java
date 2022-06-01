@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
-import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenuUtils;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
@@ -24,7 +24,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -154,66 +153,41 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onRadialKeyPressed(ItemStack stack, Player player) {
-        Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProvider(stack)));
+        Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProviderForSpellpart(stack)));
     }
 
-    public RadialMenu<ResourceLocation> getRadialMenuProvider(ItemStack itemStack) {
+    public RadialMenu<AbstractSpellPart> getRadialMenuProviderForSpellpart(ItemStack itemStack) {
         return new RadialMenu<>((int slot) -> {
             BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
         },
-                getRadialMenuSlots(itemStack),
-                GuiRadialMenuUtils::drawTextureFromResourceLocation,
+                getRadialMenuSlotsForSpellpart(itemStack),
+                RenderUtils::drawSpellPart,
                 3);
     }
 
-    public List<RadialMenuSlot<ResourceLocation>> getRadialMenuSlots(ItemStack itemStack) {
+    public List<RadialMenuSlot<AbstractSpellPart>> getRadialMenuSlotsForSpellpart(ItemStack itemStack) {
         BookCaster spellCaster = new BookCaster(itemStack);
-        List<RadialMenuSlot<ResourceLocation>> radialMenuSlots = new ArrayList<>();
+        List<RadialMenuSlot<AbstractSpellPart>> radialMenuSlots = new ArrayList<>();
         for (int i = 1; i <= spellCaster.getMaxSlots(); i++) {
             Spell spell = spellCaster.getSpell(i);
-            ResourceLocation primaryIcon = null;
-            List<ResourceLocation> secondaryIcons = new ArrayList<>();
+            AbstractSpellPart primaryIcon = null;
+            List<AbstractSpellPart> secondaryIcons = new ArrayList<>();
             for (AbstractSpellPart p : spell.recipe) {
                 if (p instanceof AbstractCastMethod) {
-                    secondaryIcons.add(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon()));
+                    secondaryIcons.add(p);
                 }
 
                 if (p instanceof AbstractEffect) {
-                    primaryIcon = new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon());
+                    primaryIcon = p;
                     break;
                 }
             }
-            radialMenuSlots.add(new RadialMenuSlot<ResourceLocation>(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
+            radialMenuSlots.add(new RadialMenuSlot<>(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
         }
         return radialMenuSlots;
     }
-
-
-    /* I left this in as an example of how to set up a RadialMenu with Item-Icons instead of Png-Icons
-       Just use this method, set the offset to 0 and switch GuiRadialMenuUtils::drawTextureFromResourceLocation
-       with GuiRadialMenuUtils::drawItemAsIcon and suddenly you're using rendered Items instead of Pngs!
-    private List<RadialMenuSlot> getRadialMenuSlotsWithItemsAsTextures(ItemStack itemStack) {
-        BookCaster spellCaster = new BookCaster(itemStack);
-        List<RadialMenuSlot> radialMenuSlots = new ArrayList<>();
-        for (int i = 1; i <= spellCaster.getMaxSlots(); i++) {
-            Spell spell = spellCaster.getSpell(i);
-            Item primaryIcon = null;
-            List<Object> secondaryIcons = new ArrayList<>();
-            for (AbstractSpellPart p : spell.recipe) {
-                if (p instanceof AbstractCastMethod) {
-                    primaryIcon = ArsNouveauAPI.getInstance().getGlyphItemMap().get(p.getId());
-                }
-
-                if (p instanceof AbstractEffect) {
-                    secondaryIcons.add(ArsNouveauAPI.getInstance().getGlyphItem(p.getId()));
-                }
-            }
-            radialMenuSlots.add(new RadialMenuSlot(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
-        }
-        return radialMenuSlots;
-    }*/
 
     public static class BookCaster extends SpellCaster {
 

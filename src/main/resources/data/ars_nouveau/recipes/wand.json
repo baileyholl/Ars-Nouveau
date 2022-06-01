@@ -50,5 +50,6 @@
   "output": {
     "item": "ars_nouveau:wand"
   },
-  "sourceCost": 0
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
 }

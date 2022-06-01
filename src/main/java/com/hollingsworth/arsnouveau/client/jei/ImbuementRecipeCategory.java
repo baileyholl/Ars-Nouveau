@@ -11,6 +11,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +42,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
     public ImbuementRecipeCategory(IGuiHelper helper){
         this.helper = helper;
         background = helper.createBlankDrawable(114,108);
-        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK));
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockRegistry.IMBUEMENT_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {
@@ -57,7 +59,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
     }
 
     @Override
-    public Class getRecipeClass() {
+    public Class<ImbuementRecipe> getRecipeClass() {
         return ImbuementRecipe.class;
     }
 
@@ -77,7 +79,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
     }
 
     @Override
-    public void draw(ImbuementRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(ImbuementRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.source), 0.0f,100f, 10);
     }
@@ -89,8 +91,8 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
         for(Ingredient i : o.pedestalItems){
             itemStacks.add(Arrays.asList(i.getItems()));
         }
-        iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        iIngredients.setOutput(VanillaTypes.ITEM, o.output);
+        iIngredients.setInputLists(VanillaTypes.ITEM_STACK, itemStacks);
+        iIngredients.setOutput(VanillaTypes.ITEM_STACK, o.output);
     }
 
     @Override
@@ -99,7 +101,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
         recipeLayout.getItemStacks().set(0, Arrays.asList(recipe.input.getItems()));
 
         int index = 1;
-        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM);
+        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM_STACK);
         if(pedestalList.size() > 0) {
             pedestalList = pedestalList.subList(1, pedestalList.size());
             double angleBetweenEach = 360.0 / pedestalList.size();
@@ -113,7 +115,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
             }
         }
         recipeLayout.getItemStacks().init(index, false, 86, 10);
-        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+        recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
 
     }
 }

@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
+import com.hollingsworth.arsnouveau.api.ritual.TagScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -36,6 +38,7 @@ public class APIRegistry {
         registerSpell(EffectFangs.INSTANCE);
         registerSpell(EffectSummonVex.INSTANCE);
         registerSpell(AugmentAccelerate.INSTANCE);
+        registerSpell(AugmentDecelerate.INSTANCE);
         registerSpell(AugmentSplit.INSTANCE);
         registerSpell(AugmentAmplify.INSTANCE);
         registerSpell(AugmentAOE.INSTANCE);
@@ -110,6 +113,8 @@ public class APIRegistry {
 
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
         api.registerScryer(SingleBlockScryer.INSTANCE);
+        api.registerScryer(CompoundScryer.INSTANCE);
+        api.registerScryer(TagScryer.INSTANCE);
         api.getEnchantingRecipeTypes().add(RecipeRegistry.APPARATUS_TYPE);
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE);
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE);

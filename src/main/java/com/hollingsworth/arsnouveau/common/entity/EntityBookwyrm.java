@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -23,6 +26,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -47,7 +51,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -62,7 +65,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable {
+public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantTextureProvider {
 
     public static final EntityDataAccessor<String> SPELL_STRING = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
@@ -160,7 +163,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         if(level.getGameTime() % 20 == 0) {
             if (!(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile)) {
                 if (!level.isClientSide) {
-                    this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel) level)), 99);
+                    this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
                 }
             }
         }
@@ -348,8 +351,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         return factory;
     }
 
-    public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
-
     @Override
     protected int getExperienceReward(Player player) {
         return 0;
@@ -400,5 +401,15 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         this.entityData.define(SPELL_STRING, "");
         this.entityData.define(STRICT_MODE, true);
         this.entityData.define(COLOR, "blue");
+    }
+
+    public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
+
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        String color = getEntityData().get(EntityBookwyrm.COLOR).toLowerCase();
+        if(color.isEmpty())
+            color = "blue";
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color +".png");
     }
 }

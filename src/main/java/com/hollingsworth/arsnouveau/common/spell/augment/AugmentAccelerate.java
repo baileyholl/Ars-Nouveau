@@ -1,14 +1,23 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 
 public class AugmentAccelerate extends AbstractAugment {
+
     public static AugmentAccelerate INSTANCE = new AugmentAccelerate();
 
     private AugmentAccelerate() {
         super(GlyphLib.AugmentAccelerateID, "Accelerate");
+    }
+
+    @Override
+    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
+        builder.addAccelerationModifier(1.0F);
+        return super.applyModifiers(builder, spellPart);
     }
 
     @Override

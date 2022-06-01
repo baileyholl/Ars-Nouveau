@@ -97,6 +97,7 @@ public class ModEntities {
     public static EntityType<WealdWalker> ENTITY_BLAZING_WEALD = null;
     public static EntityType<WealdWalker> ENTITY_VEXING_WEALD = null;
     public static EntityType<AmethystGolem> AMETHYST_GOLEM = null;
+    public static EntityType<ScryerCamera> SCRYER_CAMERA = null;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -148,7 +149,7 @@ public class ModEntities {
                     EntityType.Builder.<EntityFlyingItem>of(EntityFlyingItem::new, MobCategory.MISC)
                             .sized(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
-                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new).noSave());
             ENTITY_RITUAL = build(
                     LibEntityNames.RITUAL_PROJ,
                     EntityType.Builder.<EntityRitualProjectile>of(EntityRitualProjectile::new, MobCategory.MISC)
@@ -197,18 +198,18 @@ public class ModEntities {
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityChimeraProjectile::new));
 
             ENTITY_FAMILIAR_STARBUNCLE = build(LibEntityNames.FAMILIAR_STARBUNCLE, EntityType.Builder.of(FamiliarStarbuncle::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
 
             ENTITY_FAMILIAR_BOOKWYRM = build(LibEntityNames.FAMILIAR_BOOKWYRM, EntityType.Builder.of(FamiliarBookwyrm::new, MobCategory.CREATURE)
-                    .sized(0.7f, 0.9f).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_DRYGMY = build(LibEntityNames.FAMILIAR_DRYGMY, EntityType.Builder.of(FamiliarDrygmy::new, MobCategory.CREATURE)
-                    .sized(0.6f, 0.85f).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_SYLPH = build(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_JABBERWOG = build(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_WIXIE = build(LibEntityNames.FAMILIAR_WIXIE, EntityType.Builder.of(FamiliarWixie::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_CASCADING_WEALD = build(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                         WealdWalker walker = new WealdWalker(type, world);
                         walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);
@@ -242,6 +243,9 @@ public class ModEntities {
 
             AMETHYST_GOLEM = build(LibEntityNames.AMETHYST_GOLEM, EntityType.Builder.of(AmethystGolem::new, MobCategory.CREATURE)
                     .sized(1.0f, 1.0f).setTrackingRange(10));
+            SCRYER_CAMERA = build(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
+                    .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -277,7 +281,9 @@ public class ModEntities {
                     ENTITY_VEXING_WEALD,
                     ENTITY_FLOURISHING_WEALD,
                     AMETHYST_GOLEM,
-                    SUMMON_SKELETON
+                    SUMMON_SKELETON,
+                    SCRYER_CAMERA
+
             );
 
 

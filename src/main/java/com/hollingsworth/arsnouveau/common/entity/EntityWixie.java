@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
@@ -13,7 +16,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,9 +33,10 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -40,12 +47,14 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable {
+public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantTextureProvider {
     AnimationFactory manager = new AnimationFactory(this);
 
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
 
     public BlockPos cauldronPos;
     public int inventoryBackoff;
@@ -99,12 +108,30 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         this.entityData.set(TAMED, isTamed);
         addGoalsAfterConstructor();
     }
+    public static String[] COLORS = {"white", "green", "blue", "black", "red"};
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+            return InteractionResult.SUCCESS;
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (player.getMainHandItem().is(Tags.Items.DYES)) {
+            DyeColor color = DyeColor.getColor(stack);
+            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
+                return InteractionResult.SUCCESS;
+            this.entityData.set(COLOR, color.getName());
+            player.getMainHandItem().shrink(1);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
+    }
 
     @Override
     public void tick() {
         super.tick();
         if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel)level)), 99);
+            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel)level)), 99);
         if(!level.isClientSide && inventoryBackoff > 0){
             inventoryBackoff--;
         }
@@ -149,6 +176,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(TAMED, false);
+        this.entityData.define(COLOR, "blue");
     }
 
     @Override
@@ -177,6 +205,9 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
 
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
+        if (tag.contains("color"))
+            this.entityData.set(COLOR, tag.getString("color"));
+
     }
 
     @Override
@@ -188,6 +219,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
         tag.putBoolean("tamed", this.entityData.get(TAMED));
+        tag.putString("color", this.entityData.get(COLOR));
     }
 
     @Override
@@ -221,6 +253,14 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
             this.remove(RemovalReason.DISCARDED);
         }
         return true;
+    }
+
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        String color = getEntityData().get(EntityWixie.COLOR).toLowerCase();
+        if(color.isEmpty())
+            color = "blue";
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color +".png");
     }
 
     public enum Animations{

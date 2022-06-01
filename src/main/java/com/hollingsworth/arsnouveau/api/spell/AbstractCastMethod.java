@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import javax.annotation.Nullable;
 
 public abstract class AbstractCastMethod extends AbstractSpellPart {
-
+    // TODO: Make cast methods return booleans for success or failure
     public abstract void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver);
 
     public abstract void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver);

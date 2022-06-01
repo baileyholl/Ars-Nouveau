@@ -1,12 +1,17 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,6 +19,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     private String id;
     public String name;
+    public Glyph glyphItem;
     /*ID for NBT data and SpellManager#spellList*/
     public String getId(){
         return this.id;
@@ -52,6 +58,13 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     public SpellTier getTier() {
         return SpellTier.ONE;
+    }
+
+    public Glyph getGlyph() {
+        if(glyphItem == null){
+            glyphItem = new Glyph(ArsNouveauAPI.getInstance().getSpellRegistryName(this.getId()), this);
+        }
+        return this.glyphItem;
     }
 
     /**
@@ -134,6 +147,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     // Default value for the starter spell config
     public boolean defaultedStarterGlyph(){
         return false;
+    }
+
+    public boolean isRenderAsIcon() {
+        return true;
     }
 
     public String getItemID(){

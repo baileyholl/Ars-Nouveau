@@ -50,5 +50,6 @@
   "output": {
     "item": "ars_nouveau:belt_of_levitation"
   },
-  "sourceCost": 0
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
 }

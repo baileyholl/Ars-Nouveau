@@ -103,6 +103,6 @@ public class EffectToss extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf();
+        return augmentSetOf();
     }
 }

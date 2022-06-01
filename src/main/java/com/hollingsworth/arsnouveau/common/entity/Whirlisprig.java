@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
@@ -24,6 +27,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -46,14 +50,12 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -69,7 +71,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable {
+public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantTextureProvider {
     AnimationFactory manager = new AnimationFactory(this);
 
 
@@ -87,7 +89,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     private boolean setBehaviors;
 
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        if(event.isMoving()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+        }else{
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        }
         return PlayState.CONTINUE;
     }
 
@@ -125,34 +131,32 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         return this.entityData.get(COLOR);
     }
 
+    public static String getColorFromStack(ItemStack stack){
+        if(stack.is(Tags.Items.DYES)){
+            if(stack.is(Tags.Items.DYES_GREEN)){
+                return "summer";
+            }else if(stack.is(Tags.Items.DYES_ORANGE)){
+                return "autumn";
+            }else if(stack.is(Tags.Items.DYES_YELLOW)){
+                return "spring";
+            }else if(stack.is(Tags.Items.DYES_WHITE)){
+                return "winter";
+            }
+        }
+        return null;
+    }
+
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
         if(hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !this.entityData.get(TAMED))
             return InteractionResult.PASS;
         
         ItemStack stack = player.getItemInHand(hand);
-        Item item = stack.getItem();
-        if(Tags.Items.DYES.contains(item)){
-            if(Tags.Items.DYES_GREEN.contains(item) && !getColor().equals("summer")){
-                this.entityData.set(COLOR, "summer");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
-            if(Tags.Items.DYES_ORANGE.contains(item) && !getColor().equals("autumn")){
-                this.entityData.set(COLOR, "autumn");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
-            if(Tags.Items.DYES_YELLOW.contains(item) && !getColor().equals("spring")){
-                this.entityData.set(COLOR, "spring");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
-            if(Tags.Items.DYES_WHITE.contains(item) && !getColor().equals("winter")){
-                this.entityData.set(COLOR, "winter");
-                stack.shrink(1);
-                return InteractionResult.SUCCESS;
-            }
+        String color = getColorFromStack(stack);
+        if(color != null && !getColor().equals(color)){
+            this.entityData.set(COLOR, color);
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
 
         if(stack.isEmpty()) {
@@ -245,7 +249,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         }
 
         if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && flowerPos != null && !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
-            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel) level)), 99);
+            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
             return;
         }
 
@@ -441,5 +445,10 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
             this.remove(RemovalReason.DISCARDED);
         }
         return this.isTamed();
+    }
+
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" +(getColor().isEmpty() ? "summer" : getColor()) + ".png");
     }
 }

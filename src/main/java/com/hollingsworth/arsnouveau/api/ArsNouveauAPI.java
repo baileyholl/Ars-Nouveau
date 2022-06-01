@@ -7,9 +7,7 @@ import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.IScryer;
-import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
-
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
@@ -24,8 +22,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +62,7 @@ public class ArsNouveauAPI {
     /**
      * Contains the list of glyph item instances.
      */
-    private ConcurrentHashMap<String, Glyph> glyphItemMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Supplier<Glyph>> glyphItemMap = new ConcurrentHashMap<>();
 
     private ConcurrentHashMap<String, FamiliarScript> familiarScriptMap = new ConcurrentHashMap<>();
 
@@ -107,8 +110,22 @@ public class ArsNouveauAPI {
     }
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
-        glyphItemMap.put(id, new Glyph(getSpellRegistryName(id), part));
+        glyphItemMap.put(id, part::getGlyph);
+
+        //register the spell part's config in
+        ForgeConfigSpec spec;
+        ForgeConfigSpec.Builder spellBuilder = new ForgeConfigSpec.Builder();
+        part.buildConfig(spellBuilder);
+        spec = spellBuilder.build();
+        part.CONFIG = spec;
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, part.CONFIG, ArsNouveau.MODID + "/" + part.getId() +".toml");
+
         return spellpartMap.put(id, part);
+    }
+
+    static{
+        //think we just gotta ensure the path exists once
+        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID), ArsNouveau.MODID);
     }
 
     public AbstractSpellPart registerSpell(AbstractSpellPart part){
@@ -116,12 +133,12 @@ public class ArsNouveauAPI {
     }
 
     public AbstractRitual registerRitual(String id, AbstractRitual ritual){
-        ritualParchmentMap.put(id, new RitualTablet(getRitualRegistryName(id), ritual));
+//        ritualParchmentMap.put(id, new RitualTablet(getRitualRegistryName(id), ritual));
         return ritualMap.put(id, ritual);
     }
 
     public AbstractFamiliarHolder registerFamiliar(AbstractFamiliarHolder familiar){
-        this.familiarScriptMap.put(familiar.id, new FamiliarScript(familiar));
+//        this.familiarScriptMap.put(familiar.id, new FamiliarScript(familiar));
         return familiarHolderMap.put(familiar.id, familiar);
     }
 
@@ -136,6 +153,7 @@ public class ArsNouveauAPI {
         return null;
     }
 
+    @Deprecated // To be removed and replaced with resource locations
     public String getSpellRegistryName(String id){
         return "glyph_"+ id.toLowerCase();
     }
@@ -148,7 +166,7 @@ public class ArsNouveauAPI {
         return spellpartMap;
     }
 
-    public Map<String, Glyph> getGlyphItemMap(){
+    public Map<String, Supplier<Glyph>> getGlyphItemMap(){
         return glyphItemMap;
     }
 

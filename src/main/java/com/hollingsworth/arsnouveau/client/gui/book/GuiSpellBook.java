@@ -224,7 +224,7 @@ public class GuiSpellBook extends BaseBook {
             int xOffset = 20 * ((adjustedXPlaced ) % PER_ROW) + (nextPage ? 134 :0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
 
-            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yPlace, false, part.getIcon(), part.getId());
+            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yPlace, false, part);
             addRenderableWidget(cell);
             glyphButtons.add(cell);
             adjustedXPlaced++;
@@ -257,8 +257,8 @@ public class GuiSpellBook extends BaseBook {
             // Set visibility of Cast Methods and Augments
             for(Widget w : renderables) {
                 if(w instanceof GlyphButton glyphButton) {
-                    if (glyphButton.spell_id != null) {
-                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.spell_id);
+                    if (glyphButton.abstractSpellPart.getId() != null) {
+                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getId());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -357,9 +357,9 @@ public class GuiSpellBook extends BaseBook {
 
         if (button1.validationErrors.isEmpty()) {
             for (CraftingButton b : craftingCells) {
-                if (b.resourceIcon.equals("")) {
-                    b.resourceIcon = button1.resourceIcon;
-                    b.spellTag = button1.spell_id;
+                if (b.abstractSpellPart == null) {
+                    b.abstractSpellPart = button1.abstractSpellPart;
+                    b.spellTag = button1.abstractSpellPart.getId();
                     validate();
                     return;
                 }
@@ -383,10 +383,10 @@ public class GuiSpellBook extends BaseBook {
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
             slot.spellTag = "";
-            slot.resourceIcon = "";
+            slot.abstractSpellPart = null;
             if (spell_recipe != null && i < spell_recipe.size()){
                 slot.spellTag = spell_recipe.get(i).getId();
-                slot.resourceIcon = spell_recipe.get(i).getIcon();
+                slot.abstractSpellPart = spell_recipe.get(i);
             }
         }
     }
@@ -499,7 +499,7 @@ public class GuiSpellBook extends BaseBook {
         glyphButton.validationErrors.clear();
 
         // Simulate adding the glyph to the current spell
-        recipe.add(api.getSpellpartMap().get(glyphButton.spell_id));
+        recipe.add(api.getSpellpartMap().get(glyphButton.abstractSpellPart.getId()));
 
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(

@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -39,7 +38,7 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle
 
 
     public ResourceLocation getColor(FamiliarStarbuncle e){
-        String color = e.getEntityData().get(Starbuncle.COLOR).toLowerCase();
+        String color = e.getColor().toLowerCase();
 
         if(color.isEmpty())
             return ORANGE;
@@ -49,7 +48,7 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle
 
     @Override
     public ResourceLocation getTextureLocation(FamiliarStarbuncle entity) {
-        return WILD_TEXTURE;
+        return getColor(entity);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle
 
         @Override
         public ResourceLocation getAnimationFileLocation(FamiliarStarbuncle carbuncle) {
-            return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
+            return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
         }
 
     }

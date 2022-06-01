@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,7 +52,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         return this;
     }
 
-    public GlyphRecipe withIngredient(Tag.Named<Item> tag, int count ){
+    public GlyphRecipe withIngredient(TagKey<Item> tag, int count ){
         for(int i = 0; i < count; i++){
             withIngredient(Ingredient.of(tag));
         }

@@ -1,9 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
+import com.hollingsworth.arsnouveau.api.ritual.CompoundScryer;
+import com.hollingsworth.arsnouveau.api.ritual.TagScryer;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.ritual.ScryingRitual;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -11,16 +15,17 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarStarbuncle extends FamiliarEntity {
+import java.util.Arrays;
 
+public class FamiliarStarbuncle extends FamiliarEntity {
 
     public FamiliarStarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -41,11 +46,25 @@ public class FamiliarStarbuncle extends FamiliarEntity {
             ItemStack stack = player.getItemInHand(hand);
             if(stack.is(Tags.Items.NUGGETS_GOLD)){
                 stack.shrink(1);
-                ScryingRitual.grantScrying((ServerPlayer) player, 3 * 20 * 60, new SingleBlockScryer(Blocks.GOLD_ORE));
+                ScryingRitual.grantScrying((ServerPlayer) player, 3 * 20 * 60, new CompoundScryer(new TagScryer(Tags.Blocks.ORES_GOLD), new TagScryer(BlockTags.GOLD_ORES)));
+                return InteractionResult.SUCCESS;
             }
+            if (player.getMainHandItem().is(Tags.Items.DYES)) {
+                DyeColor color = DyeColor.getColor(stack);
+                if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(Starbuncle.carbyColors).contains(color.getName()))
+                    return InteractionResult.SUCCESS;
+                setColor(color);
+                return InteractionResult.SUCCESS;
+            }
+
         }
         return super.mobInteract(player, hand);
     }
+
+    public String getColor(){
+        return this.entityData.get(COLOR);
+    }
+
 
     @Override
     public PlayState walkPredicate(AnimationEvent event) {
@@ -57,7 +76,23 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.set(COLOR, Starbuncle.COLORS.ORANGE.name());
+    }
+
+    @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_STARBUNCLE;
+    }
+
+    @Override
+    public Starbuncle.StarbuncleData getPersistentFamiliarData() {
+        return (Starbuncle.StarbuncleData) this.persistentData;
+    }
+
+    @Override
+    public Starbuncle.StarbuncleData deserializePersistentData(CompoundTag tag) {
+        return new Starbuncle.StarbuncleData(tag);
     }
 }

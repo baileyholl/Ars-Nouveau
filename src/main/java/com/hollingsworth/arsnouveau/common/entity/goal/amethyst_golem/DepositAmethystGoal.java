@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.pathfinder.Path;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -45,10 +44,7 @@ public class DepositAmethystGoal extends Goal {
             isDone = true;
             deposit();
         }
-        Path path = golem.getNavigation().createPath(golem.getHome(), 2);
-        if(path != null){
-            golem.getNavigation().moveTo(path, 1.3f);
-        }
+        golem.getNavigation().tryMoveToBlockPos(golem.getHome(), 1);
     }
 
     public void deposit(){
@@ -71,6 +67,13 @@ public class DepositAmethystGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 80;
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.DEPOSIT;
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        golem.goalState = AmethystGolem.AmethystGolemGoalState.NONE;
     }
 
     @Override

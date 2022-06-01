@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -71,7 +71,7 @@ public class BlockUtil {
     public static boolean destroyBlockSafely(Level world, BlockPos pos, boolean dropBlock, LivingEntity caster){
         if(!(world instanceof ServerLevel))
             return false;
-        Player playerEntity = caster instanceof Player ? (Player) caster : FakePlayerFactory.getMinecraft((ServerLevel) world);
+        Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
         if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
             return false;
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
@@ -80,7 +80,7 @@ public class BlockUtil {
     }
 
     public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos){
-        Player playerEntity = caster instanceof Player ? (Player) caster : FakePlayerFactory.getMinecraft((ServerLevel) world);
+        Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
         return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity));
     }
 
@@ -101,7 +101,7 @@ public class BlockUtil {
         if(!(world instanceof ServerLevel))
             return false;
 
-        Player playerEntity = caster instanceof Player ? (Player) caster : FakePlayerFactory.getMinecraft((ServerLevel) world);
+        Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
         if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
             return false;
 

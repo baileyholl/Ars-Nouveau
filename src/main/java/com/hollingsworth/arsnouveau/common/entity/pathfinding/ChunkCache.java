@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 import com.hollingsworth.arsnouveau.common.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -144,7 +145,7 @@ public class ChunkCache implements LevelReader
     }
 
     @Override
-    public Biome getUncachedNoiseBiome(final int x, final int y, final int z)
+    public Holder<Biome> getUncachedNoiseBiome(final int x, final int y, final int z)
     {
         return null;
     }

@@ -10,14 +10,10 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -28,17 +24,10 @@ public class Recipes extends RecipeProvider {
         super(generatorIn);
     }
 
-    public static Tag.Named<Item> SOURCE_GEM_TAG = ItemTags.bind("forge:gems/source");
-    public static Tag.Named<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.bind("forge:storage_blocks/source");
-    public static Tag.Named<Item> ARCHWOOD_LOG_TAG = ItemTags.bind("forge:logs/archwood");
-    public static Tag.Named<Block> DECORATIVE_AN = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
-    public static Tag.Named<Block> MAGIC_SAPLINGS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
-    public static Tag.Named<Block> MAGIC_PLANTS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
-    public static Tag.Named<Item> MAGIC_FOOD = ItemTags.bind("ars_nouveau:magic_food");
-
-    public static Ingredient SOURCE_GEM = Ingredient.of(SOURCE_GEM_TAG);
-    public static Ingredient SOURCE_GEM_BLOCK = Ingredient.of(SOURCE_GEM_BLOCK_TAG);
-    public static Ingredient ARCHWOOD_LOG = Ingredient.of(ARCHWOOD_LOG_TAG);
+    public static Ingredient SOURCE_GEM = Ingredient.of(ItemTagProvider.SOURCE_GEM_TAG);
+    public static Ingredient SOURCE_GEM_BLOCK = Ingredient.of(ItemTagProvider.SOURCE_GEM_BLOCK_TAG);
+    public static Ingredient ARCHWOOD_LOG = Ingredient.of(ItemTagProvider.ARCHWOOD_LOG_TAG);
+    public static Ingredient WILDEN_DROP = Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG);
 
 
     @Override
@@ -113,7 +102,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("yzy")
                     .pattern("y y").define('x', Ingredient.of(BlockRegistry.ARCHWOOD_SLABS))
                     .define('y', Items.STICK)
-                    .define('z', Ingredient.of(ARCHWOOD_LOG_TAG)).save(consumer);
+                    .define('z', ARCHWOOD_LOG).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.DULL_TRINKET).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern(" x ")
@@ -161,7 +150,7 @@ public class Recipes extends RecipeProvider {
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.SPELL_PARCHMENT, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(ItemsRegistry.BLANK_PARCHMENT, 1)
-                    .requires(Ingredient.of(SOURCE_GEM_TAG), 4)
+                    .requires(SOURCE_GEM, 4)
                     .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.ALLOW_ITEM_SCROLL, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -233,7 +222,7 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(BlockRegistry.RITUAL_BLOCK)
                     .requires(BlockRegistry.ARCANE_PEDESTAL)
-                    .requires(Recipes.SOURCE_GEM_BLOCK_TAG)
+                    .requires(SOURCE_GEM_BLOCK)
                     .requires(Ingredient.of(Tags.Items.INGOTS_GOLD), 3)
                     .save(consumer);
 
@@ -274,7 +263,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.CLOUDSHAPER))
                     .requires(BlockRegistry.CASCADING_LOG)
                     .requires(Items.FEATHER)
-                    .requires(SOURCE_GEM_BLOCK_TAG)
+                    .requires(SOURCE_GEM_BLOCK)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.CHALLENGE))
@@ -355,26 +344,9 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
                     .requires(BlockRegistry.VEXING_LOG)
-                    .requires(ItemsRegistry.WILDEN_HORN, 1)
-                    .requires(ItemsRegistry.WILDEN_SPIKE, 1)
-                    .requires(ItemsRegistry.WILDEN_WING, 1)
+                    .requires(WILDEN_DROP, 3)
                     .requires(Items.LAPIS_BLOCK)
                     .save(consumer);
-            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
-                    .requires(BlockRegistry.VEXING_LOG)
-                    .requires(ItemsRegistry.WILDEN_HORN, 3)
-                    .requires(Items.LAPIS_BLOCK)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_2"));
-            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
-                    .requires(BlockRegistry.VEXING_LOG)
-                    .requires(ItemsRegistry.WILDEN_SPIKE, 3)
-                    .requires(Items.LAPIS_BLOCK)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_3"));
-            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
-                    .requires(BlockRegistry.VEXING_LOG)
-                    .requires(ItemsRegistry.WILDEN_WING, 3)
-                    .requires(Items.LAPIS_BLOCK)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_4"));
 
             shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
                     .requires(BlockRegistry.VEXING_LOG)
@@ -382,7 +354,7 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.IRON_SWORD, 1)
                     .requires(Items.BOW, 1)
                     .requires(Items.LAPIS_BLOCK)
-                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_5"));
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_alt"));
 
             ShapedRecipeBuilder.shaped(BlockRegistry.AS_GOLD_STONE, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
@@ -616,6 +588,44 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(BlockRegistry.BLAZING_SAPLING)
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE)
                     .requires(BlockRegistry.VEXING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_blazin_sapling"));
+
+            shapedBuilder(BlockRegistry.ORANGE_SBED)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', ItemsRegistry.MAGE_FIBER)
+                    .define('y', Items.FEATHER)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.RED_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_RED).save(consumer);
+
+            shapelessBuilder(BlockRegistry.GREEN_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_GREEN).save(consumer);
+
+            shapelessBuilder(BlockRegistry.BLUE_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_BLUE).save(consumer);
+
+            shapelessBuilder(BlockRegistry.PURPLE_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_PURPLE).save(consumer);
+
+            shapelessBuilder(BlockRegistry.YELLOW_SBED)
+                    .requires(ItemTagProvider.SUMMON_BED_ITEMS)
+                    .requires(Tags.Items.DYES_YELLOW).save(consumer);
+            shapelessBuilder(BlockRegistry.SCRYERS_CRYSTAL)
+                    .requires(Items.ENDER_EYE)
+                    .requires(Recipes.SOURCE_GEM).save(consumer);
+
+            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
+            shapelessBuilder(ItemsRegistry.SPELL_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
+            shapedBuilder(ItemsRegistry.STARBUNCLE_SHADES)
+                    .pattern("xyx")
+                    .define('x', Items.TINTED_GLASS)
+                    .define('y', ItemsRegistry.SOURCE_GEM)
+                    .save(consumer);
         }
     }
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {

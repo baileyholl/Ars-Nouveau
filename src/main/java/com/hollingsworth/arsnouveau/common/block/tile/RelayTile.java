@@ -142,7 +142,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if(level.getGameTime() % 20 != 0)
             return;
 
-        if(fromPos != null){
+        if(fromPos != null && level.isLoaded(fromPos)){
             // Block has been removed
             if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)){
                 fromPos = null;
@@ -157,47 +157,45 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             }
         }
 
-        if(toPos == null)
-            return;
-        if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)){
-            toPos = null;
-            update();
-            return;
-        }
-        AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
-        if(transferSource(this, toTile) > 0){
-            ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+        if(toPos != null && level.isLoaded(toPos)){
+            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)) {
+                toPos = null;
+                update();
+                return;
+            }
+            AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
+            if (transferSource(this, toTile) > 0) {
+                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+            }
         }
     }
-
+    String TO = "to_";
+    String FROM = "from";
     @Override
     public void load(CompoundTag tag) {
-        if(NBTUtil.hasBlockPos(tag, "to")){
-            this.toPos = NBTUtil.getBlockPos(tag, "to");
-        }else{
-            toPos = null;
+        super.load(tag);
+        if(NBTUtil.hasBlockPos(tag, TO)){
+            this.toPos = NBTUtil.getBlockPos(tag, TO);
         }
-        if(NBTUtil.hasBlockPos(tag, "from")){
-            this.fromPos = NBTUtil.getBlockPos(tag, "from");
-        }else{
-            fromPos = null;
+        if(NBTUtil.hasBlockPos(tag, FROM)){
+            this.fromPos = NBTUtil.getBlockPos(tag, FROM);
         }
         this.disabled = tag.getBoolean("disabled");
-        super.load(tag);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if(toPos != null) {
-            NBTUtil.storeBlockPos(tag, "to", toPos);
+            NBTUtil.storeBlockPos(tag, TO, toPos.immutable());
         }else{
-            NBTUtil.removeBlockPos(tag, "to");
+            NBTUtil.removeBlockPos(tag, TO);
         }
+
         if(fromPos != null) {
-            NBTUtil.storeBlockPos(tag, "from", fromPos);
+            NBTUtil.storeBlockPos(tag, FROM, fromPos.immutable());
         }else{
-            NBTUtil.removeBlockPos(tag, "from");
+            NBTUtil.removeBlockPos(tag, FROM);
         }
         tag.putBoolean("disabled", disabled);
     }

@@ -11,6 +11,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,6 +33,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
+public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> STOMPING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
@@ -63,10 +66,37 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     public int harvestCooldown;
     public List<BlockPos> buddingBlocks = new ArrayList<>();
     public List<BlockPos> amethystBlocks = new ArrayList<>();
-    int scanCooldown;
+    public int scanCooldown;
+    public MinecoloniesAdvancedPathNavigate pathNavigate;
+    public PathNavigation minecraftPathNav;
+    public AmethystGolemGoalState goalState;
+
+    public enum AmethystGolemGoalState{
+        NONE,
+        CONVERT,
+        GROW,
+        HARVEST,
+        PICKUP,
+        DEPOSIT
+    }
 
     public AmethystGolem(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
+    }
+
+    @Override
+    public MinecoloniesAdvancedPathNavigate getNavigation() {
+        if (this.pathNavigate == null) {
+            this.pathNavigate = new MinecoloniesAdvancedPathNavigate(this, this.level);
+            this.minecraftPathNav = this.navigation;
+            this.navigation = pathNavigate;
+            this.pathNavigate.setCanFloat(true);
+            this.pathNavigate.setSwimSpeedFactor(2.0);
+            this.pathNavigate.getPathingOptions().setEnterDoors(true);
+            this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
+            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+        }
+        return pathNavigate;
     }
 
     @Override

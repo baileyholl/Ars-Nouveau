@@ -106,6 +106,11 @@ public class SpellContext implements Cloneable{
 
     public int getCurrentIndex(){return currentIndex;}
 
+    /**
+     * @param newIndex set the current Index to param, careful with its usage as it might go out of bounds
+     */
+    public void setCurrentIndex(int newIndex){this.currentIndex = newIndex;}
+
     public boolean isCanceled() {
         return isCanceled;
     }
