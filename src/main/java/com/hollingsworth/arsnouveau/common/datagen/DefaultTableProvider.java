@@ -149,6 +149,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.PURPLE_SBED);
             registerDropSelf(BlockRegistry.BLUE_SBED);
             registerDropSelf(BlockRegistry.ORANGE_SBED);
+            registerDropSelf(BlockRegistry.SCRYERS_CRYSTAL);
+            registerDropSelf(BlockRegistry.SCRYERS_OCULUS);
         }
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {
             list.add(block);

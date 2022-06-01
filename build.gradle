@@ -161,7 +161,7 @@ dependencies {
 
 //    runtimeOnly fg.deobf("curse.maven:exp-560595:3721969") // TMG
 
-    runtimeOnly fg.deobf("curse.maven:exp-64760:3696873") // Securitycraft
+//    runtimeOnly fg.deobf("curse.maven:exp-64760:3696873") // Securitycraft
     compileOnly fg.deobf("curse.maven:exp-64760:3696873")
 
 

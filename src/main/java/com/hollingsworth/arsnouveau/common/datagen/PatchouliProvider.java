@@ -426,7 +426,7 @@ public class PatchouliProvider implements DataProvider {
 
         addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
         addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
-        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, new CraftingPage(ItemsRegistry.SCRYER_SCROLL));
+        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
         addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
     }
 
@@ -445,8 +445,10 @@ public class PatchouliProvider implements DataProvider {
     public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage){
         PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
-                .withPage(new TextPage("ars_nouveau.page." + item.asItem().getRegistryName().getPath()))
-                .withPage(recipePage);
+                .withPage(new TextPage("ars_nouveau.page." + item.asItem().getRegistryName().getPath()));
+        if(recipePage != null){
+            builder.withPage(recipePage);
+        }
         this.pages.add(new PatchouliPage(builder, getPath(category, item.asItem().getRegistryName())));
     }
 
