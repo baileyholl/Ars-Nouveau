@@ -79,8 +79,11 @@ public class ClientHandler {
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer( ModEntities.ENTITY_FOLLOW_PROJ,
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SUMMON_SKELETON, RenderSummonSkeleton::new);
+
         event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, EvokerFangsRenderer::new);
         event.registerEntityRenderer(ModEntities.ALLY_VEX, VexRenderer::new);
+
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, StarbuncleRenderer::new);
         event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, WhirlisprigRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, (t) -> new TextureVariantRenderer(t, new WixieModel()));
