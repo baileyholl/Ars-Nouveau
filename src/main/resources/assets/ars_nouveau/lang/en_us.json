@@ -1067,6 +1067,7 @@
 	"ars_nouveau.camera.not_loaded": "The block has been removed or is not chunk loaded.",
 	"ars_nouveau.page.support_mod": "Support Ars Nouveau!",
 	"ars_nouveau.patreon": "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, and more!",
-	"ars_nouveau.patreon_text": "Patreon"
+	"ars_nouveau.patreon_text": "Patreon",
+	"entity.ars_nouveau.summon_skeleton": "Summoned Skeleton"
 
 }
