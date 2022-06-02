@@ -1,0 +1,18 @@
+{
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:name_tag"
+      }
+    }
+  ],
+  "exp": 55,
+  "output": "ars_nouveau:glyph_name"
+}

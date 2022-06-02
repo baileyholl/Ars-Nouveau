@@ -25,7 +25,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.4.2'
+version = '2.5.0'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -162,7 +162,7 @@ dependencies {
 
 //    runtimeOnly fg.deobf("curse.maven:exp-560595:3721969") // TMG
 
-    runtimeOnly fg.deobf("curse.maven:exp-64760:3696873") // Securitycraft
+//    runtimeOnly fg.deobf("curse.maven:exp-64760:3696873") // Securitycraft
     compileOnly fg.deobf("curse.maven:exp-64760:3696873")
 
 

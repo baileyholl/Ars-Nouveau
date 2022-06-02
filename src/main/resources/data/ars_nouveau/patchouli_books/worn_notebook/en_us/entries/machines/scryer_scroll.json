@@ -6,10 +6,6 @@
     {
       "text": "ars_nouveau.page.scryer_scroll",
       "type": "patchouli:text"
-    },
-    {
-      "recipe": "ars_nouveau:scryer_scroll",
-      "type": "patchouli:crafting"
     }
   ]
 }

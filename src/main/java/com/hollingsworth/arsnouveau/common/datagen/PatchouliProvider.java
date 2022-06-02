@@ -404,8 +404,8 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
                 .withIcon(ItemsRegistry.SPELL_PARCHMENT)
-                .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community"))
-                .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")), getPath(MOD_NEWS, "mod_news"));
+                .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community")),
+                getPath(MOD_NEWS, "mod_news"));
 
         addBasicItem(ItemsRegistry.DOWSING_ROD, EQUIPMENT, new CraftingPage(ItemsRegistry.DOWSING_ROD));
 
@@ -426,8 +426,15 @@ public class PatchouliProvider implements DataProvider {
 
         addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
         addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
-        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, new CraftingPage(ItemsRegistry.SCRYER_SCROLL));
+        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
         addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
+
+        addPage(new PatchouliBuilder(MOD_NEWS, "support_mod")
+                .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
+                .withPage(new LinkPage("https://www.patreon.com/arsnouveau", "ars_nouveau.patreon_text", "ars_nouveau.patreon"))
+                .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")),
+                getPath(MOD_NEWS, "support_mod"));
+
     }
 
     public String getLangPath(String name, int count){
@@ -445,8 +452,10 @@ public class PatchouliProvider implements DataProvider {
     public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage){
         PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
-                .withPage(new TextPage("ars_nouveau.page." + item.asItem().getRegistryName().getPath()))
-                .withPage(recipePage);
+                .withPage(new TextPage("ars_nouveau.page." + item.asItem().getRegistryName().getPath()));
+        if(recipePage != null){
+            builder.withPage(recipePage);
+        }
         this.pages.add(new PatchouliPage(builder, getPath(category, item.asItem().getRegistryName())));
     }
 

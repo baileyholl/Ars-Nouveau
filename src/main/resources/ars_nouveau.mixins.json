@@ -19,12 +19,10 @@
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
     "camera.TrackedEntityMixin",
+    "camera.ANServerPlayerMixin",
     "elytra.ClientElytraMixin",
     "elytra.ElytraPlayerMixin",
     "elytra.MixinLivingEntity"
   ],
-  "injectors": {
-    "defaultRequire": 1
-  },
   "minVersion": "0.8"
 }

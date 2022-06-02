@@ -21,6 +21,7 @@ public class GlyphLib {
     public static final String EffectLaunchID = "launch";
     public static final String EffectPullID = "pull";
     public static final String EffectBlinkID = "blink";
+    public static final String EffectNameID = "name";
 
     public static final String EffectAquatic = "aquatic";
     public static final String EffectStrength = "strength";
@@ -67,6 +68,7 @@ public class GlyphLib {
     public static final String EffectCutID = "cut";
     public static final String EffectCrushID = "crush";
     public static final String EffectSummonWolvesID = "summon_wolves";
+    public static final String EffectSummonUndeadID = "summon_undead";
 
     public static final String EffectSummonSteedID = "summon_steed";
     public static final String EffectDecoyID = "summon_decoy";

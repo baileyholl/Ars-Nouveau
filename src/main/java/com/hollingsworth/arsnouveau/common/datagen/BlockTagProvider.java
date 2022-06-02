@@ -83,7 +83,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.AB_SMOOTH,
                 BlockRegistry.AB_ALTERNATE,
                 BlockRegistry.ARCANE_BRICKS,
-                BlockRegistry.AB_SMOOTH_BASKET
+                BlockRegistry.AB_SMOOTH_BASKET,
+                BlockRegistry.SCRYERS_CRYSTAL,
+                BlockRegistry.SCRYERS_OCULUS
                 );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(

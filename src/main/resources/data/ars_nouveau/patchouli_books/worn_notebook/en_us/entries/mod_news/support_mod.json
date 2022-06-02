@@ -1,0 +1,19 @@
+{
+  "name": "ars_nouveau.page.support_mod",
+  "category": "ars_nouveau:mod_news",
+  "icon": "ars_nouveau:starbuncle_charm",
+  "pages": [
+    {
+      "url": "https://www.patreon.com/arsnouveau",
+      "link_text": "ars_nouveau.patreon_text",
+      "text": "ars_nouveau.patreon",
+      "type": "patchouli:link"
+    },
+    {
+      "url": "https://www.redbubble.com/people/Gootastic/explore?page\u003d1\u0026sortOrder\u003drecent",
+      "link_text": "ars_nouveau.store_text",
+      "text": "ars_nouveau.store",
+      "type": "patchouli:link"
+    }
+  ]
+}

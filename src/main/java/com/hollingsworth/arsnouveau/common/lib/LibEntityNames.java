@@ -13,6 +13,7 @@ public class LibEntityNames {
     public static final String SPELL_ARROW = "spell_arrow";
     public static final String SUMMONED_WOLF = "summon_wolf";
     public static final String SUMMONED_HORSE = "summon_horse";
+    public static final String SUMMONED_SKELETON = "summon_skeleton";
     public static final String DUMMY = "dummy";
     public static final String AN_LIGHTNING = "an_lightning";
 
