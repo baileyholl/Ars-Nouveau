@@ -1,7 +1,7 @@
 {
   "name": "ars_nouveau.glyph_name.summon_undead",
-  "category": "ars_nouveau:glyphs_2",
-  "icon": "ars_nouveau:summon_undead",
+  "category": "ars_nouveau:glyphs_3",
+  "icon": "ars_nouveau:glyph_summon_undead",
   "sortnum": 2,
   "pages": [
     {
@@ -9,7 +9,7 @@
       "type": "patchouli:text"
     },
     {
-      "recipe": "ars_nouveau:summon_undead",
+      "recipe": "ars_nouveau:glyph_summon_undead",
       "type": "ars_nouveau:glyph_recipe"
     }
   ]

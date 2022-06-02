@@ -11,11 +11,6 @@
       "item": {
         "item": "minecraft:name_tag"
       }
-    },
-    {
-      "item": {
-        "tag": "minecraft:name_tag"
-      }
     }
   ],
   "exp": 55,

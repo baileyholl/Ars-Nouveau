@@ -9,17 +9,12 @@
     },
     {
       "item": {
-        "item": "minecraft:wither_skull"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:nether_star"
-      }
-    },
-    {
-      "item": {
         "item": "minecraft:bone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:wither_skeleton_skull"
       }
     }
   ],

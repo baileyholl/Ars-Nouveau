@@ -98,6 +98,6 @@ public class EffectSummonUndead extends AbstractEffect {
     @Nonnull
     @Override
     public Set<SpellSchool> getSchools() {
-        return setOf(SpellSchools.CONJURATION, SpellSchools.NECROMANCY);
+        return setOf(SpellSchools.CONJURATION);
     }
 }
