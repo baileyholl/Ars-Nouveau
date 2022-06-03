@@ -34,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("deprecation")
 public class RuneBlock extends TickableModBlock {
 
     public static VoxelShape shape =  Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
@@ -50,7 +50,6 @@ public class RuneBlock extends TickableModBlock {
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
-
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
