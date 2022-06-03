@@ -24,14 +24,14 @@ public class EffectHarm extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
-        Entity entity = rayTraceResult.getEntity();
-        int time = (int) spellStats.getDurationMultiplier();
-        if(time > 0){
-            if(entity instanceof LivingEntity)
-                applyConfigPotion((LivingEntity) entity, MobEffects.POISON, spellStats);
-        }else{
-            dealDamage(world, shooter, (float) damage, spellStats, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
+        if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
+            double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
+            int time = (int) spellStats.getDurationMultiplier();
+            if (time > 0) {
+                applyConfigPotion(entity, MobEffects.POISON, spellStats);
+            } else {
+                dealDamage(world, shooter, (float) damage, spellStats, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
+            }
         }
     }
 
