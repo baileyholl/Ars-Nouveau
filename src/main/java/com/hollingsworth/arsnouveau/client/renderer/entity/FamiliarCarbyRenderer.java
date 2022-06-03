@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
+import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -10,6 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
@@ -17,10 +20,9 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import javax.annotation.Nullable;
 
 public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle> {
-    private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
-    private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
-    private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
+
+    private FamiliarStarbuncle familiar;
+    private MultiBufferSource buffer;
 
     public FamiliarCarbyRenderer(EntityRendererProvider.Context manager) {
         super(manager, new FamiliarCarbyModel());
@@ -36,12 +38,28 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle
         super.render(entity, entityYaw, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
     }
 
+    @Override
+    public void renderEarly(FamiliarStarbuncle animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
+        this.familiar = animatable;
+        this.buffer = renderTypeBuffer;
+        super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
+    }
+
+    @Override
+    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+
+        if (this.familiar.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())){
+            CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, familiar, packedLightIn);
+            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(getColor(familiar)));
+        }
+
+        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    }
 
     public ResourceLocation getColor(FamiliarStarbuncle e){
         String color = e.getColor().toLowerCase();
 
-        if(color.isEmpty())
-            return ORANGE;
+        if (color.isEmpty()) color = "orange";
 
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color +".png");
     }

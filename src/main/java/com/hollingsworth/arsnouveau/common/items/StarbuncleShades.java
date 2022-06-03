@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,11 +25,17 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if(pInteractionTarget instanceof Starbuncle starbuncle){
-            starbuncle.setHeadCosmetic(pStack.split(1));
+        if(pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)){
+            starbuncle.setCosmeticItem(pStack.split(1));
             return InteractionResult.SUCCESS;
         }
+
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
+    }
+
+    @Override
+    public boolean canWear(LivingEntity entity) {
+        return entity instanceof Starbuncle || entity instanceof FamiliarStarbuncle;
     }
 
     //translation applied to the renderer
@@ -47,7 +55,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IItemRenderProperties() {
-            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel("starbuncle_shades", "items")).withTranslucency();
+            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("starbuncle_shades", "items")).withTranslucency();
 
             @Override
             public BlockEntityWithoutLevelRenderer getItemStackRenderer() {

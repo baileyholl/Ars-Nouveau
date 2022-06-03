@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
@@ -63,6 +64,10 @@ public class DominionWand extends ModItem{
         if(target instanceof IWandable) {
             ((IWandable) target).onFinishedConnectionLast(getPos(stack), target, playerEntity);
             clear(stack, playerEntity);
+        }
+
+        if (playerEntity.isShiftKeyDown() && target instanceof IDecoratable coolBoy){
+           coolBoy.setCosmeticItem(ItemStack.EMPTY);
         }
 
         return InteractionResult.SUCCESS;
