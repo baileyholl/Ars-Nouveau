@@ -34,6 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+@SuppressWarnings("ALL")
 public class RuneBlock extends TickableModBlock {
 
     public static VoxelShape shape =  Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
@@ -54,25 +55,28 @@ public class RuneBlock extends TickableModBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
 
-        if(!worldIn.isClientSide && stack.getItem() instanceof RunicChalk){
-            if(((RuneTile)worldIn.getBlockEntity(pos)).isTemporary){
-                ((RuneTile)worldIn.getBlockEntity(pos)).isTemporary = false;
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.setperm"));
+        if (worldIn.getBlockEntity(pos) instanceof RuneTile runeTile) {
+
+            if (!worldIn.isClientSide && stack.getItem() instanceof RunicChalk) {
+                if (runeTile.isTemporary) {
+                    runeTile.isTemporary = false;
+                    PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.setperm"));
+                    return InteractionResult.SUCCESS;
+                }
+            }
+            if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
+                return InteractionResult.SUCCESS;
+            Spell spell = CasterUtil.getCaster(stack).getSpell();
+            if (spell.isEmpty())
+                return InteractionResult.SUCCESS;
+
+            if (!(spell.recipe.get(0) instanceof MethodTouch)) {
+                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.touch"));
                 return InteractionResult.SUCCESS;
             }
+            runeTile.setSpell(spell);
+            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.spell_set"));
         }
-        if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
-            return InteractionResult.SUCCESS;
-        Spell spell = CasterUtil.getCaster(stack).getSpell();
-        if(spell.isEmpty())
-            return InteractionResult.SUCCESS;
-
-        if(!(spell.recipe.get(0) instanceof MethodTouch)){
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.touch"));
-            return InteractionResult.SUCCESS;
-        }
-        ((RuneTile)worldIn.getBlockEntity(pos)).setSpell(spell);
-        PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.spell_set"));
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
@@ -80,8 +84,7 @@ public class RuneBlock extends TickableModBlock {
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
 
-        if(worldIn.getBlockEntity(pos) instanceof RuneTile && ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity != null) {
-            RuneTile rune = ((RuneTile) worldIn.getBlockEntity(pos));
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile rune && rune.touchedEntity != null) {
             rune.castSpell(rune.touchedEntity);
             rune.touchedEntity = null;
         }
@@ -90,9 +93,17 @@ public class RuneBlock extends TickableModBlock {
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if(worldIn.getBlockEntity(pos) instanceof RuneTile) {
-            ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity = entityIn;
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
+            rune.touchedEntity = entityIn;
             worldIn.scheduleTick(pos, this,1);
+        }
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof RuneTile runeTile){
+            runeTile.disabled = world.hasNeighborSignal(pos);
         }
     }
 
