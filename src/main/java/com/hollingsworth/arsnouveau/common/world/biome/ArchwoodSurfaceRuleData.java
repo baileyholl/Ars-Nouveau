@@ -13,7 +13,9 @@ public class ArchwoodSurfaceRuleData {
     public static SurfaceRules.RuleSource makeRules()
     {
         SurfaceRules.ConditionSource isAtOrAboveWaterLevel = SurfaceRules.waterBlockCheck(-1, 0);
-        SurfaceRules.RuleSource grassSurface = SurfaceRules.sequence(SurfaceRules.ifTrue(isAtOrAboveWaterLevel, GRASS_BLOCK), DIRT);
+        SurfaceRules.RuleSource grassSurface = SurfaceRules.sequence(
+                SurfaceRules.ifTrue(isAtOrAboveWaterLevel, SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, GRASS_BLOCK)),
+                SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, DIRT));
 
         return SurfaceRules.sequence(
                 SurfaceRules.ifTrue(SurfaceRules.isBiome(ModBiomes.ARCHWOOD_FOREST), grassSurface),

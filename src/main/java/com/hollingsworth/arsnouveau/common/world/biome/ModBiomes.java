@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.common.world.biome;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,7 +23,7 @@ public class ModBiomes
 {
     public static final ResourceKey<Biome> ARCHWOOD_FOREST = register("archwood_forest");
 
-    private static ResourceKey<Biome> register(String name)
+    public static ResourceKey<Biome> register(String name)
     {
         return ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, name));
     }
@@ -34,10 +36,10 @@ public class ModBiomes
     }
 
     @Nullable
-    private static final Music NORMAL_MUSIC = null;
+    static final Music NORMAL_MUSIC = null;
 
     @SuppressWarnings("SameParameterValue")
-    private static Biome biome(Biome.Precipitation precipitation, Biome.BiomeCategory category, float temperature, float downfall, int waterColor, int waterFogColor, int skyColor, int grassColor, int foliageColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder, @Nullable Music music)
+    public static Biome biome(Biome.Precipitation precipitation, Biome.BiomeCategory category, float temperature, float downfall, int waterColor, int waterFogColor, int skyColor, int grassColor, int foliageColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder, @Nullable Music music)
     {
         return new Biome.BiomeBuilder().
                 precipitation(precipitation)
@@ -58,7 +60,7 @@ public class ModBiomes
                 .build();
     }
 
-    private static void globalOverworldGeneration(BiomeGenerationSettings.Builder builder)
+    public static void globalOverworldGeneration(BiomeGenerationSettings.Builder builder)
     {
         BiomeDefaultFeatures.addDefaultCarversAndLakes(builder);
         BiomeDefaultFeatures.addDefaultCrystalFormations(builder);
@@ -72,32 +74,35 @@ public class ModBiomes
     public static Biome archwoodForest()
     {
         MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
-        //TODO add special spawns
-        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(EntityType.GOAT, 5, 1, 3));
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE, 25, 3, 5));
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY, 25, 1, 3));
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE, 25, 1, 3));
+
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_BLAZING_WEALD, 5, 1,1));
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_CASCADING_WEALD, 5, 1,1));
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_FLOURISHING_WEALD, 5, 1,1));
+        spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_VEXING_WEALD, 5, 1,1));
+
+        BiomeDefaultFeatures.farmAnimals(spawnBuilder);
         BiomeDefaultFeatures.commonSpawns(spawnBuilder);
 
         BiomeGenerationSettings.Builder biomeBuilder = new BiomeGenerationSettings.Builder();
         //we need to follow the same order as vanilla biomes for the BiomeDefaultFeatures
         globalOverworldGeneration(biomeBuilder);
+        biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.DARK_FOREST_VEGETATION);
+
         BiomeDefaultFeatures.addDefaultOres(biomeBuilder);
         BiomeDefaultFeatures.addExtraGold(biomeBuilder);
         BiomeDefaultFeatures.addDefaultSoftDisks(biomeBuilder);
         BiomeDefaultFeatures.addForestFlowers(biomeBuilder);
-        BiomeDefaultFeatures.addWaterTrees(biomeBuilder);
-        BiomeDefaultFeatures.addGroveTrees(biomeBuilder);
-
+        //BiomeDefaultFeatures.addGroveTrees(biomeBuilder);
         BiomeDefaultFeatures.addFerns(biomeBuilder);
-
         BiomeDefaultFeatures.addMossyStoneBlock(biomeBuilder);
-
-        BiomeDefaultFeatures.addMushroomFieldVegetation(biomeBuilder);
         BiomeDefaultFeatures.addMeadowVegetation(biomeBuilder);
-
         BiomeDefaultFeatures.addDefaultMushrooms(biomeBuilder);
         BiomeDefaultFeatures.addDefaultExtraVegetation(biomeBuilder);
-        BiomeDefaultFeatures.addCommonBerryBushes(biomeBuilder);
 
-        //TODO add trees and little cute features
+        //TODO add other little features
 
         return biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.FOREST, 0.7F, 0.8F, 7978751, 329011, 7978751, 2031567, 2210437, spawnBuilder, biomeBuilder, NORMAL_MUSIC);
     }

@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.world;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -26,18 +25,18 @@ public class BiomeEvent {
         addMobSpawns(e);
 
 
-        if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) || e.getName().equals(new ResourceLocation(ArsNouveau.MODID, "archwood_forest")))  && Config.SPAWN_BERRIES.get()) {
+        if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) || (e.getName() != null && e.getName().getPath().equals("archwood_forest"))) && Config.SPAWN_BERRIES.get()) {
             e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.BERRY_BUSH_PATCH_CONFIG).build();
         }
 
         if(Config.TREE_SPAWN_RATE.get() > 0)
             e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.PLACED_MIXED);
 
-//        if(e.getName().equals(archwoodForest.getRegistryName())){
-//            addArchwoodForestFeatures(e);
-//        }
+        if (e.getName() != null && e.getName().getPath().equals("archwood_forest")){
+            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.COMMON_ARCHWOOD);
+        }
     }
-    //
+
     public static void addMobSpawns(BiomeLoadingEvent e){
         List<Biome.BiomeCategory> categories = Arrays.asList(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.EXTREME_HILLS, Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.SAVANNA, Biome.BiomeCategory.MOUNTAIN);
 
