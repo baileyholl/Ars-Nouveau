@@ -59,6 +59,11 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
     }
 
+    public BasicSpellTurret(Properties properties) {
+        super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
+    }
+
     public BasicSpellTurret() {
         this(defaultProperties().noOcclusion(), LibBlockNames.BASIC_SPELL_TURRET);
     }
