@@ -71,6 +71,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
+    //TODO use ITextureVariant
     public ResourceLocation getColor(Starbuncle e){
         String color = e.getEntityData().get(Starbuncle.COLOR).toLowerCase();
 

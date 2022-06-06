@@ -8,26 +8,21 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class TextureVariantRenderer extends GeoEntityRenderer{
+public class TextureVariantRenderer<T extends LivingEntity & IVariantTextureProvider & IAnimatable> extends GenericRenderer<T>{
 
-    public TextureVariantRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel modelProvider) {
+    public TextureVariantRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(LivingEntity entity) {
-        if(entity instanceof IVariantTextureProvider variantTextureProvider)
-            return variantTextureProvider.getTexture(entity);
-        return null;
+    public ResourceLocation getTextureLocation(T entity) {
+        return entity.getTexture(entity);
     }
 
-    @Override
-    public RenderType getRenderType(Object animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
-    }
 }
