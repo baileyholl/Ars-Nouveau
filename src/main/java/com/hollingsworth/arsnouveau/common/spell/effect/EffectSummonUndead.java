@@ -9,8 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
@@ -40,20 +41,19 @@ public class EffectSummonUndead extends AbstractEffect {
         int count = 3 + spellStats.getBuffCount(AugmentSplit.INSTANCE);
         for(int i = 0; i < count; ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
-            Item weapon = Items.IRON_SWORD;
-            if(spellStats.hasBuff(AugmentPierce.INSTANCE))
-            {
-                weapon = Items.BOW;
-            } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE))
-            {
-                switch ((int) spellStats.getAmpMultiplier())
-                {
-                    case 1: weapon = Items.DIAMOND_SWORD;
-                        break;
-                    case 2: weapon = Items.NETHERITE_SWORD;
-                        break;
-                    case 3: weapon = Items.NETHERITE_AXE;
-                        break;
+
+            ItemStack weapon = Items.IRON_SWORD.getDefaultInstance();
+            if ((spellStats.hasBuff(AugmentPierce.INSTANCE))) {
+                weapon = Items.BOW.getDefaultInstance();
+                if(spellStats.getAmpMultiplier() > 0)
+                    weapon.enchant(Enchantments.POWER_ARROWS, Math.max(4, (int) spellStats.getAmpMultiplier()) - 1);
+            } else {
+                if (spellStats.getAmpMultiplier() >= 3) {
+                    weapon = Items.NETHERITE_AXE.getDefaultInstance();
+                }else if(spellStats.getAmpMultiplier() > 2) {
+                    weapon = Items.NETHERITE_SWORD.getDefaultInstance();
+                }else if(spellStats.getAmpMultiplier() > 1) {
+                    weapon = Items.DIAMOND_SWORD.getDefaultInstance();
                 }
             }
             SummonSkeleton undeadentity = new SummonSkeleton(world, shooter, weapon);

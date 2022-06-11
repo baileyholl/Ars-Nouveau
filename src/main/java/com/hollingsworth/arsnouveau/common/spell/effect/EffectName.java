@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,6 +60,9 @@ public class EffectName extends AbstractEffect {
             }
         }
         rayTraceResult.getEntity().setCustomName((newName != null) ? newName : TextComponent.EMPTY);
+        if (rayTraceResult.getEntity() instanceof Mob) {
+            ((Mob)rayTraceResult.getEntity()).setPersistenceRequired();
+        }
 
     }
 
