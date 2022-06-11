@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
@@ -24,8 +25,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
@@ -39,16 +42,18 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable {
+public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable, IDecoratable {
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<ItemStack> COSMETIC = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.ITEM_STACK);
+
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
 
     public boolean terminatedFamiliar;
     public String holderID;
-    public PersistentFamiliarData persistentData = new PersistentFamiliarData(new CompoundTag());
+    public PersistentFamiliarData<?> persistentData = new PersistentFamiliarData<>(new CompoundTag());
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
@@ -153,6 +158,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         super.defineSynchedData();
         this.entityData.define(OWNER_UUID, Optional.empty());
         this.entityData.define(COLOR, "");
+        this.entityData.define(COSMETIC, ItemStack.EMPTY);
     }
 
     @Override
@@ -171,6 +177,18 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     public void setOwnerID(UUID uuid) {
         this.getEntityData().set(OWNER_UUID, Optional.of(uuid));
+    }
+
+    public ItemStack getCosmeticItem(){
+        return this.entityData.get(COSMETIC);
+    }
+
+    public void setCosmeticItem(ItemStack stack) {
+        if(!this.entityData.get(COSMETIC).isEmpty())
+            this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
+        this.entityData.set(COSMETIC, stack);
+        this.persistentData.cosmetic = stack;
+        syncTag();
     }
 
     @Override
@@ -213,6 +231,11 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         tag.put("familiarData", getPersistentFamiliarData().toTag(new CompoundTag()));
         tag.putString("holderID", holderID);
         tag.putString("color", this.entityData.get(COLOR));
+        if(!this.entityData.get(COSMETIC).isEmpty()) {
+            CompoundTag cosmeticTag = new CompoundTag();
+            this.entityData.get(COSMETIC).save(cosmeticTag);
+            tag.put("cosmetic", cosmeticTag);
+        }
     }
 
     @Override
@@ -224,6 +247,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         this.holderID = tag.getString("holderID");
         this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
         this.entityData.set(COLOR, tag.getString("color"));
+        this.entityData.set(COSMETIC, ItemStack.of(tag.getCompound("cosmetic")));
         syncAfterPersistentFamiliarInit();
     }
 
@@ -258,7 +282,6 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public void setTagData(@Nullable CompoundTag tag){
         this.persistentData = deserializePersistentData(tag != null && tag.contains("familiarData") ? tag.getCompound("familiarData") : new CompoundTag());
         syncAfterPersistentFamiliarInit();
-
     }
 
     /**
@@ -275,11 +298,11 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     /**
      * Override and return your own implementation of PersistentData. See FamiliarStarbuncle for an example.
      */
-    public PersistentFamiliarData deserializePersistentData(CompoundTag tag){
-        return new PersistentFamiliarData(tag);
+    public PersistentFamiliarData<?> deserializePersistentData(CompoundTag tag){
+        return new PersistentFamiliarData<>(tag);
     }
 
-    public PersistentFamiliarData getPersistentFamiliarData(){
+    public PersistentFamiliarData<?> getPersistentFamiliarData(){
         return persistentData;
     }
 
@@ -291,6 +314,9 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         setCustomName(persistentData.name);
         if(persistentData.color != null){
             setColor(persistentData.color);
+        }
+        if(persistentData.cosmetic != null){
+            setCosmeticItem(persistentData.cosmetic);
         }
     }
 }

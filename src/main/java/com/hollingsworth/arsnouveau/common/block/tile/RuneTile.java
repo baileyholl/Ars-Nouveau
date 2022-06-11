@@ -35,6 +35,7 @@ import java.util.UUID;
 public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable, ITickable {
     public Spell spell = Spell.EMPTY;
     public boolean isTemporary;
+    public boolean disabled;
     public boolean isCharged;
     public int ticksUntilCharge;
     public UUID uuid;
@@ -45,6 +46,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         super(BlockRegistry.RUNE_TILE, pos, state);
         isCharged = true;
         isTemporary = false;
+        disabled = false;
         ticksUntilCharge = 0;
     }
 
@@ -57,6 +59,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             return;
         if(!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.recipe.get(0) instanceof MethodTouch))
             return;
+        if (!this.isTemporary && this.disabled) return;
         try {
 
             Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
@@ -83,6 +86,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         super.saveAdditional(tag);
         tag.putString("spell", spell.serialize());
         tag.putBoolean("charged", isCharged);
+        tag.putBoolean("redstone", disabled);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
         if(uuid != null)
@@ -95,6 +99,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public void load(CompoundTag tag) {
         this.spell = Spell.deserialize(tag.getString("spell"));
         this.isCharged = tag.getBoolean("charged");
+        this.disabled = tag.getBoolean("redstone");
         this.isTemporary = tag.getBoolean("temp");
         this.ticksUntilCharge = tag.getInt("cooldown");
         if(tag.contains("uuid"))

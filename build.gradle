@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         maven { url 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
         maven { url 'https://modmaven.dev/' }
         maven {
@@ -139,16 +138,14 @@ repositories {
         url 'https://ldtteam.jfrog.io/ldtteam/modding/'
     }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
-    jcenter()
     mavenCentral()
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.36'
-    implementation 'org.jetbrains:annotations:20.1.0'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.30'
+    implementation 'org.jetbrains:annotations:23.0.0'
 
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
+    implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
     compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.0.194:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.0.194")
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
@@ -159,10 +156,15 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
 
-//    runtimeOnly fg.deobf("curse.maven:exp-560595:3721969") // TMG
+//    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 
-//    runtimeOnly fg.deobf("curse.maven:exp-64760:3696873") // Securitycraft
-    compileOnly fg.deobf("curse.maven:exp-64760:3696873")
+//    runtimeOnly fg.deobf("curse.maven:security-64760:3696873") // Securitycraft
+    compileOnly fg.deobf("curse.maven:security-64760:3696873")
+
+    //runtimeOnly fg.deobf("curse.maven:malum-484064:3788643")
+    //runtimeOnly fg.deobf("curse.maven:orthus-616457:3768197")
+
+
 
 
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")

@@ -56,7 +56,6 @@ public class FamiliarStarbuncle extends FamiliarEntity {
                 setColor(color);
                 return InteractionResult.SUCCESS;
             }
-
         }
         return super.mobInteract(player, hand);
     }

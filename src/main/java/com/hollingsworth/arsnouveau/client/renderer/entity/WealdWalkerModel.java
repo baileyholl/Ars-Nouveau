@@ -11,7 +11,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WealdWalkerModel extends AnimatedGeoModel<WealdWalker> {
+public class WealdWalkerModel<W extends WealdWalker> extends AnimatedGeoModel<W> {
     String type;
     public WealdWalkerModel(String type){
         super();
@@ -19,7 +19,7 @@ public class WealdWalkerModel extends AnimatedGeoModel<WealdWalker> {
     }
 
     @Override
-    public void setLivingAnimations(WealdWalker entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(W entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);

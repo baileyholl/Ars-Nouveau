@@ -21,7 +21,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class WildenGuardianRenderer  extends GeoEntityRenderer<WildenGuardian> {
+public class WildenGuardianRenderer  extends GenericRenderer<WildenGuardian> {
     public WildenGuardianRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WildenGuardianModel());
     }
@@ -129,8 +129,4 @@ public class WildenGuardianRenderer  extends GeoEntityRenderer<WildenGuardian> {
         p_229108_0_.vertex(p_229108_1_, p_229108_3_, p_229108_4_, p_229108_5_).color(p_229108_6_, p_229108_7_, p_229108_8_, 255).uv(p_229108_9_, p_229108_10_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(p_229108_2_, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
-    @Override
-    public RenderType getRenderType(WildenGuardian animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
-    }
 }
