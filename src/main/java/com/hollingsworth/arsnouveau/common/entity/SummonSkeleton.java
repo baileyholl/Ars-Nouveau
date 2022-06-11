@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.*;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -111,14 +112,6 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
                 (entity) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
                         ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && ((LivingEntity)entity).getKillCredit() != null && ((LivingEntity)entity).getKillCredit().equals(this.owner))
         ));
-    }
-
-    protected PathNavigation createNavigation(Level worldIn) {
-        FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn);
-        flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanFloat(true);
-        flyingpathnavigator.setCanPassDoors(true);
-        return flyingpathnavigator;
     }
 
     public void setOwner(LivingEntity owner) {

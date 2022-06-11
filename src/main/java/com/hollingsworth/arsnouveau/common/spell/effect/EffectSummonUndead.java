@@ -40,22 +40,18 @@ public class EffectSummonUndead extends AbstractEffect {
         int count = 3 + spellStats.getBuffCount(AugmentSplit.INSTANCE);
         for(int i = 0; i < count; ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
-            Item weapon = Items.IRON_SWORD;
-            if(spellStats.hasBuff(AugmentPierce.INSTANCE))
-            {
-                weapon = Items.BOW;
-            } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE))
-            {
-                switch ((int) spellStats.getAmpMultiplier())
-                {
-                    case 1: weapon = Items.DIAMOND_SWORD;
-                        break;
-                    case 2: weapon = Items.NETHERITE_SWORD;
-                        break;
-                    case 3: weapon = Items.NETHERITE_AXE;
-                        break;
-                }
-            }
+
+            Item weapon =(spellStats.hasBuff(AugmentPierce.INSTANCE)) ? Items.BOW :
+                    spellStats.hasBuff(AugmentAmplify.INSTANCE) ?
+                    (int) spellStats.getAmpMultiplier()>=3 ? Items.NETHERITE_AXE :
+                        (
+                                (int) spellStats.getAmpMultiplier()>2 ? Items.NETHERITE_SWORD :
+                            (
+                                    (int) spellStats.getAmpMultiplier()>1 ? Items.DIAMOND_SWORD :
+                                    Items.IRON_SWORD
+                            )
+                        )
+                    : Items.IRON_SWORD;
             SummonSkeleton undeadentity = new SummonSkeleton(world, shooter, weapon);
             undeadentity.moveTo(blockpos, 0.0F, 0.0F);
             undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null, null);
