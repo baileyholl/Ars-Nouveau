@@ -33,7 +33,7 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T entity) {
+    public ResourceLocation getTextureResource(T entity) {
         return getColor(entity);
     }
 
@@ -52,17 +52,17 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
         }
 
         @Override
-        public ResourceLocation getModelLocation(FamiliarStarbuncle carbuncle) {
+        public ResourceLocation getModelResource(FamiliarStarbuncle carbuncle) {
             return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle.geo.json");
         }
 
         @Override
-        public ResourceLocation getTextureLocation(FamiliarStarbuncle carbuncle) {
+        public ResourceLocation getTextureResource(FamiliarStarbuncle carbuncle) {
             return WILD_TEXTURE;
         }
 
         @Override
-        public ResourceLocation getAnimationFileLocation(FamiliarStarbuncle carbuncle) {
+        public ResourceLocation getAnimationResource(FamiliarStarbuncle carbuncle) {
             return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
         }
 

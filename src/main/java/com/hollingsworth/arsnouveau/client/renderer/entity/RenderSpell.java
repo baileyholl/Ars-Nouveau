@@ -24,7 +24,7 @@ public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
 
 
     @Override
-    public ResourceLocation getTextureLocation(EntityProjectileSpell entity) {
+    public ResourceLocation getTextureResource(EntityProjectileSpell entity) {
         return this.entityTexture;
     }
 }

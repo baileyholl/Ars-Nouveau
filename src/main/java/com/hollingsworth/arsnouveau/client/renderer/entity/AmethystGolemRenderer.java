@@ -34,7 +34,7 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
     public void renderEarly(AmethystGolem animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.golem = animatable;
         this.buffer = renderTypeBuffer;
-        this.text = this.getTextureLocation(animatable);
+        this.text = this.getTextureResource(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
     @Override

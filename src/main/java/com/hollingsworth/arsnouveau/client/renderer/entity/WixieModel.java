@@ -25,17 +25,17 @@ public class WixieModel<T extends LivingEntity & IAnimatable> extends AnimatedGe
     }
 
     @Override
-    public ResourceLocation getModelLocation(T entityWixie) {
+    public ResourceLocation getModelResource(T entityWixie) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/wixie.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T entityWixie) {
+    public ResourceLocation getTextureResource(T entityWixie) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(T entityWixie) {
+    public ResourceLocation getAnimationResource(T entityWixie) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/wixie_animations.json");
     }
 }

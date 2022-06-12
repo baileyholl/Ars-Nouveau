@@ -39,17 +39,17 @@ public class WildenHunterModel extends AnimatedGeoModel<WildenHunter> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(WildenHunter hunter) {
+    public ResourceLocation getModelResource(WildenHunter hunter) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/wilden_hunter.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WildenHunter hunter) {
+    public ResourceLocation getTextureResource(WildenHunter hunter) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/packhunter.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WildenHunter hunter) {
+    public ResourceLocation getAnimationResource(WildenHunter hunter) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/wilden_hunter_animations.json");
     }
 }

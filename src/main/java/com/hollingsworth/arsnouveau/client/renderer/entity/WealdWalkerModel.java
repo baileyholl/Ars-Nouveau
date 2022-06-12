@@ -34,17 +34,17 @@ public class WealdWalkerModel<W extends WealdWalker> extends AnimatedGeoModel<W>
     }
 
     @Override
-    public ResourceLocation getModelLocation(WealdWalker walker) {
+    public ResourceLocation getModelResource(WealdWalker walker) {
         return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID , "geo/" + type + "_waddler.geo.json") : new ResourceLocation(ArsNouveau.MODID , "geo/" + type + "_walker.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WealdWalker walker) {
+    public ResourceLocation getTextureResource(WealdWalker walker) {
         return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID , "textures/entity/" + type + "_waddler.png") :new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + "_walker.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WealdWalker walker) {
+    public ResourceLocation getAnimationResource(WealdWalker walker) {
         return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID , "animations/weald_waddler_animations.json") :new ResourceLocation(ArsNouveau.MODID , "animations/weald_walker_animations.json");
     }
 }

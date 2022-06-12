@@ -39,17 +39,17 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(WildenStalker wildenStalker) {
+    public ResourceLocation getModelResource(WildenStalker wildenStalker) {
         return wildenStalker.isFlying() ?  new ResourceLocation(ArsNouveau.MODID , "geo/stalker_flying.geo.json") : new ResourceLocation(ArsNouveau.MODID , "geo/stalker_standing.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WildenStalker wildenStalker) {
+    public ResourceLocation getTextureResource(WildenStalker wildenStalker) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/stalker_angry.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WildenStalker wildenStalker) {
+    public ResourceLocation getAnimationResource(WildenStalker wildenStalker) {
         return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_stalker_standing.geo.json");
     }
 

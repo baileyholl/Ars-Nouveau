@@ -41,17 +41,17 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(EntityChimera entity) {
+    public ResourceLocation getModelResource(EntityChimera entity) {
         return entity.isDefensive() ? DEFENSIVE_MODEL : NORMAL_MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityChimera entity) {
+    public ResourceLocation getTextureResource(EntityChimera entity) {
         return entity.isDefensive() ? DEFENSIVE_TEXTURE : TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(EntityChimera animatable) {
+    public ResourceLocation getAnimationResource(EntityChimera animatable) {
         return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.geo.json");
     }
 }

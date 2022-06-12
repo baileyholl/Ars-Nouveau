@@ -27,17 +27,17 @@ public class DrygmyModel<T extends LivingEntity & IAnimatable> extends AnimatedG
     }
 
     @Override
-    public ResourceLocation getModelLocation(T drygmy) {
+    public ResourceLocation getModelResource(T drygmy) {
         return NORMAL_MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T drygmy) {
+    public ResourceLocation getTextureResource(T drygmy) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(T drygmy) {
+    public ResourceLocation getAnimationResource(T drygmy) {
         return ANIMATIONS;
     }
 }

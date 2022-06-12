@@ -27,7 +27,7 @@ public class ImbuementRenderer extends GeoBlockRenderer<ImbuementTile> {
     public void renderEarly(ImbuementTile animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.tile = animatable;
         this.buffer = renderTypeBuffer;
-        this.text = this.getTextureLocation(animatable);
+        this.text = this.getTextureResource(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
 

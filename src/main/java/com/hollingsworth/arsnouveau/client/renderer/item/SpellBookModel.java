@@ -19,7 +19,7 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     public boolean isOpen;
 
     @Override
-    public ResourceLocation getModelLocation(SpellBook book, @Nullable ItemTransforms.TransformType transformType) {
+    public ResourceLocation getModelResource(SpellBook book, @Nullable ItemTransforms.TransformType transformType) {
 
         if(transformType == ItemTransforms.TransformType.GUI || transformType == ItemTransforms.TransformType.FIXED){
             if(book.tier == SpellTier.ONE)
@@ -38,18 +38,18 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
 
     @Override
-    public ResourceLocation getModelLocation(SpellBook object) {
-        return getModelLocation(object, null);
+    public ResourceLocation getModelResource(SpellBook object) {
+        return getModelResource(object, null);
     }
 
 
     @Override
-    public ResourceLocation getTextureLocation(SpellBook object){
+    public ResourceLocation getTextureResource(SpellBook object){
         return new ResourceLocation(ArsNouveau.MODID, "textures/items/spellbook_purple.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(SpellBook animatable) {
+    public ResourceLocation getAnimationResource(SpellBook animatable) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/spellbook_animations.json");
     }
 }

@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class ShieldModel extends AnimatedGeoModel<EnchantersShield> {
 
     @Override
-    public ResourceLocation getModelLocation(EnchantersShield wand) {
+    public ResourceLocation getModelResource(EnchantersShield wand) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/shield.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EnchantersShield wand) {
+    public ResourceLocation getTextureResource(EnchantersShield wand) {
         return  new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_shield.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(EnchantersShield wand) {
+    public ResourceLocation getAnimationResource(EnchantersShield wand) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/shield.json");
     }
 }

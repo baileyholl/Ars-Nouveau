@@ -16,17 +16,17 @@ public class ScryersEyeModel extends AnimatedGeoModel<ScryersOculusTile> {
     public static final ResourceLocation anim = new ResourceLocation(ArsNouveau.MODID , "animations/scryers_eye_animations.json");
     public static final ResourceLocation model = new ResourceLocation(ArsNouveau.MODID , "geo/scryers_eye.geo.json");
     @Override
-    public ResourceLocation getModelLocation(ScryersOculusTile object) {
+    public ResourceLocation getModelResource(ScryersOculusTile object) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ScryersOculusTile object) {
+    public ResourceLocation getTextureResource(ScryersOculusTile object) {
         return object != null && object.playerNear ? SQUINTING : IDLE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(ScryersOculusTile animatable) {
+    public ResourceLocation getAnimationResource(ScryersOculusTile animatable) {
         return anim;
     }
 

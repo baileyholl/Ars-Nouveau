@@ -21,7 +21,7 @@ public class RenderBlank extends EntityRenderer {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Entity entity) {
+    public ResourceLocation getTextureResource(Entity entity) {
         return entityTexture;
     }
 }

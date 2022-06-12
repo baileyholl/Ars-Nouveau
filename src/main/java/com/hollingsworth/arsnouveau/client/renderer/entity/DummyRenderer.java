@@ -31,7 +31,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityDummy p_110775_1_) {
+    public ResourceLocation getTextureResource(EntityDummy p_110775_1_) {
         return p_110775_1_.getSkinTextureLocation();
     }
 

@@ -25,17 +25,17 @@ public class GenericModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(T iAnimatable) {
+    public ResourceLocation getModelResource(T iAnimatable) {
         return modelLocation;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T iAnimatable) {
+    public ResourceLocation getTextureResource(T iAnimatable) {
         return textLoc;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(T iAnimatable) {
+    public ResourceLocation getAnimationResource(T iAnimatable) {
         return animationLoc;
     }
 }

@@ -11,17 +11,17 @@ public class GenericItemModel extends AnimatedGeoModel<AnimBlockItem> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(AnimBlockItem animBlockItem) {
-        return model.getModelLocation(null);
+    public ResourceLocation getModelResource(AnimBlockItem animBlockItem) {
+        return model.getModelResource(null);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AnimBlockItem animBlockItem) {
-        return model.getTextureLocation(null);
+    public ResourceLocation getTextureResource(AnimBlockItem animBlockItem) {
+        return model.getTextureResource(null);
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(AnimBlockItem animBlockItem) {
-        return model.getAnimationFileLocation(null);
+    public ResourceLocation getAnimationResource(AnimBlockItem animBlockItem) {
+        return model.getAnimationResource(null);
     }
 }

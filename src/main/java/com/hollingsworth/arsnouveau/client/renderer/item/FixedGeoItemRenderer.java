@@ -44,7 +44,7 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
     public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemTransforms.TransformType transformType) {
 //        super.render(animatable, stack, bufferIn, packedLightIn, itemStack, transformType);
         this.currentItemStack = itemStack;
-        GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelLocation((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelLocation(animatable));
+        GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelResource((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource(animatable));
         AnimationEvent itemEvent = new AnimationEvent((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
         if(modelProvider == null)
             return;
@@ -52,9 +52,9 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
         stack.pushPose();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0.5, 0.5);
-        RenderSystem.setShaderTexture(0, getTextureLocation(animatable));
+        RenderSystem.setShaderTexture(0, getTextureResource(animatable));
         Color renderColor = getRenderColor(animatable, 0, stack, bufferIn, null, packedLightIn);
-        RenderType renderType = getRenderType(animatable, 0, stack, bufferIn, null, packedLightIn, getTextureLocation(animatable));
+        RenderType renderType = getRenderType(animatable, 0, stack, bufferIn, null, packedLightIn, getTextureResource(animatable));
         render(model, animatable, 0, renderType, stack, bufferIn, null, packedLightIn, OverlayTexture.NO_OVERLAY, (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f, (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);
         stack.popPose();
     }
