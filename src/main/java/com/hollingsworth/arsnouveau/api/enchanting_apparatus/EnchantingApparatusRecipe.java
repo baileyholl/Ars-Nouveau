@@ -18,13 +18,14 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.hollingsworth.arsnouveau.api.ArsNouveauAPI.getRegistryName;
 
 public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
@@ -42,7 +43,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this.pedestalItems = pedestalItems;
         this.result = result;
         sourceCost = 0;
-        this.id = new ResourceLocation(ArsNouveau.MODID, result.getItem().getRegistryName().getPath());
+        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(result.getItem()).getPath());
     }
 
     public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result){
@@ -134,7 +135,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         jsonobject.add("reagent", reagent);
 
         JsonObject resultObj = new JsonObject();
-        resultObj.addProperty("item", this.result.getItem().getRegistryName().toString());
+        resultObj.addProperty("item", getRegistryName(result.getItem()).toString());
         int count = this.result.getCount();
         if (count > 1) {
             resultObj.addProperty("count", count);

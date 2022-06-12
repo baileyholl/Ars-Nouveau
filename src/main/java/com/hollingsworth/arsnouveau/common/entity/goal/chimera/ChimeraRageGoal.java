@@ -14,7 +14,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectPull;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -68,7 +68,7 @@ public class ChimeraRageGoal extends Goal {
                     .add(AugmentExtendTime.INSTANCE)
                     .build(), chimera));
             resolver.onCastOnEntity(target);
-            PortUtil.sendMessage(target, new TranslatableComponent("ars_nouveau.chimera.rage"));
+            PortUtil.sendMessage(target, Component.translatable("ars_nouveau.chimera.rage"));
         }
     }
 

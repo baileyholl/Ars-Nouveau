@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -47,15 +47,15 @@ public class EnchantingApparatusBlock extends TickableModBlock {
 
 
         if(!(world.getBlockState(pos.below()).getBlock() instanceof ArcaneCore)){
-            PortUtil.sendMessage(player, new TranslatableComponent("alert.core"));
+            PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return InteractionResult.SUCCESS;
         }
         if(tile.catalystItem == null || tile.catalystItem.isEmpty()){
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if(recipe == null){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.norecipe"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
             }else if(recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.nomana"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
             }else{
                 if(tile.attemptCraft(player.getMainHandItem(), player)){
                     tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);

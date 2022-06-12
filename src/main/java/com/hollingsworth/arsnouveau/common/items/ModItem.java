@@ -25,7 +25,7 @@ public class ModItem extends Item {
 
     public ModItem(Properties properties, String registryName){
         this(properties);
-        setRegistryName(ArsNouveau.MODID, registryName);
+        //setRegistryName(ArsNouveau.MODID, registryName);
     }
 
     public ModItem(String registryName){

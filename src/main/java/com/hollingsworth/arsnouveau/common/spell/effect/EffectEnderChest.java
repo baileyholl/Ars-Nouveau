@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class EffectEnderChest extends AbstractEffect {
     public static EffectEnderChest INSTANCE = new EffectEnderChest();
 
-    private static final Component CONTAINER_NAME = new TranslatableComponent("container.enderchest");
+    private static final Component CONTAINER_NAME = Component.translatable("container.enderchest");
 
     private EffectEnderChest() {
         super(GlyphLib.EffectEnderChestID, "Access Ender Inventory");

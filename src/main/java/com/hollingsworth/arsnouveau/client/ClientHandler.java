@@ -24,7 +24,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -221,24 +221,24 @@ public class ClientHandler {
             if (var10 instanceof ICameraMountable be) {
                 Font font = Minecraft.getInstance().font;
                 Options settings = Minecraft.getInstance().options;
-                TranslatableComponent lookAround = localize("ars_nouveau.camera.move", new Object[]{settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage()});
-                TranslatableComponent exit = localize("ars_nouveau.camera.exit", new Object[]{settings.keyShift.getTranslatedKeyMessage()});
+                Component lookAround = localize("ars_nouveau.camera.move", new Object[]{settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage()});
+                Component exit = localize("ars_nouveau.camera.exit", new Object[]{settings.keyShift.getTranslatedKeyMessage()});
                 font.drawShadow(pose,lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40 , 0xFFFFFF);
                 font.drawShadow(pose,exit, 10, mc.getWindow().getGuiScaledHeight() - 30 , 0xFFFFFF);
             }
         }
     }
 
-    public static TranslatableComponent localize(String key, Object... params) {
+    public static Component localize(String key, Object... params) {
         for(int i = 0; i < params.length; ++i) {
             Object var5 = params[i];
-            if (var5 instanceof TranslatableComponent) {
-                TranslatableComponent component = (TranslatableComponent)var5;
+            if (var5 instanceof Component) {
+                Component component = (Component)var5;
                 params[i] = localize(component.getKey(), component.getArgs());
             }
         }
 
-        return new TranslatableComponent(key, params);
+        return Component.translatable(key, params);
     }
 
 }

@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class BaseBook extends ModdedScreen {
     public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
     public ItemRenderer itemre;
     public BaseBook() {
-        super(new TextComponent(""));
+        super(Component.literal(""));
         itemre = this.itemRenderer;
     }
 

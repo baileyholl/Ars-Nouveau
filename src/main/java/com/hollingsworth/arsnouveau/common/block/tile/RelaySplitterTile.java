@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -151,14 +151,14 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(toList == null || toList.isEmpty()) {
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
+            tooltip.add(Component.translatable("ars_nouveau.relay.no_to"));
         } else {
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_to", toList.size()));
+            tooltip.add(Component.translatable("ars_nouveau.relay.one_to", toList.size()));
         }
         if(fromList == null || fromList.isEmpty()) {
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
+            tooltip.add(Component.translatable("ars_nouveau.relay.no_from"));
         } else {
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", fromList.size()));
+            tooltip.add(Component.translatable("ars_nouveau.relay.one_from", fromList.size()));
         }
     }
 

@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -82,14 +82,14 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
         if(ticksPerSignal <= 0 && !isOff){
-            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+            tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         }else{
-            tooltip.add(new TranslatableComponent("ars_nouveau.seconds", ticksPerSignal/20));
+            tooltip.add(Component.translatable("ars_nouveau.seconds", ticksPerSignal/20));
         }
         if(isOff)
-            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+            tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         if(isLocked)
-            tooltip.add(new TranslatableComponent("ars_nouveau.locked"));
+            tooltip.add(Component.translatable("ars_nouveau.locked"));
     }
 
     @Override

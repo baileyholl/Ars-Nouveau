@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class CreateSpellButton extends GuiImageButton {
                     List<Component> tooltip = new ArrayList<>();
                     boolean foundGlyphErrors = false;
 
-                    tooltip.add(new TranslatableComponent("ars_nouveau.spell.validation.crafting.invalid").withStyle(ChatFormatting.RED));
+                    tooltip.add(Component.translatable("ars_nouveau.spell.validation.crafting.invalid").withStyle(ChatFormatting.RED));
 
                     // Add any spell-wide errors
                     for (SpellValidationError error : parent.validationErrors) {
@@ -52,7 +52,7 @@ public class CreateSpellButton extends GuiImageButton {
 
                     // Show a single placeholder for all the per-glyph errors
                     if (foundGlyphErrors) {
-                        tooltip.add(new TranslatableComponent("ars_nouveau.spell.validation.crafting.invalid_glyphs"));
+                        tooltip.add(Component.translatable("ars_nouveau.spell.validation.crafting.invalid_glyphs"));
                     }
 
                     parent.tooltip = tooltip;

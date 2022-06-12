@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +50,7 @@ public class PacketSummonFamiliar {
                 Entity owner = ctx.get().getSender().level.getEntity(entityID);
 
                 if(owner instanceof LivingEntity && ((LivingEntity) owner).hasEffect(ModPotions.FAMILIAR_SICKNESS_EFFECT)){
-                    PortUtil.sendMessage(owner, new TranslatableComponent("ars_nouveau.familiar.sickness"));
+                    PortUtil.sendMessage(owner, Component.translatable("ars_nouveau.familiar.sickness"));
                     return;
                 }
 

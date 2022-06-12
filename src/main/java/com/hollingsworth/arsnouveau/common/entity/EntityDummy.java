@@ -9,7 +9,6 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -125,10 +124,10 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         return this.playerInfo;
     }
     public Component getName() {
-        return this.level.getPlayerByUUID(getOwnerID()) == null ? new TextComponent("") : this.level.getPlayerByUUID(getOwnerID()).getName();
+        return this.level.getPlayerByUUID(getOwnerID()) == null ? Component.literal("") : this.level.getPlayerByUUID(getOwnerID()).getName();
     }
     public Component getDisplayName() {
-        MutableComponent iformattabletextcomponent = new TextComponent("");
+        MutableComponent iformattabletextcomponent = Component.literal("");
         iformattabletextcomponent = iformattabletextcomponent.append(PlayerTeam.formatNameForTeam(this.getTeam(), this.getName()));
         return iformattabletextcomponent;
     }

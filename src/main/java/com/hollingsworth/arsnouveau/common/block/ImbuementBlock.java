@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -47,7 +47,7 @@ public class ImbuementBlock extends TickableModBlock {
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe == null){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.imbuement.norecipe"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
                 tile.stack = ItemStack.EMPTY;
             }else{
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);

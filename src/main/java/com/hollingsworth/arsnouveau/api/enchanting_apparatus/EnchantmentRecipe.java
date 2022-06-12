@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
@@ -21,11 +21,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.hollingsworth.arsnouveau.api.ArsNouveauAPI.getRegistryName;
 
 public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public Enchantment enchantment;
@@ -37,7 +38,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         this.enchantment = enchantment;
         this.enchantLevel = level;
         this.sourceCost = manaCost;
-        this.id = new ResourceLocation(ArsNouveau.MODID, enchantment.getRegistryName().getPath() +"_" + level);
+        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(enchantment).getPath() +"_" + level);
     }
 
     @Override
@@ -53,17 +54,17 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         Collection<Enchantment> enchantList = EnchantmentHelper.getEnchantments(stack).keySet();
         enchantList.remove(enchantment);
         if(stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.canEnchant(stack)){
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.enchanting.incompatible"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.enchanting.incompatible"));
             return false;
         }
 
         if(!EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)){
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.enchanting.incompatible"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.enchanting.incompatible"));
             return false;
         }
 
         if (!(this.enchantLevel - level == 1)) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.enchanting.bad_level"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.enchanting.bad_level"));
             return false;
         }
 
@@ -108,7 +109,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + EnchantmentRecipe.RECIPE_ID);
-        jsonobject.addProperty("enchantment", enchantment.getRegistryName().toString());
+        jsonobject.addProperty("enchantment", getRegistryName(enchantment).toString());
         jsonobject.addProperty("level", enchantLevel);
         jsonobject.addProperty("sourceCost", getSourceCost());
 

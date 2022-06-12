@@ -11,7 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -52,8 +52,8 @@ public class GuiFamiliarScreen extends BaseBook{
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.font.draw(stack,new TranslatableComponent("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
+        minecraft.font.draw(stack,Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
     }
 
     public void onGlyphClick(Button button){

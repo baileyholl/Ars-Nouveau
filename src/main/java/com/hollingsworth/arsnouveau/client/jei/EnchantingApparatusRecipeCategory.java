@@ -18,7 +18,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -63,7 +63,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("ars_nouveau.enchanting_apparatus");
+        return Component.translatable("ars_nouveau.enchanting_apparatus");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     public void draw(EnchantingApparatusRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         if(recipe.consumesSource())
-            renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.sourceCost), 0.0f,100f, 10);
+            renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0.0f,100f, 10);
     }
 
     @Override

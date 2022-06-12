@@ -14,7 +14,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.*;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -191,12 +191,12 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             if(spell.isEmpty())
                 return InteractionResult.SUCCESS;
             if(!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.alert.turret_type"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
                 return InteractionResult.SUCCESS;
             }
             BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
             tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.alert.spell_set"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
             worldIn.sendBlockUpdated(pos, state, state, 2);
         }
         return super.use(state, worldIn, pos, player, handIn, hit);

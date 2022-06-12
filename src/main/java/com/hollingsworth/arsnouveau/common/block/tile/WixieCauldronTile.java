@@ -18,8 +18,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -237,9 +236,9 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         }
 
         if((recipes.recipes.isEmpty() || recipeWrapper == null || recipeWrapper.recipes.isEmpty()) && playerEntity != null){
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.wixie.no_recipe"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.no_recipe"));
         }else if(playerEntity != null){
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.wixie.recipe_set"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.recipe_set"));
         }
     }
 
@@ -396,36 +395,36 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             return;
 
         if(isOff){
-            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+            tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         }
 
         if(!isCraftingPotion){
-            tooltip.add(new TextComponent(
-                    new TranslatableComponent("ars_nouveau.wixie.crafting").getString() +
-                            new TranslatableComponent(craftingItem.getDescriptionId()).getString())
+            tooltip.add(Component.literal(
+                    Component.translatable("ars_nouveau.wixie.crafting").getString() +
+                            Component.translatable(craftingItem.getDescriptionId()).getString())
             );
         }else if(this.craftManager != null && this.craftManager.isPotionCrafting()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.potionOut);
-            tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName()));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName()));
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
 
         if(!hasSource){
-            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
         if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())
-            tooltip.add(new TextComponent(
-                    new TranslatableComponent("ars_nouveau.wixie.needs").getString() +
-                            new TranslatableComponent(this.craftManager.neededItems.get(0).getDescriptionId()).getString()));
+            tooltip.add(Component.literal(
+                    Component.translatable("ars_nouveau.wixie.needs").getString() +
+                            Component.translatable(this.craftManager.neededItems.get(0).getDescriptionId()).getString()));
 
         if(this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.getPotionNeeded());
-            tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()));
         }
         if(this.needsPotionStorage)
-            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.needs_storage"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.needs_storage"));
 
         return;
     }

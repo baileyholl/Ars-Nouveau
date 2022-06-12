@@ -21,8 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -117,22 +116,22 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
             if(new EntitySpellResolver(new SpellContext(spell, this)).canCast(this)) {
                 this.spellRecipe = spell;
                 setRecipeString(spellRecipe.serialize());
-                player.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm.spell_set"), Util.NIL_UUID);
+                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.spell_set"), Util.NIL_UUID);
             } else{
-                player.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm.invalid"), Util.NIL_UUID);
+                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.invalid"), Util.NIL_UUID);
             }
             return InteractionResult.SUCCESS;
         }else if(stack.isEmpty()){
             if(spellRecipe == null || spellRecipe.recipe.size() == 0){
-                player.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm.desc"), Util.NIL_UUID);
+                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.desc"), Util.NIL_UUID);
             }else
-                player.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm.casting", spellRecipe.getDisplayString()), Util.NIL_UUID);
+                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.casting", spellRecipe.getDisplayString()), Util.NIL_UUID);
             return InteractionResult.SUCCESS;
         }
 
         if(!stack.isEmpty()){
             setHeldStack(new ItemStack(stack.getItem()));
-            player.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm.spell_item", stack.getItem().getName(stack).getString()), Util.NIL_UUID);
+            player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.spell_item", stack.getItem().getName(stack).getString()), Util.NIL_UUID);
         }
         return super.mobInteract(player,  hand);
 
@@ -141,7 +140,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public void onWanded(Player playerEntity) {
         this.entityData.set(STRICT_MODE, !this.entityData.get(STRICT_MODE));
-        PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.bookwyrm.strict_mode", this.entityData.get(STRICT_MODE)));
+        PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.bookwyrm.strict_mode", this.entityData.get(STRICT_MODE)));
     }
 
     public EntityBookwyrm(Level world, BlockPos lecternPos){
@@ -240,14 +239,14 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     public void getTooltip(List<Component> tooltip) {
         Spell spellParts = Spell.deserialize(this.getRecipeString());
         String spellString = spellParts.getDisplayString();
-        String itemString = this.getHeldStack() == ItemStack.EMPTY ? new TranslatableComponent("ars_nouveau.bookwyrm.no_item").getString() : this.getHeldStack().getHoverName().getString();
+        String itemString = this.getHeldStack() == ItemStack.EMPTY ? Component.translatable("ars_nouveau.bookwyrm.no_item").getString() : this.getHeldStack().getHoverName().getString();
         String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? 
-        		new TranslatableComponent("ars_nouveau.bookwyrm.placing").getString() :
-        		new TranslatableComponent("ars_nouveau.bookwyrm.using").getString();
-        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.bookwyrm.spell").getString() + spellString));
-        tooltip.add(new TextComponent(itemAction + itemString));
-        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.bookwyrm.strict").getString() +
-                new TranslatableComponent("ars_nouveau." + this.entityData.get(STRICT_MODE)).getString() ));
+        		Component.translatable("ars_nouveau.bookwyrm.placing").getString() :
+        		Component.translatable("ars_nouveau.bookwyrm.using").getString();
+        tooltip.add(Component.literal(Component.translatable("ars_nouveau.bookwyrm.spell").getString() + spellString));
+        tooltip.add(Component.literal(itemAction + itemString));
+        tooltip.add(Component.literal(Component.translatable("ars_nouveau.bookwyrm.strict").getString() +
+                Component.translatable("ars_nouveau." + this.entityData.get(STRICT_MODE)).getString() ));
     }
 
     @Override

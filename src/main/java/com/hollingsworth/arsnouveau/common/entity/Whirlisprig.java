@@ -22,8 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -121,7 +120,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
             List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
             if (!items.isEmpty()) {
                 this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.whirlisprig.ignore"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
             }
         }
         return super.mobInteract(player,hand);
@@ -162,29 +161,29 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         if(stack.isEmpty()) {
             int moodScore = entityData.get(MOOD_SCORE);
             if(moodScore < 250){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.unhappy"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.unhappy"));
             }else if(moodScore <= 500){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.content"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.content"));
             }else if(moodScore <= 750){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.happy"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.happy"));
             }else if(moodScore < 1000){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.very_happy"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.very_happy"));
             }else{
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.extremely_happy"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.extremely_happy"));
             }
             int numDrops = diversityScore / 2;
             if(numDrops <= 5){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.okay_diversity"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.okay_diversity"));
             }else if(numDrops <= 10){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.diverse_enough"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.diverse_enough"));
             }else if(numDrops <= 20){
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.very_diverse"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.very_diverse"));
             }else{
-                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.extremely_diverse"));
+                PortUtil.sendMessage(player, Component.translatable("whirlisprig.extremely_diverse"));
             }
             if(ignoreItems != null && !ignoreItems.isEmpty()) {
                 StringBuilder status = new StringBuilder();
-                status.append(new TranslatableComponent("ars_nouveau.whirlisprig.ignore_list").getString());
+                status.append(Component.translatable("ars_nouveau.whirlisprig.ignore_list").getString());
                 for (ItemStack i : ignoreItems) {
                     status.append(i.getHoverName().getString()).append(" ");
                 }
@@ -198,19 +197,19 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         BlockState state = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         int score = WhirlisprigTile.getScore(state);
         if(score > 0 && getTile() != null && getTile().scoreMap != null && getTile().scoreMap.get(state) != null && getTile().scoreMap.get(state) >= 50){
-            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.toomuch"));
+            PortUtil.sendMessage(player, Component.translatable("whirlisprig.toomuch"));
             return InteractionResult.SUCCESS;
         }
 
         if(score == 0) {
-            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.notinterested"));
+            PortUtil.sendMessage(player, Component.translatable("whirlisprig.notinterested"));
         }
         if(score == 1){
-            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.likes"));
+            PortUtil.sendMessage(player, Component.translatable("whirlisprig.likes"));
         }
 
         if(score == 2){
-            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.excited"));
+            PortUtil.sendMessage(player, Component.translatable("whirlisprig.excited"));
         }
         return InteractionResult.SUCCESS;
     }
@@ -354,16 +353,16 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         if(!this.entityData.get(TAMED))
             return;
         int mood = this.entityData.get(MOOD_SCORE);
-        String moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_unhappy").getString();
+        String moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_unhappy").getString();
         if(mood >= 1000)
-            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_extremely_happy").getString();
+            moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_extremely_happy").getString();
         else if(mood >= 750)
-            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_very_happy").getString();
+            moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_very_happy").getString();
         else if(mood >= 500)
-            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_happy").getString();
+            moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_happy").getString();
         else if(mood >= 250)
-            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_content").getString();
-        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_mood").getString() + moodStr));
+            moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_content").getString();
+        tooltip.add(Component.literal(Component.translatable("ars_nouveau.whirlisprig.tooltip_mood").getString() + moodStr));
     }
 
     @Override

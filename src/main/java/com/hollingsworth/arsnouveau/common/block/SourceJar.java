@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -125,6 +124,6 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
         if(stack.getTag() == null)
             return;
         int mana = stack.getTag().getCompound("BlockEntityTag").getInt("source");
-        tooltip.add( new TextComponent((mana*100) / 10000 + "% full"));
+        tooltip.add( Component.literal((mana*100) / 10000 + "% full"));
     }
 }

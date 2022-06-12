@@ -27,7 +27,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -291,7 +291,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.entityData.set(FROM_POS_SIZE, 0);
         this.pathBlock = null;
         this.bedPos = null;
-        PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.cleared"));
+        PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.cleared"));
     }
 
     @Override
@@ -299,11 +299,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         if (storedPos == null)
             return;
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.store"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             setToPos(storedPos);
         }
         if(level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.set_bed"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
             bedPos = storedPos.immutable();
         }
     }
@@ -314,7 +314,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return;
 
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.take"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             setFromPos(storedPos);
         }
     }
@@ -461,19 +461,19 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
         if (player.getMainHandItem().getItem() instanceof BlockItem) {
             pathBlock = ((BlockItem) player.getMainHandItem().getItem()).getBlock();
-            setPathBlockDesc(new TranslatableComponent(pathBlock.getDescriptionId()).getString());
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.starbuncle.path"));
+            setPathBlockDesc(Component.translatable(pathBlock.getDescriptionId()).getString());
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.path"));
         }
 
         if (player.getMainHandItem().isEmpty() && this.isTamed()) {
             StringBuilder status = new StringBuilder();
             if (whitelist && allowedItems != null) {
-                status.append(new TranslatableComponent("ars_nouveau.starbuncle.whitelist").getString());
+                status.append(Component.translatable("ars_nouveau.starbuncle.whitelist").getString());
                 for (ItemStack i : allowedItems) {
                     status.append(i.getHoverName().getString());
                 }
             } else if (blacklist && allowedItems != null) {
-                status.append(new TranslatableComponent("ars_nouveau.starbuncle.blacklist").getString());
+                status.append(Component.translatable("ars_nouveau.starbuncle.blacklist").getString());
                 for (ItemStack i : ignoreItems) {
                     status.append(i.getHoverName().getString());
                 }
@@ -490,7 +490,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 this.allowedItems = ItemsRegistry.ALLOW_ITEM_SCROLL.getItems(stack);
                 whitelist = true;
                 blacklist = false;
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.allow_set"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.allow_set"));
             }
             return InteractionResult.SUCCESS;
         }
@@ -501,7 +501,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
                 whitelist = false;
                 blacklist = true;
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.ignore_set"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.ignore_set"));
             }
         }
 
@@ -635,7 +635,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.entityData.set(FROM_POS_SIZE, FROM_LIST.size());
         if (tag.contains("path")) {
             pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
-            setPathBlockDesc(new TranslatableComponent(pathBlock.getDescriptionId()).getString());
+            setPathBlockDesc(Component.translatable(pathBlock.getDescriptionId()).getString());
         }
         bedPos = NBTUtil.getBlockPos(tag, "bed_");
         if(bedPos.equals(BlockPos.ZERO)) {
@@ -692,10 +692,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void getTooltip(List<Component> tooltip) {
         if (!isTamed())
             return;
-        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS_SIZE)));
-        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS_SIZE)));
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS_SIZE)));
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS_SIZE)));
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
-            tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
+            tooltip.add(Component.translatable("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
     }
 

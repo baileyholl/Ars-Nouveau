@@ -16,8 +16,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -192,28 +191,28 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void getTooltip(List<Component> tooltips) {
         if(ritual != null){
-            tooltips.add(new TextComponent(ritual.getName()));
+            tooltips.add(Component.literal(ritual.getName()));
             if(isOff) {
-                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+                tooltips.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
                 return;
             }
             if(!ritual.isRunning()){
                 if(!ritual.canStart()){
-                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.conditions_unmet"));
+                    tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet"));
                 }else
-                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.waiting"));
+                    tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting"));
             }else{
 
-                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.running"));
+                tooltips.add(Component.translatable("ars_nouveau.tooltip.running"));
             }
             if(ritual.getConsumedItems().size() != 0) {
-                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.consumed"));
+                tooltips.add(Component.translatable("ars_nouveau.tooltip.consumed"));
                 for (ItemStack i : ritual.getConsumedItems()) {
                     tooltips.add(i.getHoverName());
                 }
             }
             if(ritual.needsManaNow())
-                tooltips.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
+                tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }
 

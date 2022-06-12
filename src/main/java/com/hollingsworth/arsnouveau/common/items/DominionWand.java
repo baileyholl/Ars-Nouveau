@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -51,7 +51,7 @@ public class DominionWand extends ModItem{
 
         if((getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0))) && getEntityID(stack) == -1){
             setEntityID(stack, target.getId());
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.dominion_wand.stored_entity"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.stored_entity"));
             return  InteractionResult.SUCCESS;
         }
         Level world = playerEntity.getCommandSenderWorld();
@@ -101,7 +101,7 @@ public class DominionWand extends ModItem{
 
         if(getEntityID(stack) == - 1 && (getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0)))){
             setPosTag(stack, pos);
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.dominion_wand.position_set"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
 
@@ -164,17 +164,17 @@ public class DominionWand extends ModItem{
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
         tooltip.add(getEntityID(stack) == -1 ? 
-        		new TranslatableComponent("ars_nouveau.dominion_wand.no_entity") : 
-        		new TranslatableComponent("ars_nouveau.dominion_wand.entity_stored"));
+        		Component.translatable("ars_nouveau.dominion_wand.no_entity") : 
+        		Component.translatable("ars_nouveau.dominion_wand.entity_stored"));
         if(pos == null){
-            tooltip.add(new TranslatableComponent("ars_nouveau.dominion_wand.no_location"));
+            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_location"));
             return;
         }
 
-        tooltip.add(new TranslatableComponent("ars_nouveau.dominion_wand.position_stored", getPosString(pos)));
+        tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getPosString(pos)));
     }
 
     public static String getPosString(BlockPos pos){
-        return new TranslatableComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
+        return Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
     }
 }

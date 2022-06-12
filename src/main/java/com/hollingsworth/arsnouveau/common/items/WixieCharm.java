@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -37,7 +37,7 @@ public class WixieCharm extends ModItem{
                 tile.entityID = wixie.getId();
                 context.getItemInHand().shrink(1);
             }else{
-                PortUtil.sendMessage(context.getPlayer(), new TranslatableComponent("ars_nouveau.wixie.has_wixie"));
+                PortUtil.sendMessage(context.getPlayer(), Component.translatable("ars_nouveau.wixie.has_wixie"));
             }
         }
         return InteractionResult.SUCCESS;

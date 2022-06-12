@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -59,7 +59,7 @@ public class RuneBlock extends TickableModBlock {
             if (!worldIn.isClientSide && stack.getItem() instanceof RunicChalk) {
                 if (runeTile.isTemporary) {
                     runeTile.isTemporary = false;
-                    PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.setperm"));
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.setperm"));
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -70,11 +70,11 @@ public class RuneBlock extends TickableModBlock {
                 return InteractionResult.SUCCESS;
 
             if (!(spell.recipe.get(0) instanceof MethodTouch)) {
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.touch"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.touch"));
                 return InteractionResult.SUCCESS;
             }
             runeTile.setSpell(spell);
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.spell_set"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.spell_set"));
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }

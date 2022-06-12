@@ -10,7 +10,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
@@ -90,19 +90,19 @@ public class DataDumpCommand {
             w.close();
         } catch (IOException ex) {
             LogManager.getLogger(ArsNouveau.MODID).error("Unable to dump augment compatibility chart", ex);
-            context.getSource().sendFailure(new TextComponent("Error when trying to produce the data dump.  Check the logs."));
+            context.getSource().sendFailure(Component.literal("Error when trying to produce the data dump.  Check the logs."));
 
             // This is somewhat expected, just fail the command.  Logging took care of reporting.
             return 0;
         } catch (Exception ex) {
             LogManager.getLogger(ArsNouveau.MODID).error("Exception caught when trying to dump data", ex);
-            context.getSource().sendFailure(new TextComponent("Error when trying to produce the data dump.  Check the logs."));
+            context.getSource().sendFailure(Component.literal("Error when trying to produce the data dump.  Check the logs."));
 
             // We really didn't expect this.  Re-throw.
             throw ex;
         }
 
-        context.getSource().sendSuccess(new TextComponent("Dumped data to " + file), true);
+        context.getSource().sendSuccess(Component.literal("Dumped data to " + file), true);
         return 1;
     }
 }

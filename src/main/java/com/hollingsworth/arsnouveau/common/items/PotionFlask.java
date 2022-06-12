@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -158,7 +158,7 @@ public abstract class PotionFlask extends ModItem {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if(stack.hasTag()){
-            tooltip.add(new TranslatableComponent("ars_nouveau.flask.charges", stack.getTag().getInt("count")));
+            tooltip.add(Component.translatable("ars_nouveau.flask.charges", stack.getTag().getInt("count")));
             PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
         }
     }

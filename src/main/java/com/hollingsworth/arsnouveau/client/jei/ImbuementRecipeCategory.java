@@ -18,7 +18,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -65,7 +65,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("block.ars_nouveau.imbuement_chamber");
+        return Component.translatable("block.ars_nouveau.imbuement_chamber");
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
     @Override
     public void draw(ImbuementRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.source), 0.0f,100f, 10);
+        renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.source), 0.0f,100f, 10);
     }
 
     @Override

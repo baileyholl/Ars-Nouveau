@@ -13,7 +13,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -107,10 +107,10 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             return;
         // Let relays take from us, no action needed.
         if(this.setSendTo(storedPos.immutable())) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
             ParticleUtil.beam(storedPos, worldPosition, level);
         }else{
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.fail"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
         }
     }
 
@@ -121,16 +121,16 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if(level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
         if(this.setTakeFrom(storedPos.immutable())) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
         }else{
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.fail"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
         }
     }
 
     @Override
     public void onWanded(Player playerEntity) {
         this.clearPos();
-        PortUtil.sendMessage(playerEntity,new TranslatableComponent("ars_nouveau.connections.cleared"));
+        PortUtil.sendMessage(playerEntity,Component.translatable("ars_nouveau.connections.cleared"));
     }
 
 
@@ -203,18 +203,18 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(toPos == null){
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
+            tooltip.add(Component.translatable("ars_nouveau.relay.no_to"));
         }else{
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_to", 1));
+            tooltip.add(Component.translatable("ars_nouveau.relay.one_to", 1));
         }
         if(fromPos == null){
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
+            tooltip.add(Component.translatable("ars_nouveau.relay.no_from"));
         }else{
-            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1));
+            tooltip.add(Component.translatable("ars_nouveau.relay.one_from", 1));
         }
 
         if(disabled){
-            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+            tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         }
     }
     AnimationFactory factory = new AnimationFactory(this);

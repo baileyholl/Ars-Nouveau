@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -247,7 +247,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
 
     @Override
     public void sendInvalidMessage(Player player) {
-        PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.bow.invalid"));
+        PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.bow.invalid"));
     }
 
     @Override

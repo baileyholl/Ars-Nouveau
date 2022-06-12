@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -132,7 +131,7 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
         if(stack.getTag() == null)
             return;
         int mana = stack.getTag().getCompound("BlockEntityTag").getInt("amount");
-        tooltip.add( new TextComponent((mana*100) / 10000 + "% full"));
+        tooltip.add( Component.literal((mana*100) / 10000 + "% full"));
         ItemStack stack1 = new ItemStack(Items.POTION);
         stack1.setTag(stack.getTag().getCompound("BlockEntityTag"));
         PotionUtils.addPotionTooltip(stack1, tooltip, 1.0F);

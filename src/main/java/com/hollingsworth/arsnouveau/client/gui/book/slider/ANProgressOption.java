@@ -21,9 +21,7 @@ public class ANProgressOption extends ProgressOption {
     }
 
     public ANProgressOption(String pCaptionKey, double pMinValue, double pMaxValue, float pSteps, Function<Options, Double> pGetter, BiConsumer<Options, Double> pSetter, BiFunction<Options, ProgressOption, Component> pToString) {
-        this(pCaptionKey, pMinValue, pMaxValue, pSteps, pGetter, pSetter, pToString, (p_168549_) -> {
-            return ImmutableList.of();
-        });
+        this(pCaptionKey, pMinValue, pMaxValue, pSteps, pGetter, pSetter, pToString, (p_168549_) -> ImmutableList.of());
     }
 
     @Override

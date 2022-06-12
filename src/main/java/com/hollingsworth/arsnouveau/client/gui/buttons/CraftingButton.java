@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class CraftingButton extends GuiImageButton{
 
                 if(parent.api.getSpellpartMap().containsKey(this.spellTag)) {
                     List<Component> tooltip = new LinkedList<>();
-                    tooltip.add(new TranslatableComponent(parent.api.getSpellpartMap().get(this.spellTag).getLocalizationKey()));
+                    tooltip.add(Component.translatable(parent.api.getSpellpartMap().get(this.spellTag).getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
                         tooltip.add(ve.makeTextComponentExisting().withStyle(ChatFormatting.RED));
                     }

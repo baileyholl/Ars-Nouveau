@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -29,7 +29,7 @@ public class ToggleLightCommand {
         }
         Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> player), new PacketToggleLight(enable));
         String path = enable ? "ars_nouveau.lights_on" : "ars_nouveau.lights_off";
-        player.sendMessage(new TranslatableComponent(path, enable), Util.NIL_UUID);
+        player.sendMessage(Component.translatable(path, enable), Util.NIL_UUID);
         return 1;
     }
 }

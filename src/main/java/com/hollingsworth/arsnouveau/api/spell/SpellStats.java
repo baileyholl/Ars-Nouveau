@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -56,11 +56,11 @@ public class SpellStats {
 
     public List<Component> addTooltip(List<Component> components){
         if(this.damageModifier != 0.0d)
-            components.add(new TranslatableComponent("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            components.add(Component.translatable("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
         if(this.getDurationMultiplier() != 0.0d)
-            components.add(new TranslatableComponent("tooltip.ars_nouveau.duration_modifier", this.getDurationMultiplier()).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
+            components.add(Component.translatable("tooltip.ars_nouveau.duration_modifier", this.getDurationMultiplier()).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
         if(this.amplification != 0.0d)
-            components.add(new TranslatableComponent("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+            components.add(Component.translatable("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
 
         return components;
     }

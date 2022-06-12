@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -31,10 +31,10 @@ public class GuiSettingsScreen extends BaseBook{
             SelectableButton button = (SelectableButton) b;
             button.isSelected = !button.isSelected;
             LightManager.toggleLightsAndConfig(!Config.DYNAMIC_LIGHTS_ENABLED.get());
-            button.withTooltip(this, new TranslatableComponent(button.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
+            button.withTooltip(this, Component.translatable(button.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
         });
         dynamicButton.isSelected = Config.DYNAMIC_LIGHTS_ENABLED.get();
-        dynamicButton.withTooltip(this, new TranslatableComponent(dynamicButton.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
+        dynamicButton.withTooltip(this, Component.translatable(dynamicButton.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
         addRenderableWidget(dynamicButton);
     }
 
@@ -42,7 +42,7 @@ public class GuiSettingsScreen extends BaseBook{
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.settings.title").getString(), 51, 24,  -8355712);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.settings.title").getString(), 51, 24,  -8355712);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
     }
 }

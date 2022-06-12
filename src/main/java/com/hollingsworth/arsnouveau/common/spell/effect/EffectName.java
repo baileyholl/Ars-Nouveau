@@ -5,22 +5,16 @@ import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.NameTagItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,11 +49,11 @@ public class EffectName extends AbstractEffect {
                 ItemStack stack = StackUtil.getHeldSpellbook((Player) spellContext.getCaster());
                 if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null){
                     ISpellCaster caster =  CasterUtil.getCaster(stack);
-                    newName = new TextComponent(caster.getSpellName());
+                    newName = Component.literal(caster.getSpellName());
                 }
             }
         }
-        rayTraceResult.getEntity().setCustomName((newName != null) ? newName : TextComponent.EMPTY);
+        rayTraceResult.getEntity().setCustomName((newName != null) ? newName : Component.empty());
         if (rayTraceResult.getEntity() instanceof Mob) {
             ((Mob)rayTraceResult.getEntity()).setPersistenceRequired();
         }

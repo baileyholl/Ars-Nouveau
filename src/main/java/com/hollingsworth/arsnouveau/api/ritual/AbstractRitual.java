@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -103,11 +103,11 @@ public abstract class AbstractRitual {
     public abstract String getID();
 
     public String getName(){
-        return new TranslatableComponent("item.ars_nouveau.ritual_" + getID()).getString();
+        return Component.translatable("item.ars_nouveau.ritual_" + getID()).getString();
     }
 
     public String getDescription(){
-        return new TranslatableComponent("ars_nouveau.ritual_desc." + getID()).getString();
+        return Component.translatable("ars_nouveau.ritual_desc." + getID()).getString();
     }
 
     public int getManaCost(){

@@ -19,7 +19,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -64,7 +64,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("ars_nouveau.crush_recipe");
+        return Component.translatable("ars_nouveau.crush_recipe");
     }
 
     @Override

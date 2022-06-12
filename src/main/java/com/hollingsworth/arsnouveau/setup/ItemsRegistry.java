@@ -21,7 +21,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
@@ -30,7 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -150,13 +149,13 @@ public class ItemsRegistry {
                     new DominionWand(),
                     new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
-                    new ModItem(LibItemNames.DULL_TRINKET).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
+                    new ModItem(LibItemNames.DULL_TRINKET).withTooltip(Component.translatable("ars_nouveau.tooltip.dull")),
                     new ModItem(LibItemNames.BLAZE_FIBER),
                     new ModItem(LibItemNames.END_FIBER),
-                    new ModItem(LibItemNames.MAGE_BLOOM).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
+                    new ModItem(LibItemNames.MAGE_BLOOM).withTooltip(Component.translatable("ars_nouveau.tooltip.magebloom")),
                     new ModItem(LibItemNames.MAGE_FIBER),
-                    new ModItem(LibItemNames.MUNDANE_BELT).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
-                    new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
+                    new ModItem(LibItemNames.MUNDANE_BELT).withTooltip(Component.translatable("ars_nouveau.tooltip.dull")),
+                    new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(Component.translatable("ars_nouveau.tooltip.dull")),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
                     new ModItem(defaultItemProperties().stacksTo(1), LibItemNames.BUCKET_OF_SOURCE),
                     new NoviceArmor(EquipmentSlot.FEET).setRegistryName(LibItemNames.NOVICE_BOOTS),
@@ -178,10 +177,10 @@ public class ItemsRegistry {
                     new BeltOfLevitation(),
                     new WarpScroll(),
                     new JarOfLight(),
-                    new WornNotebook().withTooltip(new TranslatableComponent("tooltip.worn_notebook")),
+                    new WornNotebook().withTooltip(Component.translatable("tooltip.worn_notebook")),
                     new StarbuncleCharm(),
-                    new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(new TranslatableComponent("tooltip.starbuncle_shard")),
-                    new StarbuncleShades(LibItemNames.STARBUNCLE_SHADES).withTooltip(new TranslatableComponent("tooltip.starbuncle_shades")),
+                    new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(Component.translatable("tooltip.starbuncle_shard")),
+                    new StarbuncleShades(LibItemNames.STARBUNCLE_SHADES).withTooltip(Component.translatable("tooltip.starbuncle_shades")),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override
@@ -210,54 +209,54 @@ public class ItemsRegistry {
                         }
 
                     },
-                    new ModItem(LibItemNames.WHIRLISPRIG_SHARDS).withTooltip(new TranslatableComponent("tooltip.whirlisprig_shard")),
+                    new ModItem(LibItemNames.WHIRLISPRIG_SHARDS).withTooltip(Component.translatable("tooltip.whirlisprig_shard")),
                     new WhirlisprigCharm(),
-                    new ModItem(LibItemNames.SOURCE_GEM).withTooltip(new TranslatableComponent("tooltip.source_gem")),
+                    new ModItem(LibItemNames.SOURCE_GEM).withTooltip(Component.translatable("tooltip.source_gem")),
                     new AllowItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new DenyItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new MimicItemScroll(LibItemNames.MIMIC_ITEM_SCROLL),
                     new BlankParchmentItem(LibItemNames.BLANK_PARCHMENT),
-                    new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslatableComponent("tooltip.wixie_shard")),
+                    new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(Component.translatable("tooltip.wixie_shard")),
                     new Wand(),
                     new VoidJar(),
                     new SpellBow().setRegistryName(LibItemNames.SPELL_BOW),
                     new FormSpellArrow(LibItemNames.PIERCE_ARROW, AugmentPierce.INSTANCE, 2),
                     new FormSpellArrow(LibItemNames.SPLIT_ARROW, AugmentSplit.INSTANCE, 2),
                     new SpellArrow(LibItemNames.AMPLIFY_ARROW, AugmentAmplify.INSTANCE, 2),
-                    new ModItem(LibItemNames.WILDEN_HORN).withTooltip(new TranslatableComponent("tooltip.wilden_horn")),
-                    new ModItem(LibItemNames.WILDEN_WING).withTooltip(new TranslatableComponent("tooltip.wilden_wing")),
-                    new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslatableComponent("tooltip.wilden_spike")),
+                    new ModItem(LibItemNames.WILDEN_HORN).withTooltip(Component.translatable("tooltip.wilden_horn")),
+                    new ModItem(LibItemNames.WILDEN_WING).withTooltip(Component.translatable("tooltip.wilden_wing")),
+                    new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(Component.translatable("tooltip.wilden_spike")),
                     new PotionFlask() {
                         @Nonnull
                         @Override
                         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
                             return effectInstance;
                         }
-                    }.withTooltip(new TranslatableComponent("tooltip.potion_flask")),
+                    }.withTooltip(Component.translatable("tooltip.potion_flask")),
                     new PotionFlask(LibItemNames.POTION_FLASK_EXTEND_TIME) {
                         @Override
                         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
                             return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration()/2, effectInstance.getAmplifier());
                         }
-                    }.withTooltip(new TranslatableComponent("tooltip.potion_flask_extend_time")),
+                    }.withTooltip(Component.translatable("tooltip.potion_flask_extend_time")),
                     new PotionFlask(LibItemNames.POTION_FLASK_AMPLIFY) {
                         @Override
                         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
                             return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration()/2, effectInstance.getAmplifier() + 1);
                         }
-                    }.withTooltip(new TranslatableComponent("tooltip.potion_flask_amplify")),
+                    }.withTooltip(Component.translatable("tooltip.potion_flask_amplify")),
                     new ExperienceGem(defaultItemProperties(), LibItemNames.EXP_GEM) {
                         @Override
                         public int getValue() {
                             return 3;
                         }
-                    }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.exp_gem")),
+                    }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")),
                     new ExperienceGem(defaultItemProperties(), LibItemNames.GREATER_EXP_GEM) {
                         @Override
                         public int getValue() {
                             return 12;
                         }
-                    }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.exp_gem")),
+                    }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")),
                     new EnchantersShield(),
                     new EnchantersSword(Tiers.NETHERITE, 3, -2.4F).setRegistryName(LibItemNames.ENCHANTERS_SWORD),
                     new ForgeSpawnEggItem(() -> ModEntities.STARBUNCLE_TYPE, 0xFFB233,0xFFE633,defaultItemProperties()).setRegistryName(LibItemNames.STARBUNCLE_SE),
@@ -267,25 +266,25 @@ public class ItemsRegistry {
                     new ForgeSpawnEggItem(() -> ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),
                     new CasterTome(defaultItemProperties().stacksTo(1), LibItemNames.CASTER_TOME),
                     new DrygmyCharm(LibItemNames.DRYGMY_CHARM),
-                    new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.drygmy_shard")),
+                    new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")),
                     new ModItem(defaultItemProperties().fireResistant(), LibItemNames.WILDEN_TRIBUTE).withRarity(Rarity.EPIC)
-                            .withTooltip(new TranslatableComponent("tooltip.ars_nouveau.wilden_tribute")
+                            .withTooltip(Component.translatable("tooltip.ars_nouveau.wilden_tribute")
                             .withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))),
                     new SummoningFocus(defaultItemProperties().stacksTo(1), LibItemNames.SUMMON_FOCUS),
-                    new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD), LibItemNames.SOURCE_BERRY_PIE).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.source_food")),
-                    new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.source_food")),
+                    new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD), LibItemNames.SOURCE_BERRY_PIE).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")),
+                    new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")),
                     new EnchantersMirror(defaultItemProperties().stacksTo(1), LibItemNames.ENCHANTERS_MIRROR),
-                    new ModItem(LibItemNames.ABJURATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new ModItem(LibItemNames.CONJURATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new ModItem(LibItemNames.AIR_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new EarthEssence(LibItemNames.EARTH_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new FireEssence(LibItemNames.FIRE_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new ModItem(LibItemNames.MANIPULATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new DowsingRod(LibItemNames.DOWSING_ROD).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.dowsing_rod")),
-                    new AmethystGolemCharm().withTooltip(new TranslatableComponent("tooltip.ars_nouveau.amethyst_charm")),
+                    new ModItem(LibItemNames.ABJURATION_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new ModItem(LibItemNames.CONJURATION_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new ModItem(LibItemNames.AIR_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new EarthEssence(LibItemNames.EARTH_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new FireEssence(LibItemNames.FIRE_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new ModItem(LibItemNames.MANIPULATION_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(Component.translatable("tooltip.essences")),
+                    new DowsingRod(LibItemNames.DOWSING_ROD).withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod")),
+                    new AmethystGolemCharm().withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm")),
                     new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX),
-                    new ScryerScroll(LibItemNames.SCRYER_SCROLL).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.scryer_scroll")),
+                    new ScryerScroll(LibItemNames.SCRYER_SCROLL).withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")),
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

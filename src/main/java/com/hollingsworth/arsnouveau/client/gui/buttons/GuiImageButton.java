@@ -10,8 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,12 +27,12 @@ public class GuiImageButton extends Button
 
     int u, v, image_width, image_height;
     BaseBook parent;
-    TranslatableComponent toolTip;
+    Component toolTip;
     public boolean soundDisabled = false;
 
 
     public GuiImageButton( int x, int y,int u,int v,int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
-        super(x, y, w, h, new TextComponent(""), onPress);
+        super(x, y, w, h, Component.literal(""), onPress);
         this.x = x;
         this.y = y;
         this.resourceIcon = resource_image;
@@ -47,7 +46,7 @@ public class GuiImageButton extends Button
 
     }
 
-    public GuiImageButton withTooltip(BaseBook parent, TranslatableComponent toolTip){
+    public GuiImageButton withTooltip(BaseBook parent, Component toolTip){
         this.parent = parent;
         this.toolTip = toolTip;
         return this;

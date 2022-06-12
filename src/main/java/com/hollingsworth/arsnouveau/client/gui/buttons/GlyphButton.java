@@ -11,7 +11,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -55,19 +55,19 @@ public class GlyphButton extends Button {
                 if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getId())) {
                     List<Component> tip = new ArrayList<>();
                     AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.abstractSpellPart.getId());
-                    tip.add(new TranslatableComponent(spellPart.getLocalizationKey()));
+                    tip.add(Component.translatable(spellPart.getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
                         tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
                     }
                     if (Screen.hasShiftDown()) {
-                        tip.add(new TranslatableComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-                        tip.add(new TranslatableComponent("ars_nouveau.schools"));
+                        tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                        tip.add(Component.translatable("ars_nouveau.schools"));
                         for(SpellSchool s : spellPart.spellSchools){
                             tip.add(s.getTextComponent());
                         }
                         tip.add(spellPart.getBookDescLang());
                     } else {
-                        tip.add(new TranslatableComponent("tooltip.ars_nouveau.hold_shift"));
+                        tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
                     }
 
                     parent.tooltip = tip;

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
 
@@ -94,7 +94,7 @@ public class BaseSpellValidationError implements SpellValidationError {
     }
 
     private MutableComponent makeTextComponent(String keyPrefix) {
-        return new TranslatableComponent(keyPrefix + localizationCode, translationArguments);
+        return Component.translatable(keyPrefix + localizationCode, translationArguments);
     }
 
     /**
@@ -104,7 +104,7 @@ public class BaseSpellValidationError implements SpellValidationError {
     private static Component[] translateGlyphs(AbstractSpellPart... parts) {
         Component[] textComponents = new Component[parts.length];
         for (int i = 0; i < parts.length; i++) {
-            textComponents[i] = new TranslatableComponent(parts[i].getLocalizationKey());
+            textComponents[i] = Component.translatable(parts[i].getLocalizationKey());
         }
         return textComponents;
     }

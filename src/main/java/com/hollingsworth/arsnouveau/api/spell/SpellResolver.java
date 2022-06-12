@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -76,7 +76,7 @@ public class SpellResolver {
             return false;
         boolean canCast = totalCost <= manaCap.getCurrentMana() || (entity instanceof Player && ((Player) entity).isCreative());
         if(!canCast && !entity.getCommandSenderWorld().isClientSide && !silent)
-            PortUtil.sendMessageNoSpam(entity,new TranslatableComponent("ars_nouveau.spell.no_mana"));
+            PortUtil.sendMessageNoSpam(entity,Component.translatable("ars_nouveau.spell.no_mana"));
         return canCast;
     }
 

@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.enchantment;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;

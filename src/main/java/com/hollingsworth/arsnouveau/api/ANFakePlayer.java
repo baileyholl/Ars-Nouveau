@@ -5,7 +5,6 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
@@ -55,7 +54,7 @@ public class ANFakePlayer extends FakePlayer {
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("AN_Fake_Player");
+        return Component.literal("AN_Fake_Player");
     }
     private static class FakePlayNetHandler extends ServerGamePacketListenerImpl {
         public FakePlayNetHandler(MinecraftServer server, ServerPlayer playerIn) {

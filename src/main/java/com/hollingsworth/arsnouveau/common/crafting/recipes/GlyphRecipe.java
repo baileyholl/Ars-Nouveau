@@ -19,11 +19,12 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.api.ArsNouveauAPI.getRegistryName;
 
 public class GlyphRecipe implements Recipe<ScribesTile> {
 
@@ -134,7 +135,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         }
         jsonobject.add("inputItems", pedestalArr);
         jsonobject.addProperty("exp", exp);
-        jsonobject.addProperty("output", this.output.getItem().getRegistryName().toString());
+        jsonobject.addProperty("output", getRegistryName(output.getItem()).toString());
         return jsonobject;
     }
 

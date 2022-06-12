@@ -23,7 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -81,7 +81,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
         });
         ISpellCaster caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, playerIn, handIn, new TranslatableComponent("ars_nouveau.invalid_spell"));
+        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
     /**
@@ -107,9 +107,9 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final ItemStack stack, @Nullable final Level world, final List<Component> tooltip, final TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
-        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
-        tooltip.add(new TranslatableComponent("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
+        tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
+        tooltip.add(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
     }
 
     public SpellTier getTier() {

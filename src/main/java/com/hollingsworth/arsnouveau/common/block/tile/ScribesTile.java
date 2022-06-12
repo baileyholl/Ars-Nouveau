@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -173,7 +173,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     public void setRecipe(GlyphRecipe recipe, Player player){
         if(ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()){
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.not_enough_exp"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.not_enough_exp"));
             return;
         }else if(!player.isCreative()){
             player.giveExperiencePoints(-recipe.exp);
@@ -393,7 +393,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             return;
         }
         if(recipe != null){
-            tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
+            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
         }
     }
 }

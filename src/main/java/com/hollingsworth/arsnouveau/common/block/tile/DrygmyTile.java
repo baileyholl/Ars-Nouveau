@@ -17,7 +17,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -224,7 +224,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(this.needsMana){
-            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }
 }

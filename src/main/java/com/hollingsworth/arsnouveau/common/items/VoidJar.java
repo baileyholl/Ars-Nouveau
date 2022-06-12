@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -34,10 +34,10 @@ public class VoidJar extends ModItem implements IScribeable {
         CompoundTag tag = stack.getTag();
         if(tag.getBoolean("on")){
             tag.putBoolean("on", false);
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.off"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.off"));
         }else{
             tag.putBoolean("on", true);
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.on"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.on"));
         }
     }
 
@@ -78,12 +78,12 @@ public class VoidJar extends ModItem implements IScribeable {
 
             if(!stackToWrite.isEmpty()){
                 if(containsItem(stackToWrite, tag)) {
-                    PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribe.item_removed"));
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_removed"));
                     ItemScroll.removeItem(stackToWrite, tag);
                     player.startUsingItem(handIn);
                     return InteractionResultHolder.fail(stack);
                 }
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribe.item_added"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_added"));
                 ItemScroll.addItem(stackToWrite, tag);
                 player.startUsingItem(handIn);
                 return InteractionResultHolder.fail(stack);
@@ -101,9 +101,9 @@ public class VoidJar extends ModItem implements IScribeable {
             return;
 
         if(tag.getBoolean("on")){
-            tooltip2.add(new TranslatableComponent("ars_nouveau.on"));
+            tooltip2.add(Component.translatable("ars_nouveau.on"));
         }else{
-            tooltip2.add(new TranslatableComponent("ars_nouveau.off"));
+            tooltip2.add(Component.translatable("ars_nouveau.off"));
         }
 
 

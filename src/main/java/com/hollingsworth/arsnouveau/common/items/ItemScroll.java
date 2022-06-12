@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -91,10 +91,10 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
             return false;
 
         if(containsItem(stackToWrite, tag)) {
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribe.item_removed"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_removed"));
             return removeItem(stackToWrite, tag);
         }
-        PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribe.item_added"));
+        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_added"));
         return addItem(stackToWrite, tag);
     }
 

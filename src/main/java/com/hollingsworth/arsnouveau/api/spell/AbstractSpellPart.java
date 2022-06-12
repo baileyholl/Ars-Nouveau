@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -103,8 +103,8 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return this.getTier().value - o.getTier().value;
     }
 
-    public TranslatableComponent getBookDescLang(){
-        return new TranslatableComponent("ars_nouveau.glyph_desc." + getId());
+    public Component getBookDescLang(){
+        return Component.translatable("ars_nouveau.glyph_desc." + getId());
     }
 
     // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
@@ -166,6 +166,6 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public String getLocaleName(){
-        return new TranslatableComponent(getLocalizationKey()).getString();
+        return Component.translatable(getLocalizationKey()).getString();
     }
 }

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class GuiSpellHUD extends AbstractContainerEventHandler implements GuiEve
             if(caster.getCurrentSlot() != 0){
                 renderString = caster.getCurrentSlot() + " " + caster.getSpellName();
             }else{
-                renderString = new TranslatableComponent("ars_nouveau.spell_hud.crafting_mode").getString();
+                renderString = Component.translatable("ars_nouveau.spell_hud.crafting_mode").getString();
             }
             minecraft.font.drawShadow(ms,renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30 , 0xFFFFFF);
         }
