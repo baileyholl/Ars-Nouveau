@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -179,7 +180,20 @@ public class DungeonLootTables {
                 .add(EffectLaunch.INSTANCE, 2)
                 .add(EffectGlide.INSTANCE)
                 .add(AugmentDurationDown.INSTANCE), "Launches the caster into the air and grants temporary elytra flight!"));
+        RARE_LOOT.add(() -> makeTome("KirinDave's Sinister Switch", new Spell()
+                .add(MethodSelf.INSTANCE)
+                .add(EffectSummonDecoy.INSTANCE)
+                .add(EffectBlink.INSTANCE)
+                .add(AugmentAmplify.INSTANCE), "Heroes are so straightforward, so easily befuddled..." , new ParticleColor(25, 255, 255)));
 
+        RARE_LOOT.add(() -> makeTome("Xacris's Firework Display", new Spell()
+                .add(MethodProjectile.INSTANCE)
+                .add(EffectLinger.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(AugmentAOE.INSTANCE)
+                .add(EffectFirework.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 4)
+                .add(AugmentAmplify.INSTANCE), "Light up the sky" , new ParticleColor(255, 255, 255)));
     }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool){
@@ -219,6 +233,13 @@ public class DungeonLootTables {
         ItemStack stack = makeTome(name, spell);
         ISpellCaster spellCaster =  CasterUtil.getCaster(stack);
         spellCaster.setFlavorText(flavorText);
+        return stack;
+    }
+    public static ItemStack makeTome(String name, Spell spell, String flavorText, ParticleColor particleColor){
+        ItemStack stack = makeTome(name, spell);
+        ISpellCaster spellCaster =  CasterUtil.getCaster(stack);
+        spellCaster.setFlavorText(flavorText);
+        spellCaster.setColor(particleColor.toWrapper());
         return stack;
     }
 }
