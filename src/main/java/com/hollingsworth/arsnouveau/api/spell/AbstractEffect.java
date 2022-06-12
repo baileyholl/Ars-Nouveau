@@ -86,7 +86,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canSummon(LivingEntity playerEntity){
-        return isRealPlayer(playerEntity) && playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS) == null;
+        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS) == null || (playerEntity instanceof Player player && player.isCreative()));
     }
 
     public void applySummoningSickness(LivingEntity playerEntity, int time){

@@ -1,0 +1,27 @@
+{
+  "registry_name": "ars_nouveau:wilden_boss",
+  "primary_type": "arcane",
+  "spirits": [
+    {
+      "spirit": "wicked",
+      "count": 2
+    },
+{
+      "spirit": "arcane",
+      "count": 3
+    },
+{
+      "spirit": "aerial",
+      "count": 1
+    }
+,
+{
+      "spirit": "aqueous",
+      "count": 1
+    },
+{
+      "spirit": "earthen",
+      "count": 1
+    }
+  ]
+}

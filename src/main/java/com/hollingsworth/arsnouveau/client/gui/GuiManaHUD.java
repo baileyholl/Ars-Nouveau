@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,8 +19,9 @@ public class GuiManaHUD extends GuiComponent {
     public boolean shouldDisplayBar(){
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
-        return (mainHand.getItem() instanceof IDisplayMana && ((IDisplayMana) mainHand.getItem()).shouldDisplay(mainHand))
-                || (offHand.getItem() instanceof IDisplayMana && ((IDisplayMana) offHand.getItem()).shouldDisplay(offHand));
+        return (mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand))
+                || (offHand.getItem() instanceof IDisplayMana iDisplayManaOffhand && iDisplayManaOffhand.shouldDisplay(offHand))
+                || (ManaUtil.getMaxMana(minecraft.player) > ManaUtil.getCurrentMana(minecraft.player));
     }
 
     public void drawHUD(PoseStack ms, float pt) {

@@ -22,13 +22,12 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class TimerSpellTurret extends BasicSpellTurret{
 
-    public TimerSpellTurret(Properties properties, String registry) {
-        super(properties, registry);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
+    public TimerSpellTurret(Properties properties) {
+        super(properties);
     }
 
     public TimerSpellTurret() {
-        this(defaultProperties().noOcclusion(), LibBlockNames.TIMER_SPELL_TURRET);
+        super(defaultProperties().noOcclusion(), LibBlockNames.TIMER_SPELL_TURRET);
     }
 
     @Override
@@ -53,19 +52,18 @@ public class TimerSpellTurret extends BasicSpellTurret{
 
     @Override
     public void attack(BlockState state, Level level, BlockPos pos, Player player) {
-        if(!level.isClientSide){
-            TimerSpellTurretTile timerSpellTurretTile = (TimerSpellTurretTile) level.getBlockEntity(pos);
-            if(!timerSpellTurretTile.isLocked){
-                timerSpellTurretTile.addTime(-20 * (player.isShiftKeyDown() ? 10 : 1));
+        if(!level.isClientSide && level.getBlockEntity(pos) instanceof TimerSpellTurretTile tile){
+            if(!tile.isLocked){
+                tile.addTime(-20 * (player.isShiftKeyDown() ? 10 : 1));
             }
         }
     }
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile){
-            ((TimerSpellTurretTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
-            ((TimerSpellTurretTile) world.getBlockEntity(pos)).update();
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile tile){
+            tile.isOff = world.hasNeighborSignal(pos);
+            tile.update();
         }
     }
 

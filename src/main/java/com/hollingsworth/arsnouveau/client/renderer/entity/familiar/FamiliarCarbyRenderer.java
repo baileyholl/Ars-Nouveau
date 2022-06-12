@@ -1,6 +1,8 @@
-package com.hollingsworth.arsnouveau.client.renderer.entity;
+package com.hollingsworth.arsnouveau.client.renderer.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
+import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -10,59 +12,38 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle> {
-    private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
-    private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
-    private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
+public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends GenericFamiliarRenderer<T> {
 
     public FamiliarCarbyRenderer(EntityRendererProvider.Context manager) {
-        super(manager, new FamiliarCarbyModel());
+        super(manager, new FamiliarCarbyModel<>());
     }
-
-    @Override
-    protected void applyRotations(FamiliarStarbuncle entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-    }
-
-    @Override
-    public void render(FamiliarStarbuncle entity, float entityYaw, float p_225623_3_, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int p_225623_6_) {
-        super.render(entity, entityYaw, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
-    }
-
 
     public ResourceLocation getColor(FamiliarStarbuncle e){
         String color = e.getColor().toLowerCase();
 
-        if(color.isEmpty())
-            return ORANGE;
+        if (color.isEmpty()) color = "orange";
 
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color +".png");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(FamiliarStarbuncle entity) {
+    public ResourceLocation getTextureLocation(T entity) {
         return getColor(entity);
     }
 
-    @Override
-    public RenderType getRenderType(FamiliarStarbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
-    }
-
-    public static class FamiliarCarbyModel extends AnimatedGeoModel<FamiliarStarbuncle> {
+    public static class FamiliarCarbyModel<T extends FamiliarStarbuncle> extends AnimatedGeoModel<T> {
 
         private final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
         private final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
 
         @Override
-        public void setLivingAnimations(FamiliarStarbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+        public void setLivingAnimations(T entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
             super.setLivingAnimations(entity, uniqueID, customPredicate);
             IBone head = this.getAnimationProcessor().getBone("head");
             EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);

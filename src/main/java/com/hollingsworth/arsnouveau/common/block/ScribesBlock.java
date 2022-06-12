@@ -89,12 +89,12 @@ public class ScribesBlock extends TickableModBlock {
                 return InteractionResult.SUCCESS;
             }
 
-            if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
+            if (!tile.stack.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
-                tile.stack = null;
+                tile.stack = ItemStack.EMPTY;
             } else if (!player.getInventory().getSelected().isEmpty()) {
-                if(tile.stack != null){
+                if(!tile.stack.isEmpty()){
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }

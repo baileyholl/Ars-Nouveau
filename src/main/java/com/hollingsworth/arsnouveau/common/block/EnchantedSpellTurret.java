@@ -11,14 +11,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
 public class EnchantedSpellTurret extends BasicSpellTurret {
 
-    public EnchantedSpellTurret(Properties properties, String registry) {
-        super(properties, registry);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
     public EnchantedSpellTurret() {
         super(defaultProperties().noOcclusion(), LibBlockNames.ENCHANTED_SPELL_TURRET);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
@@ -26,5 +20,4 @@ public class EnchantedSpellTurret extends BasicSpellTurret {
         return new EnchantedTurretTile(pos, state);
     }
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
 }

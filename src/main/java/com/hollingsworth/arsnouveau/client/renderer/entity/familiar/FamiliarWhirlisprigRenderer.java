@@ -1,35 +1,28 @@
-package com.hollingsworth.arsnouveau.client.renderer.entity;
+package com.hollingsworth.arsnouveau.client.renderer.entity.familiar;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
+import com.hollingsworth.arsnouveau.client.renderer.entity.WhirlisprigModel;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWhirlisprig;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
-public class WhirlisprigRenderer extends TextureVariantRenderer<Whirlisprig> {
+public class FamiliarWhirlisprigRenderer<T extends FamiliarWhirlisprig> extends GenericFamiliarRenderer<T>{
 
-    public WhirlisprigRenderer(EntityRendererProvider.Context manager) {
-        super(manager, new WhirlisprigModel<>());
+    public FamiliarWhirlisprigRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new WhirlisprigModel<>());
     }
 
     @Override
-    public void render(Whirlisprig entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(T entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         if(Minecraft.getInstance().isPaused())
             return;
@@ -37,8 +30,8 @@ public class WhirlisprigRenderer extends TextureVariantRenderer<Whirlisprig> {
         Random rand = ParticleUtil.r;
         Vec3 particlePos = entityIn.position();
 
-        IBone sylph = ((WhirlisprigModel<?>) getGeoModelProvider()).getBone("sylph");
-        IBone propellers = ((WhirlisprigModel<?>) getGeoModelProvider()).getBone("propellers");
+        IBone sylph = ((WhirlisprigModel<T>) getGeoModelProvider()).getBone("sylph");
+        IBone propellers = ((WhirlisprigModel<T>) getGeoModelProvider()).getBone("propellers");
 
         float offsetY = sylph.getPositionY() / 9f;
         float roteAngle = propellers.getRotationY() / 4;

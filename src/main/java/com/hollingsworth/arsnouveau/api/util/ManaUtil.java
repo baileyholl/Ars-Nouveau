@@ -35,6 +35,13 @@ public class ManaUtil {
         return discounts.get();
     }
 
+    public static double getCurrentMana(LivingEntity e){
+        IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
+        if(mana == null)
+            return 0;
+        return mana.getCurrentMana();
+    }
+
     public static int getMaxMana(Player e){
         IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
         if(mana == null)

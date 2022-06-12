@@ -11,13 +11,9 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class WildenRenderer extends GeoEntityRenderer<WildenHunter> {
-    public WildenRenderer(EntityRendererProvider.Context renderManager) {
+public class WildenHunterRenderer extends GenericRenderer<WildenHunter> {
+    public WildenHunterRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WildenHunterModel());
     }
 
-    @Override
-    public RenderType getRenderType(WildenHunter animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
-    }
 }

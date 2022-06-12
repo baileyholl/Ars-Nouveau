@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -10,13 +11,12 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WixieModel extends AnimatedGeoModel<IAnimatable> {
+public class WixieModel<T extends LivingEntity & IAnimatable> extends AnimatedGeoModel<T> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie.png");
 
-
     @Override
-    public void setLivingAnimations(IAnimatable entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(T entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -25,17 +25,17 @@ public class WixieModel extends AnimatedGeoModel<IAnimatable> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(IAnimatable entityWixie) {
+    public ResourceLocation getModelLocation(T entityWixie) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/wixie.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IAnimatable entityWixie) {
+    public ResourceLocation getTextureLocation(T entityWixie) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(IAnimatable entityWixie) {
+    public ResourceLocation getAnimationFileLocation(T entityWixie) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/wixie_animations.json");
     }
 }
