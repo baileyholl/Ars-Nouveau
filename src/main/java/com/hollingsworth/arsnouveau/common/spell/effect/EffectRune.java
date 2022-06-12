@@ -56,7 +56,7 @@ public class EffectRune extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Places a rune on the ground that will cast the spell on targets that touch the rune. Unlike runes placed by Runic Chalk, these runes are temporary " +
-                "and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories.";
+                "and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories. Players with Magic Find will be able to read spells inscribed on runes.";
     }
 
     @Nonnull

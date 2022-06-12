@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -11,11 +13,14 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -32,7 +37,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable, ITickable {
+public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable, ITickable, ITooltipProvider {
     public Spell spell = Spell.EMPTY;
     public boolean isTemporary;
     public boolean disabled;
@@ -152,5 +157,12 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+        if(ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
+            tooltip.add(new TextComponent(spell.getDisplayString()));
+        }
     }
 }

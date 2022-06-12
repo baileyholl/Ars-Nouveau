@@ -67,9 +67,9 @@ public class HUDEventHandler {
         if (mouseOver != null && mouseOver.getType() == HitResult.Type.BLOCK) {
             BlockHitResult result = (BlockHitResult) mouseOver;
             BlockPos pos = result.getBlockPos();
-            if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider){
+            if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider tooltipProvider){
                 List<Component> components = new ArrayList<>();
-                ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip(components);
+                tooltipProvider.getTooltip(components);
                 entityHUD.drawHUD(event.getMatrixStack(), components);
             }
         }
