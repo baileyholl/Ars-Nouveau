@@ -24,6 +24,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/foliage"));
     public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
+    public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
@@ -277,6 +278,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.PURPLE_SBED
         );
         this.tag(BREAK_BLACKLIST);
+        this.tag(NO_BREAK_DROP);
 
 
     }
