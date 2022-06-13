@@ -16,7 +16,7 @@ public class ScryerCrystalTile extends ModdedTile implements ITickable, ICameraM
     public boolean addToRotation = true;
     public boolean down = false;
     public boolean downSet = false;
-    private int playersViewing = 0;
+    public int playersViewing = 0;
     double rotationSpeed = 0.018D;
     boolean shouldRotate = true;
 //

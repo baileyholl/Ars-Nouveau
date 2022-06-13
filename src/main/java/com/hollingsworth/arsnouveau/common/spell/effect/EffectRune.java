@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -35,8 +36,7 @@ public class EffectRune extends AbstractEffect {
         Spell newSpell = new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
         if(world.getBlockState(pos).getMaterial().isReplaceable()){
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
-            if(world.getBlockEntity(pos) instanceof RuneTile){
-                RuneTile runeTile = (RuneTile) world.getBlockEntity(pos);
+            if(world.getBlockEntity(pos) instanceof RuneTile runeTile){
                 if(shooter instanceof Player){
                     runeTile.uuid = shooter.getUUID();
                 }
@@ -44,6 +44,7 @@ public class EffectRune extends AbstractEffect {
                 newSpell.recipe.add(0, MethodTouch.INSTANCE);
                 runeTile.spell = newSpell;
                 runeTile.color = spellContext.colors.toParticleColor();
+                runeTile.isSensitive = spellStats.hasBuff(AugmentSensitive.INSTANCE);
             }
         }
     }
@@ -56,7 +57,7 @@ public class EffectRune extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Places a rune on the ground that will cast the spell on targets that touch the rune. Unlike runes placed by Runic Chalk, these runes are temporary " +
-                "and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories. Players with Magic Find will be able to read spells inscribed on runes.";
+                "and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories. Sensitive will cause the rune to use the Owner's inventory for pickup and usage instead. Players with Magic Find will be able to read spells inscribed on runes.";
     }
 
     @Nonnull
@@ -68,6 +69,6 @@ public class EffectRune extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf();
+        return setOf(AugmentSensitive.INSTANCE);
     }
 }

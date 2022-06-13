@@ -29,11 +29,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +44,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public boolean isTemporary;
     public boolean disabled;
     public boolean isCharged;
+    public boolean isSensitive;
     public int ticksUntilCharge;
     public UUID uuid;
     public ParticleColor color = ParticleUtil.defaultParticleColor();
@@ -98,6 +101,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             tag.putUUID("uuid", uuid);
         if(color != null)
             tag.putString("color", color.toWrapper().serialize());
+        tag.putBoolean("sensitive", isSensitive);
     }
 
     @Override
@@ -110,6 +114,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         if(tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
         this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
+        this.isSensitive = tag.getBoolean("sensitive");
         super.load(tag);
     }
 
@@ -141,11 +146,29 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
     @Override
     public List<IItemHandler> getInventory() {
+        // if sensitive, return the players inventory
+        if(isSensitive){
+            Player player = level.getPlayerByUUID(uuid);
+            if(player != null) {
+                List<IItemHandler> handlers = new ArrayList<>();
+                handlers.add(new PlayerInvWrapper(player.getInventory()));
+                return handlers;
+            }
+            return new ArrayList<>();
+        }
         return BlockUtil.getAdjacentInventories(level, worldPosition);
     }
 
     @Override
     public @Nonnull ItemStack onPickup(ItemStack stack) {
+        // If sensitive, add the stack to the player inventory
+        if(isSensitive) {
+            Player player = level.getPlayerByUUID(uuid);
+            if(player != null) {
+                player.inventory.add(stack);
+            }
+            return stack;
+        }
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 
