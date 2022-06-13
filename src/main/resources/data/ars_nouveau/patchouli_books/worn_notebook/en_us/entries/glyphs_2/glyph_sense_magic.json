@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.sense_magic",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_sense_magic",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.sense_magic",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_sense_magic",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}
