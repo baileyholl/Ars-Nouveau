@@ -93,9 +93,25 @@ public class ScryerCrystal extends TickableModBlock {
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
+
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        if(worldIn.getBlockEntity(pos) instanceof ScryerCrystalTile scryerCrystalTile){
+            return scryerCrystalTile.playersViewing;
+        }
+        return 0;
+    }
+
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
