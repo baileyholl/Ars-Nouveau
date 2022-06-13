@@ -11,6 +11,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectWither extends AbstractEffect {
@@ -33,6 +34,13 @@ public class EffectWither extends AbstractEffect {
         super.buildConfig(builder);
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
+    }
+
+    @Override
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        Map<String, Integer> map = super.getDefaultAugmentLimits();
+        map.put(GlyphLib.AugmentAmplifyID, 4);
+        return map;
     }
 
     @Override

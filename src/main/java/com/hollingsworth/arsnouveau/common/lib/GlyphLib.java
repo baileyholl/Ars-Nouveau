@@ -85,6 +85,7 @@ public class GlyphLib {
     public static final String EffectEvaporate = "evaporate";
     public static final String AugmentSensitiveID = "sensitive";
     public static final String EffectLingerID = "linger";
+    public static final String EffectSenseMagicID = "sense_magic";
 
 
     public static final String MethodLingeringID = "lingering";
