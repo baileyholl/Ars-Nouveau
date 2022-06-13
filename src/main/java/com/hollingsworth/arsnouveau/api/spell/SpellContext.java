@@ -135,6 +135,9 @@ public class SpellContext implements Cloneable{
             clone.spell = this.spell.clone();
             clone.colors = this.colors.clone();
             clone.tag = this.tag.copy();
+            clone.caster = this.caster;
+            clone.castingTile = this.castingTile;
+            clone.type = this.type;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
