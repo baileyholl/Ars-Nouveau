@@ -23,6 +23,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectLight extends AbstractEffect {
@@ -72,6 +73,13 @@ public class EffectLight extends AbstractEffect {
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addPotionConfig(builder, 30);
+    }
+
+    @Override
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        Map<String, Integer> map = super.getDefaultAugmentLimits();
+        map.put(GlyphLib.AugmentAmplifyID, 1);
+        return map;
     }
 
     @Override

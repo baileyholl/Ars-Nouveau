@@ -138,7 +138,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
-
+    // TODO: Pass the map to the method param
     /** Override this method to provide defaults for the augmentation limits configuration. */
     protected Map<String, Integer> getDefaultAugmentLimits() {
         return new HashMap<>();

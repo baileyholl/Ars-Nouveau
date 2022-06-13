@@ -11,6 +11,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectHex extends AbstractEffect {
@@ -25,7 +26,7 @@ public class EffectHex extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
-        applyPotionWithCap((LivingEntity) entity, ModPotions.HEX_EFFECT, spellStats, POTION_TIME.get(), EXTEND_TIME.get(), 4);
+        applyConfigPotion((LivingEntity) entity, ModPotions.HEX_EFFECT, spellStats);
     }
 
     @Override
@@ -42,8 +43,15 @@ public class EffectHex extends AbstractEffect {
     }
 
     @Override
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        Map<String, Integer> map = super.getDefaultAugmentLimits();
+        map.put(GlyphLib.AugmentAmplifyID, 4);
+        return map;
+    }
+
+    @Override
     public String getBookDescription() {
-        return "Applies the Hex effect up to level 5. Hex increases any damage taken by a small amount while the user is afflicted by poison, wither, or fire. Additionally, Hex cuts the rate of Mana Regeneration and healing in half.";
+        return "Applies the Hex effect. Hex increases any damage taken by a small amount while the user is afflicted by poison, wither, or fire. Additionally, Hex cuts the rate of Mana Regeneration and healing in half.";
     }
 
     @Override
