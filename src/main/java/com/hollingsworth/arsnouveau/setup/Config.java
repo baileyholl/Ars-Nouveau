@@ -41,11 +41,12 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
     public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
-    public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
+    public static ForgeConfigSpec.IntValue SYLPH_WEIGHT; // TODO: rename sylph to whirlisprig
     public static ForgeConfigSpec.IntValue DRYGMY_WEIGHT;
 
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
+    public static ForgeConfigSpec.IntValue WHIRLISPRIG_MAX_PROGRESS;
     public static ForgeConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
     public static ForgeConfigSpec.IntValue DRYGMY_BASE_ITEM;
     public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
@@ -60,7 +61,6 @@ public class Config {
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
 
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
-    public static ForgeConfigSpec.ConfigValue<? extends String> CRYSTALLIZER_ITEM;
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
     public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
 
@@ -95,10 +95,11 @@ public class Config {
         SPAWN_BERRIES = SERVER_BUILDER.comment("Spawn Mana Berry Bushes in the world").define("genBerries", true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
         CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);
-        SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Sylphs spawn").defineInRange("sylphWeight",5,0,100);
+        SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Whirlisprigs spawn").defineInRange("sylphWeight",5,0,100);
         DRYGMY_WEIGHT = SERVER_BUILDER.comment("How often Drygmys spawn").defineInRange("drygmyWeight",3,0,100);
-        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana sylphs consume per generation").defineInRange("sylphManaCost",250,0,10000);
-
+        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost",250,0,10000);
+        WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
+                .defineInRange("whirlisprigProgress",250,0,10000);
         WGUARDIAN_WEIGHT = SERVER_BUILDER.comment("How often Wilden Guardians spawn").defineInRange("wguardianWeight",50,0,200);
         WSTALKER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Stalkers spawn").defineInRange("wstalkerWeight",50,0,200);
         WHUNTER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Hunter spawn").defineInRange("whunterWeight",50,0,200);
