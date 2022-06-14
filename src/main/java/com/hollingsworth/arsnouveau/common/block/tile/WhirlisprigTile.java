@@ -50,7 +50,6 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
     public Map<BlockState, Integer> genTable = new HashMap<>();
     public Map<BlockState, Integer> scoreMap = new HashMap<>();
 
-
     public WhirlisprigTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -81,7 +80,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
             if(ticksToNextEval <= 0)
                 evaluateGrove();
 
-            if(level.getGameTime() % 60 == 0 && progress >= 250 && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null){
+            if(level.getGameTime() % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null){
                 this.progress = 0;
                 DropDistribution<BlockState> blockDropDistribution = new DropDistribution<>(genTable);
                 int numDrops = getDropsByDiversity() + 3;
@@ -129,6 +128,8 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
 
     public void addProgress(){
         this.progress += this.moodScore / 30;
+        if(this.progress > Config.WHIRLISPRIG_MAX_PROGRESS.get())
+            this.progress = Config.WHIRLISPRIG_MAX_PROGRESS.get();
         updateBlock();
     }
 
@@ -138,12 +139,10 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
         Map<BlockState, Integer> dropMap = new HashMap<>();
         int score = 0;
         for(BlockPos b : BlockPos.betweenClosed(getBlockPos().north(10).west(10).below(1),getBlockPos().south(10).east(10).above(30))){
-            if(world.isOutsideBuildHeight(b))
-                continue;
             BlockState state = world.getBlockState(b);
             BlockState defaultState = state.getBlock().defaultBlockState();
             int points = getScore(defaultState);
-            if(points == 0)
+            if(world.isOutsideBuildHeight(b) || points == 0)
                 continue;
             if(!defaultMap.containsKey(defaultState)) {
                 defaultMap.put(defaultState, 0);
@@ -154,7 +153,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
             if(!state.hasBlockEntity())
                 dropMap.put(state, dropMap.get(state) + 1);
             defaultMap.put(defaultState, defaultMap.get(defaultState) + 1);
-            score += defaultMap.get(defaultState) <= 50 ? getScore(defaultState) : 0;
+            score += defaultMap.get(defaultState) <= 50 ? points : 0;
         }
         ticksToNextEval = 20 * 120;
         genTable = dropMap;
