@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
-import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -164,12 +163,12 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
             stacks.addAll(loottable.getRandomItems(ctx));
             int oldExp = 0;
-            if(entity instanceof Mob){
-                oldExp = ((Mob) entity).xpReward;
+            if (entity instanceof Mob mob) {
+                oldExp = mob.xpReward;
             }
-            exp += ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
+            exp += entity.getExperienceReward();
 
-            if(entity instanceof Mob){
+            if (entity instanceof Mob) {
                 // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.
                 ((Mob) entity).xpReward = oldExp;
             }

@@ -167,7 +167,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     @Nullable
     @Override
     public UUID getOwnerID() {
-        return !this.getEntityData().get(OWNER_UUID).isPresent() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
     }
 
     @Override

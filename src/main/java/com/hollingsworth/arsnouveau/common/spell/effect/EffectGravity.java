@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
@@ -44,7 +44,7 @@ public class EffectGravity extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             if(spellStats.hasBuff(AugmentExtendTime.INSTANCE)){
-                applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), ModPotions.GRAVITY_EFFECT, spellStats);
+                applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), ModPotions.GRAVITY_EFFECT.get(), spellStats);
             }else{
                 Entity entity = rayTraceResult.getEntity();
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - spellStats.getDurationMultiplier(), 0));

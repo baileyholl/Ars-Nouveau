@@ -49,7 +49,7 @@ public class PacketSummonFamiliar {
 
                 Entity owner = ctx.get().getSender().level.getEntity(entityID);
 
-                if(owner instanceof LivingEntity && ((LivingEntity) owner).hasEffect(ModPotions.FAMILIAR_SICKNESS_EFFECT)){
+                if (owner instanceof LivingEntity && ((LivingEntity) owner).hasEffect(ModPotions.FAMILIAR_SICKNESS_EFFECT.get())) {
                     PortUtil.sendMessage(owner, Component.translatable("ars_nouveau.familiar.sickness"));
                     return;
                 }

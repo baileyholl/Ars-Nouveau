@@ -66,9 +66,9 @@ public class EffectColdSnap extends AbstractEffect {
         EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
         damageSource.setMagic();
         dealDamage(world, shooter, damage, stats, livingEntity, damageSource);
-        ((ServerLevel)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
-                ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
-        livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
+        ((ServerLevel) world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y + 0.5, vec.z, 50,
+                ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
+        livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), 20 * snareTime));
     }
 
     @Override

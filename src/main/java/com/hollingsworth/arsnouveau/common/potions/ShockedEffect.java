@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -15,7 +14,6 @@ public class ShockedEffect extends MobEffect {
 
     public ShockedEffect() {
         super(MobEffectCategory.HARMFUL, 2039587);
-        setRegistryName(ArsNouveau.MODID, "shocked");
     }
 
     @Override

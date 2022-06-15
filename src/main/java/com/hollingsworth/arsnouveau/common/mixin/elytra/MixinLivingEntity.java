@@ -19,7 +19,7 @@ public class MixinLivingEntity {
             )
     )
     public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.canElytraFly(entity);
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || stack.canElytraFly(entity);
     }
 
     @Redirect(
@@ -31,6 +31,6 @@ public class MixinLivingEntity {
             )
     )
     public boolean eytraValidOverride(ItemStack stack, LivingEntity entity, int flightTicks) {
-        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.elytraFlightTick(entity, flightTicks);
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || stack.elytraFlightTick(entity, flightTicks);
     }
 }

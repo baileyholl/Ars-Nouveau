@@ -19,6 +19,6 @@ public class ElytraPlayerMixin {
             )
     )
     public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.canElytraFly(entity);
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || stack.canElytraFly(entity);
     }
 }

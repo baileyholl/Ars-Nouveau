@@ -34,7 +34,7 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
-        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
+        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), stack);
         if(level > 0 && new ReactiveCaster(stack).getSpell().isValid()){
             Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(Component.literal(spell.getDisplayString()));

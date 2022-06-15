@@ -71,13 +71,13 @@ public class EffectBreak extends AbstractEffect {
             }else if(spellStats.hasBuff(AugmentFortune.INSTANCE)) {
                 int bonus = spellStats.getBuffCount(AugmentFortune.INSTANCE);
                 stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
-                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
+                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, bonus, 0));
                 state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                 if(!state.is(BlockTagProvider.NO_BREAK_DROP))destroyBlockSafely(world, pos1, false, shooter);
             } else {
                 state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                 if(!state.is(BlockTagProvider.NO_BREAK_DROP))destroyBlockSafely(world, pos1, false, shooter);
-                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, pos1, 0, 0));
+                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, 0, 0));
             }
         }
     }

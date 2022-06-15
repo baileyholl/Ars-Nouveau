@@ -18,7 +18,6 @@ public class GravityEffect extends MobEffect {
 
     protected GravityEffect() {
         super(MobEffectCategory.HARMFUL, 2039587);
-        setRegistryName(ArsNouveau.MODID, "gravity");
     }
 
     @Override
@@ -51,14 +50,14 @@ public class GravityEffect extends MobEffect {
     // Disable flight here because items tick after our potions
     @SubscribeEvent
     public static void entityTick(TickEvent.PlayerTickEvent e){
-        if(e.phase == TickEvent.Phase.END && e.player.hasEffect(ModPotions.GRAVITY_EFFECT) && !e.player.isOnGround() && !e.player.isCreative()){
+        if (e.phase == TickEvent.Phase.END && e.player.hasEffect(ModPotions.GRAVITY_EFFECT.get()) && !e.player.isOnGround() && !e.player.isCreative()) {
             e.player.abilities.flying = false;
         }
     }
 
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent e){
-        if(e.getSource().equals(DamageSource.FALL) && e.getEntityLiving().hasEffect(ModPotions.GRAVITY_EFFECT) ){
+        if (e.getSource().equals(DamageSource.FALL) && e.getEntityLiving().hasEffect(ModPotions.GRAVITY_EFFECT.get())) {
             e.setAmount(e.getAmount() * 2.0f);
         }
     }

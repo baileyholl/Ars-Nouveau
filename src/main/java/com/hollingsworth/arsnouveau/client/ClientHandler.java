@@ -221,10 +221,10 @@ public class ClientHandler {
             if (var10 instanceof ICameraMountable be) {
                 Font font = Minecraft.getInstance().font;
                 Options settings = Minecraft.getInstance().options;
-                Component lookAround = localize("ars_nouveau.camera.move", new Object[]{settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage()});
-                Component exit = localize("ars_nouveau.camera.exit", new Object[]{settings.keyShift.getTranslatedKeyMessage()});
-                font.drawShadow(pose,lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40 , 0xFFFFFF);
-                font.drawShadow(pose,exit, 10, mc.getWindow().getGuiScaledHeight() - 30 , 0xFFFFFF);
+                Component lookAround = localize("ars_nouveau.camera.move", settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage());
+                Component exit = localize("ars_nouveau.camera.exit", settings.keyShift.getTranslatedKeyMessage());
+                font.drawShadow(pose, lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40, 0xFFFFFF);
+                font.drawShadow(pose, exit, 10, mc.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
             }
         }
     }

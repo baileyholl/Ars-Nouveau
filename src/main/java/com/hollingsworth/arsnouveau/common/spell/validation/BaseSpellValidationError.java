@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
 
@@ -28,12 +27,12 @@ public class BaseSpellValidationError implements SpellValidationError {
     /**
      * Creates a new Spell Validation Error.
      *
-     * @param position the glyph position in the overall spell that was validated.
-     * @param spellPart the actual spell part in the offending position
-     * @param localizationCode the localization code
+     * @param position             the glyph position in the overall spell that was validated.
+     * @param spellPart            the actual spell part in the offending position
+     * @param localizationCode     the localization code
      * @param translationArguments arguments to be passed to the i18n system when constructing text components for this
      *                             error.
-     * @see TranslationTextComponent
+     * @see Component#translatable(String)
      */
     public BaseSpellValidationError(int position,
                                     AbstractSpellPart spellPart,

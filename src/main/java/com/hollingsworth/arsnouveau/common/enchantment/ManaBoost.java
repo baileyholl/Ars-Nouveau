@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.enchantment;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -8,7 +7,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 public class ManaBoost extends Enchantment {
     protected ManaBoost() {
         super(Rarity.UNCOMMON, EnchantmentCategory.ARMOR, new EquipmentSlot[]{EquipmentSlot.CHEST, EquipmentSlot.FEET, EquipmentSlot.HEAD, EquipmentSlot.LEGS});
-        setRegistryName(ArsNouveau.MODID, "mana_boost");
     }
     @Override
     public int getMinCost(int enchantmentLevel) {

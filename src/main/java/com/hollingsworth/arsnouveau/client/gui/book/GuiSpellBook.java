@@ -171,9 +171,9 @@ public class GuiSpellBook extends BaseBook {
         boolean foundAugments = false;
         boolean foundEffects = false;
         List<AbstractSpellPart> sorted = new ArrayList<>();
-        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).collect(Collectors.toList()));
-        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).collect(Collectors.toList()));
-        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).collect(Collectors.toList()));
+        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).toList());
+        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).toList());
+        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).toList());
         int perPage = 58;
         sorted.sort(COMPARE_TYPE_THEN_NAME);
         sorted = sorted.subList(perPage * page, Math.min(sorted.size(), perPage * (page + 1)));
@@ -182,7 +182,7 @@ public class GuiSpellBook extends BaseBook {
         int row_offset = page == 0 ? 2 : 0;
 
 
-        for(int i = 0; i < sorted.size(); i++){
+        for (int i = 0; i < sorted.size(); i++) {
             AbstractSpellPart part = sorted.get(i);
             if(!foundForms && part instanceof AbstractCastMethod) {
                 foundForms = true;
@@ -503,7 +503,7 @@ public class GuiSpellBook extends BaseBook {
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(
                 spellValidator.validate(recipe).stream()
-                        .filter(ve -> ve.getPosition() >= recipe.size() - 1).collect(Collectors.toList())
+                        .filter(ve -> ve.getPosition() >= recipe.size() - 1).toList()
         );
 
         // Remove the simulated glyph to make room for the next one

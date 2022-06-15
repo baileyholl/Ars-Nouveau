@@ -46,10 +46,9 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         Set<Item> itemSet = new HashSet<>();
         itemSet.add(getStack.getItem());
         for(BlockPos b : tile.inventories){
-            if(!(world.getBlockEntity(b) instanceof Container))
+            if (!(world.getBlockEntity(b) instanceof Container i))
                 continue;
-            Container i = (Container) world.getBlockEntity(b);
-            if(i.hasAnyOf(itemSet)){
+            if (i.hasAnyOf(itemSet)) {
                 movePos = b;
                 this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
                 break;
@@ -91,9 +90,8 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
 
             for(BlockPos b : tile.inventories){
 
-                if(!(world.getBlockEntity(b) instanceof Container))
+                if (!(world.getBlockEntity(b) instanceof Container i))
                     continue;
-                Container i = (Container) world.getBlockEntity(b);
                 for(int j = 0; j < i.getContainerSize(); j++) {
                     if (i.getItem(j).getItem() == getStack.getItem()) {
                         found = true;

@@ -446,7 +446,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         if(effect == MobEffects.MOVEMENT_SLOWDOWN)
             instance = new MobEffectInstance(instance.getEffect(), 1, 0);
 
-        if(effect == ModPotions.GRAVITY_EFFECT)
+        if (effect == ModPotions.GRAVITY_EFFECT.get())
             instance = new MobEffectInstance(instance.getEffect(), Math.min(instance.getDuration(), 100), 0);
         return super.canBeAffected(instance);
     }

@@ -17,9 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-
-import javax.annotation.Nullable;
 
 public class WildenGuardianRenderer  extends GenericRenderer<WildenGuardian> {
     public WildenGuardianRenderer(EntityRendererProvider.Context renderManager) {

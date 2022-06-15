@@ -310,11 +310,10 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     public ItemStack getHeldItem() {
-        if(lecternPos != null && level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile){
-            BookwyrmLecternTile tile = (BookwyrmLecternTile) level.getBlockEntity(lecternPos);
-            for(IItemHandler inv : BlockUtil.getAdjacentInventories(level, tile.getBlockPos())){
-                for(int i = 0; i < inv.getSlots(); i++){
-                    if(inv.getStackInSlot(i).sameItem(this.entityData.get(HELD_ITEM)))
+        if (lecternPos != null && level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile tile) {
+            for (IItemHandler inv : BlockUtil.getAdjacentInventories(level, tile.getBlockPos())) {
+                for (int i = 0; i < inv.getSlots(); i++) {
+                    if (inv.getStackInSlot(i).sameItem(this.entityData.get(HELD_ITEM)))
                         return inv.getStackInSlot(i).split(1);
                 }
             }

@@ -36,22 +36,22 @@ import static com.hollingsworth.arsnouveau.api.util.DropDistribution.rand;
 public class ScryEvents {
     @SubscribeEvent
     public static void playerLoginEvent(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event){
-        if(!event.getPlayer().level.isClientSide && event.getPlayer().hasEffect(ModPotions.SCRYING_EFFECT)){
+        if (!event.getPlayer().level.isClientSide && event.getPlayer().hasEffect(ModPotions.SCRYING_EFFECT.get())) {
             CompoundTag tag = event.getPlayer().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) event.getPlayer()), new PacketGetPersistentData(tag));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()), new PacketGetPersistentData(tag));
         }
     }
 
     @SubscribeEvent
     public static void playerTickEvent(final TickEvent.PlayerTickEvent event){
-        if(event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player.getEffect(ModPotions.SCRYING_EFFECT) != null && ClientInfo.ticksInGame % 30 == 0){
+        if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player.getEffect(ModPotions.SCRYING_EFFECT.get()) != null && ClientInfo.ticksInGame % 30 == 0) {
 
             List<BlockPos> scryingPos = new ArrayList<>();
             CompoundTag tag = ClientInfo.persistentData;
-            if(!tag.contains("an_scryer"))
+            if (!tag.contains("an_scryer"))
                 return;
             IScryer scryer = ArsNouveauAPI.getInstance().getScryer(tag.getCompound("an_scryer").getString("id")).fromTag(tag.getCompound("an_scryer"));
-            if(scryer == null)
+            if (scryer == null)
                 return;
             Player playerEntity = event.player;
             Level world = playerEntity.level;
@@ -75,7 +75,7 @@ public class ScryEvents {
     {
         final Player playerEntity = Minecraft.getInstance().player;
 
-        if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT) == null)
+        if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT.get()) == null)
             return;
         Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         ClientLevel world = Minecraft.getInstance().level;

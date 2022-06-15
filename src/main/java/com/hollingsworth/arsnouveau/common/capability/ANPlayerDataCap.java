@@ -6,7 +6,9 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import net.minecraft.nbt.CompoundTag;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ANPlayerDataCap implements IPlayerCap{
@@ -70,7 +72,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(s -> s.getId()).collect(Collectors.toList()));
+        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getId).collect(Collectors.toList()));
         for(FamiliarData f : familiars){
             tag.put("familiar_" + f.familiarHolder.id, f.toTag());
         }

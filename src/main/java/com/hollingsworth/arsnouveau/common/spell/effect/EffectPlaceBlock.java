@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
@@ -51,10 +51,9 @@ public class EffectPlaceBlock extends AbstractEffect {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
-                if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
+                if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item))
                     return;
 
-                BlockItem item = (BlockItem) stack.getItem();
                 fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
                 if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
                     continue;
@@ -71,32 +70,29 @@ public class EffectPlaceBlock extends AbstractEffect {
                 item.place(context);
             }else if(shooter instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
-                if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
+                if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item))
                     return;
-                BlockItem item = (BlockItem) stack.getItem();
-                if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
-                    result = new BlockHitResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
+                if (world.getBlockState(hitPos).getMaterial() != Material.AIR) {
+                    result = new BlockHitResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(), false);
                 }
-                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), shooter))){
+                if (MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), shooter))) {
                     continue;
                 }
                 attemptPlace(world, stack, item, result, fakePlayer);
-            }else if(shooter instanceof Player){
-                Player playerEntity = (Player) shooter;
-                NonNullList<ItemStack> list =  playerEntity.inventory.items;
-                if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
+            } else if (shooter instanceof Player playerEntity) {
+                NonNullList<ItemStack> list = playerEntity.inventory.items;
+                if (!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
-                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), playerEntity))){
+                if (MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), playerEntity))) {
                     continue;
                 }
-                for(int i = 0; i < 9; i++){
+                for (int i = 0; i < 9; i++) {
                     ItemStack stack = list.get(i);
-                    if(stack.getItem() instanceof BlockItem && world instanceof ServerLevel){
-                        BlockItem item = (BlockItem)stack.getItem();
+                    if (stack.getItem() instanceof BlockItem item && world instanceof ServerLevel) {
 
                         BlockHitResult resolveResult = new BlockHitResult(new Vec3(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
                         InteractionResult resultType = attemptPlace(world, stack, item, resolveResult, fakePlayer);
-                        if(InteractionResult.FAIL != resultType)
+                        if (InteractionResult.FAIL != resultType)
                             break;
                     }
                 }

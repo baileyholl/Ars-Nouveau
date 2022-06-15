@@ -101,8 +101,7 @@ public class SoundScreen extends BaseBook{
     }
 
     public void onSoundClick(Button button){
-        if(button instanceof SoundButton){
-            SoundButton soundButton = (SoundButton)button;
+        if (button instanceof SoundButton soundButton) {
             selectedSound = soundButton.sound;
             selectedButton.sound = selectedSound;
         }

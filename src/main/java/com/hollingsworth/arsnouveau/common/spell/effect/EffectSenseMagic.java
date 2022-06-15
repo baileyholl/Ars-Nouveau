@@ -27,7 +27,7 @@ public class EffectSenseMagic extends AbstractEffect {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
         if(!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        applyConfigPotion(living, ModPotions.MAGIC_FIND_EFFECT, spellStats);
+        applyConfigPotion(living, ModPotions.MAGIC_FIND_EFFECT.get(), spellStats);
     }
 
     @Override

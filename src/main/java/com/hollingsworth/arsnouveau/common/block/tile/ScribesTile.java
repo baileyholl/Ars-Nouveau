@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -216,8 +215,6 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if(!isMasterTile()) {
             BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(ScribesBlock.getConnectedDirection(getBlockState())));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
-            if(tile == null)
-                return null;
         }
         return tile;
     }

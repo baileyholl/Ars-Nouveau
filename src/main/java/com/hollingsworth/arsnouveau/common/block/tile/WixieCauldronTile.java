@@ -256,15 +256,14 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         AtomicBoolean foundOptimal = new AtomicBoolean(false);
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
-            if (!foundOptimal.get() && level.getBlockEntity(bPos) instanceof PotionJarTile) {
-                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(bPos);
-                if(tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)){
-                    if(tile.getMaxFill() - tile.getCurrentFill() >= 300) {
-                        if(tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
+            if (!foundOptimal.get() && level.getBlockEntity(bPos) instanceof PotionJarTile tile) {
+                if (tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)) {
+                    if (tile.getMaxFill() - tile.getCurrentFill() >= 300) {
+                        if (tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
                             foundOptimal.set(true);
                             foundPod.set(bPos.immutable());
                         }
-                        if(foundPod.get() == null)
+                        if (foundPod.get() == null)
                             foundPod.set(bPos.immutable());
                     }
                 }
@@ -277,9 +276,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public static @Nullable BlockPos findNeededPotion(Potion passedPot, int amount, Level level, BlockPos worldPosition){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
-            if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile) {
-                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(bPos);
-                if(tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)){
+            if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile tile) {
+                if (tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)) {
                     foundPod.set(bPos.immutable());
                 }
             }
@@ -326,18 +324,17 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(inventories == null)
             return itemsAvailable;
         for(BlockPos p : inventories){
-            if(level.getBlockEntity(p) instanceof Container container){
-                Container inventory = (Container) level.getBlockEntity(p);
-                for(int i = 0; i < inventory.getContainerSize(); i++){
-                    ItemStack stack = inventory.getItem(i);
-                    if(stack == null) {
+            if(level.getBlockEntity(p) instanceof Container container) {
+                for (int i = 0; i < container.getContainerSize(); i++) {
+                    ItemStack stack = container.getItem(i);
+                    if (stack == null) {
                         System.out.println("======");
                         System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
                         System.out.println(container.toString());
                         System.out.println("AT POS " + p.toString());
                         continue;
                     }
-                    if(!itemsAvailable.containsKey(stack.getItem())) {
+                    if (!itemsAvailable.containsKey(stack.getItem())) {
                         itemsAvailable.put(stack.getItem(), stack.getCount());
                         continue;
                     }
@@ -426,7 +423,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(this.needsPotionStorage)
             tooltip.add(Component.translatable("ars_nouveau.wixie.needs_storage"));
 
-        return;
     }
 
     public static class CraftingProgress{

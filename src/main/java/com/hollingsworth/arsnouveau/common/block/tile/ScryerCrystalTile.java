@@ -68,14 +68,14 @@ public class ScryerCrystalTile extends ModdedTile implements ITickable, ICameraM
     @Override
     public void startViewing() {
         if (this.playersViewing++ >= 0) {
-            this.level.setBlockAndUpdate(this.worldPosition, (BlockState)this.getBlockState().setValue(ScryerCrystal.BEING_VIEWED, true));
+            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(ScryerCrystal.BEING_VIEWED, true));
         }
     }
 
     @Override
     public void stopViewing() {
         if (--this.playersViewing <= 0) {
-            this.level.setBlockAndUpdate(this.worldPosition, (BlockState)this.getBlockState().setValue(ScryerCrystal.BEING_VIEWED, false));
+            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(ScryerCrystal.BEING_VIEWED, false));
         }
     }
 }

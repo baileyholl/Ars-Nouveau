@@ -47,6 +47,6 @@ public class ScryersEyeModel extends AnimatedGeoModel<ScryersOculusTile> {
         }
         float f2 = pBlockEntity.oRot + f1 * ClientInfo.partialTicks - 4.7f;
         eye.setRotationY(-f2);
-        eye.setPositionY((Mth.sin((float) ((ClientInfo.ticksInGame + ClientInfo.partialTicks)/ 10.0f)))/2f);
+        eye.setPositionY((Mth.sin((ClientInfo.ticksInGame + ClientInfo.partialTicks) / 10.0f)) / 2f);
     }
 }

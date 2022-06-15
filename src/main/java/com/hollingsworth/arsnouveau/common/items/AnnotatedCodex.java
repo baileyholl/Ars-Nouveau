@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -161,7 +160,7 @@ public class AnnotatedCodex extends ModItem{
 
         public void write(){
             CompoundTag tag = new CompoundTag();
-            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(s -> s.getId()).collect(Collectors.toList()));
+            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getId).collect(Collectors.toList()));
             if(playerID != null){
                 tag.putUUID("player", playerID);
             }

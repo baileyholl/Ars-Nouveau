@@ -58,7 +58,6 @@ public class CameraEvents {
     public static void onLeftClickBlock(LeftClickBlock event) {
         if (CameraUtil.isPlayerMountedOnCamera(event.getPlayer())) {
             event.setCanceled(true);
-            return;
         }
     }
 

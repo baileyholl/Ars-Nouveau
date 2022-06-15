@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.client.gui.book.GlyphUnlockMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -14,12 +13,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +41,7 @@ public class UnlockGlyphButton extends Button {
         this.isCraftingSlot = isCraftingSlot;
         this.spellPart = spellPart;
         this.id = 0;
-        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(new ResourceLocation("ars_nouveau:glyph_" + spellPart.getId())).orElse(null);;
+        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(new ResourceLocation("ars_nouveau:glyph_" + spellPart.getId())).orElse(null);
         this.recipe = recipe instanceof GlyphRecipe ? (GlyphRecipe) recipe : null;
     }
 

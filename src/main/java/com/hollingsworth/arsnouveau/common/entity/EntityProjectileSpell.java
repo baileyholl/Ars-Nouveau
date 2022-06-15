@@ -259,18 +259,17 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
         }
 
-        if (!level.isClientSide && result instanceof BlockHitResult  && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
+        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
 
-            BlockHitResult blockraytraceresult = (BlockHitResult)result;
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
 
-            if(state.getBlock() instanceof SpellPrismBlock){
+            if (state.getBlock() instanceof SpellPrismBlock) {
                 SpellPrismBlock.redirectSpell((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
                 return;
             }
 
 
-            if(state.getMaterial() == Material.PORTAL){
+            if (state.getMaterial() == Material.PORTAL) {
                 state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(),this);
                 return;
             }

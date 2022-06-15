@@ -14,15 +14,15 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistry {
-    public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new ModRecipeType();
-    public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new ModRecipeType();
-    public static final RecipeType<CrushRecipe> CRUSH_TYPE = new ModRecipeType();
+    public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new ModRecipeType<>();
+    public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new ModRecipeType<>();
+    public static final RecipeType<CrushRecipe> CRUSH_TYPE = new ModRecipeType<>();
     public static final RecipeType<ImbuementRecipe> IMBUEMENT_TYPE = new ModRecipeType<>();
 
-    public static final RecipeType<BookUpgradeRecipe> BOOK_UPGRADE_TYPE = new ModRecipeType();
-    public static final RecipeType<PotionFlaskRecipe> POTION_FLASK_TYPE = new ModRecipeType();
+    public static final RecipeType<BookUpgradeRecipe> BOOK_UPGRADE_TYPE = new ModRecipeType<>();
+    public static final RecipeType<PotionFlaskRecipe> POTION_FLASK_TYPE = new ModRecipeType<>();
     public static final RecipeType<DyeRecipe> DYE_TYPE = new ModRecipeType<>();
     public static final RecipeType<ReactiveEnchantmentRecipe> REACTIVE_TYPE = new ModRecipeType<>();
     public static final RecipeType<SpellWriteRecipe> SPELL_WRITE_TYPE = new ModRecipeType<>();

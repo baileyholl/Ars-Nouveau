@@ -12,7 +12,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -25,12 +24,6 @@ public class SummonWolf extends Wolf implements ISummon {
     public boolean isWildenSummon;
     public SummonWolf(EntityType<? extends Wolf> type, Level worldIn) {
         super(type, worldIn);
-    }
-
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-
     }
 
     @Override
@@ -89,7 +82,7 @@ public class SummonWolf extends Wolf implements ISummon {
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 
@@ -107,7 +100,7 @@ public class SummonWolf extends Wolf implements ISummon {
     @Nullable
     @Override
     public UUID getOwnerID() {
-        return !this.getEntityData().get(OWNER_UUID).isPresent() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
     }
 
     @Override

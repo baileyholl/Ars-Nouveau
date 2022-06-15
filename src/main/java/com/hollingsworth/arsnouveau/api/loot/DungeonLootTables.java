@@ -41,19 +41,19 @@ public class DungeonLootTables {
         BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION);
+            PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION.get());
             return stack;
         });
 
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION);
+            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION.get());
             return stack;
         });
 
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION);
+            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION.get());
             return stack;
         });
 

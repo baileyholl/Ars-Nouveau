@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,9 +24,9 @@ public class EffectHex extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity entity = rayTraceResult.getEntity();
-        if(!(entity instanceof LivingEntity))
+        if (!(entity instanceof LivingEntity living))
             return;
-        applyConfigPotion((LivingEntity) entity, ModPotions.HEX_EFFECT, spellStats);
+        applyConfigPotion(living, ModPotions.HEX_EFFECT.get(), spellStats);
     }
 
     @Override

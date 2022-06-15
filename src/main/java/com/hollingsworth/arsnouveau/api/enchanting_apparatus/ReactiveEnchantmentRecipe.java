@@ -29,7 +29,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
     public static final String RECIPE_ID = "reactive_enchantment";
 
     public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, int sourceCost){
-        super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 1, sourceCost);
+        super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 1, sourceCost);
     }
 
     @Override

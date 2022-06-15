@@ -122,7 +122,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
         for(int numRerolls = 0; numRerolls < (bonusReroll ? 16 : 8); numRerolls++) {
             List<ItemStack> drops = getDrops.get();
             if (drops.isEmpty()) continue;
-            successfulDrops = drops.stream().filter(s -> isValidReward(s)).collect(Collectors.toCollection(ArrayList::new));
+            successfulDrops = drops.stream().filter(this::isValidReward).collect(Collectors.toCollection(ArrayList::new));
             bonusReroll = true;
             if (successfulDrops.isEmpty()) continue;
             return successfulDrops;

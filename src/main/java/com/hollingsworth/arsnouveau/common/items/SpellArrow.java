@@ -42,9 +42,8 @@ public class SpellArrow extends ArrowItem {
         if(mana == null)
             return new Arrow(world, shooter);
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter);
-        if(!(shooter instanceof Player) || !(( shooter).getMainHandItem().getItem() instanceof ICasterTool))
+        if (!(shooter instanceof Player entity) || !((shooter).getMainHandItem().getItem() instanceof ICasterTool))
             return super.createArrow(world, stack, shooter);
-        Player entity = (Player)shooter;
         ICasterTool caster = (ICasterTool) entity.getMainHandItem().getItem();
         ISpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
         Spell spell = spellCaster.getSpell();

@@ -191,11 +191,11 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT).getPath() + "_" + 1))
+                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 1))
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT).getPath() + "_" + 2))
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT).getPath() + "_" + 3))
-                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT).getPath() + "_" + 4))
+                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 2))
+                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 3))
+                .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 4))
                 .withLocalizedText()
                 .withPage(new ApparatusPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
@@ -556,8 +556,8 @@ public class PatchouliProvider implements DataProvider {
             Enchantments.SWEEPING_EDGE,
             Enchantments.THORNS,
             Enchantments.UNBREAKING,
-            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT,
-            EnchantmentRegistry.MANA_REGEN_ENCHANTMENT
+            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get(),
+            EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get()
     );
 
     @Override

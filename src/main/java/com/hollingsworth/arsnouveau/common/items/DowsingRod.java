@@ -33,7 +33,7 @@ public class DowsingRod extends ModItem{
         if(heldStack.getDamageValue() >= getMaxDamage(heldStack))
             heldStack.shrink(1);
         if(!pLevel.isClientSide){
-            pPlayer.addEffect(new MobEffectInstance(ModPotions.MAGIC_FIND_EFFECT, 60 * 20));
+            pPlayer.addEffect(new MobEffectInstance(ModPotions.MAGIC_FIND_EFFECT.get(), 60 * 20));
             SingleBlockScryer singleBlockScryer = new SingleBlockScryer(Blocks.BUDDING_AMETHYST);
             ScryingRitual.grantScrying((ServerPlayer) pPlayer, 60*20, singleBlockScryer);
 

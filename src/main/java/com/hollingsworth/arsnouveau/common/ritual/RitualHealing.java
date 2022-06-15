@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
@@ -27,19 +28,18 @@ public class RitualHealing extends AbstractRitual {
                 Optional<LivingEntity> player = entities.stream().filter(e -> e instanceof Player).findFirst();
 
                 boolean didWorkOnce = false;
-                for(LivingEntity a : entities){
-                    if(a instanceof ZombieVillager){
-
-                        ((ZombieVillager) a).startConverting(player.isPresent() ? player.get().getUUID() : null, 0);
+                for(LivingEntity a : entities) {
+                    if (a instanceof ZombieVillager zv) {
+                        zv.startConverting(player.map(Entity::getUUID).orElse(null), 0);
                         didWorkOnce = true;
                         continue;
                     }
 
-                    if(a.getHealth() < a.getMaxHealth() || a.isInvertedHealAndHarm()) {
-                        if(a.isInvertedHealAndHarm()){
+                    if (a.getHealth() < a.getMaxHealth() || a.isInvertedHealAndHarm()) {
+                        if (a.isInvertedHealAndHarm()) {
                             FakePlayer player1 = ANFakePlayer.getPlayer((ServerLevel) getWorld());
                             a.hurt(DamageSource.playerAttack(player1).setMagic(), 10.0f);
-                        }else{
+                        } else {
                             a.heal(10.0f);
                         }
                         didWorkOnce = true;

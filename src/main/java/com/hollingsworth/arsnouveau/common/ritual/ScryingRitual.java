@@ -46,7 +46,7 @@ public class ScryingRitual extends AbstractRitual {
     }
 
     public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer){
-        playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT, ticks));
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT.get(), ticks));
         CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         tag.put("an_scryer", scryer.toTag(new CompoundTag()));
         playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);

@@ -16,15 +16,15 @@ public class ArsEvents {
 
     @SubscribeEvent
     public static void regenCalc(ManaRegenCalcEvent e){
-        if(e.getEntityLiving() != null && e.getEntityLiving().getEffect(ModPotions.HEX_EFFECT) != null){
-            e.setRegen(e.getRegen()/2.0);
+        if (e.getEntityLiving() != null && e.getEntityLiving().hasEffect(ModPotions.HEX_EFFECT.get())) {
+            e.setRegen(e.getRegen() / 2.0);
         }
     }
 
     @SubscribeEvent
-    public static void spellCalc(SpellModifierEvent e){
-        if(e.caster != null && e.caster.hasEffect(ModPotions.SPELL_DAMAGE_EFFECT)){
-            e.builder.addDamageModifier(1.5f * (e.caster.getEffect(ModPotions.SPELL_DAMAGE_EFFECT).getAmplifier() + 1));
+    public static void spellCalc(SpellModifierEvent e) {
+        if (e.caster != null && e.caster.hasEffect(ModPotions.SPELL_DAMAGE_EFFECT.get())) {
+            e.builder.addDamageModifier(1.5f * (e.caster.getEffect(ModPotions.SPELL_DAMAGE_EFFECT.get()).getAmplifier() + 1));
         }
     }
 }

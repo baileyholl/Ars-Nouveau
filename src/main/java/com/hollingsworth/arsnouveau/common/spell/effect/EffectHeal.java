@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -22,15 +24,14 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(rayTraceResult.getEntity() instanceof LivingEntity){
-            LivingEntity entity = ((LivingEntity) rayTraceResult.getEntity());
-            if(entity.isRemoved() || entity.getHealth() <= 0)
+        if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
+            if (entity.isRemoved() || entity.getHealth() <= 0)
                 return;
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-            if(entity.isInvertedHealAndHarm()){
+            if (entity.isInvertedHealAndHarm()) {
                 dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
-            }else{
+            } else {
                 entity.heal(healVal);
             }
 

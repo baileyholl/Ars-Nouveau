@@ -25,7 +25,7 @@ public class ImbuementProcessor implements IComponentProcessor {
         if(recipe == null)
             return null;
         if(key.equals("reagent"))
-            return IVariable.wrapList(Arrays.asList(recipe.input.getItems()).stream().map(IVariable::from).collect(Collectors.toList()));
+            return IVariable.wrapList(Arrays.stream(recipe.input.getItems()).map(IVariable::from).collect(Collectors.toList()));
 
         if(key.equals("recipe")){
             return IVariable.wrap(recipe.getId().toString());

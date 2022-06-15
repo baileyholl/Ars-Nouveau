@@ -641,30 +641,20 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
         {
             //This way he is less nervous and gets up the ladder
             double newSpeed = 0.3;
-            switch (pEx.getLadderFacing())
-            {
+            switch (pEx.getLadderFacing()) {
                 //  Any of these values is climbing, so adjust our direction of travel towards the ladder
-                case NORTH:
-                    vec3 = vec3.add(0, 0, 1);
-                    break;
-                case SOUTH:
-                    vec3 = vec3.add(0, 0, -1);
-                    break;
-                case WEST:
-                    vec3 = vec3.add(1, 0, 0);
-                    break;
-                case EAST:
-                    vec3 = vec3.add(-1, 0, 0);
-                    break;
-                case UP:
-                    vec3 = vec3.add(0, 1, 0);
-                    break;
+                case NORTH -> vec3 = vec3.add(0, 0, 1);
+                case SOUTH -> vec3 = vec3.add(0, 0, -1);
+                case WEST -> vec3 = vec3.add(1, 0, 0);
+                case EAST -> vec3 = vec3.add(-1, 0, 0);
+                case UP -> vec3 = vec3.add(0, 1, 0);
+
                 //  Any other value is going down, so lets not move at all
-                default:
+                default -> {
                     newSpeed = 0;
                     mob.setShiftKeyDown(true);
                     isSneaking = true;
-                    break;
+                }
             }
 
             if (newSpeed > 0)

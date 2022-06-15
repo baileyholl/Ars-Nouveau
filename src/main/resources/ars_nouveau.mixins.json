@@ -14,12 +14,11 @@
     "light.LightEntityMixin"
   ],
   "mixins": [
-    "ExpInvokerMixin",
     "PotionRecipeMixin",
+    "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
     "camera.TrackedEntityMixin",
-    "camera.ANServerPlayerMixin",
     "elytra.ClientElytraMixin",
     "elytra.ElytraPlayerMixin",
     "elytra.MixinLivingEntity"

@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -49,9 +48,8 @@ public abstract class PotionFlask extends ModItem {
         ItemStack thisStack = context.getItemInHand();
         Potion potion = PotionUtils.getPotion(thisStack);
         Player playerEntity = context.getPlayer();
-        if(!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile))
+        if (!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile jarTile))
             return super.useOn(context);
-        PotionJarTile jarTile = (PotionJarTile) context.getLevel().getBlockEntity(context.getClickedPos());
         int count = thisStack.getTag().getInt("count");
         if(jarTile == null)
             return InteractionResult.PASS;

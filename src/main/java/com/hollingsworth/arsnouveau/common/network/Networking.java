@@ -191,8 +191,7 @@ public class Networking {
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){
-        if (world instanceof ServerLevel) {
-            ServerLevel ws = (ServerLevel) world;
+        if (world instanceof ServerLevel ws) {
             ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
                     .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
                     .forEach(p -> INSTANCE.send(PacketDistributor.PLAYER.with(() -> p), toSend));

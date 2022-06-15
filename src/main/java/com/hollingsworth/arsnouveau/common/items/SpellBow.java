@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -257,11 +256,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return super.getEnchantmentValue();
     }
 
     @Override

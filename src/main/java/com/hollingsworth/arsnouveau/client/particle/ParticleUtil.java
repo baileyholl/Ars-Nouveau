@@ -140,11 +140,12 @@ public class ParticleUtil {
             }
         });
     }
-    public static void spawnRitualSkyEffect(BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+
+    public static void spawnRitualSkyEffect(BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
 
         int min = -5;
         int max = 5;
-        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY(),  tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
+        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY(), tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
         BlockPos toPos = nearPos.above(rand.nextInt(3) + 10);
         EntityFollowProjectile proj1 = new EntityFollowProjectile(tileEntity.getLevel(),
                 tileEntity.getBlockPos().above(), toPos,
@@ -157,23 +158,23 @@ public class ParticleUtil {
 
     }
 
-    public static void spawnRitualSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnRitualSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
         int scalar = 20;
-        if(ritual.getContext().progress >= 5)
+        if (ritual.getContext().progress >= 5)
             scalar = 10;
-        if(ritual.getContext().progress >= 10)
+        if (ritual.getContext().progress >= 10)
             scalar = 5;
-        if(ritual.getContext().progress >= 13)
+        if (ritual.getContext().progress >= 13)
             scalar = 3;
-        if(!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)){
+        if (!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
             ParticleUtil.spawnRitualSkyEffect(tileEntity, rand, color);
         }
     }
 
-    public static void spawnFallingSkyEffect(BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnFallingSkyEffect(BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
         int min = -5;
         int max = 5;
-        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY() + 8,  tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
+        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY() + 8, tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
         BlockPos toPos = nearPos.below(8);
         EntityFollowProjectile proj1 = new EntityFollowProjectile(tileEntity.getLevel(),
                 nearPos, toPos,
@@ -186,15 +187,15 @@ public class ParticleUtil {
 
     }
 
-    public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
         int scalar = 20;
-        if(ritual.getContext().progress >= 5)
+        if (ritual.getContext().progress >= 5)
             scalar = 10;
-        if(ritual.getContext().progress >= 10)
+        if (ritual.getContext().progress >= 10)
             scalar = 5;
-        if(ritual.getContext().progress >= 13)
+        if (ritual.getContext().progress >= 13)
             scalar = 3;
-        if(!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)){
+        if (!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
             ParticleUtil.spawnFallingSkyEffect(tileEntity, rand, color);
         }
     }

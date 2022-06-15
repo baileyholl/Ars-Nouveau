@@ -31,9 +31,7 @@ public class ResetCommand {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
             });
-            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(iPlayerCap -> {
-                iPlayerCap.setKnownGlyphs(new ArrayList<>());
-            });
+            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(iPlayerCap -> iPlayerCap.setKnownGlyphs(new ArrayList<>()));
             CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
         }
         source.sendSuccess(Component.translatable("ars_nouveau.reset.cleared"), true);

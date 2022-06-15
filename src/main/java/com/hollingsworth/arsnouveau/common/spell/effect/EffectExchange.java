@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
@@ -85,22 +85,21 @@ public class EffectExchange extends AbstractEffect {
                 continue;
             }
             if(isRealPlayer(shooter) && spellContext.castingTile == null) {
-                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, (Player) fakePlayer);
+                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, fakePlayer);
             } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
                 boolean shouldBreak = false;
                 for(IItemHandler i : handlers){
                     for(int slot = 0; slot < i.getSlots(); slot++){
                         ItemStack stack = i.getStackInSlot(slot);
-                        if(stack.getItem() instanceof BlockItem){
-                            BlockItem item = (BlockItem)stack.getItem();
-                            if(item.getBlock() == origState.getBlock())
+                        if (stack.getItem() instanceof BlockItem item) {
+                            if (item.getBlock() == origState.getBlock())
                                 continue;
-                            if(firstBlock == null){
+                            if (firstBlock == null) {
                                 firstBlock = item.getBlock();
-                            }else if(item.getBlock() != firstBlock)
+                            } else if (item.getBlock() != firstBlock)
                                 continue;
                             ItemStack extracted = i.extractItem(slot, 1, false);
-                            if(attemptPlace(extracted, world, pos1, result, shooter, fakePlayer)) {
+                            if (attemptPlace(extracted, world, pos1, result, shooter, fakePlayer)) {
                                 shouldBreak = true;
                                 break;
                             }else{
@@ -119,15 +118,14 @@ public class EffectExchange extends AbstractEffect {
     public Block swapFromInv(List<ItemStack> inventory, BlockState origState, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, int slots, Block firstBlock, Player fakePlayer){
         for(int i = 0; i < slots; i++){
             ItemStack stack = inventory.get(i);
-            if(stack.getItem() instanceof BlockItem && world instanceof ServerLevel){
-                BlockItem item = (BlockItem)stack.getItem();
-                if(item.getBlock() == origState.getBlock())
+            if (stack.getItem() instanceof BlockItem item && world instanceof ServerLevel) {
+                if (item.getBlock() == origState.getBlock())
                     continue;
-                if(firstBlock == null){
+                if (firstBlock == null) {
                     firstBlock = item.getBlock();
-                }else if(item.getBlock() != firstBlock)
+                } else if (item.getBlock() != firstBlock)
                     continue;
-                if(attemptPlace(stack, world, new BlockPos(pos1), result, shooter, fakePlayer))
+                if (attemptPlace(stack, world, new BlockPos(pos1), result, shooter, fakePlayer))
                     break;
             }
         }

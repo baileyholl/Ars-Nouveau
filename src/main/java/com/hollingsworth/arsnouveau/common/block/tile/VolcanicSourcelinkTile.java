@@ -119,7 +119,6 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         if(stonePos != null && progress >= 150){
             level.setBlockAndUpdate(stonePos, Blocks.MAGMA_BLOCK.defaultBlockState());
             progress -= 150;
-            return;
         }
     }
 

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import net.minecraft.util.Mth;
@@ -24,8 +24,7 @@ public class EffectKnockback extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(rayTraceResult.getEntity() instanceof LivingEntity && shooter != null){
-            LivingEntity target = (LivingEntity) rayTraceResult.getEntity();
+        if (rayTraceResult.getEntity() instanceof LivingEntity target && shooter != null) {
             float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             knockback(target, shooter, strength);
             target.hurtMarked = true;

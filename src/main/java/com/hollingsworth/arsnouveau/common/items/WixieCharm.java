@@ -25,18 +25,17 @@ public class WixieCharm extends ModItem{
         if(world.isClientSide)
             return InteractionResult.SUCCESS;
         BlockPos pos = context.getClickedPos();
-        if(world.getBlockState(pos).getBlock() instanceof CauldronBlock){
+        if (world.getBlockState(pos).getBlock() instanceof CauldronBlock) {
             world.setBlockAndUpdate(pos, BlockRegistry.WIXIE_CAULDRON.defaultBlockState());
             context.getItemInHand().shrink(1);
-        }else if(world.getBlockEntity(pos) instanceof WixieCauldronTile){
-            WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(pos);
-            if(!tile.hasWixie()){
+        } else if (world.getBlockEntity(pos) instanceof WixieCauldronTile tile) {
+            if (!tile.hasWixie()) {
                 EntityWixie wixie = new EntityWixie(world, true, pos);
-                wixie.setPos(pos.getX()+0.5, pos.getY() + 1.0, pos.getZ() +0.5);
+                wixie.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                 world.addFreshEntity(wixie);
                 tile.entityID = wixie.getId();
                 context.getItemInHand().shrink(1);
-            }else{
+            } else {
                 PortUtil.sendMessage(context.getPlayer(), Component.translatable("ars_nouveau.wixie.has_wixie"));
             }
         }

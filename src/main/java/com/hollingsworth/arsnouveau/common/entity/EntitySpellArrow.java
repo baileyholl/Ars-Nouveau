@@ -236,8 +236,7 @@ public class EntitySpellArrow extends Arrow {
                 return;
             }
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity) entity;
+            if (entity instanceof LivingEntity livingentity) {
                 if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
