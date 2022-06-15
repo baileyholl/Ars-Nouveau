@@ -40,8 +40,8 @@ import java.util.stream.Stream;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class PotionJar extends TickableModBlock implements SimpleWaterloggedBlock {
-    public PotionJar(Properties properties, String registry) {
-        super(properties, registry);
+    public PotionJar(Properties properties) {
+        super(properties);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 

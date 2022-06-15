@@ -35,13 +35,13 @@ public class ScryerCrystal extends TickableModBlock {
     public static VoxelShape UP = box(5,0,5,11,1,11);
     public static VoxelShape DOWN = box(5,15,5,11,16,11);
 
-    public ScryerCrystal(Properties properties, String registry) {
-        super(properties, registry);
+    public ScryerCrystal(Properties properties) {
+        super(properties);
         this.registerDefaultState((this.stateDefinition.any().setValue(FACING, Direction.NORTH)).setValue(BEING_VIEWED, false));
     }
 
-    public ScryerCrystal(String registryName) {
-        this(defaultProperties().noOcclusion(), registryName);
+    public ScryerCrystal() {
+        this(defaultProperties().noOcclusion());
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

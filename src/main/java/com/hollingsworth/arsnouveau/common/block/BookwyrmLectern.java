@@ -20,15 +20,11 @@ import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVE
 public class BookwyrmLectern extends SummonBlock{
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public BookwyrmLectern(Properties properties, String registry) {
-        super(properties, registry);
+    public BookwyrmLectern(Properties properties) {
+        super(properties);
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(FACING, Direction.NORTH));
-    }
 
-    public BookwyrmLectern(String registryName) {
-        super(registryName);
     }
-
 
 
     @Override

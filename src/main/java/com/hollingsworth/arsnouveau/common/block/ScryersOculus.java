@@ -32,12 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScryersOculus extends TickableModBlock{
-    public ScryersOculus(Properties properties, String registry) {
-        super(properties, registry);
-    }
 
-    public ScryersOculus(String registryName) {
-        this(defaultProperties().noOcclusion(), registryName);
+    public ScryersOculus() {
+        this(defaultProperties().noOcclusion());
     }
 
     public ScryersOculus(Properties properties) {

@@ -12,7 +12,6 @@ public class ModBlock extends Block {
 
     public ModBlock(Properties properties, String registry) {
         super(properties);
-        setRegistryName(registry);
     }
 
     public ModBlock(String registryName){
@@ -21,6 +20,10 @@ public class ModBlock extends Block {
 
     public ModBlock(Properties properties){
         super(properties);
+    }
+
+    public ModBlock() {
+        super(defaultProperties());
     }
 
     public static Block.Properties defaultProperties(){

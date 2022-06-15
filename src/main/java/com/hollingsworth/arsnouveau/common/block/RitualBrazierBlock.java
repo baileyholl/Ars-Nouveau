@@ -24,7 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 
 public class RitualBrazierBlock extends TickableModBlock {
-    public RitualBrazierBlock(String registryName) {
+    public RitualBrazierBlock() {
         super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0), registryName);
     }
     public static final Property<Boolean> LIT = BooleanProperty.create("lit");

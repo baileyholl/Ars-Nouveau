@@ -32,13 +32,12 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedBlock {
 
-    public WhirlisprigFlower(Properties properties, String registry) {
-        super(properties, registry);
+    public WhirlisprigFlower(Properties properties) {
+        super(properties);
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(BlockStateProperties.WATERLOGGED, false));
     }
-
-    public WhirlisprigFlower(String string) {
-        this(Block.Properties.of(Material.PLANT).sound(SoundType.SPORE_BLOSSOM).noOcclusion().strength(2.0f, 6.0f), string);
+    public WhirlisprigFlower() {
+        this(Block.Properties.of(Material.PLANT).sound(SoundType.SPORE_BLOSSOM).noOcclusion().strength(2.0f, 6.0f));
     }
 
     VoxelShape shape = Stream.of(
@@ -49,6 +48,8 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
             Block.box(6, 11.107, 10.077, 10, 12.1, 14.07),
             Block.box(6, 11.107, 1.93, 10, 12.1, 5.93)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+
 
     @Nullable
     @Override

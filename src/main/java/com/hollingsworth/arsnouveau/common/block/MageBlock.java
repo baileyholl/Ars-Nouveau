@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class MageBlock extends TickableModBlock {
 
     public MageBlock() {
-        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape(), LibBlockNames.MAGE_BLOCK);
+        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape());
     }
 
     @Override
