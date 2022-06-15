@@ -209,7 +209,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
         if(((BookwyrmLecternTile) level.getBlockEntity(lecternPos)).removeManaAround(spellRecipe)){
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spellRecipe, this));
-            resolver.onCastOnBlock(new BlockHitResult(new Vec3(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
+            resolver.onCastOnBlock(new BlockHitResult(new Vec3(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ));
         }
         this.ticksSinceLastSpell = 0;
     }

@@ -98,6 +98,8 @@ public class ModEntities {
     public static EntityType<WealdWalker> ENTITY_VEXING_WEALD = null;
     public static EntityType<AmethystGolem> AMETHYST_GOLEM = null;
     public static EntityType<ScryerCamera> SCRYER_CAMERA = null;
+    public static EntityType<EnchantedFallingBlock> FALLING_BLOCK = null;
+
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -245,6 +247,11 @@ public class ModEntities {
                     .sized(1.0f, 1.0f).setTrackingRange(10));
             SCRYER_CAMERA = build(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
                     .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
+            FALLING_BLOCK = build(
+                    "enchanted_falling_block",
+                    EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                            .setShouldReceiveVelocityUpdates(true)
+                            .setTrackingRange(256));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
@@ -282,8 +289,8 @@ public class ModEntities {
                     ENTITY_FLOURISHING_WEALD,
                     AMETHYST_GOLEM,
                     SUMMON_SKELETON,
-                    SCRYER_CAMERA
-
+                    SCRYER_CAMERA,
+                    FALLING_BLOCK
             );
 
 

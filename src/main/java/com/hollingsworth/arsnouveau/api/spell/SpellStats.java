@@ -29,8 +29,6 @@ public class SpellStats {
 
     private double durationMultiplier;
 
-
-
     private double aoeMultiplier;
 
     private List<AbstractAugment> augments;

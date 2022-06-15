@@ -40,7 +40,7 @@ public class MethodTouch extends AbstractCastMethod {
     public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = context.getLevel();
         BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
-        resolver.onResolveEffect(world, context.getPlayer(), res);
+        resolver.onResolveEffect(world, res);
         resolver.expendMana(context.getPlayer());
         Networking.sendToNearby(context.getLevel(), context.getPlayer(),
                 new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.colors));
