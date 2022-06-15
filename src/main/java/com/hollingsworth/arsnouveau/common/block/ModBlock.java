@@ -14,10 +14,6 @@ public class ModBlock extends Block {
         super(properties);
     }
 
-    public ModBlock(String registryName){
-        this(defaultProperties(), registryName);
-    }
-
     public ModBlock(Properties properties){
         super(properties);
     }

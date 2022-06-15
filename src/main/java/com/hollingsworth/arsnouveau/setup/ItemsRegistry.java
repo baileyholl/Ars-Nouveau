@@ -169,6 +169,9 @@ public class ItemsRegistry {
     public static ModItem WILDEN_TRIBUTE;
     @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SUMMON_FOCUS, registryName = ItemRegistryKey)
     public static SummoningFocus SUMMONING_FOCUS;
+
+    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SHAPERS_FOCUS, registryName = ItemRegistryKey)
+    public static ShapersFocus SHAPERS_FOCUS;
     @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SOURCE_BERRY_PIE, registryName = ItemRegistryKey)
     public static ModItem SOURCE_BERRY_PIE;
     @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SOURCE_BERRY_ROLL, registryName = ItemRegistryKey)
@@ -354,6 +357,7 @@ public class ItemsRegistry {
                     new AmethystGolemCharm().withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm")),
                     new AnnotatedCodex(LibItemNames.ANNOTATED_CODEX),
                     new ScryerScroll(LibItemNames.SCRYER_SCROLL).withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")),
+                    new ShapersFocus(LibItemNames.SHAPERS_FOCUS).withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus"))
             };
 
             for (Map.Entry<String, Supplier<Glyph>> glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {

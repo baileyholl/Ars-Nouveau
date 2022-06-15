@@ -23,10 +23,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -200,10 +197,19 @@ public class ModEntities {
     public static final RegistryObject<EntityType<ScryerCamera>> SCRYER_CAMERA = registerEntity(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
             .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
 
+    public static final RegistryObject<EntityType<EnchantedFallingBlock>> FALLING_BLOCK = registerEntity(
+                    "enchanted_falling_block",(
+                    EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                            .setShouldReceiveVelocityUpdates(true)
+                            .setTrackingRange(256)));
+
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
-        public static void registerEntities(final IForgeRegistry<EntityType<?>> registry) {
+        @SubscribeEvent
+        public static void registerEntities(final RegisterEvent event) {
+
+            if (!event.getRegistryKey().equals(ForgeRegistries.Keys.ENTITY_TYPES)) return;
 
             SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -215,7 +221,6 @@ public class ModEntities {
 
             LightManager.init();
         }
-
 
         @SubscribeEvent
         public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {

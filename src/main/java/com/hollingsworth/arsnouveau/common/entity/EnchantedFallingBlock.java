@@ -17,7 +17,7 @@ public class EnchantedFallingBlock extends FallingBlockEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.FALLING_BLOCK;
+        return ModEntities.FALLING_BLOCK.get();
     }
 
     @Override
