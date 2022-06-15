@@ -5,12 +5,10 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -80,10 +78,10 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
     public void onWanded(Player playerEntity) {
         if(!isLocked){
             this.isLocked = true;
-            playerEntity.sendMessage(Component.translatable("ars_nouveau.locked"), Util.NIL_UUID);
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.locked"));
         }else{
             this.isLocked = false;
-            playerEntity.sendMessage(Component.translatable("ars_nouveau.unlocked"), Util.NIL_UUID);
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.unlocked"));
         }
 
         BlockState state = level.getBlockState(worldPosition);

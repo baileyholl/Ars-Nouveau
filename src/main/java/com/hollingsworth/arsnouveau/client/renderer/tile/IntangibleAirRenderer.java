@@ -18,13 +18,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
-import java.util.Random;
 
 public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirTile> {
 
@@ -93,7 +93,7 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
 
         for (Direction direction : Direction.values()) {
             if (!(tileEntityIn.getLevel().getBlockState(tileEntityIn.getBlockPos().relative(direction)).getBlock() instanceof IntangibleAirBlock)) {
-                renderModelBrightnessColorQuads(matrixStackIn.last(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float)scale, ibakedmodel.getQuads(renderState, direction, new Random(Mth.getSeed(tileEntityIn.getBlockPos())), EmptyModelData.INSTANCE), combinedLightIn, combinedOverlayIn);
+                renderModelBrightnessColorQuads(matrixStackIn.last(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float) scale, ibakedmodel.getQuads(renderState, direction, RandomSource.create(Mth.getSeed(tileEntityIn.getBlockPos())), EmptyModelData.INSTANCE), combinedLightIn, combinedOverlayIn);
             }
         }
 

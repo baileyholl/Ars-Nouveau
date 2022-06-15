@@ -37,21 +37,21 @@ public class RitualAwakening extends AbstractRitual {
         for(BlockPos p : BlockPos.withinManhattan(getPos(), 3, 1, 3)){
             Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG || b.getBlock() == BlockRegistry.BLAZING_LEAVES);
             if(blazing.size() >= 50){
-                entity = ModEntities.ENTITY_BLAZING_WEALD;
+                entity = ModEntities.ENTITY_BLAZING_WEALD.get();
                 foundPos = p;
                 destroyTree(world, blazing);
                 return;
             }
             Set<BlockPos> flourishing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.FLOURISHING_LOG || b.getBlock() == BlockRegistry.FLOURISHING_LEAVES);
             if(flourishing.size() >= 50){
-                entity = ModEntities.ENTITY_FLOURISHING_WEALD;
+                entity = ModEntities.ENTITY_FLOURISHING_WEALD.get();
                 foundPos = p;
                 destroyTree(world, flourishing);
                 return;
             }
             Set<BlockPos> vexing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.VEXING_LOG || b.getBlock() == BlockRegistry.VEXING_LEAVES);
             if(vexing.size() >= 50){
-                entity = ModEntities.ENTITY_VEXING_WEALD;
+                entity = ModEntities.ENTITY_VEXING_WEALD.get();
                 foundPos = p;
                 destroyTree(world, vexing);
                 return;
@@ -59,14 +59,14 @@ public class RitualAwakening extends AbstractRitual {
 
             Set<BlockPos> cascading = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.CASCADING_LOG || b.getBlock() == BlockRegistry.CASCADING_LEAVE);
             if(cascading.size() >= 50){
-                entity = ModEntities.ENTITY_CASCADING_WEALD;
+                entity = ModEntities.ENTITY_CASCADING_WEALD.get();
                 foundPos = p;
                 destroyTree(world, cascading);
                 return;
             }
             if(world.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
                 world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
-                entity = ModEntities.AMETHYST_GOLEM;
+                entity = ModEntities.AMETHYST_GOLEM.get();
                 foundPos = p;
                 return;
             }

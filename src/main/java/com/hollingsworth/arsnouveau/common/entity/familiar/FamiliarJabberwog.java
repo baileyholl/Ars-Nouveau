@@ -38,6 +38,6 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_JABBERWOG;
+        return ModEntities.ENTITY_FAMILIAR_JABBERWOG.get();
     }
 }

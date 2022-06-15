@@ -53,7 +53,7 @@ public class ScryerCamera extends Entity {
     }
 
     public ScryerCamera(Level level, BlockPos pos) {
-        this(ModEntities.SCRYER_CAMERA, level);
+        this(ModEntities.SCRYER_CAMERA.get(), level);
         if (level.getBlockEntity(pos) instanceof ScryerCrystalTile cam) {
             double x = pos.getX() + 0.5D;
             double y = pos.getY() + 0.5D;

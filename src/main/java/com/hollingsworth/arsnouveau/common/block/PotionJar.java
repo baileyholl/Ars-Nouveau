@@ -45,10 +45,6 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
-    public PotionJar(String registry){
-        super(registry);
-    }
-
     @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;

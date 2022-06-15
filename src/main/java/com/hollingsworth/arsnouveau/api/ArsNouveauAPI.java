@@ -18,11 +18,9 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.brewing.BrewingRecipe;
@@ -30,7 +28,6 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -49,13 +46,6 @@ import java.util.stream.Collectors;
  * If you need to access data from other addons, use the FMLLoadingComplete event.
  */
 public class ArsNouveauAPI {
-
-    public static ResourceLocation getRegistryName(Item i){
-        return ForgeRegistries.ITEMS.getKey(i);
-    }
-    public static ResourceLocation getRegistryName(Enchantment e){
-        return ForgeRegistries.ENCHANTMENTS.getKey(e);
-    }
 
 
     /**
@@ -105,7 +95,7 @@ public class ArsNouveauAPI {
 
     public Item getGlyphItem(String glyphName){
         for(Item i : ItemsRegistry.RegistrationHandler.ITEMS){
-            if(getRegistryName(i).equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))){
+            if (RegistryHelper.getRegistryName(i).equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))) {
                 return i;
             }
         }

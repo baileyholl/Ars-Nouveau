@@ -52,9 +52,9 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
         stack.pushPose();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0.5, 0.5);
-        RenderSystem.setShaderTexture(0, getTextureResource(animatable));
+        RenderSystem.setShaderTexture(0, getTextureLocation(animatable));
         Color renderColor = getRenderColor(animatable, 0, stack, bufferIn, null, packedLightIn);
-        RenderType renderType = getRenderType(animatable, 0, stack, bufferIn, null, packedLightIn, getTextureResource(animatable));
+        RenderType renderType = getRenderType(animatable, 0, stack, bufferIn, null, packedLightIn, getTextureLocation(animatable));
         render(model, animatable, 0, renderType, stack, bufferIn, null, packedLightIn, OverlayTexture.NO_OVERLAY, (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f, (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);
         stack.popPose();
     }

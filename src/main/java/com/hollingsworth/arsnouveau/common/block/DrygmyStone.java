@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -60,7 +59,7 @@ public class DrygmyStone extends SummonBlock implements SimpleWaterloggedBlock {
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.block());
 
     public DrygmyStone(){
-        super(defaultProperties().noOcclusion().lightLevel((b) -> 8), LibBlockNames.DRYGMY_STONE);
+        super(defaultProperties().noOcclusion().lightLevel((b) -> 8));
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(BlockStateProperties.WATERLOGGED, false));
     }
 

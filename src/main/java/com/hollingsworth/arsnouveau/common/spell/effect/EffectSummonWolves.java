@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -29,7 +29,7 @@ public class EffectSummonWolves extends AbstractEffect {
         Vec3 hit = rayTraceResult.getLocation();
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         for(int i = 0; i < 2; i++){
-            SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
+            SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
             wolf.ticksLeft = ticks;
             wolf.setPos(hit.x(), hit.y(), hit.z());
             wolf.setTarget(shooter.getLastHurtMob());

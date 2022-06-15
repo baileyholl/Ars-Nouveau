@@ -23,10 +23,13 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.hollingsworth.arsnouveau.api.ArsNouveauAPI.getRegistryName;
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public Enchantment enchantment;
@@ -167,7 +170,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         @Override
         public void toNetwork(FriendlyByteBuf buf, EnchantmentRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
-            buf.writeUtf(recipe.enchantment.getRegistryName().toString());
+            buf.writeUtf(getRegistryName(recipe.enchantment).toString());
             buf.writeInt(recipe.enchantLevel);
             buf.writeInt(recipe.getSourceCost());
             for(Ingredient i : recipe.pedestalItems){

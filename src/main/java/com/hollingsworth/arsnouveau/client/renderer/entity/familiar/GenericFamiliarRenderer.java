@@ -35,15 +35,15 @@ public class GenericFamiliarRenderer<T extends FamiliarEntity> extends GenericRe
 
         if (this.familiar.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())){
             CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, familiar, packedLightIn);
-            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureResource(familiar)));
+            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(familiar)));
         }
 
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
     @Override
-    public ResourceLocation getTextureResource(T entity) {
-        if(entity instanceof IVariantTextureProvider variantTextureProvider)
+    public ResourceLocation getTextureLocation(T entity) {
+        if (entity instanceof IVariantTextureProvider variantTextureProvider)
             return variantTextureProvider.getTexture(entity);
         return null;
     }

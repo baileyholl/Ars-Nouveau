@@ -77,7 +77,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 
@@ -87,7 +87,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     }
 
     public EntityDrygmy(Level world, boolean tamed){
-        super(ModEntities.ENTITY_DRYGMY, world);
+        super(ModEntities.ENTITY_DRYGMY.get(), world);
         setTamed(tamed);
         addGoalsAfterConstructor();
     }

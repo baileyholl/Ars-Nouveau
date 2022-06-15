@@ -8,10 +8,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SingleBlockScryer implements IScryer{
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
+public class SingleBlockScryer implements IScryer {
     public static SingleBlockScryer INSTANCE = new SingleBlockScryer(null);
 
-    public SingleBlockScryer(Block block){
+    public SingleBlockScryer(Block block) {
         this.block = block;
     }
 
@@ -34,7 +36,7 @@ public class SingleBlockScryer implements IScryer{
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         if(block != null)
-            tag.putString("block", block.getRegistryName().toString());
+            tag.putString("block", getRegistryName(block).toString());
         return IScryer.super.toTag(tag);
     }
 

@@ -115,7 +115,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RECIPE_ID);
         jsonobject.add("input", input.toJson());
-        jsonobject.addProperty("output", output.getItem().getRegistryName().toString());
+        jsonobject.addProperty("output", getRegistryName(output.getItem()).toString());
         jsonobject.addProperty("count", output.getCount());
         jsonobject.addProperty("source", source);
         JsonArray pedestalArr = new JsonArray();

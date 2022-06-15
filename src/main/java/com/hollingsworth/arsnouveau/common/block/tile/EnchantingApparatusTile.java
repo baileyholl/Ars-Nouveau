@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -40,7 +41,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class EnchantingApparatusTile extends AnimatedTile implements Container, ITickable, IAnimatable, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
@@ -62,7 +62,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
             if (this.isCrafting) {
                 Level world = getLevel();
                 BlockPos pos = getBlockPos().offset(0, 0.5, 0);
-                Random rand = world.getRandom();
+                RandomSource rand = world.getRandom();
 
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());

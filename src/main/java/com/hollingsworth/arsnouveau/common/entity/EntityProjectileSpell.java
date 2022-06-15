@@ -60,7 +60,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(Level world, double x, double y, double z) {
-        this(ModEntities.SPELL_PROJ, world, x, y, z);
+        this(ModEntities.SPELL_PROJ.get(), world, x, y, z);
     }
 
     public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType,Level world, SpellResolver resolver){
@@ -74,11 +74,11 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(Level world, SpellResolver resolver){
-        this(ModEntities.SPELL_PROJ, world, resolver);
+        this(ModEntities.SPELL_PROJ.get(), world, resolver);
     }
 
     public EntityProjectileSpell(final Level world, final LivingEntity shooter) {
-        this(ModEntities.SPELL_PROJ, world, shooter);
+        this(ModEntities.SPELL_PROJ.get(), world, shooter);
     }
     @Override
     public void tick() {
@@ -236,7 +236,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.SPELL_PROJ;
+        return ModEntities.SPELL_PROJ.get();
     }
 
     protected void attemptRemoval(){
@@ -291,7 +291,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.SPELL_PROJ, world);
+        super(ModEntities.SPELL_PROJ.get(), world);
     }
 
     @Override

@@ -24,9 +24,8 @@ public class SpellArrow extends ArrowItem {
     public AbstractSpellPart part;
     public int numParts;
 
-    public SpellArrow(String registryName, AbstractAugment augment, int numParts) {
+    public SpellArrow(AbstractAugment augment, int numParts) {
         super(ItemsRegistry.defaultItemProperties());
-        //setRegistryName(ArsNouveau.MODID, registryName);
         this.part = augment;
         this.numParts = numParts;
     }

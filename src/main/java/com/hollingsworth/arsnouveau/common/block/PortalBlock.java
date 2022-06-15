@@ -3,11 +3,11 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.util.FlatPortalAreaHelper;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -32,7 +32,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class PortalBlock extends TickableModBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
@@ -41,22 +40,22 @@ public class PortalBlock extends TickableModBlock {
     }
 
     public PortalBlock() {
-        super(Block.Properties.of(Material.PORTAL).noCollission().strength(-1.0F, 3600000.0F).noDrops(),LibBlockNames.PORTAL);
+        super(Block.Properties.of(Material.PORTAL).noCollission().strength(-1.0F, 3600000.0F).noLootTable());
         this.registerDefaultState(this.stateDefinition.any().setValue(AXIS, Direction.Axis.X));
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-        for(int i = 0; i < 4; ++i) {
-            double d0 = (double)pos.getX() + (double)rand.nextFloat();
-            double d1 = (double)pos.getY() + (double)rand.nextFloat();
-            double d2 = (double)pos.getZ() + (double)rand.nextFloat();
-            double d3 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
-            double d4 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
-            double d5 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+        for (int i = 0; i < 4; ++i) {
+            double d0 = (double) pos.getX() + (double) rand.nextFloat();
+            double d1 = (double) pos.getY() + (double) rand.nextFloat();
+            double d2 = (double) pos.getZ() + (double) rand.nextFloat();
+            double d3 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
+            double d4 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
+            double d5 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
             int j = rand.nextInt(2) * 2 - 1;
             if (worldIn.getBlockState(pos.west()).getBlock() != this && worldIn.getBlockState(pos.east()).getBlock() != this) {
-                d0 = (double)pos.getX() + 0.5D + 0.25D * (double)j;
+                d0 = (double) pos.getX() + 0.5D + 0.25D * (double) j;
                 d3 = rand.nextFloat() * 2.0F * (float)j;
             } else {
                 d2 = (double)pos.getZ() + 0.5D + 0.25D * (double)j;
@@ -106,8 +105,7 @@ public class PortalBlock extends TickableModBlock {
         if(helper.isValidFrame()){
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
                 worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.X), 18);
-                if(worldIn.getBlockEntity(blockPos) instanceof PortalTile){
-                    PortalTile tile = (PortalTile) worldIn.getBlockEntity(blockPos);
+                if (worldIn.getBlockEntity(blockPos) instanceof PortalTile tile) {
                     tile.warpPos = warpPos;
                     tile.dimID = dimID;
                     tile.rotationVec = rotation;
@@ -122,20 +120,14 @@ public class PortalBlock extends TickableModBlock {
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        switch(rot) {
-            case COUNTERCLOCKWISE_90:
-            case CLOCKWISE_90:
-                switch(state.getValue(AXIS)) {
-                    case Z:
-                        return state.setValue(AXIS, Direction.Axis.X);
-                    case X:
-                        return state.setValue(AXIS, Direction.Axis.Z);
-                    default:
-                        return state;
-                }
-            default:
-                return state;
-        }
+        return switch (rot) {
+            case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (state.getValue(AXIS)) {
+                case Z -> state.setValue(AXIS, Direction.Axis.X);
+                case X -> state.setValue(AXIS, Direction.Axis.Z);
+                default -> state;
+            };
+            default -> state;
+        };
     }
 
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -204,6 +196,7 @@ public class PortalBlock extends TickableModBlock {
                 this.rightDir = Direction.SOUTH;
             }
 
+            //TODO check this
             for(BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
             }
 

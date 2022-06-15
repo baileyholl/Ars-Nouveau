@@ -31,15 +31,15 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     public int extendTimes;
 
     public EntityOrbitProjectile(Level worldIn, double x, double y, double z) {
-        super(ModEntities.ORBIT_SPELL, worldIn, x, y, z);
+        super(ModEntities.ORBIT_SPELL.get(), worldIn, x, y, z);
     }
 
     public EntityOrbitProjectile(Level worldIn, LivingEntity shooter) {
-        super(ModEntities.ORBIT_SPELL, worldIn, shooter);
+        super(ModEntities.ORBIT_SPELL.get(), worldIn, shooter);
     }
 
     public EntityOrbitProjectile(Level world, SpellResolver resolver){
-        super(ModEntities.ORBIT_SPELL, world, resolver);
+        super(ModEntities.ORBIT_SPELL.get(), world, resolver);
     }
 
     public EntityOrbitProjectile(EntityType<EntityOrbitProjectile> entityWardProjectileEntityType, Level world) {
@@ -191,7 +191,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ORBIT_SPELL;
+        return ModEntities.ORBIT_SPELL.get();
     }
 
     @Override
@@ -200,7 +200,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     }
 
     public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ORBIT_SPELL, world);
+        super(ModEntities.ORBIT_SPELL.get(), world);
     }
 
     public int getOwnerID() {

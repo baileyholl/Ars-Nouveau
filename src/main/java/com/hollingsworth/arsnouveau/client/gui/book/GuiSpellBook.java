@@ -25,7 +25,6 @@ import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -445,7 +444,7 @@ public class GuiSpellBook extends BaseBook {
         } else {
             // Color code chosen to match GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
             Component textComponent = Component.translatable("ars_nouveau.spell_book_gui.create")
-                    .withStyle(s -> s.setStrikethrough(true).withColor(TextColor.parseColor("#FFB2B2")));
+                    .withStyle(s -> s.withStrikethrough(true).withColor(TextColor.parseColor("#FFB2B2")));
             // The final argument to draw desaturates the above color from the text component
             minecraft.font.draw(stack, textComponent, 233, 183, -8355712);
         }

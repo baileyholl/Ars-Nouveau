@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketToggleLight;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -29,7 +28,7 @@ public class ToggleLightCommand {
         }
         Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> player), new PacketToggleLight(enable));
         String path = enable ? "ars_nouveau.lights_on" : "ars_nouveau.lights_off";
-        player.sendMessage(Component.translatable(path, enable), Util.NIL_UUID);
+        player.sendSystemMessage(Component.translatable(path, enable));
         return 1;
     }
 }

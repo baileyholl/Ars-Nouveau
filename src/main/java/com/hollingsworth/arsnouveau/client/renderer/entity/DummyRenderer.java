@@ -31,19 +31,17 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
     }
 
     @Override
-    public ResourceLocation getTextureResource(EntityDummy p_110775_1_) {
+    public ResourceLocation getTextureLocation(EntityDummy p_110775_1_) {
         return p_110775_1_.getSkinTextureLocation();
     }
 
-
-
     public DummyRenderer(EntityRendererProvider.Context  context, boolean slim) {
           super(context, new PlayerModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
-          this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
-          this.addLayer(new ItemInHandLayer<>(this));
-          this.addLayer(new ArrowLayer<>(context,this));
-          this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
-          this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
+        this.addLayer(new ArrowLayer<>(context, this));
+        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
+        this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
 //        this.addLayer(new SpinAttackEffectLayer<>(this));
 //        this.addLayer(new BeeStingerLayer<>(this));
     }

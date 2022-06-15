@@ -17,7 +17,7 @@ public class AmethystGolemCharm extends ModItem{
         if(context.getLevel().isClientSide)
             return InteractionResult.SUCCESS;
         Level world = context.getLevel();
-        AmethystGolem carbuncle = new AmethystGolem(ModEntities.AMETHYST_GOLEM, context.getLevel());
+        AmethystGolem carbuncle = new AmethystGolem(ModEntities.AMETHYST_GOLEM.get(), context.getLevel());
         Vec3 vec = context.getClickLocation();
         carbuncle.setPos(vec.x, vec.y, vec.z);
         world.addFreshEntity(carbuncle);

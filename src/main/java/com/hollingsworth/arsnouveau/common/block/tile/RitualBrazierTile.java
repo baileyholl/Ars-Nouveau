@@ -16,10 +16,10 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +37,6 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.List;
-import java.util.Random;
 
 public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable {
     public AbstractRitual ritual;
@@ -59,7 +58,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity){
         Level world = getLevel();
         BlockPos pos = getBlockPos();
-        Random rand = world.random;
+        RandomSource rand = world.random;
         double xzOffset = 0.25;
         for(int i =0; i < intensity; i++){
             world.addParticle(

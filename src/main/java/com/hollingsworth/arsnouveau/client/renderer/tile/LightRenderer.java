@@ -10,9 +10,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-
-import java.util.Random;
 
 public class LightRenderer implements BlockEntityRenderer<LightTile> {
     public LightRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
@@ -23,7 +22,7 @@ public class LightRenderer implements BlockEntityRenderer<LightTile> {
     public void render(LightTile lightTile, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         Level world = lightTile.getLevel();
         BlockPos pos = lightTile.getBlockPos();
-        Random rand = world.random;
+        RandomSource rand = world.random;
         if(Minecraft.getInstance().isPaused())
             return;
 

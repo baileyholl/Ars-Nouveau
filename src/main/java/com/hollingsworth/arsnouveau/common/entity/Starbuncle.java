@@ -27,7 +27,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -75,9 +74,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable {
 
-    public enum StarbuncleGoalState{
+    public enum StarbuncleGoalState {
         FORAGING,
         HUNTING_ITEM,
         TAKING_ITEM,
@@ -126,7 +127,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public Starbuncle(Level world, boolean tamed) {
-        super(ModEntities.STARBUNCLE_TYPE, world);
+        super(ModEntities.STARBUNCLE_TYPE.get(), world);
         this.setTamed(tamed);
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
@@ -510,7 +511,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.STARBUNCLE_TYPE;
+        return ModEntities.STARBUNCLE_TYPE.get();
     }
 
     @Override
@@ -680,7 +681,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         tag.putBoolean("stuck", isStuck);
         tag.putString("color", this.entityData.get(COLOR));
         if (pathBlock != null)
-            tag.putString("path", pathBlock.getRegistryName().toString());
+            tag.putString("path", getRegistryName(pathBlock).toString());
         NBTUtil.storeBlockPos(tag, "bed_", bedPos);
     }
 
@@ -732,7 +733,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 
@@ -942,7 +943,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             if (ignoreItems != null && !ignoreItems.isEmpty())
                 NBTUtil.writeItems(tag, "ignored_", ignoreItems);
             if (pathBlock != null)
-                tag.putString("path", pathBlock.getRegistryName().toString());
+                tag.putString("path", getRegistryName(pathBlock).toString());
             if(bedPos != null)
                 NBTUtil.storeBlockPos(tag, "bed_", bedPos);
             return tag;

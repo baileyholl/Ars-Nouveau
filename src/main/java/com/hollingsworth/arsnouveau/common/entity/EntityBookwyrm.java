@@ -16,11 +16,9 @@ import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -88,7 +86,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     }
 
     public EntityBookwyrm(Level p_i50190_2_) {
-        super(ModEntities.ENTITY_BOOKWYRM_TYPE, p_i50190_2_);
+        super(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), p_i50190_2_);
         this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
@@ -116,22 +114,22 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
             if(new EntitySpellResolver(new SpellContext(spell, this)).canCast(this)) {
                 this.spellRecipe = spell;
                 setRecipeString(spellRecipe.serialize());
-                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.spell_set"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.spell_set"));
             } else{
-                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.invalid"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.invalid"));
             }
             return InteractionResult.SUCCESS;
         }else if(stack.isEmpty()){
             if(spellRecipe == null || spellRecipe.recipe.size() == 0){
-                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.desc"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.desc"));
             }else
-                player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.casting", spellRecipe.getDisplayString()), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.casting", spellRecipe.getDisplayString()));
             return InteractionResult.SUCCESS;
         }
 
         if(!stack.isEmpty()){
             setHeldStack(new ItemStack(stack.getItem()));
-            player.sendMessage(Component.translatable("ars_nouveau.bookwyrm.spell_item", stack.getItem().getName(stack).getString()), Util.NIL_UUID);
+            player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.spell_item", stack.getItem().getName(stack).getString()));
         }
         return super.mobInteract(player,  hand);
 
@@ -265,7 +263,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_BOOKWYRM_TYPE;
+        return ModEntities.ENTITY_BOOKWYRM_TYPE.get();
     }
 
     @Override
@@ -351,7 +349,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 

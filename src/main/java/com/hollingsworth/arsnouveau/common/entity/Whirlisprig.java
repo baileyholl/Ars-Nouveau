@@ -22,7 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -107,7 +106,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 
@@ -222,7 +221,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
-        super(ModEntities.WHIRLISPRIG_TYPE, world);
+        super(ModEntities.WHIRLISPRIG_TYPE.get(), world);
         MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);

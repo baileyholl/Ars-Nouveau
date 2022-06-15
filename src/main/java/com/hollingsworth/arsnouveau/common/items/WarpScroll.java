@@ -4,11 +4,9 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -75,7 +73,7 @@ public class WarpScroll extends ModItem{
 
         if(!pos.equals(BlockPos.ZERO) ){
             if(getDimension(stack) == null || !getDimension(stack).equals(player.getCommandSenderWorld().dimension().getRegistryName().toString())){
-                player.sendMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
                 return InteractionResultHolder.fail(stack);
             }
             player.teleportToWithTicket(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
@@ -100,10 +98,10 @@ public class WarpScroll extends ModItem{
                     stack.shrink(1);
             }
             if(!didAdd){
-                player.sendMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));
                 return InteractionResultHolder.fail(stack);
             }else{
-                player.sendMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

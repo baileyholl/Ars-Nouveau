@@ -70,7 +70,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_BOOKWYRM;
+        return ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get();
     }
 
     @Override

@@ -55,7 +55,7 @@ public class WildenGuardian extends Monster implements IAnimatable, IAnimationLi
     }
 
     public WildenGuardian(Level worldIn) {
-        this(ModEntities.WILDEN_GUARDIAN, worldIn);
+        this(ModEntities.WILDEN_GUARDIAN.get(), worldIn);
     }
 
     @Override

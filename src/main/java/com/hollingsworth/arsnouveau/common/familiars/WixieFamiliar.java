@@ -15,7 +15,7 @@ public class WixieFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
-        FamiliarWixie wixie = new FamiliarWixie(ModEntities.ENTITY_FAMILIAR_WIXIE, world);
+        FamiliarWixie wixie = new FamiliarWixie(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), world);
         wixie.setTagData(tag);
         return wixie;
     }

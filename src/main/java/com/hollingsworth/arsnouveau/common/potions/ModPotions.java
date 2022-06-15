@@ -21,12 +21,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.ArrayList;
 
-@ObjectHolder(ArsNouveau.MODID)
 public class ModPotions {
 
+    //TODO change holders
     public static final ShieldEffect SHIELD_POTION = new ShieldEffect();
     public static final ShockedEffect SHOCKED_EFFECT = new ShockedEffect();
     public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
@@ -83,8 +84,8 @@ public class ModPotions {
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         @SubscribeEvent
-        public static void registerEffects(final RegistryEvent.Register<MobEffect> event) {
-            final IForgeRegistry<MobEffect> registry = event.getRegistry();
+        public static void registerEffects(final RegisterEvent event) {
+            final IForgeRegistry<MobEffect> registry = event.getForgeRegistry();
             registry.registerAll(SCRYING_EFFECT,
                     SHIELD_POTION,
                     MANA_REGEN_EFFECT,
@@ -103,15 +104,15 @@ public class ModPotions {
         }
 
         @SubscribeEvent
-        public static void registerPotions(final RegistryEvent.Register<Potion> event) {
-            final IForgeRegistry<Potion> registry = event.getRegistry();
+        public static void registerPotions(final RegisterEvent event) {
+            final IForgeRegistry<Potion> registry = event.getForgeRegistry();
 
-            registry.register(new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600)).setRegistryName(LibPotions.MANA_REGEN));
-            registry.register(new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 9600)).setRegistryName(LibPotions.MANA_REGEN_LONG));
-            registry.register(new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600, 1)).setRegistryName(LibPotions.MANA_REGEN_STRONG));
-            registry.register(new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600)).setRegistryName(LibPotions.SPELL_DAMAGE));
-            registry.register(new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 9600)).setRegistryName(LibPotions.SPELL_DAMAGE_LONG));
-            registry.register(new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600, 1)).setRegistryName(LibPotions.SPELL_DAMAGE_STRONG));
+            registry.register((LibPotions.MANA_REGEN), new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600)));
+            registry.register((LibPotions.MANA_REGEN_LONG), new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 9600)));
+            registry.register((LibPotions.MANA_REGEN_STRONG), new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600, 1)));
+            registry.register((LibPotions.SPELL_DAMAGE), new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600)));
+            registry.register((LibPotions.SPELL_DAMAGE_LONG), new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 9600)));
+            registry.register((LibPotions.SPELL_DAMAGE_STRONG), new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600, 1)));
         }
     }
 }

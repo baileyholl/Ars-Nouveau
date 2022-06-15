@@ -29,7 +29,6 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public int age;
-    //    int age;
     int maxAge;
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.ITEM_STACK);
@@ -37,7 +36,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
-        this(ModEntities.ENTITY_FLYING_ITEM, worldIn);
+        this(ModEntities.ENTITY_FLYING_ITEM.get(), worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
@@ -230,7 +229,7 @@ public class EntityFlyingItem extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FLYING_ITEM;
+        return ModEntities.ENTITY_FLYING_ITEM.get();
     }
 
     @Override
@@ -239,6 +238,6 @@ public class EntityFlyingItem extends ColoredProjectile {
     }
 
     public EntityFlyingItem(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.ENTITY_FLYING_ITEM, world);
+        super(ModEntities.ENTITY_FLYING_ITEM.get(), world);
     }
 }

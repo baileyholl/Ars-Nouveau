@@ -29,7 +29,7 @@ public class SconceBlock extends TickableModBlock {
     public static final Property<Integer> LIGHT_LEVEL = IntegerProperty.create("level", 0, 15);
 
     public SconceBlock() {
-        super(Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollission().lightLevel((b) -> b.getValue(LIGHT_LEVEL)), registryName);
+        super(Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollission().lightLevel((b) -> b.getValue(LIGHT_LEVEL)));
     }
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 

@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.ArsNouveauAPI.getRegistryName;
-
 public class GlyphRecipe implements Recipe<ScribesTile> {
 
     public static final String RECIPE_ID = "glyph";

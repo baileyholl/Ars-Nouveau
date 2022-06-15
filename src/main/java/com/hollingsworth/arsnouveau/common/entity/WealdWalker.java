@@ -16,7 +16,6 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -297,7 +296,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     }
 
     @Override
-    protected int getExperienceReward(Player p_70693_1_) {
+    public int getExperienceReward() {
         return 0;
     }
 

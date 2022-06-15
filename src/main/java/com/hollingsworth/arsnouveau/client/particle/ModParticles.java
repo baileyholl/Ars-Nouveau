@@ -12,15 +12,22 @@ import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModParticles {
-    @ObjectHolder(ArsNouveau.MODID + ":" + GlowParticleData.NAME) public static ParticleType<ColorParticleTypeData> GLOW_TYPE;
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME) public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleSparkleData.NAME) public static ParticleType<ColoredDynamicTypeData> SPARKLE_TYPE;
-    @ObjectHolder(ArsNouveau.MODID + ":" + VortexParticleData.NAME) public static ParticleType<ColorParticleTypeData> VORTEX_TYPE;
+
+    //TODO Fix this
+
+    @ObjectHolder(ArsNouveau.MODID + ":" + GlowParticleData.NAME)
+    public static ParticleType<ColorParticleTypeData> GLOW_TYPE;
+    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME)
+    public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
+    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleSparkleData.NAME)
+    public static ParticleType<ColoredDynamicTypeData> SPARKLE_TYPE;
+    @ObjectHolder(ArsNouveau.MODID + ":" + VortexParticleData.NAME)
+    public static ParticleType<ColorParticleTypeData> VORTEX_TYPE;
 
     @SubscribeEvent
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
         IForgeRegistry<ParticleType<?>> r = event.getRegistry();
-        r.register( new GlowParticleType().setRegistryName(GlowParticleData.NAME));
+        r.register(new GlowParticleType().setRegistryName(GlowParticleData.NAME));
         r.register( new LineParticleType().setRegistryName(ParticleLineData.NAME));
 
         r.register( new GlowParticleType().setRegistryName(ParticleSparkleData.NAME));

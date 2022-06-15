@@ -27,7 +27,7 @@ public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem> {
     }
 
     @Override
-    public ResourceLocation getTextureResource(EntityFlyingItem entity) {
+    public ResourceLocation getTextureLocation(EntityFlyingItem entity) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png");
     }
 }

@@ -38,7 +38,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
     }
 
     public WildenHunter(Level worldIn) {
-        this(ModEntities.WILDEN_HUNTER, worldIn);
+        this(ModEntities.WILDEN_HUNTER.get(), worldIn);
     }
 
     public int ramCooldown = 0;
@@ -67,7 +67,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 5;
     }
 

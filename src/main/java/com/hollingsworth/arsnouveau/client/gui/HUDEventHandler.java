@@ -42,8 +42,8 @@ public class HUDEventHandler {
 
         final Player player = minecraft.player;
 
-        spellHUD.drawHUD(event.getMatrixStack());
-        manaHUD.drawHUD(event.getMatrixStack(), event.getPartialTicks());
+        spellHUD.drawHUD(event.getPoseStack());
+        manaHUD.drawHUD(event.getPoseStack(), event.getPartialTick());
 
     }
 
@@ -57,10 +57,10 @@ public class HUDEventHandler {
           if(result.getEntity() instanceof ITooltipProvider) {
               List<Component> components = new ArrayList<>();
               ((ITooltipProvider) result.getEntity()).getTooltip(components);
-              entityHUD.drawHUD(event.getMatrixStack(), components);
+              entityHUD.drawHUD(event.getPoseStack(), components);
           }
           if(result.getEntity() instanceof ItemFrame){
-              scrollHUD.drawHUD(event.getMatrixStack(), (ItemFrame) result.getEntity());
+              scrollHUD.drawHUD(event.getPoseStack(), (ItemFrame) result.getEntity());
           }
 
         }
@@ -70,7 +70,7 @@ public class HUDEventHandler {
             if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider tooltipProvider){
                 List<Component> components = new ArrayList<>();
                 tooltipProvider.getTooltip(components);
-                entityHUD.drawHUD(event.getMatrixStack(), components);
+                entityHUD.drawHUD(event.getPoseStack(), components);
             }
         }
     }

@@ -43,7 +43,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     }
 
     public EntityDummy(Level world){
-        super(ModEntities.ENTITY_DUMMY, world);
+        super(ModEntities.ENTITY_DUMMY.get(), world);
     }
 
 

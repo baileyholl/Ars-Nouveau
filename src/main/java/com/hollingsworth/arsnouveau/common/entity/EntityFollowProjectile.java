@@ -29,7 +29,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     int maxAge = 500;
 
     public EntityFollowProjectile(Level world){
-        super(ModEntities.ENTITY_FOLLOW_PROJ, world, 0, 0,0);
+        super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world, 0, 0, 0);
     }
 
 
@@ -38,7 +38,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     }
 
     public EntityFollowProjectile(Level worldIn, Vec3 from, Vec3 to) {
-        this(ModEntities.ENTITY_FOLLOW_PROJ, worldIn);
+        this(ModEntities.ENTITY_FOLLOW_PROJ.get(), worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
@@ -181,12 +181,12 @@ public class EntityFollowProjectile extends ColoredProjectile {
     }
 
     public EntityFollowProjectile(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.ENTITY_FOLLOW_PROJ, world);
+        super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world);
     }
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FOLLOW_PROJ;
+        return ModEntities.ENTITY_FOLLOW_PROJ.get();
     }
     @Override
     public boolean isNoGravity() {

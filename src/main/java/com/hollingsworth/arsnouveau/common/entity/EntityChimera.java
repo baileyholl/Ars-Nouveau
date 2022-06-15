@@ -99,7 +99,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     }
 
     public EntityChimera(Level level) {
-        this(ModEntities.WILDEN_BOSS, level);
+        this(ModEntities.WILDEN_BOSS.get(), level);
     }
 
     @Override
@@ -340,25 +340,19 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
     public void getRandomUpgrade(){
         ArrayList<Integer> upgrades = new ArrayList<>();
-        if(!this.hasWings())
+        if (!this.hasWings())
             upgrades.add(0);
-        if(!this.hasSpikes())
+        if (!this.hasSpikes())
             upgrades.add(1);
-        if(!this.hasHorns())
+        if (!this.hasHorns())
             upgrades.add(2);
-        if(upgrades.isEmpty())
+        if (upgrades.isEmpty())
             return;
         int upgrade = upgrades.get(random.nextInt(upgrades.size()));
-        switch(upgrade){
-            case 0:
-                setWings(true);
-                return;
-            case 1:
-                setSpikes(true);
-                return;
-            case 2:
-                setHorns(true);
-                return;
+        switch (upgrade) {
+            case 0 -> setWings(true);
+            case 1 -> setSpikes(true);
+            case 2 -> setHorns(true);
         }
     }
 
@@ -373,18 +367,17 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
             return false;
 
         Entity entity = source.getEntity();
-        if(entity instanceof LivingEntity && !entity.equals(this)){
-            if(isDefensive() && !source.msgId.equals("thorns")){
-                if(!source.isBypassArmor() && BlockUtil.distanceFrom(entity.position, position) <= 3){
+        if (entity instanceof LivingEntity entity1 && !entity.equals(this)) {
+            if (isDefensive() && !source.msgId.equals("thorns")) {
+                if (!source.isBypassArmor() && BlockUtil.distanceFrom(entity.position, position) <= 3) {
                     entity.hurt(DamageSource.thorns(this), 6.0f);
                 }
             }
 
-            LivingEntity entity1 = (LivingEntity) entity;
             // Omit our summoned sources that might aggro or accidentally hurt us
-            if(entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
+            if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
                     || (entity instanceof ISummon && ((ISummon) entity).getOwnerID() != null && ((ISummon) entity).getOwnerID().equals(this.getUUID()))
-            || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
+                    || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }
 

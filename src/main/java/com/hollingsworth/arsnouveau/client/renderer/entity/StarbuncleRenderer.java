@@ -42,7 +42,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     public void renderEarly(Starbuncle animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.carbuncle = animatable;
         this.buffer = renderTypeBuffer;
-        this.text = this.getTextureResource(animatable);
+        this.text = this.getTextureLocation(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
 
@@ -82,7 +82,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     }
 
     @Override
-    public ResourceLocation getTextureResource(Starbuncle entity) {
+    public ResourceLocation getTextureLocation(Starbuncle entity) {
         return entity.isTamed() ? getColor(entity) : WILD_TEXTURE;
     }
 

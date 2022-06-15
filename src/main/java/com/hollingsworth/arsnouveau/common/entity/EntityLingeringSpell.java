@@ -29,15 +29,15 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     public int totalProcs;
 
     public EntityLingeringSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
-        super(ModEntities.LINGER_SPELL, worldIn);
+        super(ModEntities.LINGER_SPELL.get(), worldIn);
     }
 
     public EntityLingeringSpell(Level worldIn, double x, double y, double z) {
-        super(ModEntities.LINGER_SPELL, worldIn, x, y, z);
+        super(ModEntities.LINGER_SPELL.get(), worldIn, x, y, z);
     }
 
     public EntityLingeringSpell(Level worldIn, LivingEntity shooter) {
-        super(ModEntities.LINGER_SPELL, worldIn, shooter);
+        super(ModEntities.LINGER_SPELL.get(), worldIn, shooter);
     }
 
     public void setAccelerates(int accelerates){
@@ -112,12 +112,12 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     }
 
     public EntityLingeringSpell(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.LINGER_SPELL, world);
+        super(ModEntities.LINGER_SPELL.get(), world);
     }
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.LINGER_SPELL;
+        return ModEntities.LINGER_SPELL.get();
     }
 
     @Override

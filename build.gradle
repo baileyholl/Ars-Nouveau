@@ -142,7 +142,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.17'
+    minecraft 'net.minecraftforge:forge:1.19-41.0.32'
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")

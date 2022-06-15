@@ -1,18 +1,11 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
-import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
@@ -33,7 +26,7 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
     }
 
     @Override
-    public ResourceLocation getTextureResource(T entity) {
+    public ResourceLocation getTextureLocation(T entity) {
         return getColor(entity);
     }
 

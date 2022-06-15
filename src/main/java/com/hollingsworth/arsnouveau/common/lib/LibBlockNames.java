@@ -70,7 +70,7 @@ public class LibBlockNames {
     public final static String ARCHWOOD_SLABS = "archwood_slab";
     public final static String ARCHWOOD_SIGN = "archwood_wall_sign";
     public final static String ARCHWOOD_TRAPDOOR = "archwood_trapdoor";
-    public final static String ARCHWOOD_PPlate = "archwood_pressure_plate";
+    public final static String ARCHWOOD_PRESSURE_PLATE = "archwood_pressure_plate";
     public final static String ARCHWOOD_FENCE_GATE = "archwood_fence_gate";
     public final static String ARCHWOOD_FENCE = "archwood_fence";
     public final static String ARCHWOOD_DOOR = "archwood_door";

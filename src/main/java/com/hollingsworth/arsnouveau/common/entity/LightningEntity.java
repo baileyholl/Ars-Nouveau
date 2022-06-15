@@ -188,7 +188,7 @@ public class LightningEntity extends LightningBolt {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.LIGHTNING_ENTITY;
+        return ModEntities.LIGHTNING_ENTITY.get();
     }
 
     @Override
@@ -197,6 +197,6 @@ public class LightningEntity extends LightningBolt {
     }
 
     public LightningEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.LIGHTNING_ENTITY, world);
+        super(ModEntities.LIGHTNING_ENTITY.get(), world);
     }
 }

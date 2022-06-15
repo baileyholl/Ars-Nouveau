@@ -29,10 +29,10 @@ public class WildenSummon extends Goal {
         super.start();
         Networking.sendToNearby(entity.level, entity, new PacketAnimEntity(entity.getId(), WildenHunter.Animations.HOWL.ordinal()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.3f);
-        SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, entity.level);
+        SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), entity.level);
         wolf.ticksLeft = 400;
         wolf.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
-        SummonWolf wolf2 = new SummonWolf(ModEntities.SUMMON_WOLF, entity.level);
+        SummonWolf wolf2 = new SummonWolf(ModEntities.SUMMON_WOLF.get(), entity.level);
         wolf2.ticksLeft = 400;
         wolf2.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
         this.entity.summonCooldown = 400;

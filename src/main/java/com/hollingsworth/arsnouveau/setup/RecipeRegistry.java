@@ -32,13 +32,15 @@ public class RecipeRegistry {
     public static final RecipeSerializer<EnchantmentRecipe> ENCHANTMENT_SERIALIZER = new EnchantmentRecipe.Serializer();
     public static final RecipeSerializer<CrushRecipe> CRUSH_SERIALIZER = new CrushRecipe.Serializer();
     public static final RecipeSerializer<ImbuementRecipe> IMBUEMENT_SERIALIZER = new ImbuementRecipe.Serializer();
-    public static final RecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE =  new BookUpgradeRecipe.Serializer();
+    public static final RecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = new BookUpgradeRecipe.Serializer();
     public static final RecipeSerializer<PotionFlaskRecipe> POTION_FLASK_RECIPE = new PotionFlaskRecipe.Serializer();
     public static final RecipeSerializer<DyeRecipe> DYE_RECIPE = new DyeRecipe.Serializer();
     public static final RecipeSerializer<ReactiveEnchantmentRecipe> REACTIVE_RECIPE = new ReactiveEnchantmentRecipe.Serializer();
     public static final RecipeSerializer<SpellWriteRecipe> SPELL_WRITE_RECIPE = new SpellWriteRecipe.Serializer();
 
     public static final RecipeSerializer<GlyphRecipe> GLYPH_SERIALIZER = new GlyphRecipe.Serializer();
+
+    //TODO Fix this
 
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<RecipeSerializer<?>> evt) {

@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
-import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
@@ -16,8 +15,8 @@ import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
@@ -40,21 +39,28 @@ import net.minecraftforge.registries.RegisterEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
+
 public class BlockRegistry {
 
-    static final String ItemRegistryKey = "minecraft:item";
     static final String BlockRegistryKey = "minecraft:block";
     static final String BlockEntityRegistryKey = "minecraft:block_entity_type";
+
+    //@ObjectHolder( value = LibBlockNames.ARCANE_ROAD, registryName = BlockRegistryKey) public static TickableModBlock ARCANE_ROAD;
 
     public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of(Material.WOOD).strength(2.0F).sound(SoundType.WOOD);
 
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS);
 
-    @ObjectHolder( value = LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey) public static MageBlock MAGE_BLOCK;
-    @ObjectHolder( value = LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
+    @ObjectHolder(value = LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey)
+    public static MageBlock MAGE_BLOCK;
+    @ObjectHolder(value = LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
 
-    @ObjectHolder( value = LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey) public static LightBlock LIGHT_BLOCK;
-    @ObjectHolder( value = LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<LightTile> LIGHT_TILE;
+    @ObjectHolder(value = LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey)
+    public static LightBlock LIGHT_BLOCK;
+    @ObjectHolder(value = LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<LightTile> LIGHT_TILE;
     @ObjectHolder( value = LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
     @ObjectHolder( value = LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey) public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
 
@@ -70,10 +76,8 @@ public class BlockRegistry {
     @ObjectHolder( value = LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey) public static MageBloomCrop MAGE_BLOOM_CROP;
     @ObjectHolder( value = LibBlockNames.ARCANE_BRICKS, registryName = BlockRegistryKey) public static ModBlock ARCANE_BRICKS;
     @ObjectHolder( value = LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey) public static ScribesBlock SCRIBES_BLOCK;
-    @ObjectHolder( value = LibBlockNames.SUMMONING_CRYSTAL, registryName = BlockRegistryKey) public static SummoningCrystal SUMMONING_CRYSTAL;
     @ObjectHolder( value = LibBlockNames.SUMMONING_CRYSTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<SummoningCrystalTile> SUMMONING_CRYSTAL_TILE;
     @ObjectHolder( value = LibBlockNames.SCRIBES_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
-    @ObjectHolder( value = LibBlockNames.ARCANE_ROAD, registryName = BlockRegistryKey) public static TickableModBlock ARCANE_ROAD;
     @ObjectHolder( value = LibBlockNames.RELAY, registryName = BlockRegistryKey) public static Relay RELAY;
     @ObjectHolder( value = LibBlockNames.RUNE, registryName = BlockEntityRegistryKey) public static BlockEntityType<RuneTile> RUNE_TILE;
     @ObjectHolder( value = LibBlockNames.RUNE, registryName = BlockRegistryKey) public static RuneBlock RUNE_BLOCK;
@@ -146,9 +150,12 @@ public class BlockRegistry {
     @ObjectHolder( value = LibBlockNames.ARCHWOOD_SLABS, registryName = BlockRegistryKey) public static SlabBlock ARCHWOOD_SLABS;
    // @ObjectHolder( value = LibBlockNames.ARCHWOOD_SIGN, registryName = BlockRegistryKey) public static WallSignBlock ARCHWOOD_SIGN;
     @ObjectHolder( value = LibBlockNames.ARCHWOOD_FENCE_GATE, registryName = BlockRegistryKey) public static FenceGateBlock ARCHWOOD_FENCE_GATE;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_TRAPDOOR, registryName = BlockRegistryKey) public static TrapDoorBlock ARCHWOOD_TRAPDOOR;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_PPlate, registryName = BlockRegistryKey) public static PressurePlateBlock ARCHWOOD_PPlate;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_FENCE, registryName = BlockRegistryKey) public static FenceBlock ARCHWOOD_FENCE;
+    @ObjectHolder(value = LibBlockNames.ARCHWOOD_TRAPDOOR, registryName = BlockRegistryKey)
+    public static TrapDoorBlock ARCHWOOD_TRAPDOOR;
+    @ObjectHolder(value = LibBlockNames.ARCHWOOD_PRESSURE_PLATE, registryName = BlockRegistryKey)
+    public static PressurePlateBlock ARCHWOOD_PPlate;
+    @ObjectHolder(value = LibBlockNames.ARCHWOOD_FENCE, registryName = BlockRegistryKey)
+    public static FenceBlock ARCHWOOD_FENCE;
     @ObjectHolder( value = LibBlockNames.ARCHWOOD_DOOR, registryName = BlockRegistryKey) public static DoorBlock ARCHWOOD_DOOR;
 
     @ObjectHolder( value = LibBlockNames.STRIPPED_AWLOG_BLUE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_BLUE;
@@ -220,7 +227,8 @@ public class BlockRegistry {
     @ObjectHolder( value = LibBlockNames.YELLOW_SBED, registryName = BlockRegistryKey) public static SummonBed YELLOW_SBED;
     @ObjectHolder( value = LibBlockNames.PURPLE_SBED, registryName = BlockRegistryKey) public static SummonBed PURPLE_SBED;
 
-    @ObjectHolder( value = LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type") public static BlockStateProviderType stateProviderType;
+    @ObjectHolder(value = LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
+    public static BlockStateProviderType<?> stateProviderType;
 
     @ObjectHolder( value = LibBlockNames.SCRYERS_OCULUS, registryName = BlockRegistryKey) public static ScryersOculus SCRYERS_OCULUS;
     @ObjectHolder( value = LibBlockNames.SCRYERS_OCULUS, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScryersOculusTile> SCRYERS_OCULUS_TILE;
@@ -249,116 +257,133 @@ public class BlockRegistry {
 
         public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
+            //blocks
             registry.register(LibBlockNames.MAGE_BLOCK, new MageBlock());
-            registry.register(new LightBlock());
-            registry.register(new AgronomicSourcelinkBlock());
-            registry.register(new SourceJar());
-            registry.register(new MageBloomCrop());
-            registry.register(new EnchantingApparatusBlock());
-            registry.register(new ArcanePedestal());
-            registry.register(LibBlockNames.ARCANE_BRICKS,new ModBlock());
-            registry.register(new ScribesBlock());
-            registry.register(new Relay());
-            registry.register(new RuneBlock());
-            registry.register(new PortalBlock());
-            registry.register(new RelaySplitter());
-            registry.register(new ArcaneCore());
-            registry.register(LibBlockNames.AB_ALTERNATE,new ModBlock());
-            registry.register(LibBlockNames.ARCANE_STONE,new ModBlock());
-            registry.register(LibBlockNames.AB_BASKET,new ModBlock());
-            registry.register(LibBlockNames.AB_HERRING,new ModBlock());
-            registry.register(LibBlockNames.AB_MOSAIC,new ModBlock());
-            registry.register(new ImbuementBlock());
-            registry.register(new EnchantedSpellTurret());
-            registry.register(new RedstoneAir());
-            registry.register(new IntangibleAirBlock());
-            registry.register(new VolcanicSourcelinkBlock());
-            registry.register(new LavaLily());
-            registry.register(new SourceBerryBush(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
-            registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.CASCADING_TREE),SAP_PROP));
-            registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.BLAZING_TREE),SAP_PROP));
+            registry.register(LibBlockNames.LIGHT_BLOCK, new LightBlock());
+            registry.register(LibBlockNames.SOURCE_JAR, new SourceJar());
+            registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new CreativeSourceJar());
+            registry.register(LibBlockNames.SCRIBES_BLOCK, new ScribesBlock());
+            registry.register(LibBlockNames.MAGE_BLOOM, new MageBloomCrop());
+            registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new ImbuementBlock());
+            registry.register(LibBlockNames.ENCHANTING_APPARATUS, new EnchantingApparatusBlock());
+            registry.register(LibBlockNames.ARCANE_CORE, new ArcaneCore());
+            registry.register(LibBlockNames.ARCANE_PEDESTAL, new ArcanePedestal());
+            registry.register(LibBlockNames.RITUAL_BRAZIER, new RitualBrazierBlock());
+            registry.register(LibBlockNames.RUNE, new RuneBlock());
+            registry.register(LibBlockNames.PORTAL, new PortalBlock());
+            registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
+
+            //Relay and turrets
+            registry.register(LibBlockNames.RELAY, new Relay());
+            registry.register(LibBlockNames.RELAY_SPLITTER, new RelaySplitter());
+            registry.register(LibBlockNames.RELAY_DEPOSIT, new RelayDepositBlock());
+            registry.register(LibBlockNames.RELAY_WARP, new RelayWarpBlock());
+            registry.register(LibBlockNames.RELAY_COLLECTOR, new RelayCollectorBlock());
+            registry.register(LibBlockNames.BASIC_SPELL_TURRET, new BasicSpellTurret());
+            registry.register(LibBlockNames.TIMER_SPELL_TURRET, new TimerSpellTurret());
+            registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, new EnchantedSpellTurret());
+
+            //Misc
+            registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
+            registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
+            registry.register(LibBlockNames.REDSTONE_AIR, new RedstoneAir());
+            registry.register(LibBlockNames.INTANGIBLE_AIR, new IntangibleAirBlock());
+
+            //Trees & co
+            registry.register(LibBlockNames.LAVA_LILY, new LavaLily());
+            registry.register(LibBlockNames.SOURCEBERRY_BUSH, new SourceBerryBush(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
+            registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.CASCADING_TREE), SAP_PROP));
+            registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.BLAZING_TREE), SAP_PROP));
             registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.VEXING_TREE), SAP_PROP));
-            registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.FLOURISHING_TREE),SAP_PROP));
-            registry.register(new WixieCauldron());
-            registry.register(new CreativeSourceJar());
-            registry.register(LibBlockNames.AB_SMOOTH,new ModBlock());
-            registry.register(LibBlockNames.AB_SMOOTH_SLAB,new ModBlock());
-            registry.register(LibBlockNames.AB_CLOVER,new ModBlock());
+            registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.FLOURISHING_TREE), SAP_PROP));
+
+
             registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
             registry.register(LibBlockNames.CASCADING_LEAVES, createLeavesBlock());
-            registry.register(LibBlockNames.BLAZING_LOG, new StrippableLog(LOG_PROP, () ->BlockRegistry.STRIPPED_AWLOG_RED));
+            registry.register(LibBlockNames.BLAZING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_RED));
             registry.register(LibBlockNames.BLAZING_LEAVES, createLeavesBlock());
-            registry.register(LibBlockNames.FLOURISHING_LOG, new StrippableLog(LOG_PROP, () ->BlockRegistry.STRIPPED_AWLOG_GREEN));
+            registry.register(LibBlockNames.FLOURISHING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_GREEN));
             registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock());
-            registry.register(LibBlockNames.VEXING_LOG, new StrippableLog(LOG_PROP, () ->BlockRegistry.STRIPPED_AWLOG_PURPLE));
+            registry.register(LibBlockNames.VEXING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_PURPLE));
             registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock());
 
-            registry.register(LibBlockNames.VEXING_WOOD, new StrippableLog(LOG_PROP,  () ->BlockRegistry.STRIPPED_AWWOOD_PURPLE));
-            registry.register(LibBlockNames.CASCADING_WOOD, new StrippableLog(LOG_PROP, () ->BlockRegistry.STRIPPED_AWWOOD_BLUE));
-            registry.register(LibBlockNames.FLOURISHING_WOOD,new StrippableLog(LOG_PROP,  () ->BlockRegistry.STRIPPED_AWWOOD_GREEN));
-            registry.register(LibBlockNames.BLAZING_WOOD, new StrippableLog(LOG_PROP, () ->BlockRegistry.STRIPPED_AWWOOD_RED));
+            registry.register(LibBlockNames.VEXING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_PURPLE));
+            registry.register(LibBlockNames.CASCADING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_BLUE));
+            registry.register(LibBlockNames.FLOURISHING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_GREEN));
+            registry.register(LibBlockNames.BLAZING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_RED));
             registry.register(LibBlockNames.ARCHWOOD_PLANK, new ModBlock(LOG_PROP));
-            registry.register(LibBlockNames.RITUAL_BRAZIER, new RitualBrazierBlock());
-            registry.register((LibBlockNames.ARCHWOOD_BUTTON), new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
-            registry.register((LibBlockNames.ARCHWOOD_STAIRS), new StairBlock(()-> ARCHWOOD_PLANK.defaultBlockState(),woodProp));
-            registry.register((LibBlockNames.ARCHWOOD_SLABS), new SlabBlock(woodProp));
-            registry.register((LibBlockNames.ARCHWOOD_FENCE_GATE), new FenceGateBlock(woodProp));
-            registry.register((LibBlockNames.ARCHWOOD_FENCE), new FenceBlock(woodProp));
-            registry.register((LibBlockNames.ARCHWOOD_DOOR), new DoorBlock(woodProp));
-            registry.register((LibBlockNames.ARCHWOOD_PPlate), new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProp));
-            registry.register((LibBlockNames.ARCHWOOD_TRAPDOOR), new TrapDoorBlock(woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_BUTTON, new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+            registry.register(LibBlockNames.ARCHWOOD_STAIRS, new StairBlock(() -> ARCHWOOD_PLANK.defaultBlockState(), woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_SLABS, new SlabBlock(woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, new FenceGateBlock(woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_FENCE, new FenceBlock(woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_DOOR, new DoorBlock(woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_TRAPDOOR, new TrapDoorBlock(woodProp));
+            registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest());
 
-            registry.register((LibBlockNames.STRIPPED_AWLOG_BLUE), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWWOOD_BLUE), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWLOG_GREEN), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWWOOD_GREEN), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWLOG_RED), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWWOOD_RED), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWLOG_PURPLE), new RotatedPillarBlock(LOG_PROP));
-            registry.register((LibBlockNames.STRIPPED_AWWOOD_PURPLE), new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWLOG_BLUE, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWWOOD_BLUE, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWLOG_GREEN, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWWOOD_GREEN, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWLOG_RED, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWWOOD_RED, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWLOG_PURPLE, new RotatedPillarBlock(LOG_PROP));
+            registry.register(LibBlockNames.STRIPPED_AWWOOD_PURPLE, new RotatedPillarBlock(LOG_PROP));
             registry.register(LibBlockNames.SOURCE_GEM_BLOCK, new ModBlock(ModBlock.defaultProperties().noOcclusion().lightLevel(s -> 6)));
             registry.register(LibBlockNames.POTION_JAR_BLOCK, new PotionJar(ModBlock.defaultProperties().noOcclusion()));
             registry.register(LibBlockNames.POTION_MELDER_BLOCK, new PotionMelder(ModBlock.defaultProperties().noOcclusion()));
 
+            registry.register(LibBlockNames.ARCANE_BRICKS, new ModBlock());
+
             registry.register(LibBlockNames.AB_SMOOTH_BASKET, new ModBlock());
-            registry.register(LibBlockNames.AB_SMOOTH_CLOVER,new ModBlock());
-            registry.register(LibBlockNames.AB_SMOOTH_HERRING,new ModBlock());
-            registry.register(LibBlockNames.AB_SMOOTH_MOSAIC,new ModBlock());
-            registry.register(LibBlockNames.AB_SMOOTH_ALTERNATING,new ModBlock());
-            registry.register(LibBlockNames.AB_SMOOTH_ASHLAR,new ModBlock());
+            registry.register(LibBlockNames.AB_SMOOTH_CLOVER, new ModBlock());
+            registry.register(LibBlockNames.AB_SMOOTH_HERRING, new ModBlock());
+            registry.register(LibBlockNames.AB_SMOOTH_MOSAIC, new ModBlock());
+            registry.register(LibBlockNames.AB_SMOOTH_ALTERNATING, new ModBlock());
+            registry.register(LibBlockNames.AB_SMOOTH_ASHLAR, new ModBlock());
 
-            registry.register(LibBlockNames.AS_GOLD_ALT,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_ASHLAR,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_BASKET,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_CLOVER,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_HERRING,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_MOSAIC,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_SLAB,new ModBlock());
-            registry.register(LibBlockNames.AS_GOLD_STONE,new ModBlock());
+            registry.register(LibBlockNames.AB_ALTERNATE, new ModBlock());
+            registry.register(LibBlockNames.ARCANE_STONE, new ModBlock());
+            registry.register(LibBlockNames.AB_BASKET, new ModBlock());
+            registry.register(LibBlockNames.AB_HERRING, new ModBlock());
+            registry.register(LibBlockNames.AB_MOSAIC, new ModBlock());
 
-            registry.register(LibBlockNames.SCONCE,new SconceBlock());
-            registry.register(new DrygmyStone());
-            registry.register(new AlchemicalSourcelinkBlock());
-            registry.register(new VitalicSourcelinkBlock());
-            registry.register(new MycelialSourcelinkBlock());
-            registry.register(new RelayDepositBlock());
-            registry.register(new RelayWarpBlock());
+            registry.register(LibBlockNames.AB_SMOOTH, new ModBlock());
+            registry.register(LibBlockNames.AB_SMOOTH_SLAB, new ModBlock());
+            registry.register(LibBlockNames.AB_CLOVER, new ModBlock());
+
+            registry.register(LibBlockNames.AS_GOLD_ALT, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_ASHLAR, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_BASKET, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_CLOVER, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_HERRING, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_MOSAIC, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_SLAB, new ModBlock());
+            registry.register(LibBlockNames.AS_GOLD_STONE, new ModBlock());
+
+            //Sourcelinks
+            registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
+            registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new AgronomicSourcelinkBlock());
+            registry.register(LibBlockNames.VITALIC_SOURCELINK, new VitalicSourcelinkBlock());
+            registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new MycelialSourcelinkBlock());
+            registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new VolcanicSourcelinkBlock());
+
+            //SummonBlocks
             registry.register(LibBlockNames.BOOKWYRM_LECTERN, new BookwyrmLectern(ModBlock.defaultProperties().noOcclusion()));
-            registry.register(new BasicSpellTurret());
-            registry.register(new TimerSpellTurret());
-            registry.register((LibBlockNames.ARCHWOOD_CHEST), new ArchwoodChest());
-            registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
+            registry.register(LibBlockNames.WIXIE_CAULDRON, new WixieCauldron());
             registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
-            registry.register(LibBlockNames.RELAY_COLLECTOR, new RelayCollectorBlock());
+            registry.register(LibBlockNames.SCONCE, new SconceBlock());
+            registry.register(LibBlockNames.DRYGMY_STONE, new DrygmyStone());
 
-            registry.register(new SummonBed(LibBlockNames.RED_SBED));
-            registry.register(new SummonBed(LibBlockNames.BLUE_SBED));
-            registry.register(new SummonBed(LibBlockNames.GREEN_SBED));
-            registry.register(new SummonBed(LibBlockNames.ORANGE_SBED));
-            registry.register(new SummonBed(LibBlockNames.YELLOW_SBED));
-            registry.register(new SummonBed(LibBlockNames.PURPLE_SBED));
-            registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
-            registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
+            //Beds
+            registry.register(LibBlockNames.RED_SBED, new SummonBed());
+            registry.register(LibBlockNames.BLUE_SBED, new SummonBed());
+            registry.register(LibBlockNames.GREEN_SBED, new SummonBed());
+            registry.register(LibBlockNames.ORANGE_SBED, new SummonBed());
+            registry.register(LibBlockNames.YELLOW_SBED, new SummonBed());
+            registry.register(LibBlockNames.PURPLE_SBED, new SummonBed());
+
         }
         static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -367,7 +392,7 @@ public class BlockRegistry {
         }
 
 
-
+        @SuppressWarnings("ConstantConditions")
         public static void onTileEntityRegistry(IForgeRegistry<BlockEntityType<?>> registry) {
 
             registry.register(LibBlockNames.MAGE_BLOCK, BlockEntityType.Builder.of(MageBlockTile::new, BlockRegistry.MAGE_BLOCK).build(null));
@@ -411,84 +436,83 @@ public class BlockRegistry {
 
         public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
 
-            Item berry = new BlockItem(BlockRegistry.SOURCEBERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD));
-            registry.register(LibItemNames.SOURCE_BERRY,berry);
-            registry.register(LibBlockNames.MAGE_BLOCK, new BlockItem(BlockRegistry.MAGE_BLOCK, ItemsRegistry.defaultItemProperties()));
+            registry.register(LibItemNames.SOURCE_BERRY, new BlockItem(BlockRegistry.SOURCEBERRY_BUSH, defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)));
+            registry.register(LibBlockNames.MAGE_BLOCK, new BlockItem(BlockRegistry.MAGE_BLOCK, defaultItemProperties()));
             registry.register(LibBlockNames.LIGHT_BLOCK, new BlockItem(BlockRegistry.LIGHT_BLOCK, new Item.Properties()));
-            registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new RendererBlockItem(BlockRegistry.AGRONOMIC_SOURCELINK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return AgronomicRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.SOURCE_JAR, new BlockItem(BlockRegistry.SOURCE_JAR, ItemsRegistry.defaultItemProperties()));
-            registry.register(LibBlockNames.MAGE_BLOOM, new BlockItem(BlockRegistry.MAGE_BLOOM_CROP, ItemsRegistry.defaultItemProperties()));
-            registry.register(LibBlockNames.ENCHANTING_APPARATUS, new RendererBlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("enchanting_apparatus");
-                            }
-                        });
-            registry.register(LibBlockNames.ARCANE_PEDESTAL, new BlockItem(BlockRegistry.ARCANE_PEDESTAL, ItemsRegistry.defaultItemProperties()));
-            registry.register(LibBlockNames.ARCANE_BRICKS, new BlockItem(BlockRegistry.ARCANE_BRICKS, ItemsRegistry.defaultItemProperties()));
-            registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return ScribesRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.RELAY, new RendererBlockItem(BlockRegistry.RELAY, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("source_relay");
-                            }
-                        });
-            registry.register(LibBlockNames.RUNE, new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()));
+            registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new RendererBlockItem(BlockRegistry.AGRONOMIC_SOURCELINK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return AgronomicRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.SOURCE_JAR, new BlockItem(BlockRegistry.SOURCE_JAR, defaultItemProperties()));
+            registry.register(LibBlockNames.MAGE_BLOOM, new BlockItem(BlockRegistry.MAGE_BLOOM_CROP, defaultItemProperties()));
+            registry.register(LibBlockNames.ENCHANTING_APPARATUS, new RendererBlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("enchanting_apparatus");
+                }
+            });
+            registry.register(LibBlockNames.ARCANE_PEDESTAL, new BlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()));
+            registry.register(LibBlockNames.ARCANE_BRICKS, new BlockItem(BlockRegistry.ARCANE_BRICKS, defaultItemProperties()));
+            registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return ScribesRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.RELAY, new RendererBlockItem(BlockRegistry.RELAY, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("source_relay");
+                }
+            });
+            registry.register(LibBlockNames.RUNE, new BlockItem(BlockRegistry.RUNE_BLOCK, new Item.Properties()));
             registry.register(LibBlockNames.PORTAL, new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()));
-            registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("source_splitter");
-                            }
-                        });
-            registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("imbuement_chamber");
-                            }
-                        });
-            registry.register(LibBlockNames.ARCANE_CORE, new RendererBlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return ArcaneCoreRenderer::getISTER;
-                            }
-                        });
+            registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("source_splitter");
+                }
+            });
+            registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("imbuement_chamber");
+                }
+            });
+            registry.register(LibBlockNames.ARCANE_CORE, new RendererBlockItem(BlockRegistry.ARCANE_CORE_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return ArcaneCoreRenderer::getISTER;
+                }
+            });
             registry.register(LibBlockNames.AB_ALTERNATE,getDefaultBlockItem(BlockRegistry.AB_ALTERNATE));
-            registry.register(LibBlockNames.AB_BASKET,getDefaultBlockItem(BlockRegistry.AB_BASKET));
-            registry.register(LibBlockNames.AB_HERRING,getDefaultBlockItem(BlockRegistry.AB_HERRING));
-            registry.register(LibBlockNames.AB_MOSAIC,getDefaultBlockItem(BlockRegistry.AB_MOSAIC));
-            registry.register(LibBlockNames.ARCANE_STONE,getDefaultBlockItem(BlockRegistry.ARCANE_STONE));
-            registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().fireResistant()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return  VolcanicRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.LAVA_LILY, new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().fireResistant()));
-            registry.register(LibBlockNames.WIXIE_CAULDRON, new BlockItem(BlockRegistry.WIXIE_CAULDRON, ItemsRegistry.defaultItemProperties()));
-            registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new BlockItem(BlockRegistry.CREATIVE_SOURCE_JAR, ItemsRegistry.defaultItemProperties()));
-            registry.register(LibBlockNames.RELAY_WARP, new RendererBlockItem(BlockRegistry.RELAY_WARP, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("source_warp");
-                            }
-                        });
-            registry.register(LibBlockNames.RELAY_DEPOSIT, new RendererBlockItem(BlockRegistry.RELAY_DEPOSIT, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("source_deposit");
-                            }
-                        });
+            registry.register(LibBlockNames.AB_BASKET, getDefaultBlockItem(BlockRegistry.AB_BASKET));
+            registry.register(LibBlockNames.AB_HERRING, getDefaultBlockItem(BlockRegistry.AB_HERRING));
+            registry.register(LibBlockNames.AB_MOSAIC, getDefaultBlockItem(BlockRegistry.AB_MOSAIC));
+            registry.register(LibBlockNames.ARCANE_STONE, getDefaultBlockItem(BlockRegistry.ARCANE_STONE));
+            registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VOLCANIC_BLOCK, defaultItemProperties().fireResistant()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return VolcanicRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.LAVA_LILY, new FluidBlockItem(BlockRegistry.LAVA_LILY, defaultItemProperties().fireResistant()));
+            registry.register(LibBlockNames.WIXIE_CAULDRON, new BlockItem(BlockRegistry.WIXIE_CAULDRON, defaultItemProperties()));
+            registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new BlockItem(BlockRegistry.CREATIVE_SOURCE_JAR, defaultItemProperties()));
+            registry.register(LibBlockNames.RELAY_WARP, new RendererBlockItem(BlockRegistry.RELAY_WARP, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("source_warp");
+                }
+            });
+            registry.register(LibBlockNames.RELAY_DEPOSIT, new RendererBlockItem(BlockRegistry.RELAY_DEPOSIT, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("source_deposit");
+                }
+            });
 //
             registry.register(LibBlockNames.AB_SMOOTH_SLAB, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_SLAB));
             registry.register(LibBlockNames.AB_SMOOTH, getDefaultBlockItem(BlockRegistry.AB_SMOOTH));
@@ -511,19 +535,19 @@ public class BlockRegistry {
             registry.register(LibBlockNames.BLAZING_WOOD, getDefaultBlockItem(BlockRegistry.BLAZING_WOOD));
             registry.register(LibBlockNames.ARCHWOOD_PLANK, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK));
             registry.register(LibBlockNames.RITUAL_BRAZIER, new RendererBlockItem(BlockRegistry.RITUAL_BLOCK,
-                                ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return  RitualBrazierRenderer::getISTER;
-                            }
-                        });
+                    defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return RitualBrazierRenderer::getISTER;
+                }
+            });
 
             registry.register(LibBlockNames.ARCHWOOD_BUTTON, getDefaultBlockItem(BlockRegistry.ARCHWOOD_BUTTON));
             registry.register(LibBlockNames.ARCHWOOD_STAIRS, getDefaultBlockItem(BlockRegistry.ARCHWOOD_STAIRS));
             registry.register(LibBlockNames.ARCHWOOD_SLABS, getDefaultBlockItem(BlockRegistry.ARCHWOOD_SLABS));
             registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, getDefaultBlockItem(BlockRegistry.ARCHWOOD_FENCE_GATE));
             registry.register(LibBlockNames.ARCHWOOD_TRAPDOOR, getDefaultBlockItem(BlockRegistry.ARCHWOOD_TRAPDOOR));
-            registry.register(LibBlockNames.ARCHWOOD_PPlate, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PPlate));
+            registry.register(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PPlate));
             registry.register(LibBlockNames.ARCHWOOD_FENCE, getDefaultBlockItem(BlockRegistry.ARCHWOOD_FENCE));
             registry.register(LibBlockNames.ARCHWOOD_DOOR, getDefaultBlockItem(BlockRegistry.ARCHWOOD_DOOR));
 
@@ -540,12 +564,12 @@ public class BlockRegistry {
             //ComposterBlock.COMPOSTABLES.put(BlockRegistry.MAGE_BLOOM_CROP.asItem(), 0.3f);
 
             registry.register(LibBlockNames.POTION_JAR_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_JAR));
-            registry.register(LibBlockNames.POTION_MELDER_BLOCK, new RendererBlockItem(BlockRegistry.POTION_MELDER, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return PotionMelderRenderer::getISTER;
-                            }
-                        });
+            registry.register(LibBlockNames.POTION_MELDER_BLOCK, new RendererBlockItem(BlockRegistry.POTION_MELDER, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return PotionMelderRenderer::getISTER;
+                }
+            });
 
             registry.register(LibBlockNames.AB_SMOOTH_BASKET, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_BASKET));
             registry.register(LibBlockNames.AB_SMOOTH_CLOVER, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_CLOVER));
@@ -564,57 +588,57 @@ public class BlockRegistry {
             registry.register(LibBlockNames.AS_GOLD_MOSAIC, getDefaultBlockItem(BlockRegistry.AS_GOLD_MOSAIC));
             registry.register(LibBlockNames.AS_GOLD_SLAB, getDefaultBlockItem(BlockRegistry.AS_GOLD_SLAB));
             registry.register(LibBlockNames.AS_GOLD_STONE, getDefaultBlockItem(BlockRegistry.AS_GOLD_STONE));
-            registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new RendererBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return  AlchemicalRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.VITALIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return VitalicRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new RendererBlockItem(BlockRegistry.MYCELIAL_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return MycelialRenderer::getISTER;
-                            }
-                        });
+            registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new RendererBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return AlchemicalRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.VITALIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VITALIC_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return VitalicRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new RendererBlockItem(BlockRegistry.MYCELIAL_BLOCK, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return MycelialRenderer::getISTER;
+                }
+            });
             registry.register(LibBlockNames.BOOKWYRM_LECTERN, getDefaultBlockItem(BlockRegistry.BOOKWYRM_LECTERN));
-            registry.register(LibBlockNames.TIMER_SPELL_TURRET, new RendererBlockItem(BlockRegistry.TIMER_SPELL_TURRET, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return  TimerTurretRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.BASIC_SPELL_TURRET, new RendererBlockItem(BlockRegistry.BASIC_SPELL_TURRET, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return  BasicTurretRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, new RendererBlockItem(BlockRegistry.ENCHANTED_SPELL_TURRET, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return ReducerTurretRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest.Item(BlockRegistry.ARCHWOOD_CHEST, ItemsRegistry.defaultItemProperties()));
+            registry.register(LibBlockNames.TIMER_SPELL_TURRET, new RendererBlockItem(BlockRegistry.TIMER_SPELL_TURRET, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return TimerTurretRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.BASIC_SPELL_TURRET, new RendererBlockItem(BlockRegistry.BASIC_SPELL_TURRET, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return BasicTurretRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, new RendererBlockItem(BlockRegistry.ENCHANTED_SPELL_TURRET, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return ReducerTurretRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest.Item(BlockRegistry.ARCHWOOD_CHEST, defaultItemProperties()));
             registry.register(LibBlockNames.SPELL_PRISM, getDefaultBlockItem(BlockRegistry.SPELL_PRISM));
-            registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new RendererBlockItem(BlockRegistry.WHIRLISPRIG_FLOWER, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return  WhirlisprigFlowerRenderer::getISTER;
-                            }
-                        });
-            registry.register(LibBlockNames.RELAY_COLLECTOR, new RendererBlockItem(BlockRegistry.RELAY_COLLECTOR, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return GenericRenderer.getISTER("source_collector");
-                            }
-                        });
+            registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new RendererBlockItem(BlockRegistry.WHIRLISPRIG_FLOWER, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return WhirlisprigFlowerRenderer::getISTER;
+                }
+            });
+            registry.register(LibBlockNames.RELAY_COLLECTOR, new RendererBlockItem(BlockRegistry.RELAY_COLLECTOR, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("source_collector");
+                }
+            });
             registry.register(LibBlockNames.RED_SBED, getDefaultBlockItem(BlockRegistry.RED_SBED));
             registry.register(LibBlockNames.BLUE_SBED, getDefaultBlockItem(BlockRegistry.BLUE_SBED));
             registry.register(LibBlockNames.GREEN_SBED, getDefaultBlockItem(BlockRegistry.GREEN_SBED));
@@ -622,16 +646,16 @@ public class BlockRegistry {
             registry.register(LibBlockNames.PURPLE_SBED, getDefaultBlockItem(BlockRegistry.PURPLE_SBED));
             registry.register(LibBlockNames.ORANGE_SBED, getDefaultBlockItem(BlockRegistry.ORANGE_SBED));
             registry.register(LibBlockNames.SCRYERS_CRYSTAL, getDefaultBlockItem(BlockRegistry.SCRYERS_CRYSTAL));
-            registry.register(LibBlockNames.SCRYERS_OCULUS, new RendererBlockItem(BlockRegistry.SCRYERS_OCULUS, ItemsRegistry.defaultItemProperties()) {
-                            @Override
-                            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                                return ScryerEyeRenderer::getISTER;
-                            }
-                        }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
+            registry.register(LibBlockNames.SCRYERS_OCULUS, new RendererBlockItem(BlockRegistry.SCRYERS_OCULUS, defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return ScryerEyeRenderer::getISTER;
+                }
+            }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
         }
 
         public static ModBlockItem getDefaultBlockItem(Block block){
-            return new ModBlockItem(block, ItemsRegistry.defaultItemProperties());
+            return new ModBlockItem(block, defaultItemProperties());
         }
 
         @SubscribeEvent

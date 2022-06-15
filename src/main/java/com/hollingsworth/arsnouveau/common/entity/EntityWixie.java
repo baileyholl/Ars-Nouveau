@@ -73,13 +73,14 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     private <P extends IAnimatable> PlayState summonPredicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
     }
+
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 
-    AnimationController summonController;
-    AnimationController castController;
+    AnimationController<?> summonController;
+    AnimationController<?> castController;
 
     @Override
     public void registerControllers(AnimationData animationData) {
@@ -102,7 +103,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     public EntityWixie(Level world, boolean isTamed, BlockPos pos) {
-        super(ModEntities.ENTITY_WIXIE_TYPE, world);
+        super(ModEntities.ENTITY_WIXIE_TYPE.get(), world);
         this.cauldronPos = pos;
         this.moveControl =  new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);

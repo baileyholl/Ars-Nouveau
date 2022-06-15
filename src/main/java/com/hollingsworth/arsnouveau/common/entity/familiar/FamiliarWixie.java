@@ -95,13 +95,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_WIXIE;
+        return ModEntities.ENTITY_FAMILIAR_WIXIE.get();
     }
 
     @Override
     public void startAnimation(int arg) {
         if(arg == EntityWixie.Animations.CAST.ordinal()){
-            AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
+            AnimationController<?> controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
         }

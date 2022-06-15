@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.BlockPos;
@@ -20,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class ImbuementBlock extends TickableModBlock {
     public ImbuementBlock() {
-        super(defaultProperties().noOcclusion(), LibBlockNames.IMBUEMENT_CHAMBER);
+        super(defaultProperties().noOcclusion());
     }
 
     @Override

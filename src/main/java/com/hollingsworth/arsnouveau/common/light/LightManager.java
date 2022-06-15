@@ -41,9 +41,9 @@ public class LightManager {
         register(EntityType.PLAYER, (p ->{
             if(p instanceof Player player){
                 NonNullList<ItemStack> list =  player.inventory.items;
-                for(int i = 0; i < 9; i++){
+                for (int i = 0; i < 9; i++) {
                     ItemStack jar = list.get(i);
-                    if(jar.getItem() == ItemsRegistry.JAR_OF_LIGHT){
+                    if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT) {
                         return 15;
                     }
                 }
@@ -51,20 +51,20 @@ public class LightManager {
 
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
-        register(ModEntities.ENTITY_FLYING_ITEM, (p -> 10));
-        register(ModEntities.ENTITY_FOLLOW_PROJ, (p -> 10));
-        register(ModEntities.SPELL_PROJ, (p -> 15));
-        register(ModEntities.ORBIT_SPELL, (p -> 15));
-        register(ModEntities.LINGER_SPELL, (p -> 15));
-        register(ModEntities.STARBUNCLE_TYPE, (p ->{
-            if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){
+        register(ModEntities.ENTITY_FLYING_ITEM.get(), (p -> 10));
+        register(ModEntities.ENTITY_FOLLOW_PROJ.get(), (p -> 10));
+        register(ModEntities.SPELL_PROJ.get(), (p -> 15));
+        register(ModEntities.ORBIT_SPELL.get(), (p -> 15));
+        register(ModEntities.LINGER_SPELL.get(), (p -> 15));
+        register(ModEntities.STARBUNCLE_TYPE.get(), (p -> {
+            if (p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6) {
                 return 10;
             }
             return 0;
         }));
 
-        register(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, (p ->{
-            if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){
+        register(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (p -> {
+            if (p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6) {
                 return 10;
             }
             return 0;

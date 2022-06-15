@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import net.minecraft.util.RandomSource;
+
 import javax.annotation.Nonnull;
-import java.util.Random;
 
 /**
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
@@ -24,7 +25,7 @@ public class ParticleColor implements Cloneable{
         this((int)red,(int) green,(int) blue);
     }
 
-    public static ParticleColor makeRandomColor(int r, int g, int b, Random random){
+    public static ParticleColor makeRandomColor(int r, int g, int b, RandomSource random) {
         return new ParticleColor(random.nextInt(r), random.nextInt(g), random.nextInt(b));
     }
 

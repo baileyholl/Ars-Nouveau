@@ -1,15 +1,23 @@
 package com.hollingsworth.arsnouveau.api;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-
-import java.util.List;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class RegistryHelper {
-    /**
-     * Helper method for generating a folder of configs for a given spell. This conforms to the AN config spec and is highly recommended.
-     */
-    @Deprecated
-    public static void generateConfig(String modID, List<AbstractSpellPart> glyphs){
-        //no use for this function anymore, but it's not safe to remove it as other addons might use it.
+
+    public static ResourceLocation getRegistryName(Item i) {
+        return ForgeRegistries.ITEMS.getKey(i);
     }
+
+    public static ResourceLocation getRegistryName(Block b) {
+        return ForgeRegistries.BLOCKS.getKey(b);
+    }
+
+    public static ResourceLocation getRegistryName(Enchantment e) {
+        return ForgeRegistries.ENCHANTMENTS.getKey(e);
+    }
+
 }

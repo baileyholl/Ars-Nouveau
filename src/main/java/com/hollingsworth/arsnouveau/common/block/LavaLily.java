@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -23,7 +22,6 @@ public class LavaLily extends BushBlock {
 
     public LavaLily() {
         super(TickableModBlock.defaultProperties().noOcclusion());
-        setRegistryName(LibBlockNames.LAVA_LILY);
     }
 
     @Override

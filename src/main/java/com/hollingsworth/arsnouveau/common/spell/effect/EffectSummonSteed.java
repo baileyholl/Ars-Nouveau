@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -38,7 +38,7 @@ public class EffectSummonSteed extends AbstractEffect {
         int ticks = (int) (20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         Vec3 hit = rayTraceResult.getLocation();
         for(int i = 0; i < 1 + Math.round(spellStats.getAoeMultiplier()); i++){
-            SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
+            SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE.get(), world);
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;
             horse.tameWithName((Player) shooter);

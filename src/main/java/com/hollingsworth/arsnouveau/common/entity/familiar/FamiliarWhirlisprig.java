@@ -96,7 +96,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_SYLPH;
+        return ModEntities.ENTITY_FAMILIAR_SYLPH.get();
     }
 
     @Override

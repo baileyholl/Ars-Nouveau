@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,14 +14,13 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 public abstract class AbstractRitual {
 
     public RitualBrazierTile tile;
     private RitualContext context;
 
-    public Random rand = new Random();
+    public RandomSource rand = RandomSource.create();
 
     public AbstractRitual() { }
 

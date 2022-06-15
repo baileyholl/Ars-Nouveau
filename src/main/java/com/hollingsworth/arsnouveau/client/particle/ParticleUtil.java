@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -117,23 +118,24 @@ public class ParticleUtil {
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 
-    public static void spawnRitualAreaEffect(BlockEntity entity, Random rand, ParticleColor color, int range){
+    public static void spawnRitualAreaEffect(BlockEntity entity, RandomSource rand, ParticleColor color, int range) {
         spawnRitualAreaEffect(entity.getBlockPos(), entity.getLevel(), rand, color, range);
     }
 
-    public static void spawnRitualAreaEffect(BlockPos pos, Level world, Random rand, ParticleColor color, int range){
+    public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range) {
         spawnRitualAreaEffect(pos, world, rand, color, range, 10, 10);
     }
-    public static void spawnRitualAreaEffect(BlockPos pos, Level world, Random rand, ParticleColor color, int range, int chance, int numParticles){
+
+    public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range, int chance, int numParticles) {
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
-            if(rand.nextInt(chance) == 0){
-                for(int i =0; i< rand.nextInt(numParticles); i++) {
+            if (rand.nextInt(chance) == 0) {
+                for (int i = 0; i < rand.nextInt(numParticles); i++) {
                     double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
                     double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
                     world.addParticle(ParticleLineData.createData(color),
                             x, y, z,
-                            x, y  + ParticleUtil.inRange(0.5, 5), z);
+                            x, y + ParticleUtil.inRange(0.5, 5), z);
                 }
             }
         });

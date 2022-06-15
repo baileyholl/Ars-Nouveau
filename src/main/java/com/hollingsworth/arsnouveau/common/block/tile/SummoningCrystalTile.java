@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,8 +20,6 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
-import java.util.Random;
 
 public class SummoningCrystalTile extends AbstractSourceMachine implements IAnimatable, ITickable {
 
@@ -65,7 +64,7 @@ public class SummoningCrystalTile extends AbstractSourceMachine implements IAnim
 
     @Override
     public void tick() {
-        Random rand = level.getRandom();
+        RandomSource rand = level.getRandom();
         if(level.isClientSide && rand.nextInt(6) == 0){
             for(int i = 0; i < 10; i++){
                 level.addParticle(ParticleSparkleData.createData(ParticleUtil.defaultParticleColor(), 0.05f, 60),

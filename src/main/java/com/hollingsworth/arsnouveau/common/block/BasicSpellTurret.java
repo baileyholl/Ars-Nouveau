@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -17,6 +16,7 @@ import net.minecraft.core.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +43,6 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.Random;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -54,22 +53,18 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     public static HashMap<AbstractCastMethod, ITurretBehavior> TURRET_BEHAVIOR_MAP = new HashMap<>();
 
-    public BasicSpellTurret(Properties properties, String registry) {
-        super(properties, registry);
-        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
-    }
-
     public BasicSpellTurret(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
     }
 
+
     public BasicSpellTurret() {
-        this(defaultProperties().noOcclusion(), LibBlockNames.BASIC_SPELL_TURRET);
+        this(defaultProperties().noOcclusion());
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         this.shootSpell(worldIn, pos);
     }
 
@@ -185,27 +180,27 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if(handIn == InteractionHand.MAIN_HAND){
             ItemStack stack = player.getItemInHand(handIn);
-            if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
+            if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return InteractionResult.SUCCESS;
-            Spell spell =  CasterUtil.getCaster(stack).getSpell();
-            if(spell.isEmpty())
+            Spell spell = CasterUtil.getCaster(stack).getSpell();
+            if (spell.isEmpty())
                 return InteractionResult.SUCCESS;
-            if(!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))){
+            if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
                 return InteractionResult.SUCCESS;
             }
-            BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
-            tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
-            worldIn.sendBlockUpdated(pos, state, state, 2);
+            if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
+                tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
+                worldIn.sendBlockUpdated(pos, state, state, 2);
+            }
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, TRIGGERED);
-        builder.add(WATERLOGGED);
+        builder.add(FACING, TRIGGERED, WATERLOGGED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

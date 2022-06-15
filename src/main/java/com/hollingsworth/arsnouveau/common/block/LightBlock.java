@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +16,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
 
@@ -51,9 +51,8 @@ public class LightBlock extends ModBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof LightTile){
-            Random random = context.getLevel().random;
-            LightTile tile = (LightTile) context.getLevel().getBlockEntity(context.getClickedPos());
+        if (context.getLevel().getBlockEntity(context.getClickedPos()) instanceof LightTile tile) {
+            RandomSource random = context.getLevel().random;
             tile.red = Math.max(10, random.nextInt(255));
             tile.green = Math.max(10, random.nextInt(255));
             tile.blue = Math.max(10, random.nextInt(255));

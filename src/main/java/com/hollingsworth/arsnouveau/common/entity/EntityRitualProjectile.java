@@ -18,11 +18,11 @@ public class EntityRitualProjectile extends ColoredProjectile{
     public BlockPos tilePos;
 
     public EntityRitualProjectile(Level worldIn, double x, double y, double z) {
-        super(ModEntities.ENTITY_RITUAL, worldIn, x, y, z);
+        super(ModEntities.ENTITY_RITUAL.get(), worldIn, x, y, z);
     }
 
     public EntityRitualProjectile(Level worldIn, BlockPos pos) {
-        super(ModEntities.ENTITY_RITUAL, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        super(ModEntities.ENTITY_RITUAL.get(), worldIn, pos.getX(), pos.getY(), pos.getZ());
     }
 
     public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, Level world) {
@@ -75,7 +75,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_RITUAL;
+        return ModEntities.ENTITY_RITUAL.get();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
 
     public EntityRitualProjectile(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.ENTITY_RITUAL, world);
+        super(ModEntities.ENTITY_RITUAL.get(), world);
     }
 
     @Override

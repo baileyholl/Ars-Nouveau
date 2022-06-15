@@ -15,7 +15,7 @@ public class BookwyrmFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
-        FamiliarBookwyrm bookwyrm = new FamiliarBookwyrm(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, world);
+        FamiliarBookwyrm bookwyrm = new FamiliarBookwyrm(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), world);
         bookwyrm.setTagData(tag);
         return bookwyrm;
     }

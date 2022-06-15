@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -76,7 +75,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
     }
 
     public static String getItemKey(ItemStack stack){
-        return ITEM_PREFIX + stack.getItem().getRegistryName().toString();
+        return ITEM_PREFIX + getRegistryName(stack.getItem()).toString();
     }
 
     @Override

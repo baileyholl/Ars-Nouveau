@@ -79,52 +79,52 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_OCULUS_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
 
 
-        event.registerEntityRenderer( ModEntities.SPELL_PROJ,
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer( ModEntities.ENTITY_FOLLOW_PROJ,
+        event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.SUMMON_SKELETON, RenderSummonSkeleton::new);
+        event.registerEntityRenderer(ModEntities.SUMMON_SKELETON.get(), RenderSummonSkeleton::new);
 
-        event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, EvokerFangsRenderer::new);
-        event.registerEntityRenderer(ModEntities.ALLY_VEX, VexRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE.get(), EvokerFangsRenderer::new);
+        event.registerEntityRenderer(ModEntities.ALLY_VEX.get(), VexRenderer::new);
 
-        event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, StarbuncleRenderer::new);
-        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, WhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, (t) -> new TextureVariantRenderer<>(t, new WixieModel<>()));
-        event.registerEntityRenderer(ModEntities.WILDEN_STALKER, WildenStalkerRenderer::new);
-        event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
-        event.registerEntityRenderer(ModEntities.WILDEN_HUNTER, WildenHunterRenderer::new);
-        event.registerEntityRenderer(ModEntities.SUMMON_WOLF, WolfRenderer::new);
-        event.registerEntityRenderer(ModEntities.SUMMON_HORSE, HorseRenderer::new);
-        event.registerEntityRenderer(ModEntities.LIGHTNING_ENTITY, LightningBoltRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FLYING_ITEM,
+        event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE.get(), StarbuncleRenderer::new);
+        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE.get(), WhirlisprigRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new TextureVariantRenderer<>(t, new WixieModel<>()));
+        event.registerEntityRenderer(ModEntities.WILDEN_STALKER.get(), WildenStalkerRenderer::new);
+        event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN.get(), WildenGuardianRenderer::new);
+        event.registerEntityRenderer(ModEntities.WILDEN_HUNTER.get(), WildenHunterRenderer::new);
+        event.registerEntityRenderer(ModEntities.SUMMON_WOLF.get(), WolfRenderer::new);
+        event.registerEntityRenderer(ModEntities.SUMMON_HORSE.get(), HorseRenderer::new);
+        event.registerEntityRenderer(ModEntities.LIGHTNING_ENTITY.get(), LightningBoltRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FLYING_ITEM.get(),
                 RenderFlyingItem::new);
 
-        event.registerEntityRenderer(ModEntities.ENTITY_RITUAL,
+        event.registerEntityRenderer(ModEntities.ENTITY_RITUAL.get(),
                 renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW, TippableArrowRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE,(t) -> new TextureVariantRenderer<>(t, new WixieModel<>()));
-        event.registerEntityRenderer(ModEntities.ENTITY_DUMMY, DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY, (t) -> new TextureVariantRenderer<>(t, new DrygmyModel<>()));
-        event.registerEntityRenderer(ModEntities.ORBIT_SPELL, renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, FamiliarCarbyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY,  (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>()));
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH, FamiliarWhirlisprigRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, (t) -> new GenericFamiliarRenderer<>(t, new WixieModel<>()));
-        event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, FamiliarBookwyrmRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_JABBERWOG, (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>())); //avoid REI crash
-        event.registerEntityRenderer( ModEntities.LINGER_SPELL,
+        event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW.get(), TippableArrowRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new TextureVariantRenderer<>(t, new WixieModel<>()));
+        event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new TextureVariantRenderer<>(t, new DrygmyModel<>()));
+        event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), WildenBossRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE.get(), ChimeraProjectileRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), FamiliarCarbyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY.get(), (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>()));
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH.get(), FamiliarWhirlisprigRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), (t) -> new GenericFamiliarRenderer<>(t, new WixieModel<>()));
+        event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), BookwyrmRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarBookwyrmRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_JABBERWOG.get(), (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>())); //avoid REI crash
+        event.registerEntityRenderer(ModEntities.LINGER_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD, (v) -> new WealdWalkerRenderer<>(v, "cascading_weald"));
-        event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD, (v) -> new WealdWalkerRenderer<>(v, "blazing_weald"));
-        event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD, (v) -> new WealdWalkerRenderer<>(v, "flourishing_weald"));
-        event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD, (v) -> new WealdWalkerRenderer<>(v, "vexing_weald"));
+        event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "cascading_weald"));
+        event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "blazing_weald"));
+        event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "flourishing_weald"));
+        event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "vexing_weald"));
 
-        event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM, AmethystGolemRenderer::new);
-        event.registerEntityRenderer(ModEntities.SCRYER_CAMERA,  renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
+        event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
 
 
     }
@@ -232,8 +232,7 @@ public class ClientHandler {
     public static Component localize(String key, Object... params) {
         for(int i = 0; i < params.length; ++i) {
             Object var5 = params[i];
-            if (var5 instanceof Component) {
-                Component component = (Component)var5;
+            if (var5 instanceof Component component) {
                 params[i] = localize(component.getKey(), component.getArgs());
             }
         }

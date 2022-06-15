@@ -3,9 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +25,7 @@ public class TimerSpellTurret extends BasicSpellTurret{
     }
 
     public TimerSpellTurret() {
-        super(defaultProperties().noOcclusion(), LibBlockNames.TIMER_SPELL_TURRET);
+        super(defaultProperties().noOcclusion());
     }
 
     @Override
@@ -42,10 +40,11 @@ public class TimerSpellTurret extends BasicSpellTurret{
         if(handIn == InteractionHand.MAIN_HAND) {
             if ((stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return super.use(state, worldIn, pos, player, handIn, hit);
-            TimerSpellTurretTile timerSpellTurretTile = (TimerSpellTurretTile) worldIn.getBlockEntity(pos);
-            if(timerSpellTurretTile.isLocked)
-                return InteractionResult.SUCCESS;
-            timerSpellTurretTile.addTime(20 * (player.isShiftKeyDown() ? 10 : 1));
+            if (worldIn.getBlockEntity(pos) instanceof TimerSpellTurretTile timerSpellTurretTile) {
+                if (timerSpellTurretTile.isLocked)
+                    return InteractionResult.SUCCESS;
+                timerSpellTurretTile.addTime(20 * (player.isShiftKeyDown() ? 10 : 1));
+            }
         }
         return InteractionResult.SUCCESS;
     }

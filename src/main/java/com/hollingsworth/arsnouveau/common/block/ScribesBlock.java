@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGlyphCraft;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -54,7 +53,7 @@ public class ScribesBlock extends TickableModBlock {
     protected static final VoxelShape EAST_SHAPE = Shapes.or(BASE, LEG_NORTH_EAST, LEG_SOUTH_EAST);
 
     public ScribesBlock() {
-        super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion(), LibBlockNames.SCRIBES_BLOCK);
+        super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
         MinecraftForge.EVENT_BUS.register(this);
     }

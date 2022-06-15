@@ -308,7 +308,7 @@ public class EntitySpellArrow extends Arrow {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_SPELL_ARROW;
+        return ModEntities.ENTITY_SPELL_ARROW.get();
     }
 
     @Override
@@ -317,6 +317,6 @@ public class EntitySpellArrow extends Arrow {
     }
 
     public EntitySpellArrow(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_SPELL_ARROW, world);
+        super(ModEntities.ENTITY_SPELL_ARROW.get(), world);
     }
 }

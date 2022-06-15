@@ -78,7 +78,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_DRYGMY;
+        return ModEntities.ENTITY_FAMILIAR_DRYGMY.get();
     }
 
     @Override

@@ -26,15 +26,15 @@ import java.util.Collection;
 public class EntityChimeraProjectile extends AbstractArrow implements IAnimatable {
     int groundMax;
     public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, Level p_i48547_8_) {
-        super(ModEntities.ENTITY_CHIMERA_SPIKE, p_i48547_2_, p_i48547_4_, p_i48547_6_, p_i48547_8_);
+        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), p_i48547_2_, p_i48547_4_, p_i48547_6_, p_i48547_8_);
     }
 
     public EntityChimeraProjectile(LivingEntity p_i48548_2_, Level p_i48548_3_) {
-        super(ModEntities.ENTITY_CHIMERA_SPIKE, p_i48548_2_, p_i48548_3_);
+        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), p_i48548_2_, p_i48548_3_);
     }
 
     public EntityChimeraProjectile(Level world){
-        super(ModEntities.ENTITY_CHIMERA_SPIKE, world);
+        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), world);
     }
 
     public EntityChimeraProjectile(EntityType<EntityChimeraProjectile> entityChimeraProjectileEntityType, Level world) {
@@ -94,8 +94,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
                 return;
             }
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity)entity;
+            if (entity instanceof LivingEntity livingentity) {
                 this.doPostHurtEffects(livingentity);
             }
 
@@ -136,11 +135,10 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
             return false;
         }
 
-        if(entity instanceof LivingEntity) {
-            LivingEntity entity1 = (LivingEntity) entity;
+        if (entity instanceof LivingEntity entity1) {
             // Omit our summoned sources that might aggro or accidentally hurt us
             if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
-                    || (entity instanceof ISummon && ((ISummon) entity).getOwnerID() != null && ((ISummon) entity).getOwnerID().equals(this.getUUID()))
+                    || (entity instanceof ISummon summon && summon.getOwnerID() != null && summon.getOwnerID().equals(this.getUUID()))
                     || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }
@@ -155,7 +153,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_CHIMERA_SPIKE;
+        return ModEntities.ENTITY_CHIMERA_SPIKE.get();
     }
 
     @Override
@@ -164,6 +162,6 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
     }
 
     public EntityChimeraProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_CHIMERA_SPIKE, world);
+        super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), world);
     }
 }

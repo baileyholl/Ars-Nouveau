@@ -272,8 +272,8 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this,"run_controller", 1.0f, this::runController));
-        data.addAnimationController(new AnimationController(this,"attack_controller", 5f, this::attackController));
+        data.addAnimationController(new AnimationController<>(this, "run_controller", 1.0f, this::runController));
+        data.addAnimationController(new AnimationController<>(this, "attack_controller", 5f, this::attackController));
     }
     private PlayState attackController(AnimationEvent animationEvent) {
         return PlayState.CONTINUE;
@@ -325,7 +325,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     }
 
     @Override
-    protected int getExperienceReward(Player p_70693_1_) {
+    public int getExperienceReward() {
         return 0;
     }
 

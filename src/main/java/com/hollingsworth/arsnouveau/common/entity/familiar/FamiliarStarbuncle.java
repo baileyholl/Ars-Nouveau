@@ -82,7 +82,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_STARBUNCLE;
+        return ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get();
     }
 
     @Override

@@ -7,15 +7,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SummonBed extends ModBlock{
+public class SummonBed extends ModBlock {
     public static final VoxelShape collisionShape = Block.box(0, 0, 0, 16, 3, 16);
     public static final VoxelShape shape = Block.box(0, 0, 0, 16, 4, 16);
-    public SummonBed(Properties properties, String registry) {
-        super(properties, registry);
-    }
 
-    public SummonBed(String registryName) {
-        super(registryName);
+    public SummonBed() {
+        super();
     }
 
     public SummonBed(Properties properties) {

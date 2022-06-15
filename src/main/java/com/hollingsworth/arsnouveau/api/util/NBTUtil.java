@@ -87,6 +87,6 @@ public class NBTUtil {
     }
 
     public static String getItemKey(ItemStack stack, String prefix){
-        return prefix + stack.getItem().getRegistryName().toString();
+        return prefix + getRegistryName(stack.getItem()).toString();
     }
 }

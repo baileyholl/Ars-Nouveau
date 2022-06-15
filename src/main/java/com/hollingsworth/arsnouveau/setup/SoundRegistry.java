@@ -6,31 +6,33 @@ import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(ArsNouveau.MODID)
 public class SoundRegistry {
 
-    @ObjectHolder("fire_family")
-    public static SoundEvent FIRE_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "fire_family")).setRegistryName(new ResourceLocation(ArsNouveau.MODID, "fire_family"));
-    @ObjectHolder("empty")
-    public static SoundEvent EMPTY_SOUND_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "empty")).setRegistryName(new ResourceLocation(ArsNouveau.MODID, "empty"));
+    @ObjectHolder(value = "fire_family", registryName = "minecraft:sound_events")
+    public static SoundEvent FIRE_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "fire_family"));
+    @ObjectHolder(value = "empty", registryName = "minecraft:sound_events")
+    public static SoundEvent EMPTY_SOUND_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "empty"));
 
 
     public static SpellSound FIRE_SPELL_SOUND;
     public static SpellSound EMPTY_SPELL_SOUND;
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+
     public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onSoundRegistry(final RegistryEvent.Register<SoundEvent> soundRegistryEvent) {
-            soundRegistryEvent.getRegistry().registerAll(
-                   FIRE_FAMILY,
-                    EMPTY_SOUND_FAMILY
-            );
+
+        //TODO solve this stub
+        public static void onSoundRegistry(final IForgeRegistry<SoundEvent> registry) {
+
             FIRE_SPELL_SOUND = new SpellSound(FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"));
             EMPTY_SPELL_SOUND = new SpellSound(EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"));
+            registry.register("fire_family",
+                    FIRE_FAMILY);
+            registry.register("empty",
+                    EMPTY_SOUND_FAMILY
+            );
+
             ArsNouveauAPI.getInstance().registerSpellSound(FIRE_SPELL_SOUND);
             ArsNouveauAPI.getInstance().registerSpellSound(EMPTY_SPELL_SOUND);
         }

@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -140,7 +138,6 @@ public class Config {
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_CONFIG = SERVER_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
-        RegistryHelper.generateConfig(ArsNouveau.MODID, new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values()));
     }
 
     public static boolean isStarterEnabled(AbstractSpellPart e){
