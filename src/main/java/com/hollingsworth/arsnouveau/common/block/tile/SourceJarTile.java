@@ -41,8 +41,8 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
         else if(this.getSource() != 0){
             fillState = (this.getSource() / 1000) + 1;
         }
-
-        level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState),3);
+        if(state.hasProperty(SourceJar.fill))
+            level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState),3);
     }
 
 

@@ -35,7 +35,10 @@ public class EffectDelay extends AbstractEffect {
             return;
         Spell newSpell =  new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
         SpellContext newContext = spellContext.clone().withSpell(newSpell).withCaster(shooter);
-        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20 - (EXTEND_TIME.get() / 2) * spellStats.getBuffCount(AugmentDurationDown.INSTANCE) * 20;
+
+        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
+        int decreasedTime =(int) (20.0 * ((double) EXTEND_TIME.get() - (double)EXTEND_TIME.get()/2.0));
+        duration -= decreasedTime;
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration , newSpell, rayTraceResult, world, shooter, newContext));
         Networking.sendToNearby(world, new BlockPos(safelyGetHitPos(rayTraceResult)),
