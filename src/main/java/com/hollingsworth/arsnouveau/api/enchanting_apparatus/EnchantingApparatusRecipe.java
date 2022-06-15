@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class EnchantingApparatusRecipe implements IEnchantingRecipe{
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
+public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     public Ingredient reagent; // Used in the arcane pedestal
     public ItemStack result; // Result item

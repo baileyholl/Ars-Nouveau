@@ -9,9 +9,9 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class ApparatusRecipeProvider implements DataProvider {
     protected final DataGenerator generator;
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
@@ -39,15 +41,16 @@ public class ApparatusRecipeProvider implements DataProvider {
     }
 
     public List<EnchantingApparatusRecipe> recipes = new ArrayList<>();
+
     @Override
-    public void run(HashCache cache) throws IOException {
+    public void run(CachedOutput cache) throws IOException {
         addEntries();
         Path output = this.generator.getOutputFolder();
-        for(IEnchantingRecipe g : recipes){
-            if(g instanceof EnchantingApparatusRecipe recipe){
+        for (IEnchantingRecipe g : recipes) {
+            if (g instanceof EnchantingApparatusRecipe recipe) {
                 System.out.println(g);
                 Path path = getRecipePath(output, recipe.getId().getPath());
-                DataProvider.save(GSON, cache, recipe.asRecipe(), path);
+                DataProvider.saveStable(cache, recipe.asRecipe(), path);
 
             }
         }
@@ -914,7 +917,7 @@ public class ApparatusRecipeProvider implements DataProvider {
     }
 
     protected static Path getRecipePath(Path pathIn, Item item) {
-        return getRecipePath(pathIn, item.getRegistryName().getPath());
+        return getRecipePath(pathIn, getRegistryName(item).getPath());
     }
 
     protected static Path getRecipePath(Path pathIn, String str){

@@ -9,13 +9,16 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class ApparatusRecipeBuilder {
     EnchantingApparatusRecipe recipe;
-    public ApparatusRecipeBuilder(){
+
+    public ApparatusRecipeBuilder() {
         this.recipe = new EnchantingApparatusRecipe();
     }
 
-    public static ApparatusRecipeBuilder builder(){
+    public static ApparatusRecipeBuilder builder() {
         return new ApparatusRecipeBuilder();
     }
     public ApparatusRecipeBuilder withResult(ItemLike result){
@@ -65,7 +68,7 @@ public class ApparatusRecipeBuilder {
 
     public EnchantingApparatusRecipe build(){
         if(recipe.id.getPath().equals("empty"))
-            recipe.id = new ResourceLocation(ArsNouveau.MODID, recipe.result.getItem().getRegistryName().getPath());
+            recipe.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(recipe.result.getItem()).getPath());
         return recipe;
     }
 

@@ -12,9 +12,9 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
@@ -29,6 +29,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class GlyphRecipeProvider implements DataProvider {
 
     protected final DataGenerator generator;
@@ -41,7 +43,7 @@ public class GlyphRecipeProvider implements DataProvider {
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
+    public void run(CachedOutput cache) throws IOException {
         Path output = this.generator.getOutputFolder();
 
         add(get(AugmentAccelerate.INSTANCE).withItem(Items.POWERED_RAIL).withItem(Items.SUGAR).withItem(Items.CLOCK));
@@ -126,7 +128,7 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectSenseMagic.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(ItemsRegistry.DOWSING_ROD).withItem(ItemsRegistry.STARBUNCLE_SHARD));
         for(GlyphRecipe recipe : recipes){
             Path path = getScribeGlyphPath(output,  recipe.output.getItem());
-            DataProvider.save(GSON, cache, recipe.asRecipe(), path);
+            DataProvider.saveStable(cache, recipe.asRecipe(), path);
         }
     }
 
@@ -154,10 +156,10 @@ public class GlyphRecipeProvider implements DataProvider {
     }
 
     protected static Path getGlyphPath(Path pathIn, Glyph glyph) {
-        return pathIn.resolve("data/ars_nouveau/recipes/glyphs/" + glyph.getRegistryName().getPath() + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipes/glyphs/" + getRegistryName(glyph).getPath() + ".json");
     }
     protected static Path getScribeGlyphPath(Path pathIn, Item glyph) {
-        return pathIn.resolve("data/ars_nouveau/recipes/" + glyph.getRegistryName().getPath() + ".json");
+        return pathIn.resolve("data/ars_nouveau/recipes/" + getRegistryName(glyph).getPath() + ".json");
     }
     @Override
     public String getName() {

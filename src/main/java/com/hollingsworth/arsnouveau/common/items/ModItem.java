@@ -34,6 +34,10 @@ public class ModItem extends Item {
         return this;
     }
 
+    public String getRegistryName() {
+        return registryName;
+    }
+
     public ModItem(String registryName) {
         this(ItemsRegistry.defaultItemProperties(), registryName);
     }

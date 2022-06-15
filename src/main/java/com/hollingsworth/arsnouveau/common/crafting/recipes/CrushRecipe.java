@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class CrushRecipe implements Recipe<Container> {
 
     public final Ingredient input;
@@ -31,7 +33,7 @@ public class CrushRecipe implements Recipe<Container> {
     public final ResourceLocation id;
     public static final String RECIPE_ID = "crush";
 
-    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs){
+    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
         this.input = input;
         this.outputs = outputs;
         this.id = id;
@@ -114,7 +116,7 @@ public class CrushRecipe implements Recipe<Container> {
         JsonArray array = new JsonArray();
         for(CrushOutput output : outputs){
             JsonObject element = new JsonObject();
-            element.addProperty("item", output.stack.getItem().getRegistryName().toString());
+            element.addProperty("item", getRegistryName(output.stack.getItem()).toString());
             element.addProperty("chance", output.chance);
             element.addProperty("count", output.stack.getCount());
             array.add(element);

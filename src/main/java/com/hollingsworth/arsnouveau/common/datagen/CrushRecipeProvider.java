@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -29,17 +29,17 @@ public class CrushRecipeProvider implements DataProvider {
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
+    public void run(CachedOutput cache) throws IOException {
         recipes.add(new CrushRecipe("stone", Ingredient.of(Tags.Items.STONE))
                 .withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
         recipes.add(new CrushRecipe("gravel", Ingredient.of(Tags.Items.GRAVEL))
                 .withItems(Items.SAND.getDefaultInstance(), 1.0f)
                 .withItems(Items.FLINT.getDefaultInstance(), 0.02f));
         recipes.add(new CrushRecipe("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE)).withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
-        recipes.add(new CrushRecipe("white_dye", Ingredient.of(Items.LILY_OF_THE_VALLEY)).withItems(new ItemStack(Items.WHITE_DYE,2)));
-        recipes.add(new CrushRecipe("orange_dye", Ingredient.of(Items.ORANGE_TULIP)).withItems(new ItemStack(Items.ORANGE_DYE,2)));
-        recipes.add(new CrushRecipe("magenta_dye", Ingredient.of(Items.ALLIUM)).withItems(new ItemStack(Items.MAGENTA_DYE,2)));
-        recipes.add(new CrushRecipe("light_blue_dye", Ingredient.of(Items.BLUE_ORCHID)).withItems(new ItemStack(Items.LIGHT_BLUE_DYE,2)));
+        recipes.add(new CrushRecipe("white_dye", Ingredient.of(Items.LILY_OF_THE_VALLEY)).withItems(new ItemStack(Items.WHITE_DYE, 2)));
+        recipes.add(new CrushRecipe("orange_dye", Ingredient.of(Items.ORANGE_TULIP)).withItems(new ItemStack(Items.ORANGE_DYE, 2)));
+        recipes.add(new CrushRecipe("magenta_dye", Ingredient.of(Items.ALLIUM)).withItems(new ItemStack(Items.MAGENTA_DYE, 2)));
+        recipes.add(new CrushRecipe("light_blue_dye", Ingredient.of(Items.BLUE_ORCHID)).withItems(new ItemStack(Items.LIGHT_BLUE_DYE, 2)));
         recipes.add(new CrushRecipe("yellow_dye", Ingredient.of(Items.DANDELION)).withItems(new ItemStack(Items.YELLOW_DYE,2)));
         recipes.add(new CrushRecipe("pink_dye", Ingredient.of(Items.PINK_TULIP)).withItems(new ItemStack(Items.PINK_DYE,2)));
         recipes.add(new CrushRecipe("light_gray_dye_oxeye", Ingredient.of(Items.OXEYE_DAISY)).withItems(new ItemStack(Items.LIGHT_GRAY_DYE,2)));
@@ -57,7 +57,7 @@ public class CrushRecipeProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
         for(CrushRecipe g : recipes){
             Path path = getRecipePath(output, g.getId().getPath());
-            DataProvider.save(GSON, cache,  g.asRecipe(), path);
+            DataProvider.saveStable(cache, g.asRecipe(), path);
         }
     }
 

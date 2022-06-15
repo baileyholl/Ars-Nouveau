@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
+import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;

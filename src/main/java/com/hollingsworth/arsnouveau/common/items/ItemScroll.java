@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
@@ -75,7 +76,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
     }
 
     public static String getItemKey(ItemStack stack){
-        return ITEM_PREFIX + getRegistryName(stack.getItem()).toString();
+        return ITEM_PREFIX + RegistryHelper.getRegistryName(stack.getItem()).toString();
     }
 
     @Override

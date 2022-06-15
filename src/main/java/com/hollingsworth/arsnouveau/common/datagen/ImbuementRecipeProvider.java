@@ -5,9 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,7 +32,7 @@ public class ImbuementRecipeProvider implements DataProvider {
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
+    public void run(CachedOutput cache) throws IOException {
         recipes.add(new ImbuementRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
         recipes.add(new ImbuementRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
         recipes.add(new ImbuementRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_BLOCK), new ItemStack(BlockRegistry.SOURCE_GEM_BLOCK), 2000));
@@ -41,7 +41,7 @@ public class ImbuementRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.TORCH).withPedestalItem(Items.GUNPOWDER));
         recipes.add(new ImbuementRecipe("air_essence", Recipes.SOURCE_GEM, new ItemStack(ItemsRegistry.AIR_ESSENCE), 2000)
                 .withPedestalItem(Items.FEATHER)
-                        .withPedestalItem(ItemsRegistry.WILDEN_WING)
+                .withPedestalItem(ItemsRegistry.WILDEN_WING)
                 .withPedestalItem(Ingredient.of(ItemTags.ARROWS)));
         recipes.add(new ImbuementRecipe("earth_essence", Recipes.SOURCE_GEM, new ItemStack(ItemsRegistry.EARTH_ESSENCE), 2000)
                 .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_IRON))
@@ -69,7 +69,7 @@ public class ImbuementRecipeProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
         for(ImbuementRecipe g : recipes){
             Path path = getRecipePath(output, g.getId().getPath());
-            DataProvider.save(GSON, cache,  g.asRecipe(), path);
+            DataProvider.saveStable(cache, g.asRecipe(), path);
         }
     }
 
