@@ -125,7 +125,7 @@ public class ClientHandler {
 
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
         event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-
+        event.registerEntityRenderer(ModEntities.FALLING_BLOCK.get(), FallingBlockRenderer::new);
 
     }
     public static IIngameOverlay cameraOverlay;

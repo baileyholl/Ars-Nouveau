@@ -38,7 +38,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
-    protected AbstractSpellPart(String id, String name){
+    public AbstractSpellPart(String id, String name){
         this.id = id;
         this.name = name;
         for(SpellSchool spellSchool : getSchools()){

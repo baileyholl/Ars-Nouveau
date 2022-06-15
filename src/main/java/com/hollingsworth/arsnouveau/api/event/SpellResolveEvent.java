@@ -15,7 +15,7 @@ public class SpellResolveEvent extends Event {
     public HitResult rayTraceResult;
     public Spell spell;
     public SpellContext context;
-
+    //TODO: Add spell resolver
 
     public SpellResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext){
         this.world = world;

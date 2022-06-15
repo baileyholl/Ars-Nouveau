@@ -1,9 +1,13 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
@@ -15,7 +19,7 @@ public class SpellContext implements Cloneable{
 
     private Spell spell;
 
-    public @Nullable LivingEntity caster;
+    public @Nullable LivingEntity caster; // TODO:
 
     private int currentIndex;
 
@@ -75,6 +79,7 @@ public class SpellContext implements Cloneable{
         return this;
     }
 
+    @Deprecated(forRemoval = true)
     public SpellContext withSpellResetCounter(Spell spell){
         this.spell = spell;
         return resetCastCounter();
@@ -100,6 +105,22 @@ public class SpellContext implements Cloneable{
         return this;
     }
 
+    /**
+     * Returns a non-null caster that belongs to this spell.
+     * This should always default to a fake player if an actual entity did not cast the spell.
+     * Generally tiles would set the caster in this context, but casters can be nullable.
+     */
+    public @Nonnull LivingEntity getUnwrappedCaster(Level world){
+        LivingEntity shooter = this.caster;
+        if(shooter == null && this.castingTile != null) {
+            shooter = ANFakePlayer.getPlayer((ServerLevel) world);
+            BlockPos pos = this.castingTile.getBlockPos();
+            shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
+        }
+        shooter = shooter == null ?  ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
+        return shooter;
+    }
+
     public CasterType getType(){
         return this.type == null ? CasterType.OTHER : type;
     }
@@ -123,7 +144,7 @@ public class SpellContext implements Cloneable{
         return spell == null ? Spell.EMPTY : spell;
     }
 
-    @Nullable
+    @Nullable @Deprecated
     public LivingEntity getCaster() {
         return caster;
     }

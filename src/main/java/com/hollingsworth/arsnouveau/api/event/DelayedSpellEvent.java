@@ -44,7 +44,8 @@ public class DelayedSpellEvent implements ITimedEvent{
     public void resolveSpell(){
         if(world == null)
             return;
-        SpellResolver.resolveEffects(world, shooter, result, spell, context);
+        SpellResolver resolver = new SpellResolver(context);
+        resolver.onResolveEffect(world, result);
     }
 
     @Override

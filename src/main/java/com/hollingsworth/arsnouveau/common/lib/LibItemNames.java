@@ -117,4 +117,5 @@ public class LibItemNames {
     public static final String DOWSING_ROD = "dowsing_rod";
     public static final String ANNOTATED_CODEX = "annotated_codex";
     public static final String SCRYER_SCROLL = "scryer_scroll";
+    public static final String SHAPERS_FOCUS = "shapers_focus";
 }
