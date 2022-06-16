@@ -151,9 +151,9 @@ public class EntityFlyingItem extends ColoredProjectile {
             for (double i = 0; i < dist; i ++){
                 double coeff = i/dist;
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(GlowParticleData.createData(
-                            new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE))),
+                                    new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
                             (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }
