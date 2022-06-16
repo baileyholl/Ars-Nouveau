@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
@@ -24,8 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -37,8 +33,6 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class PatchouliProvider implements DataProvider {
     protected final DataGenerator generator;
-    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger();
     public static ResourceLocation AUTOMATION = new ResourceLocation(ArsNouveau.MODID, "automation");
     public static ResourceLocation ENCHANTMENTS = new ResourceLocation(ArsNouveau.MODID, "enchantments");
     public static ResourceLocation EQUIPMENT = new ResourceLocation(ArsNouveau.MODID, "equipment");
@@ -158,7 +152,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.STARBUNCLE_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.STARBUNCLE_CHARM))
-                .withPage(new EntityPage(ModEntities.STARBUNCLE_TYPE.getRegistryName().toString())
+                .withPage(new EntityPage(getRegistryName(ModEntities.STARBUNCLE_TYPE.get()).toString())
                         .withText(getLangPath("starbuncle_charm", 2)))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("starbuncle_charm", 4)).withTitle("ars_nouveau.item_transport"))
@@ -169,7 +163,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DRYGMY_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.DRYGMY_CHARM))
-                .withPage(new EntityPage(ModEntities.ENTITY_DRYGMY.getRegistryName().toString())
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_DRYGMY.get()).toString())
                         .withText(getLangPath("drygmy_charm", 2)))
                 .withPage(new TextPage(getLangPath("drygmy_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("drygmy_charm", 4)).withTitle("ars_nouveau.happiness"))
@@ -217,7 +211,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WHIRLISPRIG_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.WHIRLISPRIG_CHARM))
-                .withPage(new EntityPage(ModEntities.WHIRLISPRIG_TYPE.getRegistryName().toString())
+                .withPage(new EntityPage(getRegistryName(ModEntities.WHIRLISPRIG_TYPE.get()).toString())
                         .withText(getLangPath("whirlisprig_charm", 2)))
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 4)).withTitle("ars_nouveau.happiness"))
@@ -226,7 +220,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.BOOKWYRM_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.BOOKWYRM_CHARM))
-                .withPage(new EntityPage(ModEntities.ENTITY_BOOKWYRM_TYPE.getRegistryName().toString())
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BOOKWYRM_TYPE.get()).toString())
                         .withText(getLangPath("bookwyrm_charm", 2)))
                 .withPage(new TextPage(getLangPath("bookwyrm_charm", 3)))
                 .withPage(new TextPage(getLangPath("bookwyrm_charm", 4)))
@@ -235,7 +229,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.WIXIE_CHARM))
-                .withPage(new EntityPage(ModEntities.ENTITY_WIXIE_TYPE.getRegistryName().toString())
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_WIXIE_TYPE.get()).toString())
                         .withText(getLangPath("wixie_charm", 2)))
                 .withPage(new TextPage(getLangPath("wixie_charm", 3)).withTitle("ars_nouveau.item_crafting"))
                 .withPage(new TextPage(getLangPath("wixie_charm", 4)).withTitle("ars_nouveau.potion_crafting"))
@@ -261,18 +255,18 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(RESOURCES, "weald_walker")
                 .withIcon(ArsNouveauAPI.getInstance().getRitualItemMap().get(RitualLib.AWAKENING))
                 .withLocalizedText()
-                .withPage(new EntityPage(ModEntities.ENTITY_BLAZING_WEALD.getRegistryName().toString()).withText(getLangPath("weald_walker", 2)))
-                .withPage(new EntityPage(ModEntities.ENTITY_CASCADING_WEALD.getRegistryName().toString()).withText(getLangPath("weald_walker", 3)))
-                .withPage(new EntityPage(ModEntities.ENTITY_FLOURISHING_WEALD.getRegistryName().toString()).withText(getLangPath("weald_walker", 4)))
-                .withPage(new EntityPage(ModEntities.ENTITY_VEXING_WEALD.getRegistryName().toString()).withText(getLangPath("weald_walker", 5))), getPath(RESOURCES, "weald_walker"));
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BLAZING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 2)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_CASCADING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 3)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_FLOURISHING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 4)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_VEXING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 5))), getPath(RESOURCES, "weald_walker"));
 
         addPage(new PatchouliBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
                 .withLocalizedText()
-                .withPage(new EntityPage(ModEntities.WILDEN_HUNTER.getRegistryName().toString()).withText(getLangPath("wilden", 3)))
-                .withPage(new EntityPage(ModEntities.WILDEN_STALKER.getRegistryName().toString()).withText(getLangPath("wilden", 4)))
-                .withPage(new EntityPage(ModEntities.WILDEN_GUARDIAN.getRegistryName().toString()).withText(getLangPath("wilden", 5)))
-                .withPage(new EntityPage(ModEntities.WILDEN_BOSS.getRegistryName().toString()).withText(getLangPath("wilden", 6)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_HUNTER.get()).toString()).withText(getLangPath("wilden", 3)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_STALKER.get()).toString()).withText(getLangPath("wilden", 4)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_GUARDIAN.get()).toString()).withText(getLangPath("wilden", 5)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_BOSS.get()).toString()).withText(getLangPath("wilden", 6)))
                 .withPage(new TextPage(getLangPath("wilden", 7))), getPath(RESOURCES, "wilden"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
@@ -412,9 +406,9 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(ItemsRegistry.DOWSING_ROD, EQUIPMENT, new CraftingPage(ItemsRegistry.DOWSING_ROD));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.AMETHYST_GOLEM_CHARM)
-                .withLocalizedText()
-                .withPage(new EntityPage(ModEntities.AMETHYST_GOLEM.getRegistryName().toString())
-                        .withText(getLangPath("amethyst_golem_charm", 2)).withScale(0.75f).withOffset(0.2f))
+                        .withLocalizedText()
+                        .withPage(new EntityPage(getRegistryName(ModEntities.AMETHYST_GOLEM.get()).toString())
+                                .withText(getLangPath("amethyst_golem_charm", 2)).withScale(0.75f).withOffset(0.2f))
                 .withPage(new TextPage(getLangPath("amethyst_golem_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("amethyst_golem_charm", 4)).withTitle("ars_nouveau.amethyst_farming"))
                 .withPage(new TextPage(getLangPath("amethyst_golem_charm", 5)).withTitle("ars_nouveau.amethyst_storage")),

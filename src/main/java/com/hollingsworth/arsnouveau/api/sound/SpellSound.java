@@ -24,7 +24,7 @@ public class SpellSound {
     }
 
     public SpellSound(SoundEvent soundEvent, Component soundName) {
-        this(soundEvent.getRegistryName(),soundEvent,soundName);
+        this(soundEvent.getLocation(), soundEvent, soundName);
     }
 
     public ResourceLocation getId() {

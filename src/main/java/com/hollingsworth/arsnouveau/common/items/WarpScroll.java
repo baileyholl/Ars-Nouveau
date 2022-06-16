@@ -43,7 +43,7 @@ public class WarpScroll extends ModItem{
         if(!entity.getCommandSenderWorld().isClientSide){
             String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
             if(getPos(stack) != BlockPos.ZERO
-                    && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
+                    && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().location().toString())
                     && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                     && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
                     || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName))
@@ -72,7 +72,7 @@ public class WarpScroll extends ModItem{
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
         if(!pos.equals(BlockPos.ZERO) ){
-            if(getDimension(stack) == null || !getDimension(stack).equals(player.getCommandSenderWorld().dimension().getRegistryName().toString())){
+            if (getDimension(stack) == null || !getDimension(stack).equals(player.getCommandSenderWorld().dimension().location().toString())) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
                 return InteractionResultHolder.fail(stack);
             }
@@ -86,7 +86,7 @@ public class WarpScroll extends ModItem{
         if(player.isShiftKeyDown()){
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL);
             newWarpStack.setTag(new CompoundTag());
-            setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().getRegistryName().toString());
+            setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString());
             setRotationVector(newWarpStack, player.getRotationVector());
             boolean didAdd;
             if(stack.getCount() == 1){

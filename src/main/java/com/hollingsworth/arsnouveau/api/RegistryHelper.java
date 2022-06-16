@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -14,6 +15,10 @@ public class RegistryHelper {
 
     public static ResourceLocation getRegistryName(Block b) {
         return ForgeRegistries.BLOCKS.getKey(b);
+    }
+
+    public static ResourceLocation getRegistryName(EntityType<?> i) {
+        return ForgeRegistries.ENTITIES.getKey(i);
     }
 
     public static ResourceLocation getRegistryName(Enchantment e) {
