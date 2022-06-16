@@ -105,7 +105,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.ENCHANTMENT_SERIALIZER;
+        return RecipeRegistry.ENCHANTMENT_SERIALIZER.get();
     }
 
     @Override
@@ -126,17 +126,17 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         return jsonobject;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchantmentRecipe> {
+    public static class Serializer implements RecipeSerializer<EnchantmentRecipe> {
 
         @Override
         public EnchantmentRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "enchantment")));
             int level = GsonHelper.getAsInt(json, "level", 1);
-            int manaCost = GsonHelper.getAsInt(json,"sourceCost", 0);
-            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
+            int manaCost = GsonHelper.getAsInt(json, "sourceCost", 0);
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(JsonElement e : pedestalItems){
+            for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
                 if(GsonHelper.isArrayNode(obj, "item")){

@@ -3,14 +3,13 @@ package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
-import net.minecraft.core.Registry;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -49,7 +48,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return RecipeRegistry.ENCHANTMENT_TYPE.get();
     }
 
     @Override
@@ -78,15 +77,15 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
         return jsonobject;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ReactiveEnchantmentRecipe> {
+    public static class Serializer implements RecipeSerializer<ReactiveEnchantmentRecipe> {
 
         @Override
         public ReactiveEnchantmentRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            int sourceCost = GsonHelper.getAsInt(json,"sourceCost", 0);
-            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
+            int sourceCost = GsonHelper.getAsInt(json, "sourceCost", 0);
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(JsonElement e : pedestalItems){
+            for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input;
                 if(GsonHelper.isArrayNode(obj, "item")){

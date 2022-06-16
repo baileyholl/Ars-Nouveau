@@ -16,7 +16,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,12 +100,12 @@ public class CrushRecipe implements Recipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.CRUSH_SERIALIZER;
+        return RecipeRegistry.CRUSH_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return RecipeRegistry.CRUSH_TYPE.get();
     }
 
     public JsonElement asRecipe(){
@@ -135,17 +134,17 @@ public class CrushRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrushRecipe> {
+    public static class Serializer implements RecipeSerializer<CrushRecipe> {
 
         @Override
         public CrushRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             Ingredient input = null;
-            if(GsonHelper.isArrayNode(json, "input")){
+            if (GsonHelper.isArrayNode(json, "input")) {
                 input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
-            }else{
+            } else {
                 input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
             }
-            JsonArray outputs = GsonHelper.getAsJsonArray(json,"output");
+            JsonArray outputs = GsonHelper.getAsJsonArray(json, "output");
             List<CrushOutput> parsedOutputs = new ArrayList<>();
 
             for(JsonElement e : outputs){

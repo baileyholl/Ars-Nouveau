@@ -20,7 +20,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,10 +106,10 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.POTION_FLASK_RECIPE;
+        return RecipeRegistry.POTION_FLASK_RECIPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PotionFlaskRecipe> {
+    public static class Serializer implements RecipeSerializer<PotionFlaskRecipe> {
         @Override
         public PotionFlaskRecipe fromJson(final ResourceLocation recipeID, final JsonObject json) {
             final String group = GsonHelper.getAsString(json, "group", "");

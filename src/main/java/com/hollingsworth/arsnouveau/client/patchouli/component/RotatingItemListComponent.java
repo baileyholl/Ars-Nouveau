@@ -29,10 +29,10 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase{
         ClientLevel world = Minecraft.getInstance().level;
         Map<ResourceLocation, ? extends Recipe<?>> map;
         if ("enchanting_apparatus".equals(recipeType)) {
-            EnchantingApparatusRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
+            EnchantingApparatusRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE.get()).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
             return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
         }else if("imbuement_chamber".equals(recipeType)){
-            ImbuementRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
+            ImbuementRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
             return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
         }else if("glyph_recipe".equals(recipeType)){
             GlyphRecipe recipe = (GlyphRecipe) world.getRecipeManager().byKey(new ResourceLocation(recipeName)).orElse(null);

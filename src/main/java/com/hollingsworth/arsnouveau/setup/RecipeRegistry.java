@@ -1,76 +1,61 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistry {
-    public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new ModRecipeType<>();
-    public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new ModRecipeType<>();
-    public static final RecipeType<CrushRecipe> CRUSH_TYPE = new ModRecipeType<>();
-    public static final RecipeType<ImbuementRecipe> IMBUEMENT_TYPE = new ModRecipeType<>();
 
-    public static final RecipeType<BookUpgradeRecipe> BOOK_UPGRADE_TYPE = new ModRecipeType<>();
-    public static final RecipeType<PotionFlaskRecipe> POTION_FLASK_TYPE = new ModRecipeType<>();
-    public static final RecipeType<DyeRecipe> DYE_TYPE = new ModRecipeType<>();
-    public static final RecipeType<ReactiveEnchantmentRecipe> REACTIVE_TYPE = new ModRecipeType<>();
-    public static final RecipeType<SpellWriteRecipe> SPELL_WRITE_TYPE = new ModRecipeType<>();
-    public static final RecipeType<GlyphRecipe> GLYPH_TYPE = new ModRecipeType<>();
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, MODID);
 
-    public static final RecipeSerializer<EnchantingApparatusRecipe> APPARATUS_SERIALIZER = new EnchantingApparatusRecipe.Serializer();
-    public static final RecipeSerializer<EnchantmentRecipe> ENCHANTMENT_SERIALIZER = new EnchantmentRecipe.Serializer();
-    public static final RecipeSerializer<CrushRecipe> CRUSH_SERIALIZER = new CrushRecipe.Serializer();
-    public static final RecipeSerializer<ImbuementRecipe> IMBUEMENT_SERIALIZER = new ImbuementRecipe.Serializer();
-    public static final RecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = new BookUpgradeRecipe.Serializer();
-    public static final RecipeSerializer<PotionFlaskRecipe> POTION_FLASK_RECIPE = new PotionFlaskRecipe.Serializer();
-    public static final RecipeSerializer<DyeRecipe> DYE_RECIPE = new DyeRecipe.Serializer();
-    public static final RecipeSerializer<ReactiveEnchantmentRecipe> REACTIVE_RECIPE = new ReactiveEnchantmentRecipe.Serializer();
-    public static final RecipeSerializer<SpellWriteRecipe> SPELL_WRITE_RECIPE = new SpellWriteRecipe.Serializer();
 
-    public static final RecipeSerializer<GlyphRecipe> GLYPH_SERIALIZER = new GlyphRecipe.Serializer();
+    public static final RegistryObject<RecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(EnchantingApparatusRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<EnchantingApparatusRecipe>> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(EnchantingApparatusRecipe.RECIPE_ID, EnchantingApparatusRecipe.Serializer::new);
 
-    //TODO Fix this
+    public static final RegistryObject<RecipeType<EnchantmentRecipe>> ENCHANTMENT_TYPE = RECIPE_TYPES.register(EnchantmentRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<EnchantmentRecipe>> ENCHANTMENT_SERIALIZER = RECIPE_SERIALIZERS.register(EnchantmentRecipe.RECIPE_ID, EnchantmentRecipe.Serializer::new);
 
-    @SubscribeEvent
-    public static void register(final RegistryEvent.Register<RecipeSerializer<?>> evt) {
+    public static final RegistryObject<RecipeType<CrushRecipe>> CRUSH_TYPE = RECIPE_TYPES.register(CrushRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<CrushRecipe>> CRUSH_SERIALIZER = RECIPE_SERIALIZERS.register(CrushRecipe.RECIPE_ID, CrushRecipe.Serializer::new);
 
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID), APPARATUS_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID), ENCHANTMENT_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID), CRUSH_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, ImbuementRecipe.RECIPE_ID), IMBUEMENT_TYPE);
+    public static final RegistryObject<RecipeType<ImbuementRecipe>> IMBUEMENT_TYPE = RECIPE_TYPES.register(ImbuementRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<ImbuementRecipe>> IMBUEMENT_SERIALIZER = RECIPE_SERIALIZERS.register(ImbuementRecipe.RECIPE_ID, ImbuementRecipe.Serializer::new);
 
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "book_upgrade"), BOOK_UPGRADE_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "potion_flask"), POTION_FLASK_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "dye"), DYE_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, ReactiveEnchantmentRecipe.RECIPE_ID), REACTIVE_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, SpellWriteRecipe.RECIPE_ID), SPELL_WRITE_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, GlyphRecipe.RECIPE_ID), GLYPH_TYPE);
 
-        evt.getRegistry().register(APPARATUS_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID)));
-        evt.getRegistry().register(ENCHANTMENT_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID)));
-        evt.getRegistry().register(CRUSH_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID)));
-        evt.getRegistry().register(IMBUEMENT_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, ImbuementRecipe.RECIPE_ID)));
-        evt.getRegistry().register(REACTIVE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, ReactiveEnchantmentRecipe.RECIPE_ID)));
-        evt.getRegistry().register(SPELL_WRITE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, SpellWriteRecipe.RECIPE_ID)));
-        evt.getRegistry().register(GLYPH_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, GlyphRecipe.RECIPE_ID)));
+    public static final RegistryObject<RecipeType<BookUpgradeRecipe>> BOOK_UPGRADE_TYPE = RECIPE_TYPES.register("book_upgrade", ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<BookUpgradeRecipe>> BOOK_UPGRADE_RECIPE = RECIPE_SERIALIZERS.register("book_upgrade", BookUpgradeRecipe.Serializer::new);
 
-        evt.getRegistry().registerAll(
-                BOOK_UPGRADE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "book_upgrade")),
-                POTION_FLASK_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "potion_flask")),
-                DYE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "dye"))
-        );
-    }
+    public static final RegistryObject<RecipeType<PotionFlaskRecipe>> POTION_FLASK_TYPE = RECIPE_TYPES.register("potion_flask", ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<PotionFlaskRecipe>> POTION_FLASK_RECIPE = RECIPE_SERIALIZERS.register("potion_flask", PotionFlaskRecipe.Serializer::new);
+
+
+    public static final RegistryObject<RecipeType<DyeRecipe>> DYE_TYPE = RECIPE_TYPES.register("dye", ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<DyeRecipe>> DYE_RECIPE = RECIPE_SERIALIZERS.register("dye", DyeRecipe.Serializer::new);
+
+
+    public static final RegistryObject<RecipeType<ReactiveEnchantmentRecipe>> REACTIVE_TYPE = RECIPE_TYPES.register(ReactiveEnchantmentRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<ReactiveEnchantmentRecipe>> REACTIVE_RECIPE = RECIPE_SERIALIZERS.register(ReactiveEnchantmentRecipe.RECIPE_ID, ReactiveEnchantmentRecipe.Serializer::new);
+
+
+    public static final RegistryObject<RecipeType<SpellWriteRecipe>> SPELL_WRITE_TYPE = RECIPE_TYPES.register(SpellWriteRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<SpellWriteRecipe>> SPELL_WRITE_RECIPE = RECIPE_SERIALIZERS.register(SpellWriteRecipe.RECIPE_ID, SpellWriteRecipe.Serializer::new);
+
+    public static final RegistryObject<RecipeType<GlyphRecipe>> GLYPH_TYPE = RECIPE_TYPES.register(GlyphRecipe.RECIPE_ID, ModRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<GlyphRecipe>> GLYPH_SERIALIZER = RECIPE_SERIALIZERS.register(GlyphRecipe.RECIPE_ID, GlyphRecipe.Serializer::new);
 
     private static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {
         @Override
@@ -78,4 +63,5 @@ public class RecipeRegistry {
             return Registry.RECIPE_TYPE.getKey(this).toString();
         }
     }
+
 }

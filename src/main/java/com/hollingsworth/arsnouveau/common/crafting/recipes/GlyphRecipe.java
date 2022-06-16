@@ -115,12 +115,12 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.GLYPH_SERIALIZER;
+        return RecipeRegistry.GLYPH_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return RecipeRegistry.GLYPH_TYPE;
+        return RecipeRegistry.GLYPH_TYPE.get();
     }
 
     public JsonElement asRecipe(){
@@ -139,15 +139,15 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         return jsonobject;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GlyphRecipe> {
+    public static class Serializer implements RecipeSerializer<GlyphRecipe> {
 
         @Override
         public GlyphRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Item output = GsonHelper.getAsItem(json,"output");
+            Item output = GsonHelper.getAsItem(json, "output");
             int count = GsonHelper.getAsInt(json, "count");
             ItemStack outputStack = new ItemStack(output, count);
-            int levels = GsonHelper.getAsInt(json,  "exp");
-            JsonArray inputItems = GsonHelper.getAsJsonArray(json,"inputItems");
+            int levels = GsonHelper.getAsInt(json, "exp");
+            JsonArray inputItems = GsonHelper.getAsJsonArray(json, "inputItems");
             List<Ingredient> stacks = new ArrayList<>();
 
             for(JsonElement e : inputItems){

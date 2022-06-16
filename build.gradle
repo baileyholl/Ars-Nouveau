@@ -146,15 +146,16 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
-    implementation fg.deobf("mezz.jei:jei-1.18.2:9.7.0.194")
+    //not working atm implementation fg.deobf("mezz.jei:jei-1.19-forge:11.0.0.203")
+    implementation fg.deobf("curse.maven:jei-238222:3834070")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:1.19-5.1.0.1")
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.2')
 
 //    implementation fg.deobf("curse.maven:exp-64760:3577168")
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 
-//    runtimeOnly fg.deobf("curse.maven:security-64760:3696873") // Securitycraft
-    compileOnly fg.deobf("curse.maven:security-64760:3696873")
+//    runtimeOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
+    compileOnly fg.deobf("curse.maven:security-64760:3834343")
 
     //runtimeOnly fg.deobf("curse.maven:malum-484064:3788643")
     //runtimeOnly fg.deobf("curse.maven:orthus-616457:3768197")
