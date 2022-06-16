@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientDelayEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Set;
 
 public class EffectDelay extends AbstractEffect {
@@ -33,9 +32,8 @@ public class EffectDelay extends AbstractEffect {
         spellContext.setCanceled(true);
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell =  new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
+        Spell newSpell = spellContext.getRemainingSpell();
         SpellContext newContext = spellContext.clone().withSpell(newSpell).withCaster(shooter);
-
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime =(int) (20.0 * ((double) EXTEND_TIME.get() - (double)EXTEND_TIME.get()/2.0));
         duration -= decreasedTime;

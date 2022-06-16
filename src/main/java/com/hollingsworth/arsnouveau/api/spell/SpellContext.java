@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class SpellContext implements Cloneable{
 
@@ -147,6 +148,12 @@ public class SpellContext implements Cloneable{
     @Nullable @Deprecated
     public LivingEntity getCaster() {
         return caster;
+    }
+
+    public @Nonnull Spell getRemainingSpell() {
+        if(getCurrentIndex() >= getSpell().recipe.size())
+            return Spell.EMPTY;
+        return new Spell(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
     }
 
     @Override

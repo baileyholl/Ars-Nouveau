@@ -185,11 +185,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return result instanceof EntityHitResult entityHitResult ? entityHitResult.getEntity().position() : result.getLocation();
     }
 
-    public boolean isRealPlayer(LivingEntity entity){
+    public boolean isRealPlayer(Entity entity){
         return entity instanceof Player && isNotFakePlayer(entity);
     }
 
-    public boolean isNotFakePlayer(LivingEntity entity){
+    public boolean isNotFakePlayer(Entity entity){
         return !(entity instanceof FakePlayer);
     }
     // TODO: Remove bookwyrm methods
