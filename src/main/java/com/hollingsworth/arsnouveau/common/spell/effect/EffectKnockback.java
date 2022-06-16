@@ -1,14 +1,21 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -16,6 +23,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Set;
 
 public class EffectKnockback extends AbstractEffect {
@@ -34,6 +42,21 @@ public class EffectKnockback extends AbstractEffect {
         }
     }
 
+    @Override
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+        if(shooter == null)
+            return;
+        float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+
+        for(BlockPos p : posList) {
+            EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext);
+            knockback(fallingBlock, shooter, strength);
+            ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
+        }
+    }
+
     public void knockback(Entity target, LivingEntity shooter, float strength){
         knockback(target,strength,Mth.sin(shooter.yRot * ((float)Math.PI / 180F)), -Mth.cos(shooter.yRot * ((float)Math.PI / 180F)));
     }
@@ -42,7 +65,6 @@ public class EffectKnockback extends AbstractEffect {
         if(entity instanceof LivingEntity living)
             strength *= 1.0D - living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
         if (strength > 0.0D) {
-            System.out.println("knock");
             entity.hasImpulse = true;
             Vec3 vec3 = entity.getDeltaMovement();
             Vec3 vec31 = (new Vec3(xRatio, 0.0D, zRatio)).normalize().scale(strength);
@@ -70,12 +92,12 @@ public class EffectKnockback extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Knocks a target away a short distance from the caster";
+        return "Knocks a target or block away a short distance from the caster";
     }
 
     @Nonnull

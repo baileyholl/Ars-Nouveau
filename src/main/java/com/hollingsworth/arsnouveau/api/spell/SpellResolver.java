@@ -178,6 +178,13 @@ public class SpellResolver {
         return Math.max(cost, 0);
     }
 
+    /**
+     * Addons can override this to return their custom spell resolver if you change the way logic resolves.
+     */
+    public SpellResolver getNewResolver(SpellContext context){
+        return new SpellResolver(context);
+    }
+
     // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.
     // Moved to SpellContext.
     @Deprecated(forRemoval = true)

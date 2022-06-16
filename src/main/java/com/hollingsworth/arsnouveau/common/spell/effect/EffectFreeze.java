@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -34,12 +36,22 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
-            extinguishOrFreeze(world, p);
+            if(extinguishOrFreeze(world, p)){
+                ShapersFocus.tryPropagateBlockSpell(
+                        new BlockHitResult(new Vec3(p.getX(), p.getY() + 1, p.getZ()),
+                                rayTraceResult.getDirection(), p.above(), false),
+                        world, shooter, spellContext, resolver);
+            }
             for(Direction d : Direction.values()){
-                extinguishOrFreeze(world, p.relative(d));
+                BlockPos relative = p.relative(d);
+                if(extinguishOrFreeze(world, relative))
+                    ShapersFocus.tryPropagateBlockSpell(
+                            new BlockHitResult(new Vec3(relative.getX(), relative.getY() + 1, relative.getZ()),
+                                   rayTraceResult.getDirection(), relative.above(), false),
+                            world, shooter, spellContext, resolver);
             }
         }
     }
@@ -51,21 +63,25 @@ public class EffectFreeze extends AbstractEffect {
         applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), MobEffects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
-    public void extinguishOrFreeze(Level world, BlockPos p){
+    /**
+     * Returns true if this applied a freeze or extinguish effect
+     */
+    public boolean extinguishOrFreeze(Level world, BlockPos p){
         BlockState state = world.getBlockState(p.above());
         FluidState fluidState = world.getFluidState(p.above());
         if(fluidState.getType() == Fluids.WATER && state.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());
-        }
-        else if(fluidState.getType() == Fluids.LAVA && state.getBlock() instanceof LiquidBlock){
+        }else if(fluidState.getType() == Fluids.LAVA && state.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.OBSIDIAN.defaultBlockState());
         }else if(fluidState.getType() == Fluids.FLOWING_LAVA && state.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.COBBLESTONE.defaultBlockState());
         }
         else if(state.getMaterial() == Material.FIRE){
             world.destroyBlock(p.above(), false);
-
+        }else{
+            return false;
         }
+        return true;
     }
 
     @Override

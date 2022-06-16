@@ -1,18 +1,26 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Set;
 
 public class EffectLaunch extends AbstractEffect {
@@ -28,6 +36,19 @@ public class EffectLaunch extends AbstractEffect {
         entity.setDeltaMovement(entity.getDeltaMovement().add(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier(), 0));
         entity.hurtMarked = true;
         entity.fallDistance = 0.0f;
+    }
+
+    @Override
+    public void onResolveBlock(BlockHitResult result, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        super.onResolveBlock(result, world, shooter, spellStats, spellContext, resolver);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats);
+        for(BlockPos pos1 : posList) {
+            EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext);
+            entity.setDeltaMovement(entity.getDeltaMovement().add(0, (GENERIC_DOUBLE.get() * .6) + AMP_VALUE.get() * spellStats.getAmpMultiplier(), 0));
+            entity.hurtMarked = true;
+            entity.fallDistance = 0.0f;
+            ShapersFocus.tryPropagateEntitySpell(entity, world, shooter, spellContext, resolver);
+        }
     }
 
     @Override
@@ -50,7 +71,7 @@ public class EffectLaunch extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override

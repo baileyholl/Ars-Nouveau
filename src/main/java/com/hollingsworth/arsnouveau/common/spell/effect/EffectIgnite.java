@@ -33,7 +33,6 @@ public class EffectIgnite  extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-
         int duration = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
         rayTraceResult.getEntity().setSecondsOnFire(duration);
     }
@@ -55,6 +54,7 @@ public class EffectIgnite  extends AbstractEffect {
                 if (BaseFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockpos1)) {
                     BlockState blockstate1 = BaseFireBlock.getState(world, blockpos1);
                     world.setBlock(blockpos1, blockstate1, 11);
+                    world.getBlockState(pos).onCaughtFire(world, pos, face, shooter);
                 }
             }
         }
