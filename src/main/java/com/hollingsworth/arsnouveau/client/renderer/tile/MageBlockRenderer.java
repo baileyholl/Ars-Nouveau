@@ -35,4 +35,9 @@ public class MageBlockRenderer extends GeoBlockRenderer<MageBlockTile> {
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
+
+    @Override
+    public int getViewDistance() {
+        return 1500;
+    }
 }
