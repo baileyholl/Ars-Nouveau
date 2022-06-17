@@ -53,8 +53,8 @@ public class EffectIgnite  extends AbstractEffect {
                 BlockPos blockpos1 = pos.relative(face);
                 if (BaseFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockpos1)) {
                     BlockState blockstate1 = BaseFireBlock.getState(world, blockpos1);
-                    world.setBlock(blockpos1, blockstate1, 11);
-                    world.getBlockState(pos).onCaughtFire(world, pos, face, shooter);
+                    world.setBlock(blockpos1, blockstate1, 3);
+                    world.updateNeighborsAt(blockpos1, blockstate1.getBlock());
                 }
             }
         }

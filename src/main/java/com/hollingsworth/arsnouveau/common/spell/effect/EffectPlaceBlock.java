@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -43,7 +45,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         BlockHitResult result = rayTraceResult;
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
@@ -68,6 +70,11 @@ public class EffectPlaceBlock extends AbstractEffect {
                 BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)),
                         hitPos.relative(direction), direction);
                 item.place(context);
+                BlockPos affectedPos = context.getClickedPos();
+                ShapersFocus.tryPropagateBlockSpell(
+                        new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
+                                context.hitResult.getDirection(), affectedPos, false),
+                        world, shooter, spellContext, resolver);
             }else if(shooter instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
                 if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item))
@@ -79,21 +86,28 @@ public class EffectPlaceBlock extends AbstractEffect {
                     continue;
                 }
                 attemptPlace(world, stack, item, result, fakePlayer);
-            } else if (shooter instanceof Player playerEntity) {
-                NonNullList<ItemStack> list = playerEntity.inventory.items;
-                if (!world.getBlockState(hitPos).getMaterial().isReplaceable())
+
+            }else if(shooter instanceof Player playerEntity){
+                NonNullList<ItemStack> list =  playerEntity.inventory.items;
+                if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
                 if (MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), playerEntity))) {
                     continue;
                 }
                 for (int i = 0; i < 9; i++) {
                     ItemStack stack = list.get(i);
-                    if (stack.getItem() instanceof BlockItem item && world instanceof ServerLevel) {
 
+                    if(stack.getItem() instanceof BlockItem blockItem && world instanceof ServerLevel){
                         BlockHitResult resolveResult = new BlockHitResult(new Vec3(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
-                        InteractionResult resultType = attemptPlace(world, stack, item, resolveResult, fakePlayer);
-                        if (InteractionResult.FAIL != resultType)
+                        InteractionResult resultType = attemptPlace(world, stack, blockItem, resolveResult, fakePlayer);
+                        if(InteractionResult.FAIL != resultType) {
+                            BlockPos affectedPos = resolveResult.getBlockPos();
+                            ShapersFocus.tryPropagateBlockSpell(
+                                    new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
+                                            resolveResult.getDirection(), affectedPos, false),
+                                    world, shooter, spellContext, resolver);
                             break;
+                        }
                     }
                 }
             }

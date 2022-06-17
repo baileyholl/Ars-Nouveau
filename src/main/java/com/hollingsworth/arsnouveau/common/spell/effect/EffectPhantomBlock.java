@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+
+import com.hollingsworth.arsnouveau.common.block.MageBlock;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -18,6 +21,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectPhantomBlock extends AbstractEffect {
@@ -29,7 +33,7 @@ public class EffectPhantomBlock extends AbstractEffect {
 
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
             pos =  rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());
@@ -37,8 +41,9 @@ public class EffectPhantomBlock extends AbstractEffect {
                 continue;
             BlockState state = world.getBlockState(pos);
             if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.MAGE_BLOCK.defaultBlockState(), pos, CollisionContext.of(fakePlayer))){
-                world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.defaultBlockState());
-                if (world.getBlockEntity(pos) instanceof MageBlockTile tile) {
+
+                world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.defaultBlockState().setValue(MageBlock.TEMPORARY, !spellStats.hasBuff(AugmentAmplify.INSTANCE)));
+                if(world.getBlockEntity(pos) instanceof MageBlockTile tile) {
                     tile.color = spellContext.colors.toParticleColor();
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);
@@ -48,6 +53,12 @@ public class EffectPhantomBlock extends AbstractEffect {
         }
     }
 
+    @Override
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        Map<String, Integer> map = super.getDefaultAugmentLimits();
+        map.put(GlyphLib.AugmentAmplifyID, 1);
+        return map;
+    }
 
     @Override
     public int getDefaultManaCost() {
