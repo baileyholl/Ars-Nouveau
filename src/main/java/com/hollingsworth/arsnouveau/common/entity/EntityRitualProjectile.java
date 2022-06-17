@@ -31,7 +31,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualBrazierTile) || ((RitualBrazierTile) level.getBlockEntity(tilePos)).ritual == null )) {
+        if (!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualBrazierTile tile) || tile.ritual == null)) {
             this.remove(RemovalReason.DISCARDED);
             return;
         }
@@ -50,24 +50,24 @@ public class EntityRitualProjectile extends ColoredProjectile{
             for (double j = 0; j < 3; j++) {
 
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(ParticleSparkleData.createData(getParticleColor()),
-                            (float) (position().x()) + Math.sin(level.getGameTime()/3D),
+                            (float) (position().x()) + Math.sin(level.getGameTime() / 3D),
                             (float) (position().y()),
-                            (float) (position().z()) + Math.cos(level.getGameTime()/3D),
-                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
+                            (float) (position().z()) + Math.cos(level.getGameTime() / 3D),
+                            0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()));
                 }
             }
 
             for (double j = 0; j < 3; j++) {
 
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
-                            (float) (position().x()) - Math.sin(level.getGameTime()/3D),
+                            (float) (position().x()) - Math.sin(level.getGameTime() / 3D),
                             (float) (position().y()),
-                            (float) (position().z()) - Math.cos(level.getGameTime()/3D),
-                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
+                            (float) (position().z()) - Math.cos(level.getGameTime() / 3D),
+                            0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()));
                 }
             }
         }

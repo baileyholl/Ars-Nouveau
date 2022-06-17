@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api;
 
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -23,6 +24,10 @@ public class RegistryHelper {
 
     public static ResourceLocation getRegistryName(Enchantment e) {
         return ForgeRegistries.ENCHANTMENTS.getKey(e);
+    }
+
+    public static ResourceLocation getRegistryName(ParticleType<?> type) {
+        return ForgeRegistries.PARTICLE_TYPES.getKey(type);
     }
 
 }

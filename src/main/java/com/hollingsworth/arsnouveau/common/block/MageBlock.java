@@ -18,7 +18,7 @@ public class MageBlock extends TickableModBlock {
     public static final BooleanProperty TEMPORARY = BooleanProperty.create("temporary");
 
     public MageBlock() {
-        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape(), LibBlockNames.MAGE_BLOCK);
+        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape());
         registerDefaultState(defaultBlockState().setValue(TEMPORARY, false));
     }
 

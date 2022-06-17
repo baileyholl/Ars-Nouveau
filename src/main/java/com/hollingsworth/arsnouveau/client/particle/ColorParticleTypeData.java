@@ -8,6 +8,8 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 
 /**
  * Simplified verison of ElementalCraft https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/particle/ElementTypeParticleData.java
@@ -78,6 +80,6 @@ public class ColorParticleTypeData implements ParticleOptions {
 
     @Override
     public String writeToString() {
-        return type.getRegistryName().toString() + " " + color.serialize();
+        return getRegistryName(type).toString() + " " + color.serialize();
     }
 }

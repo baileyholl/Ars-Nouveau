@@ -26,8 +26,10 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
     public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
 
+    private final DataGenerator generator;
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
+        this.generator = generatorIn;
     }
 
     @Override
