@@ -40,7 +40,7 @@ public class EffectPull extends AbstractEffect {
         Entity target = rayTraceResult.getEntity();
         Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
         double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
-        target.setDeltaMovement(target.getDeltaMovement().add(vec3d.normalize().scale(d2)));
+        target.setDeltaMovement(vec3d.normalize().scale(d2));
         target.hurtMarked = true;
     }
 

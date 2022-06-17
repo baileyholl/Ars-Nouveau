@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -34,7 +36,7 @@ public class EffectCrush extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<CrushRecipe> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE);
         CrushRecipe lastHit = null; // Cache this for AOE hits
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
@@ -60,13 +62,20 @@ public class EffectCrush extends AbstractEffect {
                     world.setBlockAndUpdate(p, ((BlockItem) i.getItem()).getBlock().defaultBlockState());
                     i.shrink(1);
                     placedBlock = true;
+                    ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                            new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(),p, false
+                    ), world, shooter, spellContext, resolver);
                 }
                 if(!i.isEmpty()){
                     world.addFreshEntity(new ItemEntity(world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, i));
                 }
             }
-            if(!placedBlock)
+            if(!placedBlock) {
                 world.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
+                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                        new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(),p, false
+                ), world, shooter, spellContext, resolver);
+            }
         }
     }
 

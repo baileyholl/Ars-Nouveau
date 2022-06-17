@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,20 +28,22 @@ public class EffectEvaporate extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
-            evaporate(world, p);
+            evaporate(world, p,rayTraceResult, shooter, spellContext, resolver);
             for(Direction d : Direction.values()){
-                evaporate(world, p.relative(d));
+                evaporate(world, p.relative(d), rayTraceResult, shooter, spellContext, resolver);
             }
         }
     }
 
-    public void evaporate(Level world, BlockPos p){
+    public void evaporate(Level world, BlockPos p, BlockHitResult rayTraceResult, LivingEntity shooter, SpellContext context, SpellResolver resolver){
         if(!world.getFluidState(p).isEmpty() && world.getBlockState(p).getBlock() instanceof LiquidBlock){
             world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+            ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                    new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(),p, false
+            ), world, shooter, context, resolver);
         }
     }
 
@@ -62,6 +66,6 @@ public class EffectEvaporate extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf(AugmentAOE.INSTANCE);
+        return setOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 }

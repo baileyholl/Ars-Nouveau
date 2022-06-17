@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.effect.MobEffects;
@@ -25,7 +26,9 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectFreeze extends AbstractEffect {
@@ -39,49 +42,66 @@ public class EffectFreeze extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
-            if(extinguishOrFreeze(world, p)){
+            BlockPos affectedPos = extinguishOrFreeze(world, p, spellStats);
+            if(affectedPos != null){
                 ShapersFocus.tryPropagateBlockSpell(
-                        new BlockHitResult(new Vec3(p.getX(), p.getY() + 1, p.getZ()),
-                                rayTraceResult.getDirection(), p.above(), false),
+                        new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
+                                rayTraceResult.getDirection(), affectedPos, false),
                         world, shooter, spellContext, resolver);
             }
             for(Direction d : Direction.values()){
                 BlockPos relative = p.relative(d);
-                if(extinguishOrFreeze(world, relative))
+                affectedPos = extinguishOrFreeze(world, relative, spellStats);
+                if(affectedPos != null)
                     ShapersFocus.tryPropagateBlockSpell(
-                            new BlockHitResult(new Vec3(relative.getX(), relative.getY() + 1, relative.getZ()),
-                                   rayTraceResult.getDirection(), relative.above(), false),
+                            new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
+                                   rayTraceResult.getDirection(), affectedPos, false),
                             world, shooter, spellContext, resolver);
             }
         }
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if(!(rayTraceResult.getEntity() instanceof LivingEntity))
             return;
         applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), MobEffects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
     /**
-     * Returns true if this applied a freeze or extinguish effect
+     * Returns a position if a block was changed.
+     * Returns null if nothing happened.
      */
-    public boolean extinguishOrFreeze(Level world, BlockPos p){
-        BlockState state = world.getBlockState(p.above());
-        FluidState fluidState = world.getFluidState(p.above());
-        if(fluidState.getType() == Fluids.WATER && state.getBlock() instanceof LiquidBlock){
-            world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());
-        }else if(fluidState.getType() == Fluids.LAVA && state.getBlock() instanceof LiquidBlock){
+    public @Nullable BlockPos extinguishOrFreeze(Level world, BlockPos p, SpellStats spellStats){
+        BlockState hitState = world.getBlockState(p);
+        BlockState aboveState = world.getBlockState(p.above());
+        FluidState aboveFluidstate = world.getFluidState(p.above());
+        if(aboveFluidstate.getType() == Fluids.WATER && aboveState.getBlock() instanceof LiquidBlock){
+            if(spellStats.hasBuff(AugmentSensitive.INSTANCE)){
+                world.setBlockAndUpdate(p.above(), Blocks.FROSTED_ICE.defaultBlockState());
+            }else{
+                world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());
+            }
+            return p.above();
+        }else if(aboveFluidstate.getType() == Fluids.LAVA && aboveState.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.OBSIDIAN.defaultBlockState());
-        }else if(fluidState.getType() == Fluids.FLOWING_LAVA && state.getBlock() instanceof LiquidBlock){
+            return p.above();
+        }else if(aboveFluidstate.getType() == Fluids.FLOWING_LAVA && aboveState.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.COBBLESTONE.defaultBlockState());
+            return p.above();
         }
-        else if(state.getMaterial() == Material.FIRE){
+        else if(aboveState.getMaterial() == Material.FIRE){
             world.destroyBlock(p.above(), false);
+            return p.above();
+        }else if(hitState.getBlock() == Blocks.ICE){
+            world.setBlock(p, Blocks.PACKED_ICE.defaultBlockState(), 3);
+            return p;
+        }else if(hitState.getBlock() == Blocks.PACKED_ICE){
+            world.setBlock(p, Blocks.BLUE_ICE.defaultBlockState(), 3);
+            return p;
         }else{
-            return false;
+            return null;
         }
-        return true;
     }
 
     @Override
@@ -101,18 +121,26 @@ public class EffectFreeze extends AbstractEffect {
         return 15;
     }
 
+    @Override
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put(GlyphLib.AugmentSensitiveID, 1);
+        return map;
+    }
+
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         Set<AbstractAugment> augments = new HashSet<>(getPotionAugments());
         augments.add(AugmentAOE.INSTANCE);
         augments.add(AugmentPierce.INSTANCE);
+        augments.add(AugmentSensitive.INSTANCE);
         return augments;
     }
 
     @Override
     public String getBookDescription() {
-        return "Freezes water or lava in a small area or slows a target for a short time.";
+        return "Freezes water or lava in a small area or slows a target for a short time. Freeze on Ice will turn it into Packed Ice, and Packed Ice into Blue Ice. Sensitive will turn water into Frosted Ice and will vanish after a short time.";
     }
 
     @Nonnull
