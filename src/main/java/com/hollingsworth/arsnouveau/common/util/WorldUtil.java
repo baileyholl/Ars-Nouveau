@@ -143,27 +143,6 @@ public class WorldUtil
         return world.getDayTime() % 24000 <= pastTime;
     }
 
-    /**
-     * Check if a world is of the overworld type.
-     *
-     * @param world the world to check.
-     * @return true if so.
-     */
-    public static boolean isOverworldType(@NotNull final Level world)
-    {
-        return isOfWorldType(world, DimensionType.OVERWORLD_LOCATION);
-    }
-
-    /**
-     * Check if a world is of the nether type.
-     *
-     * @param world the world to check.
-     * @return true if so.
-     */
-    public static boolean isNetherType(@NotNull final Level world)
-    {
-        return isOfWorldType(world, DimensionType.NETHER_LOCATION);
-    }
 
     /**
      * Check if a world has a specific dimension type.

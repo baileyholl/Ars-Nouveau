@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
-import com.hollingsworth.arsnouveau.client.gui.book.slider.ANProgressOption;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SoundButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -20,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -47,10 +47,9 @@ public class SoundScreen extends BaseBook{
     @Override
     public void init() {
         super.init();
-        volumeSlider = buildSlider(Component.translatable("ars_nouveau.sounds.volume").getString(), s -> volume, (settings, d) -> volume = d, 0, 100, 1)
-                .createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
-        pitchSlider = buildSlider(Component.translatable("ars_nouveau.sounds.pitch").getString(), s -> pitch, (settings, d) -> pitch = d, 0, 200, 1)
-                .createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
+
+        volumeSlider = buildSlider( bookLeft + 28, bookTop + 49, Component.translatable("ars_nouveau.sounds.volume"), Component.empty(), volume);
+        pitchSlider = buildSlider( bookLeft + 28, bookTop + 89, Component.translatable("ars_nouveau.sounds.pitch"), Component.empty(), pitch);
 
         addRenderableWidget(volumeSlider);
         addRenderableWidget(pitchSlider);
@@ -133,9 +132,5 @@ public class SoundScreen extends BaseBook{
     @Override
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
         super.drawForegroundElements(mouseX, mouseY, partialTicks);
-    }
-
-    protected ANProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter, double min, double max, float step){
-        return new ANProgressOption(key, min, max, step, getter, setter, (settings, optionValues) -> Component.literal(key + (int)optionValues.get(settings)));
     }
 }

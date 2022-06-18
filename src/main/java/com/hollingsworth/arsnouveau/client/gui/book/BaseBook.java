@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -99,5 +100,9 @@ public class BaseBook extends ModdedScreen {
         stack.popPose();
         super.render(stack, mouseX, mouseY, partialTicks);
         drawTooltip(stack, mouseX, mouseY);
+    }
+
+    public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal){
+        return new BookSlider(x,y,100,20,prefix, suffix, 1.0D, 255.0D, currentVal, 1,1,true);
     }
 }

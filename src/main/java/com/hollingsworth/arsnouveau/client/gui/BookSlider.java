@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.gui.book.slider.ANProgressOption;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -9,15 +8,23 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 import java.util.List;
 
-public class BookSlider extends AbstractSliderButton {
-    public BookSlider(Options pOptions, int pX, int pY, int pWidth, int pHeight, ANProgressOption pProgressOption, List<FormattedCharSequence> pTooltip) {
-        super(pOptions, pX, pY, pWidth, pHeight, pProgressOption, pTooltip);
+public class BookSlider extends ForgeSlider {
+
+
+    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
+        super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
+    }
+
+    public BookSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString) {
+        super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, drawString);
     }
 
     @Override
@@ -25,12 +32,6 @@ public class BookSlider extends AbstractSliderButton {
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_bar_knob.png"));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.blit(pPoseStack, this.x + (int) (this.value * (double) (this.width - 8)), this.y, 0, 0, 8, 20, 8, 20);
-    }
-
-    //TODO fix this class, @see OptionInstance#OptionInstanceSliderButton
-    @Override
-    protected void updateMessage() {
-
     }
 
     @Override

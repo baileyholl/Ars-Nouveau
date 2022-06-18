@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.gui.book.slider.ANProgressOption;
+import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -38,9 +39,9 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
-        redW = buildSlider(Component.translatable("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
-        greenW = buildSlider(Component.translatable("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
-        blueW = buildSlider(Component.translatable("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
+        redW = buildSlider(bookLeft + 28, bookTop + 49,Component.translatable("ars_nouveau.color_gui.red_slider"), Component.empty(), red);
+        greenW = buildSlider(bookLeft + 28, bookTop + 89,Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), green);
+        blueW = buildSlider(bookLeft + 28, bookTop + 129,Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), blue);
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
@@ -125,7 +126,4 @@ public class GuiColorScreen extends BaseBook {
         super.drawForegroundElements(mouseX, mouseY, partialTicks);
     }
 
-    protected ANProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter){
-        return new ANProgressOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> Component.literal(key + (int)optionValues.get(settings)));
-    }
 }
