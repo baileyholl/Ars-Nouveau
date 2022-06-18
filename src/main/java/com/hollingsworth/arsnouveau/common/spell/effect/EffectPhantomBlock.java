@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 
 import com.hollingsworth.arsnouveau.common.block.MageBlock;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
 import javax.annotation.Nonnull;
@@ -48,6 +50,8 @@ public class EffectPhantomBlock extends AbstractEffect {
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);
                     world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+                    ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
+                            rayTraceResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
                 }
             }
         }

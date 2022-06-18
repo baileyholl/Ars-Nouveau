@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -19,10 +20,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +46,7 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
@@ -59,12 +57,12 @@ public class EffectSmelt extends AbstractEffect {
         for(BlockPos pos : posList) {
             if(!canBlockBeHarvested(spellStats, world, pos))
                 continue;
-            smeltBlock(world, pos, shooter);
+            smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
         }
     }
 
 
-    public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter){
+    public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter, BlockHitResult hitResult, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockState state = world.getBlockState(pos);
         if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
             return;
@@ -80,6 +78,9 @@ public class EffectSmelt extends AbstractEffect {
                     world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
                     BlockUtil.safelyUpdateState(world, pos);
                 }
+                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                        new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver
+                );
             }
         }
     }

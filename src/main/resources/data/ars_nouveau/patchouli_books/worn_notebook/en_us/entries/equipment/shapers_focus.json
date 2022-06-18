@@ -1,0 +1,30 @@
+{
+  "name": "item.ars_nouveau.shapers_focus",
+  "icon": "ars_nouveau:shapers_focus",
+  "category": "ars_nouveau:equipment",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.shapers_focus",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:shapers_focus",
+      "type": "ars_nouveau:apparatus_recipe"
+    },
+    {
+      "text": "ars_nouveau.page2.shapers_focus",
+      "title": "ars_nouveau.shapers_focus.blocks",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page3.shapers_focus",
+      "title": "ars_nouveau.shapers_focus.entities",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page4.shapers_focus",
+      "title": "ars_nouveau.shapers_focus.examples",
+      "type": "patchouli:text"
+    }
+  ]
+}

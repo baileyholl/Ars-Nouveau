@@ -431,6 +431,14 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")),
                 getPath(MOD_NEWS, "support_mod"));
 
+
+        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.SHAPERS_FOCUS)
+                .withLocalizedText()
+                .withPage(new ApparatusPage(ItemsRegistry.SHAPERS_FOCUS))
+                .withPage(new TextPage(getLangPath("shapers_focus", 2)).withTitle("ars_nouveau.shapers_focus.blocks"))
+                .withPage(new TextPage(getLangPath("shapers_focus", 3)).withTitle("ars_nouveau.shapers_focus.entities"))
+                .withPage(new TextPage(getLangPath("shapers_focus", 4)).withTitle("ars_nouveau.shapers_focus.examples")), getPath(EQUIPMENT, "shapers_focus"));
+
     }
 
     public String getLangPath(String name, int count){

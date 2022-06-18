@@ -23,7 +23,7 @@ public class EffectSummonDecoy extends AbstractEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(isRealPlayer(shooter)){
+        if(canSummon(shooter)){
             Vec3 pos = safelyGetHitPos(rayTraceResult);
             EntityDummy dummy = new EntityDummy(world);
             dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));
@@ -31,6 +31,7 @@ public class EffectSummonDecoy extends AbstractEffect {
             dummy.setOwnerID(shooter.getUUID());
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, dummy);
             world.getEntitiesOfClass(Mob.class, dummy.getBoundingBox().inflate(20, 10, 20)).forEach(l -> l.setTarget(dummy));
+            applySummoningSickness(shooter, 1);
         }
     }
 
@@ -60,7 +61,7 @@ public class EffectSummonDecoy extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it. Does not apply summoning sickness.";
+        return "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it.";
     }
 
     @Nonnull

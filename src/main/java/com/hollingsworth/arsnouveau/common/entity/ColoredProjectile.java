@@ -8,7 +8,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
 
 public abstract class ColoredProjectile extends Projectile {
     public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
@@ -35,32 +40,6 @@ public abstract class ColoredProjectile extends Projectile {
 
     public ParticleColor.IntWrapper getParticleColorWrapper(){
         return new ParticleColor.IntWrapper(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
-    }
-
-    public boolean shouldRenderAtSqrDistance(double pDistance) {
-        double d0 = this.getBoundingBox().getSize() * 10.0D;
-        if (Double.isNaN(d0)) {
-            d0 = 1.0D;
-        }
-
-        d0 *= 64.0D * getViewScale();
-        return pDistance < d0 * d0;
-    }
-
-
-    /**
-     * Sets a target for the client to interpolate towards over the next few ticks
-     */
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
-        this.setPos(pX, pY, pZ);
-        this.setRot(pYaw, pPitch);
-    }
-
-    /**
-     * Updates the entity motion clientside, called by packets from the server
-     */
-    public void lerpMotion(double pX, double pY, double pZ) {
-        super.lerpMotion(pX, pY, pZ);
     }
 
     public void setColor(ParticleColor.IntWrapper colors){
@@ -91,4 +70,11 @@ public abstract class ColoredProjectile extends Projectile {
         this.entityData.define(GREEN, 25);
         this.entityData.define(BLUE, 180);
     }
+
+
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
+        return ProjectileUtil.getEntityHitResult(this.level, this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+    }
+
 }

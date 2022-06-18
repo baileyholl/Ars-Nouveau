@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -33,7 +32,7 @@ public class ShapersFocus extends ModItem implements ISpellModifierItem {
     }
 
     public static void tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, LivingEntity shooter, SpellContext spellContext, SpellResolver resolver) {
-        if(!CuriosUtil.hasItem(shooter, ItemsRegistry.SHAPERS_FOCUS))
+        if(!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.getDefaultInstance()))
             return;
         SpellResolver newResolver = resolver.getNewResolver(spellContext.clone().withSpell(spellContext.getRemainingSpell()));
         newResolver.onResolveEffect(level, new EntityHitResult(fallingblockentity, fallingblockentity.position));
@@ -41,7 +40,7 @@ public class ShapersFocus extends ModItem implements ISpellModifierItem {
     }
 
     public static void tryPropagateBlockSpell(BlockHitResult blockHitResult, Level level, LivingEntity shooter, SpellContext spellContext, SpellResolver resolver) {
-        if(!CuriosUtil.hasItem(shooter, ItemsRegistry.SHAPERS_FOCUS))
+        if(!resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.getDefaultInstance()))
             return;
         SpellResolver newResolver = resolver.getNewResolver(spellContext.clone().withSpell(spellContext.getRemainingSpell()));
         newResolver.onResolveEffect(level, blockHitResult);

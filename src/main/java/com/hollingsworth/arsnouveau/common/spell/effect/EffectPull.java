@@ -51,9 +51,11 @@ public class EffectPull extends AbstractEffect {
             if(!canBlockBeHarvested(spellStats, world, p)) {
                 continue;
             }
-            EnchantedFallingBlock fallingblockentity = EnchantedFallingBlock.fall(world, p, shooter, spellContext);
-            setMotion(fallingblockentity, blockHitResult, spellStats);
-            ShapersFocus.tryPropagateEntitySpell(fallingblockentity, world, shooter, spellContext, resolver);
+            EnchantedFallingBlock fallingblockentity = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
+            if(fallingblockentity != null) {
+                setMotion(fallingblockentity, blockHitResult, spellStats);
+                ShapersFocus.tryPropagateEntitySpell(fallingblockentity, world, shooter, spellContext, resolver);
+            }
         }
     }
 
