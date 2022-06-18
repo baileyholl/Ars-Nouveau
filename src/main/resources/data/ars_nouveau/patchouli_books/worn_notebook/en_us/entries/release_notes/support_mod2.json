@@ -10,6 +10,11 @@
 			"link_text":"Join Discord",
 			"url":"https://discord.gg/y7TMXZu"
         },{
+        "type": "link",
+        "text": "Support the mod on Patreon and get free swag, a discord role, and contribute a Custom Tome!",
+        "link_text":"Patreon",
+        "url":"https://www.patreon.com/arsnouveau"
+      },{
             "type": "link",
             "text": "Support the mod with summon themed art scenes, sold as stickers, mugs, and more!",
 			"link_text":"Shop Redbubble",
