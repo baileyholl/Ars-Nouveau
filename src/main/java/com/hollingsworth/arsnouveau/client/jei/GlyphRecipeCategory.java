@@ -1,5 +1,5 @@
 package com.hollingsworth.arsnouveau.client.jei;
-
+/* TODO restore
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -111,3 +111,5 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
         recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
     }
 }
+
+ */

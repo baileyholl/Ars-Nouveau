@@ -24,9 +24,9 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -406,8 +406,7 @@ public class GlyphUnlockMenu extends BaseBook{
             RenderSystem.disableTexture();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            bufferbuilder.end();
-            BufferUploader.end(bufferbuilder);
+            BufferUploader.drawWithShader(bufferbuilder.end());
             RenderSystem.disableBlend();
             RenderSystem.enableTexture();
             MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());

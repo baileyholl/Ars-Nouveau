@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -231,12 +232,10 @@ public class ClientHandler {
 
     public static Component localize(String key, Object... params) {
         for(int i = 0; i < params.length; ++i) {
-            Object var5 = params[i];
-            if (var5 instanceof Component component) {
-                params[i] = localize(component.getKey(), component.getArgs());
-            }
+            Object parameter = params[i]; //to avoid ij dataflow warning
+            if (parameter instanceof Component component && component.getContents() instanceof TranslatableContents translatableContents)
+                params[i] = localize(translatableContents.getKey(), translatableContents.getArgs());
         }
-
         return Component.translatable(key, params);
     }
 

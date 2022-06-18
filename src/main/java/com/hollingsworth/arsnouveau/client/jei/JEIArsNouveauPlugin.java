@@ -1,5 +1,5 @@
 package com.hollingsworth.arsnouveau.client.jei;
-
+/* TODO restore
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
@@ -89,3 +89,6 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), ImbuementRecipeCategory.UID);
     }
 }
+
+
+ */
