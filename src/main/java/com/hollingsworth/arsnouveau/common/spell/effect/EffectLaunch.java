@@ -78,7 +78,7 @@ public class EffectLaunch extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Boosts a target into the air. Can be used for large jumps or for scaling mountains!";
+        return "Launches an entity or block into the air. Can be used for large jumps or for scaling mountains!";
     }
 
     @Nonnull

@@ -907,6 +907,14 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .build());
+
+        addRecipe(builder().withResult(ItemsRegistry.SHAPERS_FOCUS)
+                .withReagent(ItemsRegistry.MANIPULATION_ESSENCE)
+                .withPedestalItem(1,Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(Items.PISTON)
+                .withPedestalItem(Items.SLIME_BLOCK)
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

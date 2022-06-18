@@ -237,7 +237,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
         super.onHitEntity(pResult);
         Entity entity = pResult.getEntity();
         float f = (float)this.getDeltaMovement().length();
-        int i = Mth.ceil(Mth.clamp((Math.max(f, 2.5) * this.baseDamage) + getStateDamageBonus(), 0.0D, 2.147483647E9D));
+        int i = Mth.ceil(Mth.clamp((Math.min(f, 2.5) * this.baseDamage) + getStateDamageBonus(), 0.0D, 2.147483647E9D));
         this.piercingIgnoreEntityIds.add(entity.getId());
 
         Entity owner = this.getOwner();
