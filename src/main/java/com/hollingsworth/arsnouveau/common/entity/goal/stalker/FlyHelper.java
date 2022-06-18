@@ -37,7 +37,7 @@ public class FlyHelper extends MoveControl {
         float f3 = mob.yRot;
         float f4 = (float)Mth.atan2(f2, f);
         float f5 = Mth.wrapDegrees(mob.yRot + 90.0F);
-        float f6 = Mth.wrapDegrees(f4 * (180F / (float)Math.PI));
+        float f6 = Mth.wrapDegrees(f4 * (180F / (float) Math.PI));
         mob.yRot = Mth.approachDegrees(f5, f6, 4.0F) - 90.0F;
         mob.yBodyRot = mob.yRot;
         if (Mth.degreesDifferenceAbs(f3, mob.yRot) < 3.0F) {
@@ -46,12 +46,12 @@ public class FlyHelper extends MoveControl {
             this.speedFactor = Mth.approach(this.speedFactor, 0.2F, 0.025F);
         }
 
-        float f7 = (float)(-(Mth.atan2(-f1, d0) * (double)(180F / (float)Math.PI)));
-        mob.xRot = f7;
-        float f8 = mob.yRot + 90.0F;
-        double d3 = (double)(this.speedFactor * Mth.cos(f8 * ((float)Math.PI / 180F))) * Math.abs((double)f / d2);
-        double d4 = (double)(this.speedFactor * Mth.sin(f8 * ((float)Math.PI / 180F))) * Math.abs((double)f2 / d2);
-        double d5 = (double)(this.speedFactor * Mth.sin(f7 * ((float)Math.PI / 180F))) * Math.abs((double)f1 / d2);
+        float f7 = (float) (-(Mth.atan2(-f1, d0) * (double) (180F / (float) Math.PI)));
+        mob.setXRot(f7);
+        float f8 = mob.getYRot() + 90.0F;
+        double d3 = (double) (this.speedFactor * Mth.cos(f8 * ((float) Math.PI / 180F))) * Math.abs((double) f / d2);
+        double d4 = (double) (this.speedFactor * Mth.sin(f8 * ((float) Math.PI / 180F))) * Math.abs((double) f2 / d2);
+        double d5 = (double) (this.speedFactor * Mth.sin(f7 * ((float) Math.PI / 180F))) * Math.abs((double) f1 / d2);
         Vec3 vector3d = mob.getDeltaMovement();
         mob.setDeltaMovement(vector3d.add((new Vec3(d3, d5, d4)).subtract(vector3d).scale(0.2D)));
     }

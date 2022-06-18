@@ -76,10 +76,10 @@ public class WarpScroll extends ModItem{
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
                 return InteractionResultHolder.fail(stack);
             }
-            player.teleportToWithTicket(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
+            player.teleportToWithTicket(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = getRotationVector(stack);
-            player.xRot = rotation.x;
-            player.yRot = rotation.y;
+            player.setXRot(rotation.x);
+            player.setYRot(rotation.y);
             stack.shrink(1);
             return InteractionResultHolder.pass(stack);
         }

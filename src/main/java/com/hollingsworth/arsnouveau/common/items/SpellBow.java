@@ -173,7 +173,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     }
                 }
                 for(AbstractArrow arr : arrows){
-                    arr.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, 1.0F);
+                    arr.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot(), 0.0F, f * 3.0F, 1.0F);
                     if (f >= 1.0F) {
                         arr.setCritArrow(true);
                     }

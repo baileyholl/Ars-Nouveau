@@ -230,7 +230,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                             new Spell.Builder().add(MethodTouch.INSTANCE)
                                     .add(EffectLaunch.INSTANCE).add(AugmentAmplify.INSTANCE, 2).add(EffectDelay.INSTANCE).add(EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 2).build()
                     , this));
-                    resolver.onCastOnEntity(ItemStack.EMPTY, this, e, InteractionHand.MAIN_HAND);
+                    resolver.onCastOnEntity(ItemStack.EMPTY, e, InteractionHand.MAIN_HAND);
                 }
                 getRandomUpgrade();
                 gainPhaseBuffs();
@@ -731,8 +731,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         final double squareDifference = Math.sqrt(xDifference * xDifference + zDifference * zDifference);
         final double intendedRotationYaw = (Math.atan2(zDifference, xDifference) * 180.0D / Math.PI) - 90.0;
         final double intendedRotationPitch = -(Math.atan2(yDifference, squareDifference) * 180.0D / Math.PI);
-        citizen.yRot = (float) (updateRotation(citizen.yRot, intendedRotationYaw, 360.0) % 360.0F);
-        citizen.xRot = (float) (updateRotation(citizen.xRot, intendedRotationPitch, 360.0) % 360.0F);
+        citizen.yRot = (float) (updateRotation(citizen.getYRot(), intendedRotationYaw, 360.0) % 360.0F);
+        citizen.xRot = (float) (updateRotation(citizen.getXRot(), intendedRotationPitch, 360.0) % 360.0F);
     }
     public static double updateRotation(final double currentRotation, final double intendedRotation, final double maxIncrement) {
         double wrappedAngle = Mth.wrapDegrees(intendedRotation - currentRotation);

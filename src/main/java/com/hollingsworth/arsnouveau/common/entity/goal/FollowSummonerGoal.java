@@ -115,7 +115,7 @@ public class FollowSummonerGoal extends Goal {
                     for(int l = 0; l <= 4; ++l) {
                         for(int i1 = 0; i1 <= 4; ++i1) {
                             if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.canTeleportToBlock(new BlockPos(i + l, k - 1, j + i1))) {
-                                this.summon.getSelfEntity().moveTo((float)(i + l) + 0.5F, k, (float)(j + i1) + 0.5F, this.summon.getSelfEntity().yRot, this.summon.getSelfEntity().xRot);
+                                this.summon.getSelfEntity().moveTo((float) (i + l) + 0.5F, k, (float) (j + i1) + 0.5F, this.summon.getSelfEntity().getYRot(), this.summon.getSelfEntity().getXRot());
                                 this.navigator.stop();
                                 return;
                             }
