@@ -36,7 +36,6 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     public int sourceCost;
     public boolean keepNbtOfReagent = false;
 
-    public static final String RECIPE_ID = "enchanting_apparatus";
 
     public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems){
         this.reagent = reagent;
@@ -193,7 +192,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTING_APPARATUS_RECIPE_ID));
     }
 
     public static class Serializer implements RecipeSerializer<EnchantingApparatusRecipe> {

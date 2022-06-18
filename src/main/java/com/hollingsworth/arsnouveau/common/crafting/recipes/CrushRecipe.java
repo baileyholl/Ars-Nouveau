@@ -30,7 +30,6 @@ public class CrushRecipe implements Recipe<Container> {
     public final Ingredient input;
     public final List<CrushOutput> outputs;
     public final ResourceLocation id;
-    public static final String RECIPE_ID = "crush";
 
     public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
         this.input = input;

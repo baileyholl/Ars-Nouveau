@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
-    public static final String RECIPE_ID = "reactive_enchantment";
 
     public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, int sourceCost){
         super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 1, sourceCost);
@@ -65,7 +64,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
     @Override
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + RECIPE_ID);
+        jsonobject.addProperty("type", "ars_nouveau:" +RecipeRegistry.REACTIVE_RECIPE_ID);
         jsonobject.addProperty("sourceCost", getSourceCost());
         JsonArray pedestalArr = new JsonArray();
         for(Ingredient i : this.pedestalItems){

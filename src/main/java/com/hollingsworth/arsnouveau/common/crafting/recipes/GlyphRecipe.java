@@ -28,7 +28,7 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class GlyphRecipe implements Recipe<ScribesTile> {
 
-    public static final String RECIPE_ID = "glyph";
+
     public ItemStack output;
     public List<Ingredient> inputs;
     public ResourceLocation id;
@@ -125,7 +125,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
     public JsonElement asRecipe(){
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + GlyphRecipe.RECIPE_ID);
+        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.GLYPH_RECIPE_ID);
         jsonobject.addProperty("count", this.output.getCount());
         JsonArray pedestalArr = new JsonArray();
         for(Ingredient i : this.inputs){

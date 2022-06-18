@@ -36,7 +36,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
         this.pedestalItems = pedestalItems;
         this.id = new ResourceLocation(ArsNouveau.MODID, "spell_write");
     }
-    public static final String RECIPE_ID = "spell_write";
+
 
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
@@ -62,7 +62,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
     @Override
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + RECIPE_ID);
+        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.SPELL_WRITE_RECIPE_ID);
         jsonobject.addProperty("sourceCost", getSourceCost());
         JsonArray pedestalArr = new JsonArray();
         for(Ingredient i : this.pedestalItems){

@@ -34,7 +34,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
     public final ItemStack output;
     public final int source;
     public final ResourceLocation id;
-    public static final String RECIPE_ID = "imbuement";
+
     public List<Ingredient> pedestalItems;
 
     public ImbuementRecipe(ResourceLocation resourceLocation, Ingredient input, ItemStack output, int source, List<Ingredient> pedestalItems){
@@ -46,11 +46,11 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
     }
 
     public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source, List<Ingredient> pedestalItems){
-        this(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID + "_" + id), ingredient, output, source, pedestalItems);
+        this(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, pedestalItems);
     }
 
     public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source){
-        this(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID + "_" + id), ingredient, output, source, new ArrayList<>());
+        this(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, new ArrayList<>());
     }
 
     public ImbuementRecipe withPedestalItem(Ingredient i){
@@ -109,12 +109,12 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID));
     }
 
     public JsonElement asRecipe(){
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + RECIPE_ID);
+        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.IMBUEMENT_RECIPE_ID);
         jsonobject.add("input", input.toJson());
         jsonobject.addProperty("output", getRegistryName(output.getItem()).toString());
         jsonobject.addProperty("count", output.getCount());

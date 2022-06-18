@@ -34,7 +34,7 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public Enchantment enchantment;
     public int enchantLevel;
-    public static final String RECIPE_ID = "enchantment";
+
 
     public EnchantmentRecipe(List<Ingredient> pedestalItems, Enchantment enchantment, int level, int manaCost){
         this.pedestalItems = pedestalItems;
@@ -46,7 +46,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTMENT_RECIPE_ID));
     }
 
     public boolean doesReagentMatch(ItemStack stack, Player playerEntity){
@@ -111,7 +111,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     @Override
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" + EnchantmentRecipe.RECIPE_ID);
+        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.ENCHANTMENT_RECIPE_ID);
         jsonobject.addProperty("enchantment", getRegistryName(enchantment).toString());
         jsonobject.addProperty("level", enchantLevel);
         jsonobject.addProperty("sourceCost", getSourceCost());
