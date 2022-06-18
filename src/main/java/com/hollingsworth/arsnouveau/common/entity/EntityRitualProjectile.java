@@ -18,11 +18,11 @@ public class EntityRitualProjectile extends ColoredProjectile{
     public BlockPos tilePos;
 
     public EntityRitualProjectile(Level worldIn, double x, double y, double z) {
-        super(ModEntities.ENTITY_RITUAL, worldIn, x, y, z);
+        super(ModEntities.ENTITY_RITUAL.get(), worldIn, x, y, z);
     }
 
     public EntityRitualProjectile(Level worldIn, BlockPos pos) {
-        super(ModEntities.ENTITY_RITUAL, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        super(ModEntities.ENTITY_RITUAL.get(), worldIn, pos.getX(), pos.getY(), pos.getZ());
     }
 
     public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, Level world) {
@@ -31,7 +31,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualBrazierTile) || ((RitualBrazierTile) level.getBlockEntity(tilePos)).ritual == null )) {
+        if (!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualBrazierTile tile) || tile.ritual == null)) {
             this.remove(RemovalReason.DISCARDED);
             return;
         }
@@ -50,24 +50,24 @@ public class EntityRitualProjectile extends ColoredProjectile{
             for (double j = 0; j < 3; j++) {
 
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(ParticleSparkleData.createData(getParticleColor()),
-                            (float) (position().x()) + Math.sin(level.getGameTime()/3D),
+                            (float) (position().x()) + Math.sin(level.getGameTime() / 3D),
                             (float) (position().y()),
-                            (float) (position().z()) + Math.cos(level.getGameTime()/3D),
-                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
+                            (float) (position().z()) + Math.cos(level.getGameTime() / 3D),
+                            0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()));
                 }
             }
 
             for (double j = 0; j < 3; j++) {
 
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
-                            (float) (position().x()) - Math.sin(level.getGameTime()/3D),
+                            (float) (position().x()) - Math.sin(level.getGameTime() / 3D),
                             (float) (position().y()),
-                            (float) (position().z()) - Math.cos(level.getGameTime()/3D),
-                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
+                            (float) (position().z()) - Math.cos(level.getGameTime() / 3D),
+                            0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()));
                 }
             }
         }
@@ -75,7 +75,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_RITUAL;
+        return ModEntities.ENTITY_RITUAL.get();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
 
     public EntityRitualProjectile(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.ENTITY_RITUAL, world);
+        super(ModEntities.ENTITY_RITUAL.get(), world);
     }
 
     @Override

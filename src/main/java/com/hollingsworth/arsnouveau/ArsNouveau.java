@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -42,7 +43,7 @@ public class ArsNouveau {
         }
     };
 
-    public ArsNouveau(){
+    public ArsNouveau() {
         caelusLoaded = ModList.get().isLoaded("caelus");
         APIRegistry.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
@@ -50,13 +51,15 @@ public class ArsNouveau {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postModLoadEvent);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModSetup.registers(modEventBus);
+        modEventBus.addListener(this::setup);
+        modEventBus.addListener(this::postModLoadEvent);
+        modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
-        GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
+        GLM.register(modEventBus);
     }
 
     public void setup (final FMLCommonSetupEvent event){

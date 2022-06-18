@@ -11,17 +11,17 @@ public class AmethystGolemModel extends AnimatedGeoModel<AmethystGolem> {
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/amethyst_golem.geo.json");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID , "animations/amethyst_golem_animations.json");
     @Override
-    public ResourceLocation getModelLocation(AmethystGolem drygmy) {
+    public ResourceLocation getModelResource(AmethystGolem drygmy) {
         return NORMAL_MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AmethystGolem drygmy) {
+    public ResourceLocation getTextureResource(AmethystGolem drygmy) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(AmethystGolem drygmy) {
+    public ResourceLocation getAnimationResource(AmethystGolem drygmy) {
         return ANIMATIONS;
     }
 

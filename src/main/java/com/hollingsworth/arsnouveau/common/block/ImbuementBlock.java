@@ -2,11 +2,10 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -20,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class ImbuementBlock extends TickableModBlock {
     public ImbuementBlock() {
-        super(defaultProperties().noOcclusion(), LibBlockNames.IMBUEMENT_CHAMBER);
+        super(defaultProperties().noOcclusion());
     }
 
     @Override
@@ -44,10 +43,10 @@ public class ImbuementBlock extends TickableModBlock {
         if(tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()){
 
             tile.stack = player.getItemInHand(handIn).copy();
-            ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream()
+            ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe == null){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.imbuement.norecipe"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
                 tile.stack = ItemStack.EMPTY;
             }else{
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
@@ -59,7 +58,7 @@ public class ImbuementBlock extends TickableModBlock {
             worldIn.addFreshEntity(item);
             tile.stack = ItemStack.EMPTY;
             tile.stack = player.getInventory().getSelected().copy();
-            ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream()
+            ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe != null){
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);

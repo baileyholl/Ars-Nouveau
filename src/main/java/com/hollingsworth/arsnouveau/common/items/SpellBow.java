@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -174,7 +173,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     }
                 }
                 for(AbstractArrow arr : arrows){
-                    arr.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, 1.0F);
+                    arr.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot(), 0.0F, f * 3.0F, 1.0F);
                     if (f >= 1.0F) {
                         arr.setCritArrow(true);
                     }
@@ -247,7 +246,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
 
     @Override
     public void sendInvalidMessage(Player player) {
-        PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.bow.invalid"));
+        PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.bow.invalid"));
     }
 
     @Override
@@ -257,11 +256,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return super.getEnchantmentValue();
     }
 
     @Override

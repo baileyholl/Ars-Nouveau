@@ -17,17 +17,17 @@ public class SourcelinkModel<T extends SourcelinkTile> extends AnimatedGeoModel<
     }
 
     @Override
-    public ResourceLocation getModelLocation(SourcelinkTile agronomicSourcelink) {
+    public ResourceLocation getModelResource(SourcelinkTile agronomicSourcelink) {
         return modelLocation;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(SourcelinkTile agronomicSourcelink) {
+    public ResourceLocation getTextureResource(SourcelinkTile agronomicSourcelink) {
         return textLoc;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(SourcelinkTile agronomicSourcelink) {
+    public ResourceLocation getAnimationResource(SourcelinkTile agronomicSourcelink) {
         return animationLoc;
     }
 }

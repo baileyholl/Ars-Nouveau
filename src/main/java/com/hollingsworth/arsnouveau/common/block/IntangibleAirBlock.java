@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -20,8 +19,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class IntangibleAirBlock extends TickableModBlock implements LiquidBlockContainer {
 
     public IntangibleAirBlock() {
-        super(Block.Properties.of(Material.DECORATION).noCollission().noDrops());
-        setRegistryName(LibBlockNames.INTANGIBLE_AIR);
+        super(Block.Properties.of(Material.DECORATION).noCollission().noLootTable());
     }
 
     public RenderShape getRenderShape(BlockState state) {

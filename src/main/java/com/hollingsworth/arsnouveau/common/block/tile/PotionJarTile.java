@@ -5,13 +5,11 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -80,10 +78,10 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
     public void onWanded(Player playerEntity) {
         if(!isLocked){
             this.isLocked = true;
-            playerEntity.sendMessage(new TranslatableComponent("ars_nouveau.locked"), Util.NIL_UUID);
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.locked"));
         }else{
             this.isLocked = false;
-            playerEntity.sendMessage(new TranslatableComponent("ars_nouveau.unlocked"), Util.NIL_UUID);
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.unlocked"));
         }
 
         BlockState state = level.getBlockState(worldPosition);
@@ -145,9 +143,9 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
 
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
-        tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()));
         if(isLocked)
-            tooltip.add(new TranslatableComponent("ars_nouveau.locked"));
+            tooltip.add(Component.translatable("ars_nouveau.locked"));
     }
 
     public void appendEffect(List<MobEffectInstance> effects){

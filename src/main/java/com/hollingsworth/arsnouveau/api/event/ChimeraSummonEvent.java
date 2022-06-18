@@ -6,13 +6,13 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class ChimeraSummonEvent implements ITimedEvent {
 
@@ -44,9 +44,9 @@ public class ChimeraSummonEvent implements ITimedEvent {
                 return;
             }
             boolean summonedWilden = false;
-            if(duration % 20 ==0){
-                Random random = boss.getRandom();
-                SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
+            if(duration % 20 ==0) {
+                RandomSource random = boss.getRandom();
+                SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
 
                 wolf.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
                 wolf.isWildenSummon = true;
@@ -54,20 +54,20 @@ public class ChimeraSummonEvent implements ITimedEvent {
                 summon(wolf, getPos(), boss.getTarget());
 
                 int randBound = 10 - boss.getPhase();
-                if(!summonedWilden && boss.hasWings() && boss.level.random.nextInt(randBound) == 0){
-                    WildenStalker stalker = new WildenStalker(ModEntities.WILDEN_STALKER, world);
+                if (!summonedWilden && boss.hasWings() && boss.level.random.nextInt(randBound) == 0) {
+                    WildenStalker stalker = new WildenStalker(ModEntities.WILDEN_STALKER.get(), world);
                     summon(stalker, getPos(), boss.getTarget());
                     summonedWilden = true;
                 }
 
                 if(boss.hasHorns() && boss.level.random.nextInt(randBound) == 0){
-                    WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER, world);
+                    WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER.get(), world);
                     summon(hunter, getPos(), boss.getTarget());
                     summonedWilden = true;
                 }
 
                 if(!summonedWilden && boss.hasSpikes() && boss.level.random.nextInt(randBound) == 0){
-                    WildenGuardian guardian = new WildenGuardian(ModEntities.WILDEN_GUARDIAN, world);
+                    WildenGuardian guardian = new WildenGuardian(ModEntities.WILDEN_GUARDIAN.get(), world);
                     summon(guardian, getPos(), boss.getTarget());
                     summonedWilden = true;
                 }

@@ -5,15 +5,17 @@ import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class PatchouliBuilder {
 
-    JsonObject object = new JsonObject();;
-    JsonArray pages = new JsonArray();;
+    JsonObject object = new JsonObject();
+    JsonArray pages = new JsonArray();
     int textCounter;
     String name;
     public ResourceLocation category;
 
-    public PatchouliBuilder(ResourceLocation category, String name){
+    public PatchouliBuilder(ResourceLocation category, String name) {
         this.category = category;
         this.withName(name.contains(".") ? name : "ars_nouveau.page." + name);
         this.name = name;
@@ -23,7 +25,7 @@ public class PatchouliBuilder {
     public PatchouliBuilder(ResourceLocation category, ItemLike itemLike){
         this.category = category;
         withName(itemLike.asItem().getDescriptionId());
-        this.name = itemLike.asItem().getRegistryName().getPath();
+        this.name = getRegistryName(itemLike.asItem()).getPath();
         withIcon(itemLike);
         this.withCategory(category);
     }
@@ -50,7 +52,7 @@ public class PatchouliBuilder {
     }
 
     public PatchouliBuilder withIcon(ItemLike item){
-        object.addProperty("icon", item.asItem().getRegistryName().toString());
+        object.addProperty("icon", getRegistryName(item.asItem()).toString());
         return this;
     }
 

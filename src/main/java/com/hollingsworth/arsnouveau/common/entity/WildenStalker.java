@@ -46,7 +46,7 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
     }
 
     public WildenStalker(Level worldIn) {
-        this(ModEntities.WILDEN_STALKER, worldIn);
+        this(ModEntities.WILDEN_STALKER.get(), worldIn);
     }
 
 
@@ -105,7 +105,7 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 8;
     }
 

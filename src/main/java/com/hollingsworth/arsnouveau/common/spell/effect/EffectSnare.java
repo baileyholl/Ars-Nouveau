@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,8 +29,8 @@ public class EffectSnare extends AbstractEffect {
         if(!(livingEntity instanceof LivingEntity))
             return;
 
-        ((LivingEntity)livingEntity).addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, (int) (POTION_TIME.get() * 20  + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
-        livingEntity.setDeltaMovement(0,0,0);
+        ((LivingEntity) livingEntity).addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), (int) (POTION_TIME.get() * 20 + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
+        livingEntity.setDeltaMovement(0, 0, 0);
         livingEntity.hurtMarked = true;
     }
 

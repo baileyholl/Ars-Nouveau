@@ -12,12 +12,12 @@ import com.hollingsworth.arsnouveau.common.block.SourceBlock;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -32,7 +32,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.isTreeBlock;
 
@@ -49,7 +48,8 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     @Override
     public void convertedEffect() {
         super.convertedEffect();
-        if (tickCounter >= 120 && !level.isClientSide) {
+        if (!(level instanceof ServerLevel)) return;
+        if (tickCounter >= 120) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
             EntityBookwyrm bookwyrm = new EntityBookwyrm(level, worldPosition);
@@ -59,8 +59,8 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
             tickCounter = 0;
             return;
         }
-        if (tickCounter % 10 == 0 && !level.isClientSide) {
-            Random r = level.random;
+        if (tickCounter % 10 == 0) {
+            RandomSource r = level.random;
             int min = -2;
             int max = 2;
             EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
@@ -71,19 +71,19 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     public void changeTier(Player entity){
         if(tier == 1 || tier == 0){
             tier = 2;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "5 x 5"), Util.NIL_UUID);
+            entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "5 x 5"));
         }else if(tier == 2){
             tier = 3;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "9 x 9"), Util.NIL_UUID);
+            entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "9 x 9"));
         }else if(tier == 3){
             tier = 4;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "13 x 13"), Util.NIL_UUID);
+            entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "13 x 13"));
         }else if(tier == 4){
             tier = 5;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "17 x 17"), Util.NIL_UUID);
+            entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "17 x 17"));
         }else if(tier == 5){
             tier = 1;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.adjacent"), Util.NIL_UUID);
+            entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.adjacent"));
         }
     }
 

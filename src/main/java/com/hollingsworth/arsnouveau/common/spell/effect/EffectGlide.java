@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -24,8 +24,8 @@ public class EffectGlide extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(rayTraceResult.getEntity() instanceof LivingEntity){
-            applyConfigPotion(((LivingEntity) rayTraceResult.getEntity()), ModPotions.GLIDE_EFFECT, spellStats);
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            applyConfigPotion(living, ModPotions.GLIDE_EFFECT.get(), spellStats);
         }
     }
 

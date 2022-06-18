@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class PotionMelder extends TickableModBlock implements SimpleWaterloggedBlock {
-    public PotionMelder(Properties properties, String registry) {
-        super(properties, registry);
+    public PotionMelder(Properties properties) {
+        super(properties);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 

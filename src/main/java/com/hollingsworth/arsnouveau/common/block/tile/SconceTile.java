@@ -14,13 +14,13 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
-import java.util.Random;
 
 public class SconceTile extends ModdedTile implements ILightable, ITickable {
 
@@ -70,11 +70,10 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
 
     @Override
     public void tick() {
-        if(!level.isClientSide || !lit)
+        if (!(getLevel() instanceof ServerLevel world) || !lit)
             return;
-        Level world = getLevel();
         BlockPos pos = getBlockPos();
-        Random rand = world.random;
+        RandomSource rand = world.random;
         double xzOffset = 0.15;
         BlockState state = getLevel().getBlockState(getBlockPos());
         if(!(state.getBlock() instanceof SconceBlock))

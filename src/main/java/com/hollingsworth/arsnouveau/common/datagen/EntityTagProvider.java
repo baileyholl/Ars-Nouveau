@@ -23,10 +23,10 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(create(new ResourceLocation(ArsNouveau.MODID, "drygmy_blacklist")))
                 .add(EntityType.IRON_GOLEM);
         this.tag(create(new ResourceLocation(ArsNouveau.MODID, "magic_find")))
-                .add(ModEntities.STARBUNCLE_TYPE, ModEntities.ENTITY_DRYGMY,
-                        ModEntities.WHIRLISPRIG_TYPE,
-                        ModEntities.ENTITY_BOOKWYRM_TYPE,
-                        ModEntities.ENTITY_WIXIE_TYPE
+                .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.ENTITY_DRYGMY.get(),
+                        ModEntities.WHIRLISPRIG_TYPE.get(),
+                        ModEntities.ENTITY_BOOKWYRM_TYPE.get(),
+                        ModEntities.ENTITY_WIXIE_TYPE.get()
                 );
         this.tag(create(new ResourceLocation(ArsNouveau.MODID, "spell_can_hit")));
     }

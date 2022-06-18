@@ -8,8 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +43,7 @@ public class CasterTome extends ModItem implements ICasterTool {
         ISpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         spell.setCost(Math.min(spell.getCastingCost()/2, ManaUtil.getMaxMana(playerIn))); // Let even a new player cast 1 charge of a tome
-        return caster.castSpell(worldIn, playerIn, handIn, new TranslatableComponent(""), spell);
+        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable(""), spell);
     }
 
     @Override
@@ -54,11 +52,11 @@ public class CasterTome extends ModItem implements ICasterTool {
             return;
         ISpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
-        tooltip2.add(new TextComponent(spell.getDisplayString()));
+        tooltip2.add(Component.literal(spell.getDisplayString()));
         if(!caster.getFlavorText().isEmpty())
-            tooltip2.add(new TextComponent(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
+            tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
 
-        tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.caster_tome"));
+        tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
 }

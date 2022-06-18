@@ -8,7 +8,6 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -17,6 +16,8 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class BiomeEvent {
+
+    /*TODO Use Biome modifiers
     @SubscribeEvent
     public static void biomeLoad(BiomeLoadingEvent e) {
 
@@ -37,6 +38,8 @@ public class BiomeEvent {
 //            addArchwoodForestFeatures(e);
 //        }
     }
+
+
     //
     public static void addMobSpawns(BiomeLoadingEvent e){
         List<Biome.BiomeCategory> categories = Arrays.asList(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.EXTREME_HILLS, Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.SAVANNA, Biome.BiomeCategory.MOUNTAIN);
@@ -63,4 +66,6 @@ public class BiomeEvent {
                 e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_HUNTER, Config.WHUNTER_WEIGHT.get(), 1, 1));
         }
     }
+
+     */
 }

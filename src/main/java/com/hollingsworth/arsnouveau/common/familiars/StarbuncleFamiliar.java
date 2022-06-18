@@ -17,7 +17,7 @@ public class StarbuncleFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
-        FamiliarStarbuncle familiarStarbuncle = new FamiliarStarbuncle(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, world);
+        FamiliarStarbuncle familiarStarbuncle = new FamiliarStarbuncle(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), world);
         familiarStarbuncle.setTagData(tag);
         return familiarStarbuncle;
     }

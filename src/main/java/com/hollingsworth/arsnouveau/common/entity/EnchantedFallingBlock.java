@@ -71,7 +71,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     }
 
     public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState) {
-        this(ModEntities.FALLING_BLOCK, world);
+        this(ModEntities.FALLING_BLOCK.get(), world);
         this.blockState = blockState;
         this.blocksBuilding = true;
         this.setPos(v, y, v1);
@@ -110,7 +110,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.FALLING_BLOCK;
+        return ModEntities.FALLING_BLOCK.get();
     }
 
     @Override
@@ -171,7 +171,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
                         boolean flag4 = this.blockState.canSurvive(this.level, blockpos) && !flag3;
                         if (flag2 && flag4) {
                             if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level.getFluidState(blockpos).getType() == Fluids.WATER) {
-                                this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true));
+                                this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE);
                             }
 
                             if (this.level.setBlock(blockpos, this.blockState, 3)) {

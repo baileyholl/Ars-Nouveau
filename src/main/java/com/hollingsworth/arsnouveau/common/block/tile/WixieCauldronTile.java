@@ -18,11 +18,10 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -237,9 +236,9 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         }
 
         if((recipes.recipes.isEmpty() || recipeWrapper == null || recipeWrapper.recipes.isEmpty()) && playerEntity != null){
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.wixie.no_recipe"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.no_recipe"));
         }else if(playerEntity != null){
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.wixie.recipe_set"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.recipe_set"));
         }
     }
 
@@ -257,15 +256,14 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         AtomicBoolean foundOptimal = new AtomicBoolean(false);
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
-            if (!foundOptimal.get() && level.getBlockEntity(bPos) instanceof PotionJarTile) {
-                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(bPos);
-                if(tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)){
-                    if(tile.getMaxFill() - tile.getCurrentFill() >= 300) {
-                        if(tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
+            if (!foundOptimal.get() && level.getBlockEntity(bPos) instanceof PotionJarTile tile) {
+                if (tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)) {
+                    if (tile.getMaxFill() - tile.getCurrentFill() >= 300) {
+                        if (tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
                             foundOptimal.set(true);
                             foundPod.set(bPos.immutable());
                         }
-                        if(foundPod.get() == null)
+                        if (foundPod.get() == null)
                             foundPod.set(bPos.immutable());
                     }
                 }
@@ -278,9 +276,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public static @Nullable BlockPos findNeededPotion(Potion passedPot, int amount, Level level, BlockPos worldPosition){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
-            if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile) {
-                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(bPos);
-                if(tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)){
+            if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile tile) {
+                if (tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)) {
                     foundPod.set(bPos.immutable());
                 }
             }
@@ -313,7 +310,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             return;
         }
         if (tickCounter % 10 == 0 && !level.isClientSide) {
-            Random r = level.random;
+            RandomSource r = level.random;
             int min = -2;
             int max = 2;
             EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
@@ -327,18 +324,17 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(inventories == null)
             return itemsAvailable;
         for(BlockPos p : inventories){
-            if(level.getBlockEntity(p) instanceof Container container){
-                Container inventory = (Container) level.getBlockEntity(p);
-                for(int i = 0; i < inventory.getContainerSize(); i++){
-                    ItemStack stack = inventory.getItem(i);
-                    if(stack == null) {
+            if(level.getBlockEntity(p) instanceof Container container) {
+                for (int i = 0; i < container.getContainerSize(); i++) {
+                    ItemStack stack = container.getItem(i);
+                    if (stack == null) {
                         System.out.println("======");
                         System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
                         System.out.println(container.toString());
                         System.out.println("AT POS " + p.toString());
                         continue;
                     }
-                    if(!itemsAvailable.containsKey(stack.getItem())) {
+                    if (!itemsAvailable.containsKey(stack.getItem())) {
                         itemsAvailable.put(stack.getItem(), stack.getCount());
                         continue;
                     }
@@ -396,38 +392,37 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             return;
 
         if(isOff){
-            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+            tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         }
 
         if(!isCraftingPotion){
-            tooltip.add(new TextComponent(
-                    new TranslatableComponent("ars_nouveau.wixie.crafting").getString() +
-                            new TranslatableComponent(craftingItem.getDescriptionId()).getString())
+            tooltip.add(Component.literal(
+                    Component.translatable("ars_nouveau.wixie.crafting").getString() +
+                            Component.translatable(craftingItem.getDescriptionId()).getString())
             );
         }else if(this.craftManager != null && this.craftManager.isPotionCrafting()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.potionOut);
-            tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName()));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName()));
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
 
         if(!hasSource){
-            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
         if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())
-            tooltip.add(new TextComponent(
-                    new TranslatableComponent("ars_nouveau.wixie.needs").getString() +
-                            new TranslatableComponent(this.craftManager.neededItems.get(0).getDescriptionId()).getString()));
+            tooltip.add(Component.literal(
+                    Component.translatable("ars_nouveau.wixie.needs").getString() +
+                            Component.translatable(this.craftManager.neededItems.get(0).getDescriptionId()).getString()));
 
         if(this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.getPotionNeeded());
-            tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()));
         }
         if(this.needsPotionStorage)
-            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.needs_storage"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.needs_storage"));
 
-        return;
     }
 
     public static class CraftingProgress{
@@ -457,6 +452,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems, Recipe recipe){
             CraftingContainer inventory = new CraftingContainer(new AbstractContainerMenu(null, -1) {
+                //TODO check this
+                @Override
+                public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+                    return ItemStack.EMPTY;
+                }
+
                 public boolean stillValid(Player playerIn) {
                     return false;
                 }

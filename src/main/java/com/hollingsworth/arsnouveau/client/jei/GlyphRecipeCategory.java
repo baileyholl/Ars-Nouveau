@@ -1,5 +1,5 @@
 package com.hollingsworth.arsnouveau.client.jei;
-
+/* TODO restore
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -19,7 +19,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -67,7 +66,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("block.ars_nouveau.scribes_table");
+        return Component.translatable("block.ars_nouveau.scribes_table");
     }
 
     @Override
@@ -83,7 +82,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
     @Override
     public void draw(GlyphRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f,100f, 10);
+        renderer.draw(matrixStack, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f,100f, 10);
     }
 
     @Override
@@ -112,3 +111,5 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
         recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(0));
     }
 }
+
+ */

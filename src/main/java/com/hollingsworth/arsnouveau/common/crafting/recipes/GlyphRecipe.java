@@ -19,11 +19,12 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class GlyphRecipe implements Recipe<ScribesTile> {
 
@@ -33,7 +34,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     public ResourceLocation id;
     public int exp;
 
-    public GlyphRecipe(ResourceLocation id, ItemStack output, List<Ingredient> inputs, int exp){
+    public GlyphRecipe(ResourceLocation id, ItemStack output, List<Ingredient> inputs, int exp) {
         this.id = id;
         this.output = output;
         this.inputs = inputs;
@@ -114,12 +115,12 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.GLYPH_SERIALIZER;
+        return RecipeRegistry.GLYPH_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return RecipeRegistry.GLYPH_TYPE;
+        return RecipeRegistry.GLYPH_TYPE.get();
     }
 
     public JsonElement asRecipe(){
@@ -134,19 +135,19 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         }
         jsonobject.add("inputItems", pedestalArr);
         jsonobject.addProperty("exp", exp);
-        jsonobject.addProperty("output", this.output.getItem().getRegistryName().toString());
+        jsonobject.addProperty("output", getRegistryName(output.getItem()).toString());
         return jsonobject;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GlyphRecipe> {
+    public static class Serializer implements RecipeSerializer<GlyphRecipe> {
 
         @Override
         public GlyphRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Item output = GsonHelper.getAsItem(json,"output");
+            Item output = GsonHelper.getAsItem(json, "output");
             int count = GsonHelper.getAsInt(json, "count");
             ItemStack outputStack = new ItemStack(output, count);
-            int levels = GsonHelper.getAsInt(json,  "exp");
-            JsonArray inputItems = GsonHelper.getAsJsonArray(json,"inputItems");
+            int levels = GsonHelper.getAsInt(json, "exp");
+            JsonArray inputItems = GsonHelper.getAsJsonArray(json, "inputItems");
             List<Ingredient> stacks = new ArrayList<>();
 
             for(JsonElement e : inputItems){

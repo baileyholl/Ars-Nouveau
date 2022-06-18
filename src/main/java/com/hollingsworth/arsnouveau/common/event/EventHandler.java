@@ -19,7 +19,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -69,8 +68,8 @@ public class EventHandler {
     public static void livingHurtEvent(LivingHurtEvent e){
        if(!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof Player && e.getEntityLiving().isBlocking()){
            if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD)){
-               e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
-               e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT, 200, 1));
+               e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
+               e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
            }
        }
     }
@@ -89,7 +88,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        if(e.getEntityLiving() == null  || e.getEntityLiving().getEffect(ModPotions.SNARE_EFFECT) == null)
+        if (e.getEntityLiving() == null || !e.getEntityLiving().hasEffect(ModPotions.SNARE_EFFECT.get()))
             return;
         e.getEntityLiving().setDeltaMovement(0,0,0);
 
@@ -122,45 +121,36 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(TickEvent.PlayerTickEvent event){
-        if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT)) {
+        if (ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT.get())) {
             CaelusHandler.setFlying(event.player);
         }
 
-        if(event.player.hasEffect(ModPotions.FLIGHT_EFFECT) && event.player.level.getGameTime() % 20 == 0 && event.player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20){
+        if (event.player.hasEffect(ModPotions.FLIGHT_EFFECT.get()) && event.player.level.getGameTime() % 20 == 0 && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20) {
             FlightRefreshEvent flightRefreshEvent = new FlightRefreshEvent(event.player);
             MinecraftForge.EVENT_BUS.post(flightRefreshEvent);
         }
     }
 
     @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event){
-        if(!event.getEntityLiving().level.isClientSide  && event.getEntityLiving() instanceof Player){
-            Player entity = (Player) event.getEntityLiving();
-            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null){
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (!event.getEntityLiving().level.isClientSide && event.getEntityLiving() instanceof Player entity) {
+            if (entity.getEffect(ModPotions.FLIGHT_EFFECT.get()) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null) {
                 RitualFlight.RitualFlightHandler.grantFlight(entity);
             }
 
         }
     }
-    @SubscribeEvent
-    public static void playerDamaged(LivingHurtEvent e){
-        if(e.getEntityLiving() != null && e.getEntityLiving().getActiveEffectsMap().containsKey(ModPotions.SHIELD_POTION)
-                && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC || e.getSource() instanceof EntityDamageSource)){
-            float damage = e.getAmount() - (1.0f + 0.5f * e.getEntityLiving().getActiveEffectsMap().get(ModPotions.SHIELD_POTION).getAmplifier());
-            e.setAmount(Math.max(0, damage));
-        }
-    }
 
     @SubscribeEvent
-    public static void entityHurt(LivingHurtEvent e){
-        if(e.getEntityLiving() != null && e.getSource() == DamageSource.LIGHTNING_BOLT && e.getEntityLiving().getEffect(ModPotions.SHOCKED_EFFECT) != null){
-            float damage = e.getAmount() + 3.0f + 3.0f * e.getEntityLiving().getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
+    public static void entityHurt(LivingHurtEvent e) {
+        if (e.getEntityLiving() != null && e.getSource() == DamageSource.LIGHTNING_BOLT && e.getEntityLiving().hasEffect(ModPotions.SHOCKED_EFFECT.get())) {
+            float damage = e.getAmount() + 3.0f + 3.0f * e.getEntityLiving().getEffect(ModPotions.SHOCKED_EFFECT.get()).getAmplifier();
             e.setAmount(Math.max(0, damage));
         }
         LivingEntity entity = e.getEntityLiving();
-        if(entity != null  && entity.getEffect(ModPotions.HEX_EFFECT) != null &&
-                (entity.getEffect(MobEffects.POISON) != null || entity.getEffect(MobEffects.WITHER) != null || entity.isOnFire() || entity.getEffect(ModPotions.SHOCKED_EFFECT) != null)){
-            e.setAmount(e.getAmount() + 0.5f + 0.33f*entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
+        if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get()) &&
+                (entity.hasEffect(MobEffects.POISON) || entity.hasEffect(MobEffects.WITHER) || entity.isOnFire() || entity.hasEffect(ModPotions.SHOCKED_EFFECT.get()))) {
+            e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT.get()).getAmplifier());
 
         }
     }
@@ -168,17 +158,16 @@ public class EventHandler {
     @SubscribeEvent
     public static void entityHeal(LivingHealEvent e){
         LivingEntity entity = e.getEntityLiving();
-        if(entity != null  && entity.getEffect(ModPotions.HEX_EFFECT) != null){
-            e.setAmount(e.getAmount()/2.0f);
+        if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get())) {
+            e.setAmount(e.getAmount() / 2.0f);
         }
     }
 
     @SubscribeEvent
     public static void dispelEvent(DispelEvent event){
-        if(event.rayTraceResult instanceof EntityHitResult && ((EntityHitResult) event.rayTraceResult).getEntity() instanceof LivingEntity){
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) event.rayTraceResult).getEntity();
-            if(entity instanceof Witch){
-                if(entity.getHealth() <= entity.getMaxHealth()/2){
+        if (event.rayTraceResult instanceof EntityHitResult && ((EntityHitResult) event.rayTraceResult).getEntity() instanceof LivingEntity entity) {
+            if (entity instanceof Witch) {
+                if (entity.getHealth() <= entity.getMaxHealth() / 2) {
                     entity.remove(Entity.RemovalReason.KILLED);
                     ParticleUtil.spawnPoof((ServerLevel) event.world, entity.blockPosition());
                     event.world.addFreshEntity(new ItemEntity(event.world, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));
@@ -188,7 +177,6 @@ public class EventHandler {
         }
 
     }
-
 
     @SubscribeEvent
     public static void commandRegister(RegisterCommandsEvent event){

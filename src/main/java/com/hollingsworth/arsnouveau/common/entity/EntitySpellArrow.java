@@ -179,7 +179,7 @@ public class EntitySpellArrow extends Arrow {
             for (double j = 0; j < dist; j++) {
                 double coeff = j / dist;
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }
@@ -236,8 +236,7 @@ public class EntitySpellArrow extends Arrow {
                 return;
             }
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity) entity;
+            if (entity instanceof LivingEntity livingentity) {
                 if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
@@ -308,7 +307,7 @@ public class EntitySpellArrow extends Arrow {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_SPELL_ARROW;
+        return ModEntities.ENTITY_SPELL_ARROW.get();
     }
 
     @Override
@@ -317,6 +316,6 @@ public class EntitySpellArrow extends Arrow {
     }
 
     public EntitySpellArrow(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_SPELL_ARROW, world);
+        super(ModEntities.ENTITY_SPELL_ARROW.get(), world);
     }
 }

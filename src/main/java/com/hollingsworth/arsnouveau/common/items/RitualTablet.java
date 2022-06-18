@@ -4,10 +4,8 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -36,7 +34,7 @@ public class RitualTablet extends ModItem{
             BlockPos pos = context.getClickedPos();
             RitualBrazierTile tile = (RitualBrazierTile) world.getBlockEntity(pos);
             if(!world.isClientSide && !tile.canTakeAnotherRitual()){
-                context.getPlayer().sendMessage(new TranslatableComponent("ars_nouveau.ritual.no_start"), Util.NIL_UUID);
+                context.getPlayer().sendSystemMessage(Component.translatable("ars_nouveau.ritual.no_start"));
                 return InteractionResult.PASS;
             }
             tile.setRitual(ritual.getID());
@@ -50,6 +48,6 @@ public class RitualTablet extends ModItem{
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
-        tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.tablet"));
+        tooltip2.add(Component.translatable("tooltip.ars_nouveau.tablet"));
     }
 }

@@ -3,9 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -44,12 +42,12 @@ public class FamiliarScript extends ModItem{
         IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
         if(familiarCap != null){
             if(familiarCap.ownsFamiliar(familiar)){
-                playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.owned"), Util.NIL_UUID);
+                playerIn.sendSystemMessage(Component.translatable("ars_nouveau.familiar.owned"));
                 return super.use(worldIn, playerIn, handIn);
             }
             familiarCap.unlockFamiliar(familiar);
             CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
-            playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.unlocked"), Util.NIL_UUID);
+            playerIn.sendSystemMessage(Component.translatable("ars_nouveau.familiar.unlocked"));
             playerIn.getItemInHand(handIn).shrink(1);
         }
         return super.use(worldIn, playerIn, handIn);
@@ -58,6 +56,6 @@ public class FamiliarScript extends ModItem{
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        tooltip2.add(new TranslatableComponent("ars_nouveau.familiar.script"));
+        tooltip2.add(Component.translatable("ars_nouveau.familiar.script"));
     }
 }

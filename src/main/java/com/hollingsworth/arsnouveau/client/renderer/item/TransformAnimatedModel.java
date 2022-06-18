@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 public abstract class TransformAnimatedModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
 
 
-    public ResourceLocation getModelLocation(T object){
-        return getModelLocation(object,null);
+    public ResourceLocation getModelResource(T object){
+        return getModelResource(object,null);
     }
 
 
-    public abstract ResourceLocation getModelLocation(T object, @Nullable ItemTransforms.TransformType transformType);
+    public abstract ResourceLocation getModelResource(T object, @Nullable ItemTransforms.TransformType transformType);
 
 }

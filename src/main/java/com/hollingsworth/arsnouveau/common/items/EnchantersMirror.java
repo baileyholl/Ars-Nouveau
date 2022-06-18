@@ -4,12 +4,10 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.MirrorRenderer;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,7 +56,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
         ItemStack stack = playerIn.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(stack);
         caster.getSpell().setCost((int) (caster.getSpell().getCastingCost() - caster.getSpell().getCastingCost() * 0.25));
-        return caster.castSpell(worldIn, playerIn, handIn, new TranslatableComponent("ars_nouveau.mirror.invalid"));
+        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.mirror.invalid"));
     }
 
     @Override
@@ -68,7 +66,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
 
     @Override
     public void sendInvalidMessage(Player player) {
-        PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.mirror.invalid"));
+        PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.mirror.invalid"));
     }
 
     @Override

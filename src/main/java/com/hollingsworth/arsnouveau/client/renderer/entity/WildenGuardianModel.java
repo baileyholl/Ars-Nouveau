@@ -36,17 +36,17 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(WildenGuardian wildenStalker) {
+    public ResourceLocation getModelResource(WildenGuardian wildenStalker) {
         return wildenStalker.isArmored() ? WARDER_ARMORED: WARDER_NEUTRAL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WildenGuardian wildenStalker) {
+    public ResourceLocation getTextureResource(WildenGuardian wildenStalker) {
         return TEXT;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WildenGuardian wildenStalker) {
+    public ResourceLocation getAnimationResource(WildenGuardian wildenStalker) {
         return ANIM;
     }
 

@@ -17,8 +17,7 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 
@@ -48,9 +47,9 @@ public class SoundScreen extends BaseBook{
     @Override
     public void init() {
         super.init();
-        volumeSlider = buildSlider(new TranslatableComponent("ars_nouveau.sounds.volume").getString(), s -> volume, (settings, d) -> volume = d, 0, 100, 1)
+        volumeSlider = buildSlider(Component.translatable("ars_nouveau.sounds.volume").getString(), s -> volume, (settings, d) -> volume = d, 0, 100, 1)
                 .createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
-        pitchSlider = buildSlider(new TranslatableComponent("ars_nouveau.sounds.pitch").getString(), s -> pitch, (settings, d) -> pitch = d, 0, 200, 1)
+        pitchSlider = buildSlider(Component.translatable("ars_nouveau.sounds.pitch").getString(), s -> pitch, (settings, d) -> pitch = d, 0, 200, 1)
                 .createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
 
         addRenderableWidget(volumeSlider);
@@ -102,8 +101,7 @@ public class SoundScreen extends BaseBook{
     }
 
     public void onSoundClick(Button button){
-        if(button instanceof SoundButton){
-            SoundButton soundButton = (SoundButton)button;
+        if (button instanceof SoundButton soundButton) {
             selectedSound = soundButton.sound;
             selectedButton.sound = selectedSound;
         }
@@ -126,9 +124,9 @@ public class SoundScreen extends BaseBook{
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
         int color = -8355712;
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.sounds.title").getString(), 51, 24,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.save").getString(), 37, 160,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.sounds.test").getString(), 102, 160,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160,  color);
 
     }
 
@@ -138,6 +136,6 @@ public class SoundScreen extends BaseBook{
     }
 
     protected ANProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter, double min, double max, float step){
-        return new ANProgressOption(key, min, max, step, getter, setter, (settings, optionValues) -> new TextComponent(key + (int)optionValues.get(settings)));
+        return new ANProgressOption(key, min, max, step, getter, setter, (settings, optionValues) -> Component.literal(key + (int)optionValues.get(settings)));
     }
 }

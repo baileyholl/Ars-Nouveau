@@ -4,12 +4,10 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -45,7 +43,7 @@ public class WarpScroll extends ModItem{
         if(!entity.getCommandSenderWorld().isClientSide){
             String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
             if(getPos(stack) != BlockPos.ZERO
-                    && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
+                    && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().location().toString())
                     && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                     && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
                     || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName))
@@ -74,21 +72,21 @@ public class WarpScroll extends ModItem{
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
         if(!pos.equals(BlockPos.ZERO) ){
-            if(getDimension(stack) == null || !getDimension(stack).equals(player.getCommandSenderWorld().dimension().getRegistryName().toString())){
-                player.sendMessage(new TranslatableComponent("ars_nouveau.warp_scroll.wrong_dim"), Util.NIL_UUID);
+            if (getDimension(stack) == null || !getDimension(stack).equals(player.getCommandSenderWorld().dimension().location().toString())) {
+                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
                 return InteractionResultHolder.fail(stack);
             }
-            player.teleportToWithTicket(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
+            player.teleportToWithTicket(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = getRotationVector(stack);
-            player.xRot = rotation.x;
-            player.yRot = rotation.y;
+            player.setXRot(rotation.x);
+            player.setYRot(rotation.y);
             stack.shrink(1);
             return InteractionResultHolder.pass(stack);
         }
         if(player.isShiftKeyDown()){
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL);
             newWarpStack.setTag(new CompoundTag());
-            setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().getRegistryName().toString());
+            setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString());
             setRotationVector(newWarpStack, player.getRotationVector());
             boolean didAdd;
             if(stack.getCount() == 1){
@@ -100,10 +98,10 @@ public class WarpScroll extends ModItem{
                     stack.shrink(1);
             }
             if(!didAdd){
-                player.sendMessage(new TranslatableComponent("ars_nouveau.warp_scroll.inv_full"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));
                 return InteractionResultHolder.fail(stack);
             }else{
-                player.sendMessage(new TranslatableComponent("ars_nouveau.warp_scroll.recorded"), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
             }
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -140,9 +138,9 @@ public class WarpScroll extends ModItem{
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
         if(pos.equals(BlockPos.ZERO)){
-            tooltip.add(new TranslatableComponent("ars_nouveau.warp_scroll.no_location"));
+            tooltip.add(Component.translatable("ars_nouveau.warp_scroll.no_location"));
             return;
         }
-        tooltip.add(new TranslatableComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
+        tooltip.add(Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
     }
 }

@@ -30,13 +30,12 @@ public class RelayWarpTile extends RelaySplitterTile {
     }
 
     public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate){
-        if(to instanceof RelayWarpTile){
-            RelayWarpTile toWarp = (RelayWarpTile) to;
+        if (to instanceof RelayWarpTile toWarp) {
             double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
             double probLoss = adjustedDist / 100.0;
-            if(adjustedDist > 0 && level.getRandom().nextFloat() < probLoss){
+            if (adjustedDist > 0 && level.getRandom().nextFloat() < probLoss) {
                 int transferRate = getTransferRate(from, to, fromTransferRate);
-                if(transferRate == 0)
+                if (transferRate == 0)
                     return 0;
                 from.removeSource(transferRate);
                 int lossyTransfer = Math.max(1, (int) (transferRate * 0.7));

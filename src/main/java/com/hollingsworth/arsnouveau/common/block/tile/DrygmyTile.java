@@ -9,17 +9,16 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
-import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -124,7 +123,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             return;
         }
         if (tickCounter % 10 == 0 && !level.isClientSide) {
-            Random r = level.random;
+            RandomSource r = level.random;
             int min = -2;
             int max = 2;
             EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
@@ -164,12 +163,12 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
             stacks.addAll(loottable.getRandomItems(ctx));
             int oldExp = 0;
-            if(entity instanceof Mob){
-                oldExp = ((Mob) entity).xpReward;
+            if (entity instanceof Mob mob) {
+                oldExp = mob.xpReward;
             }
-            exp += ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
+            exp += entity.getExperienceReward();
 
-            if(entity instanceof Mob){
+            if (entity instanceof Mob) {
                 // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.
                 ((Mob) entity).xpReward = oldExp;
             }
@@ -224,7 +223,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(this.needsMana){
-            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }
 }

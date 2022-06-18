@@ -29,17 +29,17 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(Starbuncle carbuncle) {
+    public ResourceLocation getModelResource(Starbuncle carbuncle) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Starbuncle carbuncle) {
+    public ResourceLocation getTextureResource(Starbuncle carbuncle) {
         return carbuncle.isTamed() ? TAMED_TEXTURE : WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(Starbuncle carbuncle) {
+    public ResourceLocation getAnimationResource(Starbuncle carbuncle) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
     }
 }

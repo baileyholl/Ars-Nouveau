@@ -4,14 +4,16 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-public class ApparatusPage extends AbstractPage{
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-    public ApparatusPage(String recipe){
+public class ApparatusPage extends AbstractPage {
+
+    public ApparatusPage(String recipe) {
         this.object.addProperty("recipe", recipe);
     }
 
-    public ApparatusPage(ItemLike itemLike){
-        this(itemLike.asItem().getRegistryName().toString());
+    public ApparatusPage(ItemLike itemLike) {
+        this(getRegistryName(itemLike.asItem()).toString());
     }
 
     @Override

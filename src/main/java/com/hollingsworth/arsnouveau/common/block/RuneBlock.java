@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -32,24 +32,25 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class RuneBlock extends TickableModBlock {
 
-    public static VoxelShape shape =  Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
+    public static VoxelShape shape = Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
+
     public RuneBlock() {
-        super(defaultProperties().noCollission().noOcclusion().strength(0f,0f), LibBlockNames.RUNE);
+        super(defaultProperties().noCollission().noOcclusion().strength(0f, 0f));
     }
 
-    public RuneBlock(BlockBehaviour.Properties properties, String registryName){
-        super(properties, registryName);
+    public RuneBlock(BlockBehaviour.Properties properties) {
+        super(properties);
     }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
+
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
@@ -59,7 +60,7 @@ public class RuneBlock extends TickableModBlock {
             if (!worldIn.isClientSide && stack.getItem() instanceof RunicChalk) {
                 if (runeTile.isTemporary) {
                     runeTile.isTemporary = false;
-                    PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.setperm"));
+                    PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.setperm"));
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -70,20 +71,20 @@ public class RuneBlock extends TickableModBlock {
                 return InteractionResult.SUCCESS;
 
             if (!(spell.recipe.get(0) instanceof MethodTouch)) {
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.touch"));
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.touch"));
                 return InteractionResult.SUCCESS;
             }
             runeTile.setSpell(spell);
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.spell_set"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.spell_set"));
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         super.tick(state, worldIn, pos, rand);
 
-        if(worldIn.getBlockEntity(pos) instanceof RuneTile rune && rune.touchedEntity != null) {
+        if (worldIn.getBlockEntity(pos) instanceof RuneTile rune && rune.touchedEntity != null) {
             rune.castSpell(rune.touchedEntity);
             rune.touchedEntity = null;
         }

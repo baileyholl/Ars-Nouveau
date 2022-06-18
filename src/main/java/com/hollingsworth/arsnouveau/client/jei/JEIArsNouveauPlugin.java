@@ -1,5 +1,5 @@
 package com.hollingsworth.arsnouveau.client.jei;
-
+/* TODO restore
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
@@ -56,7 +56,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<GlyphRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
-        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE);
+        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get());
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         for(Recipe<?> i : manager.getRecipes()){
             if(i instanceof GlyphRecipe){
@@ -75,9 +75,9 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
         registry.addRecipes(crushRecipes, CrushRecipeCategory.UID);
         registry.addRecipes(imbuementRecipes, ImbuementRecipeCategory.UID);
-        ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
+        ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION.get());
         IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot );
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot);
         registry.addRecipes(Collections.singletonList(manaPotionRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "brewing"));
     }
 
@@ -89,3 +89,6 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), ImbuementRecipeCategory.UID);
     }
 }
+
+
+ */

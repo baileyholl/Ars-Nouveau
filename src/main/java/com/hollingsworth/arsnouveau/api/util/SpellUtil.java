@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -91,59 +90,53 @@ public class SpellUtil {
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
         int x, y, z;
         BlockPos start = origin;
-        switch(mop.isInside() ? Direction.DOWN : mop.getDirection()) {
-            case DOWN:
-            case UP:
+        switch (mop.isInside() ? Direction.DOWN : mop.getDirection()) {
+            case DOWN, UP -> {
                 // x y depends on the angle we look?
                 x = facingVec.getX() * height + facingVec.getZ() * width;
                 y = mop.getDirection().getAxisDirection().getStep() * -depth;
                 z = facingVec.getX() * width + facingVec.getZ() * height;
                 start = start.offset(-x / 2, 0, -z / 2);
-                if(x % 2 == 0) {
-                    if(x > 0 && mop.getLocation().x - mop.getBlockPos().getX() > 0.5d) {
+                if (x % 2 == 0) {
+                    if (x > 0 && mop.getLocation().x - mop.getBlockPos().getX() > 0.5d) {
                         start = start.offset(1, 0, 0);
-                    }
-                    else if(x < 0 && mop.getLocation().x - mop.getBlockPos().getX() < 0.5d) {
+                    } else if (x < 0 && mop.getLocation().x - mop.getBlockPos().getX() < 0.5d) {
                         start = start.offset(-1, 0, 0);
                     }
                 }
-                if(z % 2 == 0) {
-                    if(z > 0 && mop.getLocation().z - mop.getBlockPos().getZ() > 0.5d) {
+                if (z % 2 == 0) {
+                    if (z > 0 && mop.getLocation().z - mop.getBlockPos().getZ() > 0.5d) {
                         start = start.offset(0, 0, 1);
-                    }
-                    else if(z < 0 && mop.getLocation().z - mop.getBlockPos().getZ() < 0.5d) {
+                    } else if (z < 0 && mop.getLocation().z - mop.getBlockPos().getZ() < 0.5d) {
                         start = start.offset(0, 0, -1);
                     }
                 }
-                break;
-            case NORTH:
-            case SOUTH:
+            }
+            case NORTH, SOUTH -> {
                 x = width;
                 y = height;
                 z = mop.getDirection().getAxisDirection().getStep() * -depth;
                 start = start.offset(-x / 2, -y / 2, 0);
-                if(x % 2 == 0 && mop.getLocation().x - mop.getBlockPos().getX() > 0.5d) {
+                if (x % 2 == 0 && mop.getLocation().x - mop.getBlockPos().getX() > 0.5d) {
                     start = start.offset(1, 0, 0);
                 }
-                if(y % 2 == 0 && mop.getLocation().y - mop.getBlockPos().getY() > 0.5d) {
+                if (y % 2 == 0 && mop.getLocation().y - mop.getBlockPos().getY() > 0.5d) {
                     start = start.offset(0, 1, 0);
                 }
-                break;
-            case WEST:
-            case EAST:
+            }
+            case WEST, EAST -> {
                 x = mop.getDirection().getAxisDirection().getStep() * -depth;
                 y = height;
                 z = width;
                 start = start.offset(-0, -y / 2, -z / 2);
-                if(y % 2 == 0 && mop.getLocation().y - mop.getBlockPos().getY() > 0.5d) {
+                if (y % 2 == 0 && mop.getLocation().y - mop.getBlockPos().getY() > 0.5d) {
                     start = start.offset(0, 1, 0);
                 }
-                if(z % 2 == 0 && mop.getLocation().z - mop.getBlockPos().getZ() > 0.5d) {
+                if (z % 2 == 0 && mop.getLocation().z - mop.getBlockPos().getZ() > 0.5d) {
                     start = start.offset(0, 0, 1);
                 }
-                break;
-            default:
-                x = y = z = 0;
+            }
+            default -> x = y = z = 0;
         }
 
         ArrayList<BlockPos> builder = new ArrayList<>();

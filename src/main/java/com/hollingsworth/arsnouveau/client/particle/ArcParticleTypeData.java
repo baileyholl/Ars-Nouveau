@@ -9,6 +9,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 @OnlyIn(Dist.CLIENT)
 public class ArcParticleTypeData implements ParticleOptions {
 
@@ -47,7 +49,7 @@ public class ArcParticleTypeData implements ParticleOptions {
 
     @Override
     public String writeToString() {
-        return type.getRegistryName().toString() + " " + serializeVec(target) + " " + serializeVec(source);
+        return getRegistryName(type).toString() + " " + serializeVec(target) + " " + serializeVec(source);
     }
 
     public String serializeVec(Vec3 vec3d){

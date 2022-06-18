@@ -27,17 +27,17 @@ public class BookwyrmModel<T extends LivingEntity & IAnimatable> extends Animate
 	}
 
 	@Override
-	public ResourceLocation getModelLocation(T wyrm) {
+	public ResourceLocation getModelResource(T wyrm) {
 		return NORMAL_MODEL;
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(T wyrm) {
+	public ResourceLocation getTextureResource(T wyrm) {
 		return WILD_TEXTURE;
 	}
 
 	@Override
-	public ResourceLocation getAnimationFileLocation(T wyrm) {
+	public ResourceLocation getAnimationResource(T wyrm) {
 		return ANIMATIONS;
 	}
 }

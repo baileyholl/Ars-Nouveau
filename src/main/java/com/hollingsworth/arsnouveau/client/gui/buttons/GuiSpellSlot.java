@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class GuiSpellSlot extends GuiImageButton {
                 String name = caster.getSpellName(slotNum);
                 if(!name.isEmpty()){
                     List<Component> tip = new ArrayList<>();
-                    tip.add(new TextComponent(name));
+                    tip.add(Component.literal(name));
                     parent.tooltip = tip;
                 }
             }

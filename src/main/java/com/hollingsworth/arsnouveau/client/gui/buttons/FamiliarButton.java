@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class FamiliarButton extends Button {
                     tip.add(familiarHolder.getLangDescription());
                 }else{
                     tip.add(familiarHolder.getLangName());
-                    tip.add(new TranslatableComponent("tooltip.ars_nouveau.hold_shift"));
+                    tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
                 }
 
                 parent.tooltip = tip;

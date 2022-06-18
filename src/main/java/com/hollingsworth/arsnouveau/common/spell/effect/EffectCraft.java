@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +24,7 @@ public class EffectCraft extends AbstractEffect {
         super(GlyphLib.EffectCraftID, "Craft");
     }
 
-    private static final Component CONTAINER_NAME = new TranslatableComponent("container.crafting");
+    private static final Component CONTAINER_NAME = Component.translatable("container.crafting");
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {

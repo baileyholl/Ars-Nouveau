@@ -3,14 +3,16 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-public class ImbuementPage extends AbstractPage{
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-    public ImbuementPage(String recipe){
+public class ImbuementPage extends AbstractPage {
+
+    public ImbuementPage(String recipe) {
         this.object.addProperty("recipe", recipe);
     }
 
-    public ImbuementPage(ItemLike itemLike){
-        this(itemLike.asItem().getRegistryName().toString());
+    public ImbuementPage(ItemLike itemLike) {
+        this(getRegistryName(itemLike.asItem()).toString());
     }
 
     @Override

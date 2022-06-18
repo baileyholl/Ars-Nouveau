@@ -40,7 +40,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     private int limitedLifeTicks;
 
     public EntityAllyVex(EntityType<? extends Vex> p_i50190_1_, Level p_i50190_2_) {
-        super(ModEntities.ALLY_VEX, p_i50190_2_);
+        super(ModEntities.ALLY_VEX.get(), p_i50190_2_);
     }
 
 
@@ -54,13 +54,13 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ALLY_VEX;
+        return ModEntities.ALLY_VEX.get();
     }
 
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         this.populateDefaultEquipmentSlots(difficultyIn);
-        this.populateDefaultEquipmentEnchantments(difficultyIn);
+        this.populateDefaultEquipmentEnchantments(getRandom(), difficultyIn);
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
@@ -192,7 +192,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 

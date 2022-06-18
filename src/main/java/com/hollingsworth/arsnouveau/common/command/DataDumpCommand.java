@@ -10,7 +10,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
@@ -49,8 +49,7 @@ public class DataDumpCommand {
         List<AbstractAugment> augments = spells.values().stream()
                 .filter(p -> p instanceof AbstractAugment)
                 .map(p -> (AbstractAugment) p)
-                .sorted(Comparator.comparing(a -> a.getId()))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(AbstractSpellPart::getId)).toList();
 
         // Collect the augment compatibilities
         List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = spells.values().stream()
@@ -62,8 +61,7 @@ public class DataDumpCommand {
         augmentCompat.addAll(spells.values().stream()
                 .filter(part -> part instanceof AbstractEffect)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
-                .sorted(Comparator.comparing(t -> t.getA().getId()))
-                .collect(Collectors.toList()));
+                .sorted(Comparator.comparing(t -> t.getA().getId())).toList());
 
         // Write the file
         File file = PATH_AUGMENT_COMPATIBILITY.toFile();
@@ -72,7 +70,7 @@ public class DataDumpCommand {
             PrintWriter w = new PrintWriter(new FileWriterWithEncoding(file, "UTF-8", false));
 
             // Header Line
-            w.println("glyph, " + augments.stream().map(a -> a.getId()).collect(Collectors.joining(", ")));
+            w.println("glyph, " + augments.stream().map(AbstractSpellPart::getId).collect(Collectors.joining(", ")));
 
             // Rows
             for (Tuple<AbstractSpellPart, Set<AbstractAugment>> row : augmentCompat) {
@@ -90,19 +88,19 @@ public class DataDumpCommand {
             w.close();
         } catch (IOException ex) {
             LogManager.getLogger(ArsNouveau.MODID).error("Unable to dump augment compatibility chart", ex);
-            context.getSource().sendFailure(new TextComponent("Error when trying to produce the data dump.  Check the logs."));
+            context.getSource().sendFailure(Component.literal("Error when trying to produce the data dump.  Check the logs."));
 
             // This is somewhat expected, just fail the command.  Logging took care of reporting.
             return 0;
         } catch (Exception ex) {
             LogManager.getLogger(ArsNouveau.MODID).error("Exception caught when trying to dump data", ex);
-            context.getSource().sendFailure(new TextComponent("Error when trying to produce the data dump.  Check the logs."));
+            context.getSource().sendFailure(Component.literal("Error when trying to produce the data dump.  Check the logs."));
 
             // We really didn't expect this.  Re-throw.
             throw ex;
         }
 
-        context.getSource().sendSuccess(new TextComponent("Dumped data to " + file), true);
+        context.getSource().sendSuccess(Component.literal("Dumped data to " + file), true);
         return 1;
     }
 }

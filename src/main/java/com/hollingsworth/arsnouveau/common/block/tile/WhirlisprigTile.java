@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -33,7 +34,10 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -118,7 +122,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
         for(int numRerolls = 0; numRerolls < (bonusReroll ? 16 : 8); numRerolls++) {
             List<ItemStack> drops = getDrops.get();
             if (drops.isEmpty()) continue;
-            successfulDrops = drops.stream().filter(s -> isValidReward(s)).collect(Collectors.toCollection(ArrayList::new));
+            successfulDrops = drops.stream().filter(this::isValidReward).collect(Collectors.toCollection(ArrayList::new));
             bonusReroll = true;
             if (successfulDrops.isEmpty()) continue;
             return successfulDrops;
@@ -209,7 +213,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
             return;
         }
         if (tickCounter % 10 == 0 && !level.isClientSide) {
-            Random r = level.random;
+            RandomSource r = level.random;
             int min = -2;
             int max = 2;
             EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));

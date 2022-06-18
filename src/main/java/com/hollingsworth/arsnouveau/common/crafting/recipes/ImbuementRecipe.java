@@ -20,12 +20,13 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 
 public class ImbuementRecipe implements Recipe<ImbuementTile> {
@@ -103,7 +104,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.IMBUEMENT_SERIALIZER;
+        return RecipeRegistry.IMBUEMENT_SERIALIZER.get();
     }
 
     @Override
@@ -115,7 +116,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RECIPE_ID);
         jsonobject.add("input", input.toJson());
-        jsonobject.addProperty("output", output.getItem().getRegistryName().toString());
+        jsonobject.addProperty("output", getRegistryName(output.getItem()).toString());
         jsonobject.addProperty("count", output.getCount());
         jsonobject.addProperty("source", source);
         JsonArray pedestalArr = new JsonArray();
@@ -128,17 +129,17 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         return jsonobject;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ImbuementRecipe> {
+    public static class Serializer implements RecipeSerializer<ImbuementRecipe> {
 
         @Override
         public ImbuementRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             Ingredient inputStack = null;
-            if(GsonHelper.isArrayNode(json, "input")){
+            if (GsonHelper.isArrayNode(json, "input")) {
                 inputStack = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
-            }else{
+            } else {
                 inputStack = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
             }
-            Item output = GsonHelper.getAsItem(json,"output");
+            Item output = GsonHelper.getAsItem(json, "output");
             int count = GsonHelper.getAsInt(json, "count");
             ItemStack outputStack = new ItemStack(output, count);
             int source = GsonHelper.getAsInt(json,  "source");

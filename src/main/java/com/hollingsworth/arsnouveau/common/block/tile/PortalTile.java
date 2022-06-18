@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -38,10 +37,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public void warp(Entity e) {
         if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
             e.moveTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5,
-                    rotationVec != null ? rotationVec.y : e.yRot, rotationVec != null ? rotationVec.x : e.xRot);
-            e.xRot = rotationVec != null ? rotationVec.x : e.xRot;
-            e.yRot = rotationVec != null ? rotationVec.y : e.yRot;
-            Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ()+ 0.5, e.xRot, e.yRot));
+                    rotationVec != null ? rotationVec.y : e.getYRot(), rotationVec != null ? rotationVec.x : e.getXRot());
+            e.setXRot(rotationVec != null ? rotationVec.x : e.getXRot());
+            e.setYRot(rotationVec != null ? rotationVec.y : e.getYRot());
+            Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.getXRot(), e.getYRot()));
             ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
@@ -86,9 +85,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                         4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                 if (rotationVec != null) {
-                    e.xRot = rotationVec.x;
-                    e.yRot = rotationVec.y;
-                    Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX()+ 0.5, warpPos.getY(), warpPos.getZ()+ 0.5, e.xRot, e.yRot));
+                    e.setXRot(rotationVec.x);
+                    e.setYRot(rotationVec.y);
+                    Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, e.getXRot(), e.getYRot()));
 
                 }
             }
@@ -98,7 +97,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     @Override
     public void getTooltip(List<Component> tooltip) {
         if (this.displayName != null) {
-            tooltip.add(new TextComponent(this.displayName));
+            tooltip.add(Component.literal(this.displayName));
         }
     }
 

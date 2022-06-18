@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -61,11 +60,11 @@ public class AnnotatedCodex extends ModItem{
             int levelCost = getUnlockLevelCost(playerCap.getKnownGlyphs());
             int expCost = ScribesTile.getExperienceForLevel(levelCost);
             if(expCost > ScribesTile.getTotalPlayerExperience(pPlayer)){
-                PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.codex_not_enough_exp", levelCost));
+                PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_not_enough_exp", levelCost));
             }else {
                 data.setGlyphs(playerCap.getKnownGlyphs());
                 data.setPlayer(pPlayer);
-                PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.recorded_codex"));
+                PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.recorded_codex"));
                 pPlayer.giveExperiencePoints(-expCost);
             }
         }else if(pPlayer.getUUID().equals(data.getPlayerID())){ // Player updating codex
@@ -79,14 +78,14 @@ public class AnnotatedCodex extends ModItem{
             if(!difference.isEmpty()) {
                 int expCost = ScribesTile.getExperienceForLevel(levelCost);
                 if(expCost > ScribesTile.getTotalPlayerExperience(pPlayer)){
-                    PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.codex_not_enough_exp", levelCost));
+                    PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_not_enough_exp", levelCost));
                 }else {
                     pPlayer.giveExperiencePoints(-expCost);
                     data.setGlyphs(playerCap.getKnownGlyphs());
-                    PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.updated_codex"));
+                    PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.updated_codex"));
                 }
             }else{
-                PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.codex_up_to_date"));
+                PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_up_to_date"));
             }
         }else{ // Player consuming codex
             int numUnlocked = 0;
@@ -98,10 +97,10 @@ public class AnnotatedCodex extends ModItem{
             }
             if(numUnlocked > 0){
                 stack.shrink(1);
-                PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.consumed_codex", numUnlocked));
+                PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.consumed_codex", numUnlocked));
                 CapabilityRegistry.EventHandler.syncPlayerCap(pPlayer);
             }else{
-                PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.codex_no_use"));
+                PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_no_use"));
             }
         }
 
@@ -113,12 +112,12 @@ public class AnnotatedCodex extends ModItem{
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
         CodexData data = new CodexData(stack);
         if(data.glyphs.isEmpty()){
-            tooltip2.add(new TranslatableComponent("ars_nouveau.codex_tooltip"));
+            tooltip2.add(Component.translatable("ars_nouveau.codex_tooltip"));
         }else{
-            tooltip2.add(new TranslatableComponent("ars_nouveau.contains_glyphs", data.glyphs.size()));
+            tooltip2.add(Component.translatable("ars_nouveau.contains_glyphs", data.glyphs.size()));
         }
         if(data.playerName != null)
-            tooltip2.add(new TranslatableComponent("ars_nouveau.recorded_by", data.playerName));
+            tooltip2.add(Component.translatable("ars_nouveau.recorded_by", data.playerName));
     }
 
     public static class CodexData{
@@ -161,7 +160,7 @@ public class AnnotatedCodex extends ModItem{
 
         public void write(){
             CompoundTag tag = new CompoundTag();
-            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(s -> s.getId()).collect(Collectors.toList()));
+            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getId).collect(Collectors.toList()));
             if(playerID != null){
                 tag.putUUID("player", playerID);
             }

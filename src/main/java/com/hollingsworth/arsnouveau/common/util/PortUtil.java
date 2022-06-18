@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.common.util;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketNoSpamChatMessage;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -12,7 +10,7 @@ public class PortUtil {
     public static void sendMessage(Entity playerEntity, Component component){
         if(playerEntity == null)
             return;
-        playerEntity.sendMessage(component, Util.NIL_UUID);
+        playerEntity.sendSystemMessage(component);
     }
 
     public static void sendMessageNoSpam(Entity playerEntity, Component component){
@@ -29,6 +27,7 @@ public class PortUtil {
 
     @Deprecated
     public static void sendMessage(Entity playerEntity, String message){
-        sendMessage(playerEntity, new TextComponent(message));
+        sendMessage(playerEntity, Component.literal(message));
     }
+
 }

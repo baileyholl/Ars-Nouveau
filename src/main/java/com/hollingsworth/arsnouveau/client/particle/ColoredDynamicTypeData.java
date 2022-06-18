@@ -8,6 +8,8 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class ColoredDynamicTypeData implements ParticleOptions {
 
     private ParticleType<ColoredDynamicTypeData> type;
@@ -16,7 +18,7 @@ public class ColoredDynamicTypeData implements ParticleOptions {
     int age;
 
     public static final Codec<ColoredDynamicTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
+                    Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
             Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
             Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
             Codec.FLOAT.fieldOf("scale").forGetter(d -> d.scale),
@@ -65,6 +67,6 @@ public class ColoredDynamicTypeData implements ParticleOptions {
 
     @Override
     public String writeToString() {
-        return type.getRegistryName().toString() + " " + color.serialize() + " " + scale + " " + age;
+        return getRegistryName(type).toString() + " " + color.serialize() + " " + scale + " " + age;
     }
 }

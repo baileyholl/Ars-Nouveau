@@ -40,7 +40,7 @@ public abstract class TrackedEntityMixin {
     @Inject(method = "updatePlayer", at = @At(value = "FIELD", target = "Lnet/minecraft/world/phys/Vec3;x:D", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onUpdatePlayer(ServerPlayer player, CallbackInfo callback, Vec3 unused, double viewDistance) {
         if (CameraUtil.isPlayerMountedOnCamera(player)) {
-            Vec3 relativePosToCamera = player.getCamera().position().subtract(serverEntity.sentPos());
+            Vec3 relativePosToCamera = player.getCamera().position().subtract(this.entity.position());
 
             if (relativePosToCamera.x >= -viewDistance && relativePosToCamera.x <= viewDistance && relativePosToCamera.z >= -viewDistance && relativePosToCamera.z <= viewDistance)
                 shouldBeSent = true;

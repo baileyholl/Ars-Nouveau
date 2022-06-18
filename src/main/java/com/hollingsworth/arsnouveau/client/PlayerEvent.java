@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,10 +34,10 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
-        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
+        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), stack);
         if(level > 0 && new ReactiveCaster(stack).getSpell().isValid()){
             Spell spell = new ReactiveCaster(stack).getSpell();
-            event.getToolTip().add(new TextComponent(spell.getDisplayString()));
+            event.getToolTip().add(Component.literal(spell.getDisplayString()));
         }
     }
 

@@ -12,16 +12,9 @@ import javax.annotation.Nullable;
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
 public abstract class SummonBlock extends TickableModBlock {
-    public SummonBlock(Properties properties, String registry) {
-        super(properties, registry);
-    }
 
     public SummonBlock(Properties properties) {
         super(properties);
-    }
-
-    public SummonBlock(String string){
-        super(string);
     }
 
     @Nullable

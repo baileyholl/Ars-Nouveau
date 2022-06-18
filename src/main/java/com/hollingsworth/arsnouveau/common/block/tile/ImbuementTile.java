@@ -90,8 +90,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         // Restore the recipe on world restart
         if(recipe == null){
-            for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE)){
-                if(recipe.matches(this, level)){
+            for (ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())) {
+                if (recipe.matches(this, level)) {
                     this.recipe = recipe;
                     this.craftTicks = 100;
                     break;
@@ -187,7 +187,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if(stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream()
+        ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                 .filter(f -> f.matches(this, level)).findFirst().orElse(null);
         this.stack = ItemStack.EMPTY;
         return recipe != null;

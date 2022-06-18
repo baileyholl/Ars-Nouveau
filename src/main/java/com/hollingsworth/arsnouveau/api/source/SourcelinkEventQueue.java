@@ -12,7 +12,7 @@ public class SourcelinkEventQueue {
 
     public static Map<String, Set<BlockPos>> posMap = new HashMap<>();
     public static void addPosition(Level world, BlockPos pos){
-        String key = world.dimension().getRegistryName().toString();
+        String key = world.dimension().location().toString();
         if(!posMap.containsKey(key))
             posMap.put(key, new HashSet<>());
 
@@ -21,7 +21,7 @@ public class SourcelinkEventQueue {
 
     public static void addManaEvent(Level world, Class<? extends SourcelinkTile> tileType, int amount, Event event, BlockPos sourcePos){
         List<BlockPos> stalePos = new ArrayList<>();
-        Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().getRegistryName().toString(), new HashSet<>());
+        Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().location().toString(), new HashSet<>());
         for(BlockPos p : worldList){
             if(!world.isLoaded(p))
                 continue;

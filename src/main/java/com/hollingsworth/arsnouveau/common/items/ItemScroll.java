@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -76,7 +76,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
     }
 
     public static String getItemKey(ItemStack stack){
-        return ITEM_PREFIX + stack.getItem().getRegistryName().toString();
+        return ITEM_PREFIX + RegistryHelper.getRegistryName(stack.getItem()).toString();
     }
 
     @Override
@@ -91,10 +91,10 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
             return false;
 
         if(containsItem(stackToWrite, tag)) {
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribe.item_removed"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_removed"));
             return removeItem(stackToWrite, tag);
         }
-        PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribe.item_added"));
+        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_added"));
         return addItem(stackToWrite, tag);
     }
 

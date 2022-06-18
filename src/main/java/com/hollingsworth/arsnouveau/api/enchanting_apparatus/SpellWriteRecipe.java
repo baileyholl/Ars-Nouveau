@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
-import net.minecraft.core.Registry;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -77,18 +76,18 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return RecipeRegistry.SPELL_WRITE_TYPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SpellWriteRecipe> {
+    public static class Serializer implements RecipeSerializer<SpellWriteRecipe> {
 
         @Override
         public SpellWriteRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
-            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(JsonElement e : pedestalItems){
+            for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
                 if(GsonHelper.isArrayNode(obj, "item")){

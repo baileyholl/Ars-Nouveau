@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
  */
 public class ArsNouveauAPI {
 
+
     /**
      * Map of all spells to be registered in the spell system
      *
@@ -94,7 +95,7 @@ public class ArsNouveauAPI {
 
     public Item getGlyphItem(String glyphName){
         for(Item i : ItemsRegistry.RegistrationHandler.ITEMS){
-            if(i.getRegistryName().equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))){
+            if (RegistryHelper.getRegistryName(i).equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))) {
                 return i;
             }
         }

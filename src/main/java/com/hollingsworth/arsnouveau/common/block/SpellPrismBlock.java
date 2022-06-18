@@ -17,12 +17,12 @@ import javax.annotation.Nullable;
 public class SpellPrismBlock extends ModBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
 
-    public SpellPrismBlock(Properties properties, String registry) {
-        super(properties, registry);
+    public SpellPrismBlock(Properties properties) {
+        super(properties);
     }
 
-    public SpellPrismBlock(String name){
-        super(name);
+    public SpellPrismBlock() {
+        super();
     }
 
     @Nullable

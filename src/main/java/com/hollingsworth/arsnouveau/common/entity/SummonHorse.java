@@ -74,7 +74,7 @@ public class SummonHorse extends Horse implements ISummon {
     protected void dropEquipment() { }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 
@@ -83,7 +83,8 @@ public class SummonHorse extends Horse implements ISummon {
     }
 
     @Override
-    public void openInventory(Player playerEntity) { }
+    public void openCustomInventoryScreen(Player playerEntity) {
+    }
 
     @Override
     public boolean canMate(Animal otherAnimal) {
@@ -127,7 +128,7 @@ public class SummonHorse extends Horse implements ISummon {
     @Nullable
     @Override
     public UUID getOwnerID() {
-        return !this.getEntityData().get(OWNER_UUID).isPresent() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
     }
 
     @Override

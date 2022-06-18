@@ -3,14 +3,16 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-public class CraftingPage extends AbstractPage{
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-    public CraftingPage(String recipe){
+public class CraftingPage extends AbstractPage {
+
+    public CraftingPage(String recipe) {
         object.addProperty("recipe", recipe);
     }
 
-    public CraftingPage(ItemLike itemLike){
-        this(itemLike.asItem().getRegistryName().toString());
+    public CraftingPage(ItemLike itemLike) {
+        this(getRegistryName(itemLike.asItem()).toString());
     }
 
     public CraftingPage withRecipe2(String recipe){
@@ -19,7 +21,7 @@ public class CraftingPage extends AbstractPage{
     }
 
     public CraftingPage withRecipe2(ItemLike recipe){
-        object.addProperty("recipe2", recipe.asItem().getRegistryName().toString());
+        object.addProperty("recipe2", getRegistryName(recipe.asItem()).toString());
         return this;
     }
 

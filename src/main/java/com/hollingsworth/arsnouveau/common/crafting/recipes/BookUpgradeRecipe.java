@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class BookUpgradeRecipe extends ShapelessRecipe {
 
@@ -39,10 +38,10 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.BOOK_UPGRADE_RECIPE;
+        return RecipeRegistry.BOOK_UPGRADE_RECIPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BookUpgradeRecipe> {
+    public static class Serializer implements RecipeSerializer<BookUpgradeRecipe> {
         @Override
         public BookUpgradeRecipe fromJson(final ResourceLocation recipeID, final JsonObject json) {
             final String group = GsonHelper.getAsString(json, "group", "");

@@ -24,17 +24,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 
 public class RitualBrazierBlock extends TickableModBlock {
-    public RitualBrazierBlock(String registryName) {
-        super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0), registryName);
+    public RitualBrazierBlock() {
+        super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
     }
     public static final Property<Boolean> LIT = BooleanProperty.create("lit");
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile) || handIn != InteractionHand.MAIN_HAND || !player.getMainHandItem().isEmpty())
+        if (!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) || handIn != InteractionHand.MAIN_HAND || !player.getMainHandItem().isEmpty())
             return super.use(state, worldIn, pos, player, handIn, hit);
-        RitualBrazierTile tile = (RitualBrazierTile) worldIn.getBlockEntity(pos);
-        if(tile.ritual != null && !tile.isRitualDone()) {
+        if (tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual();
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
@@ -48,8 +47,8 @@ public class RitualBrazierBlock extends TickableModBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualBrazierTile){
-            ((RitualBrazierTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
+            tile.isOff = world.hasNeighborSignal(pos);
             BlockUtil.safelyUpdateState(world, pos);
         }
     }
@@ -57,9 +56,8 @@ public class RitualBrazierBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile){
-            RitualBrazierTile tile = (RitualBrazierTile) worldIn.getBlockEntity(pos);
-            if(tile.ritual != null && !tile.ritual.isRunning() && !tile.ritual.isDone()){
+        if (worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
+            if (tile.ritual != null && !tile.ritual.isRunning() && !tile.ritual.isDone()) {
                 worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ArsNouveauAPI.getInstance().getRitualItemMap().get(tile.ritual.getID()))));
             }
 

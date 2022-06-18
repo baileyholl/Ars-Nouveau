@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +21,7 @@ public class WixieCauldron extends SummonBlock {
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
     public WixieCauldron() {
-        super(defaultProperties().noOcclusion(), LibBlockNames.WIXIE_CAULDRON);
+        super(defaultProperties().noOcclusion());
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(FILLED, false));
     }
 

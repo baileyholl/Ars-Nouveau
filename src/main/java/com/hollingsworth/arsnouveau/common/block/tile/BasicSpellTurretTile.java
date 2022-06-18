@@ -8,8 +8,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -72,7 +70,7 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spellCaster.getSpell().getDisplayString()));
+        tooltip.add(Component.literal(Component.translatable("ars_nouveau.spell_turret.casting").getString() + spellCaster.getSpell().getDisplayString()));
     }
 
     public PlayState walkPredicate(AnimationEvent event) {

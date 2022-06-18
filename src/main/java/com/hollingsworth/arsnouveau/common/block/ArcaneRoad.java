@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -12,10 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class ArcaneRoad extends TickableModBlock {
     private static final AABB AABB = new AABB(0F, 0F, 0F, 1F, .8F, 1F);
-    public ArcaneRoad(){
-        super(LibBlockNames.ARCANE_ROAD);
-    }
-
     @Override
     public void entityInside(BlockState p_196262_1_, Level p_196262_2_, BlockPos p_196262_3_, Entity entity) {
         Vec3 dir = entity.getDeltaMovement();

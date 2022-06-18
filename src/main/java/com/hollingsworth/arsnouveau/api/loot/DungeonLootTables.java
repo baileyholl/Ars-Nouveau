@@ -15,8 +15,8 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -41,19 +41,19 @@ public class DungeonLootTables {
         BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION);
+            PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION.get());
             return stack;
         });
 
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION);
+            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION.get());
             return stack;
         });
 
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION);
+            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION.get());
             return stack;
         });
 
@@ -225,7 +225,7 @@ public class DungeonLootTables {
         ItemStack stack = new ItemStack(ItemsRegistry.CASTER_TOME);
         ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setSpell(spell);
-        stack.setHoverName(new TextComponent(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
+        stack.setHoverName(Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
         return stack;
     }
 

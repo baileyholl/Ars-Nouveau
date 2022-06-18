@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,8 +18,7 @@ public abstract class ExperienceGem extends ModItem{
     }
 
     public ExperienceGem(Properties properties, String registryName){
-        this(properties);
-        setRegistryName(ArsNouveau.MODID, registryName);
+        super(properties, registryName);
     }
 
     public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {

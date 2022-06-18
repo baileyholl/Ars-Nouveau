@@ -20,8 +20,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -83,7 +81,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             ticksUntilCharge = 20 * 2;
         }catch (Exception e){
-            PortUtil.sendMessage(entity, new TranslatableComponent("ars_nouveau.rune.error"));
+            PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.rune.error"));
             e.printStackTrace();
             level.destroyBlock(worldPosition, false);
         }
@@ -184,8 +182,8 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
-            tooltip.add(new TextComponent(spell.getDisplayString()));
+        if (ArsNouveau.proxy.getPlayer().hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())) {
+            tooltip.add(Component.literal(spell.getDisplayString()));
         }
     }
 }

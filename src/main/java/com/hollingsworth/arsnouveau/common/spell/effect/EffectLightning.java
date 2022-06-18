@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.LightningEntity;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
@@ -29,7 +29,7 @@ public class EffectLightning extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Vec3 pos = safelyGetHitPos(rayTraceResult);
-        LightningEntity lightningBoltEntity = new LightningEntity(ModEntities.LIGHTNING_ENTITY,world);
+        LightningEntity lightningBoltEntity = new LightningEntity(ModEntities.LIGHTNING_ENTITY.get(), world);
         lightningBoltEntity.setPos(pos.x(), pos.y(), pos.z());
         lightningBoltEntity.setCause(shooter instanceof ServerPlayer ? (ServerPlayer) shooter : null);
         lightningBoltEntity.amps = (float) spellStats.getAmpMultiplier();

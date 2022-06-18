@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import net.minecraft.world.effect.MobEffect;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 public class FlightEffect extends MobEffect {
     protected FlightEffect() {
         super(MobEffectCategory.BENEFICIAL, 2039587);
-        setRegistryName(ArsNouveau.MODID, "flight");
     }
 
 
@@ -24,8 +22,8 @@ public class FlightEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int p_76394_2_) {
         super.applyEffectTick(entity, p_76394_2_);
-        if(entity instanceof Player){
-            ((Player) entity).abilities.mayfly = (((Player) entity).isCreative() || entity.isSpectator()) || entity.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() > 2;
+        if (entity instanceof Player player) {
+            player.abilities.mayfly = (player.isCreative() || entity.isSpectator()) || entity.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() > 2;
         }
     }
 

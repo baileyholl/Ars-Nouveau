@@ -29,17 +29,16 @@ public class EffectDispel extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(rayTraceResult.getEntity() instanceof LivingEntity){
-            LivingEntity entity = (LivingEntity) rayTraceResult.getEntity();
+        if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
-            if(MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext)))
+            if (MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext)))
                 return;
-            for(MobEffectInstance e : array){
-                if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
+            for (MobEffectInstance e : array) {
+                if (e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
                     entity.removeEffect(e.getEffect());
             }
-            if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.isRemoved()){
+            if (entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.isRemoved()) {
                 ((IDispellable) entity).onDispel(shooter);
             }
         }

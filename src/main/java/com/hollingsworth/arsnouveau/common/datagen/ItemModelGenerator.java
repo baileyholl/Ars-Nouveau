@@ -12,6 +12,8 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class ItemModelGenerator extends net.minecraftforge.client.model.generators.ItemModelProvider {
     public ItemModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
         super(generator, modid, existingFileHelper);
@@ -20,28 +22,28 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
     @Override
     protected void registerModels() {
 
-        ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
+        ItemsRegistry.RegistrationHandler.ITEMS.forEach(i -> {
             if(i instanceof Glyph){
                 try {
                     getBuilder("glyph_" + ((Glyph) i).spellPart.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
                 }catch (Exception e){
-                    System.out.println("No texture for " + i.toString());
+                    System.out.println("No texture for " + i);
                 }
             }else if(i instanceof RitualTablet){
                 try {
                     getBuilder("ritual_" + ((RitualTablet) i).ritual.getID()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
                 }catch (Exception e){
-                    System.out.println("No texture for " + i.toString());
+                    System.out.println("No texture for " + i);
                 }
             }else if(i instanceof FamiliarScript) {
                 try {
                     getBuilder("familiar_" + ((FamiliarScript) i).familiar.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
                 }catch (Exception e){
-                    System.out.println("No texture for " + i.toString());
+                    System.out.println("No texture for " + i);
                 }
             }else{
                 try {
-                    getBuilder(i.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
+                    getBuilder(getRegistryName(i).getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
                 }catch (Exception e){
                     System.out.println("No texture for " + i.toString());
                 }
@@ -75,8 +77,8 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.AB_SMOOTH_ALTERNATING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_ALTERNATING));
         getBuilder(LibBlockNames.AB_SMOOTH_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_ASHLAR));
 
-        getBuilder(ItemsRegistry.EXPERIENCE_GEM.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.EXPERIENCE_GEM));
-        getBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.GREATER_EXPERIENCE_GEM));
+        getBuilder(ItemsRegistry.EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.EXPERIENCE_GEM));
+        getBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.GREATER_EXPERIENCE_GEM));
 
         getBuilder(LibBlockNames.AS_GOLD_ALT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ALT));
         getBuilder(LibBlockNames.AS_GOLD_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ASHLAR));
@@ -102,7 +104,7 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         return "Ars Nouveau Item Models";
     }
     private ResourceLocation registryName(final Item item) {
-        return Preconditions.checkNotNull(item.getRegistryName(), "Item %s has a null registry name", item);
+        return Preconditions.checkNotNull(getRegistryName(item), "Item %s has a null registry name", item);
     }
     private ResourceLocation itemTexture(final Item item) {
         final ResourceLocation name = registryName(item);

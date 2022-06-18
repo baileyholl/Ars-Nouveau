@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -117,32 +118,34 @@ public class ParticleUtil {
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 
-    public static void spawnRitualAreaEffect(BlockEntity entity, Random rand, ParticleColor color, int range){
+    public static void spawnRitualAreaEffect(BlockEntity entity, RandomSource rand, ParticleColor color, int range) {
         spawnRitualAreaEffect(entity.getBlockPos(), entity.getLevel(), rand, color, range);
     }
 
-    public static void spawnRitualAreaEffect(BlockPos pos, Level world, Random rand, ParticleColor color, int range){
+    public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range) {
         spawnRitualAreaEffect(pos, world, rand, color, range, 10, 10);
     }
-    public static void spawnRitualAreaEffect(BlockPos pos, Level world, Random rand, ParticleColor color, int range, int chance, int numParticles){
+
+    public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range, int chance, int numParticles) {
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
-            if(rand.nextInt(chance) == 0){
-                for(int i =0; i< rand.nextInt(numParticles); i++) {
+            if (rand.nextInt(chance) == 0) {
+                for (int i = 0; i < rand.nextInt(numParticles); i++) {
                     double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
                     double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
                     world.addParticle(ParticleLineData.createData(color),
                             x, y, z,
-                            x, y  + ParticleUtil.inRange(0.5, 5), z);
+                            x, y + ParticleUtil.inRange(0.5, 5), z);
                 }
             }
         });
     }
-    public static void spawnRitualSkyEffect(BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+
+    public static void spawnRitualSkyEffect(BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
 
         int min = -5;
         int max = 5;
-        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY(),  tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
+        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY(), tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
         BlockPos toPos = nearPos.above(rand.nextInt(3) + 10);
         EntityFollowProjectile proj1 = new EntityFollowProjectile(tileEntity.getLevel(),
                 tileEntity.getBlockPos().above(), toPos,
@@ -155,23 +158,23 @@ public class ParticleUtil {
 
     }
 
-    public static void spawnRitualSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnRitualSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
         int scalar = 20;
-        if(ritual.getContext().progress >= 5)
+        if (ritual.getContext().progress >= 5)
             scalar = 10;
-        if(ritual.getContext().progress >= 10)
+        if (ritual.getContext().progress >= 10)
             scalar = 5;
-        if(ritual.getContext().progress >= 13)
+        if (ritual.getContext().progress >= 13)
             scalar = 3;
-        if(!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)){
+        if (!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
             ParticleUtil.spawnRitualSkyEffect(tileEntity, rand, color);
         }
     }
 
-    public static void spawnFallingSkyEffect(BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnFallingSkyEffect(BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
         int min = -5;
         int max = 5;
-        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY() + 8,  tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
+        BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY() + 8, tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
         BlockPos toPos = nearPos.below(8);
         EntityFollowProjectile proj1 = new EntityFollowProjectile(tileEntity.getLevel(),
                 nearPos, toPos,
@@ -184,15 +187,15 @@ public class ParticleUtil {
 
     }
 
-    public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, RandomSource rand, ParticleColor.IntWrapper color) {
         int scalar = 20;
-        if(ritual.getContext().progress >= 5)
+        if (ritual.getContext().progress >= 5)
             scalar = 10;
-        if(ritual.getContext().progress >= 10)
+        if (ritual.getContext().progress >= 10)
             scalar = 5;
-        if(ritual.getContext().progress >= 13)
+        if (ritual.getContext().progress >= 13)
             scalar = 3;
-        if(!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)){
+        if (!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
             ParticleUtil.spawnFallingSkyEffect(tileEntity, rand, color);
         }
     }

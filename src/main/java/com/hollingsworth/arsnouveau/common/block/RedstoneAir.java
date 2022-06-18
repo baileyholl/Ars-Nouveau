@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -17,21 +17,18 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Random;
-
 public class RedstoneAir extends Block {
 
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public RedstoneAir() {
-        super(Block.Properties.of(Material.AIR).noCollission().noDrops());
-        setRegistryName(LibBlockNames.REDSTONE_AIR);
+        super(Block.Properties.of(Material.AIR).noCollission().noLootTable());
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         worldIn.removeBlock(pos, false);
         worldIn.updateNeighborsAt(pos, this);
-        for(Direction d : Direction.values()){
+        for (Direction d : Direction.values()) {
             worldIn.updateNeighborsAt(pos.relative(d), this);
         }
     }

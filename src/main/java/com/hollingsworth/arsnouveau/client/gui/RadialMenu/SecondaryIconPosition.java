@@ -4,16 +4,11 @@ public enum SecondaryIconPosition {
     NORTH, EAST, SOUTH, WEST;
 
     public static SecondaryIconPosition getNextPositon(SecondaryIconPosition secondaryIconPosition) {
-        switch (secondaryIconPosition) {
-            case NORTH:
-                return EAST;
-            case EAST:
-                return SOUTH;
-            case SOUTH:
-                return WEST;
-            case WEST:
-                return NORTH;
-        }
-        return secondaryIconPosition;
+        return switch (secondaryIconPosition) {
+            case NORTH -> EAST;
+            case EAST -> SOUTH;
+            case SOUTH -> WEST;
+            case WEST -> NORTH;
+        };
     }
 }

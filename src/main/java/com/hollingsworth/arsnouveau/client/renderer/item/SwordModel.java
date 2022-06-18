@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class SwordModel extends AnimatedGeoModel<EnchantersSword> {
 
     @Override
-    public ResourceLocation getModelLocation(EnchantersSword wand) {
+    public ResourceLocation getModelResource(EnchantersSword wand) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/sword.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EnchantersSword wand) {
+    public ResourceLocation getTextureResource(EnchantersSword wand) {
         return  new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_sword.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(EnchantersSword wand) {
+    public ResourceLocation getAnimationResource(EnchantersSword wand) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/sword.json");
     }
 

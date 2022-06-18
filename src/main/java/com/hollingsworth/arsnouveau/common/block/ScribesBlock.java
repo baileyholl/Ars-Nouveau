@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGlyphCraft;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -54,7 +53,7 @@ public class ScribesBlock extends TickableModBlock {
     protected static final VoxelShape EAST_SHAPE = Shapes.or(BASE, LEG_NORTH_EAST, LEG_SOUTH_EAST);
 
     public ScribesBlock() {
-        super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion(), LibBlockNames.SCRIBES_BLOCK);
+        super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -67,16 +66,15 @@ public class ScribesBlock extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile)) {
+        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
             return InteractionResult.SUCCESS;
         }
-        if(player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()){
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) player),
+        if (player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()) {
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
                     new PacketOpenGlyphCraft(pos));
             return InteractionResult.SUCCESS;
         }
 
-        ScribesTile tile = (ScribesTile) world.getBlockEntity(pos);
         if(state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
@@ -190,16 +188,12 @@ public class ScribesBlock extends TickableModBlock {
     }
     public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
         Direction direction = getConnectedDirection(p_220053_1_).getOpposite();
-        switch(direction) {
-            case NORTH:
-                return NORTH_SHAPE;
-            case SOUTH:
-                return SOUTH_SHAPE;
-            case WEST:
-                return WEST_SHAPE;
-            default:
-                return EAST_SHAPE;
-        }
+        return switch (direction) {
+            case NORTH -> NORTH_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> EAST_SHAPE;
+        };
     }
 
     @Override

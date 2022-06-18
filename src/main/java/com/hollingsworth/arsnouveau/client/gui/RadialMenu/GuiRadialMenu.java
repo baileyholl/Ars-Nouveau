@@ -8,7 +8,7 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -36,7 +36,7 @@ public class GuiRadialMenu<T> extends Screen {
 
 
     public GuiRadialMenu(RadialMenu<T> radialMenu) {
-        super(new TextComponent(""));
+        super(Component.literal(""));
         this.radialMenu = radialMenu;
         this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
@@ -46,7 +46,7 @@ public class GuiRadialMenu<T> extends Screen {
     }
 
     public GuiRadialMenu() {
-        super(new TextComponent(""));
+        super(Component.literal(""));
     }
 
     @SubscribeEvent

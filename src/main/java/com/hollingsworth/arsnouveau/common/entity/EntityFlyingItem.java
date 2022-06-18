@@ -29,7 +29,6 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public int age;
-    //    int age;
     int maxAge;
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.ITEM_STACK);
@@ -37,7 +36,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
-        this(ModEntities.ENTITY_FLYING_ITEM, worldIn);
+        this(ModEntities.ENTITY_FLYING_ITEM.get(), worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
@@ -152,9 +151,9 @@ public class EntityFlyingItem extends ColoredProjectile {
             for (double i = 0; i < dist; i ++){
                 double coeff = i/dist;
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(GlowParticleData.createData(
-                            new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE))),
+                                    new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
                             (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }
@@ -230,7 +229,7 @@ public class EntityFlyingItem extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FLYING_ITEM;
+        return ModEntities.ENTITY_FLYING_ITEM.get();
     }
 
     @Override
@@ -239,6 +238,6 @@ public class EntityFlyingItem extends ColoredProjectile {
     }
 
     public EntityFlyingItem(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.ENTITY_FLYING_ITEM, world);
+        super(ModEntities.ENTITY_FLYING_ITEM.get(), world);
     }
 }

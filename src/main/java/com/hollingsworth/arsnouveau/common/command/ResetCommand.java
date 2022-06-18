@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -31,12 +31,10 @@ public class ResetCommand {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
             });
-            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(iPlayerCap -> {
-                iPlayerCap.setKnownGlyphs(new ArrayList<>());
-            });
+            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(iPlayerCap -> iPlayerCap.setKnownGlyphs(new ArrayList<>()));
             CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
         }
-        source.sendSuccess(new TranslatableComponent("ars_nouveau.reset.cleared"), true);
+        source.sendSuccess(Component.translatable("ars_nouveau.reset.cleared"), true);
         return 1;
     }
 }

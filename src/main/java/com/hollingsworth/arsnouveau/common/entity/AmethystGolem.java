@@ -18,7 +18,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -202,14 +201,14 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     public void onFinishedConnectionFirst(@javax.annotation.Nullable BlockPos storedPos, @javax.annotation.Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
             setHome(storedPos);
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.home_set"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.home_set"));
         }
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(getHome() != null){
-            tooltip.add(new TranslatableComponent("ars_nouveau.gathering_at", getHome().toShortString()));
+            tooltip.add(Component.translatable("ars_nouveau.gathering_at", getHome().toShortString()));
         }
     }
 
@@ -273,8 +272,8 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this,"run_controller", 1.0f, this::runController));
-        data.addAnimationController(new AnimationController(this,"attack_controller", 5f, this::attackController));
+        data.addAnimationController(new AnimationController<>(this, "run_controller", 1.0f, this::runController));
+        data.addAnimationController(new AnimationController<>(this, "attack_controller", 5f, this::attackController));
     }
     private PlayState attackController(AnimationEvent animationEvent) {
         return PlayState.CONTINUE;
@@ -326,7 +325,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     }
 
     @Override
-    protected int getExperienceReward(Player p_70693_1_) {
+    public int getExperienceReward() {
         return 0;
     }
 

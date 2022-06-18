@@ -39,19 +39,19 @@ public class LootTableProvider extends BaseLootTableProvider{
                 );
         blockTables.put(BlockRegistry.POTION_JAR,LootTable.lootTable().withPool(potionJarBuilder));
 
-        putEntityTable(ModEntities.WILDEN_STALKER,  LootTable.lootTable()
+        putEntityTable(ModEntities.WILDEN_STALKER.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_WING)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
-                .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
+                        .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_WING)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
         );
-        putEntityTable(ModEntities.WILDEN_GUARDIAN,  LootTable.lootTable()
+        putEntityTable(ModEntities.WILDEN_GUARDIAN.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_SPIKE)
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
                                 .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
         );
-        putEntityTable(ModEntities.WILDEN_HUNTER,  LootTable.lootTable()
+        putEntityTable(ModEntities.WILDEN_HUNTER.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_HORN)
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
@@ -59,7 +59,7 @@ public class LootTableProvider extends BaseLootTableProvider{
         );
     }
 
-    public void putEntityTable(EntityType e, LootTable.Builder table){
+    public void putEntityTable(EntityType<?> e, LootTable.Builder table) {
         entityTables.put(e.getDefaultLootTable(), table);
     }
 }

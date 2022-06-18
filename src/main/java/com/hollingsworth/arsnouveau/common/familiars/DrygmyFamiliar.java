@@ -15,7 +15,7 @@ public class DrygmyFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
-        FamiliarDrygmy familiarDrygmy = new FamiliarDrygmy(ModEntities.ENTITY_FAMILIAR_DRYGMY, world);
+        FamiliarDrygmy familiarDrygmy = new FamiliarDrygmy(ModEntities.ENTITY_FAMILIAR_DRYGMY.get(), world);
         familiarDrygmy.setTagData(tag);
         return familiarDrygmy;
     }

@@ -24,9 +24,9 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -79,10 +79,10 @@ public class GlyphUnlockMenu extends BaseBook{
     @Override
     public void init() {
         super.init();
-        this.orderingTitle = new TranslatableComponent("ars_nouveau.all_glyphs").getString();
+        this.orderingTitle = Component.translatable("ars_nouveau.all_glyphs").getString();
 
         searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop +2,
-                54, 12, null, new TranslatableComponent("ars_nouveau.spell_book_gui.search"));
+                54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
         searchBar.setBordered(false);
         searchBar.setTextColor(12694931);
         searchBar.onClear = (val) -> {
@@ -90,7 +90,7 @@ public class GlyphUnlockMenu extends BaseBook{
             return null;
         };
         if(searchBar.getValue().isEmpty())
-            searchBar.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.search").getString());
+            searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder((val) -> this.onSearchChanged(val, filterSelected));
         addRenderableWidget(searchBar);
         addRenderableWidget(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onSelectClick));
@@ -110,15 +110,15 @@ public class GlyphUnlockMenu extends BaseBook{
         }
 
         all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, new TranslatableComponent("ars_nouveau.all_glyphs").getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.all_glyphs"));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(this, Component.translatable("ars_nouveau.all_glyphs"));
         all.isSelected = true;
         tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 1).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 1));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(this, Component.translatable("ars_nouveau.tier", 1));
 
         tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) ->  this.setFilter(Filter.TIER2, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 2).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 2));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) ->  this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(this, Component.translatable("ars_nouveau.tier", 2));
         tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) ->  this.setFilter(Filter.TIER3, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 3).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 3));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) ->  this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(this, Component.translatable("ars_nouveau.tier", 3));
         filterButtons.add(all);
         filterButtons.add(tier2);
         filterButtons.add(tier1);
@@ -186,7 +186,7 @@ public class GlyphUnlockMenu extends BaseBook{
             }
         } else {
             // Reset our book on clear
-            searchBar.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.search").getString());
+            searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
             displayedGlyphs = allParts;
             for(Widget w : renderables){
                 if(w instanceof GlyphButton ) {
@@ -342,13 +342,13 @@ public class GlyphUnlockMenu extends BaseBook{
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
 
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712);
     }
 
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
             if(hoveredRecipe != null) {
-                MutableComponent component = new TranslatableComponent("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+                MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
                 tooltip.add(component);
             }
             List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
@@ -406,8 +406,7 @@ public class GlyphUnlockMenu extends BaseBook{
             RenderSystem.disableTexture();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            bufferbuilder.end();
-            BufferUploader.end(bufferbuilder);
+            BufferUploader.drawWithShader(bufferbuilder.end());
             RenderSystem.disableBlend();
             RenderSystem.enableTexture();
             MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());

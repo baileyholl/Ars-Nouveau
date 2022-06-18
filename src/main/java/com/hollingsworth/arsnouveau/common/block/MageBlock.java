@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -19,7 +18,7 @@ public class MageBlock extends TickableModBlock {
     public static final BooleanProperty TEMPORARY = BooleanProperty.create("temporary");
 
     public MageBlock() {
-        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape(), LibBlockNames.MAGE_BLOCK);
+        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape());
         registerDefaultState(defaultBlockState().setValue(TEMPORARY, false));
     }
 

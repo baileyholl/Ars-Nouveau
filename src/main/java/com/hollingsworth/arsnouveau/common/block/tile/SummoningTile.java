@@ -24,7 +24,6 @@ public class SummoningTile extends ModdedTile implements ITickable {
 
         if (!converted) {
             convertedEffect();
-            return;
         }
     }
 

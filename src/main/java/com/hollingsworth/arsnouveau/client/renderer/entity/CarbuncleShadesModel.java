@@ -16,17 +16,17 @@ public class CarbuncleShadesModel extends AnimatedGeoModel<Starbuncle> {
 
 
     @Override
-    public ResourceLocation getModelLocation(Starbuncle object) {
+    public ResourceLocation getModelResource(Starbuncle object) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle_shades.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Starbuncle o) {
+    public ResourceLocation getTextureResource(Starbuncle o) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_shades.png");
     }
 //carbuncle_animations
     @Override
-    public ResourceLocation getAnimationFileLocation(Starbuncle animatable) {
+    public ResourceLocation getAnimationResource(Starbuncle animatable) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
     }
 
@@ -34,7 +34,7 @@ public class CarbuncleShadesModel extends AnimatedGeoModel<Starbuncle> {
     public void setLivingAnimations(Starbuncle entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone specs = this.getAnimationProcessor().getBone("specs");
-        IBone parentHead = modelProvider.getModel(modelProvider.getModelLocation(entity)).getBone("specs").get();
+        IBone parentHead = modelProvider.getModel(modelProvider.getModelResource(entity)).getBone("specs").get();
 
 
     }

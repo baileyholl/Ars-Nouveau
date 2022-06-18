@@ -12,17 +12,17 @@ public class PotionMelderModel extends AnimatedGeoModel<PotionMelderTile> {
     public static final ResourceLocation anim = new ResourceLocation(ArsNouveau.MODID , "animations/potion_melder_animation.json");
 
     @Override
-    public ResourceLocation getModelLocation(PotionMelderTile volcanicTile) {
+    public ResourceLocation getModelResource(PotionMelderTile volcanicTile) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PotionMelderTile volcanicTile) {
+    public ResourceLocation getTextureResource(PotionMelderTile volcanicTile) {
         return texture;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(PotionMelderTile volcanicTile) {
+    public ResourceLocation getAnimationResource(PotionMelderTile volcanicTile) {
         return anim;
     }
 }

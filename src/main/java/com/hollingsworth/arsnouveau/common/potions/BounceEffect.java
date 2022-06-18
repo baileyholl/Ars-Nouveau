@@ -15,13 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 public class BounceEffect extends MobEffect {
     public BounceEffect() {
         super(MobEffectCategory.BENEFICIAL, 2039587);
-        setRegistryName(ArsNouveau.MODID, "bounce");
     }
     // Adapted from Tinkers https://github.com/SlimeKnights/TinkersConstruct/blob/7df8a5dd62a3b731e59250c49300faadc24501d0/src/main/java/slimeknights/tconstruct/gadgets/GadgetEvents.java
     @SubscribeEvent
     public static void onFall(LivingFallEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
+        if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
             return;
         }
         boolean isPlayer = entity instanceof Player;
@@ -36,7 +35,7 @@ public class BounceEffect extends MobEffect {
                 event.setDamageMultiplier(0);
                 entity.fallDistance =  0.0F;
                 if (!isPlayer || isClient) {
-                    double f = 0.95d - .1 * entity.getEffect(ModPotions.BOUNCE_EFFECT).getAmplifier();
+                    double f = 0.95d - .1 * entity.getEffect(ModPotions.BOUNCE_EFFECT.get()).getAmplifier();
                     // only slow down half as much when bouncing
                     entity.setDeltaMovement(entity.getDeltaMovement().x /f , entity.getDeltaMovement().y * (-0.9), entity.getDeltaMovement().z/f );
                     entity.hurtMarked = true;

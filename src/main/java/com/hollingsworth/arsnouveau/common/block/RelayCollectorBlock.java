@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class RelayCollectorBlock extends Relay {
 
-    public RelayCollectorBlock(String registryName) {
-        super(registryName);
+    public RelayCollectorBlock() {
+        super();
     }
 
 

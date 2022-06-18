@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.world.effect.MobEffect;
@@ -15,7 +14,6 @@ import net.minecraft.world.phys.AABB;
 public class MagicFindEffect extends MobEffect {
     protected MagicFindEffect() {
         super(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor());
-        setRegistryName(ArsNouveau.MODID,"magic_find");
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.ShieldRenderer;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,7 +24,6 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
 
     public EnchantersShield() {
         super(defaultItemProperties().durability(500));
-        setRegistryName(LibItemNames.ENCHANTERS_SHIELD);
     }
 
     public EnchantersShield(Properties p_i48470_1_) {

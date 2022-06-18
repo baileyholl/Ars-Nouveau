@@ -54,7 +54,7 @@ public class MethodProjectile extends AbstractCastMethod {
         float velocity = Math.max(0.1f, 1.0f + stats.getAccMultiplier() / 2);
 
         for(EntityProjectileSpell proj : projectiles) {
-            proj.shoot(shooter, shooter.xRot, shooter.yRot, 0.0F, velocity, 0.8f);
+            proj.shoot(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, velocity, 0.8f);
             world.addFreshEntity(proj);
         }
     }

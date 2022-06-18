@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -23,8 +23,8 @@ public class EffectBounce extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
-        if(rayTraceResult.getEntity() instanceof LivingEntity){
-            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), ModPotions.BOUNCE_EFFECT, spellStats);
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            applyConfigPotion(living, ModPotions.BOUNCE_EFFECT.get(), spellStats);
         }
     }
 

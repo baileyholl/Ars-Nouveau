@@ -15,22 +15,22 @@ public class ModDatagen {
     public static void datagen(GatherDataEvent event){
         System.out.println("calling datagen");
         BlockTagsProvider blocktagsprovider = new BlockTagsProvider(event.getGenerator(), MODID, event.getExistingFileHelper());
-        event.getGenerator().addProvider(new LootTableProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new DefaultTableProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new LangDatagen(event.getGenerator(), ArsNouveau.MODID, "en_us"));
+        event.getGenerator().addProvider(true, new LootTableProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new DefaultTableProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new LangDatagen(event.getGenerator(), ArsNouveau.MODID, "en_us"));
 
-        event.getGenerator().addProvider(new Recipes(event.getGenerator()));
-        event.getGenerator().addProvider(new BlockTagProvider(event.getGenerator(), event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new BlockStatesDatagen(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new GlyphRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new ApparatusRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new PatchouliProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new DungeonLootGenerator(event.getGenerator(), MODID));
-        event.getGenerator().addProvider(new ImbuementRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new CrushRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new ItemTagProvider(event.getGenerator(), blocktagsprovider, MODID, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(new EntityTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new Recipes(event.getGenerator()));
+        event.getGenerator().addProvider(true, new BlockTagProvider(event.getGenerator(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new BlockStatesDatagen(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new GlyphRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new ApparatusRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new PatchouliProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new DungeonLootGenerator(event.getGenerator(), MODID));
+        event.getGenerator().addProvider(true, new ImbuementRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new CrushRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new ItemTagProvider(event.getGenerator(), blocktagsprovider, MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new EntityTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
 
     }
 }

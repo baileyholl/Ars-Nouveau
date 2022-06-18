@@ -11,17 +11,17 @@ public class RitualBrazierModel  extends AnimatedGeoModel<RitualBrazierTile> {
     public static final ResourceLocation anim = new ResourceLocation(ArsNouveau.MODID , "animations/ritual.json");
 
     @Override
-    public ResourceLocation getModelLocation(RitualBrazierTile volcanicTile) {
+    public ResourceLocation getModelResource(RitualBrazierTile volcanicTile) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RitualBrazierTile volcanicTile) {
+    public ResourceLocation getTextureResource(RitualBrazierTile volcanicTile) {
         return texture;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(RitualBrazierTile volcanicTile) {
+    public ResourceLocation getAnimationResource(RitualBrazierTile volcanicTile) {
         return anim;
     }
 }

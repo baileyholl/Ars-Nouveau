@@ -8,10 +8,9 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.SliderButton;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiConsumer;
@@ -32,19 +31,20 @@ public class GuiColorScreen extends BaseBook {
         this.slot = slot;
     }
 
-    SliderButton redW;
-    SliderButton greenW;
-    SliderButton blueW;
+    AbstractSliderButton redW;
+    AbstractSliderButton greenW;
+    AbstractSliderButton blueW;
+
     @Override
     public void init() {
         super.init();
-        redW = buildSlider(new TranslatableComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
-        greenW = buildSlider(new TranslatableComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
-        blueW = buildSlider(new TranslatableComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
+        redW = buildSlider(Component.translatable("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
+        greenW = buildSlider(Component.translatable("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
+        blueW = buildSlider(Component.translatable("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
-        addRenderableWidget(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 55, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
         addPresets();
     }
 
@@ -106,18 +106,18 @@ public class GuiColorScreen extends BaseBook {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
         int color = -8355712;
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.title").getString(), 51, 24,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.presets").getString(), 159, 24,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.default").getString(), 170, 46,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.purple").getString(), 170, 70,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.blue").getString(), 170, 94,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.red").getString(), 170, 118,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.green").getString(), 170, 142,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.yellow").getString(), 228, 46,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.white").getString(), 228, 70,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.orange").getString(), 228, 94,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.title").getString(), 51, 24,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.presets").getString(), 159, 24,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.default").getString(), 170, 46,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.purple").getString(), 170, 70,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.blue").getString(), 170, 94,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.red").getString(), 170, 118,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.green").getString(), 170, 142,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.yellow").getString(), 228, 46,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.white").getString(), 228, 70,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.orange").getString(), 228, 94,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
     }
 
     @Override
@@ -126,6 +126,6 @@ public class GuiColorScreen extends BaseBook {
     }
 
     protected ANProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter){
-        return new ANProgressOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> new TextComponent(key + (int)optionValues.get(settings)));
+        return new ANProgressOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> Component.literal(key + (int)optionValues.get(settings)));
     }
 }

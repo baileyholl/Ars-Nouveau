@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RelayTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,15 +29,11 @@ public class Relay extends TickableModBlock implements SimpleWaterloggedBlock {
     public static final VoxelShape shape = Block.box(2D, 3.0D, 2.0D, 15, 14, 15);
 
     public Relay() {
-        this(LibBlockNames.RELAY);
+        this(defaultProperties().lightLevel((blockState) -> 8).noOcclusion());
     }
 
-    public Relay(String registryName){
-        this(defaultProperties().lightLevel((blockState) ->8).noOcclusion(), registryName);
-    }
-
-    public Relay(BlockBehaviour.Properties properties, String registryName){
-        super(properties, registryName);
+    public Relay(BlockBehaviour.Properties properties) {
+        super(properties);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 

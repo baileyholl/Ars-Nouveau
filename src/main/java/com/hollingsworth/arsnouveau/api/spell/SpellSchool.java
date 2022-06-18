@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,8 +32,8 @@ public class SpellSchool {
         return getSpellParts().add(spellPart);
     }
 
-    public TranslatableComponent getTextComponent(){
-        return new TranslatableComponent("ars_nouveau.school." + getId());
+    public Component getTextComponent(){
+        return Component.translatable("ars_nouveau.school." + getId());
     }
 
     public String getId() {

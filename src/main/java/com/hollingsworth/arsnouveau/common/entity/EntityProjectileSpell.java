@@ -60,7 +60,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(Level world, double x, double y, double z) {
-        this(ModEntities.SPELL_PROJ, world, x, y, z);
+        this(ModEntities.SPELL_PROJ.get(), world, x, y, z);
     }
 
     public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType,Level world, SpellResolver resolver){
@@ -74,11 +74,11 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(Level world, SpellResolver resolver){
-        this(ModEntities.SPELL_PROJ, world, resolver);
+        this(ModEntities.SPELL_PROJ.get(), world, resolver);
     }
 
     public EntityProjectileSpell(final Level world, final LivingEntity shooter) {
-        this(ModEntities.SPELL_PROJ, world, shooter);
+        this(ModEntities.SPELL_PROJ.get(), world, shooter);
     }
     @Override
     public void tick() {
@@ -236,7 +236,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.SPELL_PROJ;
+        return ModEntities.SPELL_PROJ.get();
     }
 
     protected void attemptRemoval(){
@@ -259,18 +259,17 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
         }
 
-        if (!level.isClientSide && result instanceof BlockHitResult  && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
+        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
 
-            BlockHitResult blockraytraceresult = (BlockHitResult)result;
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
 
-            if(state.getBlock() instanceof SpellPrismBlock){
+            if (state.getBlock() instanceof SpellPrismBlock) {
                 SpellPrismBlock.redirectSpell((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
                 return;
             }
 
 
-            if(state.getMaterial() == Material.PORTAL){
+            if (state.getMaterial() == Material.PORTAL) {
                 state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(),this);
                 return;
             }
@@ -291,7 +290,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(PlayMessages.SpawnEntity packet, Level world){
-        super(ModEntities.SPELL_PROJ, world);
+        super(ModEntities.SPELL_PROJ.get(), world);
     }
 
     @Override

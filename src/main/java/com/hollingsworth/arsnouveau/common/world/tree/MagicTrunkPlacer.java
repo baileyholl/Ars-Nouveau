@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.world.tree;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 public class MagicTrunkPlacer extends TrunkPlacer {
@@ -26,13 +26,13 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     }
 
     @Override
-    public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, Random rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
+    public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos blockpos = pos.below();
         setDirtAt(world, consumer, rand, blockpos, baseTreeFeatureConfig);
-        setDirtAt(world, consumer, rand,blockpos.east(), baseTreeFeatureConfig);
-        setDirtAt(world, consumer, rand,blockpos.south(), baseTreeFeatureConfig);
-        setDirtAt(world, consumer, rand,blockpos.south().east(), baseTreeFeatureConfig);
+        setDirtAt(world, consumer, rand, blockpos.east(), baseTreeFeatureConfig);
+        setDirtAt(world, consumer, rand, blockpos.south(), baseTreeFeatureConfig);
+        setDirtAt(world, consumer, rand, blockpos.south().east(), baseTreeFeatureConfig);
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -177,17 +177,17 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return list;
     }
 
-    public void addBranch(LevelSimulatedReader world,BlockPos pos,int height, Direction d, Random random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer){
+    public void addBranch(LevelSimulatedReader world, BlockPos pos, int height, Direction d, RandomSource random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {
         pos = pos.above(height);
         addLog(world, pos.relative(d), random, baseTreeFeatureConfig, consumer);
         addLog(world, pos.relative(d).above(1), random, baseTreeFeatureConfig, consumer);
         addLog(world, pos.relative(d).above(2), random, baseTreeFeatureConfig, consumer);
-        addLog(world, pos.relative(d, 2).above(2),random, baseTreeFeatureConfig,consumer );
-        addLog(world, pos.relative(d, 3).above(2), random, baseTreeFeatureConfig,consumer);
-        addLog(world, pos.relative(d, 3).above(1), random, baseTreeFeatureConfig,consumer);
+        addLog(world, pos.relative(d, 2).above(2), random, baseTreeFeatureConfig, consumer);
+        addLog(world, pos.relative(d, 3).above(2), random, baseTreeFeatureConfig, consumer);
+        addLog(world, pos.relative(d, 3).above(1), random, baseTreeFeatureConfig, consumer);
 
 
-        addLineLeaves(world, pos.relative(d).above(1), d, 3,random, baseTreeFeatureConfig,consumer);
+        addLineLeaves(world, pos.relative(d).above(1), d, 3, random, baseTreeFeatureConfig, consumer);
         addLineLeaves(world, pos.relative(d).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
         addLineLeaves(world, pos.relative(d).above(3), d, 3, random,baseTreeFeatureConfig,consumer);
 
@@ -227,76 +227,78 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
     }
 
-    public boolean addLog(LevelSimulatedReader world,BlockPos pos, Random random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer){
+    public boolean addLog(LevelSimulatedReader world, BlockPos pos, RandomSource random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {
         return addBlock(world, pos, baseTreeFeatureConfig.trunkProvider.getState(random, pos), consumer);
     }
 
-    public boolean addBlock(LevelSimulatedReader world,BlockPos pos, BlockState state, BiConsumer<BlockPos, BlockState> consumer){
-        if(TreeFeature.validTreePos(world, pos)) {
+    public boolean addBlock(LevelSimulatedReader world, BlockPos pos, BlockState state, BiConsumer<BlockPos, BlockState> consumer) {
+        if (TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos, state, consumer);
             return true;
         } else {
             return false;
         }
     }
-    public void addHollowLine(LevelSimulatedReader world, BlockPos pos, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer){
+
+    public void addHollowLine(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {
         addHollowLine(world, pos, d, length, rand, baseTreeFeatureConfig, 1.0f, consumer);
     }
 
-    public void addHollowLine(LevelSimulatedReader world, BlockPos pos, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer){
+    public void addHollowLine(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer) {
         Direction left = d.getClockWise();
         Direction right = left.getOpposite();
 
         if (rand.nextFloat() <= chance && TreeFeature.validTreePos(world, pos.relative(left, length))) {
-            setBlock(world,  pos.relative(left, length), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(left, length)), consumer);
+            setBlock(world, pos.relative(left, length), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(left, length)), consumer);
         }
         if (rand.nextFloat() <= chance && TreeFeature.validTreePos(world, pos.relative(right, length))) {
-            setBlock(world,  pos.relative(right, length), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(right, length)), consumer);
+            setBlock(world, pos.relative(right, length), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(right, length)), consumer);
         }
     }
-    public void addLineLeaves(LevelSimulatedReader world, BlockPos pos, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer){
-        if(length % 2 == 0)
+
+    public void addLineLeaves(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {
+        if (length % 2 == 0)
             addLineLeavesEven(world, pos, d, length, rand, baseTreeFeatureConfig, 1.0f, consumer);
         else
-            addLineLeavesOdd(world, pos, d, length, rand,baseTreeFeatureConfig, 1.0f, consumer);
+            addLineLeavesOdd(world, pos, d, length, rand, baseTreeFeatureConfig, 1.0f, consumer);
     }
 
-    public void addLineLeaves(LevelSimulatedReader world, BlockPos pos, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer){
-        if(length % 2 == 0)
+    public void addLineLeaves(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer) {
+        if (length % 2 == 0)
             addLineLeavesEven(world, pos, d, length, rand, baseTreeFeatureConfig, chance, consumer);
         else
-            addLineLeavesOdd(world, pos, d, length, rand,baseTreeFeatureConfig, chance, consumer);
+            addLineLeavesOdd(world, pos, d, length, rand, baseTreeFeatureConfig, chance, consumer);
     }
 
-    public void addLineLeavesEven(LevelSimulatedReader world, BlockPos pos, Direction d, int length, Random rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer){
+    public void addLineLeavesEven(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer) {
         Direction left = d.getClockWise();
         Direction right = left.getOpposite();
 
-        for(int i = 0; i < length; i++){
-            if (rand.nextFloat() <= chance && TreeFeature.validTreePos(world, pos.relative(left, i - length/3))) {
-                setBlock(world,  pos.relative(left, i- length/3), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(left, i- length/3)), consumer);
+        for (int i = 0; i < length; i++) {
+            if (rand.nextFloat() <= chance && TreeFeature.validTreePos(world, pos.relative(left, i - length / 3))) {
+                setBlock(world, pos.relative(left, i - length / 3), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(left, i - length / 3)), consumer);
             }
         }
     }
 
-    public void addLineLeavesOdd(LevelSimulatedReader world, BlockPos pos, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer){
+    public void addLineLeavesOdd(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, float chance, BiConsumer<BlockPos, BlockState> consumer) {
         Direction left = d.getClockWise();
         Direction right = left.getOpposite();
         length += 2;
-        for(int i = 0; i < (length - 1) / 2; i++){
+        for (int i = 0; i < (length - 1) / 2; i++) {
             if (rand.nextFloat() <= chance && TreeFeature.validTreePos(world, pos.relative(left, i))) {
-                setBlock(world,  pos.relative(left, i), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(left, i)), consumer);
+                setBlock(world, pos.relative(left, i), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(left, i)), consumer);
             }
 
             if (rand.nextFloat() <= chance && TreeFeature.validTreePos(world, pos.relative(right, i))) {
-                setBlock(world,  pos.relative(right, i), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(right, i)), consumer);
+                setBlock(world, pos.relative(right, i), baseTreeFeatureConfig.foliageProvider.getState(rand, pos.relative(right, i)), consumer);
             }
         }
     }
 
 
-    public boolean addRoots(LevelSimulatedReader world, Random rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig) {
-        BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand,pos);
+    public boolean addRoots(LevelSimulatedReader world, RandomSource rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig) {
+        BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand, pos);
         if (rand.nextDouble() < 0.75 && TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos.immutable(), state, consumer);
 

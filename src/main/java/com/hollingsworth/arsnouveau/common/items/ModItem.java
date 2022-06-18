@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -19,20 +18,31 @@ public class ModItem extends Item {
     public List<Component> tooltip = new ArrayList<>();
     public Rarity rarity;
 
+    public String registryName;
+
     public ModItem(Properties properties) {
         super(properties);
     }
 
-    public ModItem(Properties properties, String registryName){
+    public ModItem(Properties properties, String registryName) {
         this(properties);
-        setRegistryName(ArsNouveau.MODID, registryName);
+        setRegistryName(registryName);
     }
 
-    public ModItem(String registryName){
+    public ModItem setRegistryName(String registryName) {
+        this.registryName = registryName;
+        return this;
+    }
+
+    public String getRegistryName() {
+        return registryName;
+    }
+
+    public ModItem(String registryName) {
         this(ItemsRegistry.defaultItemProperties(), registryName);
     }
 
-    public ModItem withTooltip(Component tip){
+    public ModItem withTooltip(Component tip) {
         tooltip.add(tip);
         return this;
     }

@@ -1,13 +1,11 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -29,9 +27,7 @@ public class RitualDisintegration extends AbstractRitual {
     @Override
     public void onStart() {
         super.onStart();
-        if(tile == null)
-            return;
-
+        if (tile == null) return;
     }
 
     @Override
@@ -59,10 +55,10 @@ public class RitualDisintegration extends AbstractRitual {
                 }
                 m.remove(Entity.RemovalReason.DISCARDED);
                 if (m.isRemoved()) {
-                    ExpInvokerMixin invoker = ((ExpInvokerMixin) m);
+
                     ParticleUtil.spawnPoof((ServerLevel) world, m.blockPosition());
-                    if (invoker.an_shouldDropExperience()) {
-                        int exp = invoker.an_getExperienceReward(ANFakePlayer.getPlayer((ServerLevel) getWorld())) * 2;
+                    if (m.shouldDropExperience()) {
+                        int exp = m.getExperienceReward() * 2;
                         if (exp > 0) {
                             int numGreater = exp / 12;
                             exp -= numGreater * 12;

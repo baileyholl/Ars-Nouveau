@@ -16,7 +16,7 @@ public class WhirlisprigFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
-        FamiliarWhirlisprig whirlisprig = new FamiliarWhirlisprig(ModEntities.ENTITY_FAMILIAR_SYLPH, world);
+        FamiliarWhirlisprig whirlisprig = new FamiliarWhirlisprig(ModEntities.ENTITY_FAMILIAR_SYLPH.get(), world);
         whirlisprig.setTagData(tag);
         return whirlisprig;
     }

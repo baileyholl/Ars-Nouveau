@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -14,8 +15,6 @@ import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.List;
 
 public class DungeonLootGenerator extends GlobalLootModifierProvider {
 
@@ -83,7 +82,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
         }
 
         @Override
-        protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+        protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
             generatedLoot.addAll(DungeonLootTables.getRandomRoll(this));
             return generatedLoot;
         }

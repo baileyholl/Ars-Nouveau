@@ -99,7 +99,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     }
 
     public EntityChimera(Level level) {
-        this(ModEntities.WILDEN_BOSS, level);
+        this(ModEntities.WILDEN_BOSS.get(), level);
     }
 
     @Override
@@ -230,7 +230,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                             new Spell.Builder().add(MethodTouch.INSTANCE)
                                     .add(EffectLaunch.INSTANCE).add(AugmentAmplify.INSTANCE, 2).add(EffectDelay.INSTANCE).add(EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 2).build()
                     , this));
-                    resolver.onCastOnEntity(ItemStack.EMPTY, this, e, InteractionHand.MAIN_HAND);
+                    resolver.onCastOnEntity(ItemStack.EMPTY, e, InteractionHand.MAIN_HAND);
                 }
                 getRandomUpgrade();
                 gainPhaseBuffs();
@@ -340,25 +340,19 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
     public void getRandomUpgrade(){
         ArrayList<Integer> upgrades = new ArrayList<>();
-        if(!this.hasWings())
+        if (!this.hasWings())
             upgrades.add(0);
-        if(!this.hasSpikes())
+        if (!this.hasSpikes())
             upgrades.add(1);
-        if(!this.hasHorns())
+        if (!this.hasHorns())
             upgrades.add(2);
-        if(upgrades.isEmpty())
+        if (upgrades.isEmpty())
             return;
         int upgrade = upgrades.get(random.nextInt(upgrades.size()));
-        switch(upgrade){
-            case 0:
-                setWings(true);
-                return;
-            case 1:
-                setSpikes(true);
-                return;
-            case 2:
-                setHorns(true);
-                return;
+        switch (upgrade) {
+            case 0 -> setWings(true);
+            case 1 -> setSpikes(true);
+            case 2 -> setHorns(true);
         }
     }
 
@@ -373,18 +367,17 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
             return false;
 
         Entity entity = source.getEntity();
-        if(entity instanceof LivingEntity && !entity.equals(this)){
-            if(isDefensive() && !source.msgId.equals("thorns")){
-                if(!source.isBypassArmor() && BlockUtil.distanceFrom(entity.position, position) <= 3){
+        if (entity instanceof LivingEntity entity1 && !entity.equals(this)) {
+            if (isDefensive() && !source.msgId.equals("thorns")) {
+                if (!source.isBypassArmor() && BlockUtil.distanceFrom(entity.position, position) <= 3) {
                     entity.hurt(DamageSource.thorns(this), 6.0f);
                 }
             }
 
-            LivingEntity entity1 = (LivingEntity) entity;
             // Omit our summoned sources that might aggro or accidentally hurt us
-            if(entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
+            if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
                     || (entity instanceof ISummon && ((ISummon) entity).getOwnerID() != null && ((ISummon) entity).getOwnerID().equals(this.getUUID()))
-            || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
+                    || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }
 
@@ -453,7 +446,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         if(effect == MobEffects.MOVEMENT_SLOWDOWN)
             instance = new MobEffectInstance(instance.getEffect(), 1, 0);
 
-        if(effect == ModPotions.GRAVITY_EFFECT)
+        if (effect == ModPotions.GRAVITY_EFFECT.get())
             instance = new MobEffectInstance(instance.getEffect(), Math.min(instance.getDuration(), 100), 0);
         return super.canBeAffected(instance);
     }
@@ -738,8 +731,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         final double squareDifference = Math.sqrt(xDifference * xDifference + zDifference * zDifference);
         final double intendedRotationYaw = (Math.atan2(zDifference, xDifference) * 180.0D / Math.PI) - 90.0;
         final double intendedRotationPitch = -(Math.atan2(yDifference, squareDifference) * 180.0D / Math.PI);
-        citizen.yRot = (float) (updateRotation(citizen.yRot, intendedRotationYaw, 360.0) % 360.0F);
-        citizen.xRot = (float) (updateRotation(citizen.xRot, intendedRotationPitch, 360.0) % 360.0F);
+        citizen.yRot = (float) (updateRotation(citizen.getYRot(), intendedRotationYaw, 360.0) % 360.0F);
+        citizen.xRot = (float) (updateRotation(citizen.getXRot(), intendedRotationPitch, 360.0) % 360.0F);
     }
     public static double updateRotation(final double currentRotation, final double intendedRotation, final double maxIncrement) {
         double wrappedAngle = Mth.wrapDegrees(intendedRotation - currentRotation);

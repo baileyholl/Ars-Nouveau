@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
@@ -42,7 +42,7 @@ public class PacketMountCamera {
                 mountable.mountCamera(level, pos, player);
                 return;
             }
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.camera.not_loaded"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.camera.not_loaded"));
         });
         (ctx.get()).setPacketHandled(true);
     }

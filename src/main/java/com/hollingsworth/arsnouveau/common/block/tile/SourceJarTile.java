@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -53,6 +52,6 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getSource()*100) / this.getMaxSource()));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getSource()*100) / this.getMaxSource()));
     }
 }

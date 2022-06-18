@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerGoal;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -50,7 +52,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
             super.start();
             SummonSkeleton.this.setAggressive(true);
         }
-    };;
+    };
 
     private LivingEntity owner;
     @Nullable
@@ -58,12 +60,12 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     private boolean limitedLifespan;
     private int limitedLifeTicks;
 
-    public SummonSkeleton(EntityType<? extends Skeleton> p_i50190_1_, Level p_i50190_2_) {
-        super(ModEntities.SUMMON_SKELETON, p_i50190_2_);
+    public SummonSkeleton(EntityType<? extends Skeleton> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public SummonSkeleton(Level p_i50190_2_, LivingEntity owner, ItemStack item) {
-        super(EntityType.SKELETON, p_i50190_2_);
+    public SummonSkeleton(Level level, LivingEntity owner, ItemStack item) {
+        super(ModEntities.SUMMON_SKELETON.get(), level);
         this.setWeapon(item);
         this.owner = owner;
         this.limitedLifespan = true;
@@ -73,13 +75,13 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.SUMMON_SKELETON;
+        return ModEntities.SUMMON_SKELETON.get();
     }
 
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        this.populateDefaultEquipmentSlots(difficultyIn);
-        this.populateDefaultEquipmentEnchantments(difficultyIn);
+        this.populateDefaultEquipmentSlots(getRandom(), difficultyIn);
+        this.populateDefaultEquipmentEnchantments(getRandom(), difficultyIn);
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
@@ -87,7 +89,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
      * Gives armor or weapon for entity based on given DifficultyInstance
      */
     @Override
-    protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
+    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance pDifficulty) {
 
     }
 
@@ -101,9 +103,10 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new SummonSkeleton.CopyOwnerTargetGoal(this));
-        this.targetSelector.addGoal(3,new NearestAttackableTargetGoal(this, Mob.class, 10, false, true,
-                (entity) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
-                        ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && ((LivingEntity)entity).getKillCredit() != null && ((LivingEntity)entity).getKillCredit().equals(this.owner))
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
+                (LivingEntity entity) ->
+                        (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner))
+                                || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
 
@@ -119,7 +122,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Override
     public void reassessWeaponGoal() {
-        if (this.level != null && !this.level.isClientSide && this.getItemInHand(InteractionHand.MAIN_HAND)!= ItemStack.EMPTY) {
+        if (this.level instanceof ServerLevel && this.getItemInHand(InteractionHand.MAIN_HAND) != ItemStack.EMPTY) {
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
             ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
@@ -167,7 +170,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         return 0;
     }
 

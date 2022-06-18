@@ -101,7 +101,6 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
         if(dirtPos != null && progress >= 25){
             level.setBlockAndUpdate(dirtPos, Blocks.MYCELIUM.defaultBlockState());
             progress -= 25;
-            return;
         }
 
     }

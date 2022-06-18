@@ -1,23 +1,18 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.AlchemicalSourcelinkTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AlchemicalSourcelinkBlock extends SourcelinkBlock {
 
-    public AlchemicalSourcelinkBlock(){
-        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.ALCHEMICAL_SOURCELINK);
+    public AlchemicalSourcelinkBlock() {
+        super(TickableModBlock.defaultProperties().noOcclusion());
     }
 
-    public AlchemicalSourcelinkBlock(Properties properties, String registry) {
-        super(properties, registry);
-    }
-
-    public AlchemicalSourcelinkBlock(String registryName) {
-        super(registryName);
+    public AlchemicalSourcelinkBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

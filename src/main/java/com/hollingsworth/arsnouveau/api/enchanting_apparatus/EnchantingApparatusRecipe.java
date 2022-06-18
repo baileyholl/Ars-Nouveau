@@ -18,7 +18,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -26,7 +25,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class EnchantingApparatusRecipe implements IEnchantingRecipe{
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
+public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     public Ingredient reagent; // Used in the arcane pedestal
     public ItemStack result; // Result item
@@ -42,7 +43,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this.pedestalItems = pedestalItems;
         this.result = result;
         sourceCost = 0;
-        this.id = new ResourceLocation(ArsNouveau.MODID, result.getItem().getRegistryName().getPath());
+        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(result.getItem()).getPath());
     }
 
     public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result){
@@ -134,7 +135,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         jsonobject.add("reagent", reagent);
 
         JsonObject resultObj = new JsonObject();
-        resultObj.addProperty("item", this.result.getItem().getRegistryName().toString());
+        resultObj.addProperty("item", getRegistryName(result.getItem()).toString());
         int count = this.result.getCount();
         if (count > 1) {
             resultObj.addProperty("count", count);
@@ -187,7 +188,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.APPARATUS_SERIALIZER;
+        return RecipeRegistry.APPARATUS_SERIALIZER.get();
     }
 
     @Override
@@ -195,7 +196,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchantingApparatusRecipe> {
+    public static class Serializer implements RecipeSerializer<EnchantingApparatusRecipe> {
 
         @Override
         public EnchantingApparatusRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -203,7 +204,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
             boolean keepNbtOfReagent = json.has("keepNbtOfReagent") && GsonHelper.getAsBoolean(json, "keepNbtOfReagent");
-            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
             for(JsonElement e : pedestalItems){

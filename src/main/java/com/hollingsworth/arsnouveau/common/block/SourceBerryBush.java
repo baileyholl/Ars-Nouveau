@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -44,7 +44,6 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     public SourceBerryBush(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
-        setRegistryName(LibBlockNames.SOURCEBERRY_BUSH);
     }
 
     public ItemStack getCloneItemStack(BlockGetter worldIn, BlockPos pos, BlockState state) {
@@ -80,12 +79,12 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     }
 
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.STARBUNCLE_TYPE) {
+        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.STARBUNCLE_TYPE.get()) {
             entityIn.makeStuckInBlock(state, new Vec3(0.8F, 0.75D, 0.8F));
             if (!worldIn.isClientSide && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
                 double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
-                if (d0 >= (double)0.003F || d1 >= (double)0.003F) {
+                if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
                     entityIn.hurt(DamageSource.SWEET_BERRY_BUSH, 1.0F);
                 }
             }
@@ -120,18 +119,18 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
         return state.getValue(AGE) < 3;
     }
 
-    public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
         return true;
     }
 
-    public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
+    public void performBonemeal(ServerLevel worldIn, RandomSource rand, BlockPos pos, BlockState state) {
         int i = Math.min(3, state.getValue(AGE) + 1);
         worldIn.setBlock(pos, state.setValue(AGE, i), 2);
     }
 
     @Nullable
     @Override
-    public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
         return BlockPathTypes.DAMAGE_OTHER;
     }
 }

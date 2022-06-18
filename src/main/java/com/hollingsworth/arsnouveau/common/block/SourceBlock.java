@@ -15,30 +15,26 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 public abstract class SourceBlock extends TickableModBlock {
-    public SourceBlock(String registryName) {
-        super(registryName);
-    }
 
     public SourceBlock(Properties properties, String registry) {
-        super(properties, registry);
+        super(properties);
     }
 
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if(!worldIn.isClientSide && handIn == InteractionHand.MAIN_HAND){
-            if(worldIn.getBlockEntity(pos) instanceof AbstractSourceMachine){
-                AbstractSourceMachine tile = (AbstractSourceMachine) worldIn.getBlockEntity(pos);
-                if(player.getItemInHand(handIn).getItem() == ItemsRegistry.BUCKET_OF_SOURCE){
-                    if(tile.getMaxSource() - tile.getSource() >= 1000){
+            if (worldIn.getBlockEntity(pos) instanceof AbstractSourceMachine tile) {
+                if (player.getItemInHand(handIn).getItem() == ItemsRegistry.BUCKET_OF_SOURCE) {
+                    if (tile.getMaxSource() - tile.getSource() >= 1000) {
                         tile.addSource(1000);
-                        if(!player.isCreative())
+                        if (!player.isCreative())
                             player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
                         return InteractionResult.SUCCESS;
                     }
                     return super.use(state, worldIn, pos, player, handIn, hit);
-                }else if(player.getItemInHand(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getItemInHand(handIn).getItem()).getFluid() == Fluids.EMPTY){
-                    if(tile.getSource() >= 1000){
+                } else if (player.getItemInHand(handIn).getItem() instanceof BucketItem && ((BucketItem) player.getItemInHand(handIn).getItem()).getFluid() == Fluids.EMPTY) {
+                    if (tile.getSource() >= 1000) {
                         if(player.getItemInHand(handIn).getCount() == 1){
                             player.setItemInHand(handIn, new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE));
                             tile.removeSource(1000);

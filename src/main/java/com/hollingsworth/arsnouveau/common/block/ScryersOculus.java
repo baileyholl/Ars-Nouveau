@@ -13,7 +13,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -32,12 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScryersOculus extends TickableModBlock{
-    public ScryersOculus(Properties properties, String registry) {
-        super(properties, registry);
-    }
 
-    public ScryersOculus(String registryName) {
-        this(defaultProperties().noOcclusion(), registryName);
+    public ScryersOculus() {
+        this(defaultProperties().noOcclusion());
     }
 
     public ScryersOculus(Properties properties) {
@@ -72,13 +69,13 @@ public class ScryersOculus extends TickableModBlock{
             }
         }
         if(slots.isEmpty()){
-            PortUtil.sendMessage(pPlayer, new TranslatableComponent("ars_nouveau.scryers_eye.no_scrolls"));
+            PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_scrolls"));
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu(new RadialMenu<>((int scroll) -> {
             ScryerScroll.ScryerScrollData data = new ScryerScroll.ScryerScrollData(stackList.get(scroll - 1));
             if(data.pos == null){
-                PortUtil.sendMessage(pPlayer, new TranslatableComponent("ars_nouveau.scryers_eye.no_pos"));
+                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_pos"));
                 return;
             }
             Networking.INSTANCE.sendToServer(new PacketMountCamera(data.pos));

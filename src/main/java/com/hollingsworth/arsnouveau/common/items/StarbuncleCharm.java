@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -57,7 +56,7 @@ public class StarbuncleCharm extends ModItem{
         if(data.name != null){
             tooltip2.add(data.name);
         }
-        tooltip2.add(new TranslatableComponent("ars_nouveau.starbuncle.storing", data.TO_LIST.size()));
-        tooltip2.add(new TranslatableComponent("ars_nouveau.starbuncle.taking", data.FROM_LIST.size()));
+        tooltip2.add(Component.translatable("ars_nouveau.starbuncle.storing", data.TO_LIST.size()));
+        tooltip2.add(Component.translatable("ars_nouveau.starbuncle.taking", data.FROM_LIST.size()));
     }
 }

@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class WandModel extends AnimatedGeoModel<Wand> {
 
     @Override
-    public ResourceLocation getModelLocation(Wand wand) {
+    public ResourceLocation getModelResource(Wand wand) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/wand.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Wand wand) {
+    public ResourceLocation getTextureResource(Wand wand) {
         return  new ResourceLocation(ArsNouveau.MODID, "textures/items/wand.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(Wand wand) {
+    public ResourceLocation getAnimationResource(Wand wand) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/wand_animation.json");
     }
 }

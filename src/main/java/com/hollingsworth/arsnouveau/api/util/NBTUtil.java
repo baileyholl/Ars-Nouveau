@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+
 public class NBTUtil {
 
-    public static CompoundTag storeBlockPos(CompoundTag tag, String prefix, BlockPos pos){
-        if(pos == null)
+    public static CompoundTag storeBlockPos(CompoundTag tag, String prefix, BlockPos pos) {
+        if (pos == null)
             return tag;
         tag.putDouble(prefix + "_x", pos.getX());
         tag.putDouble(prefix + "_y", pos.getY());
@@ -87,6 +89,6 @@ public class NBTUtil {
     }
 
     public static String getItemKey(ItemStack stack, String prefix){
-        return prefix + stack.getItem().getRegistryName().toString();
+        return prefix + getRegistryName(stack.getItem()).toString();
     }
 }

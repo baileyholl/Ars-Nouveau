@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.world.tree;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Random;
 import java.util.function.Function;
 
 public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvider {
@@ -34,7 +34,7 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     protected abstract BlockStateProviderType<?> type();
 
     @Override
-    public BlockState getState(Random randomIn, BlockPos blockPosIn) {
+    public BlockState getState(RandomSource randomIn, BlockPos blockPosIn) {
         if (state == null) {
             Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block == null) {

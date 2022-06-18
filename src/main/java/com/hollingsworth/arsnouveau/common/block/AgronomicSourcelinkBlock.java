@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.AgronomicSourcelinkTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +14,7 @@ import javax.annotation.Nullable;
 public class AgronomicSourcelinkBlock extends SourcelinkBlock {
 
     public AgronomicSourcelinkBlock() {
-        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.AGRONOMIC_SOURCELINK);
+        super(TickableModBlock.defaultProperties().noOcclusion());
     }
 
     @Override
