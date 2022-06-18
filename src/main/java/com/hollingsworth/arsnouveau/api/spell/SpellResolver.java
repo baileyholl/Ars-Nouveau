@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -183,6 +184,14 @@ public class SpellResolver {
      */
     public SpellResolver getNewResolver(SpellContext context){
         return new SpellResolver(context);
+    }
+
+    /**
+     * Check if the caster has a focus when modifying glyph behavior.
+     * Addons can override this to check other types of casters like turrets or entities.
+     */
+    public boolean hasFocus(ItemStack stack){
+        return CuriosUtil.hasItem(spellContext.caster, stack);
     }
 
     // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.

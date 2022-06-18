@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.CrashReportCategory;
@@ -98,6 +99,9 @@ public class EnchantedFallingBlock extends ColoredProjectile {
         if(level.getBlockEntity(pos) instanceof MageBlockTile tile){
             fallingblockentity.setColor(tile.color.toWrapper());
             fallingblockentity.getEntityData().set(SHOULD_COLOR, true);
+        }
+        if(resolver.hasFocus(new ItemStack(ItemsRegistry.SHAPERS_FOCUS))){
+            fallingblockentity.hurtEntities = true;
         }
 
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
@@ -228,6 +232,8 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
+        if(!hurtEntities)
+            return;
         super.onHitEntity(pResult);
         Entity entity = pResult.getEntity();
         float f = (float)this.getDeltaMovement().length();
