@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -30,9 +31,10 @@ public class GuiColorScreen extends BaseBook {
         this.slot = slot;
     }
 
-    SliderButton redW;
-    SliderButton greenW;
-    SliderButton blueW;
+    AbstractSliderButton redW;
+    AbstractSliderButton greenW;
+    AbstractSliderButton blueW;
+
     @Override
     public void init() {
         super.init();
@@ -42,7 +44,7 @@ public class GuiColorScreen extends BaseBook {
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
-        addRenderableWidget(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 55, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
         addPresets();
     }
 
