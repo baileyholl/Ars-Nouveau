@@ -43,11 +43,13 @@ public class EffectLaunch extends AbstractEffect {
         super.onResolveBlock(result, world, shooter, spellStats, spellContext, resolver);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats);
         for(BlockPos pos1 : posList) {
-            EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext);
-            entity.setDeltaMovement(entity.getDeltaMovement().add(0, (GENERIC_DOUBLE.get() * .6) + AMP_VALUE.get() * spellStats.getAmpMultiplier(), 0));
-            entity.hurtMarked = true;
-            entity.fallDistance = 0.0f;
-            ShapersFocus.tryPropagateEntitySpell(entity, world, shooter, spellContext, resolver);
+            EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
+            if(entity != null) {
+                entity.setDeltaMovement(entity.getDeltaMovement().add(0, (GENERIC_DOUBLE.get() * .6) + AMP_VALUE.get() * spellStats.getAmpMultiplier(), 0));
+                entity.hurtMarked = true;
+                entity.fallDistance = 0.0f;
+                ShapersFocus.tryPropagateEntitySpell(entity, world, shooter, spellContext, resolver);
+            }
         }
     }
 

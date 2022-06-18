@@ -54,7 +54,6 @@ public class LightManager {
         }));
         register(ModEntities.FALLING_BLOCK, (p) ->{
             EnchantedFallingBlock enchantedFallingBlock = (EnchantedFallingBlock) p;
-            System.out.println(enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition()));
             return p.isOnFire() ? 15 : enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
         register(ModEntities.ENTITY_FLYING_ITEM, (p -> 10));

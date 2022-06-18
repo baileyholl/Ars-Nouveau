@@ -51,9 +51,11 @@ public class EffectKnockback extends AbstractEffect {
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
 
         for(BlockPos p : posList) {
-            EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext);
-            knockback(fallingBlock, shooter, strength);
-            ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
+            EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
+            if(fallingBlock != null) {
+                knockback(fallingBlock, shooter, strength);
+                ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
+            }
         }
     }
 
