@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.nbt.AbstractData;
+import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -142,5 +143,43 @@ public class WarpScroll extends ModItem{
             return;
         }
         tooltip.add(Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
+    }
+
+    public static class WarpScrollData extends ItemstackData {
+        public @Nullable BlockPos pos;
+        public String dimension;
+        public Vec2 rotation;
+
+        public WarpScrollData(ItemStack stack) {
+            super(stack);
+        }
+
+        public boolean isValid(){
+            return pos != null && dimension != null && rotation != null;
+        }
+
+        @Override
+        public void readFromNBT(CompoundTag tag1) {
+            pos = tag1.contains("x") ? new BlockPos(tag1.getInt("x"), tag1.getInt("y"), tag1.getInt("z")) : null;
+            dimension = tag1.getString("dim");
+            rotation = new Vec2(tag1.getFloat("xRot"), tag1.getFloat("yRot"));
+        }
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            if(pos != null){
+                tag.putInt("x", pos.getX());
+                tag.putInt("y", pos.getY());
+                tag.putInt("z", pos.getZ());
+            }
+            tag.putString("dim", dimension);
+            tag.putFloat("xRot", rotation.x);
+            tag.putFloat("yRot", rotation.y);
+        }
+
+        @Override
+        public String getTagString() {
+            return "an_warp_scroll";
+        }
     }
 }
