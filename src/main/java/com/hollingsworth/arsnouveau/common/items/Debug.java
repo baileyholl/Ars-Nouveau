@@ -19,7 +19,6 @@ import net.minecraft.world.level.Level;
 public class Debug extends ModItem{
     public Debug() {
         super(new Item.Properties());
-        setRegistryName("debug");
     }
 
 

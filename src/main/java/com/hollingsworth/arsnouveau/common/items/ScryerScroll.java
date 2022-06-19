@@ -20,12 +20,8 @@ public class ScryerScroll extends ModItem{
         super(properties);
     }
 
-    public ScryerScroll(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public ScryerScroll(String registryName) {
-        super(registryName);
+    public ScryerScroll() {
+        super();
     }
 
     @Override

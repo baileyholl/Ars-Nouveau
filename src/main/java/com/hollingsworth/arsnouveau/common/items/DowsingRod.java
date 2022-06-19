@@ -18,12 +18,8 @@ public class DowsingRod extends ModItem{
         super(properties);
     }
 
-    public DowsingRod(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public DowsingRod(String registryName) {
-        super(ItemsRegistry.defaultItemProperties().durability(4), registryName);
+    public DowsingRod() {
+        this(ItemsRegistry.defaultItemProperties().durability(4));
     }
 
     @Override

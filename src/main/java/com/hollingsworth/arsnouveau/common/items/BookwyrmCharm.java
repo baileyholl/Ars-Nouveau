@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.common.block.BookwyrmLectern;
 import com.hollingsworth.arsnouveau.common.block.tile.BookwyrmLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -14,7 +13,7 @@ import net.minecraft.world.level.block.LecternBlock;
 
 public class BookwyrmCharm extends ModItem{
     public BookwyrmCharm() {
-        super(LibItemNames.BOOKWYRM_CHARM);
+        super();
     }
 
     public InteractionResult useOn(UseOnContext context) {

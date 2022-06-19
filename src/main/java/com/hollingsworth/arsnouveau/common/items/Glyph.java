@@ -26,7 +26,7 @@ import java.util.List;
 public class Glyph extends ModItem{
     public AbstractSpellPart spellPart;
     public Glyph(String registryName, AbstractSpellPart part) {
-        super(registryName);
+        super();
         this.spellPart = part;
     }
 

@@ -17,21 +17,17 @@ import java.util.List;
 public class FamiliarScript extends ModItem{
     public AbstractFamiliarHolder familiar;
 
-
     public FamiliarScript(AbstractFamiliarHolder familiar){
-        super("familiar_" + familiar.id);
+        super();
         this.familiar = familiar;
     }
+
     public FamiliarScript(Properties properties) {
         super(properties);
     }
 
-    public FamiliarScript(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public FamiliarScript(String registryName) {
-        super(registryName);
+    public FamiliarScript() {
+        super();
     }
 
     @Override

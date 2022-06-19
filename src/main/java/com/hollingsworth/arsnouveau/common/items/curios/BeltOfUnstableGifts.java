@@ -12,9 +12,11 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class BeltOfUnstableGifts extends ArsNouveauCurio {
-    public BeltOfUnstableGifts(String registry){
-        super(registry);
+
+    public BeltOfUnstableGifts(){
+        super();
     }
+
     public static ArrayList<MobEffect> effectTable = new ArrayList<>(Arrays.asList(
             MobEffects.SLOW_FALLING, MobEffects.NIGHT_VISION, MobEffects.CONDUIT_POWER, MobEffects.ABSORPTION, MobEffects.DAMAGE_BOOST,
             MobEffects.FIRE_RESISTANCE, MobEffects.DIG_SPEED, MobEffects.MOVEMENT_SPEED, MobEffects.REGENERATION, MobEffects.DAMAGE_RESISTANCE

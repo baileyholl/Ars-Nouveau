@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -12,12 +11,12 @@ import java.util.List;
 
 public class SpellParchment extends ModItem implements ICasterTool {
 
-    public SpellParchment(Properties properties, String registryName){
-        super(properties, registryName);
+    public SpellParchment(Properties properties){
+        super(properties);
     }
 
     public SpellParchment() {
-        super(LibItemNames.SPELL_PARCHMENT);
+        super();
     }
 
     @Override

@@ -32,12 +32,8 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
         super(properties);
     }
 
-    public EnchantersMirror(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public EnchantersMirror(String registryName) {
-        super(registryName);
+    public EnchantersMirror() {
+        super();
     }
 
     @Override

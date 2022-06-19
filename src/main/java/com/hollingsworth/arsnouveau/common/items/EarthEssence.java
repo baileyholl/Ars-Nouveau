@@ -19,12 +19,8 @@ public class EarthEssence extends ModItem{
         super(properties);
     }
 
-    public EarthEssence(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public EarthEssence(String registryName) {
-        super(registryName);
+    public EarthEssence() {
+        super();
     }
 
     @Override

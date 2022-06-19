@@ -11,7 +11,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 
 public class BeltOfLevitation extends ArsNouveauCurio {
-    public BeltOfLevitation() { super(LibItemNames.BELT_OF_LEVITATION); }
+    public BeltOfLevitation() { super(); }
 
 
     @Override

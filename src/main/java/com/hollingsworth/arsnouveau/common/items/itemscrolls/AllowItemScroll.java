@@ -7,12 +7,12 @@ import net.minecraftforge.items.IItemHandler;
 
 public class AllowItemScroll extends ItemScroll {
 
-    public AllowItemScroll(String reg) {
-        super(reg);
+    public AllowItemScroll() {
+        super();
     }
 
-    public AllowItemScroll(Properties properties, String reg) {
-        super(properties, reg);
+    public AllowItemScroll(Properties properties) {
+        super(properties);
     }
 
     @Override

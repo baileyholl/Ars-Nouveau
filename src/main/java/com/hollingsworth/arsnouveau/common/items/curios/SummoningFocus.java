@@ -36,12 +36,8 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
         super(properties);
     }
 
-    public SummoningFocus(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public SummoningFocus(String registryName) {
-        super(registryName);
+    public SummoningFocus() {
+        super();
     }
 
     public static List<AbstractCastMethod> sympatheticMethods = new ArrayList<>();

@@ -27,7 +27,7 @@ import java.util.List;
 
 public class WarpScroll extends ModItem{
     public WarpScroll() {
-        super(ItemsRegistry.defaultItemProperties(), LibItemNames.WARP_SCROLL);
+        super(ItemsRegistry.defaultItemProperties());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class WarpScroll extends ModItem{
             return InteractionResultHolder.pass(stack);
         }
         if(player.isShiftKeyDown()){
-            ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL);
+            ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL.get());
             newWarpStack.setTag(new CompoundTag());
             setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString());
             setRotationVector(newWarpStack, player.getRotationVector());

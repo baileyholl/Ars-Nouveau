@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +16,7 @@ import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.COLOR;
 
 public class StarbuncleCharm extends ModItem{
     public StarbuncleCharm() {
-        super(LibItemNames.STARBUNCLE_CHARM);
+        super();
     }
 
     /**

@@ -24,12 +24,8 @@ public class CasterTome extends ModItem implements ICasterTool {
         super(properties);
     }
 
-    public CasterTome(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public CasterTome(String registryName) {
-        super(registryName);
+    public CasterTome() {
+        super();
     }
 
     @Override

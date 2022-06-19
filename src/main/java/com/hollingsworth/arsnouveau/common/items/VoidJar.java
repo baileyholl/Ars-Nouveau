@@ -26,7 +26,7 @@ import static com.hollingsworth.arsnouveau.common.items.ItemScroll.containsItem;
 public class VoidJar extends ModItem implements IScribeable {
 
     public VoidJar() {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1), LibItemNames.VOID_JAR);
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
     public void toggleStatus(Player playerEntity, ItemStack stack){
@@ -45,7 +45,7 @@ public class VoidJar extends ModItem implements IScribeable {
         boolean voided = false;
         for(int i = 0; i < 9; i++){
             ItemStack jar = list.get(i);
-            if(jar.getItem() == ItemsRegistry.VOID_JAR){
+            if(jar.getItem() == ItemsRegistry.VOID_JAR.get()){
                 if(isActive(jar) && containsItem(pickingUp, jar.getTag())){
                     CapabilityRegistry.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * pickingUp.getCount()));
                     pickingUp.setCount(0);

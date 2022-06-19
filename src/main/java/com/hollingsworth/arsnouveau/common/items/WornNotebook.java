@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class WornNotebook extends ModItem{
 
     public WornNotebook() {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1), LibItemNames.WORN_NOTEBOOK);
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
     @Nonnull

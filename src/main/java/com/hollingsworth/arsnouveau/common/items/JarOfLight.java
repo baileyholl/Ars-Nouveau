@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +20,7 @@ import net.minecraft.world.level.material.Material;
 public class JarOfLight extends ModItem {
 
     public JarOfLight() {
-        super(LibItemNames.JAR_OF_LIGHT);
+        super();
     }
     //If the light is dispatched
 

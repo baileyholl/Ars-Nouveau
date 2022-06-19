@@ -7,12 +7,12 @@ import net.minecraftforge.items.IItemHandler;
 
 public class DenyItemScroll extends ItemScroll {
 
-    public DenyItemScroll(String reg) {
-        super(reg);
+    public DenyItemScroll() {
+        super();
     }
 
-    public DenyItemScroll(Properties properties, String reg) {
-        super(properties, reg);
+    public DenyItemScroll(Properties properties) {
+        super(properties);
     }
 
     @Override

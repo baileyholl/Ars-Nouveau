@@ -8,13 +8,8 @@ public class CompostableItem  extends ModItem{
         ComposterBlock.COMPOSTABLES.putIfAbsent(this, chance);
     }
 
-    public CompostableItem(Properties properties, String registryName, float chance) {
-        super(properties, registryName);
-        ComposterBlock.COMPOSTABLES.putIfAbsent(this, chance);
-    }
-
-    public CompostableItem(String registryName, float chance) {
-        super(registryName);
+    public CompostableItem(float chance) {
+        super();
         ComposterBlock.COMPOSTABLES.putIfAbsent(this, chance);
     }
 }

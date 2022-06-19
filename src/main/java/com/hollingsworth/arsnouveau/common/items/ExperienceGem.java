@@ -17,9 +17,10 @@ public abstract class ExperienceGem extends ModItem{
         super(properties);
     }
 
-    public ExperienceGem(Properties properties, String registryName){
-        super(properties, registryName);
+    public ExperienceGem() {
+        super();
     }
+
 
     public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         if(!world.isClientSide) {

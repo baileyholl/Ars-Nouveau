@@ -12,7 +12,7 @@ import net.minecraft.world.level.material.Material;
 
 public class RunicChalk extends ModItem{
     public RunicChalk() {
-        super(ItemsRegistry.defaultItemProperties().durability(15),LibItemNames.RUNIC_CHALK);
+        super(ItemsRegistry.defaultItemProperties().durability(15));
     }
 
     @Override

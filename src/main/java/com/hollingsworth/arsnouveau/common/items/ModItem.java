@@ -24,7 +24,7 @@ public class ModItem extends Item {
         super(properties);
     }
 
-    public ModItem() {
+    public ModItem(){
         this(ItemsRegistry.defaultItemProperties());
     }
 

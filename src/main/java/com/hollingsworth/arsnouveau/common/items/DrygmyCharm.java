@@ -14,12 +14,8 @@ public class DrygmyCharm extends ModItem{
         super(properties);
     }
 
-    public DrygmyCharm(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public DrygmyCharm(String registryName) {
-        super(registryName);
+    public DrygmyCharm() {
+        super();
     }
 
     @Override

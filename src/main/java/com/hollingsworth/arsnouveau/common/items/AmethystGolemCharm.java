@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -10,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class AmethystGolemCharm extends ModItem{
     public AmethystGolemCharm() {
-        super(LibItemNames.AMETHYST_GOLEM_CHARM);
+        super();
     }
 
     public InteractionResult useOn(UseOnContext context) {

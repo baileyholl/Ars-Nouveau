@@ -20,12 +20,12 @@ import java.util.List;
 
 public abstract class ItemScroll extends ModItem implements IScribeable {
 
-    public ItemScroll(String reg) {
-        super(reg);
+    public ItemScroll() {
+        super();
     }
 
-    public ItemScroll(Properties properties, String reg) {
-        super(properties, reg);
+    public ItemScroll(Properties properties) {
+        super(properties);
     }
 
     @Override

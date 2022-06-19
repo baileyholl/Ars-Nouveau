@@ -16,12 +16,8 @@ public class FireEssence extends ModItem{
         super(properties);
     }
 
-    public FireEssence(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public FireEssence(String registryName) {
-        super(registryName);
+    public FireEssence() {
+        super();
     }
 
     @Override

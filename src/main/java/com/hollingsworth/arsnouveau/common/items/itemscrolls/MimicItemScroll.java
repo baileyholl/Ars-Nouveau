@@ -7,12 +7,12 @@ import net.minecraftforge.items.IItemHandler;
 
 public class MimicItemScroll extends ItemScroll {
 
-    public MimicItemScroll(String reg) {
-        super(reg);
+    public MimicItemScroll() {
+        super();
     }
 
-    public MimicItemScroll(Properties properties, String reg) {
-        super(properties, reg);
+    public MimicItemScroll(Properties properties) {
+        super(properties);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     }
 
     public Wand() {
-        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup), LibItemNames.WAND);
+        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
     }
 
     private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {

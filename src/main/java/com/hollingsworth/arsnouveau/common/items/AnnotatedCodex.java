@@ -26,16 +26,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AnnotatedCodex extends ModItem{
+
     public AnnotatedCodex(Properties properties) {
         super(properties);
     }
 
-    public AnnotatedCodex(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public AnnotatedCodex(String registryName) {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1), registryName);
+    public AnnotatedCodex() {
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
     public int getUnlockLevelCost(Collection<AbstractSpellPart> spellParts){

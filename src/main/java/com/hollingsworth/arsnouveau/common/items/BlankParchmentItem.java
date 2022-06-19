@@ -12,12 +12,9 @@ public class BlankParchmentItem extends ModItem{
         super(properties);
     }
 
-    public BlankParchmentItem(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
 
-    public BlankParchmentItem(String registryName) {
-        super(registryName);
+    public BlankParchmentItem() {
+        super();
     }
 
     @Override
@@ -25,7 +22,7 @@ public class BlankParchmentItem extends ModItem{
         if(pContext.getLevel().isClientSide)
             return super.useOn(pContext);
         if(pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
-            ItemStack stack = new ItemStack(ItemsRegistry.SCRYER_SCROLL);
+            ItemStack stack = new ItemStack(ItemsRegistry.SCRYER_SCROLL.get());
             ScryerScroll.ScryerScrollData data = new ScryerScroll.ScryerScrollData(stack);
             data.setPos(pContext.getClickedPos(), stack);
             if(!pContext.getPlayer().addItem(stack)) {
