@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.RegistryObject;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
@@ -25,6 +26,11 @@ public class ApparatusRecipeBuilder {
         this.recipe.result = new ItemStack(result);
         return this;
     }
+
+    public ApparatusRecipeBuilder withResult(RegistryObject<? extends ItemLike> result){
+        return withResult(result.get());
+    }
+
     public ApparatusRecipeBuilder withResult(ItemStack result){
         this.recipe.result = result;
         return this;

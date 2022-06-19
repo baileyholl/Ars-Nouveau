@@ -10,7 +10,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import vazkii.patchouli.api.PatchouliAPI;
+//import vazkii.patchouli.api.PatchouliAPI;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +25,7 @@ public class WornNotebook extends ModItem{
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if(playerIn instanceof ServerPlayer) {
-            PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, Registry.ITEM.getKey(this));
+//            PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, Registry.ITEM.getKey(this));
         }
 
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);

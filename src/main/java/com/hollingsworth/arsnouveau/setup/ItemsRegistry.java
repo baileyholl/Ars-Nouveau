@@ -29,12 +29,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
-import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.*;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -42,195 +41,223 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 
 public class ItemsRegistry {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     static final String ItemRegistryKey = "minecraft:item";
 
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.RUNIC_CHALK, registryName = ItemRegistryKey)
-    public static RunicChalk RUNIC_CHALK;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.NOVICE_SPELL_BOOK, registryName = ItemRegistryKey)
-    public static SpellBook NOVICE_SPELLBOOK;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.APPRENTICE_SPELL_BOOK, registryName = ItemRegistryKey)
-    public static SpellBook APPRENTICE_SPELLBOOK;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ARCHMAGE_SPELL_BOOK, registryName = ItemRegistryKey)
-    public static SpellBook ARCHMAGE_SPELLBOOK;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.CREATIVE_SPELL_BOOK, registryName = ItemRegistryKey)
-    public static SpellBook CREATIVE_SPELLBOOK;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BLANK_GLYPH, registryName = ItemRegistryKey)
-    public static Item BLANK_GLYPH;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BUCKET_OF_SOURCE, registryName = ItemRegistryKey)
-    public static ModItem BUCKET_OF_SOURCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.MAGE_BLOOM, registryName = ItemRegistryKey)
-    public static ModItem MAGE_BLOOM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.MAGE_FIBER, registryName = ItemRegistryKey)
-    public static ModItem MAGE_FIBER;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BLAZE_FIBER, registryName = ItemRegistryKey)
-    public static ModItem BLAZE_FIBER;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.END_FIBER, registryName = ItemRegistryKey)
-    public static ModItem END_FIBER;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.MUNDANE_BELT, registryName = ItemRegistryKey)
-    public static ModItem MUNDANE_BELT;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.JAR_OF_LIGHT, registryName = ItemRegistryKey)
-    public static JarOfLight JAR_OF_LIGHT;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BELT_OF_LEVITATION, registryName = ItemRegistryKey)
-    public static BeltOfLevitation BELT_OF_LEVITATION;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WORN_NOTEBOOK, registryName = ItemRegistryKey)
-    public static WornNotebook WORN_NOTEBOOK = Null();
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.RING_OF_POTENTIAL, registryName = ItemRegistryKey)
-    public static ModItem RING_OF_POTENTIAL;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.RING_OF_LESSER_DISCOUNT, registryName = ItemRegistryKey)
-    public static DiscountRing RING_OF_LESSER_DISCOUNT;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.RING_OF_GREATER_DISCOUNT, registryName = ItemRegistryKey)
-    public static DiscountRing RING_OF_GREATER_DISCOUNT;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BELT_OF_UNSTABLE_GIFTS, registryName = ItemRegistryKey)
-    public static BeltOfUnstableGifts BELT_OF_UNSTABLE_GIFTS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WARP_SCROLL, registryName = ItemRegistryKey)
-    public static WarpScroll WARP_SCROLL;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SPELL_PARCHMENT, registryName = ItemRegistryKey)
-    public static SpellParchment SPELL_PARCHMENT;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BOOKWYRM_CHARM, registryName = ItemRegistryKey)
-    public static BookwyrmCharm BOOKWYRM_CHARM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.DOMINION_WAND, registryName = ItemRegistryKey)
-    public static DominionWand DOMINION_ROD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.AMULET_OF_MANA_BOOST, registryName = ItemRegistryKey)
-    public static AbstractManaCurio AMULET_OF_MANA_BOOST;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.AMULET_OF_MANA_REGEN, registryName = ItemRegistryKey)
-    public static AbstractManaCurio AMULET_OF_MANA_REGEN;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.DULL_TRINKET, registryName = ItemRegistryKey)
-    public static ModItem DULL_TRINKET;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.STARBUNCLE_CHARM, registryName = ItemRegistryKey)
-    public static StarbuncleCharm STARBUNCLE_CHARM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":debug", registryName = ItemRegistryKey)
-    public static Debug debug;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.STARBUNCLE_SHARDS, registryName = ItemRegistryKey)
-    public static ModItem STARBUNCLE_SHARD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.STARBUNCLE_SHADES, registryName = ItemRegistryKey)
-    public static StarbuncleShades STARBUNCLE_SHADES;
 
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WHIRLISPRIG_CHARM, registryName = ItemRegistryKey)
-    public static WhirlisprigCharm WHIRLISPRIG_CHARM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WHIRLISPRIG_SHARDS, registryName = ItemRegistryKey)
-    public static ModItem WHIRLISPRIG_SHARDS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SOURCE_GEM, registryName = ItemRegistryKey)
-    public static ModItem SOURCE_GEM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ALLOW_ITEM_SCROLL, registryName = ItemRegistryKey)
-    public static AllowItemScroll ALLOW_ITEM_SCROLL;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.DENY_ITEM_SCROLL, registryName = ItemRegistryKey)
-    public static DenyItemScroll DENY_ITEM_SCROLL;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.MIMIC_ITEM_SCROLL, registryName = ItemRegistryKey)
-    public static MimicItemScroll MIMIC_ITEM_SCROLL;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.BLANK_PARCHMENT, registryName = ItemRegistryKey)
-    public static BlankParchmentItem BLANK_PARCHMENT;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WAND, registryName = ItemRegistryKey)
-    public static Wand WAND;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.VOID_JAR, registryName = ItemRegistryKey)
-    public static VoidJar VOID_JAR;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WIXIE_CHARM, registryName = ItemRegistryKey)
-    public static WixieCharm WIXIE_CHARM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WIXIE_SHARD, registryName = ItemRegistryKey)
-    public static ModItem WIXIE_SHARD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SPELL_BOW, registryName = ItemRegistryKey)
-    public static SpellBow SPELL_BOW;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.AMPLIFY_ARROW, registryName = ItemRegistryKey)
-    public static SpellArrow AMPLIFY_ARROW;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SPLIT_ARROW, registryName = ItemRegistryKey)
-    public static SpellArrow SPLIT_ARROW;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.PIERCE_ARROW, registryName = ItemRegistryKey)
-    public static SpellArrow PIERCE_ARROW;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WILDEN_HORN, registryName = ItemRegistryKey)
-    public static ModItem WILDEN_HORN;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WILDEN_SPIKE, registryName = ItemRegistryKey)
-    public static ModItem WILDEN_SPIKE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WILDEN_WING, registryName = ItemRegistryKey)
-    public static ModItem WILDEN_WING;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.POTION_FLASK, registryName = ItemRegistryKey)
-    public static PotionFlask POTION_FLASK;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.POTION_FLASK_AMPLIFY, registryName = ItemRegistryKey)
-    public static PotionFlask POTION_FLASK_AMPLIFY;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.POTION_FLASK_EXTEND_TIME, registryName = ItemRegistryKey)
-    public static PotionFlask POTION_FLASK_EXTEND_TIME;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.EXP_GEM, registryName = ItemRegistryKey)
-    public static ExperienceGem EXPERIENCE_GEM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.GREATER_EXP_GEM, registryName = ItemRegistryKey)
-    public static ExperienceGem GREATER_EXPERIENCE_GEM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ENCHANTERS_SWORD, registryName = ItemRegistryKey)
+    public static final RegistryObject<RunicChalk> RUNIC_CHALK = ITEMS.register(LibItemNames.RUNIC_CHALK, () -> new RunicChalk());
+
+    public static RegistryObject<SpellBook> NOVICE_SPELLBOOK = ITEMS.register(LibItemNames.NOVICE_SPELL_BOOK, () -> new SpellBook(SpellTier.ONE));
+    public static RegistryObject<SpellBook> APPRENTICE_SPELLBOOK = ITEMS.register(LibItemNames.APPRENTICE_SPELL_BOOK, () -> new SpellBook(SpellTier.TWO));
+    public static RegistryObject<SpellBook> ARCHMAGE_SPELLBOOK = ITEMS.register(LibItemNames.ARCHMAGE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
+    public static RegistryObject<SpellBook> CREATIVE_SPELLBOOK = ITEMS.register(LibItemNames.CREATIVE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
+    public static RegistryObject<Item> BLANK_GLYPH = register(LibItemNames.BLANK_GLYPH);
+    public static RegistryObject<ModItem> BUCKET_OF_SOURCE = register(LibItemNames.BUCKET_OF_SOURCE);
+    public static RegistryObject<ModItem> MAGE_BLOOM = register(LibItemNames.MAGE_BLOOM);
+    public static RegistryObject<ModItem> MAGE_FIBER = register(LibItemNames.MAGE_FIBER);
+    public static RegistryObject<ModItem> BLAZE_FIBER = register(LibItemNames.BLAZE_FIBER);
+    public static RegistryObject<ModItem> END_FIBER = register(LibItemNames.END_FIBER);
+    public static RegistryObject<ModItem> MUNDANE_BELT = register(LibItemNames.MUNDANE_BELT);
+    public static RegistryObject<JarOfLight> JAR_OF_LIGHT = register(LibItemNames.JAR_OF_LIGHT, () -> new JarOfLight());
+    public static RegistryObject<BeltOfLevitation> BELT_OF_LEVITATION = register(LibItemNames.BELT_OF_LEVITATION, () -> new BeltOfLevitation());
+    @ObjectHolder(value = MODID + ":" + LibItemNames.WORN_NOTEBOOK, registryName = ItemRegistryKey)
+    public static RegistryObject<WornNotebook> WORN_NOTEBOOK = Null();
+    public static RegistryObject<ModItem> RING_OF_POTENTIAL = register(LibItemNames.RING_OF_POTENTIAL);
+    public static RegistryObject<DiscountRing> RING_OF_LESSER_DISCOUNT = register(LibItemNames.RING_OF_LESSER_DISCOUNT, () -> new DiscountRing() {
+        @Override
+        public int getManaDiscount() {
+            return 10;
+        }
+    });
+
+    public static RegistryObject<DiscountRing> RING_OF_GREATER_DISCOUNT = register(LibItemNames.RING_OF_GREATER_DISCOUNT, () -> new DiscountRing() {
+        @Override
+        public int getManaDiscount() {
+            return 20;
+        }
+    });
+
+    public static RegistryObject<BeltOfUnstableGifts> BELT_OF_UNSTABLE_GIFTS = register(LibItemNames.BELT_OF_UNSTABLE_GIFTS, () -> new BeltOfUnstableGifts());
+
+    public static RegistryObject<WarpScroll> WARP_SCROLL = register(LibItemNames.WARP_SCROLL, () -> new WarpScroll());
+
+    public static RegistryObject<SpellParchment> SPELL_PARCHMENT = register(LibItemNames.SPELL_PARCHMENT, () -> new SpellParchment());
+
+    public static RegistryObject<BookwyrmCharm> BOOKWYRM_CHARM = register(LibItemNames.BOOKWYRM_CHARM, () -> new BookwyrmCharm());
+
+    public static RegistryObject<DominionWand> DOMINION_ROD = register(LibItemNames.DOMINION_WAND, () -> new DominionWand());
+    @ObjectHolder(value = MODID + ":" + LibItemNames.AMULET_OF_MANA_BOOST, registryName = ItemRegistryKey)
+    public static RegistryObject<AbstractManaCurio> AMULET_OF_MANA_BOOST = register(LibItemNames.AMULET_OF_MANA_BOOST, () -> new AbstractManaCurio() {
+        @Override
+        public int getMaxManaBoost(ItemStack i) {
+            return 50;
+        }
+    });
+
+    public static RegistryObject<AbstractManaCurio> AMULET_OF_MANA_REGEN;
+
+    public static RegistryObject<ModItem> DULL_TRINKET  = register(LibItemNames.DULL_TRINKET);
+
+    public static RegistryObject<StarbuncleCharm> STARBUNCLE_CHARM = register(LibItemNames.STARBUNCLE_CHARM, () -> new StarbuncleCharm());
+
+    public static RegistryObject<Debug> debug = register("debug", () -> new Debug());
+
+    public static RegistryObject<ModItem> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS);
+
+    public static RegistryObject<StarbuncleShades> STARBUNCLE_SHADES = register(LibItemNames.STARBUNCLE_SHADES, () -> new StarbuncleShades());
+
+
+    public static RegistryObject<WhirlisprigCharm> WHIRLISPRIG_CHARM = register(LibItemNames.WHIRLISPRIG_CHARM, () -> new WhirlisprigCharm());
+
+    public static RegistryObject<ModItem> WHIRLISPRIG_SHARDS = register(LibItemNames.WHIRLISPRIG_SHARDS);
+
+    public static RegistryObject<ModItem> SOURCE_GEM = register(LibItemNames.SOURCE_GEM);
+
+    public static RegistryObject<AllowItemScroll> ALLOW_ITEM_SCROLL = register(LibItemNames.ALLOW_ITEM_SCROLL, () -> new AllowItemScroll());
+
+    public static RegistryObject<DenyItemScroll> DENY_ITEM_SCROLL = register(LibItemNames.DENY_ITEM_SCROLL, () -> new DenyItemScroll());
+
+    public static RegistryObject<MimicItemScroll> MIMIC_ITEM_SCROLL = register(LibItemNames.MIMIC_ITEM_SCROLL, () -> new MimicItemScroll());
+
+    public static RegistryObject<BlankParchmentItem> BLANK_PARCHMENT = register(LibItemNames.BLANK_PARCHMENT, () -> new BlankParchmentItem());
+
+    public static RegistryObject<Wand> WAND = register(LibItemNames.WAND, () -> new Wand());
+
+    public static RegistryObject<VoidJar> VOID_JAR = register(LibItemNames.VOID_JAR, () -> new VoidJar());
+
+    public static RegistryObject<WixieCharm> WIXIE_CHARM = register(LibItemNames.WIXIE_CHARM, () -> new WixieCharm());
+
+    public static RegistryObject<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD);
+
+    public static RegistryObject<SpellBow> SPELL_BOW = register(LibItemNames.SPELL_BOW, () -> new SpellBow());
+
+    public static RegistryObject<SpellArrow> AMPLIFY_ARROW = register(LibItemNames.AMPLIFY_ARROW, () -> new SpellArrow(AugmentAmplify.INSTANCE, 2));
+
+    public static RegistryObject<FormSpellArrow> SPLIT_ARROW = register(LibItemNames.SPLIT_ARROW, () -> new FormSpellArrow(AugmentSplit.INSTANCE, 2));
+
+    public static RegistryObject<FormSpellArrow> PIERCE_ARROW = register(LibItemNames.PIERCE_ARROW, () -> new FormSpellArrow(AugmentPierce.INSTANCE, 2));
+
+    public static RegistryObject<ModItem> WILDEN_HORN = register(LibItemNames.WILDEN_HORN);
+
+    public static RegistryObject<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE);
+
+    public static RegistryObject<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING);
+
+    public static RegistryObject<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask(){
+        @Nonnull
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return effectInstance;
+        }
+    }.withTooltip(Component.translatable("tooltip.potion_flask")));
+
+    public static RegistryObject<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask(){
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, effectInstance.getAmplifier() + 1);
+        }
+    }.withTooltip(Component.translatable("tooltip.potion_flask_amplify")));
+
+
+    public static RegistryObject<PotionFlask> POTION_FLASK_EXTEND_TIME = register(LibItemNames.POTION_FLASK_EXTEND_TIME, () -> new PotionFlask(){
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration() / 2, effectInstance.getAmplifier());
+        }
+    }.withTooltip(Component.translatable("tooltip.potion_flask_extend_time")));
+
+    @ObjectHolder(value = MODID + ":" + LibItemNames.EXP_GEM, registryName = ItemRegistryKey)
+    public static RegistryObject<ExperienceGem> EXPERIENCE_GEM;
+    @ObjectHolder(value = MODID + ":" + LibItemNames.GREATER_EXP_GEM, registryName = ItemRegistryKey)
+    public static RegistryObject<ExperienceGem> GREATER_EXPERIENCE_GEM;
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ENCHANTERS_SWORD, registryName = ItemRegistryKey)
     public static EnchantersSword ENCHANTERS_SWORD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ENCHANTERS_SHIELD, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ENCHANTERS_SHIELD, registryName = ItemRegistryKey)
     public static EnchantersShield ENCHANTERS_SHIELD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.CASTER_TOME, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.CASTER_TOME, registryName = ItemRegistryKey)
     public static CasterTome CASTER_TOME;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.DRYGMY_CHARM, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.DRYGMY_CHARM, registryName = ItemRegistryKey)
     public static DrygmyCharm DRYGMY_CHARM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.DRYGMY_SHARD, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.DRYGMY_SHARD, registryName = ItemRegistryKey)
     public static ModItem DRYGMY_SHARD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WILDEN_TRIBUTE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.WILDEN_TRIBUTE, registryName = ItemRegistryKey)
     public static ModItem WILDEN_TRIBUTE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SUMMON_FOCUS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.SUMMON_FOCUS, registryName = ItemRegistryKey)
     public static SummoningFocus SUMMONING_FOCUS;
 
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SHAPERS_FOCUS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.SHAPERS_FOCUS, registryName = ItemRegistryKey)
     public static ShapersFocus SHAPERS_FOCUS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SOURCE_BERRY_PIE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.SOURCE_BERRY_PIE, registryName = ItemRegistryKey)
     public static ModItem SOURCE_BERRY_PIE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SOURCE_BERRY_ROLL, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.SOURCE_BERRY_ROLL, registryName = ItemRegistryKey)
     public static ModItem SOURCE_BERRY_ROLL;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ENCHANTERS_MIRROR, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ENCHANTERS_MIRROR, registryName = ItemRegistryKey)
     public static EnchantersMirror ENCHANTERS_MIRROR;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.NOVICE_BOOTS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.NOVICE_BOOTS, registryName = ItemRegistryKey)
     public static NoviceArmor NOVICE_BOOTS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.NOVICE_LEGGINGS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.NOVICE_LEGGINGS, registryName = ItemRegistryKey)
     public static NoviceArmor NOVICE_LEGGINGS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.NOVICE_ROBES, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.NOVICE_ROBES, registryName = ItemRegistryKey)
     public static NoviceArmor NOVICE_ROBES;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.NOVICE_HOOD, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.NOVICE_HOOD, registryName = ItemRegistryKey)
     public static NoviceArmor NOVICE_HOOD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.APPRENTICE_BOOTS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.APPRENTICE_BOOTS, registryName = ItemRegistryKey)
     public static ApprenticeArmor APPRENTICE_BOOTS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.APPRENTICE_LEGGINGS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.APPRENTICE_LEGGINGS, registryName = ItemRegistryKey)
     public static ApprenticeArmor APPRENTICE_LEGGINGS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.APPRENTICE_ROBES, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.APPRENTICE_ROBES, registryName = ItemRegistryKey)
     public static ApprenticeArmor APPRENTICE_ROBES;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.APPRENTICE_HOOD, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.APPRENTICE_HOOD, registryName = ItemRegistryKey)
     public static ApprenticeArmor APPRENTICE_HOOD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ARCHMAGE_BOOTS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ARCHMAGE_BOOTS, registryName = ItemRegistryKey)
     public static MasterArmor ARCHMAGE_BOOTS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ARCHMAGE_LEGGINGS, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ARCHMAGE_LEGGINGS, registryName = ItemRegistryKey)
     public static MasterArmor ARCHMAGE_LEGGINGS;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ARCHMAGE_ROBES, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ARCHMAGE_ROBES, registryName = ItemRegistryKey)
     public static MasterArmor ARCHMAGE_ROBES;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ARCHMAGE_HOOD, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ARCHMAGE_HOOD, registryName = ItemRegistryKey)
     public static MasterArmor ARCHMAGE_HOOD;
 
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.DOWSING_ROD, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.DOWSING_ROD, registryName = ItemRegistryKey)
     public static DowsingRod DOWSING_ROD;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ABJURATION_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ABJURATION_ESSENCE, registryName = ItemRegistryKey)
     public static ModItem ABJURATION_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.CONJURATION_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.CONJURATION_ESSENCE, registryName = ItemRegistryKey)
     public static ModItem CONJURATION_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.AIR_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.AIR_ESSENCE, registryName = ItemRegistryKey)
     public static ModItem AIR_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.EARTH_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.EARTH_ESSENCE, registryName = ItemRegistryKey)
     public static EarthEssence EARTH_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.FIRE_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.FIRE_ESSENCE, registryName = ItemRegistryKey)
     public static FireEssence FIRE_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.MANIPULATION_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.MANIPULATION_ESSENCE, registryName = ItemRegistryKey)
     public static ModItem MANIPULATION_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.WATER_ESSENCE, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.WATER_ESSENCE, registryName = ItemRegistryKey)
     public static ModItem WATER_ESSENCE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.AMETHYST_GOLEM_CHARM, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.AMETHYST_GOLEM_CHARM, registryName = ItemRegistryKey)
     public static AmethystGolemCharm AMETHYST_GOLEM_CHARM;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.ANNOTATED_CODEX, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.ANNOTATED_CODEX, registryName = ItemRegistryKey)
     public static AnnotatedCodex ANNOTATED_CODEX;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + LibItemNames.SCRYER_SCROLL, registryName = ItemRegistryKey)
+    @ObjectHolder(value = MODID + ":" + LibItemNames.SCRYER_SCROLL, registryName = ItemRegistryKey)
     public static ScryerScroll SCRYER_SCROLL;
 
     public static FoodProperties SOURCE_BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 100), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_PIE_FOOD = new FoodProperties.Builder().nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20, 1), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_ROLL_FOOD = new FoodProperties.Builder().nutrition(8).saturationMod(0.6F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20), 1.0f).alwaysEat().build();
 
-    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static RegistryObject register(String name, Supplier<? extends Item> item) {
+        return ITEMS.register(name, item);
+    }
+
+    public static RegistryObject register(String name) {
+        return register(name, () -> new ModItem());
+    }
+    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         public static final Set<Item> ITEMS = new HashSet<>();
 
@@ -402,14 +429,16 @@ public class ItemsRegistry {
             registry.register(LibItemNames.ARCHMAGE_LEGGINGS, new MasterArmor(EquipmentSlot.LEGS));
             registry.register(LibItemNames.ARCHMAGE_ROBES, new MasterArmor(EquipmentSlot.CHEST));
             registry.register(LibItemNames.ARCHMAGE_HOOD, new MasterArmor(EquipmentSlot.HEAD));
-            registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
-            registry.register(LibItemNames.SYLPH_SE, new ForgeSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
-            registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
-            registry.register(LibItemNames.WILDEN_GUARDIAN_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
-            registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
+            // TODO: restore spawn eggs
+//            registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
+//            registry.register(LibItemNames.SYLPH_SE, new ForgeSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
+//            registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
+//            registry.register(LibItemNames.WILDEN_GUARDIAN_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
+//            registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
 
         }
     }
+
 
     public static Item.Properties defaultItemProperties() {
         return new Item.Properties().tab(ArsNouveau.itemGroup);

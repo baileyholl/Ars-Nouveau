@@ -22,6 +22,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -461,6 +462,10 @@ public class PatchouliProvider implements DataProvider {
             builder.withPage(recipePage);
         }
         this.pages.add(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
+    }
+
+    public void addBasicItem(RegistryObject<? extends ItemLike> item, ResourceLocation category, IPatchouliPage recipePage){
+       addBasicItem(item.get(), category, recipePage);
     }
 
     public Path getPath(ResourceLocation category, ResourceLocation fileName){

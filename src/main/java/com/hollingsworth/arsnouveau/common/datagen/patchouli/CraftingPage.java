@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.RegistryObject;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
@@ -13,6 +14,10 @@ public class CraftingPage extends AbstractPage {
 
     public CraftingPage(ItemLike itemLike) {
         this(getRegistryName(itemLike.asItem()).toString());
+    }
+
+    public CraftingPage(RegistryObject<? extends ItemLike> itemLike) {
+        this(itemLike.get().asItem());
     }
 
     public CraftingPage withRecipe2(String recipe){

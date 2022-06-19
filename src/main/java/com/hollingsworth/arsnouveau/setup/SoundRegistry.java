@@ -6,9 +6,11 @@ import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+@Mod(ArsNouveau.MODID)
 public class SoundRegistry {
 
     @ObjectHolder(value = "fire_family", registryName = "minecraft:sound_events")

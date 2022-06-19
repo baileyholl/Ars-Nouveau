@@ -26,20 +26,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class PotionFlask extends ModItem {
+
     public PotionFlask() {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
-        setRegistryName(LibItemNames.POTION_FLASK);
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
-    public PotionFlask(Item.Properties props, String registryName){
+    public PotionFlask(Item.Properties props){
         super(props);
-        setRegistryName(registryName);
     }
 
-    public PotionFlask(String registryName){
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
-        setRegistryName(registryName);
-    }
+
 
     @Override
     public InteractionResult useOn(UseOnContext context) {

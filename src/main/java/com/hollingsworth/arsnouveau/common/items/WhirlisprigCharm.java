@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 public class WhirlisprigCharm extends ModItem{
 
     public WhirlisprigCharm() {
-        super(LibItemNames.WHIRLISPRIG_CHARM);
+        super();
     }
 
     /**

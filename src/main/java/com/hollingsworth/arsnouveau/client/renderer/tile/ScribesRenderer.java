@@ -51,7 +51,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
             double z = tile.getBlockPos().getZ();
-            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem() : ItemsRegistry.BLANK_GLYPH : tile.stack.getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn, ticks + partialTicks);
+            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem() : ItemsRegistry.BLANK_GLYPH.get() : tile.stack.getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn, ticks + partialTicks);
         }catch (Throwable t){
             t.printStackTrace();
             // Mercy for HORRIBLE RENDER CHANGING MODS

@@ -5,16 +5,13 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class AnimModItem extends ModItem implements IAnimatable {
+
     public AnimModItem(Properties properties) {
         super(properties);
     }
 
-    public AnimModItem(Properties properties, String registryName) {
-        super(properties, registryName);
-    }
-
-    public AnimModItem(String registryName) {
-        super(registryName);
+    public AnimModItem(){
+        super();
     }
 
     @Override

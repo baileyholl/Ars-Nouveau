@@ -19,8 +19,8 @@ import java.util.function.Consumer;
 
 public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
 
-    public StarbuncleShades(String registryName) {
-        super(registryName);
+    public StarbuncleShades() {
+        super();
     }
 
     @Override

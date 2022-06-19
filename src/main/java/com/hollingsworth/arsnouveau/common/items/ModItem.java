@@ -24,22 +24,8 @@ public class ModItem extends Item {
         super(properties);
     }
 
-    public ModItem(Properties properties, String registryName) {
-        this(properties);
-        setRegistryName(registryName);
-    }
-
-    public ModItem setRegistryName(String registryName) {
-        this.registryName = registryName;
-        return this;
-    }
-
-    public String getRegistryName() {
-        return registryName;
-    }
-
-    public ModItem(String registryName) {
-        this(ItemsRegistry.defaultItemProperties(), registryName);
+    public ModItem() {
+        this(ItemsRegistry.defaultItemProperties());
     }
 
     public ModItem withTooltip(Component tip) {

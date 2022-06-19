@@ -195,22 +195,22 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void initColors(final ColorHandlerEvent.Item event) {
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-                ItemsRegistry.POTION_FLASK);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-                ItemsRegistry.POTION_FLASK_AMPLIFY);
-
-        event.getBlockColors().register((state, reader, pos, tIndex) ->
-                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
-                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
-                        : -1, BlockRegistry.POTION_JAR);
+//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+//                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+//                ItemsRegistry.POTION_FLASK);
+//
+//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+//                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+//                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
+//
+//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+//                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+//                ItemsRegistry.POTION_FLASK_AMPLIFY);
+//
+//        event.getBlockColors().register((state, reader, pos, tIndex) ->
+//                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
+//                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
+//                        : -1, BlockRegistry.POTION_JAR);
     }
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {

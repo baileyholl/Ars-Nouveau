@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 public abstract class DiscountRing extends ArsNouveauCurio implements IManaEquipment {
 
 
-    public DiscountRing(String registry) {
-        super(registry);
+    public DiscountRing() {
+        super();
     }
 
     @Override

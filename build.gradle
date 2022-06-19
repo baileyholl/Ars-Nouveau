@@ -145,7 +145,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19-41.0.32'
     implementation 'org.jetbrains:annotations:23.0.0'
 
-    implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
+//    implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
     //not working atm implementation fg.deobf("mezz.jei:jei-1.19-forge:11.0.0.203")
     implementation fg.deobf("curse.maven:jei-238222:3834070")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:1.19-5.1.0.1")

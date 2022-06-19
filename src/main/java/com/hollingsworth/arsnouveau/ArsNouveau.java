@@ -39,7 +39,7 @@ public class ArsNouveau {
     public static CreativeModeTab itemGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), MODID) {
         @Override
         public ItemStack makeIcon() {
-            return ItemsRegistry.CREATIVE_SPELLBOOK.getDefaultInstance();
+            return ItemsRegistry.CREATIVE_SPELLBOOK.get().getDefaultInstance();
         }
     };
 
@@ -79,7 +79,7 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_SAPLING.asItem(), 0.5F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_SAPLING.asItem(), 0.3F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.SOURCEBERRY_BUSH.asItem(), 0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(ItemsRegistry.MAGE_BLOOM, 0.65F);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(ItemsRegistry.MAGE_BLOOM.get(), 0.65F);
         });
     }
 

@@ -41,7 +41,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
-
+@Mod(ArsNouveau.MODID)
 public class BlockRegistry {
 
     static final String BlockRegistryKey = "minecraft:block";

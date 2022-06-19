@@ -27,6 +27,7 @@ public class ModSetup {
 
     //some things need to be deferred to maintain sanity
     public static void registers(IEventBus modEventBus) {
+        ItemsRegistry.ITEMS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
         ModPotions.POTIONS.register(modEventBus);

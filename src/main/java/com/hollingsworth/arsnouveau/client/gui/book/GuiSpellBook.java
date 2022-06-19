@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import vazkii.patchouli.api.PatchouliAPI;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -323,7 +323,8 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onDocumentationClick(Button button){
-        PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.WORN_NOTEBOOK));
+        // TODO: Restore patchouli
+//        PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.WORN_NOTEBOOK));
     }
 
     public void onColorClick(Button button){
@@ -418,7 +419,7 @@ public class GuiSpellBook extends BaseBook {
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
         List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs());
         parts.addAll(ArsNouveauAPI.getInstance().getDefaultStartingSpells());
-        if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK)
+        if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
             parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
         Minecraft.getInstance().setScreen(new GuiSpellBook(stack, tier, parts));
     }
