@@ -440,7 +440,7 @@ public class ItemsRegistry {
         for (AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
             FamiliarScript script = new FamiliarScript(holder);
             ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.id, script);
-            registry.register(holder.getId(), script);
+            registry.register("familiar_" + holder.getId(), script);
         }
 
         registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
