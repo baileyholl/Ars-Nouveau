@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -22,11 +21,12 @@ public class EffectWither extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        Entity entity = rayTraceResult.getEntity();
-        if(!(entity instanceof LivingEntity))
-            return;
-        applyConfigPotion((LivingEntity) entity, MobEffects.WITHER, spellStats);
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            applyConfigPotion(living, MobEffects.WITHER, spellStats);
+        }
+
     }
 
     @Override

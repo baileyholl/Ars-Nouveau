@@ -12,18 +12,14 @@ import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
 import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class SoundScreen extends BaseBook{
 

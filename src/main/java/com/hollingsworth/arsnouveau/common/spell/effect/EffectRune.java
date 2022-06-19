@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -26,18 +26,17 @@ public class EffectRune extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
-        pos = rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());
+        pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
         spellContext.setCanceled(true);
-        if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
+        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         Spell newSpell = new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
-        if(world.getBlockState(pos).getMaterial().isReplaceable()){
+        if (world.getBlockState(pos).getMaterial().isReplaceable()) {
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
-            if(world.getBlockEntity(pos) instanceof RuneTile runeTile){
-                if(shooter instanceof Player){
+            if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {
+                if (shooter instanceof Player) {
                     runeTile.uuid = shooter.getUUID();
                 }
                 runeTile.isTemporary = true;

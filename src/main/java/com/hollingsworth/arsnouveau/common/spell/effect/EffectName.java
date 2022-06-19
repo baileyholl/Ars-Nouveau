@@ -29,26 +29,23 @@ public class EffectName extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component newName = null;
-        if(spellContext.castingTile instanceof IInventoryResponder) {
+        if (spellContext.castingTile instanceof IInventoryResponder) {
             newName = (((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(Items.NAME_TAG))).getDisplayName().plainCopy();
-        } else if(shooter instanceof Player playerEntity){
+        } else if (shooter instanceof Player playerEntity) {
             NonNullList<ItemStack> list = playerEntity.inventory.items;
-            for(int i = 0; i < 9; i++){
+            for (int i = 0; i < 9; i++) {
                 ItemStack stack = list.get(i);
-                if(stack.getItem() == Items.NAME_TAG)
-                {
+                if (stack.getItem() == Items.NAME_TAG) {
                     newName = stack.getDisplayName().plainCopy();
                     break;
                 }
             }
-            if(newName == null && spellContext.getCaster() != null)
-            {
+            if (newName == null && spellContext.getCaster() instanceof Player) {
                 ItemStack stack = StackUtil.getHeldSpellbook((Player) spellContext.getCaster());
-                if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null){
-                    ISpellCaster caster =  CasterUtil.getCaster(stack);
+                if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
+                    ISpellCaster caster = CasterUtil.getCaster(stack);
                     newName = Component.literal(caster.getSpellName());
                 }
             }

@@ -143,14 +143,14 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         if(result.getType() == HitResult.Type.ENTITY) {
             if (((EntityHitResult) result).getEntity().equals(this.getOwner())) return;
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(level, (LivingEntity) this.getOwner(), result);
+                this.spellResolver.onResolveEffect(level, result);
                 Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        new BlockPos(result.getLocation()),getParticleColorWrapper()));
+                        new BlockPos(result.getLocation()), getParticleColorWrapper()));
                 attemptRemoval();
             }
         }else if(numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()){
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getOwner(), blockraytraceresult);
+                this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));

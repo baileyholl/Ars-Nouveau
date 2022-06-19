@@ -1,12 +1,13 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 

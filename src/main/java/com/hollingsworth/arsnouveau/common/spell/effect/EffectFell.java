@@ -37,7 +37,7 @@ public class EffectFell extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {

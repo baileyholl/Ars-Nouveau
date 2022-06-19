@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -24,14 +23,14 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        Entity livingEntity = rayTraceResult.getEntity();
-        if(!(livingEntity instanceof LivingEntity))
-            return;
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
-        ((LivingEntity) livingEntity).addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), (int) (POTION_TIME.get() * 20 + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
-        livingEntity.setDeltaMovement(0, 0, 0);
-        livingEntity.hurtMarked = true;
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            living.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), (int) (POTION_TIME.get() * 20 + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
+            living.setDeltaMovement(0, 0, 0);
+            living.hurtMarked = true;
+        }
+
     }
 
 

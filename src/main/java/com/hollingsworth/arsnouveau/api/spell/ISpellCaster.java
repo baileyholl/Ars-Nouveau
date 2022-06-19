@@ -132,7 +132,7 @@ public interface ISpellCaster {
 
 
         if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
-            if(resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn))
+            if (resolver.onCastOnEntity(stack, entityHitResult.getEntity(), handIn))
                 playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
@@ -144,7 +144,7 @@ public interface ISpellCaster {
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        if(resolver.onCast(stack,playerIn,worldIn))
+        if (resolver.onCast(stack, worldIn))
             playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }

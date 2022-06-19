@@ -28,7 +28,7 @@ public class EffectDispel extends AbstractEffect {
 
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
@@ -45,9 +45,9 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable){
-            ((IDispellable) world.getBlockState(rayTraceResult.getBlockPos())).onDispel(shooter);
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
+            dispellable.onDispel(shooter);
         }
     }
 

@@ -23,12 +23,12 @@ public class EffectSummonWolves extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(!canSummon(shooter))
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!canSummon(shooter))
             return;
         Vec3 hit = rayTraceResult.getLocation();
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
-        for(int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
             wolf.ticksLeft = ticks;
             wolf.setPos(hit.x(), hit.y(), hit.z());

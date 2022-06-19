@@ -30,14 +30,14 @@ public class EffectSummonSteed extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
-        if(!canSummon(shooter))
+        if (!canSummon(shooter))
             return;
 
-        int ticks = (int) (20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
+        int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         Vec3 hit = rayTraceResult.getLocation();
-        for(int i = 0; i < 1 + Math.round(spellStats.getAoeMultiplier()); i++){
+        for (int i = 0; i < 1 + Math.round(spellStats.getAoeMultiplier()); i++) {
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE.get(), world);
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;

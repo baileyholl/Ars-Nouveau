@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -24,47 +24,27 @@ public class MethodUnderfoot extends AbstractCastMethod {
 
     @Override
     public void onCast(@Nullable ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         LivingEntity caster = context.getPlayer();
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), new BlockHitResult(caster.position, Direction.DOWN, caster.blockPosition().below(), true));
         resolver.expendMana(caster);
-    }
-
-    @Override
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellResolver resolver) {
-        return false;
-    }
-
-    @Override
-    public boolean wouldCastOnBlockSuccessfully(UseOnContext context, SpellStats spellStats, SpellResolver resolver) {
-        return false;
-    }
-
-    @Override
-    public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellResolver resolver) {
-        return false;
-    }
-
-    @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellResolver resolver) {
-        return false;
     }
 
     @Override

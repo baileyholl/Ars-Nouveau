@@ -30,35 +30,33 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = new BlockPos(rayTraceResult.getLocation());
         double expansion = 2 + spellStats.getAoeMultiplier();
-        Vec3 posVec = new Vec3(pos.getX(),pos.getY(),pos.getZ());
+        Vec3 posVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
 
         List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(
-                posVec.add(expansion,expansion,expansion), posVec.subtract(expansion,expansion,expansion)));
-        for(ItemEntity i : entityList){
+                posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
+        for (ItemEntity i : entityList) {
 
-            if(isRealPlayer(shooter) && spellContext.castingTile == null){
+            if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
                 ItemStack stack = i.getItem();
-                Player player = (Player) shooter;
-                if(MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i)))
+                if (MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i)))
                     continue;
-                if(!stack.isEmpty() && !player.addItem(stack)) {
+                if (!stack.isEmpty() && !player.addItem(stack)) {
                     i.setPos(player.getX(), player.getY(), player.getZ());
                 }
-            }else if(shooter instanceof IPickupResponder iPickupResponder){
+            } else if (shooter instanceof IPickupResponder iPickupResponder) {
                 i.setItem(iPickupResponder.onPickup(i.getItem()));
-            }else if(spellContext.castingTile instanceof IPickupResponder iPickupResponder){
+            } else if (spellContext.castingTile instanceof IPickupResponder iPickupResponder) {
                 i.setItem(iPickupResponder.onPickup(i.getItem()));
             }
         }
         List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
                 posVec.add(expansion,expansion,expansion), posVec.subtract(expansion,expansion,expansion)));
-        for(ExperienceOrb i : orbList){
-            if(isRealPlayer(shooter) && spellContext.castingTile == null){
-                Player player = (Player) shooter;
-                if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
+        for(ExperienceOrb i : orbList) {
+            if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
+                if (MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
                     continue;
                 player.giveExperiencePoints(i.value);
                 i.remove(Entity.RemovalReason.DISCARDED);

@@ -239,14 +239,7 @@ public class SpellResolver {
         this.onResolveEffect(world, result);
     }
 
-    @Deprecated(forRemoval = true)
-    public static void resolveEffects(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext){
-        SpellResolver resolver = new SpellResolver(spellContext);
-        resolver.hitResult = result;
-        resolver.resolveAllEffects(world);
-    }
-
-    // TODO: delete bookwyrm
+    /* TODO: delete bookwyrm
     @Deprecated(forRemoval = true)
     public boolean wouldAllEffectsDoWork(HitResult result, Level world, LivingEntity entity,  SpellStats stats){
         for(AbstractSpellPart spellPart : spell.recipe){
@@ -259,8 +252,11 @@ public class SpellResolver {
         return true;
     }
 
+
     @Deprecated(forRemoval = true)
     public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster){
         return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  getCastStats(caster), this);
     }
+     */
+
 }

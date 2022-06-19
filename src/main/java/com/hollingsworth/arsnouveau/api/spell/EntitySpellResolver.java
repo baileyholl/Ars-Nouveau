@@ -15,7 +15,7 @@ public class EntitySpellResolver extends SpellResolver {
 
 
     public void onCastOnEntity(LivingEntity target){
-        super.onCastOnEntity(ItemStack.EMPTY, spellContext.caster, target, InteractionHand.MAIN_HAND);
+        super.onCastOnEntity(ItemStack.EMPTY, target, InteractionHand.MAIN_HAND);
     }
 
     @Override

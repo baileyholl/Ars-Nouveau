@@ -34,15 +34,15 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
-        if(shooter != null){
+        if (shooter != null) {
 
             float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             knockback(rayTraceResult.getEntity(), shooter, strength);
             rayTraceResult.getEntity().hurtMarked = true;
         }
-        
+
     }
 
     @Override

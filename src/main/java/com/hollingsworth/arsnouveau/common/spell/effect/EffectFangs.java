@@ -30,14 +30,14 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(shooter == null && spellContext.castingTile != null) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (shooter == null && spellContext.castingTile != null) {
             shooter = ANFakePlayer.getPlayer((ServerLevel) world);
             BlockPos pos = spellContext.castingTile.getBlockPos();
             shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
 
-        if(shooter == null)
+        if (shooter == null)
             return;
         Vec3 vec = rayTraceResult.getLocation();
 

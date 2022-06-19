@@ -77,7 +77,6 @@ public class BlockRegistry {
     @ObjectHolder( value = LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey) public static MageBloomCrop MAGE_BLOOM_CROP;
     @ObjectHolder( value = LibBlockNames.ARCANE_BRICKS, registryName = BlockRegistryKey) public static ModBlock ARCANE_BRICKS;
     @ObjectHolder( value = LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey) public static ScribesBlock SCRIBES_BLOCK;
-    @ObjectHolder( value = LibBlockNames.SUMMONING_CRYSTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<SummoningCrystalTile> SUMMONING_CRYSTAL_TILE;
     @ObjectHolder( value = LibBlockNames.SCRIBES_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
     @ObjectHolder( value = LibBlockNames.RELAY, registryName = BlockRegistryKey) public static Relay RELAY;
     @ObjectHolder( value = LibBlockNames.RUNE, registryName = BlockEntityRegistryKey) public static BlockEntityType<RuneTile> RUNE_TILE;
