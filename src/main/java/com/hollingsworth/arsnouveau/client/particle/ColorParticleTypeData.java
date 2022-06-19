@@ -49,10 +49,10 @@ public class ColorParticleTypeData implements ParticleOptions {
     };
 
     public ColorParticleTypeData(float r, float g, float b,  boolean disableDepthTest, float size, float alpha, int age){
-        this(ModParticles.GLOW_TYPE, new ParticleColor(r,g,b), disableDepthTest, size, alpha, age);
+        this(ModParticles.GLOW_TYPE.get(), new ParticleColor(r,g,b), disableDepthTest, size, alpha, age);
     }
     public ColorParticleTypeData(ParticleColor color,  boolean disableDepthTest, float size, float alpha, int age){
-        this(ModParticles.GLOW_TYPE, color, disableDepthTest, size, alpha, age);
+        this(ModParticles.GLOW_TYPE.get(), color, disableDepthTest, size, alpha, age);
     }
 
     public ColorParticleTypeData(ParticleType<ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest){

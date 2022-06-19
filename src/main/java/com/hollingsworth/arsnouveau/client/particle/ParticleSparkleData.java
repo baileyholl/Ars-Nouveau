@@ -25,11 +25,11 @@ public class ParticleSparkleData implements ParticleProvider<ColoredDynamicTypeD
     }
 
     public static ParticleOptions createData(ParticleColor color) {
-        return new ColoredDynamicTypeData(ModParticles.SPARKLE_TYPE, color,.25f,  36);
+        return new ColoredDynamicTypeData(ModParticles.SPARKLE_TYPE.get(), color,.25f,  36);
     }
 
     public static ParticleOptions createData(ParticleColor color, float scale, int age) {
-        return new ColoredDynamicTypeData(ModParticles.SPARKLE_TYPE, color, scale, age);
+        return new ColoredDynamicTypeData(ModParticles.SPARKLE_TYPE.get(), color, scale, age);
     }
 
 }

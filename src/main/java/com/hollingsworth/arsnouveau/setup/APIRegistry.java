@@ -115,13 +115,14 @@ public class APIRegistry {
         api.registerScryer(SingleBlockScryer.INSTANCE);
         api.registerScryer(CompoundScryer.INSTANCE);
         api.registerScryer(TagScryer.INSTANCE);
-        // TODO: Restore recipes as suppliers
-//        api.getEnchantingRecipeTypes().add(RecipeRegistry.APPARATUS_TYPE.get());
-//        api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE.get());
-//        api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
-//        api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
+    }
 
-
+    public static void postInit(){
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.APPARATUS_TYPE.get());
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE.get());
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

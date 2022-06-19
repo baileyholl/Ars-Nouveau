@@ -242,18 +242,7 @@ public class BlockRegistry {
 
         @SubscribeEvent
         public static void BlocksRegistry(final RegisterEvent event) {
-            if(event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)){
-                IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
-                onBlocksRegistry(registry);
-            }
-            if(event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)){
-                IForgeRegistry<Item> registry = Objects.requireNonNull(event.getForgeRegistry());
-                onBlockItemsRegistry(registry);
-            }
-            if(event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
-                IForgeRegistry<BlockEntityType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
-                onTileEntityRegistry(registry);
-            }
+
         }
 
         public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
@@ -468,7 +457,7 @@ public class BlockRegistry {
                     return GenericRenderer.getISTER("source_relay");
                 }
             });
-            registry.register(LibBlockNames.RUNE, new BlockItem(BlockRegistry.RUNE_BLOCK, new Item.Properties()));
+            //registry.register(LibBlockNames.RUNE, new BlockItem(BlockRegistry.RUNE_BLOCK, new Item.Properties()));
             registry.register(LibBlockNames.PORTAL, new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()));
             registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
                 @Override

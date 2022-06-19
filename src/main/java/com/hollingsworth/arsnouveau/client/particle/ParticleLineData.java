@@ -26,10 +26,10 @@ public class ParticleLineData implements ParticleProvider<ColoredDynamicTypeData
     }
 
     public static ParticleOptions createData(ParticleColor color) {
-        return new ColoredDynamicTypeData(ModParticles.LINE_TYPE, color, (float) ParticleUtil.inRange(0.05, 0.15), 40+random.nextInt(20));
+        return new ColoredDynamicTypeData(ModParticles.LINE_TYPE.get(), color, (float) ParticleUtil.inRange(0.05, 0.15), 40+random.nextInt(20));
     }
 
     public static ParticleOptions createData(ParticleColor color, float scale, int age) {
-        return new ColoredDynamicTypeData(ModParticles.LINE_TYPE, color, scale, age);
+        return new ColoredDynamicTypeData(ModParticles.LINE_TYPE.get(), color, scale, age);
     }
 }
