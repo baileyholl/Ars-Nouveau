@@ -42,27 +42,27 @@ public class MethodOrbit extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
+    public CastResolveType onCast(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
         summonProjectiles(world, playerEntity, resolver, spellStats);
-        resolver.expendMana(playerEntity);
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         summonProjectiles(context.getLevel(), context.getPlayer(), resolver, spellStats);
-        resolver.expendMana(context.getPlayer());
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         summonProjectiles(caster.level, caster, resolver, spellStats);
-        resolver.expendMana(caster);
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         summonProjectiles(caster.level, caster, resolver, spellStats);
-        resolver.expendMana(caster);
+        return CastResolveType.SUCCESS;
     }
 
     @Override

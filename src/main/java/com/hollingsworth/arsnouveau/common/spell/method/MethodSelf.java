@@ -24,34 +24,34 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
+    public CastResolveType onCast(ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(caster));
-        resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition()));
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = context.getLevel();
         resolver.onResolveEffect(world, new EntityHitResult(context.getPlayer()));
-        resolver.expendMana(context.getPlayer());
         Networking.sendToNearby(context.getLevel(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, context.getPlayer().blockPosition()));
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = caster.level;
         resolver.onResolveEffect(world, new EntityHitResult(caster));
-        resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition()));
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = playerIn.level;
         resolver.onResolveEffect(world, new EntityHitResult(playerIn));
-        resolver.expendMana(playerIn);
         Networking.sendToNearby(playerIn.level, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.blockPosition()));
+        return CastResolveType.SUCCESS;
     }
 
     @Override

@@ -36,6 +36,8 @@ public class CapabilityRegistry {
      * @return A lazy optional containing the IMana, if any
      */
     public static LazyOptional<IManaCap> getMana(final LivingEntity entity){
+        if(entity == null)
+            return LazyOptional.empty();
         return entity.getCapability(MANA_CAPABILITY);
     }
 

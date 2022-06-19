@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
@@ -10,9 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,11 +43,6 @@ public class SpellResolver {
         this.spellValidator = ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
-    @Deprecated(forRemoval = true)
-    public SpellResolver(ISpellCaster spellCaster, @Nullable LivingEntity castingEntity){
-        this(new SpellContext(spellCaster.getSpell(), castingEntity).withColors(spellCaster.getColor()));
-    }
-
     public SpellResolver withSilent(boolean isSilent){
         this.silent = isSilent;
         return this;
@@ -74,7 +66,7 @@ public class SpellResolver {
     }
 
     boolean enoughMana(LivingEntity entity){
-        int totalCost = getCastingCost(spell, entity);
+        int totalCost = getResolveCost();
         IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
         if(manaCap == null)
             return false;
@@ -90,7 +82,7 @@ public class SpellResolver {
 
     private SpellStats getCastStats(){
         LivingEntity caster = spellContext.caster;
-        return  new SpellStats.Builder()
+        return new SpellStats.Builder()
                 .setAugments(spell.getAugments(0, caster))
                 .addItemsFromEntity(caster)
                 .build(castType, this.hitResult, caster.level, caster, spellContext);
@@ -99,8 +91,11 @@ public class SpellResolver {
     public boolean onCast(ItemStack stack, Level level){
         if(canCast(spellContext.caster) && !postEvent()) {
             this.hitResult = null;
-            castType.onCast(stack, spellContext.caster, level, getCastStats(), spellContext, this);
-            return true;
+            CastResolveType resolveType = castType.onCast(stack, spellContext.caster, level, getCastStats(), spellContext, this);
+            if(resolveType == CastResolveType.SUCCESS){
+                expendMana();
+            }
+            return resolveType.wasSuccess;
         }
         return false;
     }
@@ -108,8 +103,11 @@ public class SpellResolver {
     public boolean onCastOnBlock(BlockHitResult blockRayTraceResult){
         if(canCast(spellContext.caster) && !postEvent()) {
             this.hitResult = blockRayTraceResult;
-            castType.onCastOnBlock(blockRayTraceResult, spellContext.caster, getCastStats(), spellContext, this);
-            return true;
+            CastResolveType resolveType = castType.onCastOnBlock(blockRayTraceResult, spellContext.caster, getCastStats(), spellContext, this);
+            if(resolveType == CastResolveType.SUCCESS) {
+                expendMana();
+            }
+            return resolveType.wasSuccess;
         }
         return false;
     }
@@ -118,8 +116,11 @@ public class SpellResolver {
     public boolean onCastOnBlock(UseOnContext context){
         if(canCast(spellContext.caster) && !postEvent()) {
             this.hitResult = context.hitResult;
-            castType.onCastOnBlock(context, getCastStats(), spellContext, this);
-            return true;
+            CastResolveType resolveType = castType.onCastOnBlock(context, getCastStats(), spellContext, this);
+            if(resolveType == CastResolveType.SUCCESS){
+                expendMana();
+            }
+            return resolveType.wasSuccess;
         }
         return false;
     }
@@ -127,8 +128,11 @@ public class SpellResolver {
     public boolean onCastOnEntity(ItemStack stack, Entity target, InteractionHand hand){
         if(canCast(spellContext.caster) && !postEvent()) {
             this.hitResult = new EntityHitResult(target);
-            castType.onCastOnEntity(stack, spellContext.caster, target, hand, getCastStats(), spellContext, this);
-            return true;
+            CastResolveType resolveType = castType.onCastOnEntity(stack, spellContext.caster, target, hand, getCastStats(), spellContext, this);
+            if(resolveType == CastResolveType.SUCCESS){
+                expendMana();
+            }
+            return resolveType.wasSuccess;
         }
         return false;
     }
@@ -141,7 +145,7 @@ public class SpellResolver {
     protected void resolveAllEffects(Level world){
         spellContext.resetCastCounter();
         LivingEntity shooter = spellContext.getUnwrappedCaster(world);
-        SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext);
+        SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
         if(spellResolveEvent.isCanceled())
             return;
@@ -166,16 +170,16 @@ public class SpellResolver {
                 MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter,  this.hitResult, spell, spellContext, effect, stats));
             }
         }
-        MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext));
+        MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, this));
     }
 
-    public void expendMana(LivingEntity entity){
-        int totalCost = getCastingCost(spell, entity);
-        CapabilityRegistry.getMana(entity).ifPresent(mana -> mana.removeMana(totalCost));
+    public void expendMana(){
+        int totalCost = getResolveCost();
+        CapabilityRegistry.getMana(spellContext.caster).ifPresent(mana -> mana.removeMana(totalCost));
     }
-    // TODO: Change to getResolveCost. Pull spell and entity from SpellContext
-    public int getCastingCost(Spell spell, LivingEntity e){
-        int cost = spell.getCastingCost() - getPlayerDiscounts(e);
+
+    public int getResolveCost(){
+        int cost = spellContext.getSpell().getCastingCost() - getPlayerDiscounts(spellContext.caster);
         return Math.max(cost, 0);
     }
 
@@ -193,70 +197,4 @@ public class SpellResolver {
     public boolean hasFocus(ItemStack stack){
         return CuriosUtil.hasItem(spellContext.caster, stack);
     }
-
-    // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.
-    // Moved to SpellContext.
-    @Deprecated(forRemoval = true)
-    public static LivingEntity getUnwrappedCaster(Level world, SpellContext spellContext){
-        LivingEntity shooter = spellContext.getCaster();
-        if(shooter == null && spellContext.castingTile != null) {
-            shooter = ANFakePlayer.getPlayer((ServerLevel) world);
-            BlockPos pos = spellContext.castingTile.getBlockPos();
-            shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
-        }
-        shooter = shooter == null ?  ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
-        return shooter;
-    }
-
-    @Deprecated(forRemoval = true)
-    public boolean postEvent(LivingEntity entity){
-        return postEvent();
-    }
-
-    @Deprecated(forRemoval = true)
-    private SpellStats getCastStats(LivingEntity caster){
-        return getCastStats();
-    }
-
-    @Deprecated(forRemoval = true)
-    public boolean onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, InteractionHand hand){
-        return onCastOnEntity(stack, target, hand);
-    }
-
-    @Deprecated(forRemoval = true)
-    public boolean onCast(ItemStack stack, LivingEntity caster, Level world){
-        return onCast(stack, world);
-    }
-
-    @Deprecated(forRemoval = true)
-    // Caster obtained from spellContext
-    public boolean onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster){
-        return onCastOnBlock(blockRayTraceResult);
-    }
-
-    @Deprecated(forRemoval = true)
-    public void onResolveEffect(Level world, LivingEntity shooter, HitResult result){
-        this.onResolveEffect(world, result);
-    }
-
-    /* TODO: delete bookwyrm
-    @Deprecated(forRemoval = true)
-    public boolean wouldAllEffectsDoWork(HitResult result, Level world, LivingEntity entity,  SpellStats stats){
-        for(AbstractSpellPart spellPart : spell.recipe){
-            if(spellPart instanceof AbstractEffect){
-                if(!((AbstractEffect) spellPart).wouldSucceed(result, world, entity, stats, spellContext)){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
-    @Deprecated(forRemoval = true)
-    public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster){
-        return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  getCastStats(caster), this);
-    }
-     */
-
 }

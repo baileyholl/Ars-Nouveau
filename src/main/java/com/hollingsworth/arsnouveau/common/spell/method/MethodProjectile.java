@@ -84,33 +84,30 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity shooter, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
+    public CastResolveType onCast(ItemStack stack, LivingEntity shooter, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
         summonProjectiles(world, shooter, spellStats, resolver);
-        resolver.expendMana(shooter);
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = context.getLevel();
         Player shooter = context.getPlayer();
         summonProjectiles(world, shooter, spellStats, resolver);
-        resolver.expendMana(shooter);
+        return CastResolveType.SUCCESS;
     }
 
-    /**
-     * Cast by entities.
-     */
     @Override
-    public void onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         caster.lookAt(EntityAnchorArgument.Anchor.EYES, blockRayTraceResult.getLocation().add(0, 0, 0));
         summonProjectiles(caster.getCommandSenderWorld(), blockRayTraceResult.getBlockPos(), caster, spellStats, resolver);
-        resolver.expendMana(caster);
+        return CastResolveType.SUCCESS;
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         summonProjectiles(caster.getCommandSenderWorld(), caster, spellStats, resolver);
-        resolver.expendMana(caster);
+        return CastResolveType.SUCCESS;
     }
 
     @Nonnull

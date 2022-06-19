@@ -143,13 +143,13 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                 List<AbstractArrow> arrows = new ArrayList<>();
                 if(arrowitem == Items.ARROW  && new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).withSilent(true).canCast(playerentity)){
                     abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow);
-                    new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana(playerentity);
+                    new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana();
                     didCastSpell = true;
                 }else if(arrowitem instanceof SpellArrow){
                     if(!(new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).canCast(playerentity))){
                         return;
                     }else if(new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).canCast(playerentity)){
-                        new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana(playerentity);
+                        new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana();
                         didCastSpell = true;
                     }
                 }
