@@ -30,20 +30,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
-import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 
 public class ItemsRegistry {
 
@@ -427,9 +423,12 @@ public class ItemsRegistry {
     }
 */
 
-    public static void onItemRegistry(IForgeRegistry<Item> registry){
-        for (Map.Entry<String, Supplier<Glyph>> glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
-            registry.register("glyph_" + glyph.getKey(), glyph.getValue().get());
+    public static void onItemRegistry(IForgeRegistry<Item> registry) {
+        for (Map.Entry<String, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
+            Glyph glyph = glyphEntry.getValue().get();
+            registry.register("glyph_" + glyphEntry.getKey(), glyph);
+            glyph.spellPart.glyphItem = glyph;
+
         }
 
         for (AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()) {

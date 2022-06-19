@@ -15,7 +15,6 @@ import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -103,7 +102,7 @@ public class ArsNouveauAPI {
     }
 
     public Item getGlyphItem(AbstractSpellPart spell){
-        return getGlyphItem(spell.getId());
+        return spell.glyphItem;
     }
 
     public Item getFamiliarItem(String id){

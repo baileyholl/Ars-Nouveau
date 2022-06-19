@@ -48,7 +48,7 @@ public class ApparatusRecipeProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
         for (IEnchantingRecipe g : recipes) {
             if (g instanceof EnchantingApparatusRecipe recipe) {
-                System.out.println(g);
+                //who put this thing here? System.out.println(g);
                 Path path = getRecipePath(output, recipe.getId().getPath());
                 DataProvider.saveStable(cache, recipe.asRecipe(), path);
 
