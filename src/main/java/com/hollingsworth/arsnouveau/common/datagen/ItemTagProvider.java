@@ -32,8 +32,8 @@ public class ItemTagProvider extends ItemTagsProvider {
 
 
         this.tag(MAGIC_FOOD)
-                .add(ItemsRegistry.SOURCE_BERRY_PIE,
-                        ItemsRegistry.SOURCE_BERRY_ROLL);
+                .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
+                        ItemsRegistry.SOURCE_BERRY_ROLL.get());
         this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
                 .add(Items.DIRT).addTag(Tags.Items.SEEDS);
 
@@ -42,7 +42,7 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(Tags.Items.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
         this.tag(Tags.Items.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
         this.tag(SOURCE_GEM_TAG)
-                .add(ItemsRegistry.SOURCE_GEM);
+                .add(ItemsRegistry.SOURCE_GEM.get());
 
         this.tag(ARCHWOOD_LOG_TAG)
                 .add(BlockRegistry.BLAZING_LOG.asItem(),
@@ -105,12 +105,12 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
         this.tag(SOURCE_GEM_BLOCK_TAG)
                 .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
-        this.tag(Tags.Items.GEMS).add(ItemsRegistry.SOURCE_GEM);
+        this.tag(Tags.Items.GEMS).add(ItemsRegistry.SOURCE_GEM.get());
 
         this.tag(ItemTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(ItemTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
         this.tag(ItemTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
-        this.tag(ItemTags.BEACON_PAYMENT_ITEMS).add(ItemsRegistry.SOURCE_GEM);
+        this.tag(ItemTags.BEACON_PAYMENT_ITEMS).add(ItemsRegistry.SOURCE_GEM.get());
         this.tag(ItemTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
         this.tag(ItemTags.WOODEN_BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
         this.tag(ItemTags.DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
@@ -127,9 +127,9 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(ItemTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
         this.tag(ItemTags.WOODEN_PRESSURE_PLATES).add(BlockRegistry.ARCHWOOD_PPlate.asItem());
 
-        this.tag(WILDEN_DROP_TAG).add(ItemsRegistry.WILDEN_HORN,
-                ItemsRegistry.WILDEN_SPIKE,
-                ItemsRegistry.WILDEN_WING);
+        this.tag(WILDEN_DROP_TAG).add(ItemsRegistry.WILDEN_HORN.get(),
+                ItemsRegistry.WILDEN_SPIKE.get(),
+                ItemsRegistry.WILDEN_WING.get());
 
         this.tag(SUMMON_BED_ITEMS).add( BlockRegistry.RED_SBED.asItem(),
                 BlockRegistry.GREEN_SBED.asItem(),

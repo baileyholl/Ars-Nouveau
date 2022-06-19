@@ -115,10 +115,10 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         if(player.getCommandSenderWorld().isClientSide)
             return super.mobInteract(player,hand);
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL) {
-            List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem()) {
+            List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
             if (!items.isEmpty()) {
-                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
             }
         }

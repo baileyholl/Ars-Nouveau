@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -65,6 +66,15 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         this.inputs.add(Ingredient.of(i));
         return this;
     }
+
+    public GlyphRecipe withItem(RegistryObject<? extends ItemLike> i){
+        return withItem(i.get());
+    }
+
+    public GlyphRecipe withItem(RegistryObject<? extends ItemLike> item, int count){
+       return withItem(item.get(), count);
+    }
+
     public GlyphRecipe withItem(ItemLike item, int count){
         for(int i = 0; i < count; i++){
             withItem(item);

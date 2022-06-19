@@ -14,23 +14,24 @@ public class LangDatagen extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
-            if(i instanceof Glyph){
-                add(i, "Glyph of " + ((Glyph) i).spellPart.name);
-                add("ars_nouveau.glyph_desc." + ((Glyph) i).spellPart.getId(), ((Glyph) i).spellPart.getBookDescription());
-                add("ars_nouveau.glyph_name." + ((Glyph) i).spellPart.getId(), ((Glyph) i).spellPart.getName());
-            }
-            if(i instanceof RitualTablet){
-                System.out.println(i);
-                add(i, "Tablet of " +((RitualTablet) i).ritual.getLangName());
-                add( "ars_nouveau.ritual_desc." + ((RitualTablet) i).ritual.getID(),((RitualTablet) i).ritual.getLangDescription());
-            }
-
-            if(i instanceof FamiliarScript){
-                add(i, "Bound Script: " + ((FamiliarScript) i).familiar.getBookName());
-                add("ars_nouveau.familiar_desc." + ((FamiliarScript) i).familiar.id, ((FamiliarScript) i).familiar.getBookDescription());
-                add("ars_nouveau.familiar_name." + ((FamiliarScript) i).familiar.id, ((FamiliarScript) i).familiar.getBookName());
-            }
-        });
+        // TODO: Restore lang datagen
+//        ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
+//            if(i instanceof Glyph){
+//                add(i, "Glyph of " + ((Glyph) i).spellPart.name);
+//                add("ars_nouveau.glyph_desc." + ((Glyph) i).spellPart.getId(), ((Glyph) i).spellPart.getBookDescription());
+//                add("ars_nouveau.glyph_name." + ((Glyph) i).spellPart.getId(), ((Glyph) i).spellPart.getName());
+//            }
+//            if(i instanceof RitualTablet){
+//                System.out.println(i);
+//                add(i, "Tablet of " +((RitualTablet) i).ritual.getLangName());
+//                add( "ars_nouveau.ritual_desc." + ((RitualTablet) i).ritual.getID(),((RitualTablet) i).ritual.getLangDescription());
+//            }
+//
+//            if(i instanceof FamiliarScript){
+//                add(i, "Bound Script: " + ((FamiliarScript) i).familiar.getBookName());
+//                add("ars_nouveau.familiar_desc." + ((FamiliarScript) i).familiar.id, ((FamiliarScript) i).familiar.getBookDescription());
+//                add("ars_nouveau.familiar_name." + ((FamiliarScript) i).familiar.id, ((FamiliarScript) i).familiar.getBookName());
+//            }
+//        });
     }
 }

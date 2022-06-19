@@ -82,7 +82,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             source += 50;
             progress += 3;
         }
-        if(i.getItem() == ItemsRegistry.FIRE_ESSENCE){
+        if(i.getItem() == ItemsRegistry.FIRE_ESSENCE.get()){
             source = 2000;
         }
         this.progress += progress;

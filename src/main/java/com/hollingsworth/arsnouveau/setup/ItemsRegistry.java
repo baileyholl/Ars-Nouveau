@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -56,105 +57,105 @@ public class ItemsRegistry {
     static final String ItemRegistryKey = "minecraft:item";
 
 
-    public static final RegistryObject<RunicChalk> RUNIC_CHALK = ITEMS.register(LibItemNames.RUNIC_CHALK, () -> new RunicChalk());
+    public static final RegistryWrapper<RunicChalk> RUNIC_CHALK = register(LibItemNames.RUNIC_CHALK, () -> new RunicChalk());
 
-    public static RegistryObject<SpellBook> NOVICE_SPELLBOOK = ITEMS.register(LibItemNames.NOVICE_SPELL_BOOK, () -> new SpellBook(SpellTier.ONE));
-    public static RegistryObject<SpellBook> APPRENTICE_SPELLBOOK = ITEMS.register(LibItemNames.APPRENTICE_SPELL_BOOK, () -> new SpellBook(SpellTier.TWO));
-    public static RegistryObject<SpellBook> ARCHMAGE_SPELLBOOK = ITEMS.register(LibItemNames.ARCHMAGE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
-    public static RegistryObject<SpellBook> CREATIVE_SPELLBOOK = ITEMS.register(LibItemNames.CREATIVE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
-    public static RegistryObject<Item> BLANK_GLYPH = register(LibItemNames.BLANK_GLYPH);
-    public static RegistryObject<ModItem> BUCKET_OF_SOURCE = register(LibItemNames.BUCKET_OF_SOURCE);
-    public static RegistryObject<ModItem> MAGE_BLOOM = register(LibItemNames.MAGE_BLOOM, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.magebloom")));
-    public static RegistryObject<ModItem> MAGE_FIBER = register(LibItemNames.MAGE_FIBER);
-    public static RegistryObject<ModItem> BLAZE_FIBER = register(LibItemNames.BLAZE_FIBER);
-    public static RegistryObject<ModItem> END_FIBER = register(LibItemNames.END_FIBER);
-    public static RegistryObject<ModItem> MUNDANE_BELT = register(LibItemNames.MUNDANE_BELT, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
-    public static RegistryObject<JarOfLight> JAR_OF_LIGHT = register(LibItemNames.JAR_OF_LIGHT, () -> new JarOfLight());
-    public static RegistryObject<BeltOfLevitation> BELT_OF_LEVITATION = register(LibItemNames.BELT_OF_LEVITATION, () -> new BeltOfLevitation());
+    public static RegistryWrapper<SpellBook> NOVICE_SPELLBOOK = register(LibItemNames.NOVICE_SPELL_BOOK, () -> new SpellBook(SpellTier.ONE));
+    public static RegistryWrapper<SpellBook> APPRENTICE_SPELLBOOK = register(LibItemNames.APPRENTICE_SPELL_BOOK, () -> new SpellBook(SpellTier.TWO));
+    public static RegistryWrapper<SpellBook> ARCHMAGE_SPELLBOOK = register(LibItemNames.ARCHMAGE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
+    public static RegistryWrapper<SpellBook> CREATIVE_SPELLBOOK = register(LibItemNames.CREATIVE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
+    public static RegistryWrapper<Item> BLANK_GLYPH = register(LibItemNames.BLANK_GLYPH);
+    public static RegistryWrapper<ModItem> BUCKET_OF_SOURCE = register(LibItemNames.BUCKET_OF_SOURCE);
+    public static RegistryWrapper<ModItem> MAGE_BLOOM = register(LibItemNames.MAGE_BLOOM, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.magebloom")));
+    public static RegistryWrapper<ModItem> MAGE_FIBER = register(LibItemNames.MAGE_FIBER);
+    public static RegistryWrapper<ModItem> BLAZE_FIBER = register(LibItemNames.BLAZE_FIBER);
+    public static RegistryWrapper<ModItem> END_FIBER = register(LibItemNames.END_FIBER);
+    public static RegistryWrapper<ModItem> MUNDANE_BELT = register(LibItemNames.MUNDANE_BELT, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+    public static RegistryWrapper<JarOfLight> JAR_OF_LIGHT = register(LibItemNames.JAR_OF_LIGHT, () -> new JarOfLight());
+    public static RegistryWrapper<BeltOfLevitation> BELT_OF_LEVITATION = register(LibItemNames.BELT_OF_LEVITATION, () -> new BeltOfLevitation());
 
-    public static RegistryObject<WornNotebook> WORN_NOTEBOOK = register(LibItemNames.WORN_NOTEBOOK, () -> new WornNotebook().withTooltip(Component.translatable("tooltip.worn_notebook")));
-    public static RegistryObject<ModItem> RING_OF_POTENTIAL = register(LibItemNames.RING_OF_POTENTIAL, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
-    public static RegistryObject<DiscountRing> RING_OF_LESSER_DISCOUNT = register(LibItemNames.RING_OF_LESSER_DISCOUNT, () -> new DiscountRing() {
+    public static RegistryWrapper<WornNotebook> WORN_NOTEBOOK = register(LibItemNames.WORN_NOTEBOOK, () -> new WornNotebook().withTooltip(Component.translatable("tooltip.worn_notebook")));
+    public static RegistryWrapper<ModItem> RING_OF_POTENTIAL = register(LibItemNames.RING_OF_POTENTIAL, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+    public static RegistryWrapper<DiscountRing> RING_OF_LESSER_DISCOUNT = register(LibItemNames.RING_OF_LESSER_DISCOUNT, () -> new DiscountRing() {
         @Override
         public int getManaDiscount() {
             return 10;
         }
     });
 
-    public static RegistryObject<DiscountRing> RING_OF_GREATER_DISCOUNT = register(LibItemNames.RING_OF_GREATER_DISCOUNT, () -> new DiscountRing() {
+    public static RegistryWrapper<DiscountRing> RING_OF_GREATER_DISCOUNT = register(LibItemNames.RING_OF_GREATER_DISCOUNT, () -> new DiscountRing() {
         @Override
         public int getManaDiscount() {
             return 20;
         }
     });
 
-    public static RegistryObject<BeltOfUnstableGifts> BELT_OF_UNSTABLE_GIFTS = register(LibItemNames.BELT_OF_UNSTABLE_GIFTS, () -> new BeltOfUnstableGifts());
+    public static RegistryWrapper<BeltOfUnstableGifts> BELT_OF_UNSTABLE_GIFTS = register(LibItemNames.BELT_OF_UNSTABLE_GIFTS, () -> new BeltOfUnstableGifts());
 
-    public static RegistryObject<WarpScroll> WARP_SCROLL = register(LibItemNames.WARP_SCROLL, () -> new WarpScroll());
+    public static RegistryWrapper<WarpScroll> WARP_SCROLL = register(LibItemNames.WARP_SCROLL, () -> new WarpScroll());
 
-    public static RegistryObject<SpellParchment> SPELL_PARCHMENT = register(LibItemNames.SPELL_PARCHMENT, () -> new SpellParchment());
+    public static RegistryWrapper<SpellParchment> SPELL_PARCHMENT = register(LibItemNames.SPELL_PARCHMENT, () -> new SpellParchment());
 
-    public static RegistryObject<BookwyrmCharm> BOOKWYRM_CHARM = register(LibItemNames.BOOKWYRM_CHARM, () -> new BookwyrmCharm());
+    public static RegistryWrapper<BookwyrmCharm> BOOKWYRM_CHARM = register(LibItemNames.BOOKWYRM_CHARM, () -> new BookwyrmCharm());
 
-    public static RegistryObject<DominionWand> DOMINION_ROD = register(LibItemNames.DOMINION_WAND, () -> new DominionWand());
+    public static RegistryWrapper<DominionWand> DOMINION_ROD = register(LibItemNames.DOMINION_WAND, () -> new DominionWand());
 
-    public static RegistryObject<AbstractManaCurio> AMULET_OF_MANA_BOOST = register(LibItemNames.AMULET_OF_MANA_BOOST, () -> new AbstractManaCurio() {
+    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_BOOST = register(LibItemNames.AMULET_OF_MANA_BOOST, () -> new AbstractManaCurio() {
         @Override
         public int getMaxManaBoost(ItemStack i) {
             return 50;
         }
     });
 
-    public static RegistryObject<AbstractManaCurio> AMULET_OF_MANA_REGEN;
+    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_REGEN;
 
-    public static RegistryObject<ModItem> DULL_TRINKET  = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+    public static RegistryWrapper<ModItem> DULL_TRINKET  = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
 
-    public static RegistryObject<StarbuncleCharm> STARBUNCLE_CHARM = register(LibItemNames.STARBUNCLE_CHARM, () -> new StarbuncleCharm());
+    public static RegistryWrapper<StarbuncleCharm> STARBUNCLE_CHARM = register(LibItemNames.STARBUNCLE_CHARM, () -> new StarbuncleCharm());
 
-    public static RegistryObject<Debug> debug = register("debug", () -> new Debug());
+    public static RegistryWrapper<Debug> debug = register("debug", () -> new Debug());
 
-    public static RegistryObject<ModItem> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.starbuncle_shard")));
+    public static RegistryWrapper<ModItem> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.starbuncle_shard")));
 
-    public static RegistryObject<StarbuncleShades> STARBUNCLE_SHADES = register(LibItemNames.STARBUNCLE_SHADES, () -> new StarbuncleShades().withTooltip(Component.translatable("tooltip.starbuncle_shades")));
+    public static RegistryWrapper<StarbuncleShades> STARBUNCLE_SHADES = register(LibItemNames.STARBUNCLE_SHADES, () -> new StarbuncleShades().withTooltip(Component.translatable("tooltip.starbuncle_shades")));
 
 
-    public static RegistryObject<WhirlisprigCharm> WHIRLISPRIG_CHARM = register(LibItemNames.WHIRLISPRIG_CHARM, () -> new WhirlisprigCharm());
+    public static RegistryWrapper<WhirlisprigCharm> WHIRLISPRIG_CHARM = register(LibItemNames.WHIRLISPRIG_CHARM, () -> new WhirlisprigCharm());
 
-    public static RegistryObject<ModItem> WHIRLISPRIG_SHARDS = register(LibItemNames.WHIRLISPRIG_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.whirlisprig_shard")));
+    public static RegistryWrapper<ModItem> WHIRLISPRIG_SHARDS = register(LibItemNames.WHIRLISPRIG_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.whirlisprig_shard")));
 
-    public static RegistryObject<ModItem> SOURCE_GEM = register(LibItemNames.SOURCE_GEM, () -> new ModItem().withTooltip(Component.translatable("tooltip.source_gem")));
+    public static RegistryWrapper<ModItem> SOURCE_GEM = register(LibItemNames.SOURCE_GEM, () -> new ModItem().withTooltip(Component.translatable("tooltip.source_gem")));
 
-    public static RegistryObject<AllowItemScroll> ALLOW_ITEM_SCROLL = register(LibItemNames.ALLOW_ITEM_SCROLL, () -> new AllowItemScroll());
+    public static RegistryWrapper<AllowItemScroll> ALLOW_ITEM_SCROLL = register(LibItemNames.ALLOW_ITEM_SCROLL, () -> new AllowItemScroll());
 
-    public static RegistryObject<DenyItemScroll> DENY_ITEM_SCROLL = register(LibItemNames.DENY_ITEM_SCROLL, () -> new DenyItemScroll());
+    public static RegistryWrapper<DenyItemScroll> DENY_ITEM_SCROLL = register(LibItemNames.DENY_ITEM_SCROLL, () -> new DenyItemScroll());
 
-    public static RegistryObject<MimicItemScroll> MIMIC_ITEM_SCROLL = register(LibItemNames.MIMIC_ITEM_SCROLL, () -> new MimicItemScroll());
+    public static RegistryWrapper<MimicItemScroll> MIMIC_ITEM_SCROLL = register(LibItemNames.MIMIC_ITEM_SCROLL, () -> new MimicItemScroll());
 
-    public static RegistryObject<BlankParchmentItem> BLANK_PARCHMENT = register(LibItemNames.BLANK_PARCHMENT, () -> new BlankParchmentItem());
+    public static RegistryWrapper<BlankParchmentItem> BLANK_PARCHMENT = register(LibItemNames.BLANK_PARCHMENT, () -> new BlankParchmentItem());
 
-    public static RegistryObject<Wand> WAND = register(LibItemNames.WAND, () -> new Wand());
+    public static RegistryWrapper<Wand> WAND = register(LibItemNames.WAND, () -> new Wand());
 
-    public static RegistryObject<VoidJar> VOID_JAR = register(LibItemNames.VOID_JAR, () -> new VoidJar());
+    public static RegistryWrapper<VoidJar> VOID_JAR = register(LibItemNames.VOID_JAR, () -> new VoidJar());
 
-    public static RegistryObject<WixieCharm> WIXIE_CHARM = register(LibItemNames.WIXIE_CHARM, () -> new WixieCharm());
+    public static RegistryWrapper<WixieCharm> WIXIE_CHARM = register(LibItemNames.WIXIE_CHARM, () -> new WixieCharm());
 
-    public static RegistryObject<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.wixie_shard")));
+    public static RegistryWrapper<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.wixie_shard")));
 
-    public static RegistryObject<SpellBow> SPELL_BOW = register(LibItemNames.SPELL_BOW, () -> new SpellBow());
+    public static RegistryWrapper<SpellBow> SPELL_BOW = register(LibItemNames.SPELL_BOW, () -> new SpellBow());
 
-    public static RegistryObject<SpellArrow> AMPLIFY_ARROW = register(LibItemNames.AMPLIFY_ARROW, () -> new SpellArrow(AugmentAmplify.INSTANCE, 2));
+    public static RegistryWrapper<SpellArrow> AMPLIFY_ARROW = register(LibItemNames.AMPLIFY_ARROW, () -> new SpellArrow(AugmentAmplify.INSTANCE, 2));
 
-    public static RegistryObject<FormSpellArrow> SPLIT_ARROW = register(LibItemNames.SPLIT_ARROW, () -> new FormSpellArrow(AugmentSplit.INSTANCE, 2));
+    public static RegistryWrapper<FormSpellArrow> SPLIT_ARROW = register(LibItemNames.SPLIT_ARROW, () -> new FormSpellArrow(AugmentSplit.INSTANCE, 2));
 
-    public static RegistryObject<FormSpellArrow> PIERCE_ARROW = register(LibItemNames.PIERCE_ARROW, () -> new FormSpellArrow(AugmentPierce.INSTANCE, 2));
+    public static RegistryWrapper<FormSpellArrow> PIERCE_ARROW = register(LibItemNames.PIERCE_ARROW, () -> new FormSpellArrow(AugmentPierce.INSTANCE, 2));
 
-    public static RegistryObject<ModItem> WILDEN_HORN = register(LibItemNames.WILDEN_HORN, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_horn")));
+    public static RegistryWrapper<ModItem> WILDEN_HORN = register(LibItemNames.WILDEN_HORN, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_horn")));
 
-    public static RegistryObject<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE , () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_spike")));
+    public static RegistryWrapper<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE , () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_spike")));
 
-    public static RegistryObject<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING , () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
+    public static RegistryWrapper<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING , () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
 
-    public static RegistryObject<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask(){
+    public static RegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask(){
         @Nonnull
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
@@ -162,7 +163,7 @@ public class ItemsRegistry {
         }
     }.withTooltip(Component.translatable("tooltip.potion_flask")));
 
-    public static RegistryObject<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask(){
+    public static RegistryWrapper<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask(){
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
             return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, effectInstance.getAmplifier() + 1);
@@ -170,7 +171,7 @@ public class ItemsRegistry {
     }.withTooltip(Component.translatable("tooltip.potion_flask_amplify")));
 
 
-    public static RegistryObject<PotionFlask> POTION_FLASK_EXTEND_TIME = register(LibItemNames.POTION_FLASK_EXTEND_TIME, () -> new PotionFlask(){
+    public static RegistryWrapper<PotionFlask> POTION_FLASK_EXTEND_TIME = register(LibItemNames.POTION_FLASK_EXTEND_TIME, () -> new PotionFlask(){
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
             return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration() / 2, effectInstance.getAmplifier());
@@ -178,93 +179,93 @@ public class ItemsRegistry {
     }.withTooltip(Component.translatable("tooltip.potion_flask_extend_time")));
 
 
-    public static RegistryObject<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> new ExperienceGem(){
+    public static RegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> new ExperienceGem(){
         @Override
         public int getValue() {
             return 3;
         }
     }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")));
 
-    public static RegistryObject<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> new ExperienceGem(){
+    public static RegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> new ExperienceGem(){
         @Override
         public int getValue() {
             return 12;
         }
     }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")));
 
-    public static RegistryObject<EnchantersSword> ENCHANTERS_SWORD = register(LibItemNames.ENCHANTERS_SWORD, () -> new EnchantersSword(Tiers.NETHERITE, 3, -2.4F));
+    public static RegistryWrapper<EnchantersSword> ENCHANTERS_SWORD = register(LibItemNames.ENCHANTERS_SWORD, () -> new EnchantersSword(Tiers.NETHERITE, 3, -2.4F));
 
-    public static RegistryObject<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, () -> new EnchantersShield());
+    public static RegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, () -> new EnchantersShield());
 
-    public static RegistryObject<CasterTome> CASTER_TOME    = register(LibItemNames.CASTER_TOME, () -> new CasterTome());
+    public static RegistryWrapper<CasterTome> CASTER_TOME    = register(LibItemNames.CASTER_TOME, () -> new CasterTome());
 
-    public static RegistryObject<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, () -> new DrygmyCharm());
+    public static RegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, () -> new DrygmyCharm());
 
-    public static RegistryObject<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.drygmy_shard")));
+    public static RegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.drygmy_shard")));
 
-    public static RegistryObject<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
+    public static RegistryWrapper<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
 
-    public static RegistryObject<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, () -> new SummoningFocus(defaultItemProperties().stacksTo(1)));
-
-
-    public static RegistryObject<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)).withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus")));
-
-    public static RegistryObject<ModItem> SOURCE_BERRY_PIE = register(LibItemNames.SOURCE_BERRY_PIE, () -> new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
-
-    public static RegistryObject<ModItem> SOURCE_BERRY_ROLL = register(LibItemNames.SOURCE_BERRY_ROLL, () -> new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
-
-    public static RegistryObject<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1)));
-
-    public static RegistryObject<NoviceArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new NoviceArmor(EquipmentSlot.FEET));
-
-    public static RegistryObject<NoviceArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new NoviceArmor(EquipmentSlot.LEGS));
-
-    public static RegistryObject<NoviceArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new NoviceArmor(EquipmentSlot.CHEST));
-
-    public static RegistryObject<NoviceArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new NoviceArmor(EquipmentSlot.HEAD));
-
-    public static RegistryObject<ApprenticeArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new ApprenticeArmor(EquipmentSlot.FEET));
-    public static RegistryObject<ApprenticeArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new ApprenticeArmor(EquipmentSlot.LEGS));
-
-    public static RegistryObject<ApprenticeArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new ApprenticeArmor(EquipmentSlot.CHEST));
-
-    public static RegistryObject<ApprenticeArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new ApprenticeArmor(EquipmentSlot.HEAD));
-
-    public static RegistryObject<MasterArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new MasterArmor(EquipmentSlot.FEET));
-
-    public static RegistryObject<MasterArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new MasterArmor(EquipmentSlot.LEGS));
-
-    public static RegistryObject<MasterArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new MasterArmor(EquipmentSlot.CHEST));
-
-    public static RegistryObject<MasterArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new MasterArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, () -> new SummoningFocus(defaultItemProperties().stacksTo(1)));
 
 
-    public static RegistryObject<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, () -> new DowsingRod().withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod")));
+    public static RegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)).withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus")));
 
-    public static RegistryObject<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<ModItem> SOURCE_BERRY_PIE = register(LibItemNames.SOURCE_BERRY_PIE, () -> new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
 
-    public static RegistryObject<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE , () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<ModItem> SOURCE_BERRY_ROLL = register(LibItemNames.SOURCE_BERRY_ROLL, () -> new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
 
-    public static RegistryObject<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE , () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1)));
 
-    public static RegistryObject<EarthEssence> EARTH_ESSENCE = register(LibItemNames.EARTH_ESSENCE, () -> new EarthEssence().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<NoviceArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new NoviceArmor(EquipmentSlot.FEET));
 
-    public static RegistryObject<FireEssence> FIRE_ESSENCE = register(LibItemNames.FIRE_ESSENCE, () -> new FireEssence().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<NoviceArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new NoviceArmor(EquipmentSlot.LEGS));
 
-    public static RegistryObject<ModItem> MANIPULATION_ESSENCE = register(LibItemNames.MANIPULATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<NoviceArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new NoviceArmor(EquipmentSlot.CHEST));
 
-    public static RegistryObject<ModItem> WATER_ESSENCE = register(LibItemNames.WATER_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+    public static RegistryWrapper<NoviceArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new NoviceArmor(EquipmentSlot.HEAD));
 
-    public static RegistryObject<AmethystGolemCharm> AMETHYST_GOLEM_CHARM = register(LibItemNames.AMETHYST_GOLEM_CHARM, () -> new AmethystGolemCharm().withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm")));
-    public static RegistryObject<AnnotatedCodex> ANNOTATED_CODEX = register(LibItemNames.ANNOTATED_CODEX, () -> new AnnotatedCodex());
-    public static RegistryObject<ScryerScroll> SCRYER_SCROLL = register(LibItemNames.SCRYER_SCROLL, () -> new ScryerScroll().withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")));
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new ApprenticeArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new ApprenticeArmor(EquipmentSlot.LEGS));
+
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new ApprenticeArmor(EquipmentSlot.CHEST));
+
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new ApprenticeArmor(EquipmentSlot.HEAD));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new MasterArmor(EquipmentSlot.FEET));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new MasterArmor(EquipmentSlot.LEGS));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new MasterArmor(EquipmentSlot.CHEST));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new MasterArmor(EquipmentSlot.HEAD));
 
 
-    public static RegistryObject register(String name, Supplier<? extends Item> item) {
-        return ITEMS.register(name, item);
+    public static RegistryWrapper<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, () -> new DowsingRod().withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod")));
+
+    public static RegistryWrapper<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE , () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE , () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<EarthEssence> EARTH_ESSENCE = register(LibItemNames.EARTH_ESSENCE, () -> new EarthEssence().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<FireEssence> FIRE_ESSENCE = register(LibItemNames.FIRE_ESSENCE, () -> new FireEssence().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<ModItem> MANIPULATION_ESSENCE = register(LibItemNames.MANIPULATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<ModItem> WATER_ESSENCE = register(LibItemNames.WATER_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.essences")));
+
+    public static RegistryWrapper<AmethystGolemCharm> AMETHYST_GOLEM_CHARM = register(LibItemNames.AMETHYST_GOLEM_CHARM, () -> new AmethystGolemCharm().withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm")));
+    public static RegistryWrapper<AnnotatedCodex> ANNOTATED_CODEX = register(LibItemNames.ANNOTATED_CODEX, () -> new AnnotatedCodex());
+    public static RegistryWrapper<ScryerScroll> SCRYER_SCROLL = register(LibItemNames.SCRYER_SCROLL, () -> new ScryerScroll().withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")));
+
+
+    public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
+        return new RegistryWrapper<>(ITEMS.register(name, item));
     }
 
-    public static RegistryObject register(String name) {
+    public static RegistryWrapper register(String name) {
         return register(name, () -> new ModItem());
     }
 //    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

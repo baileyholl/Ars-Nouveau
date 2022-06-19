@@ -21,36 +21,37 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
     @Override
     protected void registerModels() {
+// TODO: restore item model datagen
 
-        ItemsRegistry.RegistrationHandler.ITEMS.forEach(i -> {
-            if(i instanceof Glyph){
-                try {
-                    getBuilder("glyph_" + ((Glyph) i).spellPart.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
-                }catch (Exception e){
-                    System.out.println("No texture for " + i);
-                }
-            }else if(i instanceof RitualTablet){
-                try {
-                    getBuilder("ritual_" + ((RitualTablet) i).ritual.getID()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
-                }catch (Exception e){
-                    System.out.println("No texture for " + i);
-                }
-            }else if(i instanceof FamiliarScript) {
-                try {
-                    getBuilder("familiar_" + ((FamiliarScript) i).familiar.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
-                }catch (Exception e){
-                    System.out.println("No texture for " + i);
-                }
-            }else{
-                try {
-                    getBuilder(getRegistryName(i).getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
-                }catch (Exception e){
-                    System.out.println("No texture for " + i.toString());
-                }
-            }
-
-
-        });
+//        ItemsRegistry.RegistrationHandler.ITEMS.forEach(i -> {
+//            if(i instanceof Glyph){
+//                try {
+//                    getBuilder("glyph_" + ((Glyph) i).spellPart.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
+//                }catch (Exception e){
+//                    System.out.println("No texture for " + i);
+//                }
+//            }else if(i instanceof RitualTablet){
+//                try {
+//                    getBuilder("ritual_" + ((RitualTablet) i).ritual.getID()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
+//                }catch (Exception e){
+//                    System.out.println("No texture for " + i);
+//                }
+//            }else if(i instanceof FamiliarScript) {
+//                try {
+//                    getBuilder("familiar_" + ((FamiliarScript) i).familiar.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
+//                }catch (Exception e){
+//                    System.out.println("No texture for " + i);
+//                }
+//            }else{
+//                try {
+//                    getBuilder(getRegistryName(i).getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
+//                }catch (Exception e){
+//                    System.out.println("No texture for " + i.toString());
+//                }
+//            }
+//
+//
+//        });
         getBuilder(LibBlockNames.ARCANE_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCANE_STONE));
         getBuilder(LibBlockNames.AB_ALTERNATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_ALTERNATE));
         getBuilder(LibBlockNames.AB_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_BASKET));
@@ -77,8 +78,8 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.AB_SMOOTH_ALTERNATING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_ALTERNATING));
         getBuilder(LibBlockNames.AB_SMOOTH_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_ASHLAR));
 
-        getBuilder(ItemsRegistry.EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.EXPERIENCE_GEM));
-        getBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.GREATER_EXPERIENCE_GEM));
+        getBuilder(ItemsRegistry.EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.EXPERIENCE_GEM.get()));
+        getBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.GREATER_EXPERIENCE_GEM.get()));
 
         getBuilder(LibBlockNames.AS_GOLD_ALT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ALT));
         getBuilder(LibBlockNames.AS_GOLD_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ASHLAR));

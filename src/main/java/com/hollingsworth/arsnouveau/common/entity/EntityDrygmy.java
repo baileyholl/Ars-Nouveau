@@ -259,7 +259,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         list.add(new WrappedGoal(1, new UntamedFindItemGoal(this,
                 () -> !this.isTamed() && !this.entityData.get(BEING_TAMED)
-                ,(itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN))));
+                ,(itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()))));
         return list;
     }
     @Override
@@ -274,7 +274,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
 
     @Override
     protected void pickUpItem(ItemEntity itemEntity) {
-        if(!isTamed() && !entityData.get(BEING_TAMED) && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN) {
+        if(!isTamed() && !entityData.get(BEING_TAMED) && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()) {
             entityData.set(BEING_TAMED, true);
             itemEntity.getItem().shrink(1);
             this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, this.getSoundSource(), 1.0F, 1.0F);

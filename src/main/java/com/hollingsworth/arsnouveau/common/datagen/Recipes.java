@@ -718,7 +718,7 @@ public class Recipes extends RecipeProvider {
         STONECUTTER_COUNTER++;
     }
 
-    public static void makeArmor(String prefix, Consumer<FinishedRecipe> consumer, Item material) {
+    public static void makeArmor(String prefix, Consumer<FinishedRecipe> consumer, ItemLike material) {
         ShapedRecipeBuilder.shaped(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, prefix + "_boots")))
                 .pattern("   ")
                 .pattern("x x")

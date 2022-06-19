@@ -22,8 +22,6 @@ public class ModParticles {
     public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
     @ObjectHolder(value = ArsNouveau.MODID + ":" + ParticleSparkleData.NAME, registryName = particleRegistryKey)
     public static ParticleType<ColoredDynamicTypeData> SPARKLE_TYPE;
-    @ObjectHolder(value = ArsNouveau.MODID + ":" + VortexParticleData.NAME, registryName = particleRegistryKey)
-    public static ParticleType<ColorParticleTypeData> VORTEX_TYPE;
 
     @SubscribeEvent
     public static void registerParticles(RegisterEvent event) {
@@ -34,7 +32,6 @@ public class ModParticles {
         r.register(ParticleLineData.NAME, new LineParticleType());
 
         r.register((ParticleSparkleData.NAME), new GlowParticleType());
-        r.register((VortexParticleData.NAME), new GlowParticleType());
 
     }
 
@@ -43,7 +40,7 @@ public class ModParticles {
         Minecraft.getInstance().particleEngine.register(GLOW_TYPE, GlowParticleData::new);
         Minecraft.getInstance().particleEngine.register(LINE_TYPE, ParticleLineData::new);
         Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE, ParticleSparkleData::new);
-        Minecraft.getInstance().particleEngine.register(VORTEX_TYPE, VortexParticleData::new);
+
     }
 
 

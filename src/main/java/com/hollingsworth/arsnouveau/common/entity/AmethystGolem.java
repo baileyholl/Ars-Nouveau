@@ -215,7 +215,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM);
+            ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
@@ -229,7 +229,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
             return false;
 
         if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM);
+            ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
             stack = getHeldStack();
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));

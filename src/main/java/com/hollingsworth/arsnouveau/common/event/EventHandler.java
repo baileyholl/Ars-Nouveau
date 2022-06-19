@@ -67,7 +67,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void livingHurtEvent(LivingHurtEvent e){
        if(!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof Player && e.getEntityLiving().isBlocking()){
-           if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD)){
+           if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD.asItem())){
                e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
                e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
            }

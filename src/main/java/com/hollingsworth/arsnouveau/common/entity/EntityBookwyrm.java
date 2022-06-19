@@ -253,7 +253,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
             return false;
 
         if(!level.isClientSide){
-            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
+            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
@@ -378,7 +378,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public void die(DamageSource source) {
         if(!level.isClientSide){
-            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
+            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
 

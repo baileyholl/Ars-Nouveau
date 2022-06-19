@@ -223,7 +223,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
 
             if (tamingTime > 60 && !level.isClientSide) {
-                ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD, 1 + level.random.nextInt(2));
+                ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 this.remove(RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
@@ -424,7 +424,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
+            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
             stack.setTag(getStarbuncleData(this).toTag(new CompoundTag()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
@@ -485,10 +485,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
         if (!(stack.getItem() instanceof ItemScroll) || !stack.hasTag())
             return InteractionResult.FAIL;
-        if (stack.getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL) {
-            List<ItemStack> items = ItemsRegistry.ALLOW_ITEM_SCROLL.getItems(stack);
+        if (stack.getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL.get()) {
+            List<ItemStack> items = ItemsRegistry.ALLOW_ITEM_SCROLL.get().getItems(stack);
             if (!items.isEmpty()) {
-                this.allowedItems = ItemsRegistry.ALLOW_ITEM_SCROLL.getItems(stack);
+                this.allowedItems = ItemsRegistry.ALLOW_ITEM_SCROLL.get().getItems(stack);
                 whitelist = true;
                 blacklist = false;
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.allow_set"));
@@ -496,10 +496,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return InteractionResult.SUCCESS;
         }
 
-        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL) {
-            List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.get()) {
+            List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
             if (!items.isEmpty()) {
-                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
                 whitelist = false;
                 blacklist = true;
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.ignore_set"));
@@ -549,7 +549,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public boolean isPickupDisabled(){
-        return this.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES;
+        return this.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
     @Override
@@ -558,7 +558,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack charm = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
+            ItemStack charm = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
             // TODO: Replace with self reference of starbuncle data
             charm.setTag(getStarbuncleData(this).toTag(new CompoundTag()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), charm.copy()));

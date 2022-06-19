@@ -100,7 +100,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
             fallingblockentity.setColor(tile.color.toWrapper());
             fallingblockentity.getEntityData().set(SHOULD_COLOR, true);
         }
-        if(resolver.hasFocus(new ItemStack(ItemsRegistry.SHAPERS_FOCUS))){
+        if(resolver.hasFocus(new ItemStack(ItemsRegistry.SHAPERS_FOCUS.get()))){
             fallingblockentity.hurtEntities = true;
         }
 

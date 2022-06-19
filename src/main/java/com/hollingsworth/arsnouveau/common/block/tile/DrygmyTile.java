@@ -193,9 +193,9 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             if ((exp - numLesser * 3) > 0)
                 numLesser++;
             if(numGreater > 0)
-                BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM, numGreater));
+                BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM.get(), numGreater));
             if(numLesser > 0)
-                BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.EXPERIENCE_GEM, numLesser));
+                BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.EXPERIENCE_GEM.get(), numLesser));
         }
 
         this.progress = 0;

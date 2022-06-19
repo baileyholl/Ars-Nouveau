@@ -34,10 +34,10 @@ public class DungeonLootTables {
  // /setblock ~ ~ ~ minecraft:chest{LootTable:"minecraft:chests/simple_dungeon"}
     public static Random r = new Random();
     static {
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.SOURCE_GEM,1 + r.nextInt(5)));
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_HORN,1 + r.nextInt(3)));
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_SPIKE, 1 + r.nextInt(3)));
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_WING, 1 + r.nextInt(3)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.SOURCE_GEM.get(),1 + r.nextInt(5)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_HORN.get(),1 + r.nextInt(3)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_SPIKE.get(), 1 + r.nextInt(3)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_WING.get(), 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
@@ -58,14 +58,14 @@ public class DungeonLootTables {
         });
 
 
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WARP_SCROLL, 1 + r.nextInt(2)));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.STARBUNCLE_SHARD));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.DRYGMY_SHARD));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WIXIE_SHARD));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 16 + r.nextInt(16)));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.SPLIT_ARROW, 16 + r.nextInt(16)));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW, 16 + r.nextInt(16)));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WARP_SCROLL.get(), 1 + r.nextInt(2)));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get()));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS.get()));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.DRYGMY_SHARD.get()));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WIXIE_SHARD.get()));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get(), 16 + r.nextInt(16)));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.SPLIT_ARROW.get(), 16 + r.nextInt(16)));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 16 + r.nextInt(16)));
 
         UNCOMMON_LOOT.add(() ->{
             List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
@@ -222,7 +222,7 @@ public class DungeonLootTables {
     }
 
     public static ItemStack makeTome(String name, Spell spell){
-        ItemStack stack = new ItemStack(ItemsRegistry.CASTER_TOME);
+        ItemStack stack = new ItemStack(ItemsRegistry.CASTER_TOME.get());
         ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setSpell(spell);
         stack.setHoverName(Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));

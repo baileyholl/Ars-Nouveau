@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -56,6 +57,10 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
     public ImbuementRecipe withPedestalItem(Ingredient i){
         this.pedestalItems.add(i);
         return this;
+    }
+
+    public ImbuementRecipe withPedestalItem(RegistryObject<? extends ItemLike> i){
+        return withPedestalItem(i.get());
     }
 
     public ImbuementRecipe withPedestalItem(ItemStack i){

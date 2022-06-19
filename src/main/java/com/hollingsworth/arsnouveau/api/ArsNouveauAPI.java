@@ -92,13 +92,13 @@ public class ArsNouveauAPI {
     public List<AbstractSpellPart> getDefaultStartingSpells(){
         return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
-
+    // TODO: restore getGlyphItem
     public Item getGlyphItem(String glyphName){
-        for(Item i : ItemsRegistry.RegistrationHandler.ITEMS){
-            if (RegistryHelper.getRegistryName(i).equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))) {
-                return i;
-            }
-        }
+//        for(Item i : ItemsRegistry.RegistrationHandler.ITEMS){
+//            if (RegistryHelper.getRegistryName(i).equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))) {
+//                return i;
+//            }
+//        }
         return null;
     }
 

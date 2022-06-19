@@ -44,7 +44,7 @@ public class LightManager {
                 NonNullList<ItemStack> list =  player.inventory.items;
                 for (int i = 0; i < 9; i++) {
                     ItemStack jar = list.get(i);
-                    if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT) {
+                    if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()) {
                         return 15;
                     }
                 }

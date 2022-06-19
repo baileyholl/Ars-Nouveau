@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
@@ -62,7 +63,7 @@ public abstract class AbstractRitual {
         BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
     }
 
-    public boolean didConsumeItem(Item item){
+    public boolean didConsumeItem(ItemLike item){
         for(ItemStack i : getConsumedItems()){
             if(i.getItem() == item)
                 return true;

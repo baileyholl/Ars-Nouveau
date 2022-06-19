@@ -173,10 +173,10 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_OCULUS, RenderType.cutout());
 
         evt.enqueueWork(() -> {
-            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (item, resourceLocation, livingEntity, arg4) -> {
+            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(),new ResourceLocation(ArsNouveau.MODID,"blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
             });
-            ItemProperties.register(ItemsRegistry.DOWSING_ROD, new ResourceLocation(ArsNouveau.MODID, "uses"), new ClampedItemPropertyFunction() {
+            ItemProperties.register(ItemsRegistry.DOWSING_ROD.get(), new ResourceLocation(ArsNouveau.MODID, "uses"), new ClampedItemPropertyFunction() {
                 @Override
                 public float unclampedCall(ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
                     return switch (pStack.getDamageValue()) {

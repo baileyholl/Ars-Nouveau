@@ -30,7 +30,7 @@ public class WixieCauldron extends SummonBlock {
         if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
             return InteractionResult.SUCCESS;
 
-        if(player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM && !player.getMainHandItem().isEmpty()){
+        if(player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get() && !player.getMainHandItem().isEmpty()){
             ((WixieCauldronTile) worldIn.getBlockEntity(pos)).setRecipes(player, player.getMainHandItem());
             worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
             return InteractionResult.CONSUME;

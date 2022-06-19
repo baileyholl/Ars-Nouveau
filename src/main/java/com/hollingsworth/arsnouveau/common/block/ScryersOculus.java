@@ -63,7 +63,7 @@ public class ScryersOculus extends TickableModBlock{
         List<ItemStack> stackList = new ArrayList<>();
         int offset = 3;
         for (BlockPos b : BlockPos.betweenClosed(pPos.offset(offset, -offset, offset), pPos.offset(-offset, offset, -offset))) {
-            if (pLevel.getBlockEntity(b) instanceof ArcanePedestalTile tile && tile.stack.is(ItemsRegistry.SCRYER_SCROLL)) {
+            if (pLevel.getBlockEntity(b) instanceof ArcanePedestalTile tile && tile.stack.is(ItemsRegistry.SCRYER_SCROLL.get())) {
                 slots.add(new RadialMenuSlot<>(tile.stack.getHoverName().getString(), tile.stack.getItem(), new ArrayList<>()));
                 stackList.add(tile.stack);
             }

@@ -60,7 +60,7 @@ public class ScryingRitual extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        Item extendTime = ItemsRegistry.MANIPULATION_ESSENCE;
+        Item extendTime = ItemsRegistry.MANIPULATION_ESSENCE.get();
         if(didConsumeItem(extendTime) && getConsumedItems().size() == 1 && stack.getItem() instanceof BlockItem)
             return true;
 

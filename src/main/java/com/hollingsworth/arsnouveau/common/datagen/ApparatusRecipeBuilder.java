@@ -41,6 +41,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
+    public ApparatusRecipeBuilder withReagent(RegistryObject<? extends ItemLike> provider){
+        return withReagent(provider.get());
+    }
+
+
     public ApparatusRecipeBuilder withReagent(Ingredient ingredient){
         this.recipe.reagent = ingredient;
         return this;
@@ -51,8 +56,16 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
+    public ApparatusRecipeBuilder withPedestalItem(RegistryObject<? extends ItemLike> i){
+        return withPedestalItem(i.get());
+    }
+
     public ApparatusRecipeBuilder withPedestalItem(ItemLike i){
         return this.withPedestalItem(Ingredient.of(i));
+    }
+
+    public ApparatusRecipeBuilder withPedestalItem(int count,RegistryObject<? extends ItemLike> i){
+       return withPedestalItem(count, i.get());
     }
 
     public ApparatusRecipeBuilder withPedestalItem(int count, ItemLike item){

@@ -100,7 +100,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
 
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS), Ingredient.of(ItemsRegistry.MUNDANE_BELT), Arrays.asList(
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS.get()), Ingredient.of(ItemsRegistry.MUNDANE_BELT.get()), Arrays.asList(
                 Ingredient.of(Items.SUGAR),
                 Ingredient.of(Tags.Items.CROPS_NETHER_WART),
                 Ingredient.of(Tags.Items.RODS_BLAZE),
@@ -197,7 +197,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32))
+                .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get(), 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
@@ -206,14 +206,14 @@ public class ApparatusRecipeProvider implements DataProvider {
 
 
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32))
+                .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW.get(), 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, ItemsRegistry.WILDEN_HORN)
+                .withPedestalItem(1, ItemsRegistry.WILDEN_HORN.get())
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
                 .build());
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32))
+                .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(ItemsRegistry.WILDEN_SPIKE)
@@ -221,7 +221,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK))
+                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK.get()))
                 .withReagent(Ingredient.of(Items.GLASS_BOTTLE))
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(Recipes.SOURCE_GEM_BLOCK)
@@ -229,15 +229,15 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_EXTEND_TIME))
-                .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK))
+                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_EXTEND_TIME.get()))
+                .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK.get()))
                 .withPedestalItem(8,  ItemsRegistry.MANIPULATION_ESSENCE)
                 .build());
 
 
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_AMPLIFY))
-                .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK))
+                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_AMPLIFY.get()))
+                .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK.get()))
                 .withPedestalItem(8,  ItemsRegistry.ABJURATION_ESSENCE)
                 .build());
 
@@ -730,18 +730,18 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .buildEnchantmentRecipe(Enchantments.SWEEPING_EDGE, 3, 5000));
 
         addRecipe(builder()
-                .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_SPIKE))
+                .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_SPIKE.get()))
                 .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.THORNS, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(ItemsRegistry.WILDEN_SPIKE))
+                .withPedestalItem(2, Ingredient.of(ItemsRegistry.WILDEN_SPIKE.get()))
                 .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.THORNS, 2, 3500));
 
         addRecipe(builder()
-                .withPedestalItem(3, Ingredient.of(ItemsRegistry.WILDEN_SPIKE))
+                .withPedestalItem(3, Ingredient.of(ItemsRegistry.WILDEN_SPIKE.get()))
                 .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(3, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.THORNS, 3, 5000));
@@ -882,19 +882,19 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(2, Ingredient.of(Tags.Items.RODS_BLAZE))
                 .build());
         List<Ingredient> reactiveIngredients = new ArrayList<>();
-        reactiveIngredients.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
+        reactiveIngredients.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
         reactiveIngredients.add(Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
         reactiveIngredients.add(Recipes.SOURCE_GEM_BLOCK);
         addRecipe(new ReactiveEnchantmentRecipe(reactiveIngredients, 3000));
 
         List<Ingredient> spellWriteList = new ArrayList<>();
-        spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
+        spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
         addRecipe(new SpellWriteRecipe(spellWriteList));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.ENDER_PEARLS))
-                .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE))
+                .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE.get()))
                 .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 4, 9000));
 
         addRecipe(builder()
