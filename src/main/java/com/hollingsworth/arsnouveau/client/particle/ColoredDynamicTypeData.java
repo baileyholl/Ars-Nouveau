@@ -45,7 +45,7 @@ public class ColoredDynamicTypeData implements ParticleOptions {
     };
 
     public ColoredDynamicTypeData(float r, float g, float b, float scale, int age){
-        this.type = ModParticles.LINE_TYPE;
+        this.type = ModParticles.LINE_TYPE.get();
         this.color = new ParticleColor(r, g, b);
         this.scale = scale;
         this.age = age;

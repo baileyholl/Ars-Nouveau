@@ -4,17 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
-
-import java.util.List;
 
 public class BookSlider extends ForgeSlider {
 
@@ -56,7 +51,7 @@ public class BookSlider extends ForgeSlider {
         this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
         int j = 10526880;
 
-        font.draw(pPoseStack, this.getMessage(), this.x + this.width / 4, this.y + (this.height - 32) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
+        font.draw(pPoseStack, this.getMessage(), this.x + this.width / 4F, this.y + (this.height - 32) / 2F, j | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     @Override

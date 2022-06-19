@@ -20,11 +20,11 @@ public class GlowParticleData implements ParticleProvider<ColorParticleTypeData>
     }
 
     public static ParticleOptions createData(ParticleColor color) {
-        return new ColorParticleTypeData(ModParticles.GLOW_TYPE, color, false);
+        return new ColorParticleTypeData(ModParticles.GLOW_TYPE.get(), color, false);
     }
 
     public static ParticleOptions createData(ParticleColor color, boolean disableDepthTest) {
-        return new ColorParticleTypeData(ModParticles.GLOW_TYPE, color, disableDepthTest, 0.25f, 0.75f, 36);
+        return new ColorParticleTypeData(ModParticles.GLOW_TYPE.get(), color, disableDepthTest, 0.25f, 0.75f, 36);
     }
 
     public static ParticleOptions createData(ParticleColor color, boolean disableDepthTest, float size, float alpha, int age){

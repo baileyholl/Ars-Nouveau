@@ -71,7 +71,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
             playerEntity = playerEntity == null ?  ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spell, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE).withColors(this.color.toWrapper()));
-            resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, entity, InteractionHand.MAIN_HAND);
+            resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
                 return;

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ANExplosion;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
@@ -32,12 +32,12 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         double intensity = BASE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + AOE_BONUS.get() * spellStats.getAoeMultiplier();
         int dampen = spellStats.getBuffCount(AugmentDampen.INSTANCE);
         intensity -= 0.5 * dampen;
-        Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.NONE  : Explosion.BlockInteraction.DESTROY;
+        Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.NONE : Explosion.BlockInteraction.DESTROY;
         mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.BREAK : mode;
         explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }

@@ -20,7 +20,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.IItemRenderProperties;
@@ -109,7 +108,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         //Copied from BowItem so we can spawn arrows in case there are no items.
         if (!(entityLiving instanceof Player playerentity))
             return;
-        boolean isInfinity = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bowStack) > 0;
+        boolean isInfinity = playerentity.abilities.instabuild || bowStack.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
         ItemStack arrowStack = findAmmo(playerentity, bowStack);
 
         int useTime = this.getUseDuration(bowStack) - timeLeft;
@@ -191,17 +190,17 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     }
 
     public void addArrow(AbstractArrow abstractarrowentity, ItemStack bowStack,ItemStack arrowStack, boolean isArrowInfinite, Player playerentity){
-        int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, bowStack);
+        int power = bowStack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
         if (power > 0) {
             abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)power * 0.5D + 0.5D);
         }
 
-        int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, bowStack);
+        int punch = bowStack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
         if (punch > 0) {
             abstractarrowentity.setKnockback(punch);
         }
 
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, bowStack) > 0) {
+        if (bowStack.getEnchantmentLevel(Enchantments.FLAMING_ARROWS) > 0) {
             abstractarrowentity.setSecondsOnFire(100);
         }
 

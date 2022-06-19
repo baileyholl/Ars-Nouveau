@@ -101,13 +101,13 @@ public class EntitySpellArrow extends Arrow {
                 raytraceresult = entityraytraceresult;
             }
 
-            if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.ENTITY) {
-                Entity entity = ((EntityHitResult) raytraceresult).getEntity();
+            if (raytraceresult instanceof EntityHitResult entityHitResult) {
+                Entity entity = entityHitResult.getEntity();
                 Entity entity1 = this.getOwner();
-                if(entity.noPhysics) {
+                if (entity.noPhysics) {
                     raytraceresult = null;
                     entityraytraceresult = null;
-                } else if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
+                } else if (entity instanceof Player player1 && entity1 instanceof Player player2 && !player2.canHarmPlayer(player1)) {
                     raytraceresult = null;
                     entityraytraceresult = null;
                 }
@@ -273,19 +273,18 @@ public class EntitySpellArrow extends Arrow {
     @Override
     protected void onHit(HitResult result) {
         if (this.spellResolver != null)
-            this.spellResolver.onResolveEffect(level, (LivingEntity) this.getOwner(), result);
+            this.spellResolver.onResolveEffect(level, result);
         HitResult.Type raytraceresult$type = result.getType();
-        LivingEntity shooter = getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null;
         if (raytraceresult$type == HitResult.Type.ENTITY) {
             if (spellResolver != null) {
-                spellResolver.onResolveEffect(level, shooter, result);
+                spellResolver.onResolveEffect(level, result);
             }
             this.onHitEntity((EntityHitResult) result);
             attemptRemoval();
             lastEntityHit = ((EntityHitResult) result).getEntity();
         } else if (raytraceresult$type == HitResult.Type.BLOCK && !((BlockHitResult) result).getBlockPos().equals(lastPosHit)) {
             if (spellResolver != null) {
-                spellResolver.onResolveEffect(level, shooter, result);
+                spellResolver.onResolveEffect(level, result);
             }
             this.onHitBlock((BlockHitResult) result);
             lastPosHit = ((BlockHitResult) result).getBlockPos();

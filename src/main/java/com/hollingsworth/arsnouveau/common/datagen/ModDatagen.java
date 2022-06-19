@@ -25,7 +25,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(true, new BlockStatesDatagen(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(true, new GlyphRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(true, new ApparatusRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(true, new PatchouliProvider(event.getGenerator()));
+        //event.getGenerator().addProvider(true, new PatchouliProvider(event.getGenerator()));
         event.getGenerator().addProvider(true, new DungeonLootGenerator(event.getGenerator(), MODID));
         event.getGenerator().addProvider(true, new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(true, new CrushRecipeProvider(event.getGenerator()));

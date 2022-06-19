@@ -32,16 +32,16 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if(!(entity instanceof LivingEntity livingEntity))
+        if (!(entity instanceof LivingEntity livingEntity))
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         double range = 3 + spellStats.getAoeMultiplier();
         int snareSec = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
-        if(!canDamage(livingEntity))
+        if (!canDamage(livingEntity))
             return;
 
         damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);

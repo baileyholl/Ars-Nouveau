@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -27,17 +27,17 @@ public class EffectFlare extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity))
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity))
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         double range = 3 + spellStats.getAoeMultiplier();
         int fireSec = (int) (5.0 + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
-        DamageSource source =  buildDamageSource(world, shooter).setIsFire();
-        if(livingEntity.isOnFire()){
-            dealDamage(world, shooter, damage, spellStats, livingEntity,source);
-            ((ServerLevel)world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
+        DamageSource source = buildDamageSource(world, shooter).setIsFire();
+        if (livingEntity.isOnFire()) {
+            dealDamage(world, shooter, damage, spellStats, livingEntity, source);
+            ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
             for(Entity e : world.getEntities(shooter, new AABB(
                     livingEntity.position().add(range,range,range), livingEntity.position().subtract(range,range,range)))){

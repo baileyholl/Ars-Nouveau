@@ -52,6 +52,7 @@ public class ArsNouveau {
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(ModSetup::registerEvents);
         ModSetup.registers(modEventBus);
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
@@ -63,11 +64,12 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
+        APIRegistry.postInit();
 //        event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         //TODO: Restore archwood forest
-        if(false && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
+        if( Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
            // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
         }
     }

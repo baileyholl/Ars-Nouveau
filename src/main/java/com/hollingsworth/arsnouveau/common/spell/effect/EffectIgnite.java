@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,22 +32,22 @@ public class EffectIgnite  extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         int duration = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
         rayTraceResult.getEntity().setSecondsOnFire(duration);
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(spellStats.hasBuff(AugmentSensitive.INSTANCE))
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (spellStats.hasBuff(AugmentSensitive.INSTANCE))
             return;
         BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
-        if(hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState)){
+        if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState)) {
             AbstractCandleBlock.setLit(world, hitState, rayTraceResult.getBlockPos(), true);
             return;
         }
 
-        if(world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial().isReplaceable()) {
+        if (world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial().isReplaceable()) {
             Direction face = (rayTraceResult).getDirection();
             for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
                 BlockPos blockpos1 = pos.relative(face);

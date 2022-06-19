@@ -74,7 +74,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
         if(!level.isClientSide && age % (20 - 2* getAccelerates()) == 0){
             if(isSensitive()){
                 for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))){
-                    spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new
+                    spellResolver.onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
             }else {
@@ -82,7 +82,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
                 for(Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
                     if(entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt)
                         continue;
-                    spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new EntityHitResult(entity));
+                    spellResolver.onResolveEffect(level, new EntityHitResult(entity));
                     i++;
                     if(i > 5)
                         break;

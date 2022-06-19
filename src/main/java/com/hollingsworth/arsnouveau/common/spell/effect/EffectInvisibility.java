@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.effect.MobEffects;
@@ -23,8 +23,8 @@ public class EffectInvisibility extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(rayTraceResult.getEntity() instanceof LivingEntity){
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (rayTraceResult.getEntity() instanceof LivingEntity) {
             applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), MobEffects.INVISIBILITY, spellStats, false);
         }
     }

@@ -25,6 +25,7 @@ public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFalli
 
     public void render(EnchantedFallingBlock pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         BlockState blockstate = pEntity.getBlockState();
+        //TODO IF TRUE?
         if (true || blockstate.getRenderShape() == RenderShape.MODEL) {
             Level level = pEntity.getLevel();
             if (blockstate != level.getBlockState(pEntity.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {

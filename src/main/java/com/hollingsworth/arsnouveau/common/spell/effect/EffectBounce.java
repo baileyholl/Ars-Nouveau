@@ -21,8 +21,7 @@ public class EffectBounce extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             applyConfigPotion(living, ModPotions.BOUNCE_EFFECT.get(), spellStats);
         }

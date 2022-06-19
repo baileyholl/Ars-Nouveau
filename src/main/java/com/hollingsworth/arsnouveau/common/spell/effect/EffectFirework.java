@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.google.common.collect.Lists;
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
@@ -13,7 +13,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -35,23 +38,22 @@ public class EffectFirework extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
-        if(!(rayTraceResult.getEntity() instanceof LivingEntity)){
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity)) {
             return;
         }
 
         ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
-        for(int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
-            spawnFireworkOnEntity(rayTraceResult, world,shooter, firework);
+        for (int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
+            spawnFireworkOnEntity(rayTraceResult, world, shooter, firework);
         }
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
-        for(int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
+        for (int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
             spawnFireworkOnBlock(rayTraceResult, world, shooter, i, firework, spellContext);
         }
     }

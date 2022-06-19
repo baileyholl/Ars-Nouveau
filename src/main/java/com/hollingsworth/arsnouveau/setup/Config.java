@@ -39,7 +39,7 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
     public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
-    public static ForgeConfigSpec.IntValue SYLPH_WEIGHT; // TODO: rename sylph to whirlisprig
+    public static ForgeConfigSpec.IntValue WHIRLISPRIG_WEIGHT; // TODO: rename sylph to whirlisprig
     public static ForgeConfigSpec.IntValue DRYGMY_WEIGHT;
 
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
@@ -93,7 +93,7 @@ public class Config {
         SPAWN_BERRIES = SERVER_BUILDER.comment("Spawn Mana Berry Bushes in the world").define("genBerries", true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
         CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);
-        SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Whirlisprigs spawn").defineInRange("sylphWeight",5,0,100);
+        WHIRLISPRIG_WEIGHT = SERVER_BUILDER.comment("How often Whirlisprigs spawn").defineInRange("sylphWeight",5,0,100);
         DRYGMY_WEIGHT = SERVER_BUILDER.comment("How often Drygmys spawn").defineInRange("drygmyWeight",3,0,100);
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost",250,0,10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
@@ -104,7 +104,7 @@ public class Config {
         HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", true);
         STALKER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Stalker attack animals?").define("stalkerHuntsAnimals", false);
         GUARDIAN_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Defender attack animals?").define("defenderHuntsAnimals", false);
-//        ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 3, 0, Integer.MAX_VALUE);
+        ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 3, 0, Integer.MAX_VALUE);
 
         SERVER_BUILDER.pop();
         SERVER_BUILDER.push(DRYGMY_CATEGORY);

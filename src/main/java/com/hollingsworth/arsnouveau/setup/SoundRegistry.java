@@ -22,22 +22,15 @@ public class SoundRegistry {
     public static SpellSound FIRE_SPELL_SOUND;
     public static SpellSound EMPTY_SPELL_SOUND;
 
-    public static class RegistryEvents {
+    public static void onSoundRegistry(final IForgeRegistry<SoundEvent> registry) {
 
-        //TODO solve this stub
-        public static void onSoundRegistry(final IForgeRegistry<SoundEvent> registry) {
+        FIRE_SPELL_SOUND = new SpellSound(FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"));
+        EMPTY_SPELL_SOUND = new SpellSound(EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"));
+        registry.register("fire_family", FIRE_FAMILY);
+        registry.register("empty", EMPTY_SOUND_FAMILY);
 
-            FIRE_SPELL_SOUND = new SpellSound(FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"));
-            EMPTY_SPELL_SOUND = new SpellSound(EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"));
-            registry.register("fire_family",
-                    FIRE_FAMILY);
-            registry.register("empty",
-                    EMPTY_SOUND_FAMILY
-            );
-
-            ArsNouveauAPI.getInstance().registerSpellSound(FIRE_SPELL_SOUND);
-            ArsNouveauAPI.getInstance().registerSpellSound(EMPTY_SPELL_SOUND);
-        }
+        ArsNouveauAPI.getInstance().registerSpellSound(FIRE_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(EMPTY_SPELL_SOUND);
     }
 
 }

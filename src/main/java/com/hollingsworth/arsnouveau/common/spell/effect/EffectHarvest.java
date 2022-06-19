@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -62,15 +62,15 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, spellStats)){
+    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        for (BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, spellStats)) {
             BlockState state = world.getBlockState(blockpos);
 
-            if(state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock){
+            if (state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock) {
                 blockpos = blockpos.above();
                 state = world.getBlockState(blockpos);
             }
-            if(state.getBlock() instanceof NetherWartBlock){
+            if (state.getBlock() instanceof NetherWartBlock) {
                 this.harvestNetherwart(blockpos, state, world, shooter, spellStats, spellContext);
                 return;
             }

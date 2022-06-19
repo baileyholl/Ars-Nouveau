@@ -34,9 +34,9 @@ public class EffectConjureWater extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if(entity.isOnFire()){
+        if (entity.isOnFire()) {
             entity.clearFire();
         }
     }

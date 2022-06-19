@@ -22,7 +22,7 @@ public class EffectHarm extends AbstractEffect {
     private EffectHarm() {super(GlyphLib.EffectHarmID, "Harm" ); }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
             int time = (int) spellStats.getDurationMultiplier();

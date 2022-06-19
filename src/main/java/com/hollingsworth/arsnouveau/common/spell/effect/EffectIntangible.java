@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,12 +31,12 @@ public class EffectIntangible extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         int duration = (int) (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats);
-        for(BlockPos pos1 : posList) {
+        for (BlockPos pos1 : posList) {
             if (world.getBlockEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
                     || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(spellStats, world, pos) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;

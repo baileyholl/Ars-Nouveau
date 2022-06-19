@@ -27,7 +27,7 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 pos = safelyGetHitPos(rayTraceResult);
         LightningEntity lightningBoltEntity = new LightningEntity(ModEntities.LIGHTNING_ENTITY.get(), world);
         lightningBoltEntity.setPos(pos.x(), pos.y(), pos.z());
@@ -37,7 +37,7 @@ public class EffectLightning extends AbstractEffect {
         lightningBoltEntity.ampScalar = AMP_VALUE.get().floatValue();
         lightningBoltEntity.wetBonus = GENERIC_DOUBLE.get().floatValue();
         lightningBoltEntity.setDamage((float) (DAMAGE.get().floatValue() + spellStats.getDamageModifier()));
-        (world).addFreshEntity(lightningBoltEntity);
+        world.addFreshEntity(lightningBoltEntity);
     }
 
     @Override

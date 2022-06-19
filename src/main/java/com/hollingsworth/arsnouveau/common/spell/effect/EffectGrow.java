@@ -30,10 +30,10 @@ public class EffectGrow  extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter,  rayTraceResult.getBlockPos(), rayTraceResult, spellStats)){
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        for (BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
             ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
-            if(BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel) {
+            if (BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel) {
                 BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer((ServerLevel) world));
             }
         }

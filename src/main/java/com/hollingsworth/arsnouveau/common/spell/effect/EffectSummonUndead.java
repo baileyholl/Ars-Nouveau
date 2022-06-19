@@ -30,8 +30,8 @@ public class EffectSummonUndead extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(!canSummon(shooter))
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!canSummon(shooter))
             return;
 
         Vec3 vector3d = safelyGetHitPos(rayTraceResult);
@@ -39,7 +39,7 @@ public class EffectSummonUndead extends AbstractEffect {
         BlockPos pos = new BlockPos(vector3d);
 
         int count = 3 + spellStats.getBuffCount(AugmentSplit.INSTANCE);
-        for(int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
 
             ItemStack weapon = Items.IRON_SWORD.getDefaultInstance();

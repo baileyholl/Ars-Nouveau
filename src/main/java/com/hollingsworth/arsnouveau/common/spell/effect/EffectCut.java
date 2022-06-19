@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -38,30 +38,30 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if(entity instanceof IForgeShearable shearable){
+        if (entity instanceof IForgeShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(spellStats, shears);
-            if(shearable.isShearable(shears, world, entity.blockPosition())){
+            if (shearable.isShearable(shears, world, entity.blockPosition())) {
                 List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition(), spellStats.getBuffCount(AugmentFortune.INSTANCE));
-                items.forEach(i->world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
+                items.forEach(i -> world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
-        }else{
+        } else {
             dealDamage(world, shooter, (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier()), spellStats, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
         }
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult,spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(spellStats, shears);
             if (world.getBlockState(p).getBlock() instanceof IForgeShearable shearable) {
 
-                if (shearable.isShearable(shears, world,p)) {
+                if (shearable.isShearable(shears, world, p)) {
                     List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
-                    items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
+                    items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
                 }
             }
             Player entity = ANFakePlayer.getPlayer((ServerLevel) world);

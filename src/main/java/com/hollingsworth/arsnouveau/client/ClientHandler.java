@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarWhir
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamiliarRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
-import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -29,8 +28,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;

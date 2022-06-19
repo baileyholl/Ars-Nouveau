@@ -1,14 +1,13 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 
-import com.hollingsworth.arsnouveau.common.block.MageBlock;
-import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.MageBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
@@ -22,8 +22,8 @@ public class EffectSummonDecoy extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(canSummon(shooter)){
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (canSummon(shooter)) {
             Vec3 pos = safelyGetHitPos(rayTraceResult);
             EntityDummy dummy = new EntityDummy(world);
             dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));

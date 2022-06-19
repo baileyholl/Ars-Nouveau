@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityOrbitProjectile;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -63,26 +63,6 @@ public class MethodOrbit extends AbstractCastMethod {
     public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         summonProjectiles(caster.level, caster, resolver, spellStats);
         resolver.expendMana(caster);
-    }
-
-    @Override
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellResolver resolver) {
-        return false;
-    }
-
-    @Override
-    public boolean wouldCastOnBlockSuccessfully(UseOnContext context, SpellStats spellStats, SpellResolver resolver) {
-        return false;
-    }
-
-    @Override
-    public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellResolver resolver) {
-        return false;
-    }
-
-    @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellResolver resolver) {
-        return false;
     }
 
     @Override
