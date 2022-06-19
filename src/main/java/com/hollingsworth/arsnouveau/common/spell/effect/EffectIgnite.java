@@ -14,10 +14,8 @@ import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -65,11 +63,6 @@ public class EffectIgnite  extends AbstractEffect {
         super.buildConfig(builder);
         addExtendTimeConfig(builder, 2);
         addPotionConfig(builder, 3);
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return livingEntityHitSuccess(rayTraceResult) || rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos().above()).getMaterial() == Material.AIR;
     }
 
     @Override

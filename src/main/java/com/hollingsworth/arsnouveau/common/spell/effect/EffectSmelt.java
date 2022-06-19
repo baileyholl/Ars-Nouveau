@@ -105,11 +105,6 @@ public class EffectSmelt extends AbstractEffect {
         }
     }
 
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return rayTraceResult instanceof BlockHitResult;
-    }
-
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {

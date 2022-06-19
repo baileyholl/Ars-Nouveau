@@ -8,7 +8,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -34,11 +33,6 @@ public class EffectSlowfall extends AbstractEffect {
         super.buildConfig(builder);
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return livingEntityHitSuccess(rayTraceResult);
     }
 
     @Override

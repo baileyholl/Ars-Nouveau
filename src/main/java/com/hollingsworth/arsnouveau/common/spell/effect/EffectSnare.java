@@ -8,7 +8,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -39,11 +38,6 @@ public class EffectSnare extends AbstractEffect {
         super.buildConfig(builder);
         addPotionConfig(builder, 8);
         addExtendTimeConfig(builder, 1);
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return livingEntityHitSuccess(rayTraceResult);
     }
 
     @Nonnull

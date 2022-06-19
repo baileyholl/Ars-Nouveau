@@ -20,7 +20,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -109,11 +108,6 @@ public class EffectFreeze extends AbstractEffect {
         super.buildConfig(builder);
         addPotionConfig(builder, 10);
         addExtendTimeConfig(builder, 5);
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return nonAirAnythingSuccess(rayTraceResult, world);
     }
 
     @Override

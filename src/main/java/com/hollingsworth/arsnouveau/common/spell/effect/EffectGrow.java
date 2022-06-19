@@ -14,9 +14,7 @@ import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,15 +35,6 @@ public class EffectGrow  extends AbstractEffect {
                 BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer((ServerLevel) world));
             }
         }
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(!(rayTraceResult instanceof BlockHitResult))
-            return false;
-        BlockPos pos = ((BlockHitResult) rayTraceResult).getBlockPos();
-        return world.getBlockState(pos).getBlock() instanceof BonemealableBlock
-                && ((BonemealableBlock) world.getBlockState(pos).getBlock()).isValidBonemealTarget(world, pos, world.getBlockState(pos), world.isClientSide);
     }
 
     @Override

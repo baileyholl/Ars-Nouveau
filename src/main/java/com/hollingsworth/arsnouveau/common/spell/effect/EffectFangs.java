@@ -80,11 +80,6 @@ public class EffectFangs extends AbstractEffect {
         addAmpConfig(builder, 3.0);
     }
 
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return nonAirAnythingSuccess(rayTraceResult, world);
-    }
-
     private void spawnFangs(Level world, double xAngle, double zAngle, double yStart, double yEnd, float rotationYaw, int tickDelay, LivingEntity caster, float damage) {
         BlockPos blockpos = new BlockPos(xAngle, yEnd, zAngle);
         boolean flag = false;

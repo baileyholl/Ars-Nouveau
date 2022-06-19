@@ -17,13 +17,24 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
         super(tag,description);
     }
 
-    // TODO: Make cast methods return booleans for success or failure. Move expend mana to SpellResolver if these methods return true.
+    /**
+     * Called when the spell is cast on nothing. In context of items, this is called when the player right clicks air.
+     */
     public abstract CastResolveType onCast(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver);
 
+    /**
+     * Called when the spell is cast on a block.
+     */
     public abstract CastResolveType onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver);
 
+    /**
+     * Called when the spell is cast on a block.
+     */
     public abstract CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver);
 
+    /**
+     * Called when the spell is cast on an entity.
+     **/
     public abstract CastResolveType onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver);
 
     @Override
@@ -31,5 +42,4 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
         super.buildConfig(builder);
         super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits());
     }
-
 }

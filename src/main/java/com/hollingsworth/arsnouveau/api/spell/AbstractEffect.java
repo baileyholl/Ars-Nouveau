@@ -24,7 +24,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -50,7 +49,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
-        onResolve(rayTraceResult, world, shooter, spellStats, spellContext);
         if(rayTraceResult instanceof BlockHitResult blockHitResult){
             onResolveBlock(blockHitResult, world, shooter, spellStats, spellContext, resolver);
         }else if(rayTraceResult instanceof EntityHitResult entityHitResult){
@@ -62,34 +60,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){}
 
-
-    /**
-     * This will be removed in favor of the resolver sensitive version.
-     * @deprecated use {@link #onResolve(HitResult, Level, LivingEntity, SpellStats, SpellContext, SpellResolver)}
-     */
-    @Deprecated(forRemoval = true)
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        if(rayTraceResult instanceof BlockHitResult blockHitResult){
-            onResolveBlock(blockHitResult, world, shooter, spellStats, spellContext);
-        }else if(rayTraceResult instanceof EntityHitResult entityHitResult){
-            onResolveEntity(entityHitResult, world, shooter, spellStats, spellContext);
-        }
-    }
-
-    /**
-     * This will be removed in favor of the resolver sensitive version.
-     * @deprecated use {@link #onResolveEntity(EntityHitResult, Level, LivingEntity, SpellStats, SpellContext, SpellResolver)}
-     */
-    @Deprecated(forRemoval = true)
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){}
-
-    /**
-     * This will be removed in favor of the resolver sensitive version.
-     * @deprecated use {@link #onResolveBlock(BlockHitResult, Level, LivingEntity, SpellStats, SpellContext, SpellResolver)}
-     */
-    @Deprecated(forRemoval = true)
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){}
-
     public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats){
         applyConfigPotion(entity, potionEffect, spellStats, true);
     }
@@ -98,18 +68,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get(), showParticles);
     }
 
-    /**
-     * This will be removed in favor of using the validator as the limiter. If a potion is capped to a certain level,
-     * use AbstractSpellPart#getDefaultAugmentLimits and limit the amplification there.
-     */
-    @Deprecated(forRemoval = true)
-    public void applyPotionWithCap(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDuration, int durationBuffBase, int cap){
-        if(entity == null)
-            return;
-        int duration = (int) (baseDuration + durationBuffBase * stats.getDurationMultiplier());
-        int amp = Math.min(cap, (int)stats.getAmpMultiplier());
-        entity.addEffect(new MobEffectInstance(potionEffect, duration * 20, amp));
-    }
 
     public void applyPotion(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles){
         if(entity == null)
@@ -191,23 +149,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public boolean isNotFakePlayer(Entity entity){
         return !(entity instanceof FakePlayer);
-    }
-    // TODO: Remove bookwyrm methods
-    // If the spell would actually do anything. Can be used for logic checks for things like the whelp.
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        return true;
-    }
-
-    public boolean nonAirBlockSuccess(HitResult rayTraceResult, Level world){
-        return rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR;
-    }
-
-    public boolean livingEntityHitSuccess(HitResult rayTraceResult){
-        return rayTraceResult instanceof EntityHitResult && ((EntityHitResult) rayTraceResult).getEntity() instanceof LivingEntity;
-    }
-
-    public boolean nonAirAnythingSuccess(HitResult result, Level world){
-        return nonAirBlockSuccess(result, world) || livingEntityHitSuccess(result);
     }
 
     public void applyEnchantments(SpellStats stats, ItemStack stack){

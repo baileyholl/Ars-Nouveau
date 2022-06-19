@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,28 +84,6 @@ public class EffectHarvest extends AbstractEffect {
             processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext);
             world.setBlockAndUpdate(blockpos,cropsBlock.getStateForAge(1));
         }
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(!(rayTraceResult instanceof BlockHitResult))
-            return false;
-
-        BlockPos pos = ((BlockHitResult) rayTraceResult).getBlockPos();
-        BlockState state = world.getBlockState(pos);
-
-        if(state.getBlock() instanceof FarmBlock || world.getBlockState(pos.above()).getBlock() instanceof CropBlock || world.getBlockState(pos.above()).getBlock() instanceof NetherWartBlock ){
-            pos = pos.above();
-            state = world.getBlockState(pos);
-        }
-        if(state.getBlock() instanceof NetherWartBlock && state.getValue(NetherWartBlock.AGE) == 3)
-            return true;
-        if(!(state.getBlock() instanceof CropBlock))
-            return false;
-
-
-        CropBlock cropsBlock = (CropBlock)world.getBlockState(pos).getBlock();
-        return cropsBlock.isMaxAge(state) && world instanceof ServerLevel;
     }
 
 

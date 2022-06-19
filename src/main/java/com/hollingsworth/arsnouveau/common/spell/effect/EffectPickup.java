@@ -64,11 +64,6 @@ public class EffectPickup extends AbstractEffect {
         }
     }
 
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return true;
-    }
-
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {

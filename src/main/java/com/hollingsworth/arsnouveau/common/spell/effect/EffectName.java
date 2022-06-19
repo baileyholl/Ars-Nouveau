@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,11 +54,6 @@ public class EffectName extends AbstractEffect {
             ((Mob)rayTraceResult.getEntity()).setPersistenceRequired();
         }
 
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return livingEntityHitSuccess(rayTraceResult);
     }
 
     public SpellTier getTier() {

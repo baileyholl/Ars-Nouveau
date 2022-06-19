@@ -86,11 +86,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     /**
      * A helper for mods to add schools.
-     * @deprecated This will be set to protected in the future.
      * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
      */
-    @Deprecated
-    public @Nonnull Set<SpellSchool> getSchools(){
+    protected @Nonnull Set<SpellSchool> getSchools(){
         return setOf();
     }
 

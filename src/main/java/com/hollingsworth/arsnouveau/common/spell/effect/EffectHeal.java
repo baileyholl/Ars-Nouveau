@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -43,11 +42,6 @@ public class EffectHeal extends AbstractEffect {
         super.buildConfig(builder);
         addGenericDouble(builder, 3.0, "Base heal amount", "base_heal");
         addAmpConfig(builder, 3.0);
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return livingEntityHitSuccess(rayTraceResult);
     }
 
     @Override

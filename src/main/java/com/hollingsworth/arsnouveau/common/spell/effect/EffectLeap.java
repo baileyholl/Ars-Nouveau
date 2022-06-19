@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -37,11 +36,6 @@ public class EffectLeap extends AbstractEffect {
         super.buildConfig(builder);
         addGenericDouble(builder, 1.5, "Base knockup amount", "knock_up");
         addAmpConfig(builder, 1.0);
-    }
-
-    @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        return livingEntityHitSuccess(rayTraceResult);
     }
 
     @Nonnull
