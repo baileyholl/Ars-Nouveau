@@ -151,6 +151,8 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:1.19-5.1.0.1")
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.2')
 
+    implementation /*compileOnly*/ fg.deobf('com.github.glitchfiend:TerraBlender-forge:1.19-2.0.0.112')
+
 //    implementation fg.deobf("curse.maven:exp-64760:3577168")
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 

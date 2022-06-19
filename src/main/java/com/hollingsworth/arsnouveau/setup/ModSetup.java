@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.client.particle.ModParticles;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.world.biome.ModBiomes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -57,13 +59,17 @@ public class ModSetup {
             BlockRegistry.RegistryEvents.onBlockItemsRegistry(registry);
             ItemsRegistry.onItemRegistry(registry);
         }
-        if(event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
             IForgeRegistry<BlockEntityType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.RegistryEvents.onTileEntityRegistry(registry);
         }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.SOUND_EVENTS)){
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.SOUND_EVENTS)) {
             IForgeRegistry<SoundEvent> registry = Objects.requireNonNull(event.getForgeRegistry());
             SoundRegistry.onSoundRegistry(registry);
+        }
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BIOMES)) {
+            IForgeRegistry<Biome> registry = Objects.requireNonNull(event.getForgeRegistry());
+            ModBiomes.registerBiomes(registry);
         }
     }
 }
