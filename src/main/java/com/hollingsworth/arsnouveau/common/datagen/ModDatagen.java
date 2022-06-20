@@ -1,10 +1,16 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.server.packs.PackType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.HashMap;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -31,6 +37,8 @@ public class ModDatagen {
         event.getGenerator().addProvider(true, new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(true, new ItemTagProvider(event.getGenerator(), blocktagsprovider, MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(true, new EntityTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
-
+        event.getGenerator().addProvider(true, new BiomeTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(true, new BiomeModifierProvider(event.getGenerator(), event.getExistingFileHelper(), MODID,
+                JsonOps.INSTANCE, PackType.SERVER_DATA, "biome", RegistryAccess.REGISTRIES.get(ForgeRegistries.Keys.BIOME_MODIFIERS).codec(), new HashMap<>()));
     }
 }
