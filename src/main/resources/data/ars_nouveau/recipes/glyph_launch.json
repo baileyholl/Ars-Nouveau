@@ -1,6 +1,7 @@
 {
   "type": "ars_nouveau:glyph",
   "count": 1,
+  "exp": 27,
   "inputItems": [
     {
       "item": {
@@ -23,6 +24,5 @@
       }
     }
   ],
-  "exp": 27,
   "output": "ars_nouveau:glyph_launch"
 }

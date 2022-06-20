@@ -45,7 +45,8 @@ public abstract class ChunkMapMixin {
                     shift = At.Shift.AFTER
             )},
             locals = LocalCapture.CAPTURE_FAILSOFT,
-            cancellable = true
+            cancellable = true,
+            remap = false
     )
     private void updateAccordingToCamera(int viewDistance, CallbackInfo callback, int i, int j, ObjectIterator<?> objectIterator, ChunkHolder chunkHolder, ChunkPos chunkPos) {
         MutableObject<ClientboundLevelChunkWithLightPacket> mutableObject = new MutableObject();

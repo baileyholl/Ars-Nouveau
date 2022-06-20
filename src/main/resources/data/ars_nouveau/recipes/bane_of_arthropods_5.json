@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:bane_of_arthropods",
   "level": 5,
-  "sourceCost": 8000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "tag": "forge:storage_blocks/lapis"
       }
     }
-  ]
+  ],
+  "sourceCost": 8000
 }

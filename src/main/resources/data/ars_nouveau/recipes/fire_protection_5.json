@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:fire_protection",
   "level": 5,
-  "sourceCost": 8000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "tag": "forge:rods/blaze"
       }
     }
-  ]
+  ],
+  "sourceCost": 8000
 }

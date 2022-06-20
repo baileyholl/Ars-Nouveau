@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:blast_protection",
   "level": 3,
-  "sourceCost": 6000,
   "pedestalItems": [
     {
       "item": {
@@ -34,5 +33,6 @@
         "tag": "forge:obsidian"
       }
     }
-  ]
+  ],
+  "sourceCost": 6000
 }

@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:blast_protection",
   "level": 4,
-  "sourceCost": 8000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "tag": "forge:storage_blocks/gold"
       }
     }
-  ]
+  ],
+  "sourceCost": 8000
 }

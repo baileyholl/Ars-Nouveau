@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "xxx",
-    "xyx",
-    "xxx"
-  ],
   "key": {
     "x": {
       "item": "ars_nouveau:magebloom_fiber"
@@ -13,6 +8,11 @@
       "item": "minecraft:feather"
     }
   },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
   "result": {
     "item": "ars_nouveau:orange_sbed"
   }

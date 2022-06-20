@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:flame",
   "level": 1,
-  "sourceCost": 5000,
   "pedestalItems": [
     {
       "item": {
@@ -19,5 +18,6 @@
         "tag": "forge:rods/blaze"
       }
     }
-  ]
+  ],
+  "sourceCost": 5000
 }

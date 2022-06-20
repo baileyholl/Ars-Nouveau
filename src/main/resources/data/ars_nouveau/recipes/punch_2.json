@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:punch",
   "level": 2,
-  "sourceCost": 4000,
   "pedestalItems": [
     {
       "item": {
@@ -29,5 +28,6 @@
         "tag": "forge:storage_blocks/source"
       }
     }
-  ]
+  ],
+  "sourceCost": 4000
 }

@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:projectile_protection",
   "level": 1,
-  "sourceCost": 2000,
   "pedestalItems": [
     {
       "item": {
@@ -24,5 +23,6 @@
         "tag": "forge:storage_blocks/source"
       }
     }
-  ]
+  ],
+  "sourceCost": 2000
 }

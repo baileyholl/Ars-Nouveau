@@ -1,10 +1,9 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "reagent": [
-    {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:summon_focus"
+  },
   "pedestalItems": [
     {
       "item": {
@@ -32,9 +31,10 @@
       }
     }
   ],
-  "output": {
-    "item": "ars_nouveau:summon_focus"
-  },
-  "sourceCost": 0,
-  "keepNbtOfReagent": false
+  "reagent": [
+    {
+      "tag": "forge:storage_blocks/source"
+    }
+  ],
+  "sourceCost": 0
 }

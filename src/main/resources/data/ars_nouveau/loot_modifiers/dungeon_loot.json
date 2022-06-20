@@ -1,4 +1,7 @@
 {
+  "type": "ars_nouveau:dungeon_loot",
+  "common_chance": 0.3,
+  "common_rolls": 3,
   "conditions": [
     {
       "condition": "minecraft:alternative",
@@ -66,11 +69,8 @@
       ]
     }
   ],
-  "common_chance": 0.3,
-  "uncommon_chance": 0.2,
   "rare_chance": 0.1,
-  "common_rolls": 3,
-  "uncommon_rolls": 2,
   "rare_rolls": 1,
-  "type": "ars_nouveau:dungeon_loot"
+  "uncommon_chance": 0.2,
+  "uncommon_rolls": 2
 }

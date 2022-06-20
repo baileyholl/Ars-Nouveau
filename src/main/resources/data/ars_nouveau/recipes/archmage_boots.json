@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "ars_nouveau",
-  "pattern": [
-    "   ",
-    "x x",
-    "x x"
-  ],
   "key": {
     "x": {
       "item": "ars_nouveau:end_fiber"
     }
   },
+  "pattern": [
+    "   ",
+    "x x",
+    "x x"
+  ],
   "result": {
     "item": "ars_nouveau:archmage_boots"
   }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " x ",
-    " y ",
-    " z "
-  ],
   "key": {
     "x": {
       "item": "ars_nouveau:wilden_spike"
@@ -16,8 +11,13 @@
       "item": "minecraft:feather"
     }
   },
+  "pattern": [
+    " x ",
+    " y ",
+    " z "
+  ],
   "result": {
-    "item": "minecraft:arrow",
-    "count": 32
+    "count": 32,
+    "item": "minecraft:arrow"
   }
 }

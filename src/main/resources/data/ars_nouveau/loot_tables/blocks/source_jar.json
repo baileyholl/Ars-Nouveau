@@ -2,8 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "source_jar",
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -15,34 +13,36 @@
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "inv",
-                  "target": "BlockEntityTag.inv",
-                  "op": "replace"
+                  "target": "BlockEntityTag.inv"
                 },
                 {
+                  "op": "replace",
                   "source": "source",
-                  "target": "BlockEntityTag.source",
-                  "op": "replace"
+                  "target": "BlockEntityTag.source"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
-              "function": "minecraft:set_contents",
               "type": "ars_nouveau:source_jar",
               "entries": [
                 {
                   "type": "minecraft:dynamic",
                   "name": "minecraft:contents"
                 }
-              ]
+              ],
+              "function": "minecraft:set_contents"
             }
           ],
           "name": "ars_nouveau:source_jar"
         }
-      ]
+      ],
+      "name": "source_jar",
+      "rolls": 1.0
     }
   ]
 }

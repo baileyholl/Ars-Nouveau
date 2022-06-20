@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:mana_boost",
   "level": 3,
-  "sourceCost": 5000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "tag": "forge:storage_blocks/lapis"
       }
     }
-  ]
+  ],
+  "sourceCost": 5000
 }

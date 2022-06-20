@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:reactive",
   "level": 4,
-  "sourceCost": 9000,
   "pedestalItems": [
     {
       "item": {
@@ -34,5 +33,6 @@
         "item": "ars_nouveau:wilden_tribute"
       }
     }
-  ]
+  ],
+  "sourceCost": 9000
 }

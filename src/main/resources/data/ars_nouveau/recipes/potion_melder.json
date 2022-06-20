@@ -1,10 +1,9 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "reagent": [
-    {
-      "item": "ars_nouveau:potion_jar"
-    }
-  ],
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:potion_melder"
+  },
   "pedestalItems": [
     {
       "item": {
@@ -47,9 +46,10 @@
       }
     }
   ],
-  "output": {
-    "item": "ars_nouveau:potion_melder"
-  },
-  "sourceCost": 0,
-  "keepNbtOfReagent": false
+  "reagent": [
+    {
+      "item": "ars_nouveau:potion_jar"
+    }
+  ],
+  "sourceCost": 0
 }

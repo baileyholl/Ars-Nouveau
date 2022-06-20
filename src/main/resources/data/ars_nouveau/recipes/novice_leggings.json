@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "ars_nouveau",
-  "pattern": [
-    "xxx",
-    "x x",
-    "x x"
-  ],
   "key": {
     "x": {
       "item": "ars_nouveau:magebloom_fiber"
     }
   },
+  "pattern": [
+    "xxx",
+    "x x",
+    "x x"
+  ],
   "result": {
     "item": "ars_nouveau:novice_leggings"
   }

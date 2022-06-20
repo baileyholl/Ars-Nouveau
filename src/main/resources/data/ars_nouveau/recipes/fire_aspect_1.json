@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:fire_aspect",
   "level": 1,
-  "sourceCost": 2000,
   "pedestalItems": [
     {
       "item": {
@@ -29,5 +28,6 @@
         "tag": "forge:storage_blocks/lapis"
       }
     }
-  ]
+  ],
+  "sourceCost": 2000
 }

@@ -178,7 +178,8 @@ public class WorldEvent {
             new WeightedPlacedFeature(PLACED_BLAZING, 0.25f),
             new WeightedPlacedFeature(PLACED_VEXING, 0.25f),
             new WeightedPlacedFeature(PLACED_FLOURISHING, 0.25f)), PLACED_CASCADE));
-    public static Holder<PlacedFeature> PLACED_MIXED = PlacementUtils.register("ars_nouveau:archwood", MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE.get())));
+
+    public static Holder<PlacedFeature> PLACED_MIXED = PlacementUtils.register("ars_nouveau:archwood", MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE)));
     public static Holder<PlacedFeature> COMMON_ARCHWOOD = PlacementUtils.register("ars_nouveau:common_archwood", MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(1)));
 
     public static void registerFeatures() {
