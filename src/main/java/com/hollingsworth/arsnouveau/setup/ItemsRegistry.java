@@ -99,9 +99,16 @@ public class ItemsRegistry {
         }
     });
 
-    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_REGEN;
+    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_REGEN = register(LibItemNames.AMULET_OF_MANA_REGEN, () -> new AbstractManaCurio() {
 
-    public static RegistryWrapper<ModItem> DULL_TRINKET  = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+        @Override
+        public int getManaRegenBonus(ItemStack i) {
+            return 3;
+        }
+
+    });
+
+    public static RegistryWrapper<ModItem> DULL_TRINKET = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
 
     public static RegistryWrapper<StarbuncleCharm> STARBUNCLE_CHARM = register(LibItemNames.STARBUNCLE_CHARM, () -> new StarbuncleCharm());
 

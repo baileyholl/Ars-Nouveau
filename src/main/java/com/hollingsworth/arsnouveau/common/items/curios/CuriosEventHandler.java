@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class CuriosEventHandler {
 
+    //TODO let ICurioItem handle this
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent event) {
         if(event.phase != TickEvent.Phase.END)
