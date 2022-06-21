@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.lib.LibPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.effect.MobEffect;
@@ -23,35 +22,34 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.ArrayList;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
+import static com.hollingsworth.arsnouveau.common.lib.LibPotions.*;
 
 public class ModPotions {
 
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MODID);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, MODID);
 
-    public static final RegistryObject<MobEffect> SHOCKED_EFFECT = EFFECTS.register("shocked", ShockedEffect::new);
-    public static final RegistryObject<MobEffect> MANA_REGEN_EFFECT = EFFECTS.register("mana_regen", ManaRegenEffect::new);
-    public static final RegistryObject<MobEffect> SUMMONING_SICKNESS = EFFECTS.register("summoning_sickness", SummoningSicknessEffect::new);
-    public static final RegistryObject<MobEffect> HEX_EFFECT = EFFECTS.register("hex", HexEffect::new);
-    public static final RegistryObject<MobEffect> SCRYING_EFFECT = EFFECTS.register("scrying", ScryingEffect::new);
-    public static final RegistryObject<MobEffect> GLIDE_EFFECT = EFFECTS.register("glide", GlideEffect::new);
-    public static final RegistryObject<MobEffect> SNARE_EFFECT = EFFECTS.register("snared", SnareEffect::new);
-    public static final RegistryObject<MobEffect> FLIGHT_EFFECT = EFFECTS.register("flight", FlightEffect::new);
-    public static final RegistryObject<MobEffect> GRAVITY_EFFECT = EFFECTS.register("gravity", GravityEffect::new);
-    public static final RegistryObject<MobEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(LibPotions.SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()));
-    public static final RegistryObject<MobEffect> FAMILIAR_SICKNESS_EFFECT = EFFECTS.register(LibPotions.FAMILIAR_SICKNESS, () -> new PublicEffect(MobEffectCategory.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()));
-    public static final RegistryObject<MobEffect> BOUNCE_EFFECT = EFFECTS.register("bounce", BounceEffect::new);
-    public static final RegistryObject<MobEffect> MAGIC_FIND_EFFECT = EFFECTS.register("magic_find", MagicFindEffect::new);
+    public static final RegistryObject<MobEffect> SHOCKED_EFFECT = EFFECTS.register(SHOCKED, ShockedEffect::new);
+    public static final RegistryObject<MobEffect> MANA_REGEN_EFFECT = EFFECTS.register(MANA_REGEN, ManaRegenEffect::new);
+    public static final RegistryObject<MobEffect> SUMMONING_SICKNESS_EFFECT = EFFECTS.register(SUMMONING_SICKNESS, SummoningSicknessEffect::new);
+    public static final RegistryObject<MobEffect> HEX_EFFECT = EFFECTS.register(HEX, HexEffect::new);
+    public static final RegistryObject<MobEffect> SCRYING_EFFECT = EFFECTS.register(SCRYING, ScryingEffect::new);
+    public static final RegistryObject<MobEffect> GLIDE_EFFECT = EFFECTS.register(GLIDE, GlideEffect::new);
+    public static final RegistryObject<MobEffect> SNARE_EFFECT = EFFECTS.register(SNARE, SnareEffect::new);
+    public static final RegistryObject<MobEffect> FLIGHT_EFFECT = EFFECTS.register(FLIGHT, FlightEffect::new);
+    public static final RegistryObject<MobEffect> GRAVITY_EFFECT = EFFECTS.register(GRAVITY, GravityEffect::new);
+    public static final RegistryObject<MobEffect> SPELL_DAMAGE_EFFECT = EFFECTS.register(SPELL_DAMAGE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()));
+    public static final RegistryObject<MobEffect> FAMILIAR_SICKNESS_EFFECT = EFFECTS.register(FAMILIAR_SICKNESS, () -> new PublicEffect(MobEffectCategory.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()));
+    public static final RegistryObject<MobEffect> BOUNCE_EFFECT = EFFECTS.register(BOUNCE, BounceEffect::new);
+    public static final RegistryObject<MobEffect> MAGIC_FIND_EFFECT = EFFECTS.register(MAGIC_FIND, MagicFindEffect::new);
 
-    public static final RegistryObject<Potion> MANA_REGEN_POTION = POTIONS.register(LibPotions.MANA_REGEN, () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT.get(), 3600)));
+    public static final RegistryObject<Potion> MANA_REGEN_POTION = POTIONS.register(potion(MANA_REGEN), () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT.get(), 3600)));
+    public static final RegistryObject<Potion> LONG_MANA_REGEN_POTION = POTIONS.register(longPotion(MANA_REGEN), () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT.get(), 9600)));
+    public static final RegistryObject<Potion> STRONG_MANA_REGEN_POTION = POTIONS.register(strongPotion(MANA_REGEN), () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT.get(), 3600, 1)));
 
-    public static final RegistryObject<Potion> LONG_MANA_REGEN_POTION = POTIONS.register(LibPotions.MANA_REGEN_LONG, () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT.get(), 9600)));
-
-    public static final RegistryObject<Potion> STRONG_MANA_REGEN_POTION = POTIONS.register(LibPotions.MANA_REGEN_STRONG, () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT.get(), 3600, 1)));
-
-    public static final RegistryObject<Potion> SPELL_DAMAGE_POTION = POTIONS.register(LibPotions.SPELL_DAMAGE, () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT.get(), 3600)));
-    public static final RegistryObject<Potion> SPELL_DAMAGE_POTION_LONG = POTIONS.register(LibPotions.SPELL_DAMAGE_LONG, () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT.get(), 9600)));
-    public static final RegistryObject<Potion> SPELL_DAMAGE_POTION_STRONG = POTIONS.register(LibPotions.SPELL_DAMAGE_STRONG, () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT.get(), 3600, 1)));
+    public static final RegistryObject<Potion> SPELL_DAMAGE_POTION = POTIONS.register(potion(SPELL_DAMAGE), () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT.get(), 3600)));
+    public static final RegistryObject<Potion> SPELL_DAMAGE_POTION_LONG = POTIONS.register(longPotion(SPELL_DAMAGE), () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT.get(), 9600)));
+    public static final RegistryObject<Potion> SPELL_DAMAGE_POTION_STRONG = POTIONS.register(strongPotion(SPELL_DAMAGE), () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT.get(), 3600, 1)));
 
     public static void addRecipes() {
         ItemStack AWKWARD = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD);

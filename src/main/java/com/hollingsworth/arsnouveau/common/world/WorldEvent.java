@@ -32,8 +32,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-
-
 public class WorldEvent {
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> CASCADING_TREE =  FeatureUtils.register("ars_nouveau:cascade_feature", Feature.TREE, (
             new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),

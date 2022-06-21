@@ -78,11 +78,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canSummon(LivingEntity playerEntity){
-        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS.get()) == null || (playerEntity instanceof Player player && player.isCreative()));
+        return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS_EFFECT.get()) == null || (playerEntity instanceof Player player && player.isCreative()));
     }
 
     public void applySummoningSickness(LivingEntity playerEntity, int time){
-        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS.get(), time));
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), time));
     }
 
     public void summonLivingEntity(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon){
