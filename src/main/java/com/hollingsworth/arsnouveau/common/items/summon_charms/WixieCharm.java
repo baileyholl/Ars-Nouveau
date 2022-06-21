@@ -1,5 +1,7 @@
-package com.hollingsworth.arsnouveau.common.items;
+package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -11,7 +13,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CauldronBlock;
 
-public class WixieCharm extends ModItem{
+public class WixieCharm extends AbstractSummonCharm {
     public WixieCharm() {
         super();
     }
@@ -20,24 +22,34 @@ public class WixieCharm extends ModItem{
      * Called when this item is used when targetting a Block
      */
     public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        if(world.isClientSide)
-            return InteractionResult.SUCCESS;
-        BlockPos pos = context.getClickedPos();
+
+
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         if (world.getBlockState(pos).getBlock() instanceof CauldronBlock) {
             world.setBlockAndUpdate(pos, BlockRegistry.WIXIE_CAULDRON.defaultBlockState());
-            context.getItemInHand().shrink(1);
-        } else if (world.getBlockEntity(pos) instanceof WixieCauldronTile tile) {
-            if (!tile.hasWixie()) {
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
+        if (tile instanceof WixieCauldronTile cauldronTile) {
+            if (cauldronTile.hasWixie()) {
+                PortUtil.sendMessage(context.getPlayer(), Component.translatable("ars_nouveau.wixie.has_wixie"));
+            } else {
                 EntityWixie wixie = new EntityWixie(world, true, pos);
                 wixie.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                 world.addFreshEntity(wixie);
-                tile.entityID = wixie.getId();
-                context.getItemInHand().shrink(1);
-            } else {
-                PortUtil.sendMessage(context.getPlayer(), Component.translatable("ars_nouveau.wixie.has_wixie"));
+                cauldronTile.entityID = wixie.getId();
+                return InteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
+
 }

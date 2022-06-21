@@ -1,6 +1,8 @@
-package com.hollingsworth.arsnouveau.common.items;
+package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -9,31 +11,31 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-public class DrygmyCharm extends ModItem{
-    public DrygmyCharm(Properties properties) {
-        super(properties);
-    }
+public class DrygmyCharm extends AbstractSummonCharm {
 
     public DrygmyCharm() {
         super();
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        if(world.isClientSide)
-            return InteractionResult.SUCCESS;
-        BlockPos pos = context.getClickedPos();
+    public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         if(world.getBlockState(pos).getBlock() == Blocks.MOSSY_COBBLESTONE){
             world.setBlockAndUpdate(pos, BlockRegistry.DRYGMY_BLOCK.defaultBlockState());
-            context.getItemInHand().shrink(1);
-        }else if(world.getBlockEntity(pos) instanceof DrygmyTile) {
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
+        if(tile instanceof DrygmyTile) {
             EntityDrygmy drygmy = new EntityDrygmy(world, true);
             drygmy.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addFreshEntity(drygmy);
             drygmy.homePos = new BlockPos(pos);
-            context.getItemInHand().shrink(1);
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
+
 }

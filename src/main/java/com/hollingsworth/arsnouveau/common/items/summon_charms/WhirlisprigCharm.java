@@ -1,6 +1,8 @@
-package com.hollingsworth.arsnouveau.common.items;
+package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -10,31 +12,31 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-public class WhirlisprigCharm extends ModItem{
+public class WhirlisprigCharm extends AbstractSummonCharm {
 
     public WhirlisprigCharm() {
         super();
     }
 
-    /**
-     * Called when this item is used when targetting a Block
-     */
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        if(world.isClientSide)
-            return InteractionResult.SUCCESS;
-        BlockPos pos = context.getClickedPos();
-        if(world.getBlockState(pos).is(BlockTags.FLOWERS)){
+    public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
+        if(world.getBlockState(pos).is(BlockTags.FLOWERS)) {
             world.setBlockAndUpdate(pos, BlockRegistry.WHIRLISPRIG_FLOWER.defaultBlockState());
-            context.getItemInHand().shrink(1);
-        }else if(world.getBlockEntity(pos) instanceof WhirlisprigTile) {
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
+        if (tile instanceof WhirlisprigTile) {
             Whirlisprig whirlisprig = new Whirlisprig(world, true, pos);
             whirlisprig.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addFreshEntity(whirlisprig);
             whirlisprig.flowerPos = new BlockPos(pos);
-            context.getItemInHand().shrink(1);
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+        else return InteractionResult.PASS;
     }
+
 }

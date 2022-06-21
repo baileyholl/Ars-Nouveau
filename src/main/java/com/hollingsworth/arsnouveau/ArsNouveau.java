@@ -69,7 +69,6 @@ public class ArsNouveau {
 
     public void setup (final FMLCommonSetupEvent event) {
         APIRegistry.postInit();
-//        event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {

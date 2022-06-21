@@ -9,6 +9,4 @@ public abstract class AbstractManaCurio extends ArsNouveauCurio implements IMana
         super();
     }
 
-    @Override
-    public void wearableTick(LivingEntity wearer) { }
 }

@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
+import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
-import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import net.minecraft.server.level.ServerLevel;
@@ -31,11 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-public class SummoningFocus extends ModItem implements ISpellModifierItem {
-    public SummoningFocus(Properties properties) {
-        super(properties);
-    }
-
+public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierItem {
     public SummoningFocus() {
         super();
     }
