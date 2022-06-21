@@ -46,7 +46,7 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     @Override
     public boolean ownsFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.stream().anyMatch(f -> f.familiarHolder.getId().equals(holderID.id));
+        return familiars.stream().anyMatch(f -> f.familiarHolder.getRegistryName().equals(holderID.id));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getId).collect(Collectors.toList()));
+        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
         for(FamiliarData f : familiars){
             tag.put("familiar_" + f.familiarHolder.id, f.toTag());
         }

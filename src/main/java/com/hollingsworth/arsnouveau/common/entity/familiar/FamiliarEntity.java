@@ -18,6 +18,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -52,7 +53,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
 
     public boolean terminatedFamiliar;
-    public String holderID;
+    public ResourceLocation holderID;
     public PersistentFamiliarData<?> persistentData = new PersistentFamiliarData<>(new CompoundTag());
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
@@ -162,12 +163,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     }
 
     @Override
-    public String getHolderID() {
+    public ResourceLocation getHolderID() {
         return holderID;
     }
 
     @Override // TODO: Make abstract
-    public void setHolderID(String id) {
+    public void setHolderID(ResourceLocation id) {
         this.holderID = id;
     }
 
@@ -229,7 +230,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
         tag.put("familiarData", getPersistentFamiliarData().toTag(new CompoundTag()));
-        tag.putString("holderID", holderID);
+        tag.putString("holderID", holderID.toString());
         tag.putString("color", this.entityData.get(COLOR));
         if(!this.entityData.get(COSMETIC).isEmpty()) {
             CompoundTag cosmeticTag = new CompoundTag();
@@ -244,7 +245,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         if(tag.hasUUID("ownerID"))
             setOwnerID(tag.getUUID("ownerID"));
         terminatedFamiliar = tag.getBoolean("terminated");
-        this.holderID = tag.getString("holderID");
+        this.holderID = new ResourceLocation(tag.getString("holderID"));
         this.persistentData = deserializePersistentData(tag.getCompound("familiarData"));
         this.entityData.set(COLOR, tag.getString("color"));
         this.entityData.set(COSMETIC, ItemStack.of(tag.getCompound("cosmetic")));

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -70,13 +71,17 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
 
 
-    public static boolean isSpellEnabled(String tag){
+    public static boolean isGlyphEnabled(ResourceLocation tag){
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
         if(spellPart == null){
             throw new IllegalArgumentException("Spell Part with id " + tag + " does not exist in registry. Did you pass the right ID?");
         }
 
         return spellPart.ENABLED == null || spellPart.ENABLED.get();
+    }
+
+    public static boolean isGlyphEnabled(AbstractSpellPart tag){
+       return isGlyphEnabled(tag.getRegistryName());
     }
 
     static {

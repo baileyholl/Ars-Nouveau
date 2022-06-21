@@ -43,8 +43,8 @@ public class EffectHex extends AbstractEffect {
     }
 
     @Override
-    protected Map<String, Integer> getDefaultAugmentLimits() {
-        Map<String, Integer> map = super.getDefaultAugmentLimits();
+    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
+        Map<String, Integer> map = super.getDefaultAugmentLimits(defaults);
         map.put(GlyphLib.AugmentAmplifyID, 4);
         return map;
     }

@@ -107,7 +107,7 @@ public class Spell implements Cloneable{
     public String serialize(){
         List<String> tags = new ArrayList<>();
         for(AbstractSpellPart slot : recipe){
-            tags.add(slot.getRegistryName());
+            tags.add(slot.getRegistryName().toString());
         }
         return tags.toString();
     }

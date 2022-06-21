@@ -254,8 +254,8 @@ public class GuiSpellBook extends BaseBook {
             // Set visibility of Cast Methods and Augments
             for(Widget w : renderables) {
                 if(w instanceof GlyphButton glyphButton) {
-                    if (glyphButton.abstractSpellPart.getId() != null) {
-                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getId());
+                    if (glyphButton.abstractSpellPart.getRegistryName() != null) {
+                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -336,12 +336,12 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onFamiliarClick(Button button){
-        Collection<String> familiarHolders = new ArrayList<>();
+        Collection<ResourceLocation> familiarHolders = new ArrayList<>();
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
         if(cap != null){
             familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.id).collect(Collectors.toList());
         }
-        Collection<String> finalFamiliarHolders = familiarHolders;
+        Collection<ResourceLocation> finalFamiliarHolders = familiarHolders;
         Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList()), this));
     }
 
@@ -357,7 +357,7 @@ public class GuiSpellBook extends BaseBook {
             for (CraftingButton b : craftingCells) {
                 if (b.abstractSpellPart == null) {
                     b.abstractSpellPart = button1.abstractSpellPart;
-                    b.spellTag = button1.abstractSpellPart.getId();
+                    b.spellTag = button1.abstractSpellPart.getRegistryName();
                     validate();
                     return;
                 }
@@ -380,10 +380,10 @@ public class GuiSpellBook extends BaseBook {
         List<AbstractSpellPart> spell_recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
-            slot.spellTag = "";
+            slot.spellTag = ArsNouveauAPI.EMPTY_KEY;
             slot.abstractSpellPart = null;
             if (spell_recipe != null && i < spell_recipe.size()){
-                slot.spellTag = spell_recipe.get(i).getId();
+                slot.spellTag = spell_recipe.get(i).getRegistryName();
                 slot.abstractSpellPart = spell_recipe.get(i);
             }
         }
@@ -393,7 +393,8 @@ public class GuiSpellBook extends BaseBook {
         boolean allWereEmpty = true;
 
         for (CraftingButton slot : craftingCells) {
-            if(!slot.spellTag.equals("")) allWereEmpty = false;
+            if(!slot.spellTag.equals(ArsNouveauAPI.EMPTY_KEY))
+                allWereEmpty = false;
             slot.clear();
         }
 
@@ -461,7 +462,7 @@ public class GuiSpellBook extends BaseBook {
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton b = craftingCells.get(i);
             b.validationErrors.clear();
-            if (b.spellTag.isEmpty()) {
+            if (b.spellTag == ArsNouveauAPI.EMPTY_KEY) {
                 // The validator can cope with null. Insert it to preserve glyph indices.
                 recipe.add(null);
                 // Also note where we found the first blank.  Used later for the glyph buttons.
@@ -497,7 +498,7 @@ public class GuiSpellBook extends BaseBook {
         glyphButton.validationErrors.clear();
 
         // Simulate adding the glyph to the current spell
-        recipe.add(api.getSpellpartMap().get(glyphButton.abstractSpellPart.getId()));
+        recipe.add(api.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
 
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(

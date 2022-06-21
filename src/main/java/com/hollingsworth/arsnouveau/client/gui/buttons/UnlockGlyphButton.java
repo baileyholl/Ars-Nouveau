@@ -41,7 +41,7 @@ public class UnlockGlyphButton extends Button {
         this.isCraftingSlot = isCraftingSlot;
         this.spellPart = spellPart;
         this.id = 0;
-        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(new ResourceLocation("ars_nouveau:glyph_" + spellPart.getId())).orElse(null);
+        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(new ResourceLocation("ars_nouveau:glyph_" + spellPart.getRegistryName())).orElse(null);
         this.recipe = recipe instanceof GlyphRecipe ? (GlyphRecipe) recipe : null;
     }
 
@@ -60,9 +60,9 @@ public class UnlockGlyphButton extends Button {
             }
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
-                if(parent.api.getSpellpartMap().containsKey(this.spellPart.getId())) {
+                if(parent.api.getSpellpartMap().containsKey(this.spellPart.getRegistryName())) {
                     List<Component> tip = new ArrayList<>();
-                    AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.spellPart.getId());
+                    AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.spellPart.getRegistryName());
                     tip.add(Component.translatable(spellPart.getLocalizationKey()));
                     if(Screen.hasShiftDown()){
                         tip.add(spellPart.getBookDescLang());

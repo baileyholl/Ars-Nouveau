@@ -19,15 +19,15 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
     @Override
     protected void digestSpellPart(Map<String, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
         // Count the glyph
-        if (partCounts.containsKey(spellPart.getId())) {
-            partCounts.put(spellPart.getId(), partCounts.get(spellPart.getId()) + 1);
+        if (partCounts.containsKey(spellPart.getRegistryName())) {
+            partCounts.put(spellPart.getRegistryName(), partCounts.get(spellPart.getRegistryName()) + 1);
         } else {
-            partCounts.put(spellPart.getId(), 1);
+            partCounts.put(spellPart.getRegistryName(), 1);
         }
 
         // Check if over the limit
         int limit = spellPart.PER_SPELL_LIMIT == null ? Integer.MAX_VALUE : spellPart.PER_SPELL_LIMIT.get();
-        if (partCounts.getOrDefault(spellPart.getId(), 0) > limit) {
+        if (partCounts.getOrDefault(spellPart.getRegistryName(), 0) > limit) {
             validationErrors.add(new GlyphOccurrencesPolicySpellValidationError(position, spellPart, limit));
         }
     }

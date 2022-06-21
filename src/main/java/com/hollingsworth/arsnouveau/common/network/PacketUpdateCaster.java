@@ -19,7 +19,7 @@ public class PacketUpdateCaster {
    String spellName;
 
     public PacketUpdateCaster(){}
-
+    // TODO: Change from string to list of resource locations
     public PacketUpdateCaster(String spellRecipe, int cast_slot, String spellName){
         this.spellRecipe = spellRecipe;
         this.cast_slot = cast_slot;

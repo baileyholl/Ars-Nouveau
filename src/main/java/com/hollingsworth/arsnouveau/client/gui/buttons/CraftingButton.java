@@ -9,20 +9,21 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class CraftingButton extends GuiImageButton{
     int slotNum;
-    public String spellTag;
+    public ResourceLocation spellTag;
     public AbstractSpellPart abstractSpellPart;
     public List<SpellValidationError> validationErrors;
 
     public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.OnPress onPress) {
         super( x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
         this.slotNum = slotNum;
-        this.spellTag = "";
+        this.spellTag = ;
         this.resourceIcon = "";
         this.validationErrors = new LinkedList<>();
         this.parent = parent;

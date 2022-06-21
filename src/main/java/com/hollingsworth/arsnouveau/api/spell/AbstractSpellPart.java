@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,15 +17,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
 
-    private String id;
+    private ResourceLocation registryName;
     public String name;
     public Glyph glyphItem;
     /*ID for NBT data and SpellManager#spellList*/
-    public String getId(){
-        return this.id;
+    public ResourceLocation getRegistryName(){
+        return this.registryName;
     }
 
-    public String getIcon(){return this.id + ".png";}
+    public String getIcon(){return this.registryName + ".png";}
 
     /**
      * The list of schools that apply to this spell.
@@ -38,8 +38,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
-    public AbstractSpellPart(String id, String name){
-        this.id = id;
+    public AbstractSpellPart(String registryName, String name){
+        this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
+    }
+
+    public AbstractSpellPart(ResourceLocation registryName, String name) {
+        this.registryName = registryName;
         this.name = name;
         for(SpellSchool spellSchool : getSchools()){
             spellSchool.addSpellPart(this);
@@ -60,9 +64,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return SpellTier.ONE;
     }
 
+    /**
+     * Cache the glyph item here because of registry freezing.
+     */
     public Glyph getGlyph() {
         if(glyphItem == null){
-            glyphItem = new Glyph(ArsNouveauAPI.getInstance().getSpellRegistryName(this.getId()), this);
+            glyphItem = new Glyph(this);
         }
         return this.glyphItem;
     }
@@ -72,10 +79,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
      * @deprecated This will be set to protected in a future update.
-     * This should not be accessed directly, but can be overriden.
+     * This should not be accessed directly, but can be overridden.
      */
-    @Deprecated
-    public abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
+    protected abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
 
     /**
      * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}
@@ -102,7 +108,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public Component getBookDescLang(){
-        return Component.translatable("ars_nouveau.glyph_desc." + getId());
+        return Component.translatable("ars_nouveau.glyph_desc." + getRegistryName());
     }
 
     // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
@@ -136,10 +142,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
-    // TODO: Pass the map to the method param
+
     /** Override this method to provide defaults for the augmentation limits configuration. */
-    protected Map<String, Integer> getDefaultAugmentLimits() {
-        return new HashMap<>();
+    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
+        return defaults;
     }
 
     // Default value for the starter spell config
@@ -152,7 +158,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public String getItemID(){
-        return "glyph_" + this.getId();
+        return "glyph_" + this.getRegistryName();
     }
 
     public String getBookDescription(){
@@ -160,7 +166,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public String getLocalizationKey() {
-        return "ars_nouveau.glyph_name." + id;
+        return "ars_nouveau.glyph_name." + registryName;
     }
 
     public String getLocaleName(){

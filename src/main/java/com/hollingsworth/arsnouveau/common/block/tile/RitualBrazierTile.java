@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -136,8 +137,9 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        String ritualID = tag.getString("ritualID");
-        if(!ritualID.isEmpty()){
+        String ritualIDString = tag.getString("ritualID");
+        if(!ritualIDString.isEmpty()){
+            ResourceLocation ritualID = new ResourceLocation(ritualIDString);
             ritual = ArsNouveauAPI.getInstance().getRitual(ritualID);
             if(ritual != null) {
                 ritual.read(tag);
@@ -159,7 +161,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void saveAdditional(CompoundTag tag) {
         if(ritual != null){
-            tag.putString("ritualID", ritual.getID());
+            tag.putString("ritualID", ritual.getRegistryName().toString());
             ritual.write(tag);
         }else{
             tag.remove("ritualID");
@@ -175,7 +177,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         return this.ritual == null || this.ritual.isRunning();
     }
 
-    public void setRitual(String selectedRitual) {
+    public void setRitual(ResourceLocation selectedRitual) {
         this.ritual = ArsNouveauAPI.getInstance().getRitual(selectedRitual);
         if(ritual != null){
             this.ritual.tile = this;

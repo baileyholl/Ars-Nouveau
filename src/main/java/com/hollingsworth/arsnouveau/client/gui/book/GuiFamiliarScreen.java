@@ -58,7 +58,7 @@ public class GuiFamiliarScreen extends BaseBook{
 
     public void onGlyphClick(Button button){
         FamiliarButton button1 = (FamiliarButton) button;
-        Networking.INSTANCE.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.id, Minecraft.getInstance().player.getId()));
+        Networking.INSTANCE.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.getRegistryName(), Minecraft.getInstance().player.getId()));
         Minecraft.getInstance().setScreen(null);
     }
 }

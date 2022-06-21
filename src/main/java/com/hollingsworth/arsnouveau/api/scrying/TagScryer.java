@@ -1,5 +1,6 @@
-package com.hollingsworth.arsnouveau.api.ritual;
+package com.hollingsworth.arsnouveau.api.scrying;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -45,7 +46,7 @@ public class TagScryer implements IScryer {
     }
 
     @Override
-    public String getID() {
-        return "an_tag_scryer";
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, "tag_scryer");
     }
 }

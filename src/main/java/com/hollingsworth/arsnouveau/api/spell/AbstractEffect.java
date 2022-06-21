@@ -36,6 +36,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -172,7 +173,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits());
+        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
     }
 
     public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue){

@@ -137,7 +137,7 @@ public class GlyphRecipeProvider implements DataProvider {
     }
 
     public GlyphRecipe get(AbstractSpellPart spellPart){
-        return new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_" + spellPart.getId()),
+        return new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_" + spellPart.getRegistryName()),
                 ArsNouveauAPI.getInstance().getGlyphItem(spellPart).getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
     }
 

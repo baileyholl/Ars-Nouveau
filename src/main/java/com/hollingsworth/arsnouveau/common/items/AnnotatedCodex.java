@@ -157,7 +157,7 @@ public class AnnotatedCodex extends ModItem{
 
         public void write(){
             CompoundTag tag = new CompoundTag();
-            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getId).collect(Collectors.toList()));
+            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
             if(playerID != null){
                 tag.putUUID("player", playerID);
             }

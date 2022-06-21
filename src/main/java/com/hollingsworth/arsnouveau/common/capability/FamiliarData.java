@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 
 public class FamiliarData {
     public static final String ENTITY_TAG = "entityTag";
+    public static final String FAMILIAR_ID = "familiarID";
     public AbstractFamiliarHolder familiarHolder;
     public CompoundTag entityTag;
 
@@ -24,7 +25,7 @@ public class FamiliarData {
 
     public CompoundTag toTag(){
         CompoundTag tag = new CompoundTag();
-        tag.putString("familiar", familiarHolder.id);
+        tag.putString(FAMILIAR_ID, familiarHolder.getRegistryName().toString());
         tag.put(ENTITY_TAG, entityTag);
         return tag;
     }

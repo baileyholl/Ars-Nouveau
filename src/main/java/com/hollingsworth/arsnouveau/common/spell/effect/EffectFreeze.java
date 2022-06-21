@@ -116,7 +116,7 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    protected Map<String, Integer> getDefaultAugmentLimits() {
+    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
         Map<String, Integer> map = new HashMap<>();
         map.put(GlyphLib.AugmentSensitiveID, 1);
         return map;
