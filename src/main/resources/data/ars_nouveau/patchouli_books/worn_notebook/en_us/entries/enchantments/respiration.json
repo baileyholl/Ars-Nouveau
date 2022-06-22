@@ -1,19 +1,19 @@
 {
-  "name": "enchantment.minecraft.respiration",
   "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.respiration",
   "pages": [
     {
-      "recipe": "ars_nouveau:respiration_1",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:respiration_1"
     },
     {
-      "recipe": "ars_nouveau:respiration_2",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:respiration_2"
     },
     {
-      "recipe": "ars_nouveau:respiration_3",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:respiration_3"
     }
   ]
 }

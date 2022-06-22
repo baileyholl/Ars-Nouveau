@@ -1,24 +1,24 @@
 {
-  "name": "ars_nouveau.page.spell_casting",
   "category": "ars_nouveau:getting_started",
   "icon": "ars_nouveau:novice_spell_book",
-  "sortnum": 1,
+  "name": "ars_nouveau.page.spell_casting",
   "pages": [
     {
-      "text": "ars_nouveau.page1.spell_casting",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.spell_casting"
     },
     {
-      "text": "ars_nouveau.page2.spell_casting",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.spell_casting"
     },
     {
-      "text": "ars_nouveau.page3.spell_casting",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.spell_casting"
     },
     {
-      "recipe": "ars_nouveau:novice_spell_book",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:novice_spell_book"
     }
-  ]
+  ],
+  "sortnum": 1
 }

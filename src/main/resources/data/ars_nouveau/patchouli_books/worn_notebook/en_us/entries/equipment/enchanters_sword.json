@@ -1,15 +1,15 @@
 {
-  "name": "item.ars_nouveau.enchanters_sword",
   "category": "ars_nouveau:equipment",
   "icon": "ars_nouveau:enchanters_sword",
+  "name": "item.ars_nouveau.enchanters_sword",
   "pages": [
     {
-      "text": "ars_nouveau.page.enchanters_sword",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.enchanters_sword"
     },
     {
-      "recipe": "ars_nouveau:enchanters_sword",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:enchanters_sword"
     }
   ]
 }

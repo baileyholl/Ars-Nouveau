@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.delay",
   "category": "ars_nouveau:glyphs_1",
   "icon": "ars_nouveau:glyph_delay",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_delay",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.delay",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_delay"
     },
     {
-      "recipe": "ars_nouveau:glyph_delay",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_delay"
     }
-  ]
+  ],
+  "sortnum": 2
 }

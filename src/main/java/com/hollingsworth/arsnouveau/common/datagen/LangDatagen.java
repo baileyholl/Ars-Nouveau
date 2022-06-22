@@ -21,13 +21,16 @@ public class LangDatagen extends LanguageProvider {
             Glyph i = supplier.get();
             add("ars_nouveau.glyph_desc." + i.spellPart.getRegistryName().getPath(), i.spellPart.getBookDescription());
             add("ars_nouveau.glyph_name." + i.spellPart.getRegistryName().getPath(), i.spellPart.getName());
+            add("item.ars_nouveau." + i.spellPart.getRegistryName().getPath(), "Glyph of " + i.spellPart.getName());
         }
         for(FamiliarScript i : arsNouveauAPI.getFamiliarScriptMap().values()){
             add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
             add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
+            add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), "Bound Script: " + i.familiar.getBookName());
         }
         for(RitualTablet i : arsNouveauAPI.getRitualItemMap().values()){
-            add( "ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
+            add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
+            add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), "Tablet of " + i.ritual.getLangName());
         }
     }
 }

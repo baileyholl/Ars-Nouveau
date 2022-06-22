@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.extend_time",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_extend_time",
-  "sortnum": 3,
+  "name": "ars_nouveau.glyph_name.glyph_extend_time",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.extend_time",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_extend_time"
     },
     {
-      "recipe": "ars_nouveau:glyph_extend_time",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_extend_time"
     }
-  ]
+  ],
+  "sortnum": 3
 }

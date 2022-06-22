@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.name",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_name",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_name",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.name",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_name"
     },
     {
-      "recipe": "ars_nouveau:glyph_name",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_name"
     }
-  ]
+  ],
+  "sortnum": 2
 }

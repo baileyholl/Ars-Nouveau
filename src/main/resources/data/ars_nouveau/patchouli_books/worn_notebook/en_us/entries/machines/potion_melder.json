@@ -1,20 +1,23 @@
 {
-  "name": "block.ars_nouveau.potion_melder",
-  "icon": "ars_nouveau:potion_melder",
   "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:potion_melder",
+  "name": "block.ars_nouveau.potion_melder",
   "pages": [
     {
-      "text": "ars_nouveau.page1.potion_melder",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.potion_melder"
     },
     {
-      "recipe": "ars_nouveau:potion_melder",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:potion_melder"
     },
     {
-      "name": "block.ars_nouveau.potion_melder",
-      "text": "ars_nouveau.page2.potion_melder",
+      "type": "patchouli:multiblock",
       "multiblock": {
+        "mapping": {
+          "0": "ars_nouveau:potion_melder",
+          "C": "ars_nouveau:potion_jar"
+        },
         "pattern": [
           [
             "   "
@@ -25,13 +28,10 @@
           [
             " C "
           ]
-        ],
-        "mapping": {
-          "C": "ars_nouveau:potion_jar",
-          "0": "ars_nouveau:potion_melder"
-        }
+        ]
       },
-      "type": "patchouli:multiblock"
+      "name": "block.ars_nouveau.potion_melder",
+      "text": "ars_nouveau.page2.potion_melder"
     }
   ]
 }

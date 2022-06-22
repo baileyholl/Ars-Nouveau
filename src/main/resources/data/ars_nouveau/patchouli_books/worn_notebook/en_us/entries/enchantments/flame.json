@@ -1,11 +1,11 @@
 {
-  "name": "enchantment.minecraft.flame",
   "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.flame",
   "pages": [
     {
-      "recipe": "ars_nouveau:flame_1",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:flame_1"
     }
   ]
 }

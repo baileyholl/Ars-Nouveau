@@ -1,19 +1,19 @@
 {
-  "name": "enchantment.minecraft.depth_strider",
   "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.depth_strider",
   "pages": [
     {
-      "recipe": "ars_nouveau:depth_strider_1",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:depth_strider_1"
     },
     {
-      "recipe": "ars_nouveau:depth_strider_2",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:depth_strider_2"
     },
     {
-      "recipe": "ars_nouveau:depth_strider_3",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:depth_strider_3"
     }
   ]
 }

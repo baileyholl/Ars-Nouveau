@@ -1,20 +1,24 @@
 {
-  "name": "ars_nouveau.page.warp_portal",
   "category": "ars_nouveau:machines",
   "icon": "ars_nouveau:warp_scroll",
+  "name": "ars_nouveau.page.warp_portal",
   "pages": [
     {
-      "text": "ars_nouveau.page1.warp_portal",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.warp_portal"
     },
     {
-      "text": "ars_nouveau.page2.warp_portal",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.warp_portal"
     },
     {
-      "name": "ars_nouveau.page3.warp_portal",
-      "text": "ars_nouveau.page4.warp_portal",
+      "type": "patchouli:multiblock",
       "multiblock": {
+        "mapping": {
+          "0": "ars_nouveau:portal",
+          "B": "ars_nouveau:arcane_bricks",
+          "P": "ars_nouveau:portal"
+        },
         "pattern": [
           [
             " BB "
@@ -31,14 +35,10 @@
           [
             " BB "
           ]
-        ],
-        "mapping": {
-          "B": "ars_nouveau:arcane_bricks",
-          "P": "ars_nouveau:portal",
-          "0": "ars_nouveau:portal"
-        }
+        ]
       },
-      "type": "patchouli:multiblock"
+      "name": "ars_nouveau.page3.warp_portal",
+      "text": "ars_nouveau.page4.warp_portal"
     }
   ]
 }

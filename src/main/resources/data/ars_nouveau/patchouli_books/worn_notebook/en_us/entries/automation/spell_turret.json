@@ -1,35 +1,35 @@
 {
-  "name": "block.ars_nouveau.basic_spell_turret",
-  "icon": "ars_nouveau:basic_spell_turret",
   "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:basic_spell_turret",
+  "name": "block.ars_nouveau.basic_spell_turret",
   "pages": [
     {
-      "text": "ars_nouveau.page1.basic_spell_turret",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.basic_spell_turret"
     },
     {
-      "recipe": "ars_nouveau:basic_spell_turret",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:basic_spell_turret"
     },
     {
-      "text": "ars_nouveau.page2.basic_spell_turret",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.basic_spell_turret"
     },
     {
-      "recipe": "ars_nouveau:spell_turret",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:spell_turret"
     },
     {
-      "text": "ars_nouveau.page3.basic_spell_turret",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.basic_spell_turret"
     },
     {
-      "recipe": "ars_nouveau:timer_spell_turret",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:timer_spell_turret"
     },
     {
-      "text": "ars_nouveau.page4.basic_spell_turret",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page4.basic_spell_turret"
     }
   ]
 }

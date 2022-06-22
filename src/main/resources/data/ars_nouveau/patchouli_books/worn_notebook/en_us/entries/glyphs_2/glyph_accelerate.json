@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.accelerate",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_accelerate",
-  "sortnum": 3,
+  "name": "ars_nouveau.glyph_name.glyph_accelerate",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.accelerate",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_accelerate"
     },
     {
-      "recipe": "ars_nouveau:glyph_accelerate",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_accelerate"
     }
-  ]
+  ],
+  "sortnum": 3
 }

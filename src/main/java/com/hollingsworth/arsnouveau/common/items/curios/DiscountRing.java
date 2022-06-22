@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items.curios;
 
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class DiscountRing extends ArsNouveauCurio implements IManaEquipment {

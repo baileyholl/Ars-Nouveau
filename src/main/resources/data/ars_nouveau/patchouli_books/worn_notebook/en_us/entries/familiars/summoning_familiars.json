@@ -1,27 +1,27 @@
 {
-  "name": "ars_nouveau.page.summoning_familiars",
   "category": "ars_nouveau:familiars",
-  "sortnum": -1,
   "icon": "ars_nouveau:ritual_binding",
+  "name": "ars_nouveau.page.summoning_familiars",
   "pages": [
     {
-      "text": "ars_nouveau.page1.summoning_familiars",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.summoning_familiars"
     },
     {
-      "text": "ars_nouveau.page2.summoning_familiars",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.summoning_familiars"
     },
     {
-      "recipe": "ars_nouveau:ritual_binding",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ritual_binding"
     },
     {
+      "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:machines/ritual_brazier",
         "ars_nouveau:rituals/binding"
-      ],
-      "type": "patchouli:relations"
+      ]
     }
-  ]
+  ],
+  "sortnum": -1
 }

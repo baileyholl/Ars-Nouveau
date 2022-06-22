@@ -1,20 +1,20 @@
 {
-  "name": "block.ars_nouveau.enchanting_apparatus",
-  "icon": "ars_nouveau:enchanting_apparatus",
   "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:enchanting_apparatus",
+  "name": "block.ars_nouveau.enchanting_apparatus",
   "pages": [
     {
-      "text": "ars_nouveau.page1.enchanting_apparatus",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.enchanting_apparatus"
     },
     {
+      "type": "patchouli:crafting",
       "recipe": "ars_nouveau:arcane_pedestal",
-      "recipe2": "ars_nouveau:arcane_core",
-      "type": "patchouli:crafting"
+      "recipe2": "ars_nouveau:arcane_core"
     },
     {
-      "recipe": "ars_nouveau:enchanting_apparatus",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:enchanting_apparatus"
     }
   ]
 }

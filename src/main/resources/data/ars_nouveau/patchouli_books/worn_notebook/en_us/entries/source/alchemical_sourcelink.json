@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.alchemical_sourcelink",
   "category": "ars_nouveau:source",
   "icon": "ars_nouveau:alchemical_sourcelink",
+  "name": "block.ars_nouveau.alchemical_sourcelink",
   "pages": [
     {
-      "text": "ars_nouveau.page.alchemical_sourcelink",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.alchemical_sourcelink"
     },
     {
-      "recipe": "ars_nouveau:alchemical_sourcelink",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:alchemical_sourcelink"
     }
   ]
 }

@@ -254,7 +254,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(ItemsRegistry.SOURCE_BERRY_PIE).withRecipe2(ItemsRegistry.SOURCE_BERRY_ROLL)), getPath(RESOURCES,  "sourceberry"));
 
         addPage(new PatchouliBuilder(RESOURCES, "weald_walker")
-                .withIcon(ArsNouveauAPI.getInstance().getRitualItemMap().get(RitualLib.AWAKENING))
+                .withIcon(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.AWAKENING)))
                 .withLocalizedText()
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BLAZING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 2)))
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_CASCADING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 3)))
@@ -389,14 +389,14 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(ArsNouveauAPI.getInstance().getRitualItemMap().get(RitualLib.SUNRISE)))
+                .withPage(new CraftingPage(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.SUNRISE))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier")), getPath(RITUALS,"performing_rituals"));
         addPage(new PatchouliBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
-                .withIcon(ArsNouveauAPI.getInstance().getRitualItemMap().get(RitualLib.BINDING))
+                .withIcon(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)))
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(ArsNouveauAPI.getInstance().getRitualItemMap().get(RitualLib.BINDING)))
+                .withPage(new CraftingPage(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "binding")), getPath(FAMILIARS,"summoning_familiars"));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
@@ -494,31 +494,31 @@ public class PatchouliProvider implements DataProvider {
         }
     }
 
-    public void addGlyphPage(AbstractSpellPart spellPart){
+    public void addGlyphPage(AbstractSpellPart spellPart) {
         ResourceLocation category = switch (spellPart.getTier().value) {
             case 1 -> GLYPHS_1;
             case 2 -> GLYPHS_2;
             default -> GLYPHS_3;
         };
         PatchouliBuilder builder = new PatchouliBuilder(category, spellPart.getName())
-                .withName("ars_nouveau.glyph_name." + spellPart.getRegistryName())
-                .withIcon( spellPart.getRegistryName().toString())
+                .withName("ars_nouveau.glyph_name." + spellPart.getRegistryName().getPath())
+                .withIcon(spellPart.getRegistryName().toString())
                 .withSortNum(spellPart instanceof AbstractCastMethod ? 1 : spellPart instanceof AbstractEffect ? 2 : 3)
-                .withPage(new TextPage("ars_nouveau.glyph_desc." + spellPart.getRegistryName()))
-                .withPage(new GlyphPressPage(spellPart));
-        this.pages.add(new PatchouliPage(builder, getPath(category, "glyph_" + spellPart.getRegistryName())));
+                .withPage(new TextPage("ars_nouveau.glyph_desc." + spellPart.getRegistryName().getPath()))
+                .withPage(new GlyphScribePage(spellPart));
+        this.pages.add(new PatchouliPage(builder, getPath(category, spellPart.getRegistryName().getPath())));
     }
 
-    public void addFamiliarPage(AbstractFamiliarHolder familiarHolder){
-        PatchouliBuilder builder = new PatchouliBuilder(FAMILIARS, "entity.ars_nouveau." + familiarHolder.getRegistryName())
-                .withIcon("ars_nouveau:familiar_" + familiarHolder.getRegistryName())
-                .withTextPage("ars_nouveau.familiar_desc." + familiarHolder.getRegistryName())
+    public void addFamiliarPage(AbstractFamiliarHolder familiarHolder) {
+        PatchouliBuilder builder = new PatchouliBuilder(FAMILIARS, "entity.ars_nouveau." + familiarHolder.getRegistryName().getPath())
+                .withIcon("ars_nouveau:" + familiarHolder.getRegistryName().getPath())
+                .withTextPage("ars_nouveau.familiar_desc." + familiarHolder.getRegistryName().getPath())
                 .withPage(new EntityPage(familiarHolder.getRegistryName().toString()));
-        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/familiars/" + familiarHolder.getRegistryName() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/familiars/" + familiarHolder.getRegistryName().getPath() + ".json")));
     }
 
     public void addRitualPage(AbstractRitual ritual){
-        PatchouliBuilder builder = new PatchouliBuilder(RITUALS, "item." + ritual.getRegistryName().getNamespace() + ".ritual_" + ritual.getRegistryName().getPath())
+        PatchouliBuilder builder = new PatchouliBuilder(RITUALS, "item." + ritual.getRegistryName().getNamespace() + "." + ritual.getRegistryName().getPath())
                 .withIcon(ritual.getRegistryName().toString())
                 .withTextPage(ritual.getDescriptionKey())
                 .withPage(new CraftingPage(ritual.getRegistryName().toString()));

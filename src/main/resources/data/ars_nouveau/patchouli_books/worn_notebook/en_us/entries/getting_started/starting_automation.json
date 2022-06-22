@@ -1,22 +1,22 @@
 {
-  "name": "ars_nouveau.page.starting_automation",
   "category": "ars_nouveau:getting_started",
-  "sortnum": 10,
   "icon": "ars_nouveau:basic_spell_turret",
+  "name": "ars_nouveau.page.starting_automation",
   "pages": [
     {
-      "text": "ars_nouveau.page1.starting_automation",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.starting_automation"
     },
     {
+      "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:automation/spell_turret",
         "ars_nouveau:automation/spell_prism",
         "ars_nouveau:automation/bookwyrm_charm",
         "ars_nouveau:automation/starbuncle_charm",
         "ars_nouveau:automation/wixie_charm"
-      ],
-      "type": "patchouli:relations"
+      ]
     }
-  ]
+  ],
+  "sortnum": 10
 }

@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.block.ArchwoodChest;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
 

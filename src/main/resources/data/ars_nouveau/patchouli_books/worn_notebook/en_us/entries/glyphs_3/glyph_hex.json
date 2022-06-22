@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.hex",
   "category": "ars_nouveau:glyphs_3",
   "icon": "ars_nouveau:glyph_hex",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_hex",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.hex",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_hex"
     },
     {
-      "recipe": "ars_nouveau:glyph_hex",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_hex"
     }
-  ]
+  ],
+  "sortnum": 2
 }

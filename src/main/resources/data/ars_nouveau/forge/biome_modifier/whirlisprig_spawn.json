@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#ars_nouveau:summon_spawn",
+  "spawners": {
+    "type": "ars_nouveau:whirlisprig",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 5
+  }
+}
