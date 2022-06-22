@@ -57,7 +57,7 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     @Override
     public FamiliarData getFamiliarData(ResourceLocation id) {
-        return this.familiars.stream().filter(f -> f.familiarHolder.id.equals(id)).findFirst().orElse(null);
+        return this.familiars.stream().filter(f -> f.familiarHolder.getRegistryName().equals(id)).findFirst().orElse(null);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ANPlayerDataCap implements IPlayerCap{
         CompoundTag tag = new CompoundTag();
         NBTUtil.writeResourceLocations(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
         for(FamiliarData f : familiars){
-            tag.put("familiar_" + f.familiarHolder.id.toString(), f.toTag());
+            tag.put("familiar_" + f.familiarHolder.getRegistryName().toString(), f.toTag());
         }
         return tag;
     }

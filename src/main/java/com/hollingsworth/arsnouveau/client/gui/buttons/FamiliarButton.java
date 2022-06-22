@@ -15,44 +15,32 @@ import java.util.List;
 
 public class FamiliarButton extends Button {
 
-    public boolean isCraftingSlot;
-    public String resourceIcon;
-    public String tooltip = "tooltip";
-
-    GuiFamiliarScreen parent;
+    public GuiFamiliarScreen parent;
     public AbstractFamiliarHolder familiarHolder;
-    public FamiliarButton(GuiFamiliarScreen parent, int x, int y, boolean isCraftingSlot, AbstractFamiliarHolder familiar) {
-        super(x, y,  16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
+
+    public FamiliarButton(GuiFamiliarScreen parent, int x, int y, AbstractFamiliarHolder familiar) {
+        super(x, y, 16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
         this.y = y;
         this.width = 16;
         this.height = 16;
-        this.isCraftingSlot = isCraftingSlot;
-        this.resourceIcon = familiar.getImagePath();
         this.familiarHolder = familiar;
     }
 
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-        if (visible)
-        {
-            if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 , ms);
-            }
-
-            if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
-
+        if (visible) {
+            GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + familiarHolder.getRegistryName().getPath()), x, y, 0, 0, 16, 16, 16, 16, ms);
+            if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 List<Component> tip = new ArrayList<>();
-                if(Screen.hasShiftDown()){
+                if (Screen.hasShiftDown()) {
                     tip.add(familiarHolder.getLangDescription());
-                }else{
+                } else {
                     tip.add(familiarHolder.getLangName());
                     tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
                 }
-
                 parent.tooltip = tip;
-
             }
 
         }

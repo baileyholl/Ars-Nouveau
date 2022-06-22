@@ -449,7 +449,7 @@ public class ItemsRegistry {
 
         for (AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
             FamiliarScript script = new FamiliarScript(holder);
-            ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.id, script);
+            ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.getRegistryName(), script);
             registry.register(holder.getRegistryName(), script);
         }
 

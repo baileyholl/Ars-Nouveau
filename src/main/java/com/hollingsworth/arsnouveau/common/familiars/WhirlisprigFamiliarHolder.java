@@ -9,9 +9,9 @@ import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
-public class WhirlisprigFamiliar extends AbstractFamiliarHolder {
-    public WhirlisprigFamiliar() {
-        super(LibEntityNames.WHIRLISPRIG, (e) -> e instanceof Whirlisprig);
+public class WhirlisprigFamiliarHolder extends AbstractFamiliarHolder {
+    public WhirlisprigFamiliarHolder() {
+        super(LibEntityNames.FAMILIAR_WHIRLISPRIG, (e) -> e instanceof Whirlisprig);
     }
 
     @Override

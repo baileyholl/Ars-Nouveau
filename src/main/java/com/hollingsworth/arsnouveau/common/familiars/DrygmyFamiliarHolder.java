@@ -5,12 +5,13 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarDrygmy;
+import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
-public class DrygmyFamiliar extends AbstractFamiliarHolder {
-    public DrygmyFamiliar() {
-        super("drygmy", (e) -> e instanceof EntityDrygmy);
+public class DrygmyFamiliarHolder extends AbstractFamiliarHolder {
+    public DrygmyFamiliarHolder() {
+        super(LibEntityNames.FAMILIAR_DRYGMY, (e) -> e instanceof EntityDrygmy);
     }
 
     @Override

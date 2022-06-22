@@ -154,7 +154,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public boolean isRenderAsIcon() {
-        return true;
+        return false;
     }
 
 

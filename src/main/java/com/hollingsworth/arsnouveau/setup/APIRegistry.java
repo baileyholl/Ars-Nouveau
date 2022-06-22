@@ -96,12 +96,12 @@ public class APIRegistry {
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualBinding());
         registerRitual(new RitualAwakening());
-        registerFamiliar(new StarbuncleFamiliar());
-        registerFamiliar(new DrygmyFamiliar());
-        registerFamiliar(new WhirlisprigFamiliar());
-        registerFamiliar(new WixieFamiliar());
+        registerFamiliar(new StarbuncleFamiliarHolder());
+        registerFamiliar(new DrygmyFamiliarHolder());
+        registerFamiliar(new WhirlisprigFamiliarHolder());
+        registerFamiliar(new WixieFamiliarHolder());
 //        registerFamiliar(new JabberwogFamiliar());
-        registerFamiliar(new BookwyrmFamiliar());
+        registerFamiliar(new BookwyrmFamiliarHolder());
 
         registerSpell(EffectFirework.INSTANCE);
         registerSpell(EffectToss.INSTANCE);

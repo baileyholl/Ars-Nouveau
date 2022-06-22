@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 public abstract class AbstractFamiliarHolder {
 
     public Predicate<Entity> isEntity;
-    public ResourceLocation id;
+    private ResourceLocation id;
 
     public AbstractFamiliarHolder(String id, Predicate<Entity> isConversionEntity) {
         this(new ResourceLocation(ArsNouveau.MODID, id), isConversionEntity);
@@ -31,20 +31,16 @@ public abstract class AbstractFamiliarHolder {
         return new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem(getRegistryName()));
     }
 
-    public String getImagePath(){
-        return "familiar_" + id + ".png";
-    }
-
     public ResourceLocation getRegistryName(){
         return this.id;
     }
 
     public Component getLangDescription(){
-        return Component.translatable("ars_nouveau.familiar_desc." + this.id);
+        return Component.translatable(this.id.getNamespace() + ".familiar_desc." + this.id.getPath());
     }
 
     public Component getLangName(){
-        return Component.translatable("ars_nouveau.familiar_name." + this.id);
+        return Component.translatable(this.id.getNamespace() + ".familiar_name." + this.id.getPath());
     }
 
 

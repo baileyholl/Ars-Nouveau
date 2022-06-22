@@ -339,10 +339,10 @@ public class GuiSpellBook extends BaseBook {
         Collection<ResourceLocation> familiarHolders = new ArrayList<>();
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
         if(cap != null){
-            familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.id).collect(Collectors.toList());
+            familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.getRegistryName()).collect(Collectors.toList());
         }
         Collection<ResourceLocation> finalFamiliarHolders = familiarHolders;
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList()), this));
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
     }
 
     public void onCraftingSlotClick(Button button){

@@ -9,10 +9,10 @@ import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
-public class StarbuncleFamiliar extends AbstractFamiliarHolder {
+public class StarbuncleFamiliarHolder extends AbstractFamiliarHolder {
 
-    public StarbuncleFamiliar(){
-        super(LibEntityNames.STARBUNCLE, (e) -> e instanceof Starbuncle);
+    public StarbuncleFamiliarHolder(){
+        super(LibEntityNames.FAMILIAR_STARBUNCLE, (e) -> e instanceof Starbuncle);
     }
 
     @Override

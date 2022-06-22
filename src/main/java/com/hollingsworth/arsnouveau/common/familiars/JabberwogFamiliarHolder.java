@@ -3,13 +3,14 @@ package com.hollingsworth.arsnouveau.common.familiars;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
-public class JabberwogFamiliar extends AbstractFamiliarHolder {
+public class JabberwogFamiliarHolder extends AbstractFamiliarHolder {
 
-    public JabberwogFamiliar(){
-        super("jabberwog", (e) -> e instanceof Starbuncle);
+    public JabberwogFamiliarHolder(){
+        super(LibEntityNames.FAMILIAR_JABBERWOG, (e) -> e instanceof Starbuncle);
     }
 
     @Override

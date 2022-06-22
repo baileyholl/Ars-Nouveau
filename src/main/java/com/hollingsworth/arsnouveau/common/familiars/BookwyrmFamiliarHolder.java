@@ -5,12 +5,14 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
+import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
-public class BookwyrmFamiliar extends AbstractFamiliarHolder {
-    public BookwyrmFamiliar() {
-        super("bookwyrm", (e) -> e instanceof EntityBookwyrm);
+public class BookwyrmFamiliarHolder extends AbstractFamiliarHolder {
+
+    public BookwyrmFamiliarHolder() {
+        super(LibEntityNames.FAMILIAR_BOOKWYRM, (e) -> e instanceof EntityBookwyrm);
     }
 
     @Override
