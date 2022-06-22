@@ -1,5 +1,7 @@
-package com.hollingsworth.arsnouveau.api.ritual;
+package com.hollingsworth.arsnouveau.api.scrying;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -7,8 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class SingleBlockScryer implements IScryer {
     public static SingleBlockScryer INSTANCE = new SingleBlockScryer(null);
@@ -36,12 +36,12 @@ public class SingleBlockScryer implements IScryer {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         if(block != null)
-            tag.putString("block", getRegistryName(block).toString());
+            tag.putString("block", RegistryHelper.getRegistryName(block).toString());
         return IScryer.super.toTag(tag);
     }
 
     @Override
-    public String getID() {
-        return "an_single_block";
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, "single_block");
     }
 }

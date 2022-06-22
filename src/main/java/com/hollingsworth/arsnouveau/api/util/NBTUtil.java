@@ -2,11 +2,13 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
@@ -86,6 +88,14 @@ public class NBTUtil {
             tag.putString(prefix + "_" + i, s);
             i++;
         }
+    }
+
+    public static void writeResourceLocations(CompoundTag tag, String prefix, Collection<ResourceLocation> resourceLocations){
+        writeStrings(tag, prefix, resourceLocations.stream().map(ResourceLocation::toString).collect(Collectors.toList()));
+    }
+
+    public static List<ResourceLocation> readResourceLocations(CompoundTag tag, String prefix){
+        return readStrings(tag, prefix).stream().map(ResourceLocation::new).collect(Collectors.toList());
     }
 
     public static String getItemKey(ItemStack stack, String prefix){

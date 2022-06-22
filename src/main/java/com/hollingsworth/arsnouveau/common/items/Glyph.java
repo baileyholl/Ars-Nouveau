@@ -25,7 +25,8 @@ import java.util.List;
 
 public class Glyph extends ModItem{
     public AbstractSpellPart spellPart;
-    public Glyph(String registryName, AbstractSpellPart part) {
+
+    public Glyph(AbstractSpellPart part) {
         super();
         this.spellPart = part;
     }
@@ -35,7 +36,7 @@ public class Glyph extends ModItem{
         if(worldIn.isClientSide)
             return super.use(worldIn, playerIn, handIn);
 
-        if(!Config.isSpellEnabled(this.spellPart.getId())){
+        if(!Config.isGlyphEnabled(this.spellPart.getRegistryName())){
             playerIn.sendSystemMessage(Component.translatable("ars_nouveau.spell.disabled"));
             return super.use(worldIn, playerIn, handIn);
         }
@@ -59,7 +60,7 @@ public class Glyph extends ModItem{
         if(spellPart == null)
             return;
 
-        if(!Config.isSpellEnabled(this.spellPart.getId())){
+        if(!Config.isGlyphEnabled(this.spellPart.getRegistryName())){
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
         }else if(spellPart != null){
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));

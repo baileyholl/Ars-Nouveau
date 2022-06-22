@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
+
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -628,6 +630,11 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
         }
     }
+
+    public RitualTablet getRitualItem(String name) {
+        return ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, name));
+    }
+
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {
         return shapedBuilder(item, 1);
     }
@@ -636,7 +643,7 @@ public class Recipes extends RecipeProvider {
         return ShapedRecipeBuilder.shaped(result, count).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK));
     }
 
-    public Item getRitualItem(String id) {
+    public Item getRitualItem(ResourceLocation id) {
         return ArsNouveauAPI.getInstance().getRitualItemMap().get(id);
     }
 

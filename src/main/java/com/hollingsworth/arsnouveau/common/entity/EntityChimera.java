@@ -227,8 +227,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                 for(LivingEntity e : level.getEntitiesOfClass(Player.class, new AABB(this.blockPosition()).inflate(5))){
 
                     EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(
-                            new Spell.Builder().add(MethodTouch.INSTANCE)
-                                    .add(EffectLaunch.INSTANCE).add(AugmentAmplify.INSTANCE, 2).add(EffectDelay.INSTANCE).add(EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 2).build()
+                            new Spell().add(MethodTouch.INSTANCE)
+                                    .add(EffectLaunch.INSTANCE).add(AugmentAmplify.INSTANCE, 2).add(EffectDelay.INSTANCE).add(EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 2)
                     , this));
                     resolver.onCastOnEntity(ItemStack.EMPTY, e, InteractionHand.MAIN_HAND);
                 }

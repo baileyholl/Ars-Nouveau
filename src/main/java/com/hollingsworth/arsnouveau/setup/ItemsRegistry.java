@@ -24,6 +24,7 @@ import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
@@ -433,23 +434,23 @@ public class ItemsRegistry {
 */
 
     public static void onItemRegistry(IForgeRegistry<Item> registry) {
-        for (Map.Entry<String, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
+        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
-            registry.register("glyph_" + glyphEntry.getKey(), glyph);
+            registry.register(glyphEntry.getKey(), glyph);
             glyph.spellPart.glyphItem = glyph;
 
         }
 
         for (AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()) {
-            RitualTablet tablet = new RitualTablet(ArsNouveauAPI.getInstance().getRitualRegistryName(ritual.getID()), ritual);
-            registry.register(tablet.registryName, tablet);
-            ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getID(), tablet);
+            RitualTablet tablet = new RitualTablet(ritual);
+            registry.register(ritual.getRegistryName(), tablet);
+            ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getRegistryName(), tablet);
         }
 
         for (AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
             FamiliarScript script = new FamiliarScript(holder);
             ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.id, script);
-            registry.register("familiar_" + holder.getId(), script);
+            registry.register(holder.getRegistryName(), script);
         }
 
         registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));

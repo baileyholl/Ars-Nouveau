@@ -501,29 +501,29 @@ public class PatchouliProvider implements DataProvider {
             default -> GLYPHS_3;
         };
         PatchouliBuilder builder = new PatchouliBuilder(category, spellPart.getName())
-                .withName("ars_nouveau.glyph_name." + spellPart.getId())
-                .withIcon(ArsNouveau.MODID + ":" + spellPart.getItemID())
+                .withName("ars_nouveau.glyph_name." + spellPart.getRegistryName())
+                .withIcon( spellPart.getRegistryName().toString())
                 .withSortNum(spellPart instanceof AbstractCastMethod ? 1 : spellPart instanceof AbstractEffect ? 2 : 3)
-                .withPage(new TextPage("ars_nouveau.glyph_desc." + spellPart.getId()))
+                .withPage(new TextPage("ars_nouveau.glyph_desc." + spellPart.getRegistryName()))
                 .withPage(new GlyphPressPage(spellPart));
-        this.pages.add(new PatchouliPage(builder, getPath(category, "glyph_" + spellPart.getId())));
+        this.pages.add(new PatchouliPage(builder, getPath(category, "glyph_" + spellPart.getRegistryName())));
     }
 
     public void addFamiliarPage(AbstractFamiliarHolder familiarHolder){
-        PatchouliBuilder builder = new PatchouliBuilder(FAMILIARS, "entity.ars_nouveau." + familiarHolder.getId())
-                .withIcon("ars_nouveau:familiar_" + familiarHolder.getId())
-                .withTextPage("ars_nouveau.familiar_desc." + familiarHolder.getId())
-                .withPage(new EntityPage(new ResourceLocation(ArsNouveau.MODID, familiarHolder.getEntityKey()).toString()));
-        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/familiars/" + familiarHolder.getId() + ".json")));
+        PatchouliBuilder builder = new PatchouliBuilder(FAMILIARS, "entity.ars_nouveau." + familiarHolder.getRegistryName())
+                .withIcon("ars_nouveau:familiar_" + familiarHolder.getRegistryName())
+                .withTextPage("ars_nouveau.familiar_desc." + familiarHolder.getRegistryName())
+                .withPage(new EntityPage(familiarHolder.getRegistryName().toString()));
+        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/familiars/" + familiarHolder.getRegistryName() + ".json")));
     }
 
     public void addRitualPage(AbstractRitual ritual){
-        PatchouliBuilder builder = new PatchouliBuilder(RITUALS, "item.ars_nouveau.ritual_" + ritual.getID())
-                .withIcon("ars_nouveau:ritual_" + ritual.getID())
-                .withTextPage("ars_nouveau.ritual_desc." + ritual.getID())
-                .withPage(new CraftingPage("ars_nouveau:ritual_" + ritual.getID()));
+        PatchouliBuilder builder = new PatchouliBuilder(RITUALS, "item." + ritual.getRegistryName().getNamespace() + ".ritual_" + ritual.getRegistryName().getPath())
+                .withIcon(ritual.getRegistryName().toString())
+                .withTextPage(ritual.getDescriptionKey())
+                .withPage(new CraftingPage(ritual.getRegistryName().toString()));
 
-        this.pages.add(new PatchouliPage(builder,this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/rituals/" + ritual.getID() + ".json")));
+        this.pages.add(new PatchouliPage(builder,this.generator.getOutputFolder().resolve("data/" + ritual.getRegistryName().getNamespace() + "/patchouli/rituals/" + ritual.getRegistryName().getPath() + ".json")));
     }
 
     public void addEnchantmentPage(Enchantment enchantment){

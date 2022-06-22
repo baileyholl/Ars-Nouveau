@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -75,10 +76,10 @@ public class EffectLight extends AbstractEffect {
     }
 
     @Override
-    protected Map<String, Integer> getDefaultAugmentLimits() {
-        Map<String, Integer> map = super.getDefaultAugmentLimits();
-        map.put(GlyphLib.AugmentAmplifyID, 1);
-        return map;
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.getDefaultAugmentLimits(defaults);
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 1);
+        return defaults;
     }
 
     @Override

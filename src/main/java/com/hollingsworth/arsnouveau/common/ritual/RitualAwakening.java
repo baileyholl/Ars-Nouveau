@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -10,7 +11,7 @@ import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -109,17 +110,6 @@ public class RitualAwakening extends AbstractRitual {
     }
 
     @Override
-    public void write(CompoundTag tag) {
-        super.write(tag);
-    }
-
-    @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
-
-    }
-
-    @Override
     public String getLangName() {
         return "Awakening";
     }
@@ -130,7 +120,7 @@ public class RitualAwakening extends AbstractRitual {
     }
 
     @Override
-    public String getID() {
-        return RitualLib.AWAKENING;
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.AWAKENING);
     }
 }

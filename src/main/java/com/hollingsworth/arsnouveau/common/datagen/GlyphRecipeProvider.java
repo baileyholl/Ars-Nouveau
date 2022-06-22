@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
@@ -15,7 +14,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -137,7 +135,7 @@ public class GlyphRecipeProvider implements DataProvider {
     }
 
     public GlyphRecipe get(AbstractSpellPart spellPart){
-        return new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_" + spellPart.getId()),
+        return new GlyphRecipe(spellPart.getRegistryName(),
                 ArsNouveauAPI.getInstance().getGlyphItem(spellPart).getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
     }
 

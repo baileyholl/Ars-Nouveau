@@ -107,7 +107,7 @@ public class Spell implements Cloneable{
     public String serialize(){
         List<String> tags = new ArrayList<>();
         for(AbstractSpellPart slot : recipe){
-            tags.add(slot.getId());
+            tags.add(slot.getRegistryName().toString());
         }
         return tags.toString();
     }
@@ -126,7 +126,6 @@ public class Spell implements Cloneable{
 
     public String getDisplayString(){
         StringBuilder str = new StringBuilder();
-        String lastStr = "";
 
         for(int i = 0; i < recipe.size(); i++){
             AbstractSpellPart spellPart = recipe.get(i);
@@ -154,6 +153,12 @@ public class Spell implements Cloneable{
         return !this.isEmpty();
     }
 
+    public Spell add(AbstractSpellPart spellPart, int count, int index){
+        for(int i = 0; i < count; i++)
+            recipe.add(index, spellPart);
+        return this;
+    }
+
     @Override
     public Spell clone() {
         try {
@@ -162,29 +167,6 @@ public class Spell implements Cloneable{
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
-        }
-    }
-
-    public static class Builder{
-        private Spell spell;
-
-        public Builder(){
-            this.spell = new Spell();
-        }
-
-        public Builder add(AbstractSpellPart spellPart){
-            this.spell.add(spellPart);
-            return this;
-        }
-
-        public Builder add(AbstractSpellPart spellPart, int count){
-            for(int i = 0; i < count; i++)
-                this.spell.add(spellPart);
-            return this;
-        }
-
-        public Spell build(){
-            return spell;
         }
     }
 }

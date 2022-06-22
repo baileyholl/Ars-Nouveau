@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.gui.utils;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
@@ -29,7 +28,7 @@ public class RenderUtils {
         if(!objectToBeDrawn.isRenderAsIcon()) {
             RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, renderTransparent);
         } else {
-            RenderUtils.drawTextureFromResourceLocation(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + objectToBeDrawn.getIcon()), poseStack, positionX, positionY, size, renderTransparent);
+            RenderUtils.drawTextureFromResourceLocation(new ResourceLocation(objectToBeDrawn.getRegistryName().getNamespace(), "textures/items/" + objectToBeDrawn.getRegistryName().getPath() + ".png"), poseStack, positionX, positionY, size, renderTransparent);
         }
     }
 

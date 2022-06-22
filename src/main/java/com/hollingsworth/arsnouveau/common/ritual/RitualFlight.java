@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -35,10 +36,10 @@ public class RitualFlight extends AbstractRitual {
     public int getManaCost() {
         return 200;
     }
-
+    
     @Override
-    public String getID() {
-        return RitualLib.FLIGHT;
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.FLIGHT);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
@@ -43,25 +44,25 @@ public class DataDumpCommand {
      * Creates a CSV file at {@link DataDumpCommand#PATH_AUGMENT_COMPATIBILITY} all augment compatibility information
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
-        Map<String, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpellpartMap();
+        Map<ResourceLocation, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpellpartMap();
 
         // Collect the Augments
         List<AbstractAugment> augments = spells.values().stream()
                 .filter(p -> p instanceof AbstractAugment)
                 .map(p -> (AbstractAugment) p)
-                .sorted(Comparator.comparing(AbstractSpellPart::getId)).toList();
+                .sorted(Comparator.comparing(AbstractSpellPart::getRegistryName)).toList();
 
         // Collect the augment compatibilities
         List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = spells.values().stream()
                 .filter(part -> part instanceof AbstractCastMethod)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
-                .sorted(Comparator.comparing(t -> t.getA().getId()))
+                .sorted(Comparator.comparing(t -> t.getA().getRegistryName()))
                 .collect(Collectors.toList());
         // Technically can be done in one sort, but writing a comparator based on type is ugly.
         augmentCompat.addAll(spells.values().stream()
                 .filter(part -> part instanceof AbstractEffect)
                 .map(part -> new Tuple<>(part, part.compatibleAugments))
-                .sorted(Comparator.comparing(t -> t.getA().getId())).toList());
+                .sorted(Comparator.comparing(t -> t.getA().getRegistryName())).toList());
 
         // Write the file
         File file = PATH_AUGMENT_COMPATIBILITY.toFile();
@@ -70,14 +71,14 @@ public class DataDumpCommand {
             PrintWriter w = new PrintWriter(new FileWriterWithEncoding(file, "UTF-8", false));
 
             // Header Line
-            w.println("glyph, " + augments.stream().map(AbstractSpellPart::getId).collect(Collectors.joining(", ")));
+            w.println("glyph, " + augments.stream().map(a -> a.getRegistryName().toString()).collect(Collectors.joining(", ")));
 
             // Rows
             for (Tuple<AbstractSpellPart, Set<AbstractAugment>> row : augmentCompat) {
                 AbstractSpellPart part = row.getA();
                 Set<AbstractAugment> compatibleAugments = row.getB();
 
-                w.print(part.getId() + ", ");
+                w.print(part.getRegistryName() + ", ");
 
                 // Columns
                 w.print(augments.stream()

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -18,9 +19,11 @@ import java.util.List;
 public abstract class AbstractRitual {
 
     public RitualBrazierTile tile;
+
     private RitualContext context;
 
     public RandomSource rand = RandomSource.create();
+
 
     public AbstractRitual() { }
 
@@ -99,15 +102,17 @@ public abstract class AbstractRitual {
     public void onEnd(){
         this.getContext().isDone = true;
     }
-    /*Must follow rules for the lang file.*/
-    public abstract String getID();
 
     public String getName(){
-        return Component.translatable("item.ars_nouveau.ritual_" + getID()).getString();
+        return Component.translatable("item." + getRegistryName().getNamespace() + ".ritual_" + getRegistryName().getPath()).getString();
     }
 
     public String getDescription(){
-        return Component.translatable("ars_nouveau.ritual_desc." + getID()).getString();
+        return Component.translatable(getDescriptionKey()).getString();
+    }
+
+    public String getDescriptionKey(){
+        return getRegistryName().getNamespace() + ".ritual_desc."  + getRegistryName().getPath();
     }
 
     public int getManaCost(){
@@ -147,6 +152,7 @@ public abstract class AbstractRitual {
         this.context = context;
     }
 
+    public abstract ResourceLocation getRegistryName();
 
     public ParticleColor getCenterColor(){
         return new ParticleColor(

@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
 public class RitualSunrise extends AbstractRitual {
@@ -40,16 +42,16 @@ public class RitualSunrise extends AbstractRitual {
     }
 
     @Override
-    public String getID() {
-        return RitualLib.SUNRISE;
-    }
-
-    @Override
     public ParticleColor getCenterColor() {
         return new ParticleColor(
                 rand.nextInt(255),
                 rand.nextInt(255),
                 rand.nextInt(25));
+    }
+
+    @Override
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.SUNRISE);
     }
 }
 

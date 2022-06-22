@@ -51,9 +51,9 @@ public class GlyphButton extends Button {
             RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x, y, 16, !validationErrors.isEmpty());
 
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
-                if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getId())) {
+                if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
                     List<Component> tip = new ArrayList<>();
-                    AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.abstractSpellPart.getId());
+                    AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
                     tip.add(Component.translatable(spellPart.getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
                         tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));

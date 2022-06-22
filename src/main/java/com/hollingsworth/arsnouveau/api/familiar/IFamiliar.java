@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,9 +14,9 @@ public interface IFamiliar {
     /**
      * The ID of the AbstractFamiliarHolder. Used for retreiving and storing persistent familiar data.
      */
-    String getHolderID();
+    ResourceLocation getHolderID();
 
-    void setHolderID(String id);
+    void setHolderID(ResourceLocation id);
 
     UUID getOwnerID();
 

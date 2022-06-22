@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,23 +20,23 @@ import java.util.function.Supplier;
 
 public class PacketSummonFamiliar {
 
-    String familiarID;
+    ResourceLocation familiarID;
     int entityID;
 
-    public PacketSummonFamiliar(String id, int entityID){
+    public PacketSummonFamiliar(ResourceLocation id, int entityID){
         this.familiarID = id;
         this.entityID = entityID;
     }
 
     //Decoder
     public PacketSummonFamiliar(FriendlyByteBuf buf){
-        familiarID = buf.readUtf(32767);
+        familiarID = buf.readResourceLocation();
         entityID = buf.readInt();
     }
 
     //Encoder
     public void toBytes(FriendlyByteBuf buf){
-        buf.writeUtf(familiarID);
+        buf.writeResourceLocation(familiarID);
         buf.writeInt(entityID);
     }
 

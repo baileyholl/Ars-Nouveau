@@ -58,7 +58,7 @@ public class RitualBrazierBlock extends TickableModBlock {
         super.playerWillDestroy(worldIn, pos, state, player);
         if (worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
             if (tile.ritual != null && !tile.ritual.isRunning() && !tile.ritual.isDone()) {
-                worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ArsNouveauAPI.getInstance().getRitualItemMap().get(tile.ritual.getID()))));
+                worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ArsNouveauAPI.getInstance().getRitualItemMap().get(tile.ritual.getRegistryName()))));
             }
 
         }

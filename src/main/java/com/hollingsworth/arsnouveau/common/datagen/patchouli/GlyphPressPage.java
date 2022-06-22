@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 public class GlyphPressPage extends AbstractPage{
 
     public GlyphPressPage(AbstractSpellPart spellPart){
-        object.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + spellPart.getId());
+        object.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + spellPart.getRegistryName());
     }
 
     @Override

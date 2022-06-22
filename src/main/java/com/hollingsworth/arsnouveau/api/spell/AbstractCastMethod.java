@@ -10,6 +10,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 
 public abstract class AbstractCastMethod extends AbstractSpellPart {
 
@@ -40,6 +41,6 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits());
+        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
     }
 }

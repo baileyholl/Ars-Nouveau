@@ -1,8 +1,10 @@
-package com.hollingsworth.arsnouveau.api.ritual;
+package com.hollingsworth.arsnouveau.api.scrying;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CompoundScryer implements IScryer{
+public class CompoundScryer implements IScryer {
     public static final CompoundScryer INSTANCE = new CompoundScryer();
 
     List<IScryer> scryerList = new ArrayList<>();
@@ -49,7 +51,7 @@ public class CompoundScryer implements IScryer{
     }
 
     @Override
-    public String getID() {
-        return "an_compound_scryer";
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, "compound_scryer");
     }
 }

@@ -1,10 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -22,23 +20,21 @@ public class RitualTablet extends ModItem{
         super(properties);
     }
 
-    public RitualTablet(String registryName, AbstractRitual ritual){
+    public RitualTablet(AbstractRitual ritual){
         super(ItemsRegistry.defaultItemProperties());
-        this.registryName = registryName;
         this.ritual = ritual;
     }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof RitualBrazierBlock){
-            Level world = context.getLevel();
-            BlockPos pos = context.getClickedPos();
-            RitualBrazierTile tile = (RitualBrazierTile) world.getBlockEntity(pos);
-            if(!world.isClientSide && !tile.canTakeAnotherRitual()){
+
+        if(!context.getLevel().isClientSide() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof RitualBrazierTile tile){
+            if(!tile.canTakeAnotherRitual()){
                 context.getPlayer().sendSystemMessage(Component.translatable("ars_nouveau.ritual.no_start"));
                 return InteractionResult.PASS;
             }
-            tile.setRitual(ritual.getID());
+
+            tile.setRitual(ritual.getRegistryName());
             if(!context.getPlayer().isCreative())
                 context.getItemInHand().shrink(1);
             return InteractionResult.CONSUME;

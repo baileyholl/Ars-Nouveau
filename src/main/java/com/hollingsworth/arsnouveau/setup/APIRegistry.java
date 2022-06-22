@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.api.ritual.CompoundScryer;
-import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
-import com.hollingsworth.arsnouveau.api.ritual.TagScryer;
+import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
+import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
+import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -91,7 +91,7 @@ public class APIRegistry {
         registerRitual(new RitualBreed());
         registerRitual(new RitualHealing());
         registerRitual(new RitualWarp());
-        registerRitual(new ScryingRitual());
+        registerRitual(new RitualScrying());
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualBinding());
@@ -130,15 +130,11 @@ public class APIRegistry {
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {
-        ArsNouveauAPI.getInstance().registerSpell(spellPart.getId(), spellPart);
+        ArsNouveauAPI.getInstance().registerSpell(spellPart);
     }
 
     public static void registerRitual(AbstractRitual ritual){
-        ArsNouveauAPI.getInstance().registerRitual(ritual.getID(), ritual);
-    }
-
-    public static void registerSpell(String id, AbstractSpellPart spellPart) {
-        ArsNouveauAPI.getInstance().registerSpell(id, spellPart);
+        ArsNouveauAPI.getInstance().registerRitual(ritual);
     }
 
     private APIRegistry() {

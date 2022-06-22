@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import com.hollingsworth.arsnouveau.api.ritual.CompoundScryer;
-import com.hollingsworth.arsnouveau.api.ritual.TagScryer;
+import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
+import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.ritual.ScryingRitual;
+import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -46,7 +46,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
             ItemStack stack = player.getItemInHand(hand);
             if(stack.is(Tags.Items.NUGGETS_GOLD)){
                 stack.shrink(1);
-                ScryingRitual.grantScrying((ServerPlayer) player, 3 * 20 * 60, new CompoundScryer(new TagScryer(Tags.Blocks.ORES_GOLD), new TagScryer(BlockTags.GOLD_ORES)));
+                RitualScrying.grantScrying((ServerPlayer) player, 3 * 20 * 60, new CompoundScryer(new TagScryer(Tags.Blocks.ORES_GOLD), new TagScryer(BlockTags.GOLD_ORES)));
                 return InteractionResult.SUCCESS;
             }
             if (player.getMainHandItem().is(Tags.Items.DYES)) {

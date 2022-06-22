@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.capability;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Collection;
@@ -38,7 +39,7 @@ public interface IPlayerCap  extends INBTSerializable<CompoundTag> {
 
     Collection<FamiliarData> getUnlockedFamiliars();
 
-    FamiliarData getFamiliarData(String id);
+    FamiliarData getFamiliarData(ResourceLocation id);
 
     void setUnlockedFamiliars(Collection<FamiliarData> familiars);
 

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.validation;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -47,7 +48,7 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
         // Initialize the accumulators
         AbstractSpellPart action = null;
         List<AbstractAugment> augments = new ArrayList<>();
-        Map<String, List<SpellPhrase.SpellPartPosition<AbstractAugment>>> augmentPositionMap = new LinkedHashMap<>();
+        Map<ResourceLocation, List<SpellPhrase.SpellPartPosition<AbstractAugment>>> augmentPositionMap = new LinkedHashMap<>();
         int phraseStart = 0;
 
         // Walk through the recipe
@@ -58,10 +59,10 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
                 augments.add((AbstractAugment) currentPart);
 
                 // Note the position as well for easy lookup in the phrase validator
-                if (!augmentPositionMap.containsKey(currentPart.getId())) {
-                    augmentPositionMap.put(currentPart.getId(), new LinkedList<>());
+                if (!augmentPositionMap.containsKey(currentPart.getRegistryName())) {
+                    augmentPositionMap.put(currentPart.getRegistryName(), new LinkedList<>());
                 }
-                augmentPositionMap.get(currentPart.getId()).add(new SpellPhrase.SpellPartPosition<>((AbstractAugment) currentPart, pos));
+                augmentPositionMap.get(currentPart.getRegistryName()).add(new SpellPhrase.SpellPartPosition<>((AbstractAugment) currentPart, pos));
             } else if (currentPart != null) {
                 // Action changed, wrap up the current phrase and add it to the list
                 phrases.add(new SpellPhrase(action, augments, augmentPositionMap, phraseStart));
@@ -87,7 +88,7 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
         private final int firstPosition;
         private final AbstractSpellPart action;
         private final List<AbstractAugment> augments;
-        private final Map<String, List<SpellPartPosition<AbstractAugment>>> augmentPositionMap;
+        private final Map<ResourceLocation, List<SpellPartPosition<AbstractAugment>>> augmentPositionMap;
 
         /**
          * Create a new phrase that contains an action (a cast method or an effect) followed by zero or more augments.
@@ -100,7 +101,7 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
          *                           the overall spell.
          * @param firstPosition      the position (0 index) of the first action glyph within the overall spell recipe.
          */
-        private SpellPhrase(@Nullable AbstractSpellPart action, List<AbstractAugment> augments, Map<String, List<SpellPartPosition<AbstractAugment>>> augmentPositionMap, int firstPosition) {
+        private SpellPhrase(@Nullable AbstractSpellPart action, List<AbstractAugment> augments, Map<ResourceLocation, List<SpellPartPosition<AbstractAugment>>> augmentPositionMap, int firstPosition) {
             this.firstPosition = firstPosition;
             this.action = action;
             this.augments = augments;
@@ -143,7 +144,7 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
          * Returns a map from augment tags to a list of pairs of {@link AbstractAugment} and their positions in the overall
          * spell being validated. The contained lists will always be in ascending position order.
          */
-        public Map<String, List<SpellPartPosition<AbstractAugment>>> getAugmentPositionMap() {
+        public Map<ResourceLocation, List<SpellPartPosition<AbstractAugment>>> getAugmentPositionMap() {
             return augmentPositionMap;
         }
     }

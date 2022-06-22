@@ -1,15 +1,15 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,10 +22,6 @@ public class RitualDig extends AbstractRitual {
 
     public RitualDig(){
         super();
-    }
-
-    public RitualDig(RitualBrazierTile tile, RitualContext context) {
-        super(tile, context);
     }
 
     @Override
@@ -80,11 +76,6 @@ public class RitualDig extends AbstractRitual {
     }
 
     @Override
-    public String getID() {
-        return RitualLib.DIG;
-    }
-
-    @Override
     public String getLangDescription() {
         return "Digs four adjacent holes to bedrock, dropping any blocks.";
     }
@@ -92,5 +83,10 @@ public class RitualDig extends AbstractRitual {
     @Override
     public String getLangName() {
         return "Burrowing";
+    }
+
+    @Override
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.DIG);
     }
 }
