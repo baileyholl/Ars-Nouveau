@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -127,7 +128,7 @@ public class AnnotatedCodex extends ModItem{
             this.stack = stack;
             CompoundTag tag = stack.getOrCreateTag();
             ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-            for(String s : NBTUtil.readStrings(tag, "glyph_")){
+            for(ResourceLocation s : NBTUtil.readResourceLocations(tag, "glyph_")){
                 if(api.getSpellpartMap().containsKey(s)){
                     glyphs.add(api.getSpellpartMap().get(s));
                 }
@@ -157,7 +158,7 @@ public class AnnotatedCodex extends ModItem{
 
         public void write(){
             CompoundTag tag = new CompoundTag();
-            NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
+            NBTUtil.writeResourceLocations(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
             if(playerID != null){
                 tag.putUUID("player", playerID);
             }

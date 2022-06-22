@@ -1,13 +1,16 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
+import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 
@@ -71,7 +74,7 @@ public class RitualWildenSummoning extends AbstractRitual {
     }
 
     @Override
-    public String getID() {
-        return WILDEN_SUMMON;
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.WILDEN_SUMMON);
     }
 }

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,12 +42,12 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     @Override
     public boolean unlockFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.add(new FamiliarData(holderID.id));
+        return familiars.add(new FamiliarData(holderID.getRegistryName()));
     }
 
     @Override
     public boolean ownsFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.stream().anyMatch(f -> f.familiarHolder.getRegistryName().equals(holderID.id));
+        return familiars.stream().anyMatch(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     }
 
     @Override
-    public FamiliarData getFamiliarData(String id) {
+    public FamiliarData getFamiliarData(ResourceLocation id) {
         return this.familiars.stream().filter(f -> f.familiarHolder.id.equals(id)).findFirst().orElse(null);
     }
 
@@ -72,9 +73,9 @@ public class ANPlayerDataCap implements IPlayerCap{
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
+        NBTUtil.writeResourceLocations(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
         for(FamiliarData f : familiars){
-            tag.put("familiar_" + f.familiarHolder.id, f.toTag());
+            tag.put("familiar_" + f.familiarHolder.id.toString(), f.toTag());
         }
         return tag;
     }
@@ -82,7 +83,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        for(String s : NBTUtil.readStrings(nbt, "glyph_")){
+        for(ResourceLocation s : NBTUtil.readResourceLocations(nbt, "glyph_")){
             if(api.getSpellpartMap().containsKey(s)){
                 glyphs.add(api.getSpellpartMap().get(s));
             }

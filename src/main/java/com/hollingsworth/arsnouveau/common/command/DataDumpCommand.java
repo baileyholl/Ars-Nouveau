@@ -11,6 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +44,7 @@ public class DataDumpCommand {
      * Creates a CSV file at {@link DataDumpCommand#PATH_AUGMENT_COMPATIBILITY} all augment compatibility information
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
-        Map<String, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpellpartMap();
+        Map<ResourceLocation, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpellpartMap();
 
         // Collect the Augments
         List<AbstractAugment> augments = spells.values().stream()
@@ -70,7 +71,7 @@ public class DataDumpCommand {
             PrintWriter w = new PrintWriter(new FileWriterWithEncoding(file, "UTF-8", false));
 
             // Header Line
-            w.println("glyph, " + augments.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.joining(", ")));
+            w.println("glyph, " + augments.stream().map(a -> a.getRegistryName().toString()).collect(Collectors.joining(", ")));
 
             // Rows
             for (Tuple<AbstractSpellPart, Set<AbstractAugment>> row : augmentCompat) {

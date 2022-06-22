@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
@@ -7,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,7 +78,7 @@ public class RitualWarp extends AbstractRitual {
     }
 
     @Override
-    public String getID() {
-        return RitualLib.WARP;
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.WARP);
     }
 }

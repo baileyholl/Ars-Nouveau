@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
@@ -23,14 +24,14 @@ public class CraftingButton extends GuiImageButton{
     public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.OnPress onPress) {
         super( x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
         this.slotNum = slotNum;
-        this.spellTag = ;
+        this.spellTag = ArsNouveauAPI.EMPTY_KEY;
         this.resourceIcon = "";
         this.validationErrors = new LinkedList<>();
         this.parent = parent;
     }
 
     public void clear() {
-        this.spellTag = "";
+        this.spellTag = ArsNouveauAPI.EMPTY_KEY;
         this.resourceIcon = "";
         this.validationErrors.clear();
         this.abstractSpellPart = null;

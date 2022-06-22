@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -7,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -65,7 +67,7 @@ public class RitualBinding extends AbstractRitual {
     }
 
     @Override
-    public String getID() {
-        return RitualLib.BINDING;
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING);
     }
 }

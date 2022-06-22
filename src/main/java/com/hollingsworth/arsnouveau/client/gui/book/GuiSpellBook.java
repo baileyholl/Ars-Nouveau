@@ -406,7 +406,7 @@ public class GuiSpellBook extends BaseBook {
     public void onCreateClick(Button button) {
         validate();
         if (validationErrors.isEmpty()) {
-            List<String> ids = new ArrayList<>();
+            List<ResourceLocation> ids = new ArrayList<>();
             for (CraftingButton slot : craftingCells) {
                 ids.add(slot.spellTag);
             }

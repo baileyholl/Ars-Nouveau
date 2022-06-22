@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
@@ -44,6 +43,6 @@ public class BiomeModifierProvider<T extends BiomeModifier> extends JsonCodecPro
         HolderSet.Named<Biome> SUMMON_TAG = new HolderSet.Named<>(BuiltinRegistries.BIOME, BiomeTagProvider.SUMMON_SPAWN_TAG);
         SUMMON_TAG.stream().forEach(h -> System.out.println(h.get()));
         consumer.accept(new ResourceLocation(ArsNouveau.MODID, "starbuncle_spawn"), ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(SUMMON_TAG,
-                new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(), Config.CARBUNCLE_WEIGHT.get(), 1, 1)));
+                new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(),5, 1, 1)));
     }
 }

@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -43,10 +45,10 @@ public class EffectHex extends AbstractEffect {
     }
 
     @Override
-    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
-        Map<String, Integer> map = super.getDefaultAugmentLimits(defaults);
-        map.put(GlyphLib.AugmentAmplifyID, 4);
-        return map;
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.getDefaultAugmentLimits(defaults);
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 4);
+        return defaults;
     }
 
     @Override

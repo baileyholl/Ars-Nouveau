@@ -25,8 +25,6 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return this.registryName;
     }
 
-    public String getIcon(){return this.registryName + ".png";}
-
     /**
      * The list of schools that apply to this spell.
      * Addons should add and access this list directly.
@@ -108,7 +106,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public Component getBookDescLang(){
-        return Component.translatable("ars_nouveau.glyph_desc." + getRegistryName());
+        return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
     }
 
     // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
@@ -127,7 +125,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     /** Returns the number of times that this glyph may be modified by the given augment. */
-    public int getAugmentLimit(String augmentTag) {
+    public int getAugmentLimit(ResourceLocation augmentTag) {
         if (augmentLimits == null) {
             return Integer.MAX_VALUE;
         } else {
@@ -139,12 +137,14 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public SpellPartConfigUtil.AugmentLimits augmentLimits;
 
     /** Registers the glyph_limits configuration entry for augmentation limits. */
-    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
+    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
 
-    /** Override this method to provide defaults for the augmentation limits configuration. */
-    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
+    /**
+     * Override this method to provide defaults for the augmentation limits configuration.
+     */
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         return defaults;
     }
 
@@ -157,16 +157,13 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return true;
     }
 
-    public String getItemID(){
-        return "glyph_" + this.getRegistryName();
-    }
 
     public String getBookDescription(){
         return "";
     }
 
     public String getLocalizationKey() {
-        return "ars_nouveau.glyph_name." + registryName;
+        return "item." + registryName.getNamespace() + "." + registryName.getPath();
     }
 
     public String getLocaleName(){

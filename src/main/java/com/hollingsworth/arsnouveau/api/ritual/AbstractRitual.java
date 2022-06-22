@@ -102,15 +102,17 @@ public abstract class AbstractRitual {
     public void onEnd(){
         this.getContext().isDone = true;
     }
-    /*Must follow rules for the lang file.*/
-    public abstract String getID();
 
     public String getName(){
-        return Component.translatable("item.ars_nouveau.ritual_" + getID()).getString();
+        return Component.translatable("item." + getRegistryName().getNamespace() + ".ritual_" + getRegistryName().getPath()).getString();
     }
 
     public String getDescription(){
-        return Component.translatable("ars_nouveau.ritual_desc." + getID()).getString();
+        return Component.translatable(getDescriptionKey()).getString();
+    }
+
+    public String getDescriptionKey(){
+        return getRegistryName().getNamespace() + ".ritual_desc."  + getRegistryName().getPath();
     }
 
     public int getManaCost(){

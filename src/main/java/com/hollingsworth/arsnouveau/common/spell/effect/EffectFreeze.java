@@ -1,14 +1,15 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -25,7 +26,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -116,10 +116,10 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
-        Map<String, Integer> map = new HashMap<>();
-        map.put(GlyphLib.AugmentSensitiveID, 1);
-        return map;
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.getDefaultAugmentLimits(defaults);
+        defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+        return defaults;
     }
 
     @Nonnull

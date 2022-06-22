@@ -20,9 +20,8 @@ public class RitualTablet extends ModItem{
         super(properties);
     }
 
-    public RitualTablet(String registryName, AbstractRitual ritual){
+    public RitualTablet(AbstractRitual ritual){
         super(ItemsRegistry.defaultItemProperties());
-        this.registryName = registryName;
         this.ritual = ritual;
     }
 

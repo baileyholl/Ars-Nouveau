@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -65,10 +67,6 @@ public class RitualCloudshaper extends AbstractRitual {
         return "This ritual can change the weather at a moments notice. By default, this ritual will set the weather to clear. Augmenting with Gunpowder will cause it to rain, while a Lapis Block will cause it to storm.";
     }
 
-    @Override
-    public String getID() {
-        return RitualLib.CLOUDSHAPER;
-    }
 
     @Override
     public ParticleColor getCenterColor() {
@@ -80,5 +78,10 @@ public class RitualCloudshaper extends AbstractRitual {
                 rand.nextInt(100),
                 rand.nextInt(100),
                 rand.nextInt(255));
+    }
+
+    @Override
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.CLOUDSHAPER);
     }
 }

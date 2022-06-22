@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 
@@ -13,7 +14,7 @@ public class FamiliarData {
     public AbstractFamiliarHolder familiarHolder;
     public CompoundTag entityTag;
 
-    public FamiliarData(String entityID){
+    public FamiliarData(ResourceLocation entityID){
         this.familiarHolder = ArsNouveauAPI.getInstance().getFamiliarHolderMap().get(entityID);
         this.entityTag = new CompoundTag();
     }

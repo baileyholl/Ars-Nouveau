@@ -18,8 +18,6 @@ public class ModItem extends Item {
     public List<Component> tooltip = new ArrayList<>();
     public Rarity rarity;
 
-    public String registryName;
-
     public ModItem(Properties properties) {
         super(properties);
     }

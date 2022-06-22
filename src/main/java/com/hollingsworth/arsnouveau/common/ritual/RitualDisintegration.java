@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
@@ -8,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -98,8 +100,9 @@ public class RitualDisintegration extends AbstractRitual {
         return ParticleColor.makeRandomColor(220, 20, 20, rand);
     }
 
+
     @Override
-    public String getID() {
-        return RitualLib.DISINTEGRATION;
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(ArsNouveau.MODID, RitualLib.DISINTEGRATION);
     }
 }

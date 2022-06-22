@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -113,10 +114,10 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    protected Map<String, Integer> getDefaultAugmentLimits(Map<String, Integer> defaults) {
-        Map<String, Integer> map = super.getDefaultAugmentLimits(defaults);
-        map.put(GlyphLib.AugmentFortuneID, 4);
-        return map;
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.getDefaultAugmentLimits(defaults);
+        defaults.put(AugmentFortune.INSTANCE.getRegistryName(), 4);
+        return defaults;
     }
 
     @Nonnull

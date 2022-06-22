@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.util;
 
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class SpellPartConfigUtil {
      * limitations.
      */
     public static class AugmentLimits {
-        private Map<String, Integer> limits = null;
+        private Map<ResourceLocation, Integer> limits = null;
         private ForgeConfigSpec.ConfigValue<List<? extends String>> configValue;
 
         /** Create a new AugmentLimits from the given ConfigValue */
@@ -37,7 +38,7 @@ public class SpellPartConfigUtil {
         }
 
         /** Retrieves the maximum number of times the given augment may be applied, given the configuration. */
-        public int getAugmentLimit(String augmentTag) {
+        public int getAugmentLimit(ResourceLocation augmentTag) {
             if (limits == null) {
                 limits = parseAugmentLimits();
             }
@@ -45,7 +46,7 @@ public class SpellPartConfigUtil {
         }
 
         /** Sets the maximum number of times the given augment may be applied and updates the configuration. */
-        public void setAugmentLimit(String augmentTag, int limit) {
+        public void setAugmentLimit(ResourceLocation augmentTag, int limit) {
             if (limits == null) {
                 limits = parseAugmentLimits();
             }
@@ -54,12 +55,12 @@ public class SpellPartConfigUtil {
         }
 
         /** Parse glyph_limits into a Map from augment glyph tags to limits. */
-        private Map<String, Integer> parseAugmentLimits() {
+        private Map<ResourceLocation, Integer> parseAugmentLimits() {
             return configValue.get().stream()
                     .map(AUGMENT_LIMITS_PATTERN::matcher)
                     .filter(Matcher::matches)
                     .collect(Collectors.toMap(
-                            m -> m.group(1),
+                            m -> new ResourceLocation(m.group(1)),
                             m -> Integer.valueOf(m.group(2))
                     ));
         }
@@ -69,7 +70,7 @@ public class SpellPartConfigUtil {
      * Builds a "augment_limits" configuration item using the provided {@link ForgeConfigSpec.Builder} and returns an
      * {@link AugmentLimits} instance to encapsulate it.
      */
-    public static AugmentLimits buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
+    public static AugmentLimits buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Limits the number of times a given augment may be applied to a given effect", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=5\"")
                 .defineList("augment_limits", writeConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
@@ -78,9 +79,9 @@ public class SpellPartConfigUtil {
     }
 
     /** Produces a list of tag=limit strings suitable for saving to the configuration. */
-    private static List<String> writeConfig(Map<String, Integer> augmentLimits) {
+    private static List<String> writeConfig(Map<ResourceLocation, Integer> augmentLimits) {
         return augmentLimits.entrySet().stream()
-                .map(e -> e.getKey() + "=" + e.getValue().toString())
+                .map(e -> e.getKey().toString() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());
     }
 

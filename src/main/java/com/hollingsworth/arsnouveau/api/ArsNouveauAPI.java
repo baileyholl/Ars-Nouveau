@@ -109,7 +109,7 @@ public class ArsNouveauAPI {
         part.buildConfig(spellBuilder);
         spec = spellBuilder.build();
         part.CONFIG = spec;
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, part.CONFIG, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getNamespace() + ".toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, part.CONFIG, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath() + ".toml");
 
         return spellpartMap.put(part.getRegistryName(), part);
     }
