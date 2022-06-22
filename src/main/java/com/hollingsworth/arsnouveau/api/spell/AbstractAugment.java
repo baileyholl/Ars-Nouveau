@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.item.ISpellModifier;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -10,6 +11,11 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
     public AbstractAugment(String tag, String description) {
         super(tag, description);
     }
+
+    public AbstractAugment(ResourceLocation tag, String description) {
+        super(tag, description);
+    }
+
 
     @Nonnull
     @Override

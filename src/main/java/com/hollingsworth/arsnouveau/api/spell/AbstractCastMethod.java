@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,9 +15,14 @@ import java.util.HashMap;
 
 public abstract class AbstractCastMethod extends AbstractSpellPart {
 
-    public AbstractCastMethod(String tag, String description){
-        super(tag,description);
+    public AbstractCastMethod(String tag, String description) {
+        super(tag, description);
     }
+
+    public AbstractCastMethod(ResourceLocation tag, String description) {
+        super(tag, description);
+    }
+
 
     /**
      * Called when the spell is cast on nothing. In context of items, this is called when the player right clicks air.
