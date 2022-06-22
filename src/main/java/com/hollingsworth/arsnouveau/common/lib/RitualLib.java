@@ -2,19 +2,23 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 public class RitualLib {
 
-    public static final String DIG = "burrowing";
-    public static final String MOONFALL = "moonfall";
-    public static final String SUNRISE = "sunrise";
-    public static final String CLOUDSHAPER = "cloudshaping";
-    public static final String DISINTEGRATION = "disintegration";
-    public static final String CHALLENGE = "challenge";
-    public static final String OVERGROWTH = "overgrowth";
-    public static final String FERTILITY = "fertility";
-    public static final String RESTORATION = "restoration";
-    public static final String WARP = "warping";
-    public static final String SCRYING = "scrying";
-    public static final String FLIGHT = "flight";
-    public static final String WILDEN_SUMMON = "wilden_summon";
-    public static final String BINDING = "binding";
-    public static final String AWAKENING = "awakening";
+    public static final String DIG = prependRitual("burrowing");
+    public static final String MOONFALL = prependRitual("moonfall");
+    public static final String SUNRISE = prependRitual("sunrise");
+    public static final String CLOUDSHAPER = prependRitual("cloudshaping");
+    public static final String DISINTEGRATION = prependRitual("disintegration");
+    public static final String CHALLENGE = prependRitual("challenge");
+    public static final String OVERGROWTH = prependRitual("overgrowth");
+    public static final String FERTILITY = prependRitual("fertility");
+    public static final String RESTORATION = prependRitual("restoration");
+    public static final String WARP = prependRitual("warping");
+    public static final String SCRYING = prependRitual("scrying");
+    public static final String FLIGHT = prependRitual("flight");
+    public static final String WILDEN_SUMMON = prependRitual("wilden_summon");
+    public static final String BINDING = prependRitual("binding");
+    public static final String AWAKENING = prependRitual("awakening");
+
+    public static String prependRitual(String ritual) {
+        return "ritual_" + ritual;
+    }
 }

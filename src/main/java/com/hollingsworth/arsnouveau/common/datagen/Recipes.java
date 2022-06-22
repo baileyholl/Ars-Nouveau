@@ -12,7 +12,6 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -643,9 +642,6 @@ public class Recipes extends RecipeProvider {
         return ShapedRecipeBuilder.shaped(result, count).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK));
     }
 
-    public Item getRitualItem(ResourceLocation id) {
-        return ArsNouveauAPI.getInstance().getRitualItemMap().get(id);
-    }
 
     public static ShapedRecipeBuilder makeWood(ItemLike logs, ItemLike wood, int count) {
         return ShapedRecipeBuilder.shaped(wood, count).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))

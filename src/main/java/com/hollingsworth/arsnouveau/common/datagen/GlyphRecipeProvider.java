@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
-import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -153,11 +152,9 @@ public class GlyphRecipeProvider implements DataProvider {
         };
     }
 
-    protected static Path getGlyphPath(Path pathIn, Glyph glyph) {
-        return pathIn.resolve("data/ars_nouveau/recipes/glyphs/" + getRegistryName(glyph).getPath() + ".json");
-    }
     protected static Path getScribeGlyphPath(Path pathIn, Item glyph) {
         return pathIn.resolve("data/ars_nouveau/recipes/" + getRegistryName(glyph).getPath() + ".json");
+
     }
     @Override
     public String getName() {
