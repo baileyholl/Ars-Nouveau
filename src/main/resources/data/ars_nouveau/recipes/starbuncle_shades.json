@@ -1,8 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "xyx"
-  ],
   "key": {
     "x": {
       "item": "minecraft:tinted_glass"
@@ -11,6 +8,9 @@
       "item": "ars_nouveau:source_gem"
     }
   },
+  "pattern": [
+    "xyx"
+  ],
   "result": {
     "item": "ars_nouveau:starbuncle_shades"
   }

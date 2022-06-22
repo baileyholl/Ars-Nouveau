@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "xx ",
-    "xx "
-  ],
   "key": {
     "x": {
       "item": "ars_nouveau:green_archwood_log"
     }
   },
+  "pattern": [
+    "xx ",
+    "xx "
+  ],
   "result": {
-    "item": "ars_nouveau:green_archwood_wood",
-    "count": 3
+    "count": 3,
+    "item": "ars_nouveau:green_archwood_wood"
   }
 }

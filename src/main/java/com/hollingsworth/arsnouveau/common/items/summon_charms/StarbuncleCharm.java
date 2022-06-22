@@ -1,35 +1,32 @@
-package com.hollingsworth.arsnouveau.common.items;
+package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.COLOR;
 
-public class StarbuncleCharm extends ModItem{
+public class StarbuncleCharm extends AbstractSummonCharm {
     public StarbuncleCharm() {
         super();
     }
 
-    /**
-     * Called when this item is used when targetting a Block
-     */
-    public InteractionResult useOn(UseOnContext context) {
-        if(context.getLevel().isClientSide)
-            return InteractionResult.SUCCESS;
-        Level world = context.getLevel();
+    @Override
+    public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         Starbuncle carbuncle = new Starbuncle(world, true);
         Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(context.getItemInHand().getOrCreateTag());
-        Vec3 vec = context.getClickLocation();
-        carbuncle.setPos(vec.x, vec.y, vec.z);
+
+        carbuncle.setPos(pos.getX(), pos.above().getY(), pos.getZ());
         carbuncle.FROM_LIST = data.FROM_LIST;
         carbuncle.TO_LIST = data.TO_LIST;
         carbuncle.whitelist = data.whitelist;
@@ -44,8 +41,13 @@ public class StarbuncleCharm extends ModItem{
         if(data.color != null)
             carbuncle.getEntityData().set(COLOR, data.color);
         world.addFreshEntity(carbuncle);
-        context.getItemInHand().shrink(1);
+
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
+        return useOnBlock(context, world, pos);
     }
 
     @Override

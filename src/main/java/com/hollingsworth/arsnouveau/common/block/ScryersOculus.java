@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
-import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenu;
-import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;

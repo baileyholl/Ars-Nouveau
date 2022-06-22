@@ -1,10 +1,10 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "reagent": [
-    {
-      "tag": "minecraft:arrows"
-    }
-  ],
+  "keepNbtOfReagent": false,
+  "output": {
+    "count": 32,
+    "item": "ars_nouveau:split_arrow"
+  },
   "pedestalItems": [
     {
       "item": {
@@ -22,10 +22,10 @@
       }
     }
   ],
-  "output": {
-    "item": "ars_nouveau:split_arrow",
-    "count": 32
-  },
-  "sourceCost": 0,
-  "keepNbtOfReagent": false
+  "reagent": [
+    {
+      "tag": "minecraft:arrows"
+    }
+  ],
+  "sourceCost": 0
 }

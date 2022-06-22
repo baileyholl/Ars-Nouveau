@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:infinity",
   "level": 1,
-  "sourceCost": 9000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "tag": "forge:storage_blocks/diamond"
       }
     }
-  ]
+  ],
+  "sourceCost": 9000
 }

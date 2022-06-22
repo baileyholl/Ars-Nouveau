@@ -1,10 +1,10 @@
 {
   "type": "ars_nouveau:imbuement",
+  "count": 1,
   "input": {
     "tag": "forge:gems/lapis"
   },
   "output": "ars_nouveau:source_gem",
-  "count": 1,
-  "source": 500,
-  "pedestalItems": []
+  "pedestalItems": [],
+  "source": 500
 }

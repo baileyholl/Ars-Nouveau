@@ -142,25 +142,30 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.38'
+
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
     implementation 'org.jetbrains:annotations:23.0.0'
 
-//    implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
-    //not working atm implementation fg.deobf("mezz.jei:jei-1.19-forge:11.0.0.203")
-    implementation fg.deobf("curse.maven:jei-238222:3834070")
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:1.19-5.1.0.1")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.2')
+    //compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
+
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    // at runtime, use the full JEI
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+
+    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
+
+    implementation /*compileOnly*/ fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.0.112")
 
 //    implementation fg.deobf("curse.maven:exp-64760:3577168")
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 
-//    runtimeOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
-    compileOnly fg.deobf("curse.maven:security-64760:3834343")
+    /*implementation*/compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
 
-    //runtimeOnly fg.deobf("curse.maven:malum-484064:3788643")
-    //runtimeOnly fg.deobf("curse.maven:orthus-616457:3768197")
-
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
 

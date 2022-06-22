@@ -4,10 +4,13 @@ import com.hollingsworth.arsnouveau.client.particle.ModParticles;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.world.biome.ModBiomes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -50,20 +53,28 @@ public class ModSetup {
     public static void registerEvents(RegisterEvent event){
         if(event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)){
             IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.RegistryEvents.onBlocksRegistry(registry);
+            BlockRegistry.onBlocksRegistry(registry);
         }
         if(event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)){
             IForgeRegistry<Item> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.RegistryEvents.onBlockItemsRegistry(registry);
+            BlockRegistry.onBlockItemsRegistry(registry);
             ItemsRegistry.onItemRegistry(registry);
         }
-        if(event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
             IForgeRegistry<BlockEntityType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.RegistryEvents.onTileEntityRegistry(registry);
+            BlockRegistry.onTileEntityRegistry(registry);
         }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.SOUND_EVENTS)){
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.SOUND_EVENTS)) {
             IForgeRegistry<SoundEvent> registry = Objects.requireNonNull(event.getForgeRegistry());
             SoundRegistry.onSoundRegistry(registry);
+        }
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BIOMES)) {
+            IForgeRegistry<Biome> registry = Objects.requireNonNull(event.getForgeRegistry());
+            ModBiomes.registerBiomes(registry);
+        }
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_STATE_PROVIDER_TYPES)) {
+            IForgeRegistry<BlockStateProviderType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
+            BlockRegistry.registerBlockProvider(registry);
         }
     }
 }

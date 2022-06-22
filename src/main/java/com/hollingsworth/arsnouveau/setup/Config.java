@@ -21,16 +21,14 @@ public class Config {
     public static ForgeConfigSpec SERVER_CONFIG;
     public static ForgeConfigSpec CLIENT_CONFIG;
 
-    public static ForgeConfigSpec.BooleanValue SPAWN_ORE;
-    public static ForgeConfigSpec.BooleanValue SPAWN_BERRIES;
     public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
     public static ForgeConfigSpec.IntValue INIT_MAX_MANA;
     public static ForgeConfigSpec.IntValue INIT_MANA_REGEN;
 
     public static ForgeConfigSpec.IntValue GLYPH_MAX_BONUS;
     public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
-    public static ForgeConfigSpec.IntValue TREE_SPAWN_RATE;
 
+    public static Integer TREE_SPAWN_RATE = 100;
 
     public static ForgeConfigSpec.IntValue TIER_MAX_BONUS;
     public static ForgeConfigSpec.IntValue MANA_BOOST_BONUS;
@@ -39,9 +37,13 @@ public class Config {
 
 
     public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
-    public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
-    public static ForgeConfigSpec.IntValue WHIRLISPRIG_WEIGHT; // TODO: rename sylph to whirlisprig
-    public static ForgeConfigSpec.IntValue DRYGMY_WEIGHT;
+    public static Integer DEFAULT_STARBUNCLE_WEIGHT = 5;
+    public static Integer DEFAULT_WHIRLISPRIG_WEIGHT = 5;
+    public static Integer DEFAULT_DRYGMY_WEIGHT = 5;
+
+    public static Integer DEFAULT_WGUARDIAN_WEIGHT = 50;
+    public static Integer DEFAULT_WSTALKER_WEIGHT = 50;
+    public static Integer DEFAULT_WHUNTER_WEIGHT = 50;
 
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
@@ -51,9 +53,6 @@ public class Config {
     public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
 
-    public static ForgeConfigSpec.IntValue WGUARDIAN_WEIGHT;
-    public static ForgeConfigSpec.IntValue WSTALKER_WEIGHT;
-    public static ForgeConfigSpec.IntValue WHUNTER_WEIGHT;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -94,22 +93,14 @@ public class Config {
         TOUCH_LIGHT_DURATION = CLIENT_BUILDER.comment("How long the touch light lasts in ticks").defineInRange("touchLightDuration", 8, 0,40);
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(),(o) -> true);
-        TREE_SPAWN_RATE = SERVER_BUILDER.comment("Rate of tree spawn per chunk").defineInRange("treeWeight", 100, 0, Integer.MAX_VALUE);
-        SPAWN_BERRIES = SERVER_BUILDER.comment("Spawn Mana Berry Bushes in the world").define("genBerries", true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
-        CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);
-        WHIRLISPRIG_WEIGHT = SERVER_BUILDER.comment("How often Whirlisprigs spawn").defineInRange("sylphWeight",5,0,100);
-        DRYGMY_WEIGHT = SERVER_BUILDER.comment("How often Drygmys spawn").defineInRange("drygmyWeight",3,0,100);
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost",250,0,10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
                 .defineInRange("whirlisprigProgress",250,0,10000);
-        WGUARDIAN_WEIGHT = SERVER_BUILDER.comment("How often Wilden Guardians spawn").defineInRange("wguardianWeight",50,0,200);
-        WSTALKER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Stalkers spawn").defineInRange("wstalkerWeight",50,0,200);
-        WHUNTER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Hunter spawn").defineInRange("whunterWeight",50,0,200);
         HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", true);
         STALKER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Stalker attack animals?").define("stalkerHuntsAnimals", false);
         GUARDIAN_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Defender attack animals?").define("defenderHuntsAnimals", false);
-        ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 3, 0, Integer.MAX_VALUE);
+        ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 2, 0, Integer.MAX_VALUE);
 
         SERVER_BUILDER.pop();
         SERVER_BUILDER.push(DRYGMY_CATEGORY);

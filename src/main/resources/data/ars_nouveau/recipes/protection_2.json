@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:protection",
   "level": 2,
-  "sourceCost": 3500,
   "pedestalItems": [
     {
       "item": {
@@ -39,5 +38,6 @@
         "tag": "forge:storage_blocks/lapis"
       }
     }
-  ]
+  ],
+  "sourceCost": 3500
 }

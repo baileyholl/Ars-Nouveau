@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:reactive",
   "level": 3,
-  "sourceCost": 9000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "item": "ars_nouveau:manipulation_essence"
       }
     }
-  ]
+  ],
+  "sourceCost": 9000
 }

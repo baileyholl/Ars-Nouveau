@@ -9,15 +9,11 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 
 public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider{
     public SupplierBlockStateProvider(String path) {
-        this(ArsNouveau.MODID, path);
+        this(new ResourceLocation(ArsNouveau.MODID, path));
     }
     public SupplierBlockStateProvider(ResourceLocation path) {
         super(path);
     }
-    public SupplierBlockStateProvider(String modid, String path) {
-        super(modid, path);
-    }
-
 
     public static final Codec<SupplierBlockStateProvider> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("key").forGetter(d -> d.key.getPath()))
@@ -27,4 +23,5 @@ public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvid
     protected BlockStateProviderType<?> type() {
         return BlockRegistry.stateProviderType;
     }
+
 }

@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "tag": "forge:stone"
+    },
+    "y": {
+      "tag": "forge:gems/source"
+    }
+  },
   "pattern": [
     "xxx",
     "xyx",
     "xxx"
   ],
-  "key": {
-    "y": {
-      "tag": "forge:gems/source"
-    },
-    "x": {
-      "tag": "forge:stone"
-    }
-  },
   "result": {
-    "item": "ars_nouveau:arcane_stone",
-    "count": 8
+    "count": 8,
+    "item": "ars_nouveau:arcane_stone"
   }
 }

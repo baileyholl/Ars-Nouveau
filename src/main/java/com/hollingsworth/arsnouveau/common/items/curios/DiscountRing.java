@@ -11,9 +11,6 @@ public abstract class DiscountRing extends ArsNouveauCurio implements IManaEquip
         super();
     }
 
-    @Override
-    public void wearableTick(LivingEntity wearer) { }
-
     public abstract int getManaDiscount();
 
     @Override

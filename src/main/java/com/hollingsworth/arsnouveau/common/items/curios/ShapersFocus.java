@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items.curios;
 
+import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -17,7 +18,7 @@ import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
-public class ShapersFocus extends ModItem implements ISpellModifierItem {
+public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem {
 
     public ShapersFocus(Properties properties) {
         super(properties);

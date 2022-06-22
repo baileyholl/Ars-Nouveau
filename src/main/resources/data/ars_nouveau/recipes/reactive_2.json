@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:reactive",
   "level": 2,
-  "sourceCost": 6000,
   "pedestalItems": [
     {
       "item": {
@@ -44,5 +43,6 @@
         "item": "ars_nouveau:water_essence"
       }
     }
-  ]
+  ],
+  "sourceCost": 6000
 }

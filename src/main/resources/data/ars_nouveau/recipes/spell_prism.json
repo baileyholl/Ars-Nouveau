@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "gxg",
-    "xnx",
-    "gxg"
-  ],
   "key": {
-    "x": {
-      "item": "ars_nouveau:archwood_planks"
-    },
     "g": {
       "tag": "forge:ingots/gold"
     },
     "n": {
       "tag": "forge:storage_blocks/quartz"
+    },
+    "x": {
+      "item": "ars_nouveau:archwood_planks"
     }
   },
+  "pattern": [
+    "gxg",
+    "xnx",
+    "gxg"
+  ],
   "result": {
     "item": "ars_nouveau:spell_prism"
   }

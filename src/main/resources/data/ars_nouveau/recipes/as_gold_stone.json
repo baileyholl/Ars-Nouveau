@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:arcane_stone"
+    },
+    "y": {
+      "tag": "forge:nuggets/gold"
+    }
+  },
   "pattern": [
     "xxx",
     "xyx",
     "xxx"
   ],
-  "key": {
-    "y": {
-      "tag": "forge:nuggets/gold"
-    },
-    "x": {
-      "item": "ars_nouveau:arcane_stone"
-    }
-  },
   "result": {
-    "item": "ars_nouveau:as_gold_stone",
-    "count": 8
+    "count": 8,
+    "item": "ars_nouveau:as_gold_stone"
   }
 }

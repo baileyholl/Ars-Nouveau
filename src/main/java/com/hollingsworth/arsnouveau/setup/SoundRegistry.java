@@ -13,10 +13,13 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod(ArsNouveau.MODID)
 public class SoundRegistry {
 
-    @ObjectHolder(value = "fire_family", registryName = "minecraft:sound_events")
-    public static SoundEvent FIRE_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "fire_family"));
-    @ObjectHolder(value = "empty", registryName = "minecraft:sound_events")
-    public static SoundEvent EMPTY_SOUND_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "empty"));
+    public static final String FIRE_FAMILY_LIB = "fire_family";
+    public static final String NO_SOUND_LIB = "empty";
+
+    @ObjectHolder(value = FIRE_FAMILY_LIB, registryName = "minecraft:sound_events")
+    public static SoundEvent FIRE_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, FIRE_FAMILY_LIB));
+    @ObjectHolder(value = NO_SOUND_LIB, registryName = "minecraft:sound_events")
+    public static SoundEvent EMPTY_SOUND_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, NO_SOUND_LIB));
 
 
     public static SpellSound FIRE_SPELL_SOUND;
@@ -26,8 +29,8 @@ public class SoundRegistry {
 
         FIRE_SPELL_SOUND = new SpellSound(FIRE_FAMILY, Component.translatable("ars_nouveau.sound.fire_family"));
         EMPTY_SPELL_SOUND = new SpellSound(EMPTY_SOUND_FAMILY, Component.translatable("ars_nouveau.sound.empty"));
-        registry.register("fire_family", FIRE_FAMILY);
-        registry.register("empty", EMPTY_SOUND_FAMILY);
+        registry.register(FIRE_FAMILY_LIB, FIRE_FAMILY);
+        registry.register(NO_SOUND_LIB, EMPTY_SOUND_FAMILY);
 
         ArsNouveauAPI.getInstance().registerSpellSound(FIRE_SPELL_SOUND);
         ArsNouveauAPI.getInstance().registerSpellSound(EMPTY_SPELL_SOUND);

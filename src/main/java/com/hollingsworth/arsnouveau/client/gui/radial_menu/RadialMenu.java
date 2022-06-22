@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client.gui.RadialMenu;
+package com.hollingsworth.arsnouveau.client.gui.radial_menu;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 

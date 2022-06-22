@@ -5,9 +5,9 @@
   },
   "output": [
     {
-      "item": "minecraft:orange_dye",
       "chance": 1.0,
-      "count": 2
+      "count": 2,
+      "item": "minecraft:orange_dye"
     }
   ]
 }

@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.*;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.AllowItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
+import com.hollingsworth.arsnouveau.common.items.summon_charms.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -42,6 +43,7 @@ import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
+@SuppressWarnings("Convert2MethodRef") //IJ can't know we need the supplier (do we actually need it tho?)
 public class ItemsRegistry {
 
     public static FoodProperties SOURCE_BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 100), 1.0f).alwaysEat().build();
@@ -100,9 +102,16 @@ public class ItemsRegistry {
         }
     });
 
-    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_REGEN;
+    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_REGEN = register(LibItemNames.AMULET_OF_MANA_REGEN, () -> new AbstractManaCurio() {
 
-    public static RegistryWrapper<ModItem> DULL_TRINKET  = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+        @Override
+        public int getManaRegenBonus(ItemStack i) {
+            return 3;
+        }
+
+    });
+
+    public static RegistryWrapper<ModItem> DULL_TRINKET = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
 
     public static RegistryWrapper<StarbuncleCharm> STARBUNCLE_CHARM = register(LibItemNames.STARBUNCLE_CHARM, () -> new StarbuncleCharm());
 
@@ -199,7 +208,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
 
-    public static RegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, () -> new SummoningFocus(defaultItemProperties().stacksTo(1)));
+    public static RegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, () -> new SummoningFocus());
 
 
     public static RegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)).withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus")));

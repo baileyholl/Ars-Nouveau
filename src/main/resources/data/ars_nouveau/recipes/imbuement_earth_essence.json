@@ -1,11 +1,10 @@
 {
   "type": "ars_nouveau:imbuement",
+  "count": 1,
   "input": {
     "tag": "forge:gems/source"
   },
   "output": "ars_nouveau:earth_essence",
-  "count": 1,
-  "source": 2000,
   "pedestalItems": [
     {
       "item": {
@@ -22,5 +21,6 @@
         "tag": "minecraft:dirt"
       }
     }
-  ]
+  ],
+  "source": 2000
 }

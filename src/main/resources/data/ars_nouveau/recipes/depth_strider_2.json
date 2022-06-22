@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:depth_strider",
   "level": 2,
-  "sourceCost": 6000,
   "pedestalItems": [
     {
       "item": {
@@ -34,5 +33,6 @@
         "item": "minecraft:prismarine_shard"
       }
     }
-  ]
+  ],
+  "sourceCost": 6000
 }

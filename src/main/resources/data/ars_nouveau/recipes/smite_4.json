@@ -2,7 +2,6 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:smite",
   "level": 4,
-  "sourceCost": 6500,
   "pedestalItems": [
     {
       "item": {
@@ -39,5 +38,6 @@
         "tag": "forge:storage_blocks/lapis"
       }
     }
-  ]
+  ],
+  "sourceCost": 6500
 }

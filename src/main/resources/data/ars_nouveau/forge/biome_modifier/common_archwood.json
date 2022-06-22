@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#ars_nouveau:archwood_biome",
+  "features": "ars_nouveau:common_archwood",
+  "step": "vegetal_decoration"
+}

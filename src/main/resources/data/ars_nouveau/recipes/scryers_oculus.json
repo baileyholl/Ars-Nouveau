@@ -1,10 +1,9 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "reagent": [
-    {
-      "item": "minecraft:ender_eye"
-    }
-  ],
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:scryers_oculus"
+  },
   "pedestalItems": [
     {
       "item": {
@@ -27,9 +26,10 @@
       }
     }
   ],
-  "output": {
-    "item": "ars_nouveau:scryers_oculus"
-  },
-  "sourceCost": 0,
-  "keepNbtOfReagent": false
+  "reagent": [
+    {
+      "item": "minecraft:ender_eye"
+    }
+  ],
+  "sourceCost": 0
 }

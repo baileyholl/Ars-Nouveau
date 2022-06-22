@@ -1,10 +1,9 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "reagent": [
-    {
-      "item": "minecraft:stick"
-    }
-  ],
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:dominion_wand"
+  },
   "pedestalItems": [
     {
       "item": {
@@ -22,9 +21,10 @@
       }
     }
   ],
-  "output": {
-    "item": "ars_nouveau:dominion_wand"
-  },
-  "sourceCost": 0,
-  "keepNbtOfReagent": false
+  "reagent": [
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "sourceCost": 0
 }
