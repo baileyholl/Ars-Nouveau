@@ -86,7 +86,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
                 double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
                 if (d0 >= (double)0.003F || d1 >= (double)0.003F) {
-                    entityIn.hurt(DamageSource.SWEET_BERRY_BUSH, 1.0F);
+                    entityIn.hurt(new DamageSource("sourceberrybush"), 1.0F);
                 }
             }
 

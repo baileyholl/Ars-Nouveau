@@ -1081,5 +1081,8 @@
 	"ars_nouveau.shapers_focus.entities": "Entity Targeting",
 	"ars_nouveau.shapers_focus.examples": "Spell Examples",
 	"ars_nouveau.page4.shapers_focus": "$(bold)Throw Ice:$() Conjure Water -> Freeze -> Launch -> Delay -> Knockback. $(bold)Damage and ignite hit targets:$() Conjure Mageblock -> Launch -> Ignite -> Delay -> Knockback. $(bold)Ignite TNT:$() Place Block (TNT) -> Ignite. $(bold)Throw Exploding Terrain:$() Launch -> Delay -> Knockback -> Delay -> Explosion. $(bold)Throw many blocks:$() Launch -> AOE x2 -> Delay -> Knockback. $(bold)Pull blocks:$() Pull -> AOE x2 -> Delay -> Duration Down -> Launch -> Delay -> Knockback. $(bold)Harvest Sand:$() Crush (on stone) -> Aoe -> Break",
-	"tooltip.ars_nouveau.shapers_focus": "Duplicates spells that modify or move blocks. Can be used to create damaging moving blocks."
+	"tooltip.ars_nouveau.shapers_focus": "Duplicates spells that modify or move blocks. Can be used to create damaging moving blocks.",
+	
+	"death.attack.sourceberrybush": "%s was poked to death by a source berry bush",
+	"death.attack.sourceberrybush.player": "%1$s was poked to death by a source berry bush whilst trying to escape %2$s"
 }
