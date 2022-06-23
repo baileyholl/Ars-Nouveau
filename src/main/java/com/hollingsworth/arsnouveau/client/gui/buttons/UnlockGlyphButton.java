@@ -41,7 +41,7 @@ public class UnlockGlyphButton extends Button {
         this.isCraftingSlot = isCraftingSlot;
         this.spellPart = spellPart;
         this.id = 0;
-        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(new ResourceLocation("ars_nouveau:glyph_" + spellPart.getRegistryName())).orElse(null);
+        Recipe recipe = Minecraft.getInstance().level.getRecipeManager().byKey(spellPart.getRegistryName()).orElse(null);
         this.recipe = recipe instanceof GlyphRecipe ? (GlyphRecipe) recipe : null;
     }
 
