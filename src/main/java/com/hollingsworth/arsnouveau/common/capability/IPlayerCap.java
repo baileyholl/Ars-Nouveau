@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 public interface IPlayerCap  extends INBTSerializable<CompoundTag> {
@@ -39,7 +40,7 @@ public interface IPlayerCap  extends INBTSerializable<CompoundTag> {
 
     Collection<FamiliarData> getUnlockedFamiliars();
 
-    FamiliarData getFamiliarData(ResourceLocation id);
+    @Nullable FamiliarData getFamiliarData(ResourceLocation id);
 
     void setUnlockedFamiliars(Collection<FamiliarData> familiars);
 

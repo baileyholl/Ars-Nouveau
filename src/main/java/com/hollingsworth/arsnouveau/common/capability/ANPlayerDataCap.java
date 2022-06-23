@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.common.capability;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ANPlayerDataCap implements IPlayerCap{
 
@@ -56,6 +56,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     }
 
     @Override
+    @Nullable
     public FamiliarData getFamiliarData(ResourceLocation id) {
         return this.familiars.stream().filter(f -> f.familiarHolder.getRegistryName().equals(id)).findFirst().orElse(null);
     }
@@ -67,38 +68,45 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     @Override
     public boolean removeFamiliar(AbstractFamiliarHolder holderID) {
-        return this.familiars.remove(holderID);
+        return this.familiars.removeIf(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
     }
 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        NBTUtil.writeResourceLocations(tag, "glyph_", glyphs.stream().map(AbstractSpellPart::getRegistryName).collect(Collectors.toList()));
-        for(FamiliarData f : familiars){
-            tag.put("familiar_" + f.familiarHolder.getRegistryName().toString(), f.toTag());
+
+        CompoundTag glyphsTag = new CompoundTag();
+        List<AbstractSpellPart> glyphsList = glyphs.stream().toList();
+        for(int i = 0; i < glyphsList.size(); i++){
+            glyphsTag.putString("glyph" + i, glyphsList.get(i).getRegistryName().toString());
         }
+        glyphsTag.putInt("size", glyphsList.size());
+        tag.put("glyphs", glyphsTag);
+
+        CompoundTag familiarsTag = new CompoundTag();
+        List<FamiliarData> familiarsList = familiars.stream().toList();
+        for(int i = 0; i < familiarsList.size(); i++){
+            familiarsTag.put("familiar" + i, familiarsList.get(i).toTag());
+        }
+        familiarsTag.putInt("size", familiarsList.size());
+        tag.put("familiars", familiarsTag);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        for(ResourceLocation s : NBTUtil.readResourceLocations(nbt, "glyph_")){
-            if(api.getSpellpartMap().containsKey(s)){
-                glyphs.add(api.getSpellpartMap().get(s));
-            }
+        CompoundTag glyphsTag = nbt.getCompound("glyphs");
+        for(int i = 0; i < glyphsTag.getInt("size"); i++) {
+            ResourceLocation id = new ResourceLocation(glyphsTag.getString("glyph" + i));
+            AbstractSpellPart part = api.getSpellPart(id);
+            if (part != null)
+                glyphs.add(part);
         }
 
-        for(String s : nbt.getAllKeys()){
-            if(s.contains("familiar_")){
-                familiars.add(new FamiliarData(nbt.getCompound(s)));
-            }
+        CompoundTag familiarsTag = nbt.getCompound("familiars");
+        for(int i = 0; i < familiarsTag.getInt("size"); i++) {
+            familiars.add(new FamiliarData(familiarsTag.getCompound("familiar" + i)));
         }
-    }
-
-    public static ANPlayerDataCap deserialize(CompoundTag tag){
-        ANPlayerDataCap cap = new ANPlayerDataCap();
-        cap.deserializeNBT(tag);
-        return cap;
     }
 }

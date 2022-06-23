@@ -114,12 +114,6 @@ public class ArsNouveauAPI {
         return spellpartMap.put(part.getRegistryName(), part);
     }
 
-    static{
-        //think we just gotta ensure the path exists once
-        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID), ArsNouveau.MODID);
-    }
-
-
     public AbstractRitual registerRitual(AbstractRitual ritual){
         return ritualMap.put(ritual.getRegistryName(), ritual);
     }
@@ -139,8 +133,8 @@ public class ArsNouveauAPI {
         return null;
     }
 
-    public String getRitualRegistryName(String id){
-        return "ritual_"+ id.toLowerCase();
+    public @Nullable AbstractSpellPart getSpellPart(ResourceLocation id) {
+        return spellpartMap.get(id);
     }
 
     public Map<ResourceLocation, AbstractSpellPart> getSpellpartMap() {
@@ -249,4 +243,9 @@ public class ArsNouveauAPI {
 
     // This is needed internally by the mod, so just make it eagerly.
     private static final ArsNouveauAPI INSTANCE = new ArsNouveauAPI();
+
+    static{
+        //think we just gotta ensure the path exists once
+        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID), ArsNouveau.MODID);
+    }
 }

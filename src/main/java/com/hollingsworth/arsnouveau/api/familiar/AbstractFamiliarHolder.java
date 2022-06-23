@@ -43,7 +43,6 @@ public abstract class AbstractFamiliarHolder {
         return Component.translatable(this.id.getNamespace() + ".familiar_name." + this.id.getPath());
     }
 
-
     public String getBookName(){
         return "";
     }
