@@ -1,8 +1,14 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +18,11 @@ public class Spell implements Cloneable{
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
     private int cost;
+
+    public String name = "";
+    public ParticleColor color =  ParticleUtil.defaultParticleColor();
+    public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+
 
     public Spell(List<AbstractSpellPart> recipe){
         this.recipe = recipe == null ? new ArrayList<>() : recipe; // Safe check for tiles initializing a null
@@ -39,6 +50,11 @@ public class Spell implements Cloneable{
     public Spell add(AbstractSpellPart spellPart, int count){
         for(int i = 0; i < count; i++)
             recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell setRecipe(@Nonnull List<AbstractSpellPart> recipe){
+        this.recipe = recipe;
         return this;
     }
 
@@ -104,24 +120,37 @@ public class Spell implements Cloneable{
         return recipe == null || recipe.isEmpty();
     }
 
-    public String serialize(){
-        List<String> tags = new ArrayList<>();
-        for(AbstractSpellPart slot : recipe){
-            tags.add(slot.getRegistryName().toString());
+    public CompoundTag serialize(){
+        CompoundTag tag = new CompoundTag();
+        tag.putString("name", name);
+        tag.putString("color", color.toWrapper().serialize());
+        tag.put("sound", sound.serialize());
+        CompoundTag recipeTag = new CompoundTag();
+        for(int i = 0; i < recipe.size(); i++){
+            AbstractSpellPart part = recipe.get(i);
+            recipeTag.putString("part" + i, part.getRegistryName().toString());
         }
-        return tags.toString();
+        recipeTag.putInt("size", recipe.size());
+        tag.put("recipe", recipeTag);
+        return tag;
     }
 
-    public static Spell deserialize(String recipeStr){
-        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-        if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
-            return new Spell(recipe);
-        String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
-        for(String id : recipeList){
-            if (ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(id.trim()))
-                recipe.add(ArsNouveauAPI.getInstance().getSpellpartMap().get(id.trim()));
+    public static Spell fromTag(@Nullable CompoundTag tag) {
+        if(tag == null)
+            return EMPTY;
+        Spell spell = new Spell();
+        spell.name = tag.getString("name");
+        spell.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
+        spell.sound = ConfiguredSpellSound.fromTag(tag.getCompound("sound"));
+        CompoundTag recipeTag = tag.getCompound("recipe");
+        int size = recipeTag.getInt("size");
+        for(int i = 0; i < size; i++){
+            ResourceLocation registryName = new ResourceLocation(recipeTag.getString("part" + i));
+            AbstractSpellPart part = ArsNouveauAPI.getInstance().getSpellpartMap().get(registryName);
+            if(part != null)
+                spell.recipe.add(part);
         }
-        return new Spell(recipe);
+        return spell;
     }
 
     public String getDisplayString(){
@@ -162,6 +191,7 @@ public class Spell implements Cloneable{
     @Override
     public Spell clone() {
         try {
+            // TODO: Make above cloneable
             Spell clone = (Spell) super.clone();
             clone.recipe = new ArrayList<>(this.recipe);
             return clone;

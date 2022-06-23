@@ -14,13 +14,13 @@ import java.util.function.Supplier;
 
 public class PacketUpdateCaster {
 
-   String spellRecipe;
+   Spell spellRecipe;
    int cast_slot;
    String spellName;
 
     public PacketUpdateCaster(){}
-    // TODO: Change from string to list of resource locations
-    public PacketUpdateCaster(String spellRecipe, int cast_slot, String spellName){
+
+    public PacketUpdateCaster(Spell spellRecipe, int cast_slot, String spellName){
         this.spellRecipe = spellRecipe;
         this.cast_slot = cast_slot;
         this.spellName = spellName;
@@ -28,14 +28,14 @@ public class PacketUpdateCaster {
 
     //Decoder
     public PacketUpdateCaster(FriendlyByteBuf buf){
-        spellRecipe = buf.readUtf(32767);
+        spellRecipe = Spell.fromTag(buf.readNbt());
         cast_slot = buf.readInt();
         spellName = buf.readUtf(32767);
     }
 
     //Encoder
     public void toBytes(FriendlyByteBuf buf){
-        buf.writeUtf(spellRecipe);
+        buf.writeNbt(spellRecipe.serialize());
         buf.writeInt(cast_slot);
         buf.writeUtf(spellName);
     }
@@ -50,8 +50,11 @@ public class PacketUpdateCaster {
                 if(spellRecipe != null){
                     ISpellCaster caster = CasterUtil.getCaster(stack);
                     caster.setCurrentSlot(cast_slot);
-                    caster.setSpell(Spell.deserialize(spellRecipe));
+                    // Update just the recipe, don't overwrite the entire spell.
+                    Spell spell = caster.getSpell(cast_slot).setRecipe(spellRecipe.recipe);
+                    caster.setSpell(spell, cast_slot);
                     caster.setSpellName(spellName);
+
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                 }
             }

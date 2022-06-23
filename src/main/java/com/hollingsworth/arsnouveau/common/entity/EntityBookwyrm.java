@@ -6,18 +6,16 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.IInteractResponder;
+import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
+import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BookwyrmLecternTile;
-import com.hollingsworth.arsnouveau.common.entity.goal.whelp.PerformTaskGoal;
-import com.hollingsworth.arsnouveau.common.items.DominionWand;
-import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -25,8 +23,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
@@ -41,13 +37,8 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -59,7 +50,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
 public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantTextureProvider {
@@ -90,50 +80,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
-            return InteractionResult.SUCCESS;
-
-        ItemStack stack = player.getItemInHand(hand);
-
-        if (player.getMainHandItem().is(Tags.Items.DYES)) {
-            DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
-                return InteractionResult.SUCCESS;
-            this.entityData.set(COLOR, color.getName());
-            player.getMainHandItem().shrink(1);
-            return InteractionResult.SUCCESS;
-        }
-
-        if(stack.getItem() instanceof DominionWand)
-            return InteractionResult.FAIL;
-
-        if(stack.getItem() instanceof SpellParchment){
-            Spell spell =  CasterUtil.getCaster(stack).getSpell();
-            if(new EntitySpellResolver(new SpellContext(spell, this)).canCast(this)) {
-                this.spellRecipe = spell;
-                setRecipeString(spellRecipe.serialize());
-                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.spell_set"));
-            } else{
-                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.invalid"));
-            }
-            return InteractionResult.SUCCESS;
-        }else if(stack.isEmpty()){
-            if(spellRecipe == null || spellRecipe.recipe.size() == 0){
-                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.desc"));
-            }else
-                player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.casting", spellRecipe.getDisplayString()));
-            return InteractionResult.SUCCESS;
-        }
-
-        if(!stack.isEmpty()){
-            setHeldStack(new ItemStack(stack.getItem()));
-            player.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm.spell_item", stack.getItem().getName(stack).getString()));
-        }
-        return super.mobInteract(player,  hand);
-
-    }
 
     @Override
     public void onWanded(Player playerEntity) {
@@ -184,39 +130,9 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(6, new PerformTaskGoal(this));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
-
-    public boolean canPerformAnotherTask(){
-        return ticksSinceLastSpell > 60 && new EntitySpellResolver(new SpellContext(spellRecipe, this)).canCast(this);
-    }
-
-    public @Nullable BlockPos getTaskLoc(){
-        BlockPos task = getTile() != null ? getTile().getNextTaskLoc(spellRecipe, this) : null;
-        if(task == null)
-            ticksSinceLastSpell = 0;
-        return task;
-    }
-
-    public void castSpell(BlockPos target){
-        if(level.isClientSide || !(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile))
-            return;
-
-        if(((BookwyrmLecternTile) level.getBlockEntity(lecternPos)).removeManaAround(spellRecipe)){
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spellRecipe, this));
-            resolver.onCastOnBlock(new BlockHitResult(new Vec3(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ));
-        }
-        this.ticksSinceLastSpell = 0;
-    }
-
-    public boolean enoughManaForTask(){
-        if(!(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile) || spellRecipe == null || spellRecipe.isEmpty())
-            return false;
-        return ((BookwyrmLecternTile) level.getBlockEntity(lecternPos)).enoughMana(spellRecipe);
-    }
-
 
     @Override
     public @Nonnull ItemStack onPickup(ItemStack stack) {
@@ -235,16 +151,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        Spell spellParts = Spell.deserialize(this.getRecipeString());
-        String spellString = spellParts.getDisplayString();
-        String itemString = this.getHeldStack() == ItemStack.EMPTY ? Component.translatable("ars_nouveau.bookwyrm.no_item").getString() : this.getHeldStack().getHoverName().getString();
-        String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? 
-        		Component.translatable("ars_nouveau.bookwyrm.placing").getString() :
-        		Component.translatable("ars_nouveau.bookwyrm.using").getString();
-        tooltip.add(Component.literal(Component.translatable("ars_nouveau.bookwyrm.spell").getString() + spellString));
-        tooltip.add(Component.literal(itemAction + itemString));
-        tooltip.add(Component.literal(Component.translatable("ars_nouveau.bookwyrm.strict").getString() +
-                Component.translatable("ars_nouveau." + this.entityData.get(STRICT_MODE)).getString() ));
     }
 
     @Override
@@ -275,9 +181,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
             tag.putInt("summoner_z", lecternPos.getZ());
         }
         tag.putInt("last_spell", ticksSinceLastSpell);
-        if(spellRecipe != null){
-            tag.putString("spell", spellRecipe.serialize());
-        }
+
         if(!getHeldStack().isEmpty()) {
             CompoundTag itemTag = new CompoundTag();
             getHeldStack().save(itemTag);
@@ -293,13 +197,10 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         super.readAdditionalSaveData(tag);
         if(tag.contains("summoner_x"))
             lecternPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
-        spellRecipe = Spell.deserialize(tag.getString("spell"));
         ticksSinceLastSpell = tag.getInt("last_spell");
         if(tag.contains("held"))
             setHeldStack(ItemStack.of((CompoundTag)tag.get("held")));
 
-
-        setRecipeString(spellRecipe.serialize());
         this.entityData.set(STRICT_MODE, tag.getBoolean("strict"));
         this.backoffTicks = tag.getInt("backoff");
         if (tag.contains("color"))
@@ -342,6 +243,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -357,15 +259,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         return false;
     }
 
-
-    public String getRecipeString(){
-        return this.entityData.get(SPELL_STRING);
-    }
-
-    public void setRecipeString(String recipeString){
-        this.entityData.set(SPELL_STRING, recipeString);
-    }
-
     public @Nonnull ItemStack getHeldStack(){
         return this.entityData.get(HELD_ITEM);
     }
@@ -373,7 +266,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     public void setHeldStack(ItemStack stack){
         this.entityData.set(HELD_ITEM,stack);
     }
-
 
     @Override
     public void die(DamageSource source) {

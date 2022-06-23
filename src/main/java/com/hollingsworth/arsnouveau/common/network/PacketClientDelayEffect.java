@@ -33,7 +33,7 @@ public class PacketClientDelayEffect {
     //Decoder
     public PacketClientDelayEffect(FriendlyByteBuf buf){
         duration = buf.readInt();
-        spell = Spell.deserialize(buf.readUtf());
+        spell = Spell.fromTag(buf.readNbt());
         shooterID = buf.readInt();
         color = ParticleColor.IntWrapper.deserialize(buf.readUtf());
         hitEntityID = buf.readInt();
@@ -45,7 +45,7 @@ public class PacketClientDelayEffect {
     //Encoder
     public void toBytes(FriendlyByteBuf buf){
         buf.writeInt(duration);
-        buf.writeUtf(spell.serialize());
+        buf.writeNbt(spell.serialize());
         buf.writeInt(shooterID);
         buf.writeUtf(color.serialize());
         buf.writeInt(hitEntityID);

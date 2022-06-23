@@ -407,11 +407,14 @@ public class GuiSpellBook extends BaseBook {
     public void onCreateClick(Button button) {
         validate();
         if (validationErrors.isEmpty()) {
-            List<ResourceLocation> ids = new ArrayList<>();
+            Spell spell = new Spell();
             for (CraftingButton slot : craftingCells) {
-                ids.add(slot.spellTag);
+                AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(slot.spellTag);
+                if (spellPart != null) {
+                    spell.add(spellPart);
+                }
             }
-            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(ids.toString(), this.selected_cast_slot, this.spell_name.getValue()));
+            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(spell, this.selected_cast_slot, this.spell_name.getValue()));
         }
     }
 

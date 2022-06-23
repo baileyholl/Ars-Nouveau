@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SpellCaster implements ISpellCaster{
@@ -32,12 +33,12 @@ public class SpellCaster implements ISpellCaster{
     @Nonnull
     @Override
     public Spell getSpell() {
-        return spells.getOrDefault(getCurrentSlot(), Spell.EMPTY);
+        return spells.getOrDefault(getCurrentSlot(), new Spell());
     }
 
     @Override
     public @Nonnull Spell getSpell(int slot) {
-        return spells.getOrDefault(slot, Spell.EMPTY);
+        return spells.getOrDefault(slot, new Spell());
     }
 
     @Override
@@ -65,6 +66,16 @@ public class SpellCaster implements ISpellCaster{
     @Override
     public void setSpell(Spell spell) {
         this.spells.put(getCurrentSlot(), spell);
+        writeItem(stack);
+    }
+
+    @Override
+    public void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot) {
+        if(spells.containsKey(slot)){
+            spells.get(slot).setRecipe(spellRecipe);
+        }else{
+            spells.put(slot, new Spell(spellRecipe));
+        }
         writeItem(stack);
     }
 
@@ -155,13 +166,14 @@ public class SpellCaster implements ISpellCaster{
     public CompoundTag writeTag(CompoundTag tag){
         tag.putInt("current_slot", getCurrentSlot());
         tag.putString("flavor", getFlavorText());
+        CompoundTag spellTag = new CompoundTag();
 
-        for(int i = 0; i < getMaxSlots() + 1; i++){
-            tag.putString("spell_" + i, getSpell(i).serialize());
-            tag.putString("spell_name_" + i, getSpellName(i));
-            tag.putString("spell_color_" + i, getColor(i).serialize());
-            tag.put("spell_sound_" + i, getSound(i).serialize());
+        for(int i = 0; i < getMaxSlots(); i++){
+            Spell spell = getSpell(i);
+            spellTag.put("spell" + i, spell.serialize());
         }
+        tag.put("spells", spellTag);
+        tag.putInt("spell_count", getSpells().size());
         return tag;
     }
 
@@ -170,20 +182,11 @@ public class SpellCaster implements ISpellCaster{
 
         this.slot = tag.contains("current_slot") ? tag.getInt("current_slot") : 1;
         this.flavorText = tag.getString("flavor");
-        for(int i = 0; i < this.getMaxSlots() + 1; i++){
-            if(tag.contains("spell_" + i)){
-                this.setSpell(Spell.deserialize(tag.getString("spell_" + i)), i);
-            }
-            if(tag.contains("spell_name_" + i)){
-                this.setSpellName(tag.getString("spell_name_" + i), i);
-            }
-
-            if(tag.contains("spell_color_" + i)){
-                this.setColor(ParticleColor.IntWrapper.deserialize(tag.getString("spell_color_" + i)), i);
-            }
-            if(tag.contains("spell_sound_" + i)){
-                this.setSound(ConfiguredSpellSound.fromTag(tag.getCompound("spell_sound_" + i)), i);
-            }
+        CompoundTag spellTag = tag.getCompound("spells");
+        int spellCount = tag.getInt("spell_count");
+        for(int i = 0; i < spellCount; i++){
+            Spell spell = Spell.fromTag(spellTag.getCompound("spell" + i));
+            this.spells.put(i, spell);
         }
     }
 

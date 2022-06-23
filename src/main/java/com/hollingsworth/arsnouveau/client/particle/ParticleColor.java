@@ -54,7 +54,7 @@ public class ParticleColor implements Cloneable{
     public int getColor() {
         return color;
     }
-
+    // TODO: make tag
     public String serialize(){
         return "" + this.r + "," + this.g +","+this.b;
     }

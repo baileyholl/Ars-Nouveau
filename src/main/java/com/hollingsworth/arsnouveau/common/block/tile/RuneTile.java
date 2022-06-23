@@ -90,7 +90,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putString("spell", spell.serialize());
+        tag.put("spell", spell.serialize());
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("redstone", disabled);
         tag.putBoolean("temp", isTemporary);
@@ -104,7 +104,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
     @Override
     public void load(CompoundTag tag) {
-        this.spell = Spell.deserialize(tag.getString("spell"));
+        this.spell = Spell.fromTag(tag.getCompound("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.disabled = tag.getBoolean("redstone");
         this.isTemporary = tag.getBoolean("temp");

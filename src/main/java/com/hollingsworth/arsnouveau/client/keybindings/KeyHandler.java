@@ -3,14 +3,11 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ISpellHotkeyListener;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
-import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
-import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -84,10 +81,10 @@ public class KeyHandler {
     }
 
     public static void sendUpdatePacket(ItemStack stack, int newMode){
-        ISpellCaster caster = CasterUtil.getCaster(stack);
-        String recipe = caster.getSpell(newMode).serialize();
-        String name = caster.getSpellName(newMode);
-        Networking.INSTANCE.sendToServer(new PacketUpdateCaster(recipe, newMode, name));
+//        ISpellCaster caster = CasterUtil.getCaster(stack);
+//        String recipe = caster.getSpell(newMode).serialize();
+//        String name = caster.getSpellName(newMode);
+//        Networking.INSTANCE.sendToServer(new PacketUpdateCaster(recipe, newMode, name));
     }
 
     public static void sendHotkeyPacket(PacketHotkeyPressed.Key key){

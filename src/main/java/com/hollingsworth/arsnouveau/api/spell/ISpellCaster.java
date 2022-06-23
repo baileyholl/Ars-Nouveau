@@ -26,6 +26,7 @@ import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +63,8 @@ public interface ISpellCaster {
     void setSpell(Spell spell, int slot);
 
     void setSpell(Spell spell);
+
+    void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot);
 
     @Nonnull ParticleColor.IntWrapper getColor(int slot);
 
