@@ -124,16 +124,7 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
             if(block instanceof BookwyrmLectern || block instanceof BaseEntityBlock || block instanceof SourceBlock || block instanceof Container)
                 continue;
 
-            if(caster.getEntityData().get(EntityBookwyrm.STRICT_MODE)){
-                /* TODO Bookwyrm stuff
-                SpellResolver resolver = new SpellResolver(new SpellContext(spell, caster));
-                if(!resolver.wouldCastOnBlockSuccessfully(new BlockHitResult(new Vec3(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster)) {
-                    continue;
-                }
 
-                 */
-            }
-            wouldSucceed = true;
             break;
         }
 
