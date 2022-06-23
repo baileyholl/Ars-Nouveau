@@ -26,6 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -321,8 +323,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onDocumentationClick(Button button){
-        // TODO: Restore patchouli
-//        PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.WORN_NOTEBOOK));
+        PatchouliAPI.get().openBookGUI(ForgeRegistries.ITEMS.getKey(ItemsRegistry.WORN_NOTEBOOK.asItem()));
     }
 
     public void onColorClick(Button button){

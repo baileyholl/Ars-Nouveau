@@ -24,7 +24,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new BlockStatesDatagen(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
-        //event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
+        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new LootTableProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DungeonLootGenerator(event.getGenerator(), MODID));

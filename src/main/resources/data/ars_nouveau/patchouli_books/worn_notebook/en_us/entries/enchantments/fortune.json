@@ -1,19 +1,19 @@
 {
-  "name": "enchantment.minecraft.fortune",
   "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.fortune",
   "pages": [
     {
-      "recipe": "ars_nouveau:fortune_1",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:fortune_1"
     },
     {
-      "recipe": "ars_nouveau:fortune_2",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:fortune_2"
     },
     {
-      "recipe": "ars_nouveau:fortune_3",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:fortune_3"
     }
   ]
 }

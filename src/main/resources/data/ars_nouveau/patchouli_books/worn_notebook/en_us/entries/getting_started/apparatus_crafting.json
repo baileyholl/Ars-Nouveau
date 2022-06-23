@@ -1,18 +1,18 @@
 {
-  "name": "ars_nouveau.page.apparatus_crafting",
   "category": "ars_nouveau:getting_started",
-  "sortnum": 6,
   "icon": "ars_nouveau:enchanting_apparatus",
+  "name": "ars_nouveau.page.apparatus_crafting",
   "pages": [
     {
-      "text": "ars_nouveau.page1.apparatus_crafting",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.apparatus_crafting"
     },
     {
+      "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:machines/enchanting_apparatus"
-      ],
-      "type": "patchouli:relations"
+      ]
     }
-  ]
+  ],
+  "sortnum": 6
 }

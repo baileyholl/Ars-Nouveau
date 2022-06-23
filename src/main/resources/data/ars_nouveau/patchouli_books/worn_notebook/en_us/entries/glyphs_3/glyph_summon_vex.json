@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.summon_vex",
   "category": "ars_nouveau:glyphs_3",
   "icon": "ars_nouveau:glyph_summon_vex",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_summon_vex",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.summon_vex",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_summon_vex"
     },
     {
-      "recipe": "ars_nouveau:glyph_summon_vex",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_summon_vex"
     }
-  ]
+  ],
+  "sortnum": 2
 }

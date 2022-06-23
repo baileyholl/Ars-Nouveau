@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.grow",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_grow",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_grow",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.grow",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_grow"
     },
     {
-      "recipe": "ars_nouveau:glyph_grow",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_grow"
     }
-  ]
+  ],
+  "sortnum": 2
 }

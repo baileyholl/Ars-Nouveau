@@ -1,32 +1,32 @@
 {
-  "name": "item.ars_nouveau.bookwyrm_charm",
-  "icon": "ars_nouveau:bookwyrm_charm",
   "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:bookwyrm_charm",
+  "name": "item.ars_nouveau.bookwyrm_charm",
   "pages": [
     {
-      "text": "ars_nouveau.page1.bookwyrm_charm",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.bookwyrm_charm"
     },
     {
-      "recipe": "ars_nouveau:bookwyrm_charm",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:bookwyrm_charm"
     },
     {
+      "type": "patchouli:entity",
       "entity": "ars_nouveau:bookwyrm",
-      "text": "ars_nouveau.page2.bookwyrm_charm",
-      "type": "patchouli:entity"
+      "text": "ars_nouveau.page2.bookwyrm_charm"
     },
     {
-      "text": "ars_nouveau.page3.bookwyrm_charm",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.bookwyrm_charm"
     },
     {
-      "text": "ars_nouveau.page4.bookwyrm_charm",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page4.bookwyrm_charm"
     },
     {
-      "text": "ars_nouveau.page5.bookwyrm_charm",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page5.bookwyrm_charm"
     }
   ]
 }

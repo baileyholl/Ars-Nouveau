@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.wind_shear",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_wind_shear",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_wind_shear",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.wind_shear",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_wind_shear"
     },
     {
-      "recipe": "ars_nouveau:glyph_wind_shear",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_wind_shear"
     }
-  ]
+  ],
+  "sortnum": 2
 }

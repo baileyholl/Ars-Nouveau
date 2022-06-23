@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.relay_splitter",
   "category": "ars_nouveau:source",
   "icon": "ars_nouveau:relay_splitter",
+  "name": "block.ars_nouveau.relay_splitter",
   "pages": [
     {
-      "text": "ars_nouveau.page.relay_splitter",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.relay_splitter"
     },
     {
-      "recipe": "ars_nouveau:relay_splitter",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:relay_splitter"
     }
   ]
 }

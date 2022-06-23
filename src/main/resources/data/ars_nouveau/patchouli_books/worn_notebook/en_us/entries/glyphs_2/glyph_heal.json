@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.heal",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_heal",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_heal",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.heal",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_heal"
     },
     {
-      "recipe": "ars_nouveau:glyph_heal",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_heal"
     }
-  ]
+  ],
+  "sortnum": 2
 }

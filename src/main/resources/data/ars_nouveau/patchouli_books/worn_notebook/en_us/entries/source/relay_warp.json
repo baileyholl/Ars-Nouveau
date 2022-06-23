@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.relay_warp",
   "category": "ars_nouveau:source",
   "icon": "ars_nouveau:relay_warp",
+  "name": "block.ars_nouveau.relay_warp",
   "pages": [
     {
-      "text": "ars_nouveau.page.relay_warp",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.relay_warp"
     },
     {
-      "recipe": "ars_nouveau:relay_warp",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:relay_warp"
     }
   ]
 }

@@ -1,55 +1,55 @@
 {
-  "name": "block.ars_nouveau.imbuement_chamber",
-  "icon": "ars_nouveau:imbuement_chamber",
   "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:imbuement_chamber",
+  "name": "block.ars_nouveau.imbuement_chamber",
   "pages": [
     {
-      "text": "ars_nouveau.page1.imbuement_chamber",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.imbuement_chamber"
     },
     {
-      "recipe": "ars_nouveau:imbuement_chamber",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:imbuement_chamber"
     },
     {
-      "recipe": "ars_nouveau:imbuement_lapis",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_lapis"
     },
     {
-      "recipe": "ars_nouveau:imbuement_amethyst",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_amethyst"
     },
     {
-      "recipe": "ars_nouveau:imbuement_amethyst_block",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_amethyst_block"
     },
     {
-      "recipe": "ars_nouveau:imbuement_fire_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_fire_essence"
     },
     {
-      "recipe": "ars_nouveau:imbuement_earth_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_earth_essence"
     },
     {
-      "recipe": "ars_nouveau:imbuement_water_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_water_essence"
     },
     {
-      "recipe": "ars_nouveau:imbuement_air_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_air_essence"
     },
     {
-      "recipe": "ars_nouveau:imbuement_abjuration_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_abjuration_essence"
     },
     {
-      "recipe": "ars_nouveau:imbuement_conjuration_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_conjuration_essence"
     },
     {
-      "recipe": "ars_nouveau:imbuement_manipulation_essence",
-      "type": "ars_nouveau:imbuement_recipe"
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_manipulation_essence"
     }
   ]
 }

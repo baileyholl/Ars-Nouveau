@@ -2,12 +2,21 @@ package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 public abstract class AbstractSummonCharm extends ModItem {
+
+    public AbstractSummonCharm(Properties properties) {
+        super(properties);
+    }
+
+    public AbstractSummonCharm() {
+        this(ItemsRegistry.defaultItemProperties());
+    }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
@@ -17,7 +26,7 @@ public abstract class AbstractSummonCharm extends ModItem {
         InteractionResult result;
         if (world.getBlockEntity(pos) instanceof SummoningTile tile) {
             result = useOnSummonTile(context, world, tile, pos);
-        }else{
+        } else {
             result = useOnBlock(context, world, pos);
         }
         if (result == InteractionResult.SUCCESS) context.getItemInHand().shrink(1);

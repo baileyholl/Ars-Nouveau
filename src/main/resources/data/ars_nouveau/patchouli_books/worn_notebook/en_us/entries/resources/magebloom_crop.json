@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.magebloom_crop",
   "category": "ars_nouveau:resources",
   "icon": "ars_nouveau:magebloom_crop",
+  "name": "block.ars_nouveau.magebloom_crop",
   "pages": [
     {
-      "text": "ars_nouveau.page.magebloom_crop",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.magebloom_crop"
     },
     {
-      "recipe": "ars_nouveau:magebloom_crop",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:magebloom_crop"
     }
   ]
 }

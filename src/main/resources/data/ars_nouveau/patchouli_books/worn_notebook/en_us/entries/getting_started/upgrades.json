@@ -1,19 +1,19 @@
 {
-  "name": "ars_nouveau.page.upgrades",
   "category": "ars_nouveau:getting_started",
-  "sortnum": 9,
   "icon": "ars_nouveau:archmage_spell_book",
+  "name": "ars_nouveau.page.upgrades",
   "pages": [
     {
-      "text": "ars_nouveau.page1.upgrades",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.upgrades"
     },
     {
+      "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:equipment/spell_books",
         "ars_nouveau:equipment/armor"
-      ],
-      "type": "patchouli:relations"
+      ]
     }
-  ]
+  ],
+  "sortnum": 9
 }

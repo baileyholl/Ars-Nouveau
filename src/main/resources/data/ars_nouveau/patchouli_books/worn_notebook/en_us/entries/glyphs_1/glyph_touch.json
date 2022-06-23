@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.touch",
   "category": "ars_nouveau:glyphs_1",
   "icon": "ars_nouveau:glyph_touch",
-  "sortnum": 1,
+  "name": "ars_nouveau.glyph_name.glyph_touch",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.touch",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_touch"
     },
     {
-      "recipe": "ars_nouveau:glyph_touch",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_touch"
     }
-  ]
+  ],
+  "sortnum": 1
 }

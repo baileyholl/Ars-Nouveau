@@ -343,9 +343,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
                 }
 
                 float f = (float)Math.min(Mth.floor((float)i * this.fallDamagePerDistance), this.fallDamageMax);
-                this.level.getEntities(this, this.getBoundingBox(), predicate).forEach((p_149649_) -> {
-                    p_149649_.hurt(damagesource, f);
-                });
+                this.level.getEntities(this, this.getBoundingBox(), predicate).forEach(p_149649_ -> p_149649_.hurt(damagesource, f));
                 boolean flag = this.blockState.is(BlockTags.ANVIL);
                 if (flag && f > 0.0F && this.random.nextFloat() < 0.05F + (float)i * 0.05F) {
                     BlockState blockstate = AnvilBlock.damage(this.blockState);

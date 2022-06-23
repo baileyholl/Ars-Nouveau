@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.lightning",
   "category": "ars_nouveau:glyphs_3",
   "icon": "ars_nouveau:glyph_lightning",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_lightning",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.lightning",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_lightning"
     },
     {
-      "recipe": "ars_nouveau:glyph_lightning",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_lightning"
     }
-  ]
+  ],
+  "sortnum": 2
 }

@@ -15,7 +15,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 
 import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.WILDEN_DROP_TAG;
-import static com.hollingsworth.arsnouveau.common.lib.RitualLib.WILDEN_SUMMON;
 
 public class RitualWildenSummoning extends AbstractRitual {
 

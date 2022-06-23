@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.spell_prism",
   "category": "ars_nouveau:automation",
   "icon": "ars_nouveau:spell_prism",
+  "name": "block.ars_nouveau.spell_prism",
   "pages": [
     {
-      "text": "ars_nouveau.page.spell_prism",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.spell_prism"
     },
     {
-      "recipe": "ars_nouveau:spell_prism",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:spell_prism"
     }
   ]
 }

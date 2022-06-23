@@ -1,15 +1,15 @@
 {
-  "name": "item.ars_nouveau.belt_of_levitation",
   "category": "ars_nouveau:equipment",
   "icon": "ars_nouveau:belt_of_levitation",
+  "name": "item.ars_nouveau.belt_of_levitation",
   "pages": [
     {
-      "text": "ars_nouveau.page.belt_of_levitation",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.belt_of_levitation"
     },
     {
-      "recipe": "ars_nouveau:belt_of_levitation",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:belt_of_levitation"
     }
   ]
 }

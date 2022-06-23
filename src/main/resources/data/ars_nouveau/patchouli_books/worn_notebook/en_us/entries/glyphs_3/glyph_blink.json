@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.blink",
   "category": "ars_nouveau:glyphs_3",
   "icon": "ars_nouveau:glyph_blink",
-  "sortnum": 2,
+  "name": "ars_nouveau.glyph_name.glyph_blink",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.blink",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_blink"
     },
     {
-      "recipe": "ars_nouveau:glyph_blink",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_blink"
     }
-  ]
+  ],
+  "sortnum": 2
 }

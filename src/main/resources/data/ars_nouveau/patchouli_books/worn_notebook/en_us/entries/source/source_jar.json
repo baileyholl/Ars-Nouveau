@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.source_jar",
   "category": "ars_nouveau:source",
   "icon": "ars_nouveau:source_jar",
+  "name": "block.ars_nouveau.source_jar",
   "pages": [
     {
-      "text": "ars_nouveau.page.source_jar",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.source_jar"
     },
     {
-      "recipe": "ars_nouveau:source_jar",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:source_jar"
     }
   ]
 }

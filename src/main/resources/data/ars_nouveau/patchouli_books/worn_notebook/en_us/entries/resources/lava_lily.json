@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.lava_lily",
-  "icon": "ars_nouveau:lava_lily",
   "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:lava_lily",
+  "name": "block.ars_nouveau.lava_lily",
   "pages": [
     {
-      "text": "ars_nouveau.page1.lava_lily",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.lava_lily"
     },
     {
-      "recipe": "ars_nouveau:lava_lily",
-      "type": "patchouli:crafting"
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:lava_lily"
     }
   ]
 }

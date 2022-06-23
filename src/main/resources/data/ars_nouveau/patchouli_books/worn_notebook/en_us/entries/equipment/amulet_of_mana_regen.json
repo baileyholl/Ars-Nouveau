@@ -1,15 +1,15 @@
 {
-  "name": "item.ars_nouveau.amulet_of_mana_regen",
   "category": "ars_nouveau:equipment",
   "icon": "ars_nouveau:amulet_of_mana_regen",
+  "name": "item.ars_nouveau.amulet_of_mana_regen",
   "pages": [
     {
-      "text": "ars_nouveau.page.amulet_of_mana_regen",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.amulet_of_mana_regen"
     },
     {
-      "recipe": "ars_nouveau:amulet_of_mana_regen",
-      "type": "ars_nouveau:apparatus_recipe"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:amulet_of_mana_regen"
     }
   ]
 }

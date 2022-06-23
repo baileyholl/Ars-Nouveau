@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.fortune",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_fortune",
-  "sortnum": 3,
+  "name": "ars_nouveau.glyph_name.glyph_fortune",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.fortune",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_fortune"
     },
     {
-      "recipe": "ars_nouveau:glyph_fortune",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_fortune"
     }
-  ]
+  ],
+  "sortnum": 3
 }

@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.amplify",
   "category": "ars_nouveau:glyphs_1",
   "icon": "ars_nouveau:glyph_amplify",
-  "sortnum": 3,
+  "name": "ars_nouveau.glyph_name.glyph_amplify",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.amplify",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_amplify"
     },
     {
-      "recipe": "ars_nouveau:glyph_amplify",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_amplify"
     }
-  ]
+  ],
+  "sortnum": 3
 }

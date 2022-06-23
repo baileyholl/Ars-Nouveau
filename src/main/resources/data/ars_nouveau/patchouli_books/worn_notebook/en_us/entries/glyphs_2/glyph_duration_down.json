@@ -1,16 +1,16 @@
 {
-  "name": "ars_nouveau.glyph_name.duration_down",
   "category": "ars_nouveau:glyphs_2",
   "icon": "ars_nouveau:glyph_duration_down",
-  "sortnum": 3,
+  "name": "ars_nouveau.glyph_name.glyph_duration_down",
   "pages": [
     {
-      "text": "ars_nouveau.glyph_desc.duration_down",
-      "type": "patchouli:text"
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_duration_down"
     },
     {
-      "recipe": "ars_nouveau:glyph_duration_down",
-      "type": "ars_nouveau:glyph_recipe"
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_duration_down"
     }
-  ]
+  ],
+  "sortnum": 3
 }

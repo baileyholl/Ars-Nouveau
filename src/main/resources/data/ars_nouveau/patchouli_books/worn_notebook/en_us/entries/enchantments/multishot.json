@@ -1,11 +1,11 @@
 {
-  "name": "enchantment.minecraft.multishot",
   "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.multishot",
   "pages": [
     {
-      "recipe": "ars_nouveau:multishot_1",
-      "type": "ars_nouveau:enchanting_recipe"
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:multishot_1"
     }
   ]
 }
