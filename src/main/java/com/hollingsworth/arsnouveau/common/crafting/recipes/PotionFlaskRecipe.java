@@ -64,7 +64,6 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
                     return ItemStack.EMPTY;
                 if(flaskPotion == Potions.EMPTY){
                     flaskPotion = stackPotion;
-                    System.out.println(effectsList.size());
                 }
                 if(!flaskPotion.equals(stackPotion))
                     return ItemStack.EMPTY;

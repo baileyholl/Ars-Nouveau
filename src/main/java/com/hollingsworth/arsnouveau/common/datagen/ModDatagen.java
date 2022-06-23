@@ -13,7 +13,6 @@ public class ModDatagen {
 
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
-        System.out.println("calling datagen");
         BlockTagsProvider blocktagsprovider = new BlockTagsProvider(event.getGenerator(), MODID, event.getExistingFileHelper());
 
         event.getGenerator().addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));

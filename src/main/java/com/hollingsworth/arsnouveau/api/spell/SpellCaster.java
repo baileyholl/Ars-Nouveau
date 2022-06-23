@@ -60,8 +60,7 @@ public class SpellCaster implements ISpellCaster{
 
     @Override
     public void setSpell(Spell spell) {
-        this.spells.put(getCurrentSlot(), spell);
-        writeItem(stack);
+        setSpell(spell, getCurrentSlot());
     }
 
     @Override
@@ -165,13 +164,14 @@ public class SpellCaster implements ISpellCaster{
     public SpellCaster(CompoundTag itemTag){
         CompoundTag tag = itemTag.getCompound(getTagID().toString());
 
-        this.slot = tag.contains("current_slot") ? tag.getInt("current_slot") : 1;
+        this.slot = tag.getInt("current_slot");
         this.flavorText = tag.getString("flavor");
         CompoundTag spellTag = tag.getCompound("spells");
-        int spellCount = tag.getInt("spell_count");
-        for(int i = 0; i < spellCount; i++){
-            Spell spell = Spell.fromTag(spellTag.getCompound("spell" + i));
-            this.spells.put(i, spell);
+        for(int i = 0; i < getMaxSlots(); i++){
+            if(spellTag.contains("spell" + i)){
+                Spell spell = Spell.fromTag(spellTag.getCompound("spell" + i));
+                spells.put(i, spell);
+            }
         }
     }
 

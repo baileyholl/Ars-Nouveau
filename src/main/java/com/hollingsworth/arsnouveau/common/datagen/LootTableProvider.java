@@ -22,7 +22,6 @@ public class LootTableProvider extends BaseLootTableProvider{
 
     @Override
     protected void addTables() {
-        System.out.println(BlockRegistry.SOURCE_JAR);
         blockTables.put(BlockRegistry.SOURCE_JAR, createManaManchineTable("source_jar", BlockRegistry.SOURCE_JAR));
 
         LootPool.Builder potionJarBuilder = LootPool.lootPool()

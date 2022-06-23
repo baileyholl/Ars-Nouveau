@@ -48,16 +48,16 @@ public interface ISpellCaster {
 
     default void setNextSlot(){
         int slot = getCurrentSlot() + 1;
-        if(slot > getMaxSlots()){
-            slot = 1;
+        if(slot >= getMaxSlots()){
+            slot = 0;
         }
         setCurrentSlot(slot);
     }
 
     default void setPreviousSlot(){
         int slot = getCurrentSlot() - 1;
-        if(slot < 1)
-            slot = getMaxSlots();
+        if(slot < 0)
+            slot = getMaxSlots() - 1;
         setCurrentSlot(slot);
     }
 
@@ -154,11 +154,8 @@ public interface ISpellCaster {
     }
 
     default void copyFromCaster(ISpellCaster other){
-        for(int i = 0; i < getMaxSlots() + 1 && i < other.getMaxSlots() + 1; i++){
+        for(int i = 0; i < getMaxSlots() && i < other.getMaxSlots(); i++){
             setSpell(other.getSpell(i), i);
-            setSound(other.getSound(i), i);
-            setColor(other.getColor(i), i);
-            setSpellName(other.getSpellName(i), i);
             setFlavorText(other.getFlavorText());
         }
     }

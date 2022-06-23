@@ -41,7 +41,7 @@ public class GuiSpellBook extends BaseBook {
     public SpellBook spellBook;
     public ArsNouveauAPI api;
 
-    private int selected_cast_slot;
+    private int selectedSpellSlot;
     public EditBox spell_name;
     public NoShadowTextField searchBar;
     public GuiSpellSlot selected_slot;
@@ -66,7 +66,7 @@ public class GuiSpellBook extends BaseBook {
         super();
         this.bookStack = bookStack;
         this.api = ArsNouveauAPI.getInstance();
-        this.selected_cast_slot = 1;
+        this.selectedSpellSlot = 0;
         craftingCells = new ArrayList<>();
         this.max_spell_tier = tier;
         this.unlockedSpells = unlockedSpells;
@@ -82,8 +82,7 @@ public class GuiSpellBook extends BaseBook {
     public void init() {
         super.init();
         ISpellCaster caster = CasterUtil.getCaster(bookStack);
-        int selected_slot_ind = Math.max(1, caster.getCurrentSlot());
-
+        int selectedSlot = caster.getCurrentSlot();
         //Crafting slots
         for (int i = 0; i < numLinks; i++) {
             int offset = i >= 5 ? 14 : 0;
@@ -91,7 +90,7 @@ public class GuiSpellBook extends BaseBook {
             addRenderableWidget(cell);
             craftingCells.add(cell);
         }
-        updateCraftingSlots(selected_slot_ind);
+        updateCraftingSlots(selectedSlot);
 
         layoutAllGlyphs(0);
         addRenderableWidget(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onCreateClick));
@@ -124,11 +123,11 @@ public class GuiSpellBook extends BaseBook {
         addRenderableWidget(spell_name);
         addRenderableWidget(searchBar);
         // Add spell slots
-        for(int i = 1; i <= 10; i++){
-            GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 281, bookTop +1 + 15 * i, i);
-            if(i == selected_slot_ind) {
+        for(int i = 0; i < 10; i++){
+            GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 281, bookTop + 1 + 15 * (i + 1), i);
+            if(i == selectedSlot) {
                 selected_slot = slot;
-                selected_cast_slot = i;
+                selectedSpellSlot = i;
                 slot.isSelected = true;
             }
             addRenderableWidget(slot);
@@ -327,13 +326,13 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onColorClick(Button button){
-        ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selected_cast_slot);
-        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selected_cast_slot));
+        ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selectedSpellSlot);
+        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot));
     }
 
     public void onSoundsClick(Button button){
-        ConfiguredSpellSound spellSound = CasterUtil.getCaster(bookStack).getSound(selected_cast_slot);
-        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selected_cast_slot));
+        ConfiguredSpellSound spellSound = CasterUtil.getCaster(bookStack).getSound(selectedSpellSlot);
+        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot));
     }
 
     public void onFamiliarClick(Button button){
@@ -370,22 +369,22 @@ public class GuiSpellBook extends BaseBook {
         this.selected_slot.isSelected = false;
         this.selected_slot = (GuiSpellSlot) button;
         this.selected_slot.isSelected = true;
-        this.selected_cast_slot = this.selected_slot.slotNum;
-        updateCraftingSlots(this.selected_cast_slot);
-        spell_name.setValue(CasterUtil.getCaster(bookStack).getSpellName(selected_cast_slot));
+        this.selectedSpellSlot = this.selected_slot.slotNum;
+        updateCraftingSlots(this.selectedSpellSlot);
+        spell_name.setValue(CasterUtil.getCaster(bookStack).getSpellName(selectedSpellSlot));
         validate();
     }
 
     public void updateCraftingSlots(int bookSlot){
         //Crafting slots
-        List<AbstractSpellPart> spell_recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
+        List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
             slot.spellTag = ArsNouveauAPI.EMPTY_KEY;
             slot.abstractSpellPart = null;
-            if (spell_recipe != null && i < spell_recipe.size()){
-                slot.spellTag = spell_recipe.get(i).getRegistryName();
-                slot.abstractSpellPart = spell_recipe.get(i);
+            if (recipe != null && i < recipe.size()){
+                slot.spellTag = recipe.get(i).getRegistryName();
+                slot.abstractSpellPart = recipe.get(i);
             }
         }
     }
@@ -414,7 +413,7 @@ public class GuiSpellBook extends BaseBook {
                     spell.add(spellPart);
                 }
             }
-            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(spell, this.selected_cast_slot, this.spell_name.getValue()));
+            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spell_name.getValue()));
         }
     }
 
