@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -96,10 +97,6 @@ public interface ISpellCaster {
 
     Map<Integer, Spell> getSpells();
 
-    Map<Integer, String> getSpellNames();
-
-    Map<Integer, ParticleColor.IntWrapper> getColors();
-
     @Nonnull
     default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster){
         return caster.getSpell();
@@ -176,5 +173,5 @@ public interface ISpellCaster {
         worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
     }
 
-    String getTagID();
+    ResourceLocation getTagID();
 }

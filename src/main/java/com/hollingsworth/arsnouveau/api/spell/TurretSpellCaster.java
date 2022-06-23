@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class TurretSpellCaster extends SpellCaster {
@@ -14,7 +16,7 @@ public class TurretSpellCaster extends SpellCaster {
     }
 
     @Override
-    public String getTagID() {
-        return "ars_nouveau_turret_caster";
+    public ResourceLocation getTagID() {
+        return new ResourceLocation(ArsNouveau.MODID, "turret_caster");
     }
 }
