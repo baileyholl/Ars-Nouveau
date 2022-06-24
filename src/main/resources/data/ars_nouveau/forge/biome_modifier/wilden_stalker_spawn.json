@@ -3,8 +3,8 @@
   "biomes": "#minecraft:is_overworld",
   "spawners": {
     "type": "ars_nouveau:wilden_stalker",
-    "maxCount": 1,
-    "minCount": 1,
+    "maxCount": 3,
+    "minCount": 3,
     "weight": 50
   }
 }

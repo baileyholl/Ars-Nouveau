@@ -217,7 +217,7 @@ public class ArsNouveauAPI {
         return castingSpellValidator;
     }
 
-    public @Nullable IScryer getScryer(String id){
+    public @Nullable IScryer getScryer(ResourceLocation id){
         return this.scryerMap.get(id);
     }
 

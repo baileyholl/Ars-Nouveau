@@ -3,7 +3,7 @@
   "biomes": "#ars_nouveau:summon_spawn",
   "spawners": {
     "type": "ars_nouveau:starbuncle",
-    "maxCount": 1,
+    "maxCount": 2,
     "minCount": 1,
     "weight": 5
   }

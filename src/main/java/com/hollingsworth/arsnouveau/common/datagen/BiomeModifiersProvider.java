@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -34,27 +33,27 @@ public class BiomeModifiersProvider {
 
         modifierMap.put(STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(SUMMON_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(),
-                        Config.DEFAULT_STARBUNCLE_WEIGHT, 1, 1)
+                        5, 1, 2)
         ));
         modifierMap.put(DRYGMY_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(SUMMON_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY.get(),
-                        Config.DEFAULT_DRYGMY_WEIGHT, 1, 1)
+                        3, 1, 2)
         ));
         modifierMap.put(WHIRLISPRIG_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(SUMMON_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE.get(),
-                        Config.DEFAULT_WHIRLISPRIG_WEIGHT, 1, 1)
+                        5, 1, 2)
         ));
         modifierMap.put(WILDEN_HUNTER_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(WILDEN_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_HUNTER.get(),
-                        Config.DEFAULT_WHUNTER_WEIGHT, 1, 1)
+                        50, 1, 1)
         ));
         modifierMap.put(WILDEN_STALKER_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(WILDEN_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_STALKER.get(),
-                        Config.DEFAULT_WSTALKER_WEIGHT, 1, 1)
+                        50, 3, 3)
         ));
         modifierMap.put(WILDEN_GUARDIAN_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(WILDEN_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_GUARDIAN.get(),
-                        Config.DEFAULT_WGUARDIAN_WEIGHT, 1, 1)
+                        50, 1, 1)
         ));
 
         event.getGenerator().addProvider(event.includeServer(), JsonCodecProvider.forDatapackRegistry(event.getGenerator(), event.getExistingFileHelper(), MODID,

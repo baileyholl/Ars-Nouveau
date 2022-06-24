@@ -15,6 +15,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -50,7 +51,7 @@ public class ScryEvents {
             CompoundTag tag = ClientInfo.persistentData;
             if (!tag.contains("an_scryer"))
                 return;
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(tag.getCompound("an_scryer").getString("id")).fromTag(tag.getCompound("an_scryer"));
+            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(new ResourceLocation(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
             if (scryer == null)
                 return;
             Player playerEntity = event.player;
