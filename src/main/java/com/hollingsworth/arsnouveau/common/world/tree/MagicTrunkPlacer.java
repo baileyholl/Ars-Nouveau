@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.world.tree;
 
 import com.google.common.collect.Lists;
+import com.hollingsworth.arsnouveau.setup.ModSetup;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -22,8 +25,12 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
     @Override
     protected TrunkPlacerType<?> type() {
-        return TrunkPlacerType.DARK_OAK_TRUNK_PLACER;
+        return ModSetup.MAGIC_TRUNK_PLACER.get();
     }
+
+    public static final Codec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.create((p_70090_) -> {
+        return trunkPlacerParts(p_70090_).apply(p_70090_, MagicTrunkPlacer::new);
+    });
 
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {

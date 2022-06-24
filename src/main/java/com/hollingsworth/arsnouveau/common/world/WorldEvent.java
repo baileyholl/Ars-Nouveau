@@ -190,25 +190,4 @@ public class WorldEvent {
        // Registry.register(WorldGenRegistries.PROCESSOR_LIST, new ResourceLocation(ArsNouveau.MODID, "archwood_plains"), ARCHWOOD_PLAINS);
 
     }
-
-
-//
-//    public static void addBlazingForestFeatures(BiomeLoadingEvent e){
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BLAZE_SEMI_LOC))).build();
-//
-//    }
-//
-//    public static void addArchwoodForestFeatures(BiomeLoadingEvent e){
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(ARCHWOOD_TREES))).build();
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(VANILLA_BIG_TREES))).build();
-//        e.getGeneration().addFeature(GenerationStep.Decoration.LOCAL_MODIFICATIONS,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(RANDOM_LIGHTS_LOC))).build();
-//    }
-//
-//    public static Biome blazingForest = VanillaBiomes.theVoidBiome().setRegistryName(ArsNouveau.MODID, "blazing_archwood_forest");
-
-
 }
