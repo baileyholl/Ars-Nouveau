@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -9,8 +10,11 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.data.JsonCodecProvider;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
@@ -30,6 +34,7 @@ public class BiomeModifiersProvider {
         Map<ResourceLocation, BiomeModifier> modifierMap = new HashMap<>();
         HolderSet.Named<Biome> SUMMON_TAG = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTagProvider.SUMMON_SPAWN_TAG);
         HolderSet.Named<Biome> WILDEN_TAG = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTags.IS_OVERWORLD);
+        HolderSet.Named<Biome> OVERWORLD_TAG = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTags.IS_OVERWORLD);
 
         modifierMap.put(STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(SUMMON_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(),
@@ -55,6 +60,9 @@ public class BiomeModifiersProvider {
                 new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_GUARDIAN.get(),
                         50, 1, 1)
         ));
+        // TODO: Change to direct, but causes a crash for some reason OR: Make a PlacedFeature tag for the trees instead
+        HolderSet<PlacedFeature> TREESET = new HolderSet.Named<>(ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow(), TagKey.create(Registry.PLACED_FEATURE_REGISTRY, WorldEvent.PLACED_MIXED_ID));
+        modifierMap.put(ARCHWOOD_MIX_RARE, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(OVERWORLD_TAG, TREESET, GenerationStep.Decoration.VEGETAL_DECORATION));
 
         event.getGenerator().addProvider(event.includeServer(), JsonCodecProvider.forDatapackRegistry(event.getGenerator(), event.getExistingFileHelper(), MODID,
                 ops, ForgeRegistries.Keys.BIOME_MODIFIERS, modifierMap));

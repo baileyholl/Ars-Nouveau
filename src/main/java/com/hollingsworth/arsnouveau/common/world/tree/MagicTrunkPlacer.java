@@ -34,7 +34,6 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
-        System.out.println("place");
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos blockpos = pos.below();
         setDirtAt(world, consumer, rand, blockpos, baseTreeFeatureConfig);
