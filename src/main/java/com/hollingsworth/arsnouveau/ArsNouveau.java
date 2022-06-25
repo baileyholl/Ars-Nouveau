@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.client.TextureEvent;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
@@ -71,7 +72,8 @@ public class ArsNouveau {
         APIRegistry.postInit();
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
-        if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
+        event.enqueueWork(ModEntities::registerPlacements);
+        if (false && terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
     }
