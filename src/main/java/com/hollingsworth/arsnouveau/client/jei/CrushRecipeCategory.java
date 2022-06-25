@@ -1,45 +1,36 @@
 package com.hollingsworth.arsnouveau.client.jei;
-/* TODO restore
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
-    public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "crush");
 
-    IGuiHelper helper;
     public IDrawable background;
     public IDrawable icon;
-    public List<CrushRecipe.CrushOutput> outputs = new ArrayList<>();
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
     public CrushRecipeCategory(IGuiHelper helper){
-        this.helper = helper;
-        background = helper.createBlankDrawable(60,50);
+        background = helper.createBlankDrawable(120,8 + 16 * 3);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE).getDefaultInstance());
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
@@ -51,14 +42,10 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
                     }
                 });
     }
-    @Override
-    public ResourceLocation getUid() {
-        return UID;
-    }
 
     @Override
-    public Class<? extends CrushRecipe> getRecipeClass() {
-        return CrushRecipe.class;
+    public RecipeType<CrushRecipe> getRecipeType() {
+        return JEIArsNouveauPlugin.CRUSH_RECIPE_TYPE;
     }
 
     @Override
@@ -68,7 +55,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(120,8 + 16 * outputs.size());
+        return background;
     }
 
     @Override
@@ -87,29 +74,11 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void setIngredients(CrushRecipe o, IIngredients iIngredients) {
-        List<List<ItemStack>> inputs = new ArrayList<>();
-        inputs.add( Arrays.asList(o.input.getItems()));
-        iIngredients.setInputLists(VanillaTypes.ITEM_STACK,inputs);
-        iIngredients.setOutputs(VanillaTypes.ITEM_STACK, o.outputs.stream().map(c -> c.stack).collect(Collectors.toList()));
-    }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, CrushRecipe o, IIngredients ingredients) {
-        int index = 0;
-        this.outputs = o.outputs;
-        recipeLayout.getItemStacks().init(index, true, 6, 5);
-        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM_STACK).get(0));
-        index++;
-
-        for(int i = 0; i < ingredients.getOutputs(VanillaTypes.ITEM_STACK).size(); i++){
-            recipeLayout.getItemStacks().init(index, true, 60, 5+ 16 * i);
-            recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM_STACK).get(i));
-            index++;
+    public void setRecipe(IRecipeLayoutBuilder builder, CrushRecipe recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 6,5).addIngredients(recipe.input);
+        for(int i = 0; i < recipe.outputs.size(); i++){
+            CrushRecipe.CrushOutput output = recipe.outputs.get(i);
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 5 + 16 * i ).addItemStack(output.stack);
         }
     }
-
 }
-
-
- */
