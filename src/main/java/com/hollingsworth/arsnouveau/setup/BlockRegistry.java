@@ -30,18 +30,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
-@Mod(ArsNouveau.MODID)
+//@Mod(ArsNouveau.MODID)
 public class BlockRegistry {
 
     static final String BlockRegistryKey = "minecraft:block";
     static final String BlockEntityRegistryKey = "minecraft:block_entity_type";
+    static final String prepend = ArsNouveau.MODID + ":";
 
     //@ObjectHolder( value = LibBlockNames.ARCANE_ROAD, registryName = BlockRegistryKey) public static TickableModBlock ARCANE_ROAD;
 
@@ -49,188 +49,155 @@ public class BlockRegistry {
 
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS);
 
-    @ObjectHolder(value = LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey)
+    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey)
     public static MageBlock MAGE_BLOCK;
-    @ObjectHolder(value = LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey)
+    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
 
-    @ObjectHolder(value = LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey)
+    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey)
     public static LightBlock LIGHT_BLOCK;
-    @ObjectHolder(value = LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
+    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<LightTile> LIGHT_TILE;
-    @ObjectHolder( value = LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
-    @ObjectHolder( value = LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey) public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
+    @ObjectHolder( value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey) public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
 
-    @ObjectHolder( value = LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockEntityRegistryKey) public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
-    @ObjectHolder( value = LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockRegistryKey) public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockEntityRegistryKey) public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockRegistryKey) public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
 
-    @ObjectHolder( value = LibBlockNames.ARCANE_PEDESTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
-    @ObjectHolder( value = LibBlockNames.ARCANE_PEDESTAL, registryName = BlockRegistryKey) public static ArcanePedestal ARCANE_PEDESTAL;
-    @ObjectHolder( value = LibBlockNames.SOURCE_JAR, registryName = BlockRegistryKey) public static SourceJar SOURCE_JAR;
-    @ObjectHolder( value = LibBlockNames.SOURCE_JAR, registryName = BlockEntityRegistryKey) public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
-    @ObjectHolder( value = LibBlockNames.RELAY, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCANE_PEDESTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCANE_PEDESTAL, registryName = BlockRegistryKey) public static ArcanePedestal ARCANE_PEDESTAL;
+    @ObjectHolder( value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockRegistryKey) public static SourceJar SOURCE_JAR;
+    @ObjectHolder( value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockEntityRegistryKey) public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.RELAY, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
 
-    @ObjectHolder( value = LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey) public static MageBloomCrop MAGE_BLOOM_CROP;
-    @ObjectHolder( value = LibBlockNames.ARCANE_BRICKS, registryName = BlockRegistryKey) public static ModBlock ARCANE_BRICKS;
-    @ObjectHolder( value = LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey) public static ScribesBlock SCRIBES_BLOCK;
-    @ObjectHolder( value = LibBlockNames.SCRIBES_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
-    @ObjectHolder( value = LibBlockNames.RELAY, registryName = BlockRegistryKey) public static Relay RELAY;
-    @ObjectHolder( value = LibBlockNames.RUNE, registryName = BlockEntityRegistryKey) public static BlockEntityType<RuneTile> RUNE_TILE;
-    @ObjectHolder( value = LibBlockNames.RUNE, registryName = BlockRegistryKey) public static RuneBlock RUNE_BLOCK;
-    @ObjectHolder( value = LibBlockNames.PORTAL, registryName = BlockRegistryKey) public static PortalBlock PORTAL_BLOCK;
-    @ObjectHolder( value = LibBlockNames.PORTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
-    @ObjectHolder( value = LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockRegistryKey) public static ImbuementBlock IMBUEMENT_BLOCK;
-    @ObjectHolder( value = LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockEntityRegistryKey) public static BlockEntityType<ImbuementTile> IMBUEMENT_TILE;
-    @ObjectHolder( value = LibBlockNames.RELAY_SPLITTER, registryName = BlockRegistryKey) public static RelaySplitter RELAY_SPLITTER;
-    @ObjectHolder( value = LibBlockNames.RELAY_SPLITTER, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelaySplitterTile> RELAY_SPLITTER_TILE;
-    @ObjectHolder( value = LibBlockNames.ARCANE_CORE, registryName = BlockRegistryKey) public static ArcaneCore ARCANE_CORE_BLOCK;
-    @ObjectHolder( value = LibBlockNames.ARCANE_CORE, registryName = BlockEntityRegistryKey) public static BlockEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
-    @ObjectHolder( value = LibBlockNames.AB_ALTERNATE, registryName = BlockRegistryKey) public static ModBlock AB_ALTERNATE;
-    @ObjectHolder( value = LibBlockNames.AB_BASKET, registryName = BlockRegistryKey) public static ModBlock AB_BASKET;
-    @ObjectHolder( value = LibBlockNames.AB_HERRING, registryName = BlockRegistryKey) public static ModBlock AB_HERRING;
-    @ObjectHolder( value = LibBlockNames.AB_MOSAIC, registryName = BlockRegistryKey) public static ModBlock AB_MOSAIC;
-    @ObjectHolder( value = LibBlockNames.ARCANE_STONE, registryName = BlockRegistryKey) public static ModBlock ARCANE_STONE;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_SLAB, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_SLAB;
-    @ObjectHolder( value = LibBlockNames.AB_CLOVER, registryName = BlockRegistryKey) public static ModBlock AB_CLOVER;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_BASKET, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_BASKET;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_CLOVER, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_CLOVER;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_HERRING, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_HERRING;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_MOSAIC, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_MOSAIC;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_ALTERNATING, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_ALTERNATING;
-    @ObjectHolder( value = LibBlockNames.AB_SMOOTH_ASHLAR, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_ASHLAR;
-    @ObjectHolder( value = LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockRegistryKey) public static EnchantedSpellTurret ENCHANTED_SPELL_TURRET;
-    @ObjectHolder( value = LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockEntityRegistryKey) public static BlockEntityType<EnchantedTurretTile> ENCHANTED_SPELL_TURRET_TYPE;
-    @ObjectHolder( value = LibBlockNames.REDSTONE_AIR, registryName = BlockRegistryKey) public static RedstoneAir REDSTONE_AIR;
-    @ObjectHolder( value = LibBlockNames.INTANGIBLE_AIR, registryName = BlockRegistryKey) public static IntangibleAirBlock INTANGIBLE_AIR;
-    @ObjectHolder( value = LibBlockNames.INTANGIBLE_AIR, registryName = BlockEntityRegistryKey) public static  BlockEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
-
-    @ObjectHolder( value = LibBlockNames.VOLCANIC_SOURCELINK, registryName = BlockRegistryKey) public static VolcanicSourcelinkBlock VOLCANIC_BLOCK;
-    @ObjectHolder( value = LibBlockNames.VOLCANIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static  BlockEntityType<VolcanicSourcelinkTile> VOLCANIC_TILE;
-    @ObjectHolder( value = LibBlockNames.LAVA_LILY, registryName = BlockRegistryKey) public static LavaLily LAVA_LILY;
-    @ObjectHolder( value = LibBlockNames.SOURCEBERRY_BUSH, registryName = BlockRegistryKey) public static SourceBerryBush SOURCEBERRY_BUSH;
-
-    @ObjectHolder( value = LibBlockNames.WIXIE_CAULDRON, registryName = BlockRegistryKey) public static WixieCauldron WIXIE_CAULDRON;
-    @ObjectHolder( value = LibBlockNames.WIXIE_CAULDRON, registryName = BlockEntityRegistryKey) public static BlockEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
-
-
-    @ObjectHolder( value = LibBlockNames.CREATIVE_SOURCE_JAR, registryName = BlockRegistryKey) public static CreativeSourceJar CREATIVE_SOURCE_JAR;
-    @ObjectHolder( value = LibBlockNames.CREATIVE_SOURCE_JAR, registryName = BlockEntityRegistryKey) public static BlockEntityType<CreativeSourceJarTile> CREATIVE_SOURCE_JAR_TILE;
-
-    @ObjectHolder( value = LibBlockNames.CASCADING_LOG, registryName = BlockRegistryKey) public static StrippableLog CASCADING_LOG;
-    @ObjectHolder( value = LibBlockNames.CASCADING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves CASCADING_LEAVE;
-    @ObjectHolder( value = LibBlockNames.CASCADING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock CASCADING_SAPLING;
-    @ObjectHolder( value = LibBlockNames.CASCADING_WOOD, registryName = BlockRegistryKey) public static StrippableLog CASCADING_WOOD;
-
-    @ObjectHolder( value = LibBlockNames.BLAZING_LOG, registryName = BlockRegistryKey) public static StrippableLog BLAZING_LOG;
-    @ObjectHolder( value = LibBlockNames.BLAZING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves BLAZING_LEAVES;
-    @ObjectHolder( value = LibBlockNames.BLAZING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock BLAZING_SAPLING;
-    @ObjectHolder( value = LibBlockNames.BLAZING_WOOD, registryName = BlockRegistryKey) public static StrippableLog BLAZING_WOOD;
-
-    @ObjectHolder( value = LibBlockNames.VEXING_LOG, registryName = BlockRegistryKey) public static StrippableLog VEXING_LOG;
-    @ObjectHolder( value = LibBlockNames.VEXING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves VEXING_LEAVES;
-    @ObjectHolder( value = LibBlockNames.VEXING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock VEXING_SAPLING;
-    @ObjectHolder( value = LibBlockNames.VEXING_WOOD, registryName = BlockRegistryKey) public static StrippableLog VEXING_WOOD;
-
-    @ObjectHolder( value = LibBlockNames.FLOURISHING_LOG, registryName = BlockRegistryKey) public static StrippableLog FLOURISHING_LOG;
-    @ObjectHolder( value = LibBlockNames.FLOURISHING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves FLOURISHING_LEAVES;
-    @ObjectHolder( value = LibBlockNames.FLOURISHING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock FLOURISHING_SAPLING;
-    @ObjectHolder( value = LibBlockNames.FLOURISHING_WOOD, registryName = BlockRegistryKey) public static StrippableLog FLOURISHING_WOOD;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_PLANK, registryName = BlockRegistryKey) public static ModBlock ARCHWOOD_PLANK;
-
-    @ObjectHolder( value = LibBlockNames.RITUAL_BRAZIER, registryName = BlockRegistryKey) public static RitualBrazierBlock RITUAL_BLOCK;
-    @ObjectHolder( value = LibBlockNames.RITUAL_BRAZIER, registryName = BlockEntityRegistryKey) public static BlockEntityType<RitualBrazierTile> RITUAL_TILE;
-
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_BUTTON, registryName = BlockRegistryKey) public static WoodButtonBlock ARCHWOOD_BUTTON;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_STAIRS, registryName = BlockRegistryKey) public static StairBlock ARCHWOOD_STAIRS;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_SLABS, registryName = BlockRegistryKey) public static SlabBlock ARCHWOOD_SLABS;
-   // @ObjectHolder( value = LibBlockNames.ARCHWOOD_SIGN, registryName = BlockRegistryKey) public static WallSignBlock ARCHWOOD_SIGN;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_FENCE_GATE, registryName = BlockRegistryKey) public static FenceGateBlock ARCHWOOD_FENCE_GATE;
-    @ObjectHolder(value = LibBlockNames.ARCHWOOD_TRAPDOOR, registryName = BlockRegistryKey)
-    public static TrapDoorBlock ARCHWOOD_TRAPDOOR;
-    @ObjectHolder(value = LibBlockNames.ARCHWOOD_PRESSURE_PLATE, registryName = BlockRegistryKey)
-    public static PressurePlateBlock ARCHWOOD_PPlate;
-    @ObjectHolder(value = LibBlockNames.ARCHWOOD_FENCE, registryName = BlockRegistryKey)
-    public static FenceBlock ARCHWOOD_FENCE;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_DOOR, registryName = BlockRegistryKey) public static DoorBlock ARCHWOOD_DOOR;
-
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWLOG_BLUE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_BLUE;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWWOOD_BLUE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_BLUE;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWLOG_GREEN, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_GREEN;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWWOOD_GREEN, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_GREEN;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWLOG_RED, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_RED;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWWOOD_RED, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_RED;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWLOG_PURPLE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_PURPLE;
-    @ObjectHolder( value = LibBlockNames.STRIPPED_AWWOOD_PURPLE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_PURPLE;
-    @ObjectHolder( value = LibBlockNames.SOURCE_GEM_BLOCK, registryName = BlockRegistryKey) public static ModBlock SOURCE_GEM_BLOCK;
-
-    @ObjectHolder( value = LibBlockNames.POTION_JAR_BLOCK, registryName = BlockRegistryKey) public static PotionJar POTION_JAR;
-    @ObjectHolder( value = LibBlockNames.POTION_JAR_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<PotionJarTile> POTION_JAR_TYPE;
-    @ObjectHolder( value = LibBlockNames.POTION_MELDER_BLOCK, registryName = BlockRegistryKey) public static PotionMelder POTION_MELDER;
-    @ObjectHolder( value = LibBlockNames.POTION_MELDER_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<PotionMelderTile> POTION_MELDER_TYPE;
-
-    @ObjectHolder( value = LibBlockNames.SCONCE, registryName = BlockRegistryKey) public static SconceBlock SCONCE_BLOCK;
-    @ObjectHolder( value = LibBlockNames.SCONCE, registryName = BlockEntityRegistryKey) public static BlockEntityType<SconceTile> SCONCE_TILE;
-
-    @ObjectHolder( value = LibBlockNames.DRYGMY_STONE, registryName = BlockRegistryKey) public static DrygmyStone DRYGMY_BLOCK;
-    @ObjectHolder( value = LibBlockNames.DRYGMY_STONE, registryName = BlockEntityRegistryKey) public static BlockEntityType<DrygmyTile> DRYGMY_TILE;
-
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_ALT, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_ALT;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_ASHLAR, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_ASHLAR;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_BASKET, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_BASKET;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_CLOVER, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_CLOVER;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_HERRING, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_HERRING;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_MOSAIC, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_MOSAIC;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_SLAB, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_SLAB;
-    @ObjectHolder( value = LibBlockNames.AS_GOLD_STONE, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_STONE;
-
-    @ObjectHolder( value = LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockRegistryKey) public static AlchemicalSourcelinkBlock ALCHEMICAL_BLOCK;
-    @ObjectHolder( value = LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<AlchemicalSourcelinkTile> ALCHEMICAL_TILE;
-
-    @ObjectHolder( value = LibBlockNames.VITALIC_SOURCELINK, registryName = BlockRegistryKey) public static VitalicSourcelinkBlock VITALIC_BLOCK;
-    @ObjectHolder( value = LibBlockNames.VITALIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<VitalicSourcelinkTile> VITALIC_TILE;
-
-    @ObjectHolder( value = LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockRegistryKey) public static MycelialSourcelinkBlock MYCELIAL_BLOCK;
-    @ObjectHolder( value = LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<MycelialSourcelinkTile> MYCELIAL_TILE;
-
-    @ObjectHolder( value = LibBlockNames.RELAY_DEPOSIT, registryName = BlockRegistryKey) public static RelayDepositBlock RELAY_DEPOSIT;
-    @ObjectHolder( value = LibBlockNames.RELAY_DEPOSIT, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayDepositTile> RELAY_DEPOSIT_TILE;
-
-    @ObjectHolder( value = LibBlockNames.RELAY_WARP, registryName = BlockRegistryKey) public static RelayWarpBlock RELAY_WARP;
-    @ObjectHolder( value = LibBlockNames.RELAY_WARP, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayWarpTile> RELAY_WARP_TILE;
-
-
-    @ObjectHolder( value = LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockRegistryKey) public static BookwyrmLectern BOOKWYRM_LECTERN;
-    @ObjectHolder( value = LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockEntityRegistryKey) public static BlockEntityType<BookwyrmLecternTile> BOOKWYRM_LECTERN_TILE;
-
-    @ObjectHolder( value = LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockRegistryKey) public static BasicSpellTurret BASIC_SPELL_TURRET;
-    @ObjectHolder( value = LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockEntityRegistryKey) public static BlockEntityType<BasicSpellTurretTile> BASIC_SPELL_TURRET_TILE;
-
-    @ObjectHolder( value = LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockRegistryKey) public static TimerSpellTurret TIMER_SPELL_TURRET;
-    @ObjectHolder( value = LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockEntityRegistryKey) public static BlockEntityType<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_CHEST, registryName = BlockRegistryKey) public static  ArchwoodChest ARCHWOOD_CHEST;
-    @ObjectHolder( value = LibBlockNames.ARCHWOOD_CHEST, registryName = BlockEntityRegistryKey) public static  BlockEntityType<ArchwoodChestTile> ARCHWOOD_CHEST_TILE;
-    @ObjectHolder( value = LibBlockNames.SPELL_PRISM, registryName = BlockRegistryKey) public static  SpellPrismBlock SPELL_PRISM;
-    @ObjectHolder( value = LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
-    @ObjectHolder( value = LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockRegistryKey) public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
-    @ObjectHolder( value = LibBlockNames.RELAY_COLLECTOR, registryName = BlockRegistryKey) public static RelayCollectorBlock RELAY_COLLECTOR;
-    @ObjectHolder( value = LibBlockNames.RELAY_COLLECTOR, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
-
-    @ObjectHolder( value = LibBlockNames.RED_SBED, registryName = BlockRegistryKey) public static SummonBed RED_SBED;
-    @ObjectHolder( value = LibBlockNames.BLUE_SBED, registryName = BlockRegistryKey) public static SummonBed BLUE_SBED;
-    @ObjectHolder( value = LibBlockNames.GREEN_SBED, registryName = BlockRegistryKey) public static SummonBed GREEN_SBED;
-    @ObjectHolder( value = LibBlockNames.ORANGE_SBED, registryName = BlockRegistryKey) public static SummonBed ORANGE_SBED;
-    @ObjectHolder( value = LibBlockNames.YELLOW_SBED, registryName = BlockRegistryKey) public static SummonBed YELLOW_SBED;
-    @ObjectHolder( value = LibBlockNames.PURPLE_SBED, registryName = BlockRegistryKey) public static SummonBed PURPLE_SBED;
-
-    @ObjectHolder(value = LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
-    public static BlockStateProviderType<?> stateProviderType;
-
-    @ObjectHolder( value = LibBlockNames.SCRYERS_OCULUS, registryName = BlockRegistryKey) public static ScryersOculus SCRYERS_OCULUS;
-    @ObjectHolder( value = LibBlockNames.SCRYERS_OCULUS, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScryersOculusTile> SCRYERS_OCULUS_TILE;
-
-    @ObjectHolder( value = LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockRegistryKey) public static ScryerCrystal SCRYERS_CRYSTAL;
-    @ObjectHolder( value = LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScryerCrystalTile> SCRYER_CRYSTAL_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey) public static MageBloomCrop MAGE_BLOOM_CROP;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCANE_BRICKS, registryName = BlockRegistryKey) public static ModBlock ARCANE_BRICKS;
+    @ObjectHolder( value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey) public static ScribesBlock SCRIBES_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.RELAY, registryName = BlockRegistryKey) public static Relay RELAY;
+    @ObjectHolder( value = prepend + LibBlockNames.RUNE, registryName = BlockEntityRegistryKey) public static BlockEntityType<RuneTile> RUNE_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.RUNE, registryName = BlockRegistryKey) public static RuneBlock RUNE_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.PORTAL, registryName = BlockRegistryKey) public static PortalBlock PORTAL_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.PORTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
+    @ObjectHolder( value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockRegistryKey) public static ImbuementBlock IMBUEMENT_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockEntityRegistryKey) public static BlockEntityType<ImbuementTile> IMBUEMENT_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.RELAY_SPLITTER, registryName = BlockRegistryKey) public static RelaySplitter RELAY_SPLITTER;
+    @ObjectHolder( value = prepend + LibBlockNames.RELAY_SPLITTER, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelaySplitterTile> RELAY_SPLITTER_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCANE_CORE, registryName = BlockRegistryKey) public static ArcaneCore ARCANE_CORE_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCANE_CORE, registryName = BlockEntityRegistryKey) public static BlockEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_ALTERNATE, registryName = BlockRegistryKey) public static ModBlock AB_ALTERNATE;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_BASKET, registryName = BlockRegistryKey) public static ModBlock AB_BASKET;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_HERRING, registryName = BlockRegistryKey) public static ModBlock AB_HERRING;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_MOSAIC, registryName = BlockRegistryKey) public static ModBlock AB_MOSAIC;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCANE_STONE, registryName = BlockRegistryKey) public static ModBlock ARCANE_STONE;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_SLAB, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_SLAB;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_CLOVER, registryName = BlockRegistryKey) public static ModBlock AB_CLOVER;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_BASKET, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_BASKET;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_CLOVER, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_CLOVER;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_HERRING, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_HERRING;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_MOSAIC, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_MOSAIC;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_ALTERNATING, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_ALTERNATING;
+    @ObjectHolder( value = prepend + LibBlockNames.AB_SMOOTH_ASHLAR, registryName = BlockRegistryKey) public static ModBlock AB_SMOOTH_ASHLAR;
+    @ObjectHolder( value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockRegistryKey) public static EnchantedSpellTurret ENCHANTED_SPELL_TURRET;
+    @ObjectHolder( value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockEntityRegistryKey) public static BlockEntityType<EnchantedTurretTile> ENCHANTED_SPELL_TURRET_TYPE;
+    @ObjectHolder( value = prepend + LibBlockNames.REDSTONE_AIR, registryName = BlockRegistryKey) public static RedstoneAir REDSTONE_AIR;
+    @ObjectHolder( value = prepend + LibBlockNames.INTANGIBLE_AIR, registryName = BlockRegistryKey) public static IntangibleAirBlock INTANGIBLE_AIR;
+    @ObjectHolder( value = prepend + LibBlockNames.INTANGIBLE_AIR, registryName = BlockEntityRegistryKey) public static  BlockEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
+    @ObjectHolder( value = prepend + LibBlockNames.VOLCANIC_SOURCELINK, registryName = BlockRegistryKey) public static VolcanicSourcelinkBlock VOLCANIC_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.VOLCANIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static  BlockEntityType<VolcanicSourcelinkTile> VOLCANIC_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.LAVA_LILY, registryName = BlockRegistryKey) public static LavaLily LAVA_LILY;
+    @ObjectHolder( value = prepend + LibBlockNames.SOURCEBERRY_BUSH, registryName = BlockRegistryKey) public static SourceBerryBush SOURCEBERRY_BUSH;
+    @ObjectHolder( value = prepend + LibBlockNames.WIXIE_CAULDRON, registryName = BlockRegistryKey) public static WixieCauldron WIXIE_CAULDRON;
+    @ObjectHolder( value = prepend + LibBlockNames.WIXIE_CAULDRON, registryName = BlockEntityRegistryKey) public static BlockEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
+    @ObjectHolder( value = prepend + LibBlockNames.CREATIVE_SOURCE_JAR, registryName = BlockRegistryKey) public static CreativeSourceJar CREATIVE_SOURCE_JAR;
+    @ObjectHolder( value = prepend + LibBlockNames.CREATIVE_SOURCE_JAR, registryName = BlockEntityRegistryKey) public static BlockEntityType<CreativeSourceJarTile> CREATIVE_SOURCE_JAR_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.CASCADING_LOG, registryName = BlockRegistryKey) public static StrippableLog CASCADING_LOG;
+    @ObjectHolder( value = prepend + LibBlockNames.CASCADING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves CASCADING_LEAVE;
+    @ObjectHolder( value = prepend + LibBlockNames.CASCADING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock CASCADING_SAPLING;
+    @ObjectHolder( value = prepend + LibBlockNames.CASCADING_WOOD, registryName = BlockRegistryKey) public static StrippableLog CASCADING_WOOD;
+    @ObjectHolder( value = prepend + LibBlockNames.BLAZING_LOG, registryName = BlockRegistryKey) public static StrippableLog BLAZING_LOG;
+    @ObjectHolder( value = prepend + LibBlockNames.BLAZING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves BLAZING_LEAVES;
+    @ObjectHolder( value = prepend + LibBlockNames.BLAZING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock BLAZING_SAPLING;
+    @ObjectHolder( value = prepend + LibBlockNames.BLAZING_WOOD, registryName = BlockRegistryKey) public static StrippableLog BLAZING_WOOD;
+    @ObjectHolder( value = prepend + LibBlockNames.VEXING_LOG, registryName = BlockRegistryKey) public static StrippableLog VEXING_LOG;
+    @ObjectHolder( value = prepend + LibBlockNames.VEXING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves VEXING_LEAVES;
+    @ObjectHolder( value = prepend + LibBlockNames.VEXING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock VEXING_SAPLING;
+    @ObjectHolder( value = prepend + LibBlockNames.VEXING_WOOD, registryName = BlockRegistryKey) public static StrippableLog VEXING_WOOD;
+    @ObjectHolder( value = prepend + LibBlockNames.FLOURISHING_LOG, registryName = BlockRegistryKey) public static StrippableLog FLOURISHING_LOG;
+    @ObjectHolder( value = prepend + LibBlockNames.FLOURISHING_LEAVES, registryName = BlockRegistryKey) public static MagicLeaves FLOURISHING_LEAVES;
+    @ObjectHolder( value = prepend + LibBlockNames.FLOURISHING_SAPLING, registryName = BlockRegistryKey) public static SaplingBlock FLOURISHING_SAPLING;
+    @ObjectHolder( value = prepend + LibBlockNames.FLOURISHING_WOOD, registryName = BlockRegistryKey) public static StrippableLog FLOURISHING_WOOD;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCHWOOD_PLANK, registryName = BlockRegistryKey) public static ModBlock ARCHWOOD_PLANK;
+    @ObjectHolder( value = prepend + LibBlockNames.RITUAL_BRAZIER, registryName = BlockRegistryKey) public static RitualBrazierBlock RITUAL_BLOCK;
+    @ObjectHolder( value = prepend + LibBlockNames.RITUAL_BRAZIER, registryName = BlockEntityRegistryKey) public static BlockEntityType<RitualBrazierTile> RITUAL_TILE;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCHWOOD_BUTTON, registryName = BlockRegistryKey) public static WoodButtonBlock ARCHWOOD_BUTTON;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCHWOOD_STAIRS, registryName = BlockRegistryKey) public static StairBlock ARCHWOOD_STAIRS;
+    @ObjectHolder( value = prepend + LibBlockNames.ARCHWOOD_SLABS, registryName = BlockRegistryKey) public static SlabBlock ARCHWOOD_SLABS;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_FENCE_GATE, registryName = BlockRegistryKey) public static FenceGateBlock ARCHWOOD_FENCE_GATE;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_TRAPDOOR, registryName = BlockRegistryKey)public static TrapDoorBlock ARCHWOOD_TRAPDOOR;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_PRESSURE_PLATE, registryName = BlockRegistryKey)public static PressurePlateBlock ARCHWOOD_PPlate;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_FENCE, registryName = BlockRegistryKey) public static FenceBlock ARCHWOOD_FENCE;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_DOOR, registryName = BlockRegistryKey) public static DoorBlock ARCHWOOD_DOOR;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_BLUE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_BLUE;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_BLUE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_BLUE;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_GREEN, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_GREEN;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_GREEN, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_GREEN;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_RED, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_RED;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_RED, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_RED;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_PURPLE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWLOG_PURPLE;
+    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_PURPLE, registryName = BlockRegistryKey) public static RotatedPillarBlock STRIPPED_AWWOOD_PURPLE;
+    @ObjectHolder(value = prepend + LibBlockNames.SOURCE_GEM_BLOCK, registryName = BlockRegistryKey) public static ModBlock SOURCE_GEM_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.POTION_JAR_BLOCK, registryName = BlockRegistryKey) public static PotionJar POTION_JAR;
+    @ObjectHolder(value = prepend + LibBlockNames.POTION_JAR_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<PotionJarTile> POTION_JAR_TYPE;
+    @ObjectHolder(value = prepend + LibBlockNames.POTION_MELDER_BLOCK, registryName = BlockRegistryKey) public static PotionMelder POTION_MELDER;
+    @ObjectHolder(value = prepend + LibBlockNames.POTION_MELDER_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<PotionMelderTile> POTION_MELDER_TYPE;
+    @ObjectHolder(value = prepend + LibBlockNames.SCONCE, registryName = BlockRegistryKey) public static SconceBlock SCONCE_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.SCONCE, registryName = BlockEntityRegistryKey) public static BlockEntityType<SconceTile> SCONCE_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockRegistryKey) public static DrygmyStone DRYGMY_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockEntityRegistryKey) public static BlockEntityType<DrygmyTile> DRYGMY_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_ALT, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_ALT;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_ASHLAR, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_ASHLAR;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_BASKET, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_BASKET;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_CLOVER, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_CLOVER;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_HERRING, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_HERRING;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_MOSAIC, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_MOSAIC;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_SLAB, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_SLAB;
+    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_STONE, registryName = BlockRegistryKey) public static ModBlock AS_GOLD_STONE;
+    @ObjectHolder(value = prepend + LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockRegistryKey) public static AlchemicalSourcelinkBlock ALCHEMICAL_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<AlchemicalSourcelinkTile> ALCHEMICAL_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.VITALIC_SOURCELINK, registryName = BlockRegistryKey) public static VitalicSourcelinkBlock VITALIC_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.VITALIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<VitalicSourcelinkTile> VITALIC_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockRegistryKey) public static MycelialSourcelinkBlock MYCELIAL_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<MycelialSourcelinkTile> MYCELIAL_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.RELAY_DEPOSIT, registryName = BlockRegistryKey) public static RelayDepositBlock RELAY_DEPOSIT;
+    @ObjectHolder(value = prepend + LibBlockNames.RELAY_DEPOSIT, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayDepositTile> RELAY_DEPOSIT_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockRegistryKey) public static RelayWarpBlock RELAY_WARP;
+    @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayWarpTile> RELAY_WARP_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockRegistryKey) public static BookwyrmLectern BOOKWYRM_LECTERN;
+    @ObjectHolder(value = prepend + LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockEntityRegistryKey) public static BlockEntityType<BookwyrmLecternTile> BOOKWYRM_LECTERN_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockRegistryKey) public static BasicSpellTurret BASIC_SPELL_TURRET;
+    @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockEntityRegistryKey) public static BlockEntityType<BasicSpellTurretTile> BASIC_SPELL_TURRET_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockRegistryKey) public static TimerSpellTurret TIMER_SPELL_TURRET;
+    @ObjectHolder(value = prepend + LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockEntityRegistryKey) public static BlockEntityType<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_CHEST, registryName = BlockRegistryKey) public static  ArchwoodChest ARCHWOOD_CHEST;
+    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_CHEST, registryName = BlockEntityRegistryKey) public static  BlockEntityType<ArchwoodChestTile> ARCHWOOD_CHEST_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.SPELL_PRISM, registryName = BlockRegistryKey) public static  SpellPrismBlock SPELL_PRISM;
+    @ObjectHolder(value = prepend + LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockRegistryKey) public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
+    @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockRegistryKey) public static RelayCollectorBlock RELAY_COLLECTOR;
+    @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.RED_SBED, registryName = BlockRegistryKey) public static SummonBed RED_SBED;
+    @ObjectHolder(value = prepend + LibBlockNames.BLUE_SBED, registryName = BlockRegistryKey) public static SummonBed BLUE_SBED;
+    @ObjectHolder(value = prepend + LibBlockNames.GREEN_SBED, registryName = BlockRegistryKey) public static SummonBed GREEN_SBED;
+    @ObjectHolder(value = prepend + LibBlockNames.ORANGE_SBED, registryName = BlockRegistryKey) public static SummonBed ORANGE_SBED;
+    @ObjectHolder(value = prepend + LibBlockNames.YELLOW_SBED, registryName = BlockRegistryKey) public static SummonBed YELLOW_SBED;
+    @ObjectHolder(value = prepend + LibBlockNames.PURPLE_SBED, registryName = BlockRegistryKey) public static SummonBed PURPLE_SBED;
+    @ObjectHolder(value = prepend + LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type") public static BlockStateProviderType<?> stateProviderType;
+    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_OCULUS, registryName = BlockRegistryKey) public static ScryersOculus SCRYERS_OCULUS;
+    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_OCULUS, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScryersOculusTile> SCRYERS_OCULUS_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockRegistryKey) public static ScryerCrystal SCRYERS_CRYSTAL;
+    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<ScryerCrystalTile> SCRYER_CRYSTAL_TILE;
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
