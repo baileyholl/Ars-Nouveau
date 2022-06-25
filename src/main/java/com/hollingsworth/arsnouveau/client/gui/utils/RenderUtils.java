@@ -25,11 +25,7 @@ public class RenderUtils {
     private static final RenderType TRANSLUCENT = RenderType.entityTranslucent(TextureAtlas.LOCATION_BLOCKS);
 
     public static void drawSpellPart(AbstractSpellPart objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
-        if(!objectToBeDrawn.isRenderAsIcon()) {
-            RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, renderTransparent);
-        } else {
-            RenderUtils.drawTextureFromResourceLocation(new ResourceLocation(objectToBeDrawn.getRegistryName().getNamespace(), "textures/items/" + objectToBeDrawn.getRegistryName().getPath() + ".png"), poseStack, positionX, positionY, size, renderTransparent);
-        }
+        RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, renderTransparent);
     }
 
     public static void drawItemAsIcon(Item providedItem, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
@@ -89,4 +85,5 @@ public class RenderUtils {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
     }
+
 }

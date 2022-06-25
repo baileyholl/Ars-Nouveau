@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiFamiliarScreen;
-import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,7 @@ public class FamiliarButton extends Button {
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + familiarHolder.getRegistryName().getPath()), x, y, 0, 0, 16, 16, 16, 16, ms);
+            RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem().getItem(), ms, x, y, 16, false);
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 List<Component> tip = new ArrayList<>();
                 if (Screen.hasShiftDown()) {
