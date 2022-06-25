@@ -36,40 +36,30 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
-//@Mod(ArsNouveau.MODID)
+
 public class BlockRegistry {
 
     static final String BlockRegistryKey = "minecraft:block";
     static final String BlockEntityRegistryKey = "minecraft:block_entity_type";
     static final String prepend = ArsNouveau.MODID + ":";
 
-    //@ObjectHolder( value = LibBlockNames.ARCANE_ROAD, registryName = BlockRegistryKey) public static TickableModBlock ARCANE_ROAD;
-
     public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of(Material.WOOD).strength(2.0F).sound(SoundType.WOOD);
 
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS);
 
-    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey)
-    public static MageBlock MAGE_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey)
-    public static LightBlock LIGHT_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<LightTile> LIGHT_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey) public static MageBlock MAGE_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey) public static LightBlock LIGHT_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey) public static BlockEntityType<LightTile> LIGHT_TILE;
     @ObjectHolder( value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey) public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
     @ObjectHolder( value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey) public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
-
     @ObjectHolder( value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockEntityRegistryKey) public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
     @ObjectHolder( value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockRegistryKey) public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
-
     @ObjectHolder( value = prepend + LibBlockNames.ARCANE_PEDESTAL, registryName = BlockEntityRegistryKey) public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
     @ObjectHolder( value = prepend + LibBlockNames.ARCANE_PEDESTAL, registryName = BlockRegistryKey) public static ArcanePedestal ARCANE_PEDESTAL;
     @ObjectHolder( value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockRegistryKey) public static SourceJar SOURCE_JAR;
     @ObjectHolder( value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockEntityRegistryKey) public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
     @ObjectHolder( value = prepend + LibBlockNames.RELAY, registryName = BlockEntityRegistryKey) public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
-
     @ObjectHolder( value = prepend + LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey) public static MageBloomCrop MAGE_BLOOM_CROP;
     @ObjectHolder( value = prepend + LibBlockNames.ARCANE_BRICKS, registryName = BlockRegistryKey) public static ModBlock ARCANE_BRICKS;
     @ObjectHolder( value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey) public static ScribesBlock SCRIBES_BLOCK;
