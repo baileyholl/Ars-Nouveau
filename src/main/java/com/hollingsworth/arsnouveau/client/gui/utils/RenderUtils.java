@@ -64,7 +64,7 @@ public class RenderUtils {
         }
 
         if (renderTransparent) {
-            GL11.glDepthMask(true);
+            RenderSystem.depthMask(true);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
         }
 
@@ -77,7 +77,7 @@ public class RenderUtils {
     }
 
     public static void drawTextureFromResourceLocation(ResourceLocation providedResourceLocation, PoseStack stack, int x, int y, int size, boolean renderTransparent) {
-        GL11.glEnable(GL11.GL_BLEND);
+        RenderSystem.enableBlend();
         if (renderTransparent) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
         } else {
@@ -87,6 +87,6 @@ public class RenderUtils {
         RenderSystem.setShaderTexture(0, providedResourceLocation);
         GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        GL11.glDisable(GL11.GL_BLEND);
+        RenderSystem.disableBlend();
     }
 }
