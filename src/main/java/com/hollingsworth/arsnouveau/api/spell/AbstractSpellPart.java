@@ -153,18 +153,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return false;
     }
 
-    @Deprecated(forRemoval = true)
-    public boolean isRenderAsIcon() {
-        return false;
-    }
-
-
     public String getBookDescription(){
         return "";
     }
 
     public String getLocalizationKey() {
-        return "item." + registryName.getNamespace() + "." + registryName.getPath();
+        return registryName.getNamespace() + ".glyph_name." + registryName.getPath();
     }
 
     public String getLocaleName(){
