@@ -17,8 +17,6 @@ public class Spell implements Cloneable{
     public static final Spell EMPTY = new Spell();
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
-    private int cost;
-
     public String name = "";
     public ParticleColor color =  ParticleUtil.defaultParticleColor();
     public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
@@ -26,7 +24,6 @@ public class Spell implements Cloneable{
 
     public Spell(List<AbstractSpellPart> recipe){
         this.recipe = recipe == null ? new ArrayList<>() : recipe; // Safe check for tiles initializing a null
-        this.cost = getInitialCost();
     }
 
     public Spell(){ }
@@ -74,9 +71,9 @@ public class Spell implements Cloneable{
         if(recipe == null || recipe.isEmpty())
             return augments;
         for(int j = startPosition + 1; j < recipe.size(); j++){
-            AbstractSpellPart next_spell = recipe.get(j);
-            if(next_spell instanceof AbstractAugment){
-                augments.add((AbstractAugment) next_spell);
+            AbstractSpellPart nextGlyph = recipe.get(j);
+            if(nextGlyph instanceof AbstractAugment augment){
+                augments.add(augment);
             }else{
                 break;
             }
@@ -98,7 +95,7 @@ public class Spell implements Cloneable{
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }
 
-    private int getInitialCost(){
+    public int getCastingCost(){
         int cost = 0;
         if(recipe == null)
             return cost;
@@ -107,13 +104,9 @@ public class Spell implements Cloneable{
         }
         return Math.max(0, cost);
     }
-
-    public int getCastingCost(){
-        return Math.max(0, cost);
-    }
-
+    // TODO: Remove this, move to event driven
     public void setCost(int cost){
-        this.cost = Math.max(0, cost);
+//        this.cost = Math.max(0, cost);
     }
 
     public boolean isEmpty(){
