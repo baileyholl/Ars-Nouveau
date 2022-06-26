@@ -1,40 +1,41 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class GuiColorScreen extends BaseBook {
+    // Cache color values from constructor because we can only create widgets during init
+    double startRed;
+    double startGreen;
+    double startBlue;
 
-    double red;
-    double blue;
-    double green;
-    int slot;
+    public int slot;
 
-    protected GuiColorScreen(double red, double green, double blue, int slot) {
+    public BookSlider redW;
+    public BookSlider greenW;
+    public BookSlider blueW;
+
+    protected GuiColorScreen(double startRed, double startGreen, double startBlue, int forSpellSlot) {
         super();
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-        this.slot = slot;
+        this.startRed = startRed;
+        this.startGreen = startGreen;
+        this.startBlue = startBlue;
+        this.slot = forSpellSlot;
     }
-
-    AbstractSliderButton redW;
-    AbstractSliderButton greenW;
-    AbstractSliderButton blueW;
 
     @Override
     public void init() {
         super.init();
-        redW = buildSlider(bookLeft + 28, bookTop + 49,Component.translatable("ars_nouveau.color_gui.red_slider"), Component.empty(), red);
-        greenW = buildSlider(bookLeft + 28, bookTop + 89,Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), green);
-        blueW = buildSlider(bookLeft + 28, bookTop + 129,Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), blue);
+        redW = buildSlider(bookLeft + 28, bookTop + 49,Component.translatable("ars_nouveau.color_gui.red_slider"), Component.empty(), startRed);
+        greenW = buildSlider(bookLeft + 28, bookTop + 89,Component.translatable("ars_nouveau.color_gui.green_slider"), Component.empty(), startGreen);
+        blueW = buildSlider(bookLeft + 28, bookTop + 129,Component.translatable("ars_nouveau.color_gui.blue_slider"), Component.empty(), startBlue);
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
@@ -76,23 +77,16 @@ public class GuiColorScreen extends BaseBook {
         // Cyan
         addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
                 "textures/gui/cyan_color_icon.png", (_2) -> setFromPreset(25, 255, 255)));
-
-
-
-
     }
-    public void setFromPreset(int r, int g, int b){
-        red = r;
-        green = g;
-        blue = b;
-        redW.setValue((r)/255.0);
-        greenW.setValue((g)/255.0);
-        blueW.setValue((b)/255.0);
 
+    public void setFromPreset(int r, int g, int b){
+        redW.setValue(r);
+        greenW.setValue(g);
+        blueW.setValue(b);
     }
 
     public void onSaveClick(Button button){
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, red, green, blue));
+        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, redW.getValue(), greenW.getValue(), blueW.getValue()));
     }
 
     @Override
@@ -118,5 +112,4 @@ public class GuiColorScreen extends BaseBook {
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
         super.drawForegroundElements(mouseX, mouseY, partialTicks);
     }
-
 }
