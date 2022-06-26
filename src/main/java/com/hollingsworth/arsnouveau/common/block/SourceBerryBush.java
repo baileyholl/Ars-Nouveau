@@ -34,8 +34,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
 public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape BUSHLING_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
@@ -46,10 +44,12 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
+    @Override
     public ItemStack getCloneItemStack(BlockGetter worldIn, BlockPos pos, BlockState state) {
         return new ItemStack(BlockRegistry.SOURCEBERRY_BUSH);
     }
 
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if (state.getValue(AGE) == 0) {
             return BUSHLING_SHAPE;
@@ -66,18 +66,17 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
         return state.getValue(AGE) < 3;
     }
 
-    /**
-     * Performs a random tick on a block.
-     */
-    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+    @Override
+    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
+        super.randomTick(state, worldIn, pos, random);
         int i = state.getValue(AGE);
         if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state,random.nextInt(5) == 0)) {
             worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
             net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
-
     }
 
+    @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.STARBUNCLE_TYPE.get()) {
             entityIn.makeStuckInBlock(state, new Vec3(0.8F, 0.75D, 0.8F));
@@ -92,6 +91,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
         }
     }
 
+    @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         int i = state.getValue(AGE);
         boolean flag = i == 3;
@@ -108,6 +108,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
         }
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AGE);
     }
@@ -115,14 +116,17 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     /**
      * Whether this IGrowable can grow
      */
+    @Override
     public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
         return state.getValue(AGE) < 3;
     }
 
+    @Override
     public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
         return true;
     }
 
+    @Override
     public void performBonemeal(ServerLevel worldIn, RandomSource rand, BlockPos pos, BlockState state) {
         int i = Math.min(3, state.getValue(AGE) + 1);
         worldIn.setBlock(pos, state.setValue(AGE, i), 2);

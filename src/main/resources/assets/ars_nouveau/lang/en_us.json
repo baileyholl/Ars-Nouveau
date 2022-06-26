@@ -894,7 +894,7 @@
 	"item.ars_nouveau.fire_essence": "Fire Essence",
 	"item.ars_nouveau.dowsing_rod": "Dowsing Rod",
 	"effect.ars_nouveau.magic_find": "Magic Find",
-	"tooltip.essences": "Magical Essences created in an Imbuement Chamber.",
+	"tooltip.ars_nouveau.essences": "Magical Essences created in an Imbuement Chamber.",
 	"ars_nouveau.page.dowsing_rod": "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses.",
 	"ars_nouveau.apparatus.norecipe": "No recipe found. Pedestals must be within 3 blocks.",
 	"ars_nouveau.imbuement.norecipe": "No recipe found. If pedestals are required, they must be placed within the 1 block cube around the chamber.",
