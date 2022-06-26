@@ -164,7 +164,7 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
                 RenderUtils::drawSpellPart,
-                3);
+                0);
     }
 
     public List<RadialMenuSlot<AbstractSpellPart>> getRadialMenuSlotsForSpellpart(ItemStack itemStack) {
