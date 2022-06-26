@@ -25,11 +25,7 @@ public class RenderUtils {
     private static final RenderType TRANSLUCENT = RenderType.entityTranslucent(TextureAtlas.LOCATION_BLOCKS);
 
     public static void drawSpellPart(AbstractSpellPart objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
-        if(!objectToBeDrawn.isRenderAsIcon()) {
-            RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, renderTransparent);
-        } else {
-            RenderUtils.drawTextureFromResourceLocation(new ResourceLocation(objectToBeDrawn.getRegistryName().getNamespace(), "textures/items/" + objectToBeDrawn.getRegistryName().getPath() + ".png"), poseStack, positionX, positionY, size, renderTransparent);
-        }
+        RenderUtils.drawItemAsIcon(objectToBeDrawn.glyphItem, poseStack, positionX, positionY, size, renderTransparent);
     }
 
     public static void drawItemAsIcon(Item providedItem, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
@@ -64,7 +60,7 @@ public class RenderUtils {
         }
 
         if (renderTransparent) {
-            GL11.glDepthMask(true);
+            RenderSystem.depthMask(true);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
         }
 
@@ -77,7 +73,7 @@ public class RenderUtils {
     }
 
     public static void drawTextureFromResourceLocation(ResourceLocation providedResourceLocation, PoseStack stack, int x, int y, int size, boolean renderTransparent) {
-        GL11.glEnable(GL11.GL_BLEND);
+        RenderSystem.enableBlend();
         if (renderTransparent) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
         } else {
@@ -87,6 +83,7 @@ public class RenderUtils {
         RenderSystem.setShaderTexture(0, providedResourceLocation);
         GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        GL11.glDisable(GL11.GL_BLEND);
+        RenderSystem.disableBlend();
     }
+
 }

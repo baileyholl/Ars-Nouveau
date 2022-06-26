@@ -153,6 +153,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return false;
     }
 
+    @Deprecated(forRemoval = true)
     public boolean isRenderAsIcon() {
         return false;
     }
