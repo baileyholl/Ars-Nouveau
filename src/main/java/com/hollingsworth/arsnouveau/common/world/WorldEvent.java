@@ -70,23 +70,24 @@ public class WorldEvent {
     public static Holder<PlacedFeature> PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING));
     public static Holder<PlacedFeature> PLACED_BLAZING = PlacementUtils.register("ars_nouveau:placed_blazing", BLAZING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING));
     public static Holder<PlacedFeature> PLACED_VEXING = PlacementUtils.register("ars_nouveau:placed_vexing", VEXING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING));
-    public static Holder<PlacedFeature> PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", FLOURISHING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", FLOURISHING_TREE,
+            PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING));
 
     public static Holder<PlacedFeature> COMMON_FLOURISHING = PlacementUtils.register("ars_nouveau:common_flourishing",
             FLOURISHING_TREE,
-            VegetationPlacements.treePlacement(PlacementUtils.countExtra(12, 0.1f, 1), BlockRegistry.FLOURISHING_SAPLING));
+            List.of(PlacementUtils.countExtra(12, 0.1f, 1), PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_CASCADING = PlacementUtils.register("ars_nouveau:common_cascading",
             CASCADING_TREE,
-            VegetationPlacements.treePlacement(PlacementUtils.countExtra(12, 0.1f, 1), BlockRegistry.CASCADING_SAPLING));
+            List.of(PlacementUtils.countExtra(12, 0.1f, 1),  PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_BLAZING = PlacementUtils.register("ars_nouveau:common_blazing",
             BLAZING_TREE,
-            VegetationPlacements.treePlacement(PlacementUtils.countExtra(12, 0.1f, 1), BlockRegistry.BLAZING_SAPLING));
+            List.of(PlacementUtils.countExtra(12, 0.1f, 1),  PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_VEXING = PlacementUtils.register("ars_nouveau:common_vexing",
             VEXING_TREE,
-            VegetationPlacements.treePlacement(PlacementUtils.countExtra(12, 0.1f, 1), BlockRegistry.VEXING_SAPLING));
+           List.of(PlacementUtils.countExtra(12, 0.1f, 1),  PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING)));
 
     public static Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> MIXED_TREES = FeatureUtils.register("ars_nouveau:random_mixed", Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(List.of(
             new WeightedPlacedFeature(PLACED_CASCADE, 0.25f),
@@ -106,6 +107,6 @@ public class WorldEvent {
 
     public static Holder<PlacedFeature> PLACED_MIXED = PlacementUtils.register(PLACED_MIXED_ID.toString(), MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE)));
 
-    public static Holder<PlacedFeature> COMMON_ARCHWOOD = PlacementUtils.register("ars_nouveau:common_archwood", MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(1)));
+    public static Holder<PlacedFeature> COMMON_ARCHWOOD = PlacementUtils.register("ars_nouveau:common_archwood", MIXED_COMMON_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(1)));
 
 }
