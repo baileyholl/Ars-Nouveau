@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.network.PacketAddFadingLight;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
-import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -65,7 +64,7 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     public void addFadingLight(Level level, double x, double y, double z) {
-        Networking.sendToNearby(level, new BlockPos(x,y,z), new PacketAddFadingLight(x,y,z, Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
+        Networking.sendToNearby(level, new BlockPos(x,y,z), new PacketAddFadingLight(x,y,z));
     }
 
     @Nonnull

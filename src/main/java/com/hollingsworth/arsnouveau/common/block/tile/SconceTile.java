@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -70,10 +69,10 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
 
     @Override
     public void tick() {
-        if (!(getLevel() instanceof ServerLevel world) || !lit)
+        if (!level.isClientSide() || !lit)
             return;
         BlockPos pos = getBlockPos();
-        RandomSource rand = world.random;
+        RandomSource rand = level.random;
         double xzOffset = 0.15;
         BlockState state = getLevel().getBlockState(getBlockPos());
         if(!(state.getBlock() instanceof SconceBlock))
@@ -99,12 +98,14 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
         }
         ParticleColor color = new ParticleColor(rand.nextInt(red), rand.nextInt(green), rand.nextInt(blue));
         int intensity = 10;
-        for(int i =0; i < intensity; i++) {
-            world.addParticle(
+
+        for (int i = 0; i < intensity; i++) {
+            level.addParticle(
                     GlowParticleData.createData(color),
                     centerX, pos.getY() + 0.8 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
                     0, ParticleUtil.inRange(0.0, 0.03f), 0);
 
         }
+
     }
 }

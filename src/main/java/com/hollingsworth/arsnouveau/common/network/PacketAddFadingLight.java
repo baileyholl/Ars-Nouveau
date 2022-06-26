@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.FadeLightTimedEvent;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,36 +16,27 @@ public class PacketAddFadingLight {
     final double x;
     final double y;
     final double z;
-    final int duration;
-    final int luminance;
 
-
-    public PacketAddFadingLight(double x, double y, double z, int duration, int luminance){
+    public PacketAddFadingLight(double x, double y, double z){
         this.x = x;
         this.y = y;
         this.z = z;
-        this.duration = duration;
-        this.luminance = luminance;
     }
 
-    public PacketAddFadingLight(BlockPos pos, int duration, int luminance){
+    public PacketAddFadingLight(BlockPos pos){
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
-        this.duration = duration;
-        this.luminance = luminance;
     }
 
     public static PacketAddFadingLight decode(FriendlyByteBuf buf) {
-        return new PacketAddFadingLight(buf.readDouble(),buf.readDouble(), buf.readDouble(), buf.readInt(), buf.readInt());
+        return new PacketAddFadingLight(buf.readDouble(),buf.readDouble(), buf.readDouble());
     }
 
     public static void encode(PacketAddFadingLight msg, FriendlyByteBuf buf) {
         buf.writeDouble(msg.x);
         buf.writeDouble(msg.y);
         buf.writeDouble(msg.z);
-        buf.writeInt(msg.duration);
-        buf.writeInt(msg.luminance);
     }
 
     public static class Handler {
@@ -59,7 +51,7 @@ public class PacketAddFadingLight {
                 @Override
                 public void run() {
                     if(LightManager.shouldUpdateDynamicLight())
-                        EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(Minecraft.getInstance().level, new Vec3(m.x, m.y, m.z), m.duration, m.luminance));
+                        EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(Minecraft.getInstance().level, new Vec3(m.x, m.y, m.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
                 }
             });
             ctx.get().setPacketHandled(true);
