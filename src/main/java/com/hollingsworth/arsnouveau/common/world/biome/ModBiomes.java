@@ -91,7 +91,7 @@ public class ModBiomes {
         BiomeDefaultFeatures.addDefaultMushrooms(biomeBuilder);
         BiomeDefaultFeatures.addDefaultExtraVegetation(biomeBuilder);
 
-        biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.COMMON_FLOURISHING);
+        biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.COMMON_ARCHWOOD);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.BERRY_BUSH_PATCH_CONFIG);
 
         return biome(Biome.Precipitation.RAIN, 0.7F, 0.8F, 7978751, 329011, 7978751, 2031567, 2210437, spawnBuilder, biomeBuilder, NORMAL_MUSIC);
