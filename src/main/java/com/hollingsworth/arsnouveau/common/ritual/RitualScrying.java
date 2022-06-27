@@ -31,11 +31,10 @@ public class RitualScrying extends AbstractRitual {
         ParticleUtil.spawnFallingSkyEffect(tile.ritual, tile, rand, getCenterColor().toWrapper());
         if(getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide)
             incrementProgress();
-
-
+        
         if(!getWorld().isClientSide && getProgress() >= 15){
             List<ServerPlayer> players =  getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
-            if(players.size() > 0){
+            if(!players.isEmpty()){
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
                 int modifier = didConsumeItem(ItemsRegistry.MANIPULATION_ESSENCE) ? 3 : 1;
                 for(ServerPlayer playerEntity : players){

@@ -121,11 +121,9 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         return ritual != null && ritual.getContext().isDone;
     }
 
-
     public boolean canRitualStart(){
         return ritual.canStart();
     }
-
 
     public void startRitual(){
         if(ritual == null || !ritual.canStart() || ritual.isRunning())

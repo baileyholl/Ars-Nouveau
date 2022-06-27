@@ -67,7 +67,7 @@ public abstract class AbstractRitual {
 
     public boolean didConsumeItem(ItemLike item){
         for(ItemStack i : getConsumedItems()){
-            if(i.getItem() == item)
+            if(i.getItem() == item.asItem())
                 return true;
         }
         return false;
@@ -104,7 +104,7 @@ public abstract class AbstractRitual {
     }
 
     public String getName(){
-        return Component.translatable("item." + getRegistryName().getNamespace() + ".ritual_" + getRegistryName().getPath()).getString();
+        return Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString();
     }
 
     public String getDescription(){
