@@ -97,8 +97,7 @@ public class SpellCaster implements ISpellCaster{
 
     @Override
     public void setSpellName(String name) {
-        this.getSpell().name = name;
-        writeItem(stack);
+        setSpellName(name, getCurrentSlot());
     }
 
     @Override

@@ -53,7 +53,7 @@ public class PacketUpdateCaster {
                     // Update just the recipe, don't overwrite the entire spell.
                     Spell spell = caster.getSpell(cast_slot).setRecipe(spellRecipe.recipe);
                     caster.setSpell(spell, cast_slot);
-                    caster.setSpellName(spellName);
+                    caster.setSpellName(spellName, cast_slot);
 
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                 }

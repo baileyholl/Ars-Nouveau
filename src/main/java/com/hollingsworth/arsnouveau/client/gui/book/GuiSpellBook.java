@@ -109,11 +109,8 @@ public class GuiSpellBook extends BaseBook {
             this.onSearchChanged("");
             return null;
         };
-
-
-        int mode = caster.getCurrentSlot();
-        mode = mode == 0 ? 1 : mode;
-        spell_name.setValue(caster.getSpellName(mode));
+        
+        spell_name.setValue(caster.getSpellName(caster.getCurrentSlot()));
         if(spell_name.getValue().isEmpty())
             spell_name.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString());
 

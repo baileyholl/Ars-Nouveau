@@ -21,9 +21,6 @@ public class ArchwoodRegion extends Region {
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper)
     {
-//        this.addBiome(mapper, Climate.Parameter.point(0.35F), Climate.Parameter.point(0.5F), Climate.Parameter.point(0.03F),
-//                Climate.Parameter.point(0.6F), Climate.Parameter.point(0.02F),
-//                Climate.Parameter.point(0.125F), 0F, ModBiomes.ARCHWOOD_FOREST);
         this.addModifiedVanillaOverworldBiomes(mapper, (builder -> {
             builder.replaceBiome(Biomes.FOREST, ModBiomes.ARCHWOOD_FOREST);
         }));
