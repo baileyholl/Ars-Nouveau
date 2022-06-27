@@ -72,19 +72,19 @@ public class WorldEvent {
 
     public static Holder<PlacedFeature> COMMON_FLOURISHING = PlacementUtils.register("ars_nouveau:common_flourishing",
             FLOURISHING_TREE,
-            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING)));
+            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_CASCADING = PlacementUtils.register("ars_nouveau:common_cascading",
             CASCADING_TREE,
-            List.of(PlacementUtils.countExtra(12, 0.01f, 1),  PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING)));
+            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_BLAZING = PlacementUtils.register("ars_nouveau:common_blazing",
             BLAZING_TREE,
-            List.of(PlacementUtils.countExtra(12, 0.01f, 1),  PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING)));
+            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_VEXING = PlacementUtils.register("ars_nouveau:common_vexing",
             VEXING_TREE,
-           List.of(PlacementUtils.countExtra(12, 0.01f, 1),  PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING)));
+           List.of(PlacementUtils.countExtra(12, 0.01f, 1),PlacementUtils.HEIGHTMAP_OCEAN_FLOOR,  PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING)));
 
     public static Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> MIXED_TREES = FeatureUtils.register("ars_nouveau:random_mixed", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(
             HolderSet.direct(PLACED_CASCADE, PLACED_BLAZING, PLACED_VEXING, PLACED_FLOURISHING)));
