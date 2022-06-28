@@ -30,33 +30,45 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 
 public class WorldEvent {
-    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> CASCADING_TREE =  FeatureUtils.register("ars_nouveau:cascade_feature", Feature.TREE, (
-            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),
-                    new MagicTrunkPlacer(9, 1, 0),
-                    new SupplierBlockStateProvider(LibBlockNames.CASCADING_LEAVES),
-                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0,0), 0),
-                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> CASCADING_TREE =  FeatureUtils.register("ars_nouveau:cascade_feature",
+            Feature.TREE,
+            buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false));
 
-    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> BLAZING_TREE =  FeatureUtils.register("ars_nouveau:blazing_feature", Feature.TREE, (
-            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.BLAZING_LOG),
-                    new MagicTrunkPlacer(9, 1, 0),
-                    new SupplierBlockStateProvider(LibBlockNames.BLAZING_LEAVES),
-                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
-                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> BLAZING_TREE =  FeatureUtils.register("ars_nouveau:blazing_feature",
+            Feature.TREE, (
+            buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false)));
 
-    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> FLOURISHING_TREE =  FeatureUtils.register("ars_nouveau:flourishing_feature", Feature.TREE, (
-            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LOG),
-                    new MagicTrunkPlacer(9, 1, 0),
-                    new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LEAVES),
-                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
-                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> FLOURISHING_TREE =  FeatureUtils.register("ars_nouveau:flourishing_feature",
+            Feature.TREE,
+            buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false));
 
-    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> VEXING_TREE =  FeatureUtils.register("ars_nouveau:vexing_feature", Feature.TREE, (
-            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.VEXING_LOG),
-                    new MagicTrunkPlacer(9, 1, 0),
-                    new SupplierBlockStateProvider(LibBlockNames.VEXING_LEAVES),
-                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
-                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> VEXING_TREE =  FeatureUtils.register("ars_nouveau:vexing_feature",
+            Feature.TREE, (
+            buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false)));
+
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_CASCADE_TREE =  FeatureUtils.register("ars_nouveau:natural_cascade_feature",
+            Feature.TREE,
+            buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, true));
+
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_BLAZING_TREE =  FeatureUtils.register("ars_nouveau:natural_blazing_feature",
+            Feature.TREE,
+            buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true));
+
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_FLOURISHING_TREE =  FeatureUtils.register("ars_nouveau:natural_flourishing_feature",
+            Feature.TREE,
+            buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true));
+
+    public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_VEXING_TREE =  FeatureUtils.register("ars_nouveau:natural_vexing_feature",
+            Feature.TREE,
+            buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true));
+
+    public static TreeConfiguration buildTree(String leaves, String log, boolean natural) {
+        return new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(log),
+                new MagicTrunkPlacer(9, 1, 0, natural),
+                new SupplierBlockStateProvider(leaves),
+                new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
+                new TwoLayersFeatureSize(2, 0, 2)).build();
+    }
 
     public static Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> PATCH_BERRY_BUSH = FeatureUtils.register("ars_nouveau:patch_berry", Feature.RANDOM_PATCH,
         FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK,
@@ -64,26 +76,26 @@ public class WorldEvent {
                         .defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK)));
 
     public static Holder<PlacedFeature> BERRY_BUSH_PATCH_CONFIG = PlacementUtils.register("ars_nouveau:placed_berry", PATCH_BERRY_BUSH, RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
-    public static Holder<PlacedFeature> PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING));
-    public static Holder<PlacedFeature> PLACED_BLAZING = PlacementUtils.register("ars_nouveau:placed_blazing", BLAZING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING));
-    public static Holder<PlacedFeature> PLACED_VEXING = PlacementUtils.register("ars_nouveau:placed_vexing", VEXING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING));
-    public static Holder<PlacedFeature> PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", FLOURISHING_TREE,
+    public static Holder<PlacedFeature> PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", NATURAL_CASCADE_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_BLAZING = PlacementUtils.register("ars_nouveau:placed_blazing", NATURAL_BLAZING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_VEXING = PlacementUtils.register("ars_nouveau:placed_vexing", NATURAL_VEXING_TREE, PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING));
+    public static Holder<PlacedFeature> PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", NATURAL_FLOURISHING_TREE,
             PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING));
 
     public static Holder<PlacedFeature> COMMON_FLOURISHING = PlacementUtils.register("ars_nouveau:common_flourishing",
-            FLOURISHING_TREE,
+            NATURAL_FLOURISHING_TREE,
             List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_CASCADING = PlacementUtils.register("ars_nouveau:common_cascading",
-            CASCADING_TREE,
+            NATURAL_CASCADE_TREE,
             List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_BLAZING = PlacementUtils.register("ars_nouveau:common_blazing",
-            BLAZING_TREE,
+            NATURAL_BLAZING_TREE,
             List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_VEXING = PlacementUtils.register("ars_nouveau:common_vexing",
-            VEXING_TREE,
+            NATURAL_VEXING_TREE,
            List.of(PlacementUtils.countExtra(12, 0.01f, 1),PlacementUtils.HEIGHTMAP_OCEAN_FLOOR,  PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING)));
 
     public static Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> MIXED_TREES = FeatureUtils.register("ars_nouveau:random_mixed", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(

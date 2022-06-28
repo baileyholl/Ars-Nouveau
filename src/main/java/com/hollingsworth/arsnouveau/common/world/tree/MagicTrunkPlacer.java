@@ -8,6 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -19,8 +21,15 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class MagicTrunkPlacer extends TrunkPlacer {
+    boolean isWorldGen;
+
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b) {
         super(baseHeight, height_rand_a, height_rand_b);
+    }
+
+    public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b, boolean isWorldGen) {
+        this(baseHeight, height_rand_a, height_rand_b);
+        this.isWorldGen = isWorldGen;
     }
 
     @Override
@@ -28,9 +37,12 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return ModSetup.MAGIC_TRUNK_PLACER.get();
     }
 
-    public static final Codec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.create((p_70090_) -> {
-        return trunkPlacerParts(p_70090_).apply(p_70090_, MagicTrunkPlacer::new);
-    });
+    public static final Codec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.create(builder ->
+            builder.group(Codec.intRange(0, 32).fieldOf("base_height").forGetter(placer -> placer.baseHeight),
+            Codec.intRange(0, 24).fieldOf("height_rand_a").forGetter(placer -> placer.heightRandA),
+            Codec.intRange(0, 24).fieldOf("height_rand_b").forGetter(placer -> placer.heightRandB),
+            Codec.BOOL.fieldOf("isWorldGen").forGetter(placer -> placer.isWorldGen))
+            .apply(builder, MagicTrunkPlacer::new));
 
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
@@ -62,15 +74,16 @@ public class MagicTrunkPlacer extends TrunkPlacer {
                 placeLog(world,consumer, rand, blockpos1.east().south(),  baseTreeFeatureConfig);
             }
 
-            if(i < 1){
-                addRoots(world, rand, pos.west().above(i),  consumer, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().south().above(i),consumer, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().west().above(i), consumer,baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().south().east().above(i),consumer, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.east().east().above(i), consumer,baseTreeFeatureConfig);
-                addRoots(world, rand, pos.east().east().south().above(i),consumer, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.east().north().above(i), consumer,baseTreeFeatureConfig);
-                addRoots(world, rand, pos.north().above(i), consumer,baseTreeFeatureConfig);
+            if(i == 0){
+                BlockPos abovePos = pos.above(i);
+                addRoots(world, rand, abovePos.west(),  consumer, baseTreeFeatureConfig, new Direction[]{Direction.NORTH, Direction.WEST});
+                addRoots(world, rand, abovePos.south(2),consumer, baseTreeFeatureConfig, new Direction[]{Direction.SOUTH, Direction.WEST});
+                addRoots(world, rand, abovePos.south().west(), consumer,baseTreeFeatureConfig, new Direction[]{Direction.WEST});
+                addRoots(world, rand, abovePos.south(2).east(),consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST, Direction.SOUTH});
+                addRoots(world, rand, abovePos.east(2), consumer,baseTreeFeatureConfig, new Direction[]{Direction.EAST, Direction.NORTH});
+                addRoots(world, rand, abovePos.east(2).south(),consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST});
+                addRoots(world, rand, abovePos.east().north(), consumer,baseTreeFeatureConfig, new Direction[]{Direction.NORTH});
+                addRoots(world, rand, abovePos.north(), consumer,baseTreeFeatureConfig, new Direction[]{Direction.NORTH, Direction.EAST});
             }
 
             if(i > 1 && i > lastBranch){
@@ -169,8 +182,6 @@ public class MagicTrunkPlacer extends TrunkPlacer {
                 addLineLeaves(world, pos.east(0).above(i + 3), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
                 addLineLeaves(world, pos.east(-1).above(i + 3), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
 
-
-
                 addLineLeaves(world, pos.east(2).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
                 addLineLeaves(world, pos.east(1).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
                 addLineLeaves(world, pos.east(0).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
@@ -193,37 +204,22 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         addLog(world, pos.relative(d, 3).above(2), random, baseTreeFeatureConfig, consumer);
         addLog(world, pos.relative(d, 3).above(1), random, baseTreeFeatureConfig, consumer);
 
-
         addLineLeaves(world, pos.relative(d).above(1), d, 3, random, baseTreeFeatureConfig, consumer);
         addLineLeaves(world, pos.relative(d).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
         addLineLeaves(world, pos.relative(d).above(3), d, 3, random,baseTreeFeatureConfig,consumer);
 
-        for(int j =1; j < 4; j++){
+        for(int j = 1; j < 4; j++){
             addLineLeaves(world, pos.relative(d, j).above(3), d, 3, random,baseTreeFeatureConfig,consumer);
             addLineLeaves(world, pos.relative(d, j).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
-
             addLineLeaves(world, pos.relative(d, j).above(4), d, 3, random,baseTreeFeatureConfig, .1f,consumer);
-           // addLineLeaves(world, pos.offset(d, j).up(2), d, 3,random, baseTreeFeatureConfig);
-
         }
-//        for(int i = 2; i < 5; i++){
-//            for(int j = 1; j <= 2; j++){
-//                addHollowLine(world, pos.offset(d, i).up(j), d, 2,random, baseTreeFeatureConfig);
-//            }
-//
-//        }
+
         for(int i = 0; i < 2; i++){
             addHollowLine(world, pos.relative(d, 2 + i).above(1), d, 2,random, baseTreeFeatureConfig,consumer);
             addHollowLine(world, pos.relative(d, 2 + i).above(2), d, 2,random, baseTreeFeatureConfig,consumer);
             addHollowLine(world, pos.relative(d, 2 + i).above(1), d, 3,random, baseTreeFeatureConfig, 0.1f,consumer);
             addHollowLine(world, pos.relative(d, 2 + i).above(2), d, 3,random, baseTreeFeatureConfig, 0.1f,consumer);
         }
-//        addHollowLine(world, pos.offset(d, 2).up(2), d, 2,random, baseTreeFeatureConfig);
-//        addHollowLine(world, pos.offset(d, 2).up(1), d, 2,random, baseTreeFeatureConfig);
-//
-//        addHollowLine(world, pos.offset(d, 3).up(2), d, 2,random, baseTreeFeatureConfig);
-//        addHollowLine(world, pos.offset(d, 3).up(1), d, 2,random, baseTreeFeatureConfig);
-//
 
         addLineLeaves(world, pos.relative(d, 4).above(1), d, 3,random, baseTreeFeatureConfig,consumer);
         addLineLeaves(world, pos.relative(d, 4).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
@@ -242,9 +238,8 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         if (TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos, state, consumer);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void addHollowLine(LevelSimulatedReader world, BlockPos pos, Direction d, int length, RandomSource rand, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {
@@ -304,15 +299,59 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     }
 
 
-    public boolean addRoots(LevelSimulatedReader world, RandomSource rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig) {
+    public boolean addRoots(LevelSimulatedReader world, RandomSource rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig, Direction[] extendedDirs) {
         BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand, pos);
         if (rand.nextDouble() < 0.75 && TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos.immutable(), state, consumer);
-
-            return true;
-        } else {
-            return false;
+            if(isWorldGen) {
+                for (int i = 0; i < 2; i++) {
+                    if (TreeFeature.validTreePos(world, pos.below())) {
+                        pos = pos.below();
+                        setBlock(world, pos.immutable(), state, consumer);
+                    } else {
+                        break;
+                    }
+                }
+                for (Direction d : extendedDirs) {
+                    placeRotatedRoot(world, rand, pos.below().relative(d), consumer, baseTreeFeatureConfig, d);
+                }
+                return true;
+            }
         }
+        return false;
+    }
+
+    public boolean placeRotatedRoot(LevelSimulatedReader world, RandomSource rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig, Direction direction){
+        BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand, pos);
+        if(state.hasProperty(RotatedPillarBlock.AXIS)){
+            state = state.setValue(RotatedPillarBlock.AXIS, direction.getAxis());
+        }
+        if (rand.nextDouble() < 0.6 && validForExtendedRoot(world, pos)) {
+            setBlock(world, pos.immutable(), state, consumer);
+            int count = 0;
+            while(rand.nextDouble() < 0.8 - count * 0.3){
+                count++;
+                if(rand.nextDouble() < 0.7) {
+                    direction = rand.nextDouble() < 0.5 ? direction.getClockWise() : direction.getCounterClockWise();
+                    state = state.setValue(RotatedPillarBlock.AXIS, direction.getAxis());
+                }
+                pos = pos.relative(direction);
+                if(TreeFeature.validTreePos(world, pos.below())){
+                    pos = pos.below();
+                }
+                if(validForExtendedRoot(world, pos)) {
+                    setBlock(world, pos.immutable(), state, consumer);
+                }else{
+                    break;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean validForExtendedRoot(LevelSimulatedReader world, BlockPos pos){
+        return TreeFeature.validTreePos(world, pos) || world.isStateAtPosition(pos, (b) -> b.getBlock() == Blocks.DIRT || b.getBlock() == Blocks.GRASS_BLOCK);
     }
 
     public void setBlock(LevelSimulatedReader world, BlockPos pos, BlockState state, BiConsumer<BlockPos, BlockState> consumer){
