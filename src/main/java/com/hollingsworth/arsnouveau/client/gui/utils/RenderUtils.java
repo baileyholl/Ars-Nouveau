@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -66,12 +67,16 @@ public class RenderUtils {
         }
 
         if (renderTransparent) {
-            GL11.glDepthMask(true);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            RenderSystem.depthMask(true);;
+            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
         poseStack.popPose();
         RenderSystem.applyModelViewMatrix();
+        if(renderTransparent) {
+            RenderSystem.disableBlend();
+            RenderSystem.defaultBlendFunc();
+        }
     }
 
     private static MultiBufferSource transparentBuffer(MultiBufferSource buffer) {
