@@ -35,7 +35,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -53,8 +53,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super(tag, description);
     }
 
-
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult instanceof BlockHitResult blockHitResult) {
             onResolveBlock(blockHitResult, world, shooter, spellStats, spellContext, resolver);
         } else if (rayTraceResult instanceof EntityHitResult entityHitResult) {
@@ -62,59 +61,61 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){}
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    }
 
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){}
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    }
 
-    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats){
+    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats) {
         applyConfigPotion(entity, potionEffect, spellStats, true);
     }
 
-    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats, boolean showParticles){
+    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats, boolean showParticles) {
         applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get(), showParticles);
     }
 
-
-    public void applyPotion(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles){
-        if(entity == null)
+    public void applyPotion(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles) {
+        if (entity == null)
             return;
         int ticks = baseDurationSeconds * 20 + durationBuffSeconds * stats.getDurationInTicks();
         int amp = (int) stats.getAmpMultiplier();
         entity.addEffect(new MobEffectInstance(potionEffect, ticks, amp, false, showParticles, true));
     }
 
-    public boolean canSummon(LivingEntity playerEntity){
+    public boolean canSummon(LivingEntity playerEntity) {
         return isRealPlayer(playerEntity) && (playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS_EFFECT.get()) == null || (playerEntity instanceof Player player && player.isCreative()));
     }
 
-    public void applySummoningSickness(LivingEntity playerEntity, int time){
+    public void applySummoningSickness(LivingEntity playerEntity, int time) {
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), time));
     }
 
-    public void summonLivingEntity(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon){
-        if(shooter != null)
+    public void summonLivingEntity(HitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon) {
+        if (isRealPlayer(shooter))
             summon.setOwnerID(shooter.getUUID());
-        if(summon.getLivingEntity() != null)
+        if (summon.getLivingEntity() != null)
             world.addFreshEntity(summon.getLivingEntity());
 
         MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
-    public Player getPlayer(LivingEntity entity, ServerLevel world){
+    public Player getPlayer(LivingEntity entity, ServerLevel world) {
         return entity instanceof Player player ? player : ANFakePlayer.getPlayer(world);
     }
 
-    public int getBaseHarvestLevel(SpellStats stats){
+    public int getBaseHarvestLevel(SpellStats stats) {
         return (int) (3 + stats.getAmpMultiplier());
     }
 
-    public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
+    public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos) {
         return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && SpellUtil.isCorrectHarvestLevel(getBaseHarvestLevel(stats), world.getBlockState(pos));
     }
 
-    public void dealDamage(Level world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
-        if (!(world instanceof ServerLevel server)) return;
-        shooter = shooter == null ? ANFakePlayer.getPlayer(server) : shooter;
+    public void dealDamage(Level world, @Nonnull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
+        if (!(world instanceof ServerLevel server))
+            return;
+
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
 
         SpellDamageEvent event = new SpellDamageEvent(source, shooter, entity, totalDamage);
@@ -127,12 +128,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return;
 
         entity.hurt(source, totalDamage);
-        Player playerContext = shooter instanceof Player ? (Player) shooter : ANFakePlayer.getPlayer(server);
+        Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
         if (!(entity instanceof LivingEntity mob))
             return;
-        if (mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)){
+        if (mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootContext.Builder lootContext = LootUtil.getLootingContext(server,shooter, mob, looting, DamageSource.playerAttack(playerContext));
+            LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, DamageSource.playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
             LootTable loottable = server.getServer().getLootTables().get(lootTable);
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
@@ -140,30 +141,30 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
-    public DamageSource buildDamageSource(Level world, LivingEntity shooter){
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
         shooter = !(shooter instanceof Player) ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
         return DamageSource.playerAttack((Player) shooter);
     }
 
-    public Vec3 safelyGetHitPos(HitResult result){
+    public Vec3 safelyGetHitPos(HitResult result) {
         return result instanceof EntityHitResult entityHitResult ? entityHitResult.getEntity().position() : result.getLocation();
     }
 
-    public boolean isRealPlayer(Entity entity){
+    public boolean isRealPlayer(Entity entity) {
         return entity instanceof Player && isNotFakePlayer(entity);
     }
 
-    public boolean isNotFakePlayer(Entity entity){
+    public boolean isNotFakePlayer(Entity entity) {
         return !(entity instanceof FakePlayer);
     }
 
-    public void applyEnchantments(SpellStats stats, ItemStack stack){
+    public void applyEnchantments(SpellStats stats, ItemStack stack) {
 
-        if(stats.hasBuff(AugmentExtract.INSTANCE)){
+        if (stats.hasBuff(AugmentExtract.INSTANCE)) {
             stack.enchant(Enchantments.SILK_TOUCH, 1);
         }
 
-        if(stats.hasBuff(AugmentFortune.INSTANCE)){
+        if (stats.hasBuff(AugmentFortune.INSTANCE)) {
             stack.enchant(Enchantments.BLOCK_FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
         }
     }
@@ -181,45 +182,45 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
     }
 
-    public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue){
+    public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
         DAMAGE = builder.defineInRange("damage", defaultValue, 0, Integer.MAX_VALUE);
     }
 
-    public void addAmpConfig(ForgeConfigSpec.Builder builder, double defaultValue){
+    public void addAmpConfig(ForgeConfigSpec.Builder builder, double defaultValue) {
         AMP_VALUE = builder.defineInRange("amplify", defaultValue, 0, Integer.MAX_VALUE);
     }
 
-    public void addPotionConfig(ForgeConfigSpec.Builder builder, int defaultTime){
+    public void addPotionConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
         POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
-    public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime){
+    public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime) {
         EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
     }
 
-    public void addGenericInt(ForgeConfigSpec.Builder builder, int val, String comment, String path){
+    public void addGenericInt(ForgeConfigSpec.Builder builder, int val, String comment, String path) {
         GENERIC_INT = builder.comment(comment).defineInRange(path, val, 0, Integer.MAX_VALUE);
     }
 
-    public void addGenericDouble(ForgeConfigSpec.Builder builder, double val, String comment, String path){
+    public void addGenericDouble(ForgeConfigSpec.Builder builder, double val, String comment, String path) {
         GENERIC_DOUBLE = builder.comment(comment).defineInRange(path, val, 0.0, Double.MAX_VALUE);
     }
 
-    public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder){
+    public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder) {
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
     }
 
-    public ItemStack getItemFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate){
-        if(spellContext.castingTile instanceof IInventoryResponder){
-            return ((IInventoryResponder) spellContext.castingTile).getItem(predicate);
-        }else if(shooter instanceof IInventoryResponder){
-            return ((IInventoryResponder) shooter).getItem(predicate);
-        }else if(shooter instanceof Player playerEntity){
+    public ItemStack getItemFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate) {
+        if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
+            return iInventoryResponder.getItem(predicate);
+        } else if (shooter instanceof IInventoryResponder responder) {
+            return responder.getItem(predicate);
+        } else if (shooter instanceof Player playerEntity) {
             NonNullList<ItemStack> list = playerEntity.inventory.items;
-            for(int i = 0; i < 9; i++){
+            for (int i = 0; i < 9; i++) {
                 ItemStack stack = list.get(i);
-                if(predicate.test(stack)){
+                if (predicate.test(stack)) {
                     return stack;
                 }
             }
@@ -227,24 +228,24 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return ItemStack.EMPTY;
     }
 
-    public ItemStack getItemFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Item item){
+    public ItemStack getItemFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Item item) {
         return getItemFromCaster(shooter, spellContext, (i) -> i.sameItem(new ItemStack(item)));
     }
 
-    public ItemStack extractStackFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate, int maxExtract){
+    public ItemStack extractStackFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate, int maxExtract) {
         IInventoryResponder responder = null;
-        if(spellContext.castingTile instanceof IInventoryResponder) {
+        if (spellContext.castingTile instanceof IInventoryResponder) {
             responder = (IInventoryResponder) spellContext.castingTile;
-        }else if(shooter instanceof IInventoryResponder){
+        } else if (shooter instanceof IInventoryResponder) {
             responder = (IInventoryResponder) shooter;
         }
-        if(responder != null){
+        if (responder != null) {
             return responder.extractItem(predicate, maxExtract);
-        }else if(shooter instanceof Player playerEntity){
+        } else if (shooter instanceof Player playerEntity) {
             NonNullList<ItemStack> list = playerEntity.inventory.items;
-            for(int i = 0; i < 9; i++){
+            for (int i = 0; i < 9; i++) {
                 ItemStack stack = list.get(i);
-                if(predicate.test(stack)){
+                if (predicate.test(stack)) {
                     return stack.split(maxExtract);
                 }
             }
@@ -252,21 +253,21 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return ItemStack.EMPTY;
     }
 
-    public ItemStack insertStackToCaster(@Nullable LivingEntity shooter, SpellContext spellContext, ItemStack stack){
+    public ItemStack insertStackToCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, ItemStack stack) {
         IPickupResponder responder = null;
-        if(spellContext.castingTile instanceof IPickupResponder) {
+        if (spellContext.castingTile instanceof IPickupResponder) {
             responder = (IPickupResponder) spellContext.castingTile;
-        }else if(shooter instanceof IInventoryResponder){
+        } else if (shooter instanceof IInventoryResponder) {
             responder = (IPickupResponder) shooter;
         }
-        if(responder != null){
+        if (responder != null) {
             return responder.onPickup(stack);
         }
-        if(isRealPlayer(shooter)){
+        if (isRealPlayer(shooter)) {
             Player player = (Player) shooter;
             VoidJar.tryVoiding(player, stack);
-            if(!player.addItem(stack)){
-                ItemEntity i = new ItemEntity(shooter.level,player.getX(), player.getY(), player.getZ(), stack);
+            if (!player.addItem(stack)) {
+                ItemEntity i = new ItemEntity(shooter.level, player.getX(), player.getY(), player.getZ(), stack);
                 shooter.level.addFreshEntity(i);
             }
         }
