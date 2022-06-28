@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.book.GlyphUnlockMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -47,15 +48,13 @@ public class ItemButton extends GuiImageButton{
             if (ingredient != null && ingredient.getItems().length != 0) {
                 ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];
                 if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
-//                    parent.tooltip = parent.getTooltipFromItem(stack);
                     if(parent instanceof GlyphUnlockMenu menu){
                         Font font = Minecraft.getInstance().font;
                         List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, parent.getTooltipFromItem(stack), parX, width, height, font, font));
                         menu.renderTooltipInternal(ms, components, parX, parY);
                     }
                 }
-                Minecraft.getInstance().getItemRenderer().renderGuiItem(stack, x + 3, y + 2);
-
+                RenderUtils.drawItemAsIcon(stack.getItem(), ms, x + 3, y + 2, 16, false);
             }
         }
 
