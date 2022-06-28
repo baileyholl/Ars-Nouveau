@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +29,8 @@ import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
+
+import static net.minecraft.data.worldgen.placement.VegetationPlacements.worldSurfaceSquaredWithCount;
 
 public class WorldEvent {
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> CASCADING_TREE =  FeatureUtils.register("ars_nouveau:cascade_feature",
@@ -108,10 +111,20 @@ public class WorldEvent {
 
     public static ResourceLocation PLACED_MIXED_ID = new ResourceLocation(ArsNouveau.MODID, "archwood");
 
-    public static Holder<PlacedFeature> PLACED_MIXED = PlacementUtils.register(PLACED_MIXED_ID.toString(), MIXED_TREES, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE)));
+    public static Holder<PlacedFeature> PLACED_MIXED = PlacementUtils.register(PLACED_MIXED_ID.toString(),
+            MIXED_TREES,
+            VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE)));
 
     public static Holder<PlacedFeature> COMMON_ARCHWOOD = PlacementUtils.register("ars_nouveau:common_archwood",
             MIXED_COMMON_TREES,
             VegetationPlacements.treePlacement(CountPlacement.of(3), BlockRegistry.BLAZING_SAPLING));
+
+    // FEATURE CYCLE MY REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    public static Holder<PlacedFeature> ArtisanalMojangGrassTM = PlacementUtils.register("ars_nouveau:patch_grass_forest",
+            VegetationFeatures.PATCH_GRASS,
+            worldSurfaceSquaredWithCount(2));
+    public static final Holder<PlacedFeature> ArtisanalMojangFlowersTM = PlacementUtils.register("ars_nouveau:flower_default",
+            VegetationFeatures.FLOWER_DEFAULT, RarityFilter.onAverageOnceEvery(32),
+            InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
 
 }
