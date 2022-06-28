@@ -25,9 +25,9 @@ public class Materials {
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 2.5f, () -> Ingredient.of(Items.SCUTE));
 
 
-    private static class ModdedArmorMaterial implements ArmorMaterial{
+    public static class ModdedArmorMaterial implements ArmorMaterial {
 
-        private static final int[] Max_Damage_Array = new int[] {13,15,16,11};
+        private static final int[] Max_Damage_Array = new int[]{13, 15, 16, 11};
         private final String name;
         private final int maxDamageFactor;
         private final int[] damageReductionAmountArray;

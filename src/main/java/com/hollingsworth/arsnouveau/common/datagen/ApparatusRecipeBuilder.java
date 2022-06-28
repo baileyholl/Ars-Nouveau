@@ -74,8 +74,8 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(int count, Ingredient ingred){
-        for(int i = 0; i < count; i++)
+    public ApparatusRecipeBuilder withPedestalItem(int count, Ingredient ingred) {
+        for (int i = 0; i < count; i++)
             this.withPedestalItem(ingred);
         return this;
     }
@@ -85,13 +85,18 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public EnchantingApparatusRecipe build(){
-        if(recipe.id.getPath().equals("empty"))
+    public ApparatusRecipeBuilder withSourceCost(int cost) {
+        this.recipe.sourceCost = cost;
+        return this;
+    }
+
+    public EnchantingApparatusRecipe build() {
+        if (recipe.id.getPath().equals("empty"))
             recipe.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(recipe.result.getItem()).getPath());
         return recipe;
     }
 
-    public EnchantmentRecipe buildEnchantmentRecipe(Enchantment enchantment, int level, int mana){
+    public EnchantmentRecipe buildEnchantmentRecipe(Enchantment enchantment, int level, int mana) {
         return new EnchantmentRecipe(this.recipe.pedestalItems, enchantment, level, mana);
     }
 
