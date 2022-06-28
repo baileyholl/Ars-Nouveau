@@ -233,13 +233,13 @@ public class BlockRegistry {
 
 
         registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
-        registry.register(LibBlockNames.CASCADING_LEAVES, createLeavesBlock());
+        registry.register(LibBlockNames.CASCADING_LEAVES, createLeavesBlock(MaterialColor.COLOR_BLUE));
         registry.register(LibBlockNames.BLAZING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_RED));
-        registry.register(LibBlockNames.BLAZING_LEAVES, createLeavesBlock());
+        registry.register(LibBlockNames.BLAZING_LEAVES, createLeavesBlock(MaterialColor.COLOR_RED));
         registry.register(LibBlockNames.FLOURISHING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_GREEN));
-        registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock());
+        registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock(MaterialColor.COLOR_LIGHT_GREEN));
         registry.register(LibBlockNames.VEXING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_PURPLE));
-        registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock());
+        registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock(MaterialColor.COLOR_PURPLE));
 
         registry.register(LibBlockNames.VEXING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_PURPLE));
         registry.register(LibBlockNames.CASCADING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_BLUE));
@@ -320,8 +320,8 @@ public class BlockRegistry {
 
     }
 
-    public static MagicLeaves createLeavesBlock() {
-        return new MagicLeaves(BlockBehaviour.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn(
+    public static MagicLeaves createLeavesBlock(MaterialColor color) {
+        return new MagicLeaves(BlockBehaviour.Properties.of(Material.LEAVES).color(color).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn(
                 BlockRegistry::allowsSpawnOnLeaves).isSuffocating(BlockRegistry::isntSolid).isViewBlocking(BlockRegistry::isntSolid));
     }
 

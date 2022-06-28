@@ -35,7 +35,7 @@ import static com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator.G
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
-    public static IProxy proxy = DistExecutor.runForDist(()-> ClientProxy::new, () -> ServerProxy::new);
+    public static IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
 
@@ -86,6 +86,7 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_SAPLING.asItem(), 0.3F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.SOURCEBERRY_BUSH.asItem(), 0.3f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(ItemsRegistry.MAGE_BLOOM.get(), 0.65F);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MAGE_BLOOM_CROP.asItem(), 0.65F);
         });
     }
 
