@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -16,14 +16,10 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.List;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -55,5 +51,5 @@ public class Deferred {
             () -> new ConfiguredFeature<>(LIGHT_FEATURE.get(), new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.defaultBlockState())));
 
     public static final RegistryObject<PlacedFeature> PLACED_LIGHTS = PLACED_FEAT_REG.register("placed_lights", () ->
-            new PlacedFeature(Holder.direct(CONFIGURED_LIGHTS.get()), List.of(PlacementUtils.HEIGHTMAP, RarityFilter.onAverageOnceEvery(5), InSquarePlacement.spread())) );
+            new PlacedFeature(Holder.direct(CONFIGURED_LIGHTS.get()), VegetationPlacements.worldSurfaceSquaredWithCount(1)) );
 }
