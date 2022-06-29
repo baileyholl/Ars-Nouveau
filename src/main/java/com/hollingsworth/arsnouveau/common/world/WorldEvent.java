@@ -87,19 +87,19 @@ public class WorldEvent {
 
     public static Holder<PlacedFeature> COMMON_FLOURISHING = PlacementUtils.register("ars_nouveau:common_flourishing",
             NATURAL_FLOURISHING_TREE,
-            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING)));
+            List.of(PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_CASCADING = PlacementUtils.register("ars_nouveau:common_cascading",
             NATURAL_CASCADE_TREE,
-            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING)));
+            List.of(PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_BLAZING = PlacementUtils.register("ars_nouveau:common_blazing",
             NATURAL_BLAZING_TREE,
-            List.of(PlacementUtils.countExtra(12, 0.01f, 1), PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING)));
+            List.of( PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING)));
 
     public static Holder<PlacedFeature> COMMON_VEXING = PlacementUtils.register("ars_nouveau:common_vexing",
             NATURAL_VEXING_TREE,
-           List.of(PlacementUtils.countExtra(12, 0.01f, 1),PlacementUtils.HEIGHTMAP_OCEAN_FLOOR,  PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING)));
+           List.of(PlacementUtils.HEIGHTMAP_OCEAN_FLOOR,  PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING)));
 
     public static Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> MIXED_TREES = FeatureUtils.register("ars_nouveau:random_mixed", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(
             HolderSet.direct(PLACED_CASCADE, PLACED_BLAZING, PLACED_VEXING, PLACED_FLOURISHING)));
@@ -117,7 +117,7 @@ public class WorldEvent {
 
     public static Holder<PlacedFeature> COMMON_ARCHWOOD = PlacementUtils.register("ars_nouveau:common_archwood",
             MIXED_COMMON_TREES,
-            VegetationPlacements.treePlacement(CountPlacement.of(3), BlockRegistry.BLAZING_SAPLING));
+            VegetationPlacements.treePlacement(PlacementUtils.countExtra(7, 0.01f, 1), BlockRegistry.BLAZING_SAPLING));
 
     // FEATURE CYCLE MY REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     public static Holder<PlacedFeature> ArtisanalMojangGrassTM = PlacementUtils.register("ars_nouveau:patch_grass_forest",
