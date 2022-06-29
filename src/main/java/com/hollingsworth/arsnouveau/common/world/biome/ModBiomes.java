@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.world.biome;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.world.Deferred;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
@@ -96,7 +98,7 @@ public class ModBiomes {
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.BERRY_BUSH_PATCH_CONFIG);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.ArtisanalMojangGrassTM);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.ArtisanalMojangFlowersTM);
-//        biomeBuilder.addFeature(GenerationStep.Decoration.LOCAL_MODIFICATIONS, Holder.direct(WorldEvent.PLACED_LIGHTS.get()));
+        biomeBuilder.addFeature(GenerationStep.Decoration.LOCAL_MODIFICATIONS, Holder.direct(Deferred.PLACED_LIGHTS.get()));
         return biome(Biome.Precipitation.RAIN, 0.7F, 0.8F, 7978751, 329011, 7978751, 2031567, 2210437, spawnBuilder, biomeBuilder, NORMAL_MUSIC);
     }
 
