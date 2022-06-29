@@ -12,8 +12,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.registries.*;
@@ -42,7 +45,9 @@ public class ModSetup {
     public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.createOptional(Registry.TRUNK_PLACER_TYPE_REGISTRY, MODID);
 
     public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () ->  new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
-
+    public static final DeferredRegister<Feature<?>> FEAT_REG = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
+    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFG_REG = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, MODID);
+    public static final DeferredRegister<PlacedFeature> PLACED_FEAT_REG = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, MODID);
     //some things need to be deferred to maintain sanity
     public static void registers(IEventBus modEventBus) {
         ItemsRegistry.ITEMS.register(modEventBus);
@@ -54,6 +59,9 @@ public class ModSetup {
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register(modEventBus);
+        FEAT_REG.register(modEventBus);
+        CONFG_REG.register(modEventBus);
+        PLACED_FEAT_REG.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event){

@@ -11,6 +11,7 @@ public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvid
     public SupplierBlockStateProvider(String path) {
         this(new ResourceLocation(ArsNouveau.MODID, path));
     }
+
     public SupplierBlockStateProvider(ResourceLocation path) {
         super(path);
     }

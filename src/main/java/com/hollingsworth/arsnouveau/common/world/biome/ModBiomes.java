@@ -96,6 +96,7 @@ public class ModBiomes {
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.BERRY_BUSH_PATCH_CONFIG);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.ArtisanalMojangGrassTM);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.ArtisanalMojangFlowersTM);
+//        biomeBuilder.addFeature(GenerationStep.Decoration.LOCAL_MODIFICATIONS, Holder.direct(WorldEvent.PLACED_LIGHTS.get()));
         return biome(Biome.Precipitation.RAIN, 0.7F, 0.8F, 7978751, 329011, 7978751, 2031567, 2210437, spawnBuilder, biomeBuilder, NORMAL_MUSIC);
     }
 
