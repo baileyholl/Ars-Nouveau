@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
@@ -53,10 +54,10 @@ public class LightBlock extends ModBlock implements EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         if (context.getLevel().getBlockEntity(context.getClickedPos()) instanceof LightTile tile) {
             RandomSource random = context.getLevel().random;
-            tile.red = Math.max(10, random.nextInt(255));
-            tile.green = Math.max(10, random.nextInt(255));
-            tile.blue = Math.max(10, random.nextInt(255));
-
+            tile.color = new ParticleColor(
+                    Math.max(10, random.nextInt(255)),
+                    Math.max(10, random.nextInt(255)),
+                    Math.max(10, random.nextInt(255)));
         }
         return super.getStateForPlacement(context);
     }

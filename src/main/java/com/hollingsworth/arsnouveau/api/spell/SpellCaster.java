@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -73,10 +72,9 @@ public class SpellCaster implements ISpellCaster{
         writeItem(stack);
     }
 
-    @NotNull
     @Override
-    public ParticleColor.IntWrapper getColor(int slot) {
-        return this.getSpell(slot).color.toWrapper();
+    public ParticleColor getColor(int slot) {
+        return this.getSpell(slot).color;
     }
 
     @Override
@@ -112,14 +110,13 @@ public class SpellCaster implements ISpellCaster{
     }
 
     @Override
-    public void setColor(ParticleColor.IntWrapper color) {
-        this.getSpell().color = color.toParticleColor();
-        writeItem(stack);
+    public void setColor(ParticleColor color) {
+        setColor(color, getCurrentSlot());
     }
 
     @Override
-    public void setColor(ParticleColor.IntWrapper color, int slot) {
-        this.getSpell(slot).color = color.toParticleColor();
+    public void setColor(ParticleColor color, int slot) {
+        this.getSpell(slot).color = color;
         writeItem(stack);
     }
 
@@ -137,8 +134,8 @@ public class SpellCaster implements ISpellCaster{
 
     @Nonnull
     @Override
-    public ParticleColor.IntWrapper getColor() {
-        return this.getSpell().color.toWrapper();
+    public ParticleColor getColor() {
+        return this.getSpell().color;
     }
 
     @Override

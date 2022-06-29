@@ -67,13 +67,15 @@ public interface ISpellCaster {
 
     void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot);
 
-    @Nonnull ParticleColor.IntWrapper getColor(int slot);
+    @Nonnull
+    ParticleColor getColor(int slot);
 
-    @Nonnull ParticleColor.IntWrapper getColor();
+    @Nonnull
+    ParticleColor getColor();
 
-    void setColor(ParticleColor.IntWrapper color);
+    void setColor(ParticleColor color);
 
-    void setColor(ParticleColor.IntWrapper color, int slot);
+    void setColor(ParticleColor color, int slot);
 
     @Nonnull ConfiguredSpellSound getSound(int slot);
 

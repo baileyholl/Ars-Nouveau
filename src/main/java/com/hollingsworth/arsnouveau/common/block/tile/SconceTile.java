@@ -23,9 +23,7 @@ import net.minecraft.world.phys.HitResult;
 
 public class SconceTile extends ModdedTile implements ILightable, ITickable {
 
-    public int red = 255;
-    public int green = 125;
-    public int blue = 255;
+    public ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean lit;
 
     public SconceTile(BlockPos pos, BlockState state) {
@@ -36,28 +34,20 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        this.red = nbt.getInt("red");
-        this.red = red > 0 ? red : 255;
-        this.green = nbt.getInt("green");
-        green = this.green > 0 ? green : 125;
-        this.blue = nbt.getInt("blue");
-        blue = this.blue > 0 ? blue : 255;
+        this.color = ParticleColor.deserialize(nbt.getCompound("color"));
         lit = nbt.getBoolean("lit");
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
-        compound.putInt("red", red);
-        compound.putInt("green", green);
-        compound.putInt("blue", blue);
+        super.saveAdditional(compound);
+        compound.put("color", color.serialize());
         compound.putBoolean("lit", lit);
     }
 
     @Override
     public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
-        this.red = spellContext.colors.r;
-        this.green = spellContext.colors.g;
-        this.blue = spellContext.colors.b;
+        this.color = spellContext.getColors().clone();
         lit = true;
         if(rayTraceResult instanceof BlockHitResult) {
             BlockState state = world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos());
@@ -96,12 +86,13 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
             centerX = pos.getX() + 0.8 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
             centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
         }
-        ParticleColor color = new ParticleColor(rand.nextInt(red), rand.nextInt(green), rand.nextInt(blue));
+
+        ParticleColor nextColor = this.color.nextColor(this.level.random);
         int intensity = 10;
 
         for (int i = 0; i < intensity; i++) {
             level.addParticle(
-                    GlowParticleData.createData(color),
+                    GlowParticleData.createData(nextColor),
                     centerX, pos.getY() + 0.8 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
                     0, ParticleUtil.inRange(0.0, 0.03f), 0);
 

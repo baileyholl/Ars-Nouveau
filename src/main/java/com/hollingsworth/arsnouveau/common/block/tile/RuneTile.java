@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -45,7 +44,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public boolean isSensitive;
     public int ticksUntilCharge;
     public UUID uuid;
-    public ParticleColor color = ParticleUtil.defaultParticleColor();
+    public ParticleColor color = ParticleColor.defaultParticleColor();
     public Entity touchedEntity;
 
     public RuneTile(BlockPos pos, BlockState state) {
@@ -70,7 +69,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
             Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
             playerEntity = playerEntity == null ?  ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spell, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE).withColors(this.color.toWrapper()));
+            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spell, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE).withColors(this.color));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
@@ -97,8 +96,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         tag.putInt("cooldown", ticksUntilCharge);
         if(uuid != null)
             tag.putUUID("uuid", uuid);
-        if(color != null)
-            tag.putString("color", color.toWrapper().serialize());
+        tag.put("runeColor", color.serialize());
         tag.putBoolean("sensitive", isSensitive);
     }
 
@@ -111,7 +109,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         this.ticksUntilCharge = tag.getInt("cooldown");
         if(tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
-        this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
+        this.color = ParticleColor.deserialize(tag.getCompound("runeColor"));
         this.isSensitive = tag.getBoolean("sensitive");
         super.load(tag);
     }

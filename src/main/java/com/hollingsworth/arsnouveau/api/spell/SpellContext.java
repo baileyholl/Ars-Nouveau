@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +25,7 @@ public class SpellContext implements Cloneable{
 
     public @Nullable BlockEntity castingTile;
 
-    public ParticleColor.IntWrapper colors;
+    private ParticleColor colors = ParticleColor.defaultParticleColor();
 
     private CasterType type;
 
@@ -37,13 +36,11 @@ public class SpellContext implements Cloneable{
         this.caster = caster;
         this.isCanceled = false;
         this.currentIndex = 0;
-        this.colors = ParticleUtil.defaultParticleColorWrapper();
     }
 
     public SpellContext(ISpellCaster caster, @Nullable LivingEntity casterEntity){
         this(caster.getSpell(), casterEntity);
         withColors(caster.getColor());
-
     }
 
     public @Nullable AbstractSpellPart nextPart(){
@@ -80,18 +77,12 @@ public class SpellContext implements Cloneable{
         return this;
     }
 
-    @Deprecated(forRemoval = true)
-    public SpellContext withSpellResetCounter(Spell spell){
-        this.spell = spell;
-        return resetCastCounter();
-    }
-
     public SpellContext withCaster(@Nullable LivingEntity caster){
         this.caster = caster;
         return this;
     }
 
-    public SpellContext withColors(ParticleColor.IntWrapper colors){
+    public SpellContext withColors(ParticleColor colors){
         this.colors = colors;
         return this;
     }
@@ -145,11 +136,6 @@ public class SpellContext implements Cloneable{
         return spell == null ? Spell.EMPTY : spell;
     }
 
-    @Nullable @Deprecated
-    public LivingEntity getCaster() {
-        return caster;
-    }
-
     public @Nonnull Spell getRemainingSpell() {
         if(getCurrentIndex() >= getSpell().recipe.size())
             return Spell.EMPTY;
@@ -170,6 +156,14 @@ public class SpellContext implements Cloneable{
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public ParticleColor getColors() {
+        return colors.clone();
+    }
+
+    public void setColors(ParticleColor colors) {
+        this.colors = colors;
     }
 
     /**

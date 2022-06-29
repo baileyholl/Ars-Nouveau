@@ -62,9 +62,7 @@ public class EffectLight extends AbstractEffect {
         if (world.getBlockState(pos).getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))) {
             world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState().setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
-                tile.red = spellContext.colors.r;
-                tile.green = spellContext.colors.g;
-                tile.blue = spellContext.colors.b;
+                tile.color = spellContext.getColors();
             }
         }
     }

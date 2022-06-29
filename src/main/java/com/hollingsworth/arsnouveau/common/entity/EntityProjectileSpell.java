@@ -68,9 +68,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         this.spellResolver = resolver;
         this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentPierce.INSTANCE);
         this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentSensitive.INSTANCE);
-        resolver.spellContext.colors.makeVisible();
-        setColor(resolver.spellContext.colors);
-
+        setColor(resolver.spellContext.getColors());
     }
 
     public EntityProjectileSpell(Level world, SpellResolver resolver){

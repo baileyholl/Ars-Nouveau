@@ -41,8 +41,8 @@ public class EffectName extends AbstractEffect {
                     break;
                 }
             }
-            if (newName == null && spellContext.getCaster() instanceof Player) {
-                ItemStack stack = StackUtil.getHeldSpellbook((Player) spellContext.getCaster());
+            if (newName == null) {
+                ItemStack stack = StackUtil.getHeldSpellbook(playerEntity);
                 if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
                     ISpellCaster caster = CasterUtil.getCaster(stack);
                     newName = Component.literal(caster.getSpellName());

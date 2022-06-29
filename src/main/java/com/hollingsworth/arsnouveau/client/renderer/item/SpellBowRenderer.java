@@ -52,7 +52,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
                         for(int i =0; i< 1; i++){
                             Vec3 particlePos = new Vec3(laserPos.x, laserPos.y,laserPos.z);
                             particlePos = particlePos.add(ParticleUtil.pointInSphere().scale(0.3f));
-                            player.level.addParticle(ParticleLineData.createData(tool.getColor().toParticleColor() ,scaleAge, 5+player.level.random.nextInt(20)) ,
+                            player.level.addParticle(ParticleLineData.createData(tool.getColor() ,scaleAge, 5+player.level.random.nextInt(20)) ,
                                     particlePos.x(), particlePos.y(), particlePos.z(),
                                     laserPos.x()   , laserPos.y() , laserPos.z());
                         }

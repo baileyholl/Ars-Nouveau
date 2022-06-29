@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +17,7 @@ public class Spell implements Cloneable{
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
     public String name = "";
-    public ParticleColor color =  ParticleUtil.defaultParticleColor();
+    public ParticleColor color =  ParticleColor.defaultParticleColor();
     public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
 
 
@@ -116,7 +115,7 @@ public class Spell implements Cloneable{
     public CompoundTag serialize(){
         CompoundTag tag = new CompoundTag();
         tag.putString("name", name);
-        tag.putString("color", color.toWrapper().serialize());
+        tag.put("spellColor", color.serialize());
         tag.put("sound", sound.serialize());
         CompoundTag recipeTag = new CompoundTag();
         for(int i = 0; i < recipe.size(); i++){
@@ -133,7 +132,7 @@ public class Spell implements Cloneable{
             return EMPTY;
         Spell spell = new Spell();
         spell.name = tag.getString("name");
-        spell.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
+        spell.color = ParticleColor.deserialize(tag.getCompound("spellColor"));
         spell.sound = ConfiguredSpellSound.fromTag(tag.getCompound("sound"));
         CompoundTag recipeTag = tag.getCompound("recipe");
         int size = recipeTag.getInt("size");
@@ -187,6 +186,8 @@ public class Spell implements Cloneable{
             // TODO: Make above cloneable
             Spell clone = (Spell) super.clone();
             clone.recipe = new ArrayList<>(this.recipe);
+            clone.color = this.color.clone();
+            clone.sound = this.sound;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

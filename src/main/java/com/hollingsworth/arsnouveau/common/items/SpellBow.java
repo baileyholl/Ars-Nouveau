@@ -97,7 +97,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, ISpellCaster caster, boolean isSpellArrow){
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(caster.getSpell(), playerentity).withColors(caster.getColor())).withSilent(true);
-        spellArrow.setColors(caster.getColor().r, caster.getColor().g, caster.getColor().b);
+        spellArrow.setColors(caster.getColor());
         if(isSpellArrow)
             spellArrow.setBaseDamage(0);
         return spellArrow;

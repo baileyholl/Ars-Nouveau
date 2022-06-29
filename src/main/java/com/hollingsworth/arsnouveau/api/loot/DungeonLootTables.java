@@ -239,7 +239,7 @@ public class DungeonLootTables {
         ItemStack stack = makeTome(name, spell);
         ISpellCaster spellCaster =  CasterUtil.getCaster(stack);
         spellCaster.setFlavorText(flavorText);
-        spellCaster.setColor(particleColor.toWrapper());
+        spellCaster.setColor(particleColor);
         return stack;
     }
 }

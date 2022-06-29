@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -18,7 +17,7 @@ public class MageBlockTile extends AnimatedTile implements ITickable, IAnimatabl
     int age;
     public boolean isPermanent;
     public double lengthModifier;
-    public ParticleColor color = ParticleUtil.defaultParticleColor();
+    public ParticleColor color = ParticleColor.defaultParticleColor();
 
     public MageBlockTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.MAGE_BLOCK_TILE, pos, state);
@@ -42,7 +41,7 @@ public class MageBlockTile extends AnimatedTile implements ITickable, IAnimatabl
     public void load(CompoundTag compound) {
         super.load(compound);
         this.age = compound.getInt("age");
-        this.color = ParticleColor.IntWrapper.deserialize(compound.getString("color")).toParticleColor();
+        this.color = ParticleColor.deserialize(compound.getCompound("lightColor"));
         this.isPermanent = compound.getBoolean("permanent");
         this.lengthModifier = compound.getDouble("modifier");
     }
@@ -50,16 +49,14 @@ public class MageBlockTile extends AnimatedTile implements ITickable, IAnimatabl
     @Override
     public void saveAdditional(CompoundTag tag) {
         tag.put("age", IntTag.valueOf(age));
-        tag.putString("color", color.toWrapper().serialize());
+        tag.put("lightColor", color.serialize());
         tag.putBoolean("permanent", isPermanent);
         tag.putDouble("modifier", lengthModifier);
     }
 
-
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimationData data) {}
 
-    }
     AnimationFactory factory = new AnimationFactory(this);
     @Override
     public AnimationFactory getFactory() {

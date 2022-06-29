@@ -37,7 +37,7 @@ public class DelayedSpellEvent implements ITimedEvent{
             resolveSpell();
         }else if(!serverSide && result != null){
             BlockPos hitVec = result instanceof EntityHitResult ? ((EntityHitResult) result).getEntity().blockPosition() : new BlockPos(result.getLocation());
-            ParticleUtil.spawnTouch((ClientLevel) world, hitVec, context.colors.toParticleColor());
+            ParticleUtil.spawnTouch((ClientLevel) world, hitVec, context.getColors());
         }
     }
 

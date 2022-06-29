@@ -323,7 +323,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onColorClick(Button button){
-        ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selectedSpellSlot);
+        ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selectedSpellSlot).toWrapper();
         Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot));
     }
 

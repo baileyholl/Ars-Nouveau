@@ -83,10 +83,6 @@ public class ParticleUtil {
         }
     }
 
-    public static ParticleColor defaultParticleColor(){
-        return new ParticleColor(255, 25, 180);
-    }
-
     public static ParticleColor.IntWrapper defaultParticleColorWrapper(){
         return new ParticleColor.IntWrapper(255, 25, 180);
     }
@@ -101,7 +97,7 @@ public class ParticleUtil {
     }
 
     public static void spawnTouch(ClientLevel world, BlockPos loc){
-        spawnTouch(world, loc, defaultParticleColor());
+        spawnTouch(world, loc, ParticleColor.defaultParticleColor());
     }
 
     public static void spawnTouch(ClientLevel world, BlockPos loc, ParticleColor particleColor){

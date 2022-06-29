@@ -46,7 +46,7 @@ public class EffectPhantomBlock extends AbstractEffect {
 
                 world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.defaultBlockState().setValue(MageBlock.TEMPORARY, !spellStats.hasBuff(AugmentAmplify.INSTANCE)));
                 if(world.getBlockEntity(pos) instanceof MageBlockTile tile) {
-                    tile.color = spellContext.colors.toParticleColor();
+                    tile.color = spellContext.getColors();
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);
                     world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);

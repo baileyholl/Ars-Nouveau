@@ -81,7 +81,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
             if(event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())){
                 for(LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)){
                     if(event.getEntityLiving().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))){
-                        EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.spell, i).withColors(event.context.colors));
+                        EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.spell, i).withColors(event.context.getColors()));
                         spellResolver.onCast(ItemStack.EMPTY, i.level);
                     }
                 }

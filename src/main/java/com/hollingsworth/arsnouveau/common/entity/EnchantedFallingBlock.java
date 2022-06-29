@@ -97,7 +97,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
         fallingblockentity.context = context;
         fallingblockentity.baseDamage = (float) (9.0f + spellStats.getDamageModifier());
         if(level.getBlockEntity(pos) instanceof MageBlockTile tile){
-            fallingblockentity.setColor(tile.color.toWrapper());
+            fallingblockentity.setColor(tile.color);
             fallingblockentity.getEntityData().set(SHOULD_COLOR, true);
         }
         if(resolver.hasFocus(new ItemStack(ItemsRegistry.SHAPERS_FOCUS.get()))){

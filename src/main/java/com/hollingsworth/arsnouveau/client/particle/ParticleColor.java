@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
-
-import javax.annotation.Nonnull;
 
 /**
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
@@ -11,7 +10,7 @@ public class ParticleColor implements Cloneable{
 
     private final float r;
     private final float g;
-    private final float b;
+    private float b;
     private final int color;
 
     public ParticleColor(int r, int g, int b) {
@@ -41,6 +40,10 @@ public class ParticleColor implements Cloneable{
         return new ParticleColor(r,g,b);
     }
 
+    public static ParticleColor defaultParticleColor(){
+        return new ParticleColor(255, 25, 180);
+    }
+
     public float getRed(){return r;}
 
     public float getGreen() {
@@ -54,8 +57,18 @@ public class ParticleColor implements Cloneable{
     public int getColor() {
         return color;
     }
-    // TODO: make tag
-    public String serialize(){
+
+    public CompoundTag serialize(){
+        CompoundTag tag = new CompoundTag();
+        // Wrap and store as int because we don't want to lose precision
+        ParticleColor.IntWrapper wrapper = toWrapper();
+        tag.putInt("r", wrapper.r);
+        tag.putInt("g",  wrapper.g);
+        tag.putInt("b",  wrapper.b);
+        return tag;
+    }
+
+    public String toString() {
         return "" + this.r + "," + this.g +","+this.b;
     }
 
@@ -63,11 +76,26 @@ public class ParticleColor implements Cloneable{
         return new IntWrapper(this);
     }
 
-    public static ParticleColor deserialize(String string){
+    /**
+     * Generates a new color within the max range of the given color.
+     */
+    public ParticleColor nextColor(RandomSource random){
+        ParticleColor.IntWrapper wrapper = toWrapper();
+        return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
+    }
+
+    // Needed because particles can be created over commands
+    public static ParticleColor fromString(String string){
         if(string == null || string.isEmpty())
-            return ParticleUtil.defaultParticleColor();
+            return defaultParticleColor();
         String[] arr = string.split(",");
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
+    }
+
+    public static ParticleColor deserialize(CompoundTag tag){
+        if(tag == null || tag.isEmpty())
+            return defaultParticleColor();
+        return new ParticleColor(tag.getInt("r"), tag.getInt("g"), tag.getInt("b"));
     }
 
     @Override
@@ -99,31 +127,6 @@ public class ParticleColor implements Cloneable{
 
         public ParticleColor toParticleColor(){
             return new ParticleColor(r,g,b);
-        }
-
-        public String serialize(){
-            return "" + this.r + "," + this.g +","+this.b;
-        }
-
-        public void makeVisible(){
-            if(r + g + b < 20){
-                b += 10;
-                g += 10;
-                r += 10;
-            }
-        }
-
-        public static @Nonnull ParticleColor.IntWrapper deserialize(String string){
-            ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColorWrapper();
-            if(string == null || string.isEmpty())
-                return color;
-
-            try{
-                String[] arr = string.split(",");
-                color = new ParticleColor.IntWrapper(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
-                return color;
-            }catch (Exception ignored){ }
-            return color;
         }
 
         @Override

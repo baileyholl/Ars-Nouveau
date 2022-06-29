@@ -35,10 +35,10 @@ public class EffectLinger extends AbstractEffect {
         entityLingeringSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
-        SpellContext newContext = new SpellContext(newSpell, shooter).withCastingTile(spellContext.castingTile).withType(spellContext.getType()).withColors(spellContext.colors);
+        SpellContext newContext = new SpellContext(newSpell, shooter).withCastingTile(spellContext.castingTile).withType(spellContext.getType()).withColors(spellContext.getColors());
         entityLingeringSpell.spellResolver = new SpellResolver(newContext);
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
-        entityLingeringSpell.setColor(spellContext.colors);
+        entityLingeringSpell.setColor(spellContext.getColors());
         world.addFreshEntity(entityLingeringSpell);
     }
 

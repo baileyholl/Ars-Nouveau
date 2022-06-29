@@ -42,10 +42,11 @@ public abstract class ColoredProjectile extends Projectile {
         return new ParticleColor.IntWrapper(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
-    public void setColor(ParticleColor.IntWrapper colors){
-        entityData.set(RED, colors.r);
-        entityData.set(GREEN, colors.g);
-        entityData.set(BLUE, colors.b);
+    public void setColor(ParticleColor colors){
+        ParticleColor.IntWrapper wrapper = colors.toWrapper();
+        entityData.set(RED, wrapper.r);
+        entityData.set(GREEN, wrapper.g);
+        entityData.set(BLUE, wrapper.b);
     }
 
     @Override

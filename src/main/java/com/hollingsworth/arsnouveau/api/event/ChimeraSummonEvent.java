@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.*;
 import net.minecraft.core.BlockPos;
@@ -73,7 +74,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
                 }
             }
         }else{
-            ParticleUtil.spawnRitualAreaEffect(pos, world, world.random, ParticleUtil.defaultParticleColor(), 1 + phase * 2);
+            ParticleUtil.spawnRitualAreaEffect(pos, world, world.random, ParticleColor.defaultParticleColor(), 1 + phase * 2);
         }
     }
 

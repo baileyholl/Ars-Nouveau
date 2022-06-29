@@ -35,12 +35,12 @@ public class ColoredDynamicTypeData implements ParticleOptions {
         @Override
         public ColoredDynamicTypeData fromCommand(ParticleType<ColoredDynamicTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
-            return new ColoredDynamicTypeData(type, ParticleColor.deserialize(reader.readString()), reader.readFloat(), reader.readInt());
+            return new ColoredDynamicTypeData(type, ParticleColor.fromString(reader.readString()), reader.readFloat(), reader.readInt());
         }
 
         @Override
         public ColoredDynamicTypeData fromNetwork(ParticleType<ColoredDynamicTypeData> type, FriendlyByteBuf buffer) {
-            return new ColoredDynamicTypeData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readFloat(), buffer.readInt());
+            return new ColoredDynamicTypeData(type, ParticleColor.deserialize(buffer.readNbt()), buffer.readFloat(), buffer.readInt());
         }
     };
 
@@ -60,7 +60,7 @@ public class ColoredDynamicTypeData implements ParticleOptions {
 
     @Override
     public void writeToNetwork(FriendlyByteBuf buffer) {
-        buffer.writeUtf(color.serialize());
+        buffer.writeNbt(color.serialize());
         buffer.writeFloat(scale);
         buffer.writeInt(age);
     }

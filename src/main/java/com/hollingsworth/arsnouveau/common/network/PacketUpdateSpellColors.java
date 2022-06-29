@@ -15,35 +15,22 @@ import java.util.function.Supplier;
 public class PacketUpdateSpellColors {
 
    int castSlot;
-   int r;
-   int g;
-   int b;
+   ParticleColor color;
 
-    public PacketUpdateSpellColors(int castSlot, int r, int g, int b){
-        this.castSlot = castSlot;
-        this.r = r;
-        this.g = g;
-        this.b = b;
+    public PacketUpdateSpellColors(int slot, ParticleColor color){
+        this.castSlot = slot;
+        this.color = color;
     }
-
     //Decoder
     public PacketUpdateSpellColors(FriendlyByteBuf buf){
         castSlot = buf.readInt();
-        r = buf.readInt();
-        g = buf.readInt();
-        b = buf.readInt();
-    }
-
-    public PacketUpdateSpellColors(int slot, double red, double green, double blue) {
-        this(slot, (int)red, (int) green, (int) blue);
+        color = ParticleColor.deserialize(buf.readNbt());
     }
 
     //Encoder
     public void toBytes(FriendlyByteBuf buf){
         buf.writeInt(castSlot);
-        buf.writeInt(r);
-        buf.writeInt(g);
-        buf.writeInt(b);
+        buf.writeNbt(color.serialize());
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
@@ -52,7 +39,8 @@ public class PacketUpdateSpellColors {
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if(stack.getItem() instanceof SpellBook){
                     ISpellCaster caster = CasterUtil.getCaster(stack);
-                    caster.setColor(new ParticleColor.IntWrapper(r, g, b), castSlot);
+                    caster.setColor(color, castSlot);
+                    System.out.println(color);
                     caster.setCurrentSlot(castSlot);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),

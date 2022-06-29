@@ -20,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -43,9 +42,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     public AbstractRitual ritual;
     AnimationFactory manager = new AnimationFactory(this);
     public boolean isDecorative;
-    int red;
-    int blue;
-    int green;
+    public ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean isOff;
 
     public RitualBrazierTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
@@ -59,7 +56,6 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity){
         Level world = getLevel();
         BlockPos pos = getBlockPos();
-        RandomSource rand = world.random;
         double xzOffset = 0.25;
         for(int i =0; i < intensity; i++){
             world.addParticle(
@@ -78,7 +74,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void tick() {
         if(isDecorative && level.isClientSide){
-            makeParticle(ParticleColor.makeRandomColor(red, green, blue, level.random), ParticleColor.makeRandomColor(red, green, blue, level.random), 50);
+            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 50);
             return;
         }
 
@@ -146,12 +142,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         }else{
             ritual = null;
         }
-        this.red = tag.getInt("red");
-        this.red = red > 0 ? red : 255;
-        this.green = tag.getInt("green");
-        green = this.green > 0 ? green : 125;
-        this.blue = tag.getInt("blue");
-        blue = this.blue > 0 ? blue : 255;
+        color = ParticleColor.deserialize(tag.getCompound("color"));
         isDecorative = tag.getBoolean("decorative");
         isOff = tag.getBoolean("off");
     }
@@ -164,9 +155,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         }else{
             tag.remove("ritualID");
         }
-        tag.putInt("red", red);
-        tag.putInt("green", green);
-        tag.putInt("blue", blue);
+        tag.put("color", color.serialize());
         tag.putBoolean("decorative", isDecorative);
         tag.putBoolean("off", isOff);
     }
@@ -233,9 +222,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
 
     @Override
     public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
-        this.red = spellContext.colors.r;
-        this.green = spellContext.colors.g;
-        this.blue = spellContext.colors.b;
+        this.color = spellContext.getColors();
         this.isDecorative = true;
         BlockState state = world.getBlockState(getBlockPos());
         world.setBlock(getBlockPos(), state.setValue(RitualBrazierBlock.LIT, true), 3);

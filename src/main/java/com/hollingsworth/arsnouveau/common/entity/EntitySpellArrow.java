@@ -53,13 +53,14 @@ public class EntitySpellArrow extends Arrow {
     }
 
     public void setDefaultColors(){
-        setColors(255, 25, 180);
+        setColors(ParticleColor.defaultParticleColor());
     }
 
-    public void setColors(int r, int g, int b){
-        this.entityData.set(RED, r);
-        this.entityData.set(GREEN, g);
-        this.entityData.set(BLUE, b);
+    public void setColors(ParticleColor color){
+        ParticleColor.IntWrapper wrapper = color.toWrapper();
+        this.entityData.set(RED, wrapper.r);
+        this.entityData.set(GREEN, wrapper.g);
+        this.entityData.set(BLUE, wrapper.b);
     }
 
     @Override

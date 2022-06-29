@@ -39,12 +39,12 @@ public class ColorParticleTypeData implements ParticleOptions {
         @Override
         public ColorParticleTypeData fromCommand(ParticleType<ColorParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
-            return new ColorParticleTypeData(type, ParticleColor.deserialize(reader.readString()), reader.readBoolean());
+            return new ColorParticleTypeData(type, ParticleColor.fromString(reader.readString()), reader.readBoolean());
         }
 
         @Override
         public ColorParticleTypeData fromNetwork(ParticleType<ColorParticleTypeData> type, FriendlyByteBuf buffer) {
-            return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readBoolean());
+            return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readNbt()), buffer.readBoolean());
         }
     };
 
@@ -75,7 +75,7 @@ public class ColorParticleTypeData implements ParticleOptions {
 
     @Override
     public void writeToNetwork(FriendlyByteBuf packetBuffer) {
-        packetBuffer.writeUtf(color.serialize());
+        packetBuffer.writeNbt(color.serialize());
     }
 
     @Override
