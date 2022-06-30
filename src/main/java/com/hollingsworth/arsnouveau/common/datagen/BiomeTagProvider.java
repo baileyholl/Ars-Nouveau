@@ -20,8 +20,6 @@ public class BiomeTagProvider extends BiomeTagsProvider {
     //for common, cluster archwood
     public static TagKey<Biome> ARCHWOOD_BIOME_TAG = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "archwood_biome"));
 
-    //for rare, spread archwood
-    public static TagKey<Biome> RARE_ARCHWOOD_BIOME_TAG = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "rare_archwood_biome"));
     public static TagKey<Biome> NO_MOB_SPAWN = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "no_mob_spawn"));
 
 
@@ -36,15 +34,12 @@ public class BiomeTagProvider extends BiomeTagsProvider {
         this.tag(SUMMON_SPAWN_TAG).addTags(IS_OVERWORLD);
         this.tag(ARCHWOOD_BIOME_TAG).add(ModBiomes.ARCHWOOD_FOREST);
         this.tag(NO_MOB_SPAWN).addTags(Tags.Biomes.IS_MUSHROOM).add(Biomes.DEEP_DARK);
-        this.tag(RARE_ARCHWOOD_BIOME_TAG).addTag(IS_OVERWORLD);
+
     }
 
     void addTagToTags(TagKey<Biome> biomeTag, TagKey<Biome>... tags) {
-
         for (TagKey<Biome> tag : tags) {
             this.tag(tag).addTag(biomeTag);
         }
-
     }
-
 }

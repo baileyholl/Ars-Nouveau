@@ -32,6 +32,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(event.getGenerator(), blocktagsprovider, MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new EntityTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
         BiomeModifiersProvider.datagenModifiers(event);
     }
 
