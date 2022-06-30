@@ -19,7 +19,8 @@ public class SpellContext implements Cloneable{
 
     private Spell spell;
 
-    public @Nullable LivingEntity caster; // TODO:
+    @Nullable
+    private LivingEntity caster;
 
     private int currentIndex;
 
@@ -28,19 +29,17 @@ public class SpellContext implements Cloneable{
     private ParticleColor colors = ParticleColor.defaultParticleColor();
 
     private CasterType type;
+    private Level level;
 
     public CompoundTag tag = new CompoundTag();
 
-    public SpellContext(@Nonnull Spell spell, @Nullable LivingEntity caster){
+    public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster){
+        this.level = level;
         this.spell = spell;
         this.caster = caster;
         this.isCanceled = false;
         this.currentIndex = 0;
-    }
-
-    public SpellContext(ISpellCaster caster, @Nullable LivingEntity casterEntity){
-        this(caster.getSpell(), casterEntity);
-        withColors(caster.getColor());
+        this.colors = spell.color.clone();
     }
 
     public @Nullable AbstractSpellPart nextPart(){
@@ -102,14 +101,14 @@ public class SpellContext implements Cloneable{
      * This should always default to a fake player if an actual entity did not cast the spell.
      * Generally tiles would set the caster in this context, but casters can be nullable.
      */
-    public @Nonnull LivingEntity getUnwrappedCaster(Level world){
+    public @Nonnull LivingEntity getUnwrappedCaster(){
         LivingEntity shooter = this.caster;
         if(shooter == null && this.castingTile != null) {
-            shooter = ANFakePlayer.getPlayer((ServerLevel) world);
+            shooter = ANFakePlayer.getPlayer((ServerLevel) level);
             BlockPos pos = this.castingTile.getBlockPos();
             shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
-        shooter = shooter == null ?  ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
+        shooter = shooter == null ?  ANFakePlayer.getPlayer((ServerLevel) level) : shooter;
         return shooter;
     }
 
@@ -152,6 +151,7 @@ public class SpellContext implements Cloneable{
             clone.caster = this.caster;
             clone.castingTile = this.castingTile;
             clone.type = this.type;
+            clone.level = this.level;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
@@ -164,6 +164,10 @@ public class SpellContext implements Cloneable{
 
     public void setColors(ParticleColor colors) {
         this.colors = colors;
+    }
+
+    public void setCaster(@Nullable LivingEntity caster) {
+        this.caster = caster;
     }
 
     /**

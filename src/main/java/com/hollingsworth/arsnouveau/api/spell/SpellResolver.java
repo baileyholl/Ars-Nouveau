@@ -77,11 +77,11 @@ public class SpellResolver {
     }
 
     public boolean postEvent(){
-        return SpellUtil.postEvent(new SpellCastEvent(spellContext.caster, spell, spellContext));
+        return SpellUtil.postEvent(new SpellCastEvent(spell, spellContext));
     }
 
     private SpellStats getCastStats(){
-        LivingEntity caster = spellContext.caster;
+        LivingEntity caster = spellContext.getUnwrappedCaster();
         return new SpellStats.Builder()
                 .setAugments(spell.getAugments(0, caster))
                 .addItemsFromEntity(caster)
@@ -89,9 +89,9 @@ public class SpellResolver {
     }
 
     public boolean onCast(ItemStack stack, Level level){
-        if(canCast(spellContext.caster) && !postEvent()) {
+        if(canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
             this.hitResult = null;
-            CastResolveType resolveType = castType.onCast(stack, spellContext.caster, level, getCastStats(), spellContext, this);
+            CastResolveType resolveType = castType.onCast(stack, spellContext.getUnwrappedCaster(), level, getCastStats(), spellContext, this);
             if(resolveType == CastResolveType.SUCCESS){
                 expendMana();
             }
@@ -101,9 +101,9 @@ public class SpellResolver {
     }
 
     public boolean onCastOnBlock(BlockHitResult blockRayTraceResult){
-        if(canCast(spellContext.caster) && !postEvent()) {
+        if(canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
             this.hitResult = blockRayTraceResult;
-            CastResolveType resolveType = castType.onCastOnBlock(blockRayTraceResult, spellContext.caster, getCastStats(), spellContext, this);
+            CastResolveType resolveType = castType.onCastOnBlock(blockRayTraceResult, spellContext.getUnwrappedCaster(), getCastStats(), spellContext, this);
             if(resolveType == CastResolveType.SUCCESS) {
                 expendMana();
             }
@@ -114,7 +114,7 @@ public class SpellResolver {
 
     // Gives context for InteractionHand
     public boolean onCastOnBlock(UseOnContext context){
-        if(canCast(spellContext.caster) && !postEvent()) {
+        if(canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
             this.hitResult = context.hitResult;
             CastResolveType resolveType = castType.onCastOnBlock(context, getCastStats(), spellContext, this);
             if(resolveType == CastResolveType.SUCCESS){
@@ -126,9 +126,9 @@ public class SpellResolver {
     }
 
     public boolean onCastOnEntity(ItemStack stack, Entity target, InteractionHand hand){
-        if(canCast(spellContext.caster) && !postEvent()) {
+        if(canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
             this.hitResult = new EntityHitResult(target);
-            CastResolveType resolveType = castType.onCastOnEntity(stack, spellContext.caster, target, hand, getCastStats(), spellContext, this);
+            CastResolveType resolveType = castType.onCastOnEntity(stack, spellContext.getUnwrappedCaster(), target, hand, getCastStats(), spellContext, this);
             if(resolveType == CastResolveType.SUCCESS){
                 expendMana();
             }
@@ -144,7 +144,7 @@ public class SpellResolver {
 
     protected void resolveAllEffects(Level world){
         spellContext.resetCastCounter();
-        LivingEntity shooter = spellContext.getUnwrappedCaster(world);
+        LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
         if(spellResolveEvent.isCanceled())
@@ -175,11 +175,11 @@ public class SpellResolver {
 
     public void expendMana(){
         int totalCost = getResolveCost();
-        CapabilityRegistry.getMana(spellContext.caster).ifPresent(mana -> mana.removeMana(totalCost));
+        CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).ifPresent(mana -> mana.removeMana(totalCost));
     }
 
     public int getResolveCost(){
-        int cost = spellContext.getSpell().getCastingCost() - getPlayerDiscounts(spellContext.caster);
+        int cost = spellContext.getSpell().getCastingCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster());
         return Math.max(cost, 0);
     }
 
@@ -195,6 +195,6 @@ public class SpellResolver {
      * Addons can override this to check other types of casters like turrets or entities.
      */
     public boolean hasFocus(ItemStack stack){
-        return CuriosUtil.hasItem(spellContext.caster, stack);
+        return CuriosUtil.hasItem(spellContext.getUnwrappedCaster(), stack);
     }
 }

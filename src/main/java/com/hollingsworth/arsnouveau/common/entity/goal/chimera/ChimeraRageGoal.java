@@ -60,7 +60,7 @@ public class ChimeraRageGoal extends Goal {
             target.removeEffect(MobEffects.SLOW_FALLING);
         }
         if(target != null) {
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(new Spell().add(MethodTouch.INSTANCE).add(EffectLaunch.INSTANCE)
+            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(chimera.level, new Spell().add(MethodTouch.INSTANCE).add(EffectLaunch.INSTANCE)
                     .add(EffectDelay.INSTANCE)
                     .add(EffectPull.INSTANCE)
                     .add(AugmentAmplify.INSTANCE, 2)
