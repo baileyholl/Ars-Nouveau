@@ -1,0 +1,5 @@
+{
+  "type": "forge:remove_spawns",
+  "biomes": "#ars_nouveau:no_mob_spawn",
+  "entity_types": "#ars_nouveau:an_hostile"
+}

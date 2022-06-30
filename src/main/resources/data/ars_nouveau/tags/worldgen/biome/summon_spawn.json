@@ -1,11 +1,5 @@
 {
   "values": [
-    "#minecraft:is_forest",
-    "#minecraft:is_hill",
-    "#minecraft:is_taiga",
-    "#minecraft:is_jungle",
-    "#minecraft:is_savanna",
-    "#minecraft:is_overworld",
-    "minecraft:plains"
+    "#minecraft:is_overworld"
   ]
 }

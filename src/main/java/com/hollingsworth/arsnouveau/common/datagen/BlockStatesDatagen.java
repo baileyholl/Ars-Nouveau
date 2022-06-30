@@ -56,7 +56,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
         registerNormalCube(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
 
-        registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
+     //   registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
     }
 
     private void registerDoor(DoorBlock door, String reg) {

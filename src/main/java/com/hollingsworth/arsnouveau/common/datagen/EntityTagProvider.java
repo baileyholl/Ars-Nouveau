@@ -29,6 +29,10 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.ENTITY_WIXIE_TYPE.get()
                 );
         this.tag(create(new ResourceLocation(ArsNouveau.MODID, "spell_can_hit")));
+        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "an_hostile")))
+                .add(ModEntities.WILDEN_HUNTER.get(), ModEntities.WILDEN_GUARDIAN.get(),
+                        ModEntities.WILDEN_STALKER.get()
+                );
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {

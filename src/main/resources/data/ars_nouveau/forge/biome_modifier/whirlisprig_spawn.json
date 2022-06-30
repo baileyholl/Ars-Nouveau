@@ -1,6 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "#ars_nouveau:summon_spawn",
+  "biomes": "#minecraft:is_overworld",
   "spawners": {
     "type": "ars_nouveau:whirlisprig",
     "maxCount": 2,
