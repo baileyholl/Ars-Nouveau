@@ -1,20 +1,17 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -30,7 +27,6 @@ import java.util.Set;
 public class EffectFell extends AbstractEffect {
     public static EffectFell INSTANCE = new EffectFell();
 
-    public static TagKey<Block> FELLABLE =  TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
 
     private EffectFell() {
         super(GlyphLib.EffectFellID, "Fell");
@@ -70,7 +66,7 @@ public class EffectFell extends AbstractEffect {
     }
 
     public boolean isTree(BlockState blockstate){
-        return blockstate.is(FELLABLE);
+        return blockstate.is(BlockTagProvider.FELLABLE);
     }
 
     public Set<BlockPos> getTree(Level world, BlockPos start, int maxBlocks) {

@@ -25,6 +25,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
     public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
+    public static TagKey<Block> FELLABLE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
 
     private final DataGenerator generator;
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
@@ -164,7 +165,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.TWISTING_VINES,
                 Blocks.PUMPKIN,
                 Blocks.MELON,
-                Blocks.WEEPING_VINES);
+                Blocks.WEEPING_VINES,
+                Blocks.MANGROVE_ROOTS,
+                Blocks.MUDDY_MANGROVE_ROOTS);
 
         this.tag(HARVEST_STEMS).addTag(BlockTags.LOGS).add(
                 Blocks.MUSHROOM_STEM,
@@ -173,8 +176,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.CACTUS);
 
 
-        this.tag(BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable")))
-                .addTags(HARVEST_FOLIAGE, HARVEST_STEMS);
+        this.tag(FELLABLE).addTags(HARVEST_FOLIAGE, HARVEST_STEMS);
 
         TagKey<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
         TagKey<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
