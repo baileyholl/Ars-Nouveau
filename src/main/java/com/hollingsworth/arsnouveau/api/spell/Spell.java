@@ -111,8 +111,8 @@ public class Spell implements Cloneable{
         return cost;
     }
 
-    public void setDiscount(int cost){
-        this.discount = cost;
+    public void setDiscount(int discount){
+        this.discount = discount;
     }
 
     public boolean isEmpty(){
