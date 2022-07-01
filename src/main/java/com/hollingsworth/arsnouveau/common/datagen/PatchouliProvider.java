@@ -218,14 +218,6 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 4)).withTitle("ars_nouveau.happiness"))
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 5)).withTitle("ars_nouveau.important"))
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 6)).withTitle("ars_nouveau.production")), getPath(AUTOMATION, "whirlisprig_charm"));
-        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.BOOKWYRM_CHARM)
-                .withLocalizedText()
-                .withPage(new ApparatusPage(ItemsRegistry.BOOKWYRM_CHARM))
-                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BOOKWYRM_TYPE.get()).toString())
-                        .withText(getLangPath("bookwyrm_charm", 2)))
-                .withPage(new TextPage(getLangPath("bookwyrm_charm", 3)))
-                .withPage(new TextPage(getLangPath("bookwyrm_charm", 4)))
-                .withPage(new TextPage(getLangPath("bookwyrm_charm", 5))), getPath(AUTOMATION, "bookwyrm_charm"));
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
                 .withLocalizedText()

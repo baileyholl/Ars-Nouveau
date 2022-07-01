@@ -295,8 +295,8 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     }
 
     @Override
-    public void performRangedAttack(LivingEntity p_82196_1_, float p_82196_2_) {
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spell, this).withColors(color));
+    public void performRangedAttack(LivingEntity entity, float p_82196_2_) {
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this).withColors(color));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
         projectileSpell.setColor(color);
         projectileSpell.shoot(this, this.getXRot(), this.getYRot(), 0.0F, 1.0f, 0.8f);

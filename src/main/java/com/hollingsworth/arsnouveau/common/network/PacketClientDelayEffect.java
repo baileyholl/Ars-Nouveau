@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,7 +25,6 @@ public class PacketClientDelayEffect {
     public Spell spell;
     public int duration;
     public int shooterID; // -1 is a null entity
-    public ParticleColor color;
     public @Nullable BlockHitResult hitPos;
     public int hitEntityID;
 
@@ -35,7 +33,6 @@ public class PacketClientDelayEffect {
         duration = buf.readInt();
         spell = Spell.fromTag(buf.readNbt());
         shooterID = buf.readInt();
-        color = ParticleColor.deserialize(buf.readNbt());
         hitEntityID = buf.readInt();
         if(hitEntityID == -1) {
             hitPos = buf.readBlockHitResult();
@@ -47,7 +44,6 @@ public class PacketClientDelayEffect {
         buf.writeInt(duration);
         buf.writeNbt(spell.serialize());
         buf.writeInt(shooterID);
-        buf.writeNbt(color.serialize());
         buf.writeInt(hitEntityID);
 
         if(hitEntityID == -1) {
@@ -59,7 +55,6 @@ public class PacketClientDelayEffect {
     public PacketClientDelayEffect(int duration, @Nullable LivingEntity shooter, Spell spell, SpellContext context, @Nullable BlockHitResult hitPos, @Nullable Entity hitEntity){
         this.duration = duration;
         this.shooterID = shooter == null ? -1 : shooter.getId();
-        this.color = context.getColors();
         this.spell = spell;
         this.hitPos = hitPos;
         this.hitEntityID = hitEntity == null ? -1 : hitEntity.getId();
@@ -77,7 +72,7 @@ public class PacketClientDelayEffect {
             }else{
                 result = new EntityHitResult(hitEntity);
             }
-            EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, spell, result, world, (LivingEntity) world.getEntity(shooterID), new SpellContext(spell, (LivingEntity) world.getEntity(shooterID)).withColors(color)));
+            EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, spell, result, world, (LivingEntity) world.getEntity(shooterID), new SpellContext(world, spell, (LivingEntity) world.getEntity(shooterID))));
         } );
         ctx.get().setPacketHandled(true);
     }

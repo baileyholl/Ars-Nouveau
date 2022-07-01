@@ -112,13 +112,6 @@ public class ApparatusRecipeProvider implements DataProvider {
         )));
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.BOOKWYRM_CHARM)
-                .withReagent(Items.BOOK)
-                .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_IRON))
-                .withPedestalItem(4, Recipes.SOURCE_GEM)
-                .build());
-
-        addRecipe(builder()
                 .withResult(ItemsRegistry.STARBUNCLE_CHARM)
                 .withReagent(ItemsRegistry.STARBUNCLE_SHARD)
                 .withPedestalItem(5,Ingredient.of(Tags.Items.NUGGETS_GOLD))

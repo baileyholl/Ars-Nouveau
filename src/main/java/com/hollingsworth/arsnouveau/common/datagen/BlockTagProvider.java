@@ -173,8 +173,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.PUMPKIN,
                 Blocks.MELON,
                 Blocks.WEEPING_VINES,
-                Blocks.MANGROVE_ROOTS,
-                Blocks.MUDDY_MANGROVE_ROOTS);
+                Blocks.MANGROVE_ROOTS);
 
         this.tag(HARVEST_STEMS).addTag(BlockTags.LOGS).add(
                 Blocks.MUSHROOM_STEM,

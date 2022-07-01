@@ -32,7 +32,7 @@ public class RuneRenderer extends GeoBlockRenderer<RuneTile> {
     @Override
     public void render(GeoModel model, RuneTile animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder,
                        int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        ParticleColor color = animatable.color;
+        ParticleColor color = animatable.spell.color;
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn,
                 animatable.isCharged ? color.getRed() : red, animatable.isCharged ? color.getGreen() : green,  animatable.isCharged ? color.getBlue() : blue, alpha);
 

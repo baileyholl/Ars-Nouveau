@@ -64,10 +64,10 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType,Level world, SpellResolver resolver){
-        this(entityType, world, resolver.spellContext.caster);
+        this(entityType, world, resolver.spellContext.getUnwrappedCaster());
         this.spellResolver = resolver;
-        this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentPierce.INSTANCE);
-        this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentSensitive.INSTANCE);
+        this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentPierce.INSTANCE);
+        this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.getUnwrappedCaster(), AugmentSensitive.INSTANCE);
         setColor(resolver.spellContext.getColors());
     }
 
