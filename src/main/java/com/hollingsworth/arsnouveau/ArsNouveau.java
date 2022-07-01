@@ -35,7 +35,8 @@ import static com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator.G
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
-    public static IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    // Has to be runForDist, SafeRunForDist will throw a sided crash
+    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
 
