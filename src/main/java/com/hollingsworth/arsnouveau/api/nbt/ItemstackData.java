@@ -9,6 +9,7 @@ public abstract class ItemstackData extends AbstractData{
     public ItemstackData(ItemStack stack) {
         super(stack.getOrCreateTag());
         this.stack = stack;
+        readFromNBT(getItemTag(stack));
     }
 
     @Override
@@ -26,7 +27,7 @@ public abstract class ItemstackData extends AbstractData{
         stack.getOrCreateTag().put(getTagString(), tag);
     }
 
-    public CompoundTag getItemTag(){
+    public CompoundTag getItemTag(ItemStack stack){
         return stack.getOrCreateTag().getCompound(getTagString());
     }
 
