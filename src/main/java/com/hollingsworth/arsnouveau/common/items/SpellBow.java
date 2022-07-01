@@ -289,7 +289,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     @Override
     public ISpellCaster getSpellCaster(ItemStack stack) {
         return new BasicReductionCaster(stack, (spell -> {
-            spell.setDiscount(MethodProjectile.INSTANCE.getCastingCost());
+            spell.addDiscount(MethodProjectile.INSTANCE.getCastingCost());
             return spell;
         }));
     }

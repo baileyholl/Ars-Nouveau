@@ -85,13 +85,13 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     public boolean enoughMana(@Nullable Spell spell){
         if(spell == null)
             return false;
-        return SourceUtil.hasSourceNearby(worldPosition, level, 7, spell.getCastingCost() / 4);
+        return SourceUtil.hasSourceNearby(worldPosition, level, 7, spell.getDiscountedCost() / 4);
     }
 
     public boolean removeManaAround(@Nullable Spell spell){
         if(spell == null)
             return false;
-        return SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, spell.getCastingCost() / 4) != null;
+        return SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, spell.getDiscountedCost() / 4) != null;
     }
 
     public @Nullable BlockPos getNextTaskLoc(@Nullable Spell spell, EntityBookwyrm caster){

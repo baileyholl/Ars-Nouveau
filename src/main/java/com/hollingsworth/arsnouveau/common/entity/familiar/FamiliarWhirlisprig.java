@@ -57,7 +57,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
                     discount += part.getCastingCost() * .5;
                 }
             }
-            event.spell.setDiscount(discount);
+            event.spell.addDiscount(discount);
         }
     }
 

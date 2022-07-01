@@ -38,7 +38,7 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     }
 
     public int getManaCost(){
-        return this.spellCaster.getSpell().getCastingCost();
+        return this.spellCaster.getSpell().getDiscountedCost();
     }
 
     @Override
