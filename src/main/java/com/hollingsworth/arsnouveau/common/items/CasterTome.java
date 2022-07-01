@@ -39,10 +39,10 @@ public class CasterTome extends ModItem implements ICasterTool {
         ISpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         // Let even a new player cast 1 charge of a tome
-        if(spell.getCastingCost() > ManaUtil.getMaxMana(playerIn)){
-            spell.setDiscount(spell.getCastingCost() - ManaUtil.getMaxMana(playerIn));
+        if(spell.getDiscountedCost() > ManaUtil.getMaxMana(playerIn)){
+            spell.addDiscount(spell.getDiscountedCost() - ManaUtil.getMaxMana(playerIn));
         }else{
-            spell.setDiscount(spell.getCastingCost()/2);
+            spell.addDiscount(spell.getDiscountedCost()/2);
         }
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable(""), spell);
     }

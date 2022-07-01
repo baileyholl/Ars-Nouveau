@@ -118,7 +118,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     @Override
     public ISpellCaster getSpellCaster(ItemStack stack) {
         return new BasicReductionCaster(stack, (spell -> {
-            spell.setDiscount(AugmentAmplify.INSTANCE.getCastingCost());
+            spell.addDiscount(AugmentAmplify.INSTANCE.getCastingCost());
             return spell;
         }));
     }

@@ -23,7 +23,7 @@ public class Spell implements Cloneable{
      * The discount removed from the casting cost of the spell.
      * This value is not saved, but is set to 0 after each cast.
      */
-    public int discount = 0;
+    private int discount = 0;
 
 
     public Spell(List<AbstractSpellPart> recipe){
@@ -99,20 +99,51 @@ public class Spell implements Cloneable{
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }
 
-    public int getCastingCost(){
+
+    /**
+     * Returns the cost of casting this spell with discounts.
+     * Does not reset the discount value.
+     * THIS SHOULD NOT BE USED FOR EXPENDING MANA.
+     */
+    public int getDiscountedCost(){
+        return Math.max(0, getNoDiscountCost() - discount);
+    }
+
+    /**
+     * Returns the original cost of casting this spell without discounts.
+     * THIS SHOULD NOT BE USED FOR EXPENDING MANA.
+     */
+    public int getNoDiscountCost(){
         int cost = 0;
         if(recipe == null)
             return cost;
         for (AbstractSpellPart spell : recipe) {
             cost += spell.getCastingCost();
         }
-        cost = Math.max(0, cost - discount);
+        cost = Math.max(0, cost);
+        return cost;
+    }
+
+    /**
+     * Returns the final cost of the spell with all discounts applied.
+     * This will reset the discount to 0, so this should only be used before expending mana.
+     */
+    public int getFinalCostAndReset(){
+        int cost = getDiscountedCost();
         discount = 0;
         return cost;
     }
 
+    public void addDiscount(int discount){
+        this.discount += discount;
+    }
+
     public void setDiscount(int discount){
         this.discount = discount;
+    }
+
+    public int getDiscount(){
+        return discount;
     }
 
     public boolean isEmpty(){
