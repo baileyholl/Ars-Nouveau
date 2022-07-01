@@ -10,6 +10,7 @@ public class GoToBedGoal extends Goal {
     int ticksSleeping;
     boolean unreachable;
     public Starbuncle starbuncle;
+    BlockPos bedPos;
 
     public GoToBedGoal(Starbuncle starbuncle) {
         this.starbuncle = starbuncle;
@@ -26,6 +27,7 @@ public class GoToBedGoal extends Goal {
         unreachable = false;
         starbuncle.getNavigation().stop();
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.RESTING;
+        bedPos = starbuncle.data.bedPos;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class GoToBedGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        setPath(starbuncle.bedPos.getX(), starbuncle.bedPos.getY() + 1, starbuncle.bedPos.getZ(), 1.3);
+        setPath(bedPos.getX(), bedPos.getY() + 1.0, bedPos.getZ(), 1.3);
 
     }
 
@@ -51,13 +53,13 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if(starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || starbuncle.bedPos == null || starbuncle.getValidTakePos() != null) {
+        if(starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || starbuncle.getValidTakePos() != null) {
             return false;
         }
         if(!starbuncle.getHeldStack().isEmpty() && starbuncle.getValidStorePos(starbuncle.getHeldStack()) != null) {
             return false;
         }
-        Block onBlock = starbuncle.level.getBlockState(new BlockPos(starbuncle.bedPos)).getBlock();
+        Block onBlock = starbuncle.level.getBlockState(new BlockPos(bedPos)).getBlock();
         if(!(onBlock instanceof SummonBed)) {
             return false;
         }
