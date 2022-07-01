@@ -45,7 +45,7 @@ public class GlyphProcessor implements IComponentProcessor {
         }
         if (s.equals("mana_cost")) {
             if (recipe.output.getItem() instanceof Glyph) {
-                int cost = ((Glyph) recipe.output.getItem()).spellPart.getConfigCost();
+                int cost = ((Glyph) recipe.output.getItem()).spellPart.getCastingCost();
                 String costLang = "";
                 if (cost == 0)
                     costLang = Component.translatable("ars_nouveau.mana_cost.none").getString();

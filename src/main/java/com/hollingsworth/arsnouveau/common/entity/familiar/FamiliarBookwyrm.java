@@ -52,7 +52,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     @Override
     public void onCast(SpellCastEvent event) {
         if(isAlive() && getOwner() != null && getOwner().equals(event.getEntity()))
-            event.spell.setCost((int) (event.spell.getCastingCost() - event.spell.getCastingCost() * .15));
+            event.spell.setDiscount((int) (event.spell.getCastingCost() * .15));
     }
 
     @Override

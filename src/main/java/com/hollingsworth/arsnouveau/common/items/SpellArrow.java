@@ -48,7 +48,7 @@ public class SpellArrow extends ArrowItem {
         ISpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
         Spell spell = spellCaster.getSpell();
         modifySpell(spell);
-        spell.setCost(spell.getCastingCost() - part.getConfigCost() * numParts);
+        spell.setDiscount(part.getCastingCost() * numParts);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(world, spell, entity)).withSilent(true);
         spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
         return spellArrow;

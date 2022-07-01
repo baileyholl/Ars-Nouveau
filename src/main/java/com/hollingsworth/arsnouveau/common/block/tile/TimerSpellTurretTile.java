@@ -47,9 +47,9 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     public int getManaCost() {
         int cost = super.getManaCost();
         Spell spell = this.getSpellCaster().getSpell();
-        cost -= spell.getInstanceCount(MethodTouch.INSTANCE) * MethodTouch.INSTANCE.getConfigCost();
-        cost -= spell.getInstanceCount(EffectRedstone.INSTANCE) * EffectRedstone.INSTANCE.getConfigCost();
-        cost -= spell.getInstanceCount(MethodProjectile.INSTANCE) * MethodProjectile.INSTANCE.getConfigCost();
+        cost -= spell.getInstanceCount(MethodTouch.INSTANCE) * MethodTouch.INSTANCE.getCastingCost();
+        cost -= spell.getInstanceCount(EffectRedstone.INSTANCE) * EffectRedstone.INSTANCE.getCastingCost();
+        cost -= spell.getInstanceCount(MethodProjectile.INSTANCE) * MethodProjectile.INSTANCE.getCastingCost();
         return Math.max(0, cost);
     }
 

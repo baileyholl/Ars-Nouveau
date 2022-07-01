@@ -51,13 +51,13 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
             return;
 
         if(getOwner() != null && getOwner().equals(event.getEntity())) {
-            int cost = event.spell.getCastingCost();
+            int discount = 0;
             for(AbstractSpellPart part : event.spell.recipe){
                 if(SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)){
-                    cost -= part.getConfigCost() * .5;
+                    discount += part.getCastingCost() * .5;
                 }
             }
-            event.spell.setCost(cost);
+            event.spell.setDiscount(discount);
         }
     }
 

@@ -79,7 +79,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
         ISpellCaster caster = getSpellCaster(stack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(player.level, caster.getSpell(), player));
+        SpellResolver resolver = new SpellResolver(new SpellContext(player.level, caster.modifySpellBeforeCasting(target.level, player, InteractionHand.MAIN_HAND, caster.getSpell()), player));
         EntityHitResult entityRes = new EntityHitResult(target);
         resolver.onCastOnEntity(stack, entityRes.getEntity(), InteractionHand.MAIN_HAND);
         return super.hurtEnemy(stack, target, player);
@@ -118,7 +118,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     @Override
     public ISpellCaster getSpellCaster(ItemStack stack) {
         return new BasicReductionCaster(stack, (spell -> {
-            spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getConfigCost());
+            spell.setDiscount(AugmentAmplify.INSTANCE.getCastingCost());
             return spell;
         }));
     }

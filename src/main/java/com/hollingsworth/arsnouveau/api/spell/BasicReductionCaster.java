@@ -15,10 +15,12 @@ public class BasicReductionCaster extends SpellCaster{
 
     public BasicReductionCaster(ItemStack stack, Function<Spell, Spell> modifyFunc) {
         super(stack);
+        this.modificationFunc = modifyFunc;
     }
 
     public BasicReductionCaster(CompoundTag itemTag, Function<Spell, Spell> modifyFunc) {
         super(itemTag);
+        this.modificationFunc = modifyFunc;
     }
 
     @Override
