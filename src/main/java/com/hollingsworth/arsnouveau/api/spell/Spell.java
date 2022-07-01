@@ -19,6 +19,11 @@ public class Spell implements Cloneable{
     public String name = "";
     public ParticleColor color =  ParticleColor.defaultParticleColor();
     public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+    /**
+     * The discount removed from the casting cost of the spell.
+     * This value is not saved, but is set to 0 after each cast.
+     */
+    public int discount = 0;
 
 
     public Spell(List<AbstractSpellPart> recipe){
@@ -99,13 +104,15 @@ public class Spell implements Cloneable{
         if(recipe == null)
             return cost;
         for (AbstractSpellPart spell : recipe) {
-            cost += spell.getConfigCost();
+            cost += spell.getCastingCost();
         }
-        return Math.max(0, cost);
+        cost = Math.max(0, cost - discount);
+        discount = 0;
+        return cost;
     }
-    // TODO: Remove this, move to event driven
-    public void setCost(int cost){
-//        this.cost = Math.max(0, cost);
+
+    public void setDiscount(int cost){
+        this.discount = cost;
     }
 
     public boolean isEmpty(){

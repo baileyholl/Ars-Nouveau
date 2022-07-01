@@ -51,7 +51,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(stack);
-        caster.getSpell().setCost((int) (caster.getSpell().getCastingCost() - caster.getSpell().getCastingCost() * 0.25));
+        caster.getSpell().setDiscount((int) (caster.getSpell().getCastingCost() * 0.25));
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.mirror.invalid"));
     }
 

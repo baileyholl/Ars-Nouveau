@@ -53,7 +53,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     public abstract int getDefaultManaCost();
 
-    public int getConfigCost(){
+    public int getCastingCost(){
         return COST == null ? getDefaultManaCost() : COST.get();
     }
 
@@ -152,6 +152,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return false;
     }
 
+    /**
+     * Used for datagen lang ONLY.
+     */
     public String getBookDescription(){
         return "";
     }
