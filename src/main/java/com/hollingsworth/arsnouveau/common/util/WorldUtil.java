@@ -17,11 +17,11 @@ import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
+
 /**
  * Class which has world related util functions like chunk load checks
  */
-public class WorldUtil
-{
+public class WorldUtil {
     /**
      * Checks if the block is loaded for block access
      *
@@ -29,8 +29,7 @@ public class WorldUtil
      * @param pos   position to check
      * @return true if block is accessible/loaded
      */
-    public static boolean isBlockLoaded(final LevelAccessor world, final BlockPos pos)
-    {
+    public static boolean isBlockLoaded(final LevelAccessor world, final BlockPos pos) {
         return isChunkLoaded(world, pos.getX() >> 4, pos.getZ() >> 4);
     }
 
@@ -42,11 +41,9 @@ public class WorldUtil
      * @param z     chunk position
      * @return true if loaded
      */
-    public static boolean isChunkLoaded(final LevelAccessor world, final int x, final int z)
-    {
-        if (world.getChunkSource() instanceof ServerChunkCache)
-        {
-            return ((ServerChunkCache)world.getChunkSource()).getChunkFuture(x, z, ChunkStatus.FULL, false).isDone();
+    public static boolean isChunkLoaded(final LevelAccessor world, final int x, final int z) {
+        if (world.getChunkSource() instanceof ServerChunkCache) {
+            return ((ServerChunkCache) world.getChunkSource()).getChunkFuture(x, z, ChunkStatus.FULL, false).isDone();
         }
         return world.getChunk(x, z, ChunkStatus.FULL, false) != null;
     }
@@ -57,10 +54,8 @@ public class WorldUtil
      * @param world the world to mark it dirty in.
      * @param pos   the position within the chunk.
      */
-    public static void markChunkDirty(final Level world, final BlockPos pos)
-    {
-        if (WorldUtil.isBlockLoaded(world, pos))
-        {
+    public static void markChunkDirty(final Level world, final BlockPos pos) {
+        if (WorldUtil.isBlockLoaded(world, pos)) {
             world.getChunk(pos.getX() >> 4, pos.getZ() >> 4).setUnsaved(true);
             final BlockState state = world.getBlockState(pos);
             world.sendBlockUpdated(pos, state, state, 3);
@@ -74,8 +69,7 @@ public class WorldUtil
      * @param pos   chunk position
      * @return true if loaded
      */
-    public static boolean isChunkLoaded(final LevelAccessor world, final ChunkPos pos)
-    {
+    public static boolean isChunkLoaded(final LevelAccessor world, final ChunkPos pos) {
         return isChunkLoaded(world, pos.x, pos.z);
     }
 
@@ -86,8 +80,7 @@ public class WorldUtil
      * @param pos   position to check
      * @return true if block is accessible/loaded
      */
-    public static boolean isEntityBlockLoaded(final LevelAccessor world, final BlockPos pos)
-    {
+    public static boolean isEntityBlockLoaded(final LevelAccessor world, final BlockPos pos) {
         return isEntityChunkLoaded(world, pos.getX() >> 4, pos.getZ() >> 4);
     }
 
@@ -99,8 +92,7 @@ public class WorldUtil
      * @param z     chunk position
      * @return true if loaded
      */
-    public static boolean isEntityChunkLoaded(final LevelAccessor world, final int x, final int z)
-    {
+    public static boolean isEntityChunkLoaded(final LevelAccessor world, final int x, final int z) {
         return isEntityChunkLoaded(world, new ChunkPos(x, z));
     }
 
@@ -111,10 +103,8 @@ public class WorldUtil
      * @param pos   chunk position
      * @return true if loaded
      */
-    public static boolean isEntityChunkLoaded(final LevelAccessor world, final ChunkPos pos)
-    {
-        if (world instanceof ServerLevel)
-        {
+    public static boolean isEntityChunkLoaded(final LevelAccessor world, final ChunkPos pos) {
+        if (world instanceof ServerLevel) {
             return ((ServerLevel) world).isPositionEntityTicking(pos.getWorldPosition());
         }
         return isChunkLoaded(world, pos);
@@ -127,8 +117,7 @@ public class WorldUtil
      * @param box   the box.
      * @return true if loaded.
      */
-    public static boolean isAABBLoaded(final Level world, final AABB box)
-    {
+    public static boolean isAABBLoaded(final Level world, final AABB box) {
         return isChunkLoaded(world, ((int) box.minX) >> 4, ((int) box.minZ) >> 4) && isChunkLoaded(world, ((int) box.maxX) >> 4, ((int) box.maxZ) >> 4);
     }
 
@@ -138,8 +127,7 @@ public class WorldUtil
      * @param world the world to check.
      * @return true if so.
      */
-    public static boolean isPastTime(final Level world, final int pastTime)
-    {
+    public static boolean isPastTime(final Level world, final int pastTime) {
         return world.getDayTime() % 24000 <= pastTime;
     }
 
@@ -151,14 +139,11 @@ public class WorldUtil
      * @param type  the type to compare.
      * @return true if it matches.
      */
-    public static boolean isOfWorldType(@NotNull final Level world, @NotNull final ResourceKey<DimensionType> type)
-    {
+    public static boolean isOfWorldType(@NotNull final Level world, @NotNull final ResourceKey<DimensionType> type) {
         RegistryAccess dynRegistries = world.registryAccess();
         ResourceLocation loc = dynRegistries.registry(Registry.DIMENSION_TYPE_REGISTRY).get().getKey(world.dimensionType());
-        if (loc == null)
-        {
-            if (world.isClientSide)
-            {
+        if (loc == null) {
+            if (world.isClientSide) {
                 return world.dimensionType().effectsLocation().equals(type.location());
             }
             return false;
@@ -175,8 +160,7 @@ public class WorldUtil
      * @param world world to check
      * @return true if peaceful
      */
-    public static boolean isPeaceful(@NotNull final Level world)
-    {
+    public static boolean isPeaceful(@NotNull final Level world) {
         return !world.getLevelData().getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) || world.getDifficulty().equals(Difficulty.PEACEFUL);
     }
 

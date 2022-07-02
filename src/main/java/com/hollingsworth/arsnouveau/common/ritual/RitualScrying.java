@@ -29,16 +29,16 @@ public class RitualScrying extends AbstractRitual {
     protected void tick() {
 
         ParticleUtil.spawnFallingSkyEffect(tile.ritual, tile, rand, getCenterColor().toWrapper());
-        if(getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide)
+        if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide)
             incrementProgress();
 
-        if(!getWorld().isClientSide && getProgress() >= 15){
-            List<ServerPlayer> players =  getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
-            if(!players.isEmpty()){
+        if (!getWorld().isClientSide && getProgress() >= 15) {
+            List<ServerPlayer> players = getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
+            if (!players.isEmpty()) {
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
                 int modifier = didConsumeItem(ItemsRegistry.MANIPULATION_ESSENCE) ? 3 : 1;
-                for(ServerPlayer playerEntity : players){
-                    if(item.getItem() instanceof BlockItem blockItem)
+                for (ServerPlayer playerEntity : players) {
+                    if (item.getItem() instanceof BlockItem blockItem)
                         RitualScrying.grantScrying(playerEntity, 60 * 20 * 5 * modifier, new SingleBlockScryer(blockItem.getBlock()));
                 }
             }
@@ -51,12 +51,12 @@ public class RitualScrying extends AbstractRitual {
         return new ResourceLocation(ArsNouveau.MODID, RitualLib.SCRYING);
     }
 
-    public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer){
+    public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer) {
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT.get(), ticks));
         CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         tag.put("an_scryer", scryer.toTag(new CompoundTag()));
         playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
-        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerEntity), new PacketGetPersistentData(tag));
+        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new PacketGetPersistentData(tag));
     }
 
     @Override
@@ -67,16 +67,16 @@ public class RitualScrying extends AbstractRitual {
     @Override
     public boolean canConsumeItem(ItemStack stack) {
         Item extendTime = ItemsRegistry.MANIPULATION_ESSENCE.get();
-        if(didConsumeItem(extendTime) && getConsumedItems().size() == 1 && stack.getItem() instanceof BlockItem)
+        if (didConsumeItem(extendTime) && getConsumedItems().size() == 1 && stack.getItem() instanceof BlockItem)
             return true;
 
-        if(!getConsumedItems().isEmpty() && stack.getItem() instanceof BlockItem)
+        if (!getConsumedItems().isEmpty() && stack.getItem() instanceof BlockItem)
             return false;
 
-        if(didConsumeItem(stack.getItem()))
+        if (didConsumeItem(stack.getItem()))
             return false;
 
-        if(getConsumedItems().isEmpty() && stack.getItem() instanceof BlockItem)
+        if (getConsumedItems().isEmpty() && stack.getItem() instanceof BlockItem)
             return true;
 
         return stack.getItem() == extendTime;

@@ -17,36 +17,36 @@ public class PacketTimedEvent {
     CompoundTag tag;
 
     //Decoder
-    public PacketTimedEvent(FriendlyByteBuf buf){
+    public PacketTimedEvent(FriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
-    public PacketTimedEvent(CompoundTag tag){
+    public PacketTimedEvent(CompoundTag tag) {
         this.tag = tag;
     }
 
-    public PacketTimedEvent(ITimedEvent event){
+    public PacketTimedEvent(ITimedEvent event) {
         this.tag = new CompoundTag();
         event.serialize(tag);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            if(!methodMap.containsKey(tag.getString("id")))
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            if (!methodMap.containsKey(tag.getString("id")))
                 throw new IllegalStateException("No event found for ID or ID missing");
             methodMap.get(tag.getString("id")).apply(tag);
-        } );
+        });
         ctx.get().setPacketHandled(true);
     }
 
     public static Map<String, Function<CompoundTag, Void>> methodMap = new HashMap();
 
-    static{
+    static {
         methodMap.put(ChimeraSummonEvent.ID, (nbt) -> ChimeraSummonEvent.get(nbt).onPacketHandled());
         methodMap.put(EruptionEvent.ID, (nbt) -> EruptionEvent.get(nbt).onPacketHandled());
     }

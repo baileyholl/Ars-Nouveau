@@ -33,16 +33,16 @@ public class MethodProjectile extends AbstractCastMethod {
         return 10;
     }
 
-    public void summonProjectiles(Level world, LivingEntity shooter, SpellStats stats, SpellResolver resolver){
+    public void summonProjectiles(Level world, LivingEntity shooter, SpellStats stats, SpellResolver resolver) {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
         projectiles.add(projectileSpell);
         int numSplits = stats.getBuffCount(AugmentSplit.INSTANCE);
 
-        for(int i =1; i < numSplits + 1; i++){
-            Direction offset =shooter.getDirection().getClockWise();
-            if(i%2==0) offset = offset.getOpposite();
-             // Alternate sides
+        for (int i = 1; i < numSplits + 1; i++) {
+            Direction offset = shooter.getDirection().getClockWise();
+            if (i % 2 == 0) offset = offset.getOpposite();
+            // Alternate sides
             BlockPos projPos = shooter.blockPosition().relative(offset, i);
             projPos = projPos.offset(0, 1.5, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
@@ -52,14 +52,14 @@ public class MethodProjectile extends AbstractCastMethod {
 
         float velocity = Math.max(0.1f, 1.0f + stats.getAccMultiplier() / 2);
 
-        for(EntityProjectileSpell proj : projectiles) {
+        for (EntityProjectileSpell proj : projectiles) {
             proj.shoot(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, velocity, 0.8f);
             world.addFreshEntity(proj);
         }
     }
 
     // Summons the projectiles directly above the block, facing downwards.
-    public void summonProjectiles(Level world, BlockPos pos, LivingEntity shooter, SpellStats stats, SpellResolver resolver){
+    public void summonProjectiles(Level world, BlockPos pos, LivingEntity shooter, SpellStats stats, SpellResolver resolver) {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
         projectileSpell.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
@@ -67,9 +67,9 @@ public class MethodProjectile extends AbstractCastMethod {
 
         int numSplits = stats.getBuffCount(AugmentSplit.INSTANCE);
 
-        for(int i =1; i < numSplits + 1; i++){
+        for (int i = 1; i < numSplits + 1; i++) {
             Direction offset = shooter.getDirection().getClockWise();
-            if(i%2==0) offset = offset.getOpposite();
+            if (i % 2 == 0) offset = offset.getOpposite();
             // Alternate sides
             BlockPos projPos = pos.relative(offset, i); // TODO: Fix split
             projPos = projPos.offset(0, 1.5, 0);
@@ -77,7 +77,7 @@ public class MethodProjectile extends AbstractCastMethod {
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
-        for(EntityProjectileSpell proj : projectiles) {
+        for (EntityProjectileSpell proj : projectiles) {
             proj.setDeltaMovement(new Vec3(0, -0.1, 0));
             world.addFreshEntity(proj);
         }

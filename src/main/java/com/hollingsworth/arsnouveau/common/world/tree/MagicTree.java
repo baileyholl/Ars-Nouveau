@@ -11,7 +11,8 @@ import java.util.function.Supplier;
 public class MagicTree extends AbstractTreeGrower {
 
     Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature;
-    public MagicTree(Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature){
+
+    public MagicTree(Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature) {
         this.configConfiguredFeature = configConfiguredFeature;
     }
 

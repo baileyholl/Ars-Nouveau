@@ -25,15 +25,15 @@ public class MethodOrbit extends AbstractCastMethod {
     }
 
 
-    public void summonProjectiles(Level world, LivingEntity shooter, SpellResolver resolver, SpellStats stats){
+    public void summonProjectiles(Level world, LivingEntity shooter, SpellResolver resolver, SpellStats stats) {
         int total = 3 + stats.getBuffCount(AugmentSplit.INSTANCE);
-        for(int i = 0; i < total; i++){
+        for (int i = 0; i < total; i++) {
             EntityOrbitProjectile wardProjectile = new EntityOrbitProjectile(world, resolver);
             wardProjectile.wardedEntity = shooter;
             wardProjectile.setOwnerID(shooter.getId());
             wardProjectile.setOffset(i);
             wardProjectile.setAccelerates((int) stats.getAccMultiplier());
-            wardProjectile.setAoe((float)stats.getAoeMultiplier());
+            wardProjectile.setAoe((float) stats.getAoeMultiplier());
             wardProjectile.extendTimes = (int) stats.getDurationMultiplier();
             wardProjectile.setTotal(total);
             wardProjectile.setColor(resolver.spellContext.getColors());

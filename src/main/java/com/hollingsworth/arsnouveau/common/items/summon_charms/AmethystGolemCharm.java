@@ -24,6 +24,6 @@ public class AmethystGolemCharm extends AbstractSummonCharm {
 
     @Override
     public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
-        return useOnBlock(context, world,pos);
+        return useOnBlock(context, world, pos);
     }
 }

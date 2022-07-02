@@ -21,11 +21,11 @@ public class UntamedFindItemGoal extends Goal {
     boolean itemStuck;
     ItemEntity pathingEntity;
 
-    public List<ItemEntity> nearbyItems(){
+    public List<ItemEntity> nearbyItems() {
         return mobEntity.level.getEntitiesOfClass(ItemEntity.class, new AABB(mobEntity.blockPosition()).inflate(8), itemSelector);
     }
 
-    public UntamedFindItemGoal(Mob mobEntity, Supplier<Boolean> canRun, Predicate<ItemEntity> itemSelector){
+    public UntamedFindItemGoal(Mob mobEntity, Supplier<Boolean> canRun, Predicate<ItemEntity> itemSelector) {
         this.mobEntity = mobEntity;
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.canRun = canRun;
@@ -36,7 +36,7 @@ public class UntamedFindItemGoal extends Goal {
     public void tick() {
         super.tick();
         timeFinding += 1;
-        if(pathingEntity == null || pathingEntity.isRemoved())
+        if (pathingEntity == null || pathingEntity.isRemoved())
             return;
 
         pathToTarget(pathingEntity, 1.2f);
@@ -45,7 +45,7 @@ public class UntamedFindItemGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return timeFinding <= 20 * 30 && !itemStuck  && !(pathingEntity == null || pathingEntity.isRemoved() || pathingEntity.getItem().isEmpty()) && canUse();
+        return timeFinding <= 20 * 30 && !itemStuck && !(pathingEntity == null || pathingEntity.isRemoved() || pathingEntity.getItem().isEmpty()) && canUse();
     }
 
     @Override
@@ -68,9 +68,9 @@ public class UntamedFindItemGoal extends Goal {
 
         List<ItemEntity> list = nearbyItems();
         if (!list.isEmpty() && !itemStuck) {
-            for(ItemEntity item : list){
+            for (ItemEntity item : list) {
                 Path path = mobEntity.getNavigation().createPath(item, 0);
-                if(path != null && path.canReach()) {
+                if (path != null && path.canReach()) {
                     this.pathingEntity = item;
                     pathToTarget(pathingEntity, 1.2f);
                     break;
@@ -78,17 +78,17 @@ public class UntamedFindItemGoal extends Goal {
             }
         }
 
-        if(pathingEntity == null)
+        if (pathingEntity == null)
             itemStuck = true;
     }
 
-    public void pathToTarget(Entity entity, double speed){
+    public void pathToTarget(Entity entity, double speed) {
         Path path = mobEntity.getNavigation().createPath(entity, 0);
-        if(path != null && path.canReach()) {
+        if (path != null && path.canReach()) {
             mobEntity.getNavigation().moveTo(path, speed);
             //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));
         }
-        if(path != null && !path.canReach()) {
+        if (path != null && !path.canReach()) {
             itemStuck = true;
         }
     }

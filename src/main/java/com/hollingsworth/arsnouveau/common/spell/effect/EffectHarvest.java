@@ -34,26 +34,26 @@ public class EffectHarvest extends AbstractEffect {
         super(GlyphLib.EffectHarvestID, "Harvest");
     }
 
-    public void harvestNetherwart(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        if(state.getValue(NetherWartBlock.AGE) != 3)
+    public void harvestNetherwart(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if (state.getValue(NetherWartBlock.AGE) != 3)
             return;
         processAndSpawnDrops(pos, state, world, shooter, spellStats, spellContext);
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
     }
 
-    public void processAndSpawnDrops(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        List<ItemStack> cropDrops = Block.getDrops(state, (ServerLevel)world, pos, world.getBlockEntity(pos));
-        if(spellStats.hasBuff(AugmentFortune.INSTANCE)){
+    public void processAndSpawnDrops(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        List<ItemStack> cropDrops = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
+        if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
             cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerLevel) world, pos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)));
         }
-        for(ItemStack i : cropDrops){
-            if(i.getItem() instanceof BlockItem && ((BlockItem) i.getItem()).getBlock() == state.getBlock()){
+        for (ItemStack i : cropDrops) {
+            if (i.getItem() instanceof BlockItem && ((BlockItem) i.getItem()).getBlock() == state.getBlock()) {
                 i.shrink(1);
                 break;
             }
         }
-        cropDrops.forEach(d ->{
-            if(d.isEmpty() || d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()){
+        cropDrops.forEach(d -> {
+            if (d.isEmpty() || d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()) {
                 return;
             }
             world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), d));
@@ -74,15 +74,15 @@ public class EffectHarvest extends AbstractEffect {
                 return;
             }
 
-            if(!(state.getBlock() instanceof CropBlock))
+            if (!(state.getBlock() instanceof CropBlock))
                 continue;
-            CropBlock cropsBlock = (CropBlock)world.getBlockState(blockpos).getBlock();
+            CropBlock cropsBlock = (CropBlock) world.getBlockState(blockpos).getBlock();
 
-            if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
+            if (!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
                 continue;
 
             processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext);
-            world.setBlockAndUpdate(blockpos,cropsBlock.getStateForAge(1));
+            world.setBlockAndUpdate(blockpos, cropsBlock.getStateForAge(1));
         }
     }
 

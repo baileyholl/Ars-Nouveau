@@ -46,23 +46,23 @@ public class EffectColdSnap extends AbstractEffect {
 
         damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
 
-        for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.position().add(range,range,range), livingEntity.position().subtract(range,range,range)))){
-            if(e.equals(livingEntity) || e.equals(shooter))
+        for (LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
+            if (e.equals(livingEntity) || e.equals(shooter))
                 continue;
-            if(canDamage(e)){
+            if (canDamage(e)) {
                 vec = e.position();
                 damage(vec, world, shooter, spellStats, damage, snareSec, e);
-            }else{
+            } else {
                 e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
             }
         }
     }
 
-    public boolean canDamage(LivingEntity livingEntity){
+    public boolean canDamage(LivingEntity livingEntity) {
         return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN);
     }
 
-    public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity){
+    public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity) {
         EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
         damageSource.setMagic();
         dealDamage(world, shooter, damage, stats, livingEntity, damageSource);

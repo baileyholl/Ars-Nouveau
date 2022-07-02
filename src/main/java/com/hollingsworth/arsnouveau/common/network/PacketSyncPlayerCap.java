@@ -13,26 +13,27 @@ import java.util.function.Supplier;
 
 public class PacketSyncPlayerCap {
     CompoundTag tag;
+
     //Decoder
-    public PacketSyncPlayerCap(FriendlyByteBuf buf){
+    public PacketSyncPlayerCap(FriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
-    public PacketSyncPlayerCap(CompoundTag famCaps){
-       this.tag = famCaps;
+    public PacketSyncPlayerCap(CompoundTag famCaps) {
+        this.tag = famCaps;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
             Player playerEntity = ArsNouveau.proxy.getPlayer();
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(new ANPlayerDataCap());
 
-            if(cap != null){
+            if (cap != null) {
                 cap.deserializeNBT(tag);
             }
         });

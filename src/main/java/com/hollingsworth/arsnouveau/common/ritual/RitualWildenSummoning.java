@@ -21,10 +21,10 @@ public class RitualWildenSummoning extends AbstractRitual {
     @Override
     protected void tick() {
         EntityChimera.spawnPhaseParticles(getPos().above(), getWorld(), 1);
-        if(getWorld().getGameTime() % 20 == 0)
+        if (getWorld().getGameTime() % 20 == 0)
             incrementProgress();
         if (getWorld().getGameTime() % 60 == 0 && !getWorld().isClientSide) {
-            if(!isBossSpawn()){
+            if (!isBossSpawn()) {
                 int wild = rand.nextInt(3);
                 BlockPos summonPos = getPos().above().east(rand.nextInt(3) - rand.nextInt(6)).north(rand.nextInt(3) - rand.nextInt(6));
                 Mob mobEntity = switch (wild) {
@@ -36,8 +36,8 @@ public class RitualWildenSummoning extends AbstractRitual {
                 if (getProgress() >= 15) {
                     setFinished();
                 }
-            }else{
-                if(getProgress() >= 8){
+            } else {
+                if (getProgress() >= 8) {
                     BlockPos.betweenClosedStream(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))
                             .forEach(p -> BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), p, true));
                     EntityChimera chimera = new EntityChimera(getWorld());
@@ -48,11 +48,11 @@ public class RitualWildenSummoning extends AbstractRitual {
         }
     }
 
-    public boolean isBossSpawn(){
+    public boolean isBossSpawn() {
         return didConsumeItem(ItemsRegistry.WILDEN_HORN) && didConsumeItem(ItemsRegistry.WILDEN_WING) && didConsumeItem(ItemsRegistry.WILDEN_SPIKE);
     }
 
-    public void summon(Mob mob, BlockPos pos){
+    public void summon(Mob mob, BlockPos pos) {
         mob.setPos(pos.getX(), pos.getY(), pos.getZ());
         mob.level.addFreshEntity(mob);
     }

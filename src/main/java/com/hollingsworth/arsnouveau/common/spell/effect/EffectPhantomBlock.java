@@ -37,15 +37,15 @@ public class EffectPhantomBlock extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
-        for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
-            pos =  rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());
-            if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
+        for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
+            pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
+            if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
                 continue;
             BlockState state = world.getBlockState(pos);
-            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.MAGE_BLOCK.defaultBlockState(), pos, CollisionContext.of(fakePlayer))){
+            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.MAGE_BLOCK.defaultBlockState(), pos, CollisionContext.of(fakePlayer))) {
 
                 world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.defaultBlockState().setValue(MageBlock.TEMPORARY, !spellStats.hasBuff(AugmentAmplify.INSTANCE)));
-                if(world.getBlockEntity(pos) instanceof MageBlockTile tile) {
+                if (world.getBlockEntity(pos) instanceof MageBlockTile tile) {
                     tile.color = spellContext.getColors();
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);

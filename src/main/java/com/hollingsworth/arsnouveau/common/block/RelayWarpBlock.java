@@ -15,7 +15,7 @@ public class RelayWarpBlock extends Relay {
         super(properties);
     }
 
-    public RelayWarpBlock(){
+    public RelayWarpBlock() {
         super();
     }
 

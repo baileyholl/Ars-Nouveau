@@ -49,7 +49,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
     public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
         this.color = spellContext.getColors().clone();
         lit = true;
-        if(rayTraceResult instanceof BlockHitResult) {
+        if (rayTraceResult instanceof BlockHitResult) {
             BlockState state = world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos());
             world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
             world.sendBlockUpdated(((BlockHitResult) rayTraceResult).getBlockPos(), state,
@@ -65,26 +65,26 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
         RandomSource rand = level.random;
         double xzOffset = 0.15;
         BlockState state = getLevel().getBlockState(getBlockPos());
-        if(!(state.getBlock() instanceof SconceBlock))
+        if (!(state.getBlock() instanceof SconceBlock))
             return;
 
         double centerX = 0.0;
         double centerZ = 0.0;
-        if(state.getValue(ScribesBlock.FACING) == Direction.NORTH){
-            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
-            centerZ = pos.getZ() + 0.8+ ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
+        if (state.getValue(ScribesBlock.FACING) == Direction.NORTH) {
+            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerZ = pos.getZ() + 0.8 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
         }
-        if(state.getValue(ScribesBlock.FACING) == Direction.SOUTH){
-            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
-            centerZ = pos.getZ() + 0.2+ ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
+        if (state.getValue(ScribesBlock.FACING) == Direction.SOUTH) {
+            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerZ = pos.getZ() + 0.2 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
         }
-        if(state.getValue(ScribesBlock.FACING) == Direction.EAST){
-            centerX = pos.getX() + 0.2 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
-            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
+        if (state.getValue(ScribesBlock.FACING) == Direction.EAST) {
+            centerX = pos.getX() + 0.2 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
         }
-        if(state.getValue(ScribesBlock.FACING) == Direction.WEST){
-            centerX = pos.getX() + 0.8 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
-            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset/4, xzOffset/4);
+        if (state.getValue(ScribesBlock.FACING) == Direction.WEST) {
+            centerX = pos.getX() + 0.8 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
         }
 
         ParticleColor nextColor = this.color.nextColor(this.level.random);

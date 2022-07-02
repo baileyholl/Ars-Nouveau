@@ -30,8 +30,8 @@ public class SpellResolveEvent extends Event {
     /**
      * Fired before a spell is resolved. Can be cancelled to stop resolving.
      */
-    public static class Pre extends SpellResolveEvent{
-        public Pre(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver){
+    public static class Pre extends SpellResolveEvent {
+        public Pre(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
             super(world, shooter, result, spell, spellContext, resolver);
         }
 
@@ -44,7 +44,7 @@ public class SpellResolveEvent extends Event {
     /**
      * Fired after a spell has resolved its effects. Cannot be canceled.
      */
-    public static class Post extends SpellResolveEvent{
+    public static class Post extends SpellResolveEvent {
 
         public Post(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
             super(world, shooter, result, spell, spellContext, resolver);

@@ -60,7 +60,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     public int inventoryBackoff;
 
     private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-        if(getNavigation().isInProgress())
+        if (getNavigation().isInProgress())
             return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
@@ -98,28 +98,29 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
     public EntityWixie(Level world, boolean isTamed, BlockPos pos) {
         super(ModEntities.ENTITY_WIXIE_TYPE.get(), world);
         this.cauldronPos = pos;
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         addGoalsAfterConstructor();
     }
+
     public static String[] COLORS = {"white", "green", "blue", "black", "red"};
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             this.entityData.set(COLOR, color.getName());
             player.getMainHandItem().shrink(1);
@@ -131,16 +132,16 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel)level)), 99);
-        if(!level.isClientSide && inventoryBackoff > 0){
+        if (!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
+            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
+        if (!level.isClientSide && inventoryBackoff > 0) {
             inventoryBackoff--;
         }
 
     }
 
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
-    public List<WrappedGoal> getTamedGoals(){
+    public List<WrappedGoal> getTamedGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
         list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
@@ -149,7 +150,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         return list;
     }
 
-    public List<WrappedGoal> getUntamedGoals(){
+    public List<WrappedGoal> getUntamedGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
         list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
@@ -160,16 +161,16 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor(){
-        if(this.level.isClientSide())
+    protected void addGoalsAfterConstructor() {
+        if (this.level.isClientSide())
             return;
 
-        for(WrappedGoal goal : getGoals()){
+        for (WrappedGoal goal : getGoals()) {
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
     }
 
-    public List<WrappedGoal> getGoals(){
+    public List<WrappedGoal> getGoals() {
         return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
@@ -193,6 +194,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
+
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
                 .add(Attributes.MAX_HEALTH, 6.0D)
@@ -202,7 +204,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if(tag.contains("summoner_x"))
+        if (tag.contains("summoner_x"))
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
 
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
@@ -214,7 +216,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if(cauldronPos != null){
+        if (cauldronPos != null) {
             tag.putInt("summoner_x", cauldronPos.getX());
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
@@ -225,32 +227,34 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public void startAnimation(int arg) {
-        if(arg == Animations.CAST.ordinal() && castController != null){
+        if (arg == Animations.CAST.ordinal() && castController != null) {
             castController.markNeedsReload();
             castController.setAnimation(new AnimationBuilder().addAnimation("cast", false));
-        }else if(arg == Animations.SUMMON_ITEM.ordinal() && summonController != null){
+        } else if (arg == Animations.SUMMON_ITEM.ordinal() && summonController != null) {
             summonController.markNeedsReload();
             summonController.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
         }
     }
+
     @Override
     public void die(DamageSource source) {
-        if(!level.isClientSide ){
+        if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
 
         }
         super.die(source);
     }
+
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.isRemoved())
+        if (this.isRemoved())
             return false;
 
-        if(!level.isClientSide ){
+        if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
-            ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
         return true;
@@ -259,12 +263,12 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(EntityWixie.COLOR).toLowerCase();
-        if(color.isEmpty())
+        if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
     }
 
-    public enum Animations{
+    public enum Animations {
         CAST,
         SUMMON_ITEM
     }

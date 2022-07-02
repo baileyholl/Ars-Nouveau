@@ -32,12 +32,12 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public InteractionResult interactAt(Player pPlayer, Vec3 pVec, InteractionHand hand) {
-        if(hand != InteractionHand.MAIN_HAND || pPlayer.getCommandSenderWorld().isClientSide )
+        if (hand != InteractionHand.MAIN_HAND || pPlayer.getCommandSenderWorld().isClientSide)
             return InteractionResult.PASS;
 
         ItemStack stack = pPlayer.getItemInHand(hand);
         String color = Whirlisprig.getColorFromStack(stack);
-        if(color != null && !getColor().equals(color)){
+        if (color != null && !getColor().equals(color)) {
             setColor(color);
             stack.shrink(1);
             return InteractionResult.SUCCESS;
@@ -47,13 +47,13 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public void onCast(SpellCastEvent event) {
-        if(!isAlive())
+        if (!isAlive())
             return;
 
-        if(getOwner() != null && getOwner().equals(event.getEntity())) {
+        if (getOwner() != null && getOwner().equals(event.getEntity())) {
             int discount = 0;
-            for(AbstractSpellPart part : event.spell.recipe){
-                if(SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)){
+            for (AbstractSpellPart part : event.spell.recipe) {
+                if (SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)) {
                     discount += part.getCastingCost() * .5;
                 }
             }
@@ -62,16 +62,16 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     public void eatEvent(LivingEntityUseItemEvent.Finish event) {
-        if(!isAlive())
+        if (!isAlive())
             return;
 
-        if(!event.getEntityLiving().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
-            if(event.getItem().getItem().getFoodProperties() != null && event.getItem().getItem().isEdible()){
+        if (!event.getEntityLiving().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
+            if (event.getItem().getItem().getFoodProperties() != null && event.getItem().getItem().isEdible()) {
                 FoodProperties food = event.getItem().getItem().getFoodProperties();
                 float saturationModifier = food.getSaturationModifier();
                 int nutrition = food.getNutrition();
                 float satAmount = nutrition * saturationModifier * 2.0f;
-                if(event.getEntityLiving() instanceof Player){
+                if (event.getEntityLiving() instanceof Player) {
                     FoodData stats = ((Player) event.getEntityLiving()).getFoodData();
                     stats.saturationLevel += satAmount * .4f;
                 }
@@ -86,9 +86,9 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public PlayState walkPredicate(AnimationEvent event) {
-        if(event.isMoving()){
+        if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
-        }else{
+        } else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         }
         return PlayState.CONTINUE;
@@ -101,6 +101,6 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" +(getColor().isEmpty() ? "summer" : getColor()) + ".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
     }
 }

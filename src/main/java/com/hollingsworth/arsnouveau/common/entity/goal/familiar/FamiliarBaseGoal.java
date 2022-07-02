@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 public class FamiliarBaseGoal extends Goal {
     public FamiliarEntity entity;
 
-    public FamiliarBaseGoal(FamiliarEntity entity){
+    public FamiliarBaseGoal(FamiliarEntity entity) {
         this.entity = entity;
     }
 

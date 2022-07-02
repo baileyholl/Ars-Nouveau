@@ -29,16 +29,16 @@ public class JarOfLight extends ModItem {
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
-        if(worldIn.isClientSide)
+        if (worldIn.isClientSide)
             return;
         CompoundTag tag = stack.getTag();
-        if(tag == null)
+        if (tag == null)
             stack.setTag(new CompoundTag());
         tag = stack.getTag();
-        if(lightExists(tag)){
+        if (lightExists(tag)) {
 
             //This shouldn't happen but catch it anyway
-            if(getLightLocation(tag) == null) {
+            if (getLightLocation(tag) == null) {
                 setLightExists(tag, false);
                 return;
             }
@@ -47,16 +47,16 @@ public class JarOfLight extends ModItem {
 
             BlockState state = worldIn.getBlockState(lightLocation);
             // The previous light block was destroyed.
-            if(!(state.getBlock() instanceof LightBlock)) {
+            if (!(state.getBlock() instanceof LightBlock)) {
                 setLightExists(tag, false);
                 setLightLocation(tag, null);
             }
 
-            if(BlockUtil.distanceFrom(lightLocation, entityIn.blockPosition()) > 7 ){
+            if (BlockUtil.distanceFrom(lightLocation, entityIn.blockPosition()) > 7) {
                 Direction opposite = entityIn.getDirection().getOpposite();
                 BlockPos preferredLightPos = entityIn.blockPosition().relative(opposite, 1);
                 removeLight(worldIn, tag);
-                if(!placeLight(worldIn, preferredLightPos, tag))
+                if (!placeLight(worldIn, preferredLightPos, tag))
                     placeLight(worldIn, preferredLightPos.above(2), tag);
 
             }
@@ -66,15 +66,15 @@ public class JarOfLight extends ModItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
-        if(worldIn.isClientSide)
+        if (worldIn.isClientSide)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 
         CompoundTag tag = playerIn.getItemInHand(handIn).getTag();
 
-        if(tag == null)
+        if (tag == null)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
         //Remove light
-        if(lightExists(tag)){
+        if (lightExists(tag)) {
             removeLight(worldIn, tag);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
         }
@@ -83,8 +83,8 @@ public class JarOfLight extends ModItem {
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
     }
 
-    public boolean placeLight(Level world, BlockPos pos, CompoundTag tag){
-        if(world.getBlockState(pos).getMaterial() == Material.AIR){
+    public boolean placeLight(Level world, BlockPos pos, CompoundTag tag) {
+        if (world.getBlockState(pos).getMaterial() == Material.AIR) {
             world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState());
             setLightExists(tag, true);
             setLightLocation(tag, pos);
@@ -93,33 +93,33 @@ public class JarOfLight extends ModItem {
         return false;
     }
 
-    public void removeLight(Level world, CompoundTag tag){
-        if(getLightLocation(tag) == null)
+    public void removeLight(Level world, CompoundTag tag) {
+        if (getLightLocation(tag) == null)
             return;
 
-        if(world.getBlockState(getLightLocation(tag)).getBlock() instanceof LightBlock)
+        if (world.getBlockState(getLightLocation(tag)).getBlock() instanceof LightBlock)
             world.setBlockAndUpdate(getLightLocation(tag), Blocks.AIR.defaultBlockState());
 
         setLightExists(tag, false);
     }
 
 
-    public boolean lightExists(CompoundTag tag){
+    public boolean lightExists(CompoundTag tag) {
         return tag.contains("light_exists") && tag.getBoolean("light_exists");
     }
 
-    public void setLightExists(CompoundTag tag, boolean lightExists){
+    public void setLightExists(CompoundTag tag, boolean lightExists) {
         tag.putBoolean("light_exists", lightExists);
     }
 
-    public BlockPos getLightLocation(CompoundTag tag){
-        if(!tag.contains("x") || !tag.contains("y") || !tag.contains("z"))
+    public BlockPos getLightLocation(CompoundTag tag) {
+        if (!tag.contains("x") || !tag.contains("y") || !tag.contains("z"))
             return null;
         return new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
     }
 
-    public void setLightLocation(CompoundTag tag, BlockPos pos){
-        if(pos == null){
+    public void setLightLocation(CompoundTag tag, BlockPos pos) {
+        if (pos == null) {
             tag.remove("x");
             tag.remove("y");
             tag.remove("z");

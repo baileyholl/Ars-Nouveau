@@ -36,7 +36,7 @@ import static com.hollingsworth.arsnouveau.api.util.DropDistribution.rand;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ScryEvents {
     @SubscribeEvent
-    public static void playerLoginEvent(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event){
+    public static void playerLoginEvent(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide && event.getPlayer().hasEffect(ModPotions.SCRYING_EFFECT.get())) {
             CompoundTag tag = event.getPlayer().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()), new PacketGetPersistentData(tag));
@@ -44,7 +44,7 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void playerTickEvent(final TickEvent.PlayerTickEvent event){
+    public static void playerTickEvent(final TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player.getEffect(ModPotions.SCRYING_EFFECT.get()) != null && ClientInfo.ticksInGame % 30 == 0) {
 
             List<BlockPos> scryingPos = new ArrayList<>();
@@ -57,13 +57,13 @@ public class ScryEvents {
             Player playerEntity = event.player;
             Level world = playerEntity.level;
             Vec3i scrySize = scryer.getScryingSize();
-            for(BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ())){
-                if(world.isOutsideBuildHeight(p) || world.getBlockState(p).isAir())
+            for (BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ())) {
+                if (world.isOutsideBuildHeight(p) || world.getBlockState(p).isAir())
                     continue;
-                if(scryingPos.size() >= scryer.getScryMax())
+                if (scryingPos.size() >= scryer.getScryMax())
                     break;
 
-                if(scryer.shouldRevealBlock(world.getBlockState(p), p, playerEntity)) {
+                if (scryer.shouldRevealBlock(world.getBlockState(p), p, playerEntity)) {
                     scryingPos.add(new BlockPos(p));
                 }
             }
@@ -72,8 +72,7 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderWorldLast(final RenderLevelLastEvent event)
-    {
+    public static void onRenderWorldLast(final RenderLevelLastEvent event) {
         final Player playerEntity = Minecraft.getInstance().player;
 
         if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT.get()) == null)
@@ -82,15 +81,15 @@ public class ScryEvents {
         ClientLevel world = Minecraft.getInstance().level;
 
         double yView = vector3d.y();
-        if(Minecraft.getInstance().isPaused())
+        if (Minecraft.getInstance().isPaused())
             return;
-        for(BlockPos p : ClientInfo.scryingPositions){
+        for (BlockPos p : ClientInfo.scryingPositions) {
             ParticleColor color = new ParticleColor(
                     rand.nextInt(255),
                     rand.nextInt(255),
                     rand.nextInt(255));
             BlockPos renderPos = new BlockPos(p);
-            if(Math.abs(yView - p.getY()) >= 30){
+            if (Math.abs(yView - p.getY()) >= 30) {
                 renderPos = new BlockPos(p.getX(), p.getY() > yView ? yView + 20 : yView - 20, p.getZ());
                 color = new ParticleColor(
                         rand.nextInt(30),
@@ -98,9 +97,9 @@ public class ScryEvents {
                         rand.nextInt(50));
             }
 
-            if(Math.abs(yView - p.getY()) >= 60){
+            if (Math.abs(yView - p.getY()) >= 60) {
                 renderPos = new BlockPos(p.getX(), p.getY() > yView ? yView + 20 : yView - 20, p.getZ());
-                color =  new ParticleColor(
+                color = new ParticleColor(
                         rand.nextInt(50),
                         rand.nextInt(50),
                         rand.nextInt(255));

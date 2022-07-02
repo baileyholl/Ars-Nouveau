@@ -57,16 +57,16 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         this.spell = spell;
     }
 
-    public void castSpell(Entity entity){
-        if(entity == null)
+    public void castSpell(Entity entity) {
+        if (entity == null)
             return;
-        if(!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.recipe.get(0) instanceof MethodTouch))
+        if (!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.recipe.get(0) instanceof MethodTouch))
             return;
         if (!this.isTemporary && this.disabled) return;
         try {
 
             Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
-            playerEntity = playerEntity == null ?  ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
+            playerEntity = playerEntity == null ? ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
@@ -77,7 +77,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             ticksUntilCharge = 20 * 2;
-        }catch (Exception e){
+        } catch (Exception e) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.rune.error"));
             e.printStackTrace();
             level.destroyBlock(worldPosition, false);
@@ -92,7 +92,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         tag.putBoolean("redstone", disabled);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
-        if(uuid != null)
+        if (uuid != null)
             tag.putUUID("uuid", uuid);
         tag.putBoolean("sensitive", isSensitive);
     }
@@ -104,7 +104,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         this.disabled = tag.getBoolean("redstone");
         this.isTemporary = tag.getBoolean("temp");
         this.ticksUntilCharge = tag.getInt("cooldown");
-        if(tag.contains("uuid"))
+        if (tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
         this.isSensitive = tag.getBoolean("sensitive");
         super.load(tag);
@@ -113,25 +113,25 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     @Override
     public void tick() {
 
-        if(level == null)
+        if (level == null)
             return;
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             if (ticksUntilCharge > 0) {
                 ticksUntilCharge -= 1;
                 return;
             }
         }
-        if(this.isCharged)
+        if (this.isCharged)
             return;
-        if(!level.isClientSide && this.isTemporary){
+        if (!level.isClientSide && this.isTemporary) {
             level.destroyBlock(this.worldPosition, false);
         }
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             BlockPos fromPos = SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 10, 100);
-            if(fromPos != null) {
+            if (fromPos != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
-            }else
+            } else
                 ticksUntilCharge = 20 * 3;
         }
     }
@@ -139,9 +139,9 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     @Override
     public List<IItemHandler> getInventory() {
         // if sensitive, return the players inventory
-        if(isSensitive){
+        if (isSensitive) {
             Player player = level.getPlayerByUUID(uuid);
-            if(player != null) {
+            if (player != null) {
                 List<IItemHandler> handlers = new ArrayList<>();
                 handlers.add(new PlayerInvWrapper(player.getInventory()));
                 return handlers;
@@ -154,9 +154,9 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     @Override
     public @Nonnull ItemStack onPickup(ItemStack stack) {
         // If sensitive, add the stack to the player inventory
-        if(isSensitive) {
+        if (isSensitive) {
             Player player = level.getPlayerByUUID(uuid);
-            if(player != null) {
+            if (player != null) {
                 player.inventory.add(stack);
             }
             return stack;
@@ -168,7 +168,9 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public void registerControllers(AnimationData data) {
 
     }
+
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

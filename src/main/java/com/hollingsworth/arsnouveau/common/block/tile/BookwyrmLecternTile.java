@@ -63,65 +63,65 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
         }
     }
 
-    public void changeTier(Player entity){
-        if(tier == 1 || tier == 0){
+    public void changeTier(Player entity) {
+        if (tier == 1 || tier == 0) {
             tier = 2;
             entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "5 x 5"));
-        }else if(tier == 2){
+        } else if (tier == 2) {
             tier = 3;
             entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "9 x 9"));
-        }else if(tier == 3){
+        } else if (tier == 3) {
             tier = 4;
             entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "13 x 13"));
-        }else if(tier == 4){
+        } else if (tier == 4) {
             tier = 5;
             entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.set", "17 x 17"));
-        }else if(tier == 5){
+        } else if (tier == 5) {
             tier = 1;
             entity.sendSystemMessage(Component.translatable("ars_nouveau.bookwyrm_lectern.adjacent"));
         }
     }
 
-    public boolean enoughMana(@Nullable Spell spell){
-        if(spell == null)
+    public boolean enoughMana(@Nullable Spell spell) {
+        if (spell == null)
             return false;
         return SourceUtil.hasSourceNearby(worldPosition, level, 7, spell.getDiscountedCost() / 4);
     }
 
-    public boolean removeManaAround(@Nullable Spell spell){
-        if(spell == null)
+    public boolean removeManaAround(@Nullable Spell spell) {
+        if (spell == null)
             return false;
         return SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, spell.getDiscountedCost() / 4) != null;
     }
 
-    public @Nullable BlockPos getNextTaskLoc(@Nullable Spell spell, EntityBookwyrm caster){
-        if(isOff || spell == null)
+    public @Nullable BlockPos getNextTaskLoc(@Nullable Spell spell, EntityBookwyrm caster) {
+        if (isOff || spell == null)
             return null;
 
         List<BlockPos> posList = getTargets();
-        if(posList == null || posList.isEmpty()) {
+        if (posList == null || posList.isEmpty()) {
             return null;
         }
         BlockPos taskPos = null;
         boolean wouldSucceed = false;
-        for(int i = 0; i < posList.size(); i++){
-            if(taskIndex >= posList.size()){
+        for (int i = 0; i < posList.size(); i++) {
+            if (taskIndex >= posList.size()) {
                 taskIndex = 0;
             }
             taskPos = posList.get(taskIndex);
             taskIndex += 1;
 
             // If the block above is not air
-            if (level.getBlockState(taskPos.above()).getMaterial() != Material.AIR && !isTreeBlock(level.getBlockState(taskPos))){
-                for(int j = 1; j < 4; j++) {
-                    if (level.getBlockState(taskPos.above(i)).getMaterial() != Material.AIR || isTreeBlock(level.getBlockState(taskPos.above()))){
+            if (level.getBlockState(taskPos.above()).getMaterial() != Material.AIR && !isTreeBlock(level.getBlockState(taskPos))) {
+                for (int j = 1; j < 4; j++) {
+                    if (level.getBlockState(taskPos.above(i)).getMaterial() != Material.AIR || isTreeBlock(level.getBlockState(taskPos.above()))) {
                         taskPos = taskPos.above(i);
                         break;
                     }
                 }
             }
             Block block = level.getBlockState(taskPos).getBlock();
-            if(block instanceof BookwyrmLectern || block instanceof BaseEntityBlock || block instanceof SourceBlock || block instanceof Container)
+            if (block instanceof BookwyrmLectern || block instanceof BaseEntityBlock || block instanceof SourceBlock || block instanceof Container)
                 continue;
 
 
@@ -131,34 +131,34 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
         return wouldSucceed ? taskPos : null;
     }
 
-    public List<BlockPos> getTargets(){
+    public List<BlockPos> getTargets() {
         List<BlockPos> positions = new ArrayList<>();
-        if(tier == 1){
+        if (tier == 1) {
             positions.add(getBlockPos().north().below());
             positions.add(getBlockPos().south().below());
             positions.add(getBlockPos().east().below());
             positions.add(getBlockPos().west().below());
         }
-        if(tier == 2){
+        if (tier == 2) {
             BlockPos.betweenClosedStream(getBlockPos().north(2).east(2).below(1), getBlockPos().south(2).west(2).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
-        if(tier == 3){
+        if (tier == 3) {
             BlockPos.betweenClosedStream(getBlockPos().north(4).east(4).below(1), getBlockPos().south(4).west(4).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
-        if(tier == 4){
+        if (tier == 4) {
             BlockPos.betweenClosedStream(getBlockPos().north(6).east(6).below(1), getBlockPos().south(6).west(6).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
-        if(tier == 5){
+        if (tier == 5) {
             BlockPos.betweenClosedStream(getBlockPos().north(8).east(8).below(1), getBlockPos().south(8).west(8).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
         return positions;
     }
 
-    public ItemStack insertItem(ItemStack stack){
+    public ItemStack insertItem(ItemStack stack) {
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 
-    public ItemStack getItem(Item item){
+    public ItemStack getItem(Item item) {
         return BlockUtil.getItemAdjacent(level, worldPosition, stack -> stack.getItem() == item);
     }
 

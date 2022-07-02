@@ -8,8 +8,9 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class AmethystGolemModel extends AnimatedGeoModel<AmethystGolem> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/amethyst_golem.png");
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/amethyst_golem.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID , "animations/amethyst_golem_animations.json");
+    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/amethyst_golem.geo.json");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/amethyst_golem_animations.json");
+
     @Override
     public ResourceLocation getModelResource(AmethystGolem drygmy) {
         return NORMAL_MODEL;

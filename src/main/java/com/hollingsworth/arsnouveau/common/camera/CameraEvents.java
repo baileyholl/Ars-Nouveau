@@ -22,6 +22,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
 // https://github.com/Geforce132/SecurityCraft/blob/fbef0c9d3f5959f09f2f0a1a351a9a86604566ed/src/main/java/net/geforcemods/securitycraft/SCEventHandler.java
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class CameraEvents {

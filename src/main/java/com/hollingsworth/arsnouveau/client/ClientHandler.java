@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class ClientHandler {
     @SubscribeEvent
-    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
@@ -126,7 +126,9 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.FALLING_BLOCK.get(), EnchantedFallingBlockRenderer::new);
 
     }
+
     public static IIngameOverlay cameraOverlay;
+
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
 //
@@ -170,7 +172,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_OCULUS, RenderType.cutout());
 
         evt.enqueueWork(() -> {
-            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(),new ResourceLocation(ArsNouveau.MODID,"blocking"), (item, resourceLocation, livingEntity, arg4) -> {
+            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
             });
             ItemProperties.register(ItemsRegistry.DOWSING_ROD.get(), new ResourceLocation(ArsNouveau.MODID, "uses"), new ClampedItemPropertyFunction() {
@@ -228,7 +230,7 @@ public class ClientHandler {
     }
 
     public static Component localize(String key, Object... params) {
-        for(int i = 0; i < params.length; ++i) {
+        for (int i = 0; i < params.length; ++i) {
             Object parameter = params[i]; //to avoid ij dataflow warning
             if (parameter instanceof Component component && component.getContents() instanceof TranslatableContents translatableContents)
                 params[i] = localize(translatableContents.getKey(), translatableContents.getArgs());

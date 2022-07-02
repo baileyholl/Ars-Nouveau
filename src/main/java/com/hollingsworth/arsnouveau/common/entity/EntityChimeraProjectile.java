@@ -25,6 +25,7 @@ import java.util.Collection;
 
 public class EntityChimeraProjectile extends AbstractArrow implements IAnimatable {
     int groundMax;
+
     public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, Level p_i48547_8_) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), p_i48547_2_, p_i48547_4_, p_i48547_6_, p_i48547_8_);
     }
@@ -33,7 +34,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), p_i48548_2_, p_i48548_3_);
     }
 
-    public EntityChimeraProjectile(Level world){
+    public EntityChimeraProjectile(Level world) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE.get(), world);
     }
 
@@ -46,7 +47,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         super.tick();
 //        if(groundMax == 0)
 //            groundMax = 60 + random.nextInt(60);
-        if(!level.isClientSide && this.inGroundTime >= 1){
+        if (!level.isClientSide && this.inGroundTime >= 1) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -79,7 +80,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         } else {
             damagesource = DamageSource.MAGIC;
             if (entity1 instanceof LivingEntity) {
-                ((LivingEntity)entity1).setLastHurtMob(entity);
+                ((LivingEntity) entity1).setLastHurtMob(entity);
             }
         }
 
@@ -115,7 +116,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
     @Override
     protected void doPostHurtEffects(LivingEntity entity) {
         super.doPostHurtEffects(entity);
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
 
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
@@ -146,6 +147,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

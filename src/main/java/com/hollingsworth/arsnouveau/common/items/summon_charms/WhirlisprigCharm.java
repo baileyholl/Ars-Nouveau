@@ -20,7 +20,7 @@ public class WhirlisprigCharm extends AbstractSummonCharm {
 
     @Override
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
-        if(world.getBlockState(pos).is(BlockTags.FLOWERS)) {
+        if (world.getBlockState(pos).is(BlockTags.FLOWERS)) {
             world.setBlockAndUpdate(pos, BlockRegistry.WHIRLISPRIG_FLOWER.defaultBlockState());
             return InteractionResult.SUCCESS;
         }
@@ -35,8 +35,7 @@ public class WhirlisprigCharm extends AbstractSummonCharm {
             world.addFreshEntity(whirlisprig);
             whirlisprig.flowerPos = new BlockPos(pos);
             return InteractionResult.SUCCESS;
-        }
-        else return InteractionResult.PASS;
+        } else return InteractionResult.PASS;
     }
 
 }

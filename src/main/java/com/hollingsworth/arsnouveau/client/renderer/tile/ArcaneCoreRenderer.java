@@ -17,7 +17,7 @@ public class ArcaneCoreRenderer extends GeoBlockRenderer<ArcaneCoreTile> {
         super(rendererDispatcherIn, modelProvider);
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

@@ -63,7 +63,7 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
 
     public void tick() {
         LivingEntity livingentity = this.mob.getTarget();
-        if(livingentity == null)
+        if (livingentity == null)
             return;
 
 
@@ -79,7 +79,7 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
             --this.seeTime;
         }
 
-        if (!(d0 > (double)this.attackRadiusSqr) && this.seeTime >= 20) {
+        if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 20) {
             this.mob.getNavigation().stop();
             ++this.strafingTime;
         } else {
@@ -88,11 +88,11 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
         }
 
         if (this.strafingTime >= 20) {
-            if ((double)this.mob.getRandom().nextFloat() < 0.3D) {
+            if ((double) this.mob.getRandom().nextFloat() < 0.3D) {
                 this.strafingClockwise = !this.strafingClockwise;
             }
 
-            if ((double)this.mob.getRandom().nextFloat() < 0.3D) {
+            if ((double) this.mob.getRandom().nextFloat() < 0.3D) {
                 this.strafingBackwards = !this.strafingBackwards;
             }
 
@@ -100,9 +100,9 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
         }
 
         if (this.strafingTime > -1) {
-            if (d0 > (double)(this.attackRadiusSqr * 0.75F)) {
+            if (d0 > (double) (this.attackRadiusSqr * 0.75F)) {
                 this.strafingBackwards = false;
-            } else if (d0 < (double)(this.attackRadiusSqr * 0.25F)) {
+            } else if (d0 < (double) (this.attackRadiusSqr * 0.25F)) {
                 this.strafingBackwards = true;
             }
 
@@ -111,13 +111,13 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
         } else {
             this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
         }
-        if(this.seeTime >= 40 && !this.hasAnimated){
+        if (this.seeTime >= 40 && !this.hasAnimated) {
             this.hasAnimated = true;
             Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), animId));
         }
-        if(this.hasAnimated){
+        if (this.hasAnimated) {
             animatedTicks++;
-            if(animatedTicks >= delayTicks){
+            if (animatedTicks >= delayTicks) {
                 mob.performRangedAttack(mob.getTarget(), 1);
                 this.done = true;
             }

@@ -22,8 +22,10 @@ import net.minecraftforge.fml.common.Mod;
 
 public class CapabilityRegistry {
 
-    public static final Capability<IManaCap> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IPlayerCap> PLAYER_DATA_CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IManaCap> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
+    public static final Capability<IPlayerCap> PLAYER_DATA_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
 
     public static final Direction DEFAULT_FACING = null;
@@ -35,8 +37,8 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<IManaCap> getMana(final LivingEntity entity){
-        if(entity == null)
+    public static LazyOptional<IManaCap> getMana(final LivingEntity entity) {
+        if (entity == null)
             return LazyOptional.empty();
         return entity.getCapability(MANA_CAPABILITY);
     }
@@ -47,11 +49,12 @@ public class CapabilityRegistry {
      * @param entity The entity
      * @return A lazy optional containing the IMana, if any
      */
-    public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity){
-        if(entity == null)
+    public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity) {
+        if (entity == null)
             return LazyOptional.empty();
         return entity.getCapability(PLAYER_DATA_CAP);
     }
+
     /**
      * Event handler for the {@link IManaCap} capability.
      */
@@ -66,7 +69,7 @@ public class CapabilityRegistry {
          */
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
-            if(event.getObject() instanceof Player) {
+            if (event.getObject() instanceof Player) {
                 ManaCapAttacher.attach(event);
                 ANPlayerCapAttacher.attach(event);
             }
@@ -77,6 +80,7 @@ public class CapabilityRegistry {
             event.register(IManaCap.class);
             event.register(IPlayerCap.class);
         }
+
         /**
          * Copy the player's mana when they respawn after dying or returning from the end.
          *
@@ -93,7 +97,7 @@ public class CapabilityRegistry {
                 newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
             }));
 
-            getPlayerDataCap(oldPlayer).ifPresent(oldPlayerCap ->{
+            getPlayerDataCap(oldPlayer).ifPresent(oldPlayerCap -> {
                 IPlayerCap playerDataCap = getPlayerDataCap(event.getPlayer()).orElse(new ANPlayerDataCap());
                 CompoundTag tag = oldPlayerCap.serializeNBT();
                 playerDataCap.deserializeNBT(tag);
@@ -105,14 +109,14 @@ public class CapabilityRegistry {
 
         @SubscribeEvent
         public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-            if(event.getPlayer() instanceof ServerPlayer){
+            if (event.getPlayer() instanceof ServerPlayer) {
                 syncPlayerCap(event.getPlayer());
             }
         }
 
         @SubscribeEvent
         public static void respawnEvent(PlayerEvent.PlayerRespawnEvent event) {
-            if(event.getPlayer() instanceof ServerPlayer) {
+            if (event.getPlayer() instanceof ServerPlayer) {
                 syncPlayerCap(event.getPlayer());
             }
         }
@@ -132,7 +136,7 @@ public class CapabilityRegistry {
             }
         }
 
-        public static void syncPlayerCap(Player player){
+        public static void syncPlayerCap(Player player) {
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
             CompoundTag tag = cap.serializeNBT();
             Networking.sendToPlayer(new PacketSyncPlayerCap(tag), player);

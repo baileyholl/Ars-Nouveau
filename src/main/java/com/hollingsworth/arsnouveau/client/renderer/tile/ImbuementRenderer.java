@@ -43,7 +43,7 @@ public class ImbuementRenderer extends GeoBlockRenderer<ImbuementTile> {
             tileEntityIn.entity = new ItemEntity(tile.getLevel(), x, y, z, tileEntityIn.stack);
 
         }
-        if(tileEntityIn.entity != null) {
+        if (tileEntityIn.entity != null) {
             ItemEntity entityItem = tileEntityIn.entity;
             tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
             entityItem.setYHeadRot(tileEntityIn.frames);
@@ -51,7 +51,7 @@ public class ImbuementRenderer extends GeoBlockRenderer<ImbuementTile> {
             matrixStack.pushPose();
             matrixStack.scale(0.75f, 0.75f, 0.75f);
             float offset = 0.5f * 0.75f + 0.31f;
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, offset,0.3,offset, entityItem.yRot, 0,matrixStack, iRenderTypeBuffer, lightIn);
+            Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, offset, 0.3, offset, entityItem.yRot, 0, matrixStack, iRenderTypeBuffer, lightIn);
             matrixStack.popPose();
         }
     }

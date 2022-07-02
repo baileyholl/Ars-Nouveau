@@ -11,17 +11,17 @@ import java.util.*;
 /**
  * A type of spell validator that validates a spell as a set of individual <em>phrases</em> where a spell phrase is any
  * action (cast form or effect) modified by a series of augments.
- *
+ * <p>
  * Implementations of this class should be warned that positions may be <code>null</code>, which occurs while crafting
  * spells if there are gaps in the UI.
- *
+ * <p>
  * The augment position map will exclude empty slots.
  */
 public abstract class SpellPhraseValidator extends AbstractSpellValidator {
     /**
      * Implemented to define the per-phrase validation logic.
      *
-     * @param phrase the spell phrase to validate
+     * @param phrase           the spell phrase to validate
      * @param validationErrors a list the validator may add new errors to. Like <code>context</code>, this list is
      *                         private to the specific validator, allowing steps to remove or change existing errors if
      *                         desired.

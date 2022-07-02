@@ -31,17 +31,17 @@ import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class EnchantmentRecipe extends EnchantingApparatusRecipe{
+public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     public Enchantment enchantment;
     public int enchantLevel;
 
 
-    public EnchantmentRecipe(List<Ingredient> pedestalItems, Enchantment enchantment, int level, int manaCost){
+    public EnchantmentRecipe(List<Ingredient> pedestalItems, Enchantment enchantment, int level, int manaCost) {
         this.pedestalItems = pedestalItems;
         this.enchantment = enchantment;
         this.enchantLevel = level;
         this.sourceCost = manaCost;
-        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(enchantment).getPath() +"_" + level);
+        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(enchantment).getPath() + "_" + level);
     }
 
     @Override
@@ -49,19 +49,19 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTMENT_RECIPE_ID));
     }
 
-    public boolean doesReagentMatch(ItemStack stack, Player playerEntity){
-        if(stack.isEmpty())
+    public boolean doesReagentMatch(ItemStack stack, Player playerEntity) {
+        if (stack.isEmpty())
             return false;
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
         int level = enchantments.getOrDefault(enchantment, 0);
         Collection<Enchantment> enchantList = EnchantmentHelper.getEnchantments(stack).keySet();
         enchantList.remove(enchantment);
-        if(stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.canEnchant(stack)){
+        if (stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.canEnchant(stack)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.enchanting.incompatible"));
             return false;
         }
 
-        if(!EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)){
+        if (!EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.enchanting.incompatible"));
             return false;
         }
@@ -117,7 +117,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         jsonobject.addProperty("sourceCost", getSourceCost());
 
         JsonArray pedestalArr = new JsonArray();
-        for(Ingredient i : this.pedestalItems){
+        for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
             object.add("item", i.toJson());
             pedestalArr.add(object);
@@ -139,14 +139,14 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
             for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
-                if(GsonHelper.isArrayNode(obj, "item")){
+                if (GsonHelper.isArrayNode(obj, "item")) {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                }else{
+                } else {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 }
                 stacks.add(input);
             }
-            return new EnchantmentRecipe( stacks,enchantment,level, manaCost);
+            return new EnchantmentRecipe(stacks, enchantment, level, manaCost);
         }
 
         @Nullable
@@ -158,8 +158,10 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
             int manaCost = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
+            for (int i = 0; i < length; i++) {
+                try {
+                    stacks.add(Ingredient.fromNetwork(buffer));
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }
@@ -173,7 +175,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
             buf.writeUtf(getRegistryName(recipe.enchantment).toString());
             buf.writeInt(recipe.enchantLevel);
             buf.writeInt(recipe.getSourceCost());
-            for(Ingredient i : recipe.pedestalItems){
+            for (Ingredient i : recipe.pedestalItems) {
                 i.toNetwork(buf);
             }
         }

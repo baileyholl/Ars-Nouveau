@@ -27,6 +27,7 @@ public class RitualBrazierBlock extends TickableModBlock {
     public RitualBrazierBlock() {
         super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
     }
+
     public static final Property<Boolean> LIT = BooleanProperty.create("lit");
 
     @Override

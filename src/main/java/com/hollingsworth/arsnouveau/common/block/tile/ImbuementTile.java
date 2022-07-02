@@ -60,36 +60,36 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void tick() {
-        if(level.isClientSide) {
+        if (level.isClientSide) {
 
             int baseAge = draining ? 20 : 40;
             int randBound = draining ? 3 : 6;
             int numParticles = draining ? 2 : 1;
-            float scaleAge = draining ?(float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
-            if(level.random.nextInt( randBound)  == 0 && !Minecraft.getInstance().isPaused()){
-                for(int i =0; i< numParticles; i++){
+            float scaleAge = draining ? (float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
+            if (level.random.nextInt(randBound) == 0 && !Minecraft.getInstance().isPaused()) {
+                for (int i = 0; i < numParticles; i++) {
                     Vec3 particlePos = new Vec3(getX(), getY(), getZ()).add(0.5, 0.5, 0.5);
                     particlePos = particlePos.add(ParticleUtil.pointInSphere());
-                    level.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge + level.random.nextInt(20)) ,
+                    level.addParticle(ParticleLineData.createData(new ParticleColor(255, 25, 180), scaleAge, baseAge + level.random.nextInt(20)),
                             particlePos.x(), particlePos.y(), particlePos.z(),
-                            getX() + 0.5  , getY() +0.5 , getZ()+ 0.5);
+                            getX() + 0.5, getY() + 0.5, getZ() + 0.5);
                 }
             }
             return;
         }
         this.hasRecipe = recipe != null;
-        if(backoff > 0) {
+        if (backoff > 0) {
             backoff--;
             return;
         }
-        if(stack.isEmpty()) {
+        if (stack.isEmpty()) {
             return;
         }
-        if(craftTicks > 0)
+        if (craftTicks > 0)
             craftTicks--;
 
         // Restore the recipe on world restart
-        if(recipe == null){
+        if (recipe == null) {
             for (ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())) {
                 if (recipe.matches(this, level)) {
                     this.recipe = recipe;
@@ -99,10 +99,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             }
         }
 
-        if(recipe == null || !recipe.matches(this, level)) {
+        if (recipe == null || !recipe.matches(this, level)) {
             backoff = 20;
             recipe = null;
-            if(this.draining) {
+            if (this.draining) {
                 this.draining = false;
                 update();
             }
@@ -112,24 +112,24 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         int transferRate = 200;
 
 
-        if(this.level.getGameTime() % 20 == 0 && this.getSource() < recipe.source){
-            if(!canAcceptSource(Math.min(200, recipe.source)))
+        if (this.level.getGameTime() % 20 == 0 && this.getSource() < recipe.source) {
+            if (!canAcceptSource(Math.min(200, recipe.source)))
                 return;
 
             BlockPos takePos = SourceUtil.takeSourceNearby(worldPosition, level, 2, Math.min(200, recipe.source));
-            if(takePos != null){
+            if (takePos != null) {
                 this.addSource(transferRate);
-                EntityFlyingItem item = new EntityFlyingItem(level,takePos.above(), worldPosition, 255, 50, 80)
+                EntityFlyingItem item = new EntityFlyingItem(level, takePos.above(), worldPosition, 255, 50, 80)
                         .withNoTouch();
                 item.setDistanceAdjust(2f);
                 level.addFreshEntity(item);
-                if(!draining) {
+                if (!draining) {
                     draining = true;
                     update();
                 }
-            }else{
+            } else {
                 this.addSource(10);
-                if(draining){
+                if (draining) {
                     draining = false;
                     update();
                 }
@@ -137,7 +137,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         }
 
-        if(this.getSource() >= recipe.source && craftTicks <= 0){
+        if (this.getSource() >= recipe.source && craftTicks <= 0) {
             this.setItem(0, recipe.output.copy());
             this.addSource(-recipe.source);
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleUtil.defaultParticleColorWrapper());
@@ -147,7 +147,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void load(CompoundTag tag) {
-        stack = ItemStack.of((CompoundTag)tag.get("itemStack"));
+        stack = ItemStack.of((CompoundTag) tag.get("itemStack"));
         draining = tag.getBoolean("draining");
         this.hasRecipe = tag.getBoolean("hasRecipe");
         this.craftTicks = tag.getInt("craftTicks");
@@ -157,7 +157,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if(stack != null) {
+        if (stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             tag.put("itemStack", reagentTag);
@@ -184,7 +184,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        if(stack.isEmpty() || !this.stack.isEmpty())
+        if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
         ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
@@ -253,8 +253,8 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1,  this::idlePredicate));
-        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 1,  this::slowCraftPredicate));
+        data.addAnimationController(new AnimationController(this, "controller", 1, this::idlePredicate));
+        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 1, this::slowCraftPredicate));
     }
 
     private PlayState slowCraftPredicate(AnimationEvent animationEvent) {
@@ -268,15 +268,16 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
     }
 
-    public List<ItemStack> getPedestalItems(){
+    public List<ItemStack> getPedestalItems() {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        for(BlockPos p : BlockPos.betweenClosed(this.getBlockPos().offset(1, -1, 1), this.getBlockPos().offset(-1, 1, -1))){
-            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile  && !pedestalTile.stack.isEmpty()) {
+        for (BlockPos p : BlockPos.betweenClosed(this.getBlockPos().offset(1, -1, 1), this.getBlockPos().offset(-1, 1, -1))) {
+            if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && !pedestalTile.stack.isEmpty()) {
                 pedestalItems.add(pedestalTile.stack);
             }
         }

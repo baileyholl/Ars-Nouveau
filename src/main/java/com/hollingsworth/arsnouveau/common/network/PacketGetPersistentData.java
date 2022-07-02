@@ -10,24 +10,25 @@ import java.util.function.Supplier;
 public class PacketGetPersistentData {
 
     public CompoundTag tag;
+
     //Decoder
-    public PacketGetPersistentData(FriendlyByteBuf buf){
+    public PacketGetPersistentData(FriendlyByteBuf buf) {
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(tag);
     }
 
-    public PacketGetPersistentData(CompoundTag tag){
+    public PacketGetPersistentData(CompoundTag tag) {
         this.tag = tag;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
             ClientInfo.persistentData = tag;
-        } );
+        });
         ctx.get().setPacketHandled(true);
     }
 }

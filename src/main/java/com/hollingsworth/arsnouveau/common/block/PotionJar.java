@@ -61,29 +61,29 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(worldIn.isClientSide)
+        if (worldIn.isClientSide)
             return InteractionResult.SUCCESS;
 
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
-        if(tile == null)
+        if (tile == null)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(handIn);
         Potion potion = PotionUtils.getPotion(stack);
 
-        if(stack.getItem() == Items.POTION && potion != Potions.EMPTY ) {
+        if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
             if (tile.getAmount() == 0) {
 
                 tile.setPotion(stack);
                 tile.addAmount(100);
-                if(!player.isCreative()) {
+                if (!player.isCreative()) {
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
 
-            }else if(tile.isMixEqual(stack) && tile.getCurrentFill() < tile.getMaxFill()){
+            } else if (tile.isMixEqual(stack) && tile.getCurrentFill() < tile.getMaxFill()) {
 
                 tile.addAmount(100);
-                if(!player.isCreative()) {
+                if (!player.isCreative()) {
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
@@ -92,7 +92,7 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
             worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
         }
 
-        if(stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100){
+        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, tile.getPotion());
             PotionUtils.setCustomEffects(potionStack, tile.getCustomEffects());
@@ -124,10 +124,10 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if(stack.getTag() == null)
+        if (stack.getTag() == null)
             return;
         int mana = stack.getTag().getCompound("BlockEntityTag").getInt("amount");
-        tooltip.add( Component.literal((mana*100) / 10000 + "% full"));
+        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
         ItemStack stack1 = new ItemStack(Items.POTION);
         stack1.setTag(stack.getTag().getCompound("BlockEntityTag"));
         PotionUtils.addPotionTooltip(stack1, tooltip, 1.0F);

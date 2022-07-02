@@ -30,9 +30,9 @@ public class BasicTurretRenderer extends GeoBlockRenderer<BasicSpellTurretTile> 
     public void render(GeoModel model, BasicSpellTurretTile animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         matrixStackIn.pushPose();
         Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);
-        if(direction == Direction.UP){
+        if (direction == Direction.UP) {
             matrixStackIn.translate(0, -0.5, -0.5);
-        }else if(direction == Direction.DOWN){
+        } else if (direction == Direction.DOWN) {
             matrixStackIn.translate(0, -0.5, 0.5);
         }
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
@@ -40,7 +40,7 @@ public class BasicTurretRenderer extends GeoBlockRenderer<BasicSpellTurretTile> 
         matrixStackIn.popPose();
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

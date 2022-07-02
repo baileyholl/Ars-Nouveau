@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public class FamiliarFollowGoal extends FamiliarBaseGoal{
+public class FamiliarFollowGoal extends FamiliarBaseGoal {
 
 
     private LivingEntity theOwner;
@@ -34,7 +34,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
             return false;
         } else if (entity.level.dimension() != player.level.dimension()) {
             return false;
-        }else if (entity.distanceToSqr(player) < (minDist * minDist)) {
+        } else if (entity.distanceToSqr(player) < (minDist * minDist)) {
             return false;
         }
         theOwner = player;
@@ -44,7 +44,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
     @Override
     public boolean canContinueToUse() {
         boolean stillRunning = !entity.getNavigation().isDone() && entity.distanceToSqr(theOwner) > (maxDist * maxDist) && theOwner.level.dimension() == entity.level.dimension();
-        if(!stillRunning)
+        if (!stillRunning)
             entity.getNavigation().stop();
         return stillRunning;
     }
@@ -62,7 +62,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
         if (!entity.isPassenger()) {
             if (entity.distanceToSqr(theOwner) >= 144.0 && entity.canTeleport()) {
                 BlockPos targetPos = theOwner.blockPosition();
-                teleportTo(entity, targetPos.getX(), targetPos.getY() , targetPos.getZ());
+                teleportTo(entity, targetPos.getX(), targetPos.getY(), targetPos.getZ());
             } else {
                 entity.getNavigation().moveTo(theOwner, moveSpeed);
             }
@@ -75,7 +75,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
     }
 
     private void teleportTo(Entity target, int x, int y, int z) {
-        entity.setPos(x,y + 0.5,z);
+        entity.setPos(x, y + 0.5, z);
         entity.getNavigation().stop();
     }
 }

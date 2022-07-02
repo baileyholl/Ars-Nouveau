@@ -45,22 +45,22 @@ public class EffectConjureWater extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         double aoeBuff = spellStats.getAoeMultiplier();
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, aoeBuff, spellStats.getBuffCount(AugmentPierce.INSTANCE));
-        if(world.dimensionType().ultraWarm())
+        if (world.dimensionType().ultraWarm())
             return;
-        for(BlockPos pos1 : posList) {
-            if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
+        for (BlockPos pos1 : posList) {
+            if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
-            BlockState hitState =  world.getBlockState(pos1);
-            if(hitState.getBlock() instanceof SimpleWaterloggedBlock waterloggedBlock && waterloggedBlock.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)){
+            BlockState hitState = world.getBlockState(pos1);
+            if (hitState.getBlock() instanceof SimpleWaterloggedBlock waterloggedBlock && waterloggedBlock.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
                 waterloggedBlock.placeLiquid(world, pos1, hitState, Fluids.WATER.getSource(true));
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                        new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(),pos1, false
+                        new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false
                 ), world, shooter, spellContext, resolver);
-            }else if(world.getBlockState(pos1.relative(rayTraceResult.getDirection())).canBeReplaced(Fluids.WATER)){
+            } else if (world.getBlockState(pos1.relative(rayTraceResult.getDirection())).canBeReplaced(Fluids.WATER)) {
                 pos1 = pos1.relative(rayTraceResult.getDirection());
                 world.setBlockAndUpdate(pos1, Blocks.WATER.defaultBlockState());
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                        new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(),pos1, false
+                        new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false
                 ), world, shooter, spellContext, resolver);
             }
         }

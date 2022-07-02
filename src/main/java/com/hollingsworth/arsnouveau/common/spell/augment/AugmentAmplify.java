@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 
 public class AugmentAmplify extends AbstractAugment {
     public static AugmentAmplify INSTANCE = new AugmentAmplify();

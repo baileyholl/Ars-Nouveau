@@ -24,9 +24,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
+public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
 
-    public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, int sourceCost){
+    public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, int sourceCost) {
         super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 1, sourceCost);
     }
 
@@ -36,9 +36,9 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
         return super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player) && !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty();
     }
 
-    public static @Nonnull ItemStack getParchment(List<ItemStack> pedestalItems){
-        for(ItemStack stack : pedestalItems){
-            if(stack.getItem() instanceof SpellParchment){
+    public static @Nonnull ItemStack getParchment(List<ItemStack> pedestalItems) {
+        for (ItemStack stack : pedestalItems) {
+            if (stack.getItem() instanceof SpellParchment) {
                 return stack;
             }
         }
@@ -64,10 +64,10 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
     @Override
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:" +RecipeRegistry.REACTIVE_RECIPE_ID);
+        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.REACTIVE_RECIPE_ID);
         jsonobject.addProperty("sourceCost", getSourceCost());
         JsonArray pedestalArr = new JsonArray();
-        for(Ingredient i : this.pedestalItems){
+        for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
             object.add("item", i.toJson());
             pedestalArr.add(object);
@@ -87,9 +87,9 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
             for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input;
-                if(GsonHelper.isArrayNode(obj, "item")){
+                if (GsonHelper.isArrayNode(obj, "item")) {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                }else{
+                } else {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 }
                 stacks.add(input);
@@ -104,8 +104,10 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
             int sourceCost = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
+            for (int i = 0; i < length; i++) {
+                try {
+                    stacks.add(Ingredient.fromNetwork(buffer));
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }
@@ -117,7 +119,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
         public void toNetwork(FriendlyByteBuf buf, ReactiveEnchantmentRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
             buf.writeInt(recipe.getSourceCost());
-            for(Ingredient i : recipe.pedestalItems){
+            for (Ingredient i : recipe.pedestalItems) {
                 i.toNetwork(buf);
             }
         }

@@ -16,8 +16,8 @@ import java.nio.file.Path;
 
 public class BlockTagProvider extends BlockTagsProvider {
 
-    public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
-    public static TagKey<Block> SUMMON_BED =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+    public static TagKey<Block> IGNORE_TILE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+    public static TagKey<Block> SUMMON_BED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
     public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
     public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
@@ -25,9 +25,10 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
     public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
-    public static TagKey<Block> FELLABLE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
+    public static TagKey<Block> FELLABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
 
     private final DataGenerator generator;
+
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
         this.generator = generatorIn;
@@ -35,7 +36,7 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
-       // super.addTags();
+        // super.addTags();
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 BlockRegistry.ARCANE_STONE,
                 BlockRegistry.RELAY,
@@ -90,10 +91,10 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.AB_SMOOTH_BASKET,
                 BlockRegistry.SCRYERS_CRYSTAL,
                 BlockRegistry.SCRYERS_OCULUS
-                );
+        );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
-                  BlockRegistry.SCRIBES_BLOCK,
+                BlockRegistry.SCRIBES_BLOCK,
                 BlockRegistry.CASCADING_LOG,
                 BlockRegistry.CASCADING_WOOD,
                 BlockRegistry.BLAZING_LOG,
@@ -131,28 +132,28 @@ public class BlockTagProvider extends BlockTagsProvider {
 
         this.tag(DECORATIVE_AN)
                 .add(BlockRegistry.AB_SMOOTH_BASKET,
-                BlockRegistry.AB_SMOOTH_CLOVER,
-                BlockRegistry.AB_SMOOTH_HERRING,
-                BlockRegistry.AB_SMOOTH_MOSAIC,
-                BlockRegistry.AB_SMOOTH_ALTERNATING,
-                BlockRegistry.AB_SMOOTH_ASHLAR,
-                BlockRegistry.AS_GOLD_ALT,
-                BlockRegistry.AS_GOLD_ASHLAR,
-                BlockRegistry.AS_GOLD_BASKET,
-                BlockRegistry.AS_GOLD_CLOVER,
-                BlockRegistry.AS_GOLD_HERRING,
-                BlockRegistry.AS_GOLD_MOSAIC,
-                BlockRegistry.AS_GOLD_STONE,
-                BlockRegistry.AS_GOLD_SLAB,
-                BlockRegistry.ARCANE_STONE,
-                BlockRegistry.AB_BASKET,
-                BlockRegistry.AB_HERRING,
-                BlockRegistry.AB_MOSAIC,
-                BlockRegistry.AB_CLOVER,
-                BlockRegistry.AB_SMOOTH_SLAB,
-                BlockRegistry.AB_SMOOTH,
-                BlockRegistry.AB_ALTERNATE,
-                BlockRegistry.ARCANE_BRICKS);
+                        BlockRegistry.AB_SMOOTH_CLOVER,
+                        BlockRegistry.AB_SMOOTH_HERRING,
+                        BlockRegistry.AB_SMOOTH_MOSAIC,
+                        BlockRegistry.AB_SMOOTH_ALTERNATING,
+                        BlockRegistry.AB_SMOOTH_ASHLAR,
+                        BlockRegistry.AS_GOLD_ALT,
+                        BlockRegistry.AS_GOLD_ASHLAR,
+                        BlockRegistry.AS_GOLD_BASKET,
+                        BlockRegistry.AS_GOLD_CLOVER,
+                        BlockRegistry.AS_GOLD_HERRING,
+                        BlockRegistry.AS_GOLD_MOSAIC,
+                        BlockRegistry.AS_GOLD_STONE,
+                        BlockRegistry.AS_GOLD_SLAB,
+                        BlockRegistry.ARCANE_STONE,
+                        BlockRegistry.AB_BASKET,
+                        BlockRegistry.AB_HERRING,
+                        BlockRegistry.AB_MOSAIC,
+                        BlockRegistry.AB_CLOVER,
+                        BlockRegistry.AB_SMOOTH_SLAB,
+                        BlockRegistry.AB_SMOOTH,
+                        BlockRegistry.AB_ALTERNATE,
+                        BlockRegistry.ARCANE_BRICKS);
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
@@ -191,7 +192,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.CASCADING_SAPLING,
                 BlockRegistry.FLOURISHING_SAPLING,
                 BlockRegistry.VEXING_SAPLING
-                );
+        );
         this.tag(BlockTags.SAPLINGS).add(
                 BlockRegistry.BLAZING_SAPLING,
                 BlockRegistry.CASCADING_SAPLING,
@@ -202,7 +203,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(MAGIC_PLANTS)
                 .addTag(MAGIC_SAPLINGS).add(
                         BlockRegistry.SOURCEBERRY_BUSH,
-                BlockRegistry.MAGE_BLOOM_CROP
+                        BlockRegistry.MAGE_BLOOM_CROP
                 );
 
         this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
@@ -224,7 +225,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.STRIPPED_AWWOOD_RED,
                 BlockRegistry.STRIPPED_AWLOG_PURPLE,
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE);
-        this.tag(BlockTags.LOGS_THAT_BURN).add( BlockRegistry.VEXING_LOG,
+        this.tag(BlockTags.LOGS_THAT_BURN).add(BlockRegistry.VEXING_LOG,
                 BlockRegistry.CASCADING_LOG,
                 BlockRegistry.FLOURISHING_LOG,
                 BlockRegistry.BLAZING_LOG,
@@ -285,6 +286,7 @@ public class BlockTagProvider extends BlockTagsProvider {
 
 
     }
+
     protected Path getPath(ResourceLocation p_126514_) {
         return this.generator.getOutputFolder().resolve("data/" + p_126514_.getNamespace() + "/tags/blocks/" + p_126514_.getPath() + ".json");
     }

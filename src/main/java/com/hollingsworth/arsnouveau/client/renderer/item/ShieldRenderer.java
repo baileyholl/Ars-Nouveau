@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class ShieldRenderer  extends FixedGeoItemRenderer<EnchantersShield> {
+public class ShieldRenderer extends FixedGeoItemRenderer<EnchantersShield> {
     public ShieldRenderer() {
         super(new ShieldModel());
     }

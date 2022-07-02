@@ -19,17 +19,17 @@ import net.minecraftforge.fml.common.Mod;
 public class ReactiveEvents {
 
     @SubscribeEvent
-    public static void livingHitEvent(LivingHurtEvent e){
+    public static void livingHitEvent(LivingHurtEvent e) {
         LivingEntity entity = e.getEntityLiving();
-        if(entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
+        if (entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
             return;
 
-        for(ItemStack s : entity.getArmorSlots()){
+        for (ItemStack s : entity.getArmorSlots()) {
             castSpell((Player) entity, s);
         }
     }
 
-    public static void castSpell(Player playerIn, ItemStack s){
+    public static void castSpell(Player playerIn, ItemStack s) {
 
         if (s.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
             ReactiveCaster reactiveCaster = new ReactiveCaster(s);
@@ -38,20 +38,20 @@ public class ReactiveEvents {
     }
 
     @SubscribeEvent
-    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e){
+    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e) {
         Player entity = e.getPlayer();
 
-        if(entity.getCommandSenderWorld().isClientSide)
+        if (entity.getCommandSenderWorld().isClientSide)
             return;
         ItemStack s = e.getItemStack();
         castSpell(entity, s);
     }
 
     @SubscribeEvent
-    public static void playerAttackEntity(AttackEntityEvent e){
+    public static void playerAttackEntity(AttackEntityEvent e) {
         LivingEntity entity = e.getEntityLiving();
 
-        if(entity == null || entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
+        if (entity == null || entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
             return;
         ItemStack s = e.getEntityLiving().getMainHandItem();
         castSpell((Player) entity, s);
@@ -59,7 +59,7 @@ public class ReactiveEvents {
 
 
     @SubscribeEvent
-    public static void leftClickAir(PlayerInteractEvent.LeftClickEmpty e){
+    public static void leftClickAir(PlayerInteractEvent.LeftClickEmpty e) {
         if (e.getItemStack().getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()) > 0)
             Networking.INSTANCE.sendToServer(new PacketReactiveSpell());
     }

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 
 import java.util.function.Supplier;
 
-public class CastSpellGoal extends CastGoal<WealdWalker>{
+public class CastSpellGoal extends CastGoal<WealdWalker> {
     WealdWalker walker;
 
     public CastSpellGoal(WealdWalker entity, double speed, int attackInterval, float attackRange, Supplier<Boolean> canUse, int animId, int delayTicks) {

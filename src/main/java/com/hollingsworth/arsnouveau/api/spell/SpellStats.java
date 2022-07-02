@@ -34,29 +34,29 @@ public class SpellStats {
 
     private List<ItemStack> modifierItems;
 
-    private SpellStats(){
+    private SpellStats() {
         augments = new ArrayList<>();
         modifierItems = new ArrayList<>();
     }
 
-    public int getDurationInTicks(){
+    public int getDurationInTicks() {
         return (int) (20.0D * durationMultiplier);
     }
 
-    public int getBuffCount(AbstractAugment abstractAugment){
+    public int getBuffCount(AbstractAugment abstractAugment) {
         return (int) augments.stream().filter(abstractAugment::equals).count();
     }
 
-    public boolean hasBuff(AbstractAugment abstractAugment){
+    public boolean hasBuff(AbstractAugment abstractAugment) {
         return getBuffCount(abstractAugment) > 0;
     }
 
-    public List<Component> addTooltip(List<Component> components){
-        if(this.damageModifier != 0.0d)
+    public List<Component> addTooltip(List<Component> components) {
+        if (this.damageModifier != 0.0d)
             components.add(Component.translatable("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-        if(this.getDurationMultiplier() != 0.0d)
+        if (this.getDurationMultiplier() != 0.0d)
             components.add(Component.translatable("tooltip.ars_nouveau.duration_modifier", this.getDurationMultiplier()).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
-        if(this.amplification != 0.0d)
+        if (this.amplification != 0.0d)
             components.add(Component.translatable("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
 
         return components;
@@ -66,7 +66,9 @@ public class SpellStats {
         return amplification;
     }
 
-    public double getAoeMultiplier(){return aoeMultiplier;}
+    public double getAoeMultiplier() {
+        return aoeMultiplier;
+    }
 
     public void setAmpMultiplier(double amplification) {
         this.amplification = amplification;
@@ -76,7 +78,7 @@ public class SpellStats {
         return acceleration;
     }
 
-    public void setAccMultiplier(float acceleration){
+    public void setAccMultiplier(float acceleration) {
         this.acceleration = acceleration;
     }
 
@@ -94,7 +96,7 @@ public class SpellStats {
     }
 
     public void setDurationMultiplier(double durationMultiplier) {
-            this.durationMultiplier = durationMultiplier;
+        this.durationMultiplier = durationMultiplier;
     }
 
     public List<AbstractAugment> getAugments() {
@@ -113,20 +115,20 @@ public class SpellStats {
         this.modifierItems = modifierItems;
     }
 
-    public static class Builder{
+    public static class Builder {
         private SpellStats spellStats;
 
-        public Builder(){
+        public Builder() {
             this.spellStats = new SpellStats();
         }
 
-        public SpellStats build(AbstractSpellPart spellPart, @Nullable HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext){
-            for(AbstractAugment abstractAugment : spellStats.augments){
+        public SpellStats build(AbstractSpellPart spellPart, @Nullable HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
+            for (AbstractAugment abstractAugment : spellStats.augments) {
                 abstractAugment.applyModifiers(this, spellPart);
             }
 
-            for(ItemStack stack : spellStats.modifierItems){
-                if(stack.getItem() instanceof ISpellModifierItem) {
+            for (ItemStack stack : spellStats.modifierItems) {
+                if (stack.getItem() instanceof ISpellModifierItem) {
                     for (int i = 0; i < stack.getCount(); i++) {
                         ((ISpellModifierItem) stack.getItem()).applyItemModifiers(stack, this, spellPart, rayTraceResult, world, shooter, spellContext);
                     }
@@ -137,21 +139,21 @@ public class SpellStats {
             return spellStats;
         }
 
-        public SpellStats build(){
+        public SpellStats build() {
             return spellStats;
         }
 
-        public Builder setDamageModifier(double damageModifier){
+        public Builder setDamageModifier(double damageModifier) {
             spellStats.damageModifier = damageModifier;
             return this;
         }
 
-        public Builder addDamageModifier(double damageModifier){
+        public Builder addDamageModifier(double damageModifier) {
             spellStats.damageModifier += damageModifier;
             return this;
         }
 
-        public Builder setAugments(List<AbstractAugment> augments){
+        public Builder setAugments(List<AbstractAugment> augments) {
             spellStats.augments = augments;
             return this;
         }
@@ -159,74 +161,74 @@ public class SpellStats {
         /**
          * Pulls all items from hands, curios, and armor.
          */
-        public Builder addItemsFromEntity(@Nullable LivingEntity entity){
-            if(entity == null)
+        public Builder addItemsFromEntity(@Nullable LivingEntity entity) {
+            if (entity == null)
                 return this;
-            CuriosUtil.getAllWornItems(entity).ifPresent(e ->{
-                for(int i = 0; i < e.getSlots(); i++){
+            CuriosUtil.getAllWornItems(entity).ifPresent(e -> {
+                for (int i = 0; i < e.getSlots(); i++) {
                     ItemStack item = e.getStackInSlot(i);
                     spellStats.modifierItems.add(item);
                 }
             });
-            for(ItemStack i : entity.getAllSlots()){
+            for (ItemStack i : entity.getAllSlots()) {
                 spellStats.modifierItems.add(i);
             }
 
             return this;
         }
 
-        public Builder addAugment(AbstractAugment abstractAugment){
+        public Builder addAugment(AbstractAugment abstractAugment) {
             spellStats.augments.add(abstractAugment);
             return this;
         }
 
-        public Builder setAmplification(double power){
+        public Builder setAmplification(double power) {
             spellStats.amplification = power;
             return this;
         }
 
-        public Builder addAmplification(double amplification){
+        public Builder addAmplification(double amplification) {
             spellStats.amplification += amplification;
             return this;
         }
 
-        public Builder setAOE(double aoe){
+        public Builder setAOE(double aoe) {
             spellStats.aoeMultiplier = aoe;
             return this;
         }
 
-        public Builder addAOE(double aoe){
+        public Builder addAOE(double aoe) {
             spellStats.aoeMultiplier += aoe;
             return this;
         }
 
         @Deprecated(forRemoval = true)
-        public Builder setDurationModifier(double duration){
-                spellStats.durationMultiplier = duration;
+        public Builder setDurationModifier(double duration) {
+            spellStats.durationMultiplier = duration;
             return this;
         }
 
-        public Builder addDurationModifier(double duration){
+        public Builder addDurationModifier(double duration) {
             spellStats.durationMultiplier += duration;
             return this;
         }
 
-        public Builder setAccelerationModifier(float acceleration){
+        public Builder setAccelerationModifier(float acceleration) {
             spellStats.acceleration = acceleration;
             return this;
         }
 
-        public Builder addAccelerationModifier(float acceleration){
+        public Builder addAccelerationModifier(float acceleration) {
             spellStats.acceleration += acceleration;
             return this;
         }
 
-        public Builder setItems(List<ItemStack> items){
+        public Builder setItems(List<ItemStack> items) {
             spellStats.modifierItems = items;
             return this;
         }
 
-        public Builder addItem(ItemStack itemStack){
+        public Builder addItem(ItemStack itemStack) {
             spellStats.modifierItems.add(itemStack);
             return this;
         }

@@ -27,6 +27,7 @@ public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITicka
     public float tRot;
     public boolean playerNear;
     private static final Random RANDOM = new Random();
+
     public ScryersOculusTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
@@ -36,9 +37,11 @@ public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITicka
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimationData data) {
+    }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -46,7 +49,7 @@ public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITicka
 
     @Override
     public void tick() {
-        if(level.isClientSide){
+        if (level.isClientSide) {
             bookAnimationTick(level, getBlockPos(), getBlockState(), this);
         }
     }
@@ -54,18 +57,18 @@ public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITicka
     public static void bookAnimationTick(Level pLevel, BlockPos pPos, BlockState pState, ScryersOculusTile pBlockEntity) {
         pBlockEntity.oOpen = pBlockEntity.open;
         pBlockEntity.oRot = pBlockEntity.rot;
-        Player player = pLevel.getNearestPlayer((double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.5D, 5.0D, false);
+        Player player = pLevel.getNearestPlayer((double) pPos.getX() + 0.5D, (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 5.0D, false);
         if (player != null) {
-            double d0 = player.getX() - ((double)pPos.getX() + 0.5D);
-            double d1 = player.getZ() - ((double)pPos.getZ() + 0.5D);
+            double d0 = player.getX() - ((double) pPos.getX() + 0.5D);
+            double d1 = player.getZ() - ((double) pPos.getZ() + 0.5D);
             pBlockEntity.tRot = (float) Mth.atan2(d1, d0);
             pBlockEntity.open += 0.1F;
             if (pBlockEntity.open < 0.5F || RANDOM.nextInt(40) == 0) {
                 float f1 = pBlockEntity.flipT;
 
                 do {
-                    pBlockEntity.flipT += (float)(RANDOM.nextInt(4) - RANDOM.nextInt(4));
-                } while(f1 == pBlockEntity.flipT);
+                    pBlockEntity.flipT += (float) (RANDOM.nextInt(4) - RANDOM.nextInt(4));
+                } while (f1 == pBlockEntity.flipT);
             }
             pBlockEntity.playerNear = true;
         } else {
@@ -74,28 +77,28 @@ public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITicka
             pBlockEntity.playerNear = false;
         }
 
-        while(pBlockEntity.rot >= (float)Math.PI) {
-            pBlockEntity.rot -= ((float)Math.PI * 2F);
+        while (pBlockEntity.rot >= (float) Math.PI) {
+            pBlockEntity.rot -= ((float) Math.PI * 2F);
         }
 
-        while(pBlockEntity.rot < -(float)Math.PI) {
-            pBlockEntity.rot += ((float)Math.PI * 2F);
+        while (pBlockEntity.rot < -(float) Math.PI) {
+            pBlockEntity.rot += ((float) Math.PI * 2F);
         }
 
-        while(pBlockEntity.tRot >= (float)Math.PI) {
-            pBlockEntity.tRot -= ((float)Math.PI * 2F);
+        while (pBlockEntity.tRot >= (float) Math.PI) {
+            pBlockEntity.tRot -= ((float) Math.PI * 2F);
         }
 
-        while(pBlockEntity.tRot < -(float)Math.PI) {
-            pBlockEntity.tRot += ((float)Math.PI * 2F);
+        while (pBlockEntity.tRot < -(float) Math.PI) {
+            pBlockEntity.tRot += ((float) Math.PI * 2F);
         }
 
         float f2;
-        for(f2 = pBlockEntity.tRot - pBlockEntity.rot; f2 >= (float)Math.PI; f2 -= ((float)Math.PI * 2F)) {
+        for (f2 = pBlockEntity.tRot - pBlockEntity.rot; f2 >= (float) Math.PI; f2 -= ((float) Math.PI * 2F)) {
         }
 
-        while(f2 < -(float)Math.PI) {
-            f2 += ((float)Math.PI * 2F);
+        while (f2 < -(float) Math.PI) {
+            f2 += ((float) Math.PI * 2F);
         }
 
         pBlockEntity.rot += f2 * 0.4F;

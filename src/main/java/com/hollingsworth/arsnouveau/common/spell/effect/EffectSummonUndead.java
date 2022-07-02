@@ -45,14 +45,14 @@ public class EffectSummonUndead extends AbstractEffect {
             ItemStack weapon = Items.IRON_SWORD.getDefaultInstance();
             if ((spellStats.hasBuff(AugmentPierce.INSTANCE))) {
                 weapon = Items.BOW.getDefaultInstance();
-                if(spellStats.getAmpMultiplier() > 0)
+                if (spellStats.getAmpMultiplier() > 0)
                     weapon.enchant(Enchantments.POWER_ARROWS, Math.max(4, (int) spellStats.getAmpMultiplier()) - 1);
             } else {
                 if (spellStats.getAmpMultiplier() >= 3) {
                     weapon = Items.NETHERITE_AXE.getDefaultInstance();
-                }else if(spellStats.getAmpMultiplier() > 2) {
+                } else if (spellStats.getAmpMultiplier() > 2) {
                     weapon = Items.NETHERITE_SWORD.getDefaultInstance();
-                }else if(spellStats.getAmpMultiplier() > 1) {
+                } else if (spellStats.getAmpMultiplier() > 1) {
                     weapon = Items.DIAMOND_SWORD.getDefaultInstance();
                 }
             }

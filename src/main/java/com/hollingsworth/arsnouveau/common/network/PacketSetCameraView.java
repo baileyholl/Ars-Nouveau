@@ -18,7 +18,8 @@ import java.util.function.Supplier;
 public class PacketSetCameraView {
     private int id;
 
-    public PacketSetCameraView() {}
+    public PacketSetCameraView() {
+    }
 
     public PacketSetCameraView(Entity camera) {
         id = camera.getId();
@@ -49,8 +50,7 @@ public class PacketSetCameraView {
                     mc.options.setCameraType(CameraType.FIRST_PERSON);
 //                    mc.gui.setOverlayMessage(Utils.localize("mount.onboard", mc.options.keyShift.getTranslatedKeyMessage()), false);
                     CameraController.setRenderPosition(entity);
-                }
-                else if (CameraController.previousCameraType != null)
+                } else if (CameraController.previousCameraType != null)
                     mc.options.setCameraType(CameraController.previousCameraType);
 
                 mc.levelRenderer.allChanged();

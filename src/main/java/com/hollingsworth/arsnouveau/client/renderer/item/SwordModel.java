@@ -9,17 +9,17 @@ public class SwordModel extends AnimatedGeoModel<EnchantersSword> {
 
     @Override
     public ResourceLocation getModelResource(EnchantersSword wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/sword.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/sword.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(EnchantersSword wand) {
-        return  new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_sword.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_sword.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(EnchantersSword wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/sword.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/sword.json");
     }
 
 

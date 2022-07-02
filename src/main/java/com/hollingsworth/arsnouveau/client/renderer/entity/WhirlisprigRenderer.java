@@ -23,7 +23,7 @@ public class WhirlisprigRenderer extends TextureVariantRenderer<Whirlisprig> {
     @Override
     public void render(Whirlisprig entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        if(Minecraft.getInstance().isPaused())
+        if (Minecraft.getInstance().isPaused())
             return;
         Level world = entityIn.getCommandSenderWorld();
         Random rand = ParticleUtil.r;

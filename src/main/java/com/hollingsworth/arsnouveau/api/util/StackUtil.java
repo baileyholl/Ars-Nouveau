@@ -11,13 +11,13 @@ import javax.annotation.Nullable;
 
 public class StackUtil {
 
-    public static @Nonnull ItemStack getHeldSpellbook(Player playerEntity){
+    public static @Nonnull ItemStack getHeldSpellbook(Player playerEntity) {
         ItemStack book = playerEntity.getMainHandItem().getItem() instanceof SpellBook ? playerEntity.getMainHandItem() : null;
         return book == null ? (playerEntity.getOffhandItem().getItem() instanceof SpellBook ? playerEntity.getOffhandItem() : ItemStack.EMPTY) : book;
     }
 
-    public static @Nullable InteractionHand getHeldCasterTool(Player player){
-        InteractionHand casterTool = player.getMainHandItem().getItem() instanceof ICasterTool ? InteractionHand.MAIN_HAND: null;
+    public static @Nullable InteractionHand getHeldCasterTool(Player player) {
+        InteractionHand casterTool = player.getMainHandItem().getItem() instanceof ICasterTool ? InteractionHand.MAIN_HAND : null;
         return casterTool == null ? (player.getOffhandItem().getItem() instanceof ICasterTool ? InteractionHand.OFF_HAND : null) : casterTool;
     }
 }

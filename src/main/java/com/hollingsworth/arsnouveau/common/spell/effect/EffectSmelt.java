@@ -20,7 +20,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,8 +56,8 @@ public class EffectSmelt extends AbstractEffect {
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 
-        for(BlockPos pos : posList) {
-            if(!canBlockBeHarvested(spellStats, world, pos))
+        for (BlockPos pos : posList) {
+            if (!canBlockBeHarvested(spellStats, world, pos))
                 continue;
             smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
         }
@@ -63,18 +66,18 @@ public class EffectSmelt extends AbstractEffect {
 
     public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter, BlockHitResult hitResult, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockState state = world.getBlockState(pos);
-        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
+        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
             return;
         Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(new ItemStack(state.getBlock().asItem(), 1)),
                 world);
         if (optional.isPresent()) {
             ItemStack itemstack = optional.get().getResultItem();
             if (!itemstack.isEmpty()) {
-                if(itemstack.getItem() instanceof BlockItem){
-                    world.setBlockAndUpdate(pos, ((BlockItem)itemstack.getItem()).getBlock().defaultBlockState());
-                }else{
+                if (itemstack.getItem() instanceof BlockItem) {
+                    world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
+                } else {
                     BlockUtil.destroyBlockSafely(world, pos, false, shooter);
-                    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
+                    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), itemstack.copy()));
                     BlockUtil.safelyUpdateState(world, pos);
                 }
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
@@ -85,7 +88,7 @@ public class EffectSmelt extends AbstractEffect {
     }
 
 
-    public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt){
+    public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt) {
         int numSmelted = 0;
         for (ItemEntity itemEntity : itemEntities) {
             if (numSmelted > maxItemSmelt)

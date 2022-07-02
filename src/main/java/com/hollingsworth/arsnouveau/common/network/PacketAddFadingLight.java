@@ -17,20 +17,20 @@ public class PacketAddFadingLight {
     final double y;
     final double z;
 
-    public PacketAddFadingLight(double x, double y, double z){
+    public PacketAddFadingLight(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public PacketAddFadingLight(BlockPos pos){
+    public PacketAddFadingLight(BlockPos pos) {
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
     }
 
     public static PacketAddFadingLight decode(FriendlyByteBuf buf) {
-        return new PacketAddFadingLight(buf.readDouble(),buf.readDouble(), buf.readDouble());
+        return new PacketAddFadingLight(buf.readDouble(), buf.readDouble(), buf.readDouble());
     }
 
     public static void encode(PacketAddFadingLight msg, FriendlyByteBuf buf) {
@@ -50,7 +50,7 @@ public class PacketAddFadingLight {
                 // Use anon - lambda causes classloading issues
                 @Override
                 public void run() {
-                    if(LightManager.shouldUpdateDynamicLight())
+                    if (LightManager.shouldUpdateDynamicLight())
                         EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(Minecraft.getInstance().level, new Vec3(m.x, m.y, m.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
                 }
             });

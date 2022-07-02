@@ -14,7 +14,7 @@ public class DeliverEssenceGoal extends Goal {
     BlockPos target;
     boolean approached;
 
-    public DeliverEssenceGoal(EntityDrygmy drygmy){
+    public DeliverEssenceGoal(EntityDrygmy drygmy) {
         this.drygmy = drygmy;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
@@ -45,15 +45,15 @@ public class DeliverEssenceGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        if(!approached && BlockUtil.distanceFrom(drygmy.blockPosition(),target) >= 2){
+        if (!approached && BlockUtil.distanceFrom(drygmy.blockPosition(), target) >= 2) {
             Path path = drygmy.getNavigation().createPath(target.getX(), target.getY(), target.getZ(), 1);
-            if(path == null || !path.canReach()){
+            if (path == null || !path.canReach()) {
                 approached = true;
                 return;
             }
 
             drygmy.getNavigation().moveTo(path, 1.0);
-        }else{
+        } else {
             this.approached = true;
             drygmy.getHome().giveProgress();
             drygmy.setHoldingEssence(false);

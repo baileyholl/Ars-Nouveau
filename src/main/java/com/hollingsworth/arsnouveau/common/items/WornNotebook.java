@@ -13,7 +13,7 @@ import vazkii.patchouli.api.PatchouliAPI;
 
 import javax.annotation.Nonnull;
 
-public class WornNotebook extends ModItem{
+public class WornNotebook extends ModItem {
 
     public WornNotebook() {
         super(ItemsRegistry.defaultItemProperties().stacksTo(1));

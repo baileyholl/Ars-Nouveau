@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
-public class FamiliarBookwyrmRenderer<T extends FamiliarBookwyrm> extends GenericFamiliarRenderer<T>{
+public class FamiliarBookwyrmRenderer<T extends FamiliarBookwyrm> extends GenericFamiliarRenderer<T> {
     public FamiliarBookwyrmRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BookwyrmModel<>());
     }
@@ -18,8 +18,6 @@ public class FamiliarBookwyrmRenderer<T extends FamiliarBookwyrm> extends Generi
         super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
         stack.popPose();
     }
-
-
 
 
 }

@@ -51,6 +51,7 @@ public class EffectRedstone extends AbstractEffect {
     }
 
     public ForgeConfigSpec.IntValue BONUS_TIME;
+
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);

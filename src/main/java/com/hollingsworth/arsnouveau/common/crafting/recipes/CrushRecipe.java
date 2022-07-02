@@ -37,11 +37,11 @@ public class CrushRecipe implements Recipe<Container> {
         this.id = id;
     }
 
-    public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs){
+    public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs) {
         this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs);
     }
 
-    public CrushRecipe(String id, Ingredient input){
+    public CrushRecipe(String id, Ingredient input) {
         this(id, input, new ArrayList<>());
     }
 
@@ -56,21 +56,22 @@ public class CrushRecipe implements Recipe<Container> {
         return finalOutputs;
     }
 
-    public CrushRecipe withItems(ItemStack output, float chance){
+    public CrushRecipe withItems(ItemStack output, float chance) {
         this.outputs.add(new CrushOutput(output, chance));
         return this;
     }
 
-    public CrushRecipe withItems(ItemStack output){
+    public CrushRecipe withItems(ItemStack output) {
         this.outputs.add(new CrushOutput(output, 1.0f));
         return this;
     }
+
     @Override
     public boolean matches(Container inventory, Level world) {
         return this.input.test(inventory.getItem(0));
     }
 
-    public boolean matches(ItemStack i, Level world){
+    public boolean matches(ItemStack i, Level world) {
         return this.input.test(i);
     }
 
@@ -107,12 +108,12 @@ public class CrushRecipe implements Recipe<Container> {
         return RecipeRegistry.CRUSH_TYPE.get();
     }
 
-    public JsonElement asRecipe(){
+    public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:crush");
         jsonobject.add("input", input.toJson());
         JsonArray array = new JsonArray();
-        for(CrushOutput output : outputs){
+        for (CrushOutput output : outputs) {
             JsonObject element = new JsonObject();
             element.addProperty("item", getRegistryName(output.stack.getItem()).toString());
             element.addProperty("chance", output.chance);
@@ -123,11 +124,11 @@ public class CrushRecipe implements Recipe<Container> {
         return jsonobject;
     }
 
-    public static class CrushOutput{
+    public static class CrushOutput {
         public ItemStack stack;
         public float chance;
 
-        public CrushOutput(ItemStack stack, float chance){
+        public CrushOutput(ItemStack stack, float chance) {
             this.stack = stack;
             this.chance = chance;
         }
@@ -146,7 +147,7 @@ public class CrushRecipe implements Recipe<Container> {
             JsonArray outputs = GsonHelper.getAsJsonArray(json, "output");
             List<CrushOutput> parsedOutputs = new ArrayList<>();
 
-            for(JsonElement e : outputs){
+            for (JsonElement e : outputs) {
                 JsonObject obj = e.getAsJsonObject();
                 float chance = GsonHelper.getAsFloat(obj, "chance");
                 String itemId = GsonHelper.getAsString(obj, "item");
@@ -163,7 +164,7 @@ public class CrushRecipe implements Recipe<Container> {
         public void toNetwork(FriendlyByteBuf buf, CrushRecipe recipe) {
             buf.writeInt(recipe.outputs.size());
             recipe.input.toNetwork(buf);
-            for(CrushOutput i : recipe.outputs){
+            for (CrushOutput i : recipe.outputs) {
                 buf.writeFloat(i.chance);
                 buf.writeItemStack(i.stack, false);
             }
@@ -176,12 +177,12 @@ public class CrushRecipe implements Recipe<Container> {
             Ingredient input = Ingredient.fromNetwork(buffer);
             List<CrushOutput> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{
+            for (int i = 0; i < length; i++) {
+                try {
                     float chance = buffer.readFloat();
                     ItemStack outStack = buffer.readItem();
                     stacks.add(new CrushOutput(outStack, chance));
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }

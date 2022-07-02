@@ -13,7 +13,7 @@ public class FamOwnerHurtByTargetGoal extends TargetGoal {
     private LivingEntity ownerLastHurtBy;
     private int timestamp;
 
-    public FamOwnerHurtByTargetGoal(IFamiliar familiar){
+    public FamOwnerHurtByTargetGoal(IFamiliar familiar) {
         super((Mob) familiar.getThisEntity(), false);
         this.familiar = familiar;
     }

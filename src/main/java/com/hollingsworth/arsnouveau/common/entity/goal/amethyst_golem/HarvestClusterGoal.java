@@ -23,7 +23,7 @@ public class HarvestClusterGoal extends Goal {
 
     List<BlockPos> harvestableList = new ArrayList<>();
 
-    public HarvestClusterGoal(AmethystGolem golem, Supplier<Boolean> canUse){
+    public HarvestClusterGoal(AmethystGolem golem, Supplier<Boolean> canUse) {
         this.golem = golem;
         this.canUse = canUse;
     }
@@ -34,41 +34,41 @@ public class HarvestClusterGoal extends Goal {
         tickTime--;
 
         golem.getNavigation().stop();
-        if(tickTime % 40 == 0){
+        if (tickTime % 40 == 0) {
             tryDropAmethyst();
         }
-        if(tickTime <= 0 || harvestableList.isEmpty()) {
+        if (tickTime <= 0 || harvestableList.isEmpty()) {
             isDone = true;
             golem.setStomping(false);
             golem.harvestCooldown = 20 * 60;
         }
     }
 
-    public void tryDropAmethyst(){
+    public void tryDropAmethyst() {
         List<BlockPos> harvested = new ArrayList<>();
-        for(BlockPos p : harvestableList){
-            if(hasCluster(p)){
+        for (BlockPos p : harvestableList) {
+            if (hasCluster(p)) {
                 harvested.add(p);
                 harvest(p);
                 break;
             }
         }
-        for(BlockPos p : harvested)
+        for (BlockPos p : harvested)
             harvestableList.remove(p);
     }
 
-    public void harvest(BlockPos p){
-        for(Direction d : Direction.values()){
-            if(golem.level.getBlockState(p.relative(d)).getBlock() == Blocks.AMETHYST_CLUSTER){
+    public void harvest(BlockPos p) {
+        for (Direction d : Direction.values()) {
+            if (golem.level.getBlockState(p.relative(d)).getBlock() == Blocks.AMETHYST_CLUSTER) {
                 golem.level.setBlock(p.relative(d), Blocks.AIR.defaultBlockState(), 3);
                 golem.level.addFreshEntity(new ItemEntity(golem.level, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, new ItemStack(Items.AMETHYST_SHARD, 4)));
             }
         }
     }
 
-    public boolean hasCluster(BlockPos p){
-        for(Direction d : Direction.values()){
-            if(golem.level.getBlockState(p.relative(d)).getBlock() == Blocks.AMETHYST_CLUSTER){
+    public boolean hasCluster(BlockPos p) {
+        for (Direction d : Direction.values()) {
+            if (golem.level.getBlockState(p.relative(d)).getBlock() == Blocks.AMETHYST_CLUSTER) {
                 return true;
             }
         }

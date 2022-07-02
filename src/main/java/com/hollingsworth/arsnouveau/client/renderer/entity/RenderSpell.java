@@ -12,15 +12,15 @@ public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
     private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");
 
 
-    public RenderSpell(EntityRendererProvider.Context renderManagerIn, ResourceLocation entityTexture)
-    {
+    public RenderSpell(EntityRendererProvider.Context renderManagerIn, ResourceLocation entityTexture) {
         super(renderManagerIn);
         this.entityTexture = entityTexture;
 
     }
 
     @Override
-    public void render(EntityProjectileSpell proj, float entityYaw, float partialTicks, PoseStack p_225623_4_, MultiBufferSource p_225623_5_, int p_225623_6_) {}
+    public void render(EntityProjectileSpell proj, float entityYaw, float partialTicks, PoseStack p_225623_4_, MultiBufferSource p_225623_5_, int p_225623_6_) {
+    }
 
 
     @Override

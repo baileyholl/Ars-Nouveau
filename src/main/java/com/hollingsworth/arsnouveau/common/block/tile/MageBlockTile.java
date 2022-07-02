@@ -25,12 +25,12 @@ public class MageBlockTile extends AnimatedTile implements ITickable, IAnimatabl
 
     @Override
     public void tick() {
-        if(isPermanent)
+        if (isPermanent)
             return;
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             age++;
             //15 seconds
-            if(age > (20 * 15 + 20 * 5 * lengthModifier)){
+            if (age > (20 * 15 + 20 * 5 * lengthModifier)) {
                 level.destroyBlock(this.getBlockPos(), false);
                 level.removeBlockEntity(this.getBlockPos());
             }
@@ -55,9 +55,11 @@ public class MageBlockTile extends AnimatedTile implements ITickable, IAnimatabl
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimationData data) {
+    }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

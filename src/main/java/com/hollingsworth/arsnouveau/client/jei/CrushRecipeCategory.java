@@ -29,8 +29,8 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     public IDrawable icon;
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
-    public CrushRecipeCategory(IGuiHelper helper){
-        background = helper.createBlankDrawable(120,8 + 16 * 3);
+    public CrushRecipeCategory(IGuiHelper helper) {
+        background = helper.createBlankDrawable(120, 8 + 16 * 3);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE).getDefaultInstance());
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
@@ -66,19 +66,19 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     @Override
     public void draw(CrushRecipe recipe, @Nonnull IRecipeSlotsView slotsView, @Nonnull PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw( matrixStack,30, 6);
+        arrow.draw(matrixStack, 30, 6);
         Font renderer = Minecraft.getInstance().font;
-        for(int i = 0; i < recipe.outputs.size(); i++){
-            renderer.draw(matrixStack, Math.round(100 * recipe.outputs.get(i).chance - 0.5f) + "%", 85f,11f + 17f * i, 10);
+        for (int i = 0; i < recipe.outputs.size(); i++) {
+            renderer.draw(matrixStack, Math.round(100 * recipe.outputs.get(i).chance - 0.5f) + "%", 85f, 11f + 17f * i, 10);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CrushRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 6,5).addIngredients(recipe.input);
-        for(int i = 0; i < recipe.outputs.size(); i++){
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input);
+        for (int i = 0; i < recipe.outputs.size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs.get(i);
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 5 + 16 * i ).addItemStack(output.stack);
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 5 + 16 * i).addItemStack(output.stack);
         }
     }
 }

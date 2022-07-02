@@ -43,11 +43,11 @@ public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFalli
                         float f2 = 1;
                         blockrenderdispatcher.getModelRenderer().renderModel(pMatrixStack.last(),
                                 pBuffer.getBuffer(ItemBlockRenderTypes.getRenderType(pEntity.blockState, false)),
-                                pEntity.blockState, bakedmodel, f, f1, f2, pPackedLight,  OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
+                                pEntity.blockState, bakedmodel, f, f1, f2, pPackedLight, OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
                     }
                 }
                 net.minecraftforge.client.ForgeHooksClient.setRenderType(null);
-                if(pEntity.getEntityData().get(EnchantedFallingBlock.SHOULD_COLOR)){
+                if (pEntity.getEntityData().get(EnchantedFallingBlock.SHOULD_COLOR)) {
 //                    RenderSystem.setShaderColor(
 //                           255,
 //                            pEntity.getParticleColorWrapper().g,

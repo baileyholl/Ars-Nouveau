@@ -10,20 +10,22 @@ import java.util.function.Supplier;
 
 public class PacketReactiveSpell {
 
-    public PacketReactiveSpell(){}
+    public PacketReactiveSpell() {
+    }
 
 
     //Decoder
-    public PacketReactiveSpell(FriendlyByteBuf buf){
+    public PacketReactiveSpell(FriendlyByteBuf buf) {
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){}
+    public void toBytes(FriendlyByteBuf buf) {
+    }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
             ServerPlayer serverPlayerEntity = ctx.get().getSender();
-            if(serverPlayerEntity!= null){
+            if (serverPlayerEntity != null) {
                 ItemStack stack = serverPlayerEntity.getMainHandItem();
                 ReactiveEvents.castSpell(ctx.get().getSender(), stack);
             }

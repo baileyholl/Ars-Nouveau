@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-public class EntityOrbitProjectile extends EntityProjectileSpell{
+public class EntityOrbitProjectile extends EntityProjectileSpell {
     public Entity wardedEntity;
     public int ticksLeft;
     public static final EntityDataAccessor<Integer> OWNER_UUID = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
@@ -38,7 +38,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         super(ModEntities.ORBIT_SPELL.get(), worldIn, shooter);
     }
 
-    public EntityOrbitProjectile(Level world, SpellResolver resolver){
+    public EntityOrbitProjectile(Level world, SpellResolver resolver) {
         super(ModEntities.ORBIT_SPELL.get(), world, resolver);
     }
 
@@ -47,59 +47,59 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     }
 
 
-    public void setOffset(int offset){
+    public void setOffset(int offset) {
         entityData.set(OFFSET, offset);
     }
 
-    public int getOffset(){
+    public int getOffset() {
         int val = 15;
         return (entityData.get(OFFSET)) * val;
     }
 
-    public void setTotal(int total){
+    public void setTotal(int total) {
         entityData.set(TOTAL, total);
     }
 
-    public int getTotal(){
+    public int getTotal() {
         return entityData.get(TOTAL) > 0 ? entityData.get(TOTAL) : 1;
     }
 
-    public void setAccelerates(int accelerates){
+    public void setAccelerates(int accelerates) {
         entityData.set(ACCELERATES, accelerates);
     }
 
-    public int getAccelerates(){
+    public int getAccelerates() {
         return entityData.get(ACCELERATES);
     }
 
     @Deprecated(forRemoval = true)
-    public void setAoe(int aoe){
+    public void setAoe(int aoe) {
         entityData.set(AOE, (float) aoe);
     }
 
-    public void setAoe(float aoe){
+    public void setAoe(float aoe) {
         entityData.set(AOE, aoe);
     }
 
-    public float getAoe(){
+    public float getAoe() {
         return entityData.get(AOE);
     }
 
-    public double getRotateSpeed(){
+    public double getRotateSpeed() {
         return 10.0 - getAccelerates();
     }
 
-    public double getRadiusMultiplier(){
+    public double getRadiusMultiplier() {
         return 1.5 + 0.5 * getAoe();
     }
 
     @Override
     public void tick() {
         Entity owner = level.getEntity(getOwnerID());
-        if(!level.isClientSide && owner == null) {
+        if (!level.isClientSide && owner == null) {
             this.remove(RemovalReason.DISCARDED);
             return;
-        }else if(owner == null) {
+        } else if (owner == null) {
             return;
         }
         super.tick();
@@ -115,14 +115,14 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         this.setPos(getAngledPosition(tickCount));
     }
 
-    public Vec3 getAngledPosition(int nextTick){
+    public Vec3 getAngledPosition(int nextTick) {
         double rotateSpeed = getRotateSpeed();
         double radiusMultiplier = getRadiusMultiplier();
         Entity owner = level.getEntity(getOwnerID());
         return new Vec3(
-                owner.getX() - radiusMultiplier * Math.sin(nextTick/rotateSpeed + getOffset()),
+                owner.getX() - radiusMultiplier * Math.sin(nextTick / rotateSpeed + getOffset()),
                 owner.getY() + 1 - (owner.isShiftKeyDown() ? 0.25 : 0),
-                owner.getZ()- radiusMultiplier * Math.cos(nextTick/rotateSpeed + getOffset()));
+                owner.getZ() - radiusMultiplier * Math.cos(nextTick / rotateSpeed + getOffset()));
     }
 
     @Override
@@ -137,19 +137,19 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
 
     @Override
     protected void onHit(HitResult result) {
-        if(level.isClientSide || result == null)
+        if (level.isClientSide || result == null)
             return;
 
-        if(result.getType() == HitResult.Type.ENTITY) {
+        if (result.getType() == HitResult.Type.ENTITY) {
             if (((EntityHitResult) result).getEntity().equals(this.getOwner())) return;
-            if(this.spellResolver != null) {
+            if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
                 Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         new BlockPos(result.getLocation()), getParticleColorWrapper()));
                 attemptRemoval();
             }
-        }else if(numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()){
-            if(this.spellResolver != null) {
+        } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
+            if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
@@ -157,6 +157,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
             attemptRemoval();
         }
     }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -208,6 +209,6 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     }
 
     public void setOwnerID(int uuid) {
-        this.getEntityData().set(OWNER_UUID,uuid);
+        this.getEntityData().set(OWNER_UUID, uuid);
     }
 }

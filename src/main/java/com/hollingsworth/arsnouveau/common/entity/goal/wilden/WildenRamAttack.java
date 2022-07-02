@@ -26,14 +26,14 @@ public class WildenRamAttack extends MeleeAttackGoal {
     @Override
     protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
         double d0 = this.getAttackReachSqr(enemy);
-        if(distToEnemySqr - 5 <= d0)
+        if (distToEnemySqr - 5 <= d0)
             Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), WildenHunter.Animations.RAM.ordinal()));
 
         if (distToEnemySqr <= d0 && this.getTicksUntilNextAttack() <= 0) {
             this.resetAttackCooldown();
             this.mob.swing(InteractionHand.MAIN_HAND);
             this.mob.doHurtTarget(enemy);
-            if(this.mob instanceof WildenHunter)
+            if (this.mob instanceof WildenHunter)
                 ((WildenHunter) this.mob).ramCooldown = 200;
             enemy.knockback(2.0F, enemy.getX() - mob.getX(), enemy.getZ() - mob.getZ());
             enemy.hurtMarked = true;

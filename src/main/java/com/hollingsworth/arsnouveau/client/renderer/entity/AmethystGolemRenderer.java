@@ -30,6 +30,7 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
     public RenderType getRenderType(AmethystGolem animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
         return RenderType.entityCutoutNoCull(textureLocation);
     }
+
     @Override
     public void renderEarly(AmethystGolem animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.golem = animatable;
@@ -37,9 +38,10 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
         this.text = this.getTextureLocation(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
+
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if(bone.getName().equals("item")){
+        if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtils.moveToPivot(bone, stack);
             stack.translate(0, -0.10, 0);

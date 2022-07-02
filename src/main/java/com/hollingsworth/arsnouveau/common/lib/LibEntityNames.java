@@ -49,11 +49,11 @@ public class LibEntityNames {
     public static final String AMETHYST_GOLEM = "amethyst_golem";
     public static final String SCRYER_CAMERA = "scryer_camera";
 
-    public static String appendFamiliar(String fam){
+    public static String appendFamiliar(String fam) {
         return "familiar_" + fam;
     }
 
-    public static String appendWeald(String type){
+    public static String appendWeald(String type) {
         return type + "_weald_walker";
     }
 }

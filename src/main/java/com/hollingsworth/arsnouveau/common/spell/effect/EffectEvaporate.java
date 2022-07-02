@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
@@ -30,19 +30,19 @@ public class EffectEvaporate extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
-            evaporate(world, p,rayTraceResult, shooter, spellContext, resolver);
-            for(Direction d : Direction.values()){
+        for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
+            evaporate(world, p, rayTraceResult, shooter, spellContext, resolver);
+            for (Direction d : Direction.values()) {
                 evaporate(world, p.relative(d), rayTraceResult, shooter, spellContext, resolver);
             }
         }
     }
 
-    public void evaporate(Level world, BlockPos p, BlockHitResult rayTraceResult, LivingEntity shooter, SpellContext context, SpellResolver resolver){
-        if(!world.getFluidState(p).isEmpty() && world.getBlockState(p).getBlock() instanceof LiquidBlock){
+    public void evaporate(Level world, BlockPos p, BlockHitResult rayTraceResult, LivingEntity shooter, SpellContext context, SpellResolver resolver) {
+        if (!world.getFluidState(p).isEmpty() && world.getBlockState(p).getBlock() instanceof LiquidBlock) {
             world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                    new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(),p, false
+                    new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
             ), world, shooter, context, resolver);
         }
     }

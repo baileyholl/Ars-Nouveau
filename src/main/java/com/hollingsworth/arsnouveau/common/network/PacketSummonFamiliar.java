@@ -23,28 +23,28 @@ public class PacketSummonFamiliar {
     ResourceLocation familiarID;
     int entityID;
 
-    public PacketSummonFamiliar(ResourceLocation id, int entityID){
+    public PacketSummonFamiliar(ResourceLocation id, int entityID) {
         this.familiarID = id;
         this.entityID = entityID;
     }
 
     //Decoder
-    public PacketSummonFamiliar(FriendlyByteBuf buf){
+    public PacketSummonFamiliar(FriendlyByteBuf buf) {
         familiarID = buf.readResourceLocation();
         entityID = buf.readInt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(familiarID);
         buf.writeInt(entityID);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            if(ctx.get().getSender() != null){
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            if (ctx.get().getSender() != null) {
                 IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ctx.get().getSender()).orElse(null);
-                if(cap == null)
+                if (cap == null)
                     return;
 
 
@@ -62,7 +62,7 @@ public class PacketSummonFamiliar {
                 FamiliarSummonEvent summonEvent = new FamiliarSummonEvent(familiarEntity.getThisEntity(), owner);
                 MinecraftForge.EVENT_BUS.post(summonEvent);
 
-                if(!summonEvent.isCanceled()) {
+                if (!summonEvent.isCanceled()) {
                     owner.level.addFreshEntity(familiarEntity.getThisEntity());
                     ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
                 }

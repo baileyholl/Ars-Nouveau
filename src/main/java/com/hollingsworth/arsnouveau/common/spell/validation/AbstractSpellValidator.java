@@ -21,8 +21,8 @@ public abstract class AbstractSpellValidator implements ISpellValidator {
     /**
      * Implementations of this method validate the given spell recipe, accumulating errors into <code>validationErrors</code>.
      *
-     * @param spellRecipe the recipe of the spell to validate. The list may contain <code>null</code> elements, which
-     *                    indicates that a glyph slot is currently blank.
+     * @param spellRecipe      the recipe of the spell to validate. The list may contain <code>null</code> elements, which
+     *                         indicates that a glyph slot is currently blank.
      * @param validationErrors a list the validator may add new errors to. Like <code>context</code>, this list is
      *                         private to the specific validator, allowing steps to remove or change existing errors if
      *                         desired.

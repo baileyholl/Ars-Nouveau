@@ -26,7 +26,7 @@ public class WixieModel<T extends LivingEntity & IAnimatable> extends AnimatedGe
 
     @Override
     public ResourceLocation getModelResource(T entityWixie) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/wixie.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/wixie.geo.json");
     }
 
     @Override
@@ -36,6 +36,6 @@ public class WixieModel<T extends LivingEntity & IAnimatable> extends AnimatedGe
 
     @Override
     public ResourceLocation getAnimationResource(T entityWixie) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/wixie_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wixie_animations.json");
     }
 }

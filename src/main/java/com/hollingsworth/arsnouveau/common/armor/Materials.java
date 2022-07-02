@@ -12,10 +12,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
+
 // https://github.com/TheKiritoPlayer20/SuperTools/blob/SuperTools_1.14/src/main/java/me/KG20/supertools/Armor/BasisArmorMaterial.java
 public class Materials {
 
-    public final static ModdedArmorMaterial novice = new ModdedArmorMaterial(ArsNouveau.MODID + ":novice", 25,new int[]{1, 4, 5, 2},
+    public final static ModdedArmorMaterial novice = new ModdedArmorMaterial(ArsNouveau.MODID + ":novice", 25, new int[]{1, 4, 5, 2},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.WHITE_WOOL));
 
     public final static ModdedArmorMaterial apprentice = new ModdedArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},

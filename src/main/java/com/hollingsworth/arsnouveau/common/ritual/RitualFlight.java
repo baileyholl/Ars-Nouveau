@@ -27,7 +27,7 @@ import java.util.Set;
 public class RitualFlight extends AbstractRitual {
     @Override
     protected void tick() {
-        if(!getWorld().isClientSide && getWorld().getGameTime() % 20 == 0){
+        if (!getWorld().isClientSide && getWorld().getGameTime() % 20 == 0) {
             RitualFlightHandler.activePositions.add(getPos());
         }
     }
@@ -36,7 +36,7 @@ public class RitualFlight extends AbstractRitual {
     public int getManaCost() {
         return 200;
     }
-    
+
     @Override
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(ArsNouveau.MODID, RitualLib.FLIGHT);
@@ -53,42 +53,42 @@ public class RitualFlight extends AbstractRitual {
     }
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-    public static class RitualFlightHandler{
+    public static class RitualFlightHandler {
         public static Set<BlockPos> activePositions = new HashSet<>();
 
-        public static @Nullable RitualFlight getFlightRitual(Level world, BlockPos pos){
+        public static @Nullable RitualFlight getFlightRitual(Level world, BlockPos pos) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if(entity instanceof RitualBrazierTile){
-                if(((RitualBrazierTile) entity).ritual instanceof RitualFlight)
+            if (entity instanceof RitualBrazierTile) {
+                if (((RitualBrazierTile) entity).ritual instanceof RitualFlight)
                     return (RitualFlight) ((RitualBrazierTile) entity).ritual;
             }
             return null;
         }
 
-        public static void grantFlight(LivingEntity entity){
+        public static void grantFlight(LivingEntity entity) {
             BlockPos pos = getValidPosition(entity.level, entity.blockPosition());
-            if(pos == null)
+            if (pos == null)
                 return;
             BlockEntity tileEntity = entity.level.getBlockEntity(pos);
-            if(tileEntity instanceof RitualBrazierTile){
-                if(((RitualBrazierTile) tileEntity).ritual instanceof RitualFlight) {
+            if (tileEntity instanceof RitualBrazierTile) {
+                if (((RitualBrazierTile) tileEntity).ritual instanceof RitualFlight) {
                     ((RitualBrazierTile) tileEntity).ritual.setNeedsMana(true);
                     entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 90 * 20));
                 }
             }
         }
 
-        public static BlockPos getValidPosition(Level world, BlockPos fromPos){
+        public static BlockPos getValidPosition(Level world, BlockPos fromPos) {
             List<BlockPos> stalePositions = new ArrayList<>();
             BlockPos foundPos = null;
-            for(BlockPos p : activePositions){
-                if(BlockUtil.distanceFrom(p, fromPos) <= 60){
+            for (BlockPos p : activePositions) {
+                if (BlockUtil.distanceFrom(p, fromPos) <= 60) {
                     RitualFlight ritualFlight = getFlightRitual(world, p);
-                    if(ritualFlight == null){
+                    if (ritualFlight == null) {
                         stalePositions.add(p);
                         continue;
                     }
-                    if(!ritualFlight.needsManaNow()) {
+                    if (!ritualFlight.needsManaNow()) {
                         foundPos = p;
                         break;
                     }
@@ -98,13 +98,13 @@ public class RitualFlight extends AbstractRitual {
             return foundPos;
         }
 
-        public static @Nullable BlockPos canPlayerStillFly(LivingEntity entity){
+        public static @Nullable BlockPos canPlayerStillFly(LivingEntity entity) {
             return getValidPosition(entity.level, entity.blockPosition());
         }
 
         @SubscribeEvent
-        public static void refreshFlight(FlightRefreshEvent e){
-            if(!e.getEntityLiving().level.isClientSide) {
+        public static void refreshFlight(FlightRefreshEvent e) {
+            if (!e.getEntityLiving().level.isClientSide) {
                 BlockPos validPos = canPlayerStillFly(e.getEntityLiving());
                 boolean wasFlying = e.getPlayer().abilities.flying;
                 if (validPos != null && wasFlying) {
@@ -113,7 +113,7 @@ public class RitualFlight extends AbstractRitual {
                     e.getPlayer().abilities.flying = wasFlying;
                     Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
                     BlockEntity tile = e.getPlayer().level.getBlockEntity(validPos);
-                    if(tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight){
+                    if (tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight) {
                         ((RitualBrazierTile) tile).ritual.setNeedsMana(true);
                     }
                 }

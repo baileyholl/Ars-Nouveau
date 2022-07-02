@@ -30,8 +30,8 @@ public class SpellArrow extends ArrowItem {
         this.numParts = numParts;
     }
 
-    public void modifySpell(Spell spell){
-        for(int i = 0; i < numParts; i++){
+    public void modifySpell(Spell spell) {
+        for (int i = 0; i < numParts; i++) {
             spell.recipe.add(part);
         }
     }
@@ -39,7 +39,7 @@ public class SpellArrow extends ArrowItem {
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
         IManaCap mana = CapabilityRegistry.getMana(shooter).orElse(null);
-        if(mana == null)
+        if (mana == null)
             return new Arrow(world, shooter);
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter);
         if (!(shooter instanceof Player entity) || !((shooter).getMainHandItem().getItem() instanceof ICasterTool))
@@ -55,12 +55,11 @@ public class SpellArrow extends ArrowItem {
     }
 
 
-
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(Component.translatable("ars_nouveau.spell_arrow.desc"));
         Spell spell = new Spell();
-        for(int i = 0; i < numParts; i++){
+        for (int i = 0; i < numParts; i++) {
             spell.recipe.add(part);
         }
         tooltip.add(Component.literal(spell.getDisplayString()));

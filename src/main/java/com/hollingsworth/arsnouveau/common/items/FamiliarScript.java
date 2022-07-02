@@ -14,10 +14,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FamiliarScript extends ModItem{
+public class FamiliarScript extends ModItem {
     public AbstractFamiliarHolder familiar;
 
-    public FamiliarScript(AbstractFamiliarHolder familiar){
+    public FamiliarScript(AbstractFamiliarHolder familiar) {
         super();
         this.familiar = familiar;
     }
@@ -32,12 +32,12 @@ public class FamiliarScript extends ModItem{
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(worldIn, playerIn, handIn);
 
         IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
-        if(familiarCap != null){
-            if(familiarCap.ownsFamiliar(familiar)){
+        if (familiarCap != null) {
+            if (familiarCap.ownsFamiliar(familiar)) {
                 playerIn.sendSystemMessage(Component.translatable("ars_nouveau.familiar.owned"));
                 return super.use(worldIn, playerIn, handIn);
             }

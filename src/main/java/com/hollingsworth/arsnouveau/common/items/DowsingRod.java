@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-public class DowsingRod extends ModItem{
+public class DowsingRod extends ModItem {
     public DowsingRod(Properties properties) {
         super(properties);
     }
@@ -26,12 +26,12 @@ public class DowsingRod extends ModItem{
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack heldStack = pPlayer.getItemInHand(pUsedHand);
         heldStack.setDamageValue(pPlayer.getItemInHand(pUsedHand).getDamageValue() + 1);
-        if(heldStack.getDamageValue() >= getMaxDamage(heldStack))
+        if (heldStack.getDamageValue() >= getMaxDamage(heldStack))
             heldStack.shrink(1);
-        if(!pLevel.isClientSide){
+        if (!pLevel.isClientSide) {
             pPlayer.addEffect(new MobEffectInstance(ModPotions.MAGIC_FIND_EFFECT.get(), 60 * 20));
             SingleBlockScryer singleBlockScryer = new SingleBlockScryer(Blocks.BUDDING_AMETHYST);
-            RitualScrying.grantScrying((ServerPlayer) pPlayer, 60*20, singleBlockScryer);
+            RitualScrying.grantScrying((ServerPlayer) pPlayer, 60 * 20, singleBlockScryer);
 
         }
         return super.use(pLevel, pPlayer, pUsedHand);

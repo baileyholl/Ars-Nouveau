@@ -30,10 +30,10 @@ public class ScryerCrystal extends TickableModBlock {
 
     public static VoxelShape SOUTH = box(5, 5, 0, 11, 11, 1);
     public static VoxelShape NORTH = box(5, 5, 15, 11, 11, 16);
-    public static VoxelShape EAST = box(0,5,5,1,11,11);
-    public static VoxelShape WEST =  box(15,5,5,16,11,11);
-    public static VoxelShape UP = box(5,0,5,11,1,11);
-    public static VoxelShape DOWN = box(5,15,5,11,16,11);
+    public static VoxelShape EAST = box(0, 5, 5, 1, 11, 11);
+    public static VoxelShape WEST = box(15, 5, 5, 16, 11, 11);
+    public static VoxelShape UP = box(5, 0, 5, 11, 1, 11);
+    public static VoxelShape DOWN = box(5, 15, 5, 11, 16, 11);
 
     public ScryerCrystal(Properties properties) {
         super(properties);
@@ -54,22 +54,22 @@ public class ScryerCrystal extends TickableModBlock {
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if(pState.getValue(FACING) == Direction.SOUTH){
+        if (pState.getValue(FACING) == Direction.SOUTH) {
             return SOUTH;
         }
-        if(pState.getValue(FACING) == Direction.NORTH){
+        if (pState.getValue(FACING) == Direction.NORTH) {
             return NORTH;
         }
-        if(pState.getValue(FACING) == Direction.EAST){
+        if (pState.getValue(FACING) == Direction.EAST) {
             return EAST;
         }
-        if(pState.getValue(FACING) == Direction.WEST){
+        if (pState.getValue(FACING) == Direction.WEST) {
             return WEST;
         }
-        if(pState.getValue(FACING) == Direction.UP){
+        if (pState.getValue(FACING) == Direction.UP) {
             return UP;
         }
-        if(pState.getValue(FACING) == Direction.DOWN){
+        if (pState.getValue(FACING) == Direction.DOWN) {
             return DOWN;
         }
 
@@ -84,7 +84,7 @@ public class ScryerCrystal extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pLevel.getBlockEntity(pPos) instanceof ScryerCrystalTile scryerCrystalTile && pPlayer.getItemInHand(pHand).isEmpty() & pHand == InteractionHand.MAIN_HAND){
+        if (pLevel.getBlockEntity(pPos) instanceof ScryerCrystalTile scryerCrystalTile && pPlayer.getItemInHand(pHand).isEmpty() & pHand == InteractionHand.MAIN_HAND) {
             scryerCrystalTile.mountCamera(pLevel, pPos, pPlayer);
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
@@ -105,7 +105,7 @@ public class ScryerCrystal extends TickableModBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        if(worldIn.getBlockEntity(pos) instanceof ScryerCrystalTile scryerCrystalTile){
+        if (worldIn.getBlockEntity(pos) instanceof ScryerCrystalTile scryerCrystalTile) {
             return scryerCrystalTile.playersViewing;
         }
         return 0;
@@ -117,6 +117,7 @@ public class ScryerCrystal extends TickableModBlock {
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getClickedFace());
     }
+
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
         return RenderShape.MODEL;

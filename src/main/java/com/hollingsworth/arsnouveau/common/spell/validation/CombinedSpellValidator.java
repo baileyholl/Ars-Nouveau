@@ -14,12 +14,16 @@ import java.util.stream.Collectors;
 public class CombinedSpellValidator implements ISpellValidator {
     private final List<ISpellValidator> validators;
 
-    /** Create a combined spell validator from the given list of validators. */
+    /**
+     * Create a combined spell validator from the given list of validators.
+     */
     public CombinedSpellValidator(List<ISpellValidator> validators) {
         this.validators = validators;
     }
 
-    /** Create a combined spell validator from the given list of validators. */
+    /**
+     * Create a combined spell validator from the given list of validators.
+     */
     public CombinedSpellValidator(ISpellValidator... validators) {
         this.validators = Arrays.asList(validators);
     }

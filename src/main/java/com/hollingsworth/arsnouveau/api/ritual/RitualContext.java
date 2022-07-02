@@ -14,7 +14,7 @@ public class RitualContext {
     public boolean needsManaToRun; // Marks the last time mana was consumed or added.
     public List<ItemStack> consumedItems;
 
-    public RitualContext(){
+    public RitualContext() {
         progress = 0;
         isDone = false;
         this.isStarted = false;
@@ -23,15 +23,15 @@ public class RitualContext {
     }
 
 
-    public void write(CompoundTag tag){
+    public void write(CompoundTag tag) {
         tag.putInt("progress", progress);
         tag.putBoolean("complete", isDone);
         tag.putBoolean("started", isStarted);
         tag.putBoolean("needsMana", needsManaToRun);
-        NBTUtil.writeItems(tag,"item_", consumedItems);
+        NBTUtil.writeItems(tag, "item_", consumedItems);
     }
 
-    public static RitualContext read(CompoundTag tag){
+    public static RitualContext read(CompoundTag tag) {
         RitualContext context = new RitualContext();
         context.progress = tag.getInt("progress");
         context.isDone = tag.getBoolean("complete");

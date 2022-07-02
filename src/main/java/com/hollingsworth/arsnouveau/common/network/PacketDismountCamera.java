@@ -9,9 +9,11 @@ import java.util.function.Supplier;
 
 // https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/network/server/DismountCamera.java
 public class PacketDismountCamera {
-    public PacketDismountCamera() {}
+    public PacketDismountCamera() {
+    }
 
-    public static void encode(PacketDismountCamera message, FriendlyByteBuf buf) {}
+    public static void encode(PacketDismountCamera message, FriendlyByteBuf buf) {
+    }
 
     public static PacketDismountCamera decode(FriendlyByteBuf buf) {
         return new PacketDismountCamera();

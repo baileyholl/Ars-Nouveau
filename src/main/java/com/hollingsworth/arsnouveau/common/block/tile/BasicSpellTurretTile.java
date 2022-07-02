@@ -33,11 +33,11 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
         super(p_i48289_1_, pos, state);
     }
 
-    public BasicSpellTurretTile(BlockPos pos, BlockState state){
+    public BasicSpellTurretTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.BASIC_SPELL_TURRET_TILE, pos, state);
     }
 
-    public int getManaCost(){
+    public int getManaCost() {
         return this.spellCaster.getSpell().getDiscountedCost();
     }
 
@@ -74,7 +74,7 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     }
 
     public PlayState walkPredicate(AnimationEvent event) {
-        if(playRecoil){
+        if (playRecoil) {
             event.getController().clearAnimationCache();
             event.getController().setAnimation(new AnimationBuilder().addAnimation("recoil", false));
             playRecoil = false;
@@ -83,6 +83,7 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     }
 
     AnimationController castController;
+
     @Override
     public void registerControllers(AnimationData data) {
         castController = new AnimationController<>(this, "castController", 0, this::walkPredicate);
@@ -101,9 +102,9 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
         this.playRecoil = true;
     }
 
-    public boolean update(){
-        if(this.worldPosition != null && this.level != null){
-            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 2);
+    public boolean update() {
+        if (this.worldPosition != null && this.level != null) {
+            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 2);
             return true;
         }
         return false;

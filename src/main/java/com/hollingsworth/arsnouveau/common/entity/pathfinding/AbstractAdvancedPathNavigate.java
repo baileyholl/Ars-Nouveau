@@ -6,23 +6,22 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
 
 
-public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
-{
+public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation {
 
     /**
      * Type of restriction.
      */
-    public enum RestrictionType
-    {
+    public enum RestrictionType {
         NONE,
         XZ,
         XYZ
     }
+
     //  Parent class private members
-    protected final Mob    ourEntity;
-    protected       BlockPos     destination;
-    protected       double       walkSpeedFactor = 1.0D;
-    protected       BlockPos     originalDestination;
+    protected final Mob ourEntity;
+    protected BlockPos destination;
+    protected double walkSpeedFactor = 1.0D;
+    protected BlockPos originalDestination;
 
     /**
      * The navigators node costs
@@ -39,8 +38,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
      *
      * @return the destination position.
      */
-    public BlockPos getDestination()
-    {
+    public BlockPos getDestination() {
         return destination;
     }
 
@@ -57,8 +55,9 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
 
     /**
      * Attempt to move to a specific pos.
+     *
      * @param position the position to move to.
-     * @param speed the speed.
+     * @param speed    the speed.
      * @return true if successful.
      */
     public abstract boolean tryMoveToBlockPos(final BlockPos position, final double speed);
@@ -68,8 +67,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
      *
      * @return the pathing options.
      */
-    public PathingOptions getPathingOptions()
-    {
+    public PathingOptions getPathingOptions() {
         return pathingOptions;
     }
 
@@ -78,8 +76,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
      *
      * @return mobentity
      */
-    public Mob getOurEntity()
-    {
+    public Mob getOurEntity() {
         return ourEntity;
     }
 

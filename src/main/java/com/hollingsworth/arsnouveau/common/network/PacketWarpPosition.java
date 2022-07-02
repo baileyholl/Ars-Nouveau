@@ -16,14 +16,14 @@ public class PacketWarpPosition {
     float xRot;
     float yRot;
 
-    public PacketWarpPosition( Entity entity,double x, double y, double z){
+    public PacketWarpPosition(Entity entity, double x, double y, double z) {
         this.entityID = entity.getId();
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public PacketWarpPosition( int id,double x, double y, double z, float xRot, float yRot){
+    public PacketWarpPosition(int id, double x, double y, double z, float xRot, float yRot) {
         this.entityID = id;
         this.x = x;
         this.y = y;
@@ -33,7 +33,7 @@ public class PacketWarpPosition {
     }
 
     public static PacketWarpPosition decode(FriendlyByteBuf buf) {
-        return new PacketWarpPosition(buf.readInt(),buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readFloat(), buf.readFloat());
+        return new PacketWarpPosition(buf.readInt(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readFloat(), buf.readFloat());
     }
 
     public static void encode(PacketWarpPosition msg, FriendlyByteBuf buf) {
@@ -44,6 +44,7 @@ public class PacketWarpPosition {
         buf.writeFloat(msg.xRot);
         buf.writeFloat(msg.yRot);
     }
+
     public static class Handler {
         public static void handle(final PacketWarpPosition message, final Supplier<NetworkEvent.Context> ctx) {
             if (ctx.get().getDirection().getReceptionSide().isServer()) {
@@ -58,7 +59,7 @@ public class PacketWarpPosition {
                     Minecraft mc = Minecraft.getInstance();
                     ClientLevel world = mc.level;
                     Entity e = world.getEntity(message.entityID);
-                    if(e == null)
+                    if (e == null)
                         return;
                     e.setPos(message.x, message.y, message.z);
                     e.setXRot(message.xRot);

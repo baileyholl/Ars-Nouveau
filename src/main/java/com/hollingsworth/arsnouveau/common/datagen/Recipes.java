@@ -638,7 +638,7 @@ public class Recipes extends RecipeProvider {
         return shapedBuilder(item, 1);
     }
 
-    public ShapedRecipeBuilder shapedBuilder(ItemLike result, int count){
+    public ShapedRecipeBuilder shapedBuilder(ItemLike result, int count) {
         return ShapedRecipeBuilder.shaped(result, count).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK));
     }
 

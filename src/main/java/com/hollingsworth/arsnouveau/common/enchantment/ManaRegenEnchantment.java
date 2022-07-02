@@ -12,7 +12,7 @@ public class ManaRegenEnchantment extends Enchantment {
 
     @Override
     public int getMinCost(int enchantmentLevel) {
-        return 1+11*(enchantmentLevel-1);
+        return 1 + 11 * (enchantmentLevel - 1);
     }
 
 

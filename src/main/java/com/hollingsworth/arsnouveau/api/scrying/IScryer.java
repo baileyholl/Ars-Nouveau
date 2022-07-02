@@ -13,7 +13,7 @@ public interface IScryer {
 
     IScryer fromTag(CompoundTag tag);
 
-    default CompoundTag toTag(CompoundTag tag){
+    default CompoundTag toTag(CompoundTag tag) {
         tag.putString("id", getRegistryName().toString());
         return tag;
     }
@@ -22,11 +22,11 @@ public interface IScryer {
 
     Vec3i DEFAULT_SIZE = new Vec3i(20, 120, 20);
 
-    default Vec3i getScryingSize(){
+    default Vec3i getScryingSize() {
         return DEFAULT_SIZE;
     }
 
-    default int getScryMax(){
+    default int getScryMax() {
         return 50;
     }
 

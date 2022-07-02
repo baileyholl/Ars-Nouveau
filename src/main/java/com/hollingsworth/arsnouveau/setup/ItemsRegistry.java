@@ -154,11 +154,11 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> WILDEN_HORN = register(LibItemNames.WILDEN_HORN, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_horn")));
 
-    public static RegistryWrapper<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE , () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_spike")));
+    public static RegistryWrapper<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_spike")));
 
-    public static RegistryWrapper<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING , () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
+    public static RegistryWrapper<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
 
-    public static RegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask(){
+    public static RegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask() {
         @Nonnull
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
@@ -166,7 +166,7 @@ public class ItemsRegistry {
         }
     }.withTooltip(Component.translatable("tooltip.potion_flask")));
 
-    public static RegistryWrapper<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask(){
+    public static RegistryWrapper<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask() {
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
             return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, effectInstance.getAmplifier() + 1);
@@ -174,7 +174,7 @@ public class ItemsRegistry {
     }.withTooltip(Component.translatable("tooltip.potion_flask_amplify")));
 
 
-    public static RegistryWrapper<PotionFlask> POTION_FLASK_EXTEND_TIME = register(LibItemNames.POTION_FLASK_EXTEND_TIME, () -> new PotionFlask(){
+    public static RegistryWrapper<PotionFlask> POTION_FLASK_EXTEND_TIME = register(LibItemNames.POTION_FLASK_EXTEND_TIME, () -> new PotionFlask() {
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
             return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration() / 2, effectInstance.getAmplifier());
@@ -182,14 +182,14 @@ public class ItemsRegistry {
     }.withTooltip(Component.translatable("tooltip.potion_flask_extend_time")));
 
 
-    public static RegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> new ExperienceGem(){
+    public static RegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> new ExperienceGem() {
         @Override
         public int getValue() {
             return 3;
         }
     }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")));
 
-    public static RegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> new ExperienceGem(){
+    public static RegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> new ExperienceGem() {
         @Override
         public int getValue() {
             return 12;
@@ -200,7 +200,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, () -> new EnchantersShield());
 
-    public static RegistryWrapper<CasterTome> CASTER_TOME    = register(LibItemNames.CASTER_TOME, () -> new CasterTome());
+    public static RegistryWrapper<CasterTome> CASTER_TOME = register(LibItemNames.CASTER_TOME, () -> new CasterTome());
 
     public static RegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, () -> new DrygmyCharm());
 
@@ -247,9 +247,9 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
-    public static RegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE , () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+    public static RegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
-    public static RegistryWrapper<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE , () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+    public static RegistryWrapper<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
     public static RegistryWrapper<EarthEssence> EARTH_ESSENCE = register(LibItemNames.EARTH_ESSENCE, () -> new EarthEssence().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
@@ -271,7 +271,7 @@ public class ItemsRegistry {
     public static RegistryWrapper register(String name) {
         return register(name, () -> new ModItem());
     }
-    
+
     public static void onItemRegistry(IForgeRegistry<Item> registry) {
         for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
@@ -299,7 +299,6 @@ public class ItemsRegistry {
         registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
 
     }
-
 
 
     public static Item.Properties defaultItemProperties() {

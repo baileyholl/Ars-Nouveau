@@ -13,7 +13,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
-public class PacketSetSound{
+public class PacketSetSound {
 
     int castSlot;
     ConfiguredSpellSound sound;
@@ -24,27 +24,27 @@ public class PacketSetSound{
     }
 
     //Decoder
-    public PacketSetSound(FriendlyByteBuf buf){
+    public PacketSetSound(FriendlyByteBuf buf) {
         castSlot = buf.readInt();
         CompoundTag tag = buf.readNbt();
         sound = tag == null ? ConfiguredSpellSound.DEFAULT : ConfiguredSpellSound.fromTag(tag);
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(castSlot);
         buf.writeNbt(sound.serialize());
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            if(ctx.get().getSender() != null){
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            if (ctx.get().getSender() != null) {
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
-                if(stack != null && stack.getItem() instanceof SpellBook){
-                    ISpellCaster caster =  CasterUtil.getCaster(stack);
+                if (stack != null && stack.getItem() instanceof SpellBook) {
+                    ISpellCaster caster = CasterUtil.getCaster(stack);
                     caster.setSound(sound, castSlot);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()),
                             new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.value));
                 }
             }

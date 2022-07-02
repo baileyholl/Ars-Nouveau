@@ -16,7 +16,8 @@ public class ConvertBuddingGoal extends Goal {
     BlockPos targetCluster;
     int usingTicks;
     boolean isDone;
-    public ConvertBuddingGoal(AmethystGolem golem, Supplier<Boolean> canUse){
+
+    public ConvertBuddingGoal(AmethystGolem golem, Supplier<Boolean> canUse) {
         this.golem = golem;
         this.canUse = canUse;
     }
@@ -31,20 +32,20 @@ public class ConvertBuddingGoal extends Goal {
         super.tick();
         usingTicks--;
         golem.getNavigation().tryMoveToBlockPos(targetCluster, 1.0f);
-        if(usingTicks <= 0){
+        if (usingTicks <= 0) {
             isDone = true;
             convert();
             return;
         }
-        if(BlockUtil.distanceFrom(golem.blockPosition(), targetCluster) <= 2){
+        if (BlockUtil.distanceFrom(golem.blockPosition(), targetCluster) <= 2) {
             golem.setImbuePos(targetCluster);
             golem.setImbueing(true);
             usingTicks = Math.min(usingTicks, 40);
         }
     }
 
-    public void convert(){
-        if(targetCluster != null && golem.level.getBlockState(targetCluster).getBlock() == Blocks.AMETHYST_BLOCK){
+    public void convert() {
+        if (targetCluster != null && golem.level.getBlockState(targetCluster).getBlock() == Blocks.AMETHYST_BLOCK) {
             golem.level.setBlock(targetCluster, Blocks.BUDDING_AMETHYST.defaultBlockState(), 3);
             ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleUtil.defaultParticleColorWrapper());
         }
@@ -57,8 +58,8 @@ public class ConvertBuddingGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 120;
-        for(BlockPos pos : golem.amethystBlocks){
-            if(golem.level.getBlockState(pos).getBlock() == Blocks.AMETHYST_BLOCK){
+        for (BlockPos pos : golem.amethystBlocks) {
+            if (golem.level.getBlockState(pos).getBlock() == Blocks.AMETHYST_BLOCK) {
                 targetCluster = pos;
                 break;
             }

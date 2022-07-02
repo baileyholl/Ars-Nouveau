@@ -11,7 +11,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     private int source = 0;
     private int maxSource = 0;
     public static String SOURCE_TAG = "source";
-    public static String MAX_SOURCE_TAG ="max_source";
+    public static String MAX_SOURCE_TAG = "max_source";
 
     public AbstractSourceMachine(BlockEntityType<?> manaTile, BlockPos pos, BlockState state) {
         super(manaTile, pos, state);
@@ -33,12 +33,12 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int setSource(int source) {
-        if(this.source == source)
+        if (this.source == source)
             return this.source;
         this.source = source;
-        if(this.source > this.getMaxSource())
+        if (this.source > this.getMaxSource())
             this.source = this.getMaxSource();
-        if(this.source < 0)
+        if (this.source < 0)
             this.source = 0;
         update();
         return this.source;
@@ -56,7 +56,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int removeSource(int source) {
-        if(source == 0)
+        if (source == 0)
             return this.getSource();
         this.setSource(this.getSource() - source);
         update();
@@ -69,9 +69,9 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         update();
     }
 
-    public boolean update(){
-        if(this.worldPosition != null && this.level != null){
-            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 3);
+    public boolean update() {
+        if (this.worldPosition != null && this.level != null) {
+            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             return true;
         }
         return false;
@@ -82,16 +82,21 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         return maxSource;
     }
 
-    public boolean canAcceptSource(){ return this.getSource() < this.getMaxSource(); }
+    public boolean canAcceptSource() {
+        return this.getSource() < this.getMaxSource();
+    }
 
-    public boolean canAcceptSource(int source){return this.getSource() + source <= this.getMaxSource();}
+    public boolean canAcceptSource(int source) {
+        return this.getSource() + source <= this.getMaxSource();
+    }
 
     /**
      * Transfers the maximum possible amount of source from one tile to another.
      * Takes the maximum transfer rate of the two tiles into account, and the space remaining.
+     *
      * @return The amount of source that was transferred.
      */
-    public int transferSource(ISourceTile from, ISourceTile to){
+    public int transferSource(ISourceTile from, ISourceTile to) {
         int transferRate = getTransferRate(from, to);
         from.removeSource(transferRate);
         to.addSource(transferRate);
@@ -101,20 +106,20 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     /**
      * Gets the maximum amount of source that can be transferred from one tile to another.
      */
-    public int getTransferRate(ISourceTile from, ISourceTile to){
+    public int getTransferRate(ISourceTile from, ISourceTile to) {
         return Math.min(Math.min(from.getTransferRate(), from.getSource()), to.getMaxSource() - to.getSource());
     }
 
-    public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate){
+    public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate) {
         int transferRate = getTransferRate(from, to, fromTransferRate);
-        if(transferRate == 0)
+        if (transferRate == 0)
             return 0;
         from.removeSource(transferRate);
         to.addSource(transferRate);
         return transferRate;
     }
 
-    public int getTransferRate(ISourceTile from, ISourceTile to, int fromTransferRate){
+    public int getTransferRate(ISourceTile from, ISourceTile to, int fromTransferRate) {
         return Math.min(Math.min(fromTransferRate, from.getSource()), to.getMaxSource() - to.getSource());
     }
 }

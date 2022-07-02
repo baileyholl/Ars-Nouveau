@@ -21,8 +21,8 @@ import net.minecraftforge.fml.common.Mod;
 public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
 
-    public static void checkKeysPressed(int key){
-        if(key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
+    public static void checkKeysPressed(int key) {
+        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
             if (MINECRAFT.screen instanceof GuiRadialMenu) {
                 MINECRAFT.player.closeContainer();
                 return;
@@ -31,63 +31,65 @@ public class KeyHandler {
 
         Player player = MINECRAFT.player;
         InteractionHand hand = StackUtil.getHeldCasterTool(player);
-        if(hand == null)
+        if (hand == null)
             return;
         ItemStack stack = player.getItemInHand(hand);
-        if(stack.isEmpty() || !(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener))
+        if (stack.isEmpty() || !(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener))
             return;
 
-        if(key == ModKeyBindings.NEXT_SLOT.getKey().getValue()){
+        if (key == ModKeyBindings.NEXT_SLOT.getKey().getValue()) {
             sendHotkeyPacket(PacketHotkeyPressed.Key.NEXT);
             return;
         }
 
-        if(key == ModKeyBindings.PREVIOUS_SLOT.getKey().getValue()){
+        if (key == ModKeyBindings.PREVIOUS_SLOT.getKey().getValue()) {
             sendHotkeyPacket(PacketHotkeyPressed.Key.PREVIOUS);
             return;
         }
 
-        if(key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()){
-            if(MINECRAFT.screen == null){
+        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
+            if (MINECRAFT.screen == null) {
                 hotkeyListener.onRadialKeyPressed(stack, player);
                 return;
             }
         }
 
-        if(key == ModKeyBindings.OPEN_BOOK.getKey().getValue()){
-            if(MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spell_name.isFocused()) {
+        if (key == ModKeyBindings.OPEN_BOOK.getKey().getValue()) {
+            if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spell_name.isFocused()) {
                 MINECRAFT.player.closeContainer();
                 return;
             }
 
-            if(MINECRAFT.screen == null){
+            if (MINECRAFT.screen == null) {
                 hotkeyListener.onOpenBookMenuKeyPressed(stack, player);
             }
         }
     }
+
     @SubscribeEvent
     public static void mouseEvent(final InputEvent.MouseInputEvent event) {
 
-        if(MINECRAFT.player == null || MINECRAFT.screen != null || event.getAction() != 1)
+        if (MINECRAFT.player == null || MINECRAFT.screen != null || event.getAction() != 1)
             return;
         checkKeysPressed(event.getButton());
     }
+
     @SubscribeEvent
     public static void keyEvent(final InputEvent.KeyInputEvent event) {
-        if(MINECRAFT.player == null || MINECRAFT.screen != null || event.getAction() != 1)
+        if (MINECRAFT.player == null || MINECRAFT.screen != null || event.getAction() != 1)
             return;
         checkKeysPressed(event.getKey());
 
     }
 
-    public static void sendUpdatePacket(ItemStack stack, int newMode){
+    public static void sendUpdatePacket(ItemStack stack, int newMode) {
 //        ISpellCaster caster = CasterUtil.getCaster(stack);
 //        String recipe = caster.getSpell(newMode).serialize();
 //        String name = caster.getSpellName(newMode);
 //        Networking.INSTANCE.sendToServer(new PacketUpdateCaster(recipe, newMode, name));
     }
 
-    public static void sendHotkeyPacket(PacketHotkeyPressed.Key key){
+    public static void sendHotkeyPacket(PacketHotkeyPressed.Key key) {
         Networking.INSTANCE.sendToServer(new PacketHotkeyPressed(key));
     }
 

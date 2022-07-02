@@ -5,23 +5,22 @@ import net.minecraft.core.BlockPos;
 /**
  * Pathing constants class.
  */
-public final class PathingConstants
-{
+public final class PathingConstants {
     //  Debug Output
     //  Debug Output
     //  Debug Output
-    public static final Object   debugNodeMonitor     = new Object();
-    public static final int      DEBUG_VERBOSITY_NONE = 0;
-    public static final int      DEBUG_VERBOSITY_FULL = 2;
-    public static final BlockPos BLOCKPOS_IDENTITY    = new BlockPos(0, 0, 0);
-    public static final BlockPos BLOCKPOS_UP          = new BlockPos(0, 1, 0);
-    public static final BlockPos BLOCKPOS_DOWN        = new BlockPos(0, -1, 0);
-    public static final BlockPos BLOCKPOS_NORTH       = new BlockPos(0, 0, -1);
-    public static final BlockPos BLOCKPOS_SOUTH       = new BlockPos(0, 0, 1);
-    public static final BlockPos BLOCKPOS_EAST        = new BlockPos(1, 0, 0);
-    public static final BlockPos BLOCKPOS_WEST        = new BlockPos(-1, 0, 0);
-    public static final int      MAX_Y                = 256;
-    public static final int      MIN_Y                = 0;
+    public static final Object debugNodeMonitor = new Object();
+    public static final int DEBUG_VERBOSITY_NONE = 0;
+    public static final int DEBUG_VERBOSITY_FULL = 2;
+    public static final BlockPos BLOCKPOS_IDENTITY = new BlockPos(0, 0, 0);
+    public static final BlockPos BLOCKPOS_UP = new BlockPos(0, 1, 0);
+    public static final BlockPos BLOCKPOS_DOWN = new BlockPos(0, -1, 0);
+    public static final BlockPos BLOCKPOS_NORTH = new BlockPos(0, 0, -1);
+    public static final BlockPos BLOCKPOS_SOUTH = new BlockPos(0, 0, 1);
+    public static final BlockPos BLOCKPOS_EAST = new BlockPos(1, 0, 0);
+    public static final BlockPos BLOCKPOS_WEST = new BlockPos(-1, 0, 0);
+    public static final int MAX_Y = 256;
+    public static final int MIN_Y = 0;
 
     /**
      * Distance which is considered to be on one side of the fence/glasspane/wall etc.
@@ -56,8 +55,7 @@ public final class PathingConstants
     /**
      * Private constructor to hide implicit one.
      */
-    private PathingConstants()
-    {
+    private PathingConstants() {
         /*
          * Intentionally left empty.
          */

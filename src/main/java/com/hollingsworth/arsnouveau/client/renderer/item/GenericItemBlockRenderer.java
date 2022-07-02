@@ -14,11 +14,12 @@ import javax.annotation.Nullable;
 public class GenericItemBlockRenderer extends GeoItemRenderer<AnimBlockItem> {
 
     public boolean isTranslucent;
+
     public GenericItemBlockRenderer(AnimatedGeoModel modelProvider) {
         super(new GenericItemModel(modelProvider));
     }
 
-    public GenericItemBlockRenderer withTranslucency(){
+    public GenericItemBlockRenderer withTranslucency() {
         this.isTranslucent = true;
         return this;
     }

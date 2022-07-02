@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface IMultiSourceTargetProvider {
     List<BlockPos> getFromList();
+
     List<BlockPos> getToList();
 }

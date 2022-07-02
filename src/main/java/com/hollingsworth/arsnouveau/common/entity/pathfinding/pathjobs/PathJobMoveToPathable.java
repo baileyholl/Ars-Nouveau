@@ -9,18 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class PathJobMoveToPathable extends PathJobMoveToLocation{
+public class PathJobMoveToPathable extends PathJobMoveToLocation {
 
     public List<BlockPos> destinations;
 
     /**
      * Prepares the PathJob for the path finding system.
      *
-     * @param world  world the entity is in.
-     * @param start  starting location.
+     * @param world        world the entity is in.
+     * @param start        starting location.
      * @param destinations list of acceptable destinations
-     * @param range  max search range.
-     * @param entity the entity.
+     * @param range        max search range.
+     * @param entity       the entity.
      */
     public PathJobMoveToPathable(Level world, BlockPos start, List<BlockPos> destinations, int range, LivingEntity entity) {
         super(world, start, destinations.size() == 0 ? start : destinations.get(0), range, entity);
@@ -30,13 +30,13 @@ public class PathJobMoveToPathable extends PathJobMoveToLocation{
     @Override
     protected Path search() {
         Path path = null;
-        for(BlockPos p : destinations){
+        for (BlockPos p : destinations) {
             this.destination = p;
             totalNodesVisited = 0;
-            nodesOpen =  new PriorityQueue<>(500);
+            nodesOpen = new PriorityQueue<>(500);
             nodesVisited = new HashMap<>();
             path = super.search();
-            if(path.canReach())
+            if (path.canReach())
                 return path;
         }
         destination = destinations.get(0);

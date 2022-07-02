@@ -22,24 +22,21 @@ import java.util.concurrent.*;
 /**
  * Static class the handles all the Pathfinding.
  */
-public final class Pathfinding
-{
+public final class Pathfinding {
     private static final BlockingQueue<Runnable> jobQueue = new LinkedBlockingDeque<>();
-    private static       ThreadPoolExecutor      executor;
+    private static ThreadPoolExecutor executor;
 
     /**
      * Minecolonies specific thread factory.
      */
-    public static class MinecoloniesThreadFactory implements ThreadFactory
-    {
+    public static class MinecoloniesThreadFactory implements ThreadFactory {
         /**
          * Ongoing thread IDs.
          */
         public static int id;
 
         @Override
-        public Thread newThread(final Runnable runnable)
-        {
+        public Thread newThread(final Runnable runnable) {
             final Thread thread = new Thread(runnable, "AN stolen Minecolonies Pathfinding Worker #" + (id++));
             thread.setDaemon(true);
 
@@ -54,10 +51,8 @@ public final class Pathfinding
      *
      * @return the threadpool executor.
      */
-    public static ThreadPoolExecutor getExecutor()
-    {
-        if (executor == null)
-        {
+    public static ThreadPoolExecutor getExecutor() {
+        if (executor == null) {
             executor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, jobQueue, new MinecoloniesThreadFactory());
         }
         return executor;
@@ -66,15 +61,13 @@ public final class Pathfinding
     /**
      * Stops all running threads in this thread pool
      */
-    public static void shutdown()
-    {
+    public static void shutdown() {
         getExecutor().shutdownNow();
         jobQueue.clear();
         executor = null;
     }
 
-    private Pathfinding()
-    {
+    private Pathfinding() {
         //Hides default constructor.
     }
 
@@ -83,8 +76,7 @@ public final class Pathfinding
      *
      * @param job PathJob
      */
-    public static void enqueue(final AbstractPathJob job)
-    {
+    public static void enqueue(final AbstractPathJob job) {
         job.getResult().startJob(getExecutor());
     }
 
@@ -95,10 +87,8 @@ public final class Pathfinding
      * @param matrixStack the matrix stack to apply to.
      */
     @OnlyIn(Dist.CLIENT)
-    public static void debugDraw(final double frame, final PoseStack matrixStack)
-    {
-        if (AbstractPathJob.lastDebugNodesNotVisited == null)
-        {
+    public static void debugDraw(final double frame, final PoseStack matrixStack) {
+        if (AbstractPathJob.lastDebugNodesNotVisited == null) {
             return;
         }
 
@@ -119,39 +109,29 @@ public final class Pathfinding
         final Set<ModNode> debugNodesVisited;
         final Set<ModNode> debugNodesPath;
 
-        synchronized (PathingConstants.debugNodeMonitor)
-        {
+        synchronized (PathingConstants.debugNodeMonitor) {
             debugNodesNotVisited = AbstractPathJob.lastDebugNodesNotVisited;
             debugNodesVisited = AbstractPathJob.lastDebugNodesVisited;
             debugNodesPath = AbstractPathJob.lastDebugNodesPath;
         }
 
-        try
-        {
-            for (final ModNode n : debugNodesNotVisited)
-            {
+        try {
+            for (final ModNode n : debugNodesNotVisited) {
                 debugDrawNode(n, 1.0F, 0F, 0F, matrixStack);
             }
 
-            for (final ModNode n : debugNodesVisited)
-            {
+            for (final ModNode n : debugNodesVisited) {
                 debugDrawNode(n, 0F, 0F, 1.0F, matrixStack);
             }
 
-            for (final ModNode n : debugNodesPath)
-            {
-                if (n.isReachedByWorker())
-                {
+            for (final ModNode n : debugNodesPath) {
+                if (n.isReachedByWorker()) {
                     debugDrawNode(n, 1F, 0.4F, 0F, matrixStack);
-                }
-                else
-                {
+                } else {
                     debugDrawNode(n, 0F, 1.0F, 0F, matrixStack);
                 }
             }
-        }
-        catch (final ConcurrentModificationException exc)
-        {
+        } catch (final ConcurrentModificationException exc) {
             Log.getLogger().catching(exc);
         }
 
@@ -163,8 +143,7 @@ public final class Pathfinding
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void debugDrawNode(final ModNode n, final float r, final float g, final float b, final PoseStack matrixStack)
-    {
+    private static void debugDrawNode(final ModNode n, final float r, final float g, final float b, final PoseStack matrixStack) {
         matrixStack.pushPose();
         matrixStack.translate((double) n.pos.getX() + 0.375, (double) n.pos.getY() + 0.375, (double) n.pos.getZ() + 0.375);
 
@@ -172,8 +151,7 @@ public final class Pathfinding
         final double dx = n.pos.getX() - entity.getX();
         final double dy = n.pos.getY() - entity.getY();
         final double dz = n.pos.getZ() - entity.getZ();
-        if (Math.sqrt(dx * dx + dy * dy + dz * dz) <= 5D)
-        {
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) <= 5D) {
             renderDebugText(n, matrixStack);
         }
 
@@ -224,8 +202,7 @@ public final class Pathfinding
 
         tessellator.end();
 
-        if (n.parent != null)
-        {
+        if (n.parent != null) {
             final float pdx = n.parent.pos.getX() - n.pos.getX() + 0.125f;
             final float pdy = n.parent.pos.getY() - n.pos.getY() + 0.125f;
             final float pdz = n.parent.pos.getZ() - n.pos.getZ() + 0.125f;
@@ -239,8 +216,7 @@ public final class Pathfinding
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void renderDebugText(final ModNode n, final PoseStack matrixStack)
-    {
+    private static void renderDebugText(final ModNode n, final PoseStack matrixStack) {
         final String s1 = String.format("F: %.3f [%d]", n.getCost(), n.getCounterAdded());
         final String s2 = String.format("G: %.3f [%d]", n.getScore(), n.getCounterVisited());
         final Font fontrenderer = Minecraft.getInstance().font;
@@ -259,10 +235,10 @@ public final class Pathfinding
 
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(
-          GlStateManager.SourceFactor.SRC_ALPHA,
-          GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-          GlStateManager.SourceFactor.ONE,
-          GlStateManager.DestFactor.ZERO);
+                GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO);
         RenderSystem.disableTexture();
 
         final int i = Math.max(fontrenderer.width(s1), fontrenderer.width(s2)) / 2;

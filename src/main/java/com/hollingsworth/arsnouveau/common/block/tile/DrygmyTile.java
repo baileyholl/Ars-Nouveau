@@ -55,57 +55,57 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public void tick() {
         super.tick();
 
-        if(level.isClientSide){
-            for(int i = 0; i < progress/2; i++){
+        if (level.isClientSide) {
+            for (int i = 0; i < progress / 2; i++) {
                 level.addParticle(
                         GlowParticleData.createData(new ParticleColor(
                                 50,
                                 255,
                                 20
                         )),
-                        getBlockPos().getX() +0.5 + ParticleUtil.inRange(-0.1, 0.1)  , getBlockPos().getY() + 1  + ParticleUtil.inRange(-0.1, 0.1) , getBlockPos().getZ() +0.5 + ParticleUtil.inRange(-0.1, 0.1),
-                        0,0,0);
+                        getBlockPos().getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), getBlockPos().getY() + 1 + ParticleUtil.inRange(-0.1, 0.1), getBlockPos().getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
+                        0, 0, 0);
             }
 
         }
 
 
-        if(!level.isClientSide && level.getGameTime() % 100 == 0){
+        if (!level.isClientSide && level.getGameTime() % 100 == 0) {
             refreshEntitiesAndBonus();
         }
 
-        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
+        if (!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null) {
             this.needsMana = false;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
 
-        if(!level.isClientSide && level.getGameTime() % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()){
+        if (!level.isClientSide && level.getGameTime() % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()) {
             generateItems();
         }
     }
 
-    public List<LivingEntity> getNearbyEntities(){
+    public List<LivingEntity> getNearbyEntities() {
         if (nearbyEntities == null)
             this.refreshEntitiesAndBonus();
 
         return nearbyEntities;
     }
 
-    public @Nullable LivingEntity getRandomEntity(){
-        if(getNearbyEntities().isEmpty())
+    public @Nullable LivingEntity getRandomEntity() {
+        if (getNearbyEntities().isEmpty())
             return null;
         return getNearbyEntities().get(new Random().nextInt(getNearbyEntities().size()));
     }
 
-    public void giveProgress(){
-        if(progress < getMaxProgress()){
+    public void giveProgress() {
+        if (progress < getMaxProgress()) {
             progress += 1;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
 
     }
 
-    public int getMaxProgress(){
+    public int getMaxProgress() {
         return Config.DRYGMY_MAX_PROGRESS.get();
     }
 
@@ -131,7 +131,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         }
     }
 
-    public void refreshEntitiesAndBonus(){
+    public void refreshEntitiesAndBonus() {
         Set<ResourceLocation> uniqueEntities;
         this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof Player)).collect(Collectors.toList());
@@ -139,20 +139,20 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         this.bonus = uniqueEntities.size() * Config.DRYGMY_UNIQUE_BONUS.get() + Math.min(Config.DRYGMY_QUANTITY_CAP.get(), nearbyEntities.size());
     }
 
-    public void generateItems(){
+    public void generateItems() {
         List<ItemStack> stacks = new ArrayList<>();
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) level);
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
         // Create the loot table and exp count
-        for(LivingEntity entity : getNearbyEntities()){
-            if(entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
+        for (LivingEntity entity : getNearbyEntities()) {
+            if (entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
                 continue;
             }
 
             LootTable loottable = this.level.getServer().getLootTables().get(entity.getLootTable());
-            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(level.getRandom())
+            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(level.getRandom())
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
                     .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer)
@@ -175,26 +175,26 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         }
         // Pull our items randomly and break once our stack count is over our max item list
         int itemsPicked = 0;
-        if(stacks.size() > 0) {
+        if (stacks.size() > 0) {
             for (int i = 0; i < numberItems; i++) {
                 ItemStack stack = stacks.get(level.random.nextInt(stacks.size())).copy();
                 itemsPicked += stack.getCount();
                 BlockUtil.insertItemAdjacent(level, worldPosition, stack);
-                if(itemsPicked >= numberItems)
+                if (itemsPicked >= numberItems)
                     break;
             }
         }
 
         exp *= .25;
-        if(exp > 3){
+        if (exp > 3) {
             int numGreater = exp / 12;
             exp -= numGreater * 12;
             int numLesser = exp / 3;
             if ((exp - numLesser * 3) > 0)
                 numLesser++;
-            if(numGreater > 0)
+            if (numGreater > 0)
                 BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM.get(), numGreater));
-            if(numLesser > 0)
+            if (numLesser > 0)
                 BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.EXPERIENCE_GEM.get(), numLesser));
         }
 
@@ -222,7 +222,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(this.needsMana){
+        if (this.needsMana) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }

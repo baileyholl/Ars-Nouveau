@@ -20,11 +20,11 @@ public class MagicFindEffect extends MobEffect {
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         super.applyEffectTick(pLivingEntity, pAmplifier);
         Level level = pLivingEntity.level;
-        if(level.isClientSide || level.getGameTime() % 60 != 0)
+        if (level.isClientSide || level.getGameTime() % 60 != 0)
             return;
-        for(Entity e : level.getEntities(pLivingEntity, new AABB(pLivingEntity.blockPosition()).inflate(75))){
-            if(e instanceof LivingEntity living && living.getType().is(EntityTags.MAGIC_FIND)){
-                living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60*20));
+        for (Entity e : level.getEntities(pLivingEntity, new AABB(pLivingEntity.blockPosition()).inflate(75))) {
+            if (e instanceof LivingEntity living && living.getType().is(EntityTags.MAGIC_FIND)) {
+                living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60 * 20));
             }
         }
     }

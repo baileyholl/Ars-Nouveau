@@ -22,54 +22,55 @@ public class ApparatusRecipeBuilder {
     public static ApparatusRecipeBuilder builder() {
         return new ApparatusRecipeBuilder();
     }
-    public ApparatusRecipeBuilder withResult(ItemLike result){
+
+    public ApparatusRecipeBuilder withResult(ItemLike result) {
         this.recipe.result = new ItemStack(result);
         return this;
     }
 
-    public ApparatusRecipeBuilder withResult(RegistryObject<? extends ItemLike> result){
+    public ApparatusRecipeBuilder withResult(RegistryObject<? extends ItemLike> result) {
         return withResult(result.get());
     }
 
-    public ApparatusRecipeBuilder withResult(ItemStack result){
+    public ApparatusRecipeBuilder withResult(ItemStack result) {
         this.recipe.result = result;
         return this;
     }
 
-    public ApparatusRecipeBuilder withReagent(ItemLike provider){
+    public ApparatusRecipeBuilder withReagent(ItemLike provider) {
         this.recipe.reagent = Ingredient.of(provider);
         return this;
     }
 
-    public ApparatusRecipeBuilder withReagent(RegistryObject<? extends ItemLike> provider){
+    public ApparatusRecipeBuilder withReagent(RegistryObject<? extends ItemLike> provider) {
         return withReagent(provider.get());
     }
 
 
-    public ApparatusRecipeBuilder withReagent(Ingredient ingredient){
+    public ApparatusRecipeBuilder withReagent(Ingredient ingredient) {
         this.recipe.reagent = ingredient;
         return this;
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(Ingredient i){
+    public ApparatusRecipeBuilder withPedestalItem(Ingredient i) {
         this.recipe.pedestalItems.add(i);
         return this;
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(RegistryObject<? extends ItemLike> i){
+    public ApparatusRecipeBuilder withPedestalItem(RegistryObject<? extends ItemLike> i) {
         return withPedestalItem(i.get());
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(ItemLike i){
+    public ApparatusRecipeBuilder withPedestalItem(ItemLike i) {
         return this.withPedestalItem(Ingredient.of(i));
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(int count,RegistryObject<? extends ItemLike> i){
-       return withPedestalItem(count, i.get());
+    public ApparatusRecipeBuilder withPedestalItem(int count, RegistryObject<? extends ItemLike> i) {
+        return withPedestalItem(count, i.get());
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(int count, ItemLike item){
-        for(int i = 0; i < count; i++)
+    public ApparatusRecipeBuilder withPedestalItem(int count, ItemLike item) {
+        for (int i = 0; i < count; i++)
             this.withPedestalItem(item);
         return this;
     }

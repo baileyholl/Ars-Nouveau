@@ -35,8 +35,8 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         return p_110775_1_.getSkinTextureLocation();
     }
 
-    public DummyRenderer(EntityRendererProvider.Context  context, boolean slim) {
-          super(context, new PlayerModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
+    public DummyRenderer(EntityRendererProvider.Context context, boolean slim) {
+        super(context, new PlayerModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
         this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
         this.addLayer(new ArrowLayer<>(context, this));
@@ -156,7 +156,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         float f = p_225621_1_.getSwimAmount(p_225621_5_);
         if (p_225621_1_.isFallFlying()) {
             super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);
-            float f1 = (float)p_225621_1_.getFallFlyingTicks() + p_225621_5_;
+            float f1 = (float) p_225621_1_.getFallFlyingTicks() + p_225621_5_;
             float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!p_225621_1_.isAutoSpinAttack()) {
                 p_225621_2_.mulPose(Vector3f.XP.rotationDegrees(f2 * (-90.0F - p_225621_1_.getXRot())));
@@ -169,7 +169,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
             if (d0 > 0.0D && d1 > 0.0D) {
                 double d2 = (vector3d1.x * vector3d.x + vector3d1.z * vector3d.z) / Math.sqrt(d0 * d1);
                 double d3 = vector3d1.x * vector3d.z - vector3d1.z * vector3d.x;
-                p_225621_2_.mulPose(Vector3f.YP.rotation((float)(Math.signum(d3) * Math.acos(d2))));
+                p_225621_2_.mulPose(Vector3f.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
             super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);

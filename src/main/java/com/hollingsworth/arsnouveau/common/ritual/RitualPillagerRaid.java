@@ -21,16 +21,16 @@ public class RitualPillagerRaid extends AbstractRitual {
     @Override
     protected void tick() {
         ParticleUtil.spawnRitualSkyEffect(this, tile, rand, getCenterColor().toWrapper());
-        if(getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
+        if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
-            if(getProgress() >= 18){
+            if (getProgress() >= 18) {
                 ServerLevel world = (ServerLevel) getWorld();
-                List<ServerPlayer> players =  world.getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
-                if(players.size() > 0){
+                List<ServerPlayer> players = world.getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
+                if (players.size() > 0) {
                     Raid raid = world.getRaids().createOrExtendRaid(players.get(0));
-                    if(raid != null){
+                    if (raid != null) {
                         this.setFinished();
-                        if(didConsumeItem(Items.EMERALD))
+                        if (didConsumeItem(Items.EMERALD))
                             raid.numGroups = 7;
                     }
                 }

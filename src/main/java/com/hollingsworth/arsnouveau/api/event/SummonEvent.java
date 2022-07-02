@@ -20,7 +20,7 @@ public class SummonEvent extends Event {
     public ISummon summon;
     public SpellStats stats;
 
-    public SummonEvent(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats stats, SpellContext spellContext, ISummon summon){
+    public SummonEvent(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats stats, SpellContext spellContext, ISummon summon) {
         this.rayTraceResult = rayTraceResult;
         this.world = world;
         this.shooter = shooter;
@@ -29,12 +29,13 @@ public class SummonEvent extends Event {
         this.summon = summon;
     }
 
-    public static class Death extends Event{
+    public static class Death extends Event {
         public ISummon summon;
         public @Nullable DamageSource source;
         public Level world;
         public boolean wasExpiration; //If the summon expired via time
-        public Death(Level world, ISummon summon, @Nullable DamageSource source, boolean wasExpiration){
+
+        public Death(Level world, ISummon summon, @Nullable DamageSource source, boolean wasExpiration) {
             this.summon = summon;
             this.source = source;
             this.world = world;

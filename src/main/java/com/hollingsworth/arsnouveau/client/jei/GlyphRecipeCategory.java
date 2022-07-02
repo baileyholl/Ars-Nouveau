@@ -21,9 +21,9 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
     public IDrawable background;
     public IDrawable icon;
 
-    public GlyphRecipeCategory(IGuiHelper helper){
+    public GlyphRecipeCategory(IGuiHelper helper) {
         super(helper, (glyphRecipe -> new MultiProvider(glyphRecipe.output, glyphRecipe.inputs, null)));
-        background = helper.createBlankDrawable(114,108);
+        background = helper.createBlankDrawable(114, 108);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockRegistry.SCRIBES_BLOCK));
     }
 
@@ -50,6 +50,6 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
     @Override
     public void draw(GlyphRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        renderer.draw(matrixStack, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f,100f, 10);
+        renderer.draw(matrixStack, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f, 100f, 10);
     }
 }

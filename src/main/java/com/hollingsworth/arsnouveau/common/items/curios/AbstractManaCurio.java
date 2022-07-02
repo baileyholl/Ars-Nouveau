@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 
 public abstract class AbstractManaCurio extends ArsNouveauCurio implements IManaEquipment {
-    public AbstractManaCurio(){
+    public AbstractManaCurio() {
         super();
     }
 

@@ -69,7 +69,7 @@ public class ArsNouveau {
         GLM.register(modEventBus);
     }
 
-    public void setup (final FMLCommonSetupEvent event) {
+    public void setup(final FMLCommonSetupEvent event) {
         APIRegistry.postInit();
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
@@ -79,8 +79,8 @@ public class ArsNouveau {
         }
     }
 
-    public void postModLoadEvent(final FMLLoadCompleteEvent event){
-        event.enqueueWork(()->{
+    public void postModLoadEvent(final FMLLoadCompleteEvent event) {
+        event.enqueueWork(() -> {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_SAPLING.asItem(), 0.3F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_SAPLING.asItem(), 0.3F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_SAPLING.asItem(), 0.5F);
@@ -91,7 +91,7 @@ public class ArsNouveau {
         });
     }
 
-    public void clientSetup(final FMLClientSetupEvent event){
+    public void clientSetup(final FMLClientSetupEvent event) {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(TextureEvent::textEvent);
     }
@@ -101,8 +101,7 @@ public class ArsNouveau {
     }
 
     @SubscribeEvent
-    public static void onServerStopped(final ServerStoppingEvent event)
-    {
+    public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
     }
 }

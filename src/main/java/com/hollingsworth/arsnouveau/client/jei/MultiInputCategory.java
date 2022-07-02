@@ -26,7 +26,7 @@ public abstract class MultiInputCategory<T> implements IRecipeCategory<T> {
         MultiProvider provider = multiProvider.apply(recipe);
         List<Ingredient> inputs = provider.input;
         double angleBetweenEach = 360.0 / inputs.size();
-        if(provider.optionalCenter != null)
+        if (provider.optionalCenter != null)
             builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addIngredients(provider.optionalCenter);
 
         Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
@@ -46,5 +46,6 @@ public abstract class MultiInputCategory<T> implements IRecipeCategory<T> {
         return new Vec2((float) newX, (float) newY);
     }
 
-    public record MultiProvider(ItemStack output, List<Ingredient> input, @Nullable Ingredient optionalCenter){}
+    public record MultiProvider(ItemStack output, List<Ingredient> input, @Nullable Ingredient optionalCenter) {
+    }
 }

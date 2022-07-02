@@ -16,8 +16,9 @@ public abstract class SingleBlockFeature extends Feature<BlockStateConfiguration
 
     @Override
     public boolean place(BlockStateConfiguration config, WorldGenLevel seed, ChunkGenerator chunkGenerator, RandomSource rand, BlockPos pos) {
-        while(true) {
-            label46: {
+        while (true) {
+            label46:
+            {
                 if (pos.getY() > 3) {
                     if (!seed.isEmptyBlock(pos) || seed.isEmptyBlock(pos.below()) || seed.isWaterAt(pos)) {
                         break label46;

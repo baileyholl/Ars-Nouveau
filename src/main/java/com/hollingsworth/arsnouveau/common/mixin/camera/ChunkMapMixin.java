@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
+
 // https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/ChunkMapMixin.java
 @Mixin(
         value = {ChunkMap.class},
@@ -72,10 +73,10 @@ public abstract class ChunkMapMixin {
     private void trackCameraLoadedChunks(ServerPlayer player, CallbackInfo callback) {
         if (CameraUtil.isPlayerMountedOnCamera(player)) {
             SectionPos pos = SectionPos.of(player.getCamera());
-            ScryerCamera camera = (ScryerCamera)player.getCamera();
+            ScryerCamera camera = (ScryerCamera) player.getCamera();
 
-            for(int i = pos.x() - this.viewDistance; i <= pos.x() + this.viewDistance; ++i) {
-                for(int j = pos.z() - this.viewDistance; j <= pos.z() + this.viewDistance; ++j) {
+            for (int i = pos.x() - this.viewDistance; i <= pos.x() + this.viewDistance; ++i) {
+                for (int j = pos.z() - this.viewDistance; j <= pos.z() + this.viewDistance; ++j) {
                     this.updateChunkTracking(player, new ChunkPos(i, j), new MutableObject(), camera.hasLoadedChunks(), true);
                 }
             }

@@ -35,24 +35,24 @@ public class RitualDisintegration extends AbstractRitual {
     @Override
     protected void tick() {
         Level world = getWorld();
-        if(world.isClientSide){
+        if (world.isClientSide) {
             BlockPos pos = getPos();
 
-                for(int i =0; i< 100; i++){
-                    Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
-                    particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(5,5,5));
-                    world.addParticle(ParticleLineData.createData(getCenterColor()),
-                            particlePos.x(), particlePos.y(), particlePos.z(),
-                            pos.getX()  +0.5, pos.getY() + 1  , pos.getZ() +0.5);
-                }
+            for (int i = 0; i < 100; i++) {
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+                particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(5, 5, 5));
+                world.addParticle(ParticleLineData.createData(getCenterColor()),
+                        particlePos.x(), particlePos.y(), particlePos.z(),
+                        pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+            }
         }
 
-        if(!world.isClientSide && world.getGameTime() % 60 == 0){
+        if (!world.isClientSide && world.getGameTime() % 60 == 0) {
             boolean didWorkOnce = false;
             List<LivingEntity> entityList = world.getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5.0),
                     (m) -> (m.getClassification(false).equals(MobCategory.MONSTER) || m.getType().is(EntityTags.DISINTEGRATION_WHITELIST)) && !(m instanceof Player));
-            for(LivingEntity m : entityList) {
-                if(m.getType().is(EntityTags.DISINTEGRATION_BLACKLIST)) {
+            for (LivingEntity m : entityList) {
+                if (m.getType().is(EntityTags.DISINTEGRATION_BLACKLIST)) {
                     continue;
                 }
                 m.remove(Entity.RemovalReason.DISCARDED);
@@ -75,7 +75,7 @@ public class RitualDisintegration extends AbstractRitual {
                     }
                 }
             }
-            if(didWorkOnce)
+            if (didWorkOnce)
                 setNeedsMana(true);
         }
     }

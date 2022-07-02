@@ -28,7 +28,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
 
     @Override
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if(transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND){
+        if (transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND) {
             Player player = Minecraft.getInstance().player;
             Vec3 playerPos = player.position().add(0, player.getEyeHeight(), 0);
             Vec3 look = player.getLookAngle(); // or getLook(partialTicks)
@@ -44,30 +44,31 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
             Vec3 laserPos = playerPos.add(right);
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
-            ISpellCaster tool =  CasterUtil.getCaster(itemStack);
-                int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
-                if(timeHeld > 0 && timeHeld != 72000){
-                    float scaleAge = (float) ParticleUtil.inRange(0.05,0.1);
-                    if(player.level.random.nextInt( 6)  == 0){
-                        for(int i =0; i< 1; i++){
-                            Vec3 particlePos = new Vec3(laserPos.x, laserPos.y,laserPos.z);
-                            particlePos = particlePos.add(ParticleUtil.pointInSphere().scale(0.3f));
-                            player.level.addParticle(ParticleLineData.createData(tool.getColor() ,scaleAge, 5+player.level.random.nextInt(20)) ,
-                                    particlePos.x(), particlePos.y(), particlePos.z(),
-                                    laserPos.x()   , laserPos.y() , laserPos.z());
-                        }
+            ISpellCaster tool = CasterUtil.getCaster(itemStack);
+            int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
+            if (timeHeld > 0 && timeHeld != 72000) {
+                float scaleAge = (float) ParticleUtil.inRange(0.05, 0.1);
+                if (player.level.random.nextInt(6) == 0) {
+                    for (int i = 0; i < 1; i++) {
+                        Vec3 particlePos = new Vec3(laserPos.x, laserPos.y, laserPos.z);
+                        particlePos = particlePos.add(ParticleUtil.pointInSphere().scale(0.3f));
+                        player.level.addParticle(ParticleLineData.createData(tool.getColor(), scaleAge, 5 + player.level.random.nextInt(20)),
+                                particlePos.x(), particlePos.y(), particlePos.z(),
+                                laserPos.x(), laserPos.y(), laserPos.z());
                     }
                 }
+            }
         }
         super.renderByItem(itemStack, transformType, stack, bufferIn, combinedLightIn, p_239207_6_);
 
     }
+
     @Override
     public void render(GeoModel model, Object animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         IBone top = model.getBone("bow_top").get();
         IBone gem = model.getBone("gem").get();
         IBone bottom = model.getBone("bow_top2").get();
-        float outerAngle = ((ClientInfo.ticksInGame + partialTicks) /10.0f) % 360;
+        float outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 10.0f) % 360;
         top.setRotationZ((float) Math.toRadians(-10.0));
         top.setRotationY(0.0f);
         top.setRotationX(0.0f);
@@ -77,25 +78,25 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
         bottom.setRotationX((float) Math.toRadians(-180.0f));
 
 
-        if(Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
-           // System.out.println(72000 - Minecraft.getInstance().player.getItemInUseCount());
+        if (Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
+            // System.out.println(72000 - Minecraft.getInstance().player.getItemInUseCount());
             int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks() + partialTicks);
 
-            if(timeHeld != 0 && timeHeld != 72000){
-                top.setRotationZ((float) (Math.toRadians(-10) - Math.toRadians(timeHeld) *2.0f));
-                bottom.setRotationZ((float) (Math.toRadians(-10f) +Math.toRadians(timeHeld) *2.0f));
-                outerAngle =  ((ClientInfo.ticksInGame + partialTicks) /5.0f) % 360;
-                if(timeHeld >= 19){
-                    top.setRotationZ((float) (Math.toRadians(-10) - Math.toRadians(19) *2.0f));
-                    bottom.setRotationZ((float) (Math.toRadians(-10)  +Math.toRadians(19) *2.0f));
-                    outerAngle =  ((ClientInfo.ticksInGame + partialTicks) /3.0f) % 360;
+            if (timeHeld != 0 && timeHeld != 72000) {
+                top.setRotationZ((float) (Math.toRadians(-10) - Math.toRadians(timeHeld) * 2.0f));
+                bottom.setRotationZ((float) (Math.toRadians(-10f) + Math.toRadians(timeHeld) * 2.0f));
+                outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 5.0f) % 360;
+                if (timeHeld >= 19) {
+                    top.setRotationZ((float) (Math.toRadians(-10) - Math.toRadians(19) * 2.0f));
+                    bottom.setRotationZ((float) (Math.toRadians(-10) + Math.toRadians(19) * 2.0f));
+                    outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;
                 }
             }
         }
         gem.setRotationX(outerAngle);
         gem.setRotationY(outerAngle);
 
-        super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer,vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
     @Override

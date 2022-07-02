@@ -28,7 +28,7 @@ import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ModSetup {
 
-    public static void sendIntercoms(){
+    public static void sendIntercoms() {
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.CHARM.getMessageBuilder().build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.RING.getMessageBuilder().size(2).build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BELT.getMessageBuilder().build());
@@ -42,7 +42,7 @@ public class ModSetup {
 
     public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.createOptional(Registry.TRUNK_PLACER_TYPE_REGISTRY, MODID);
 
-    public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () ->  new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
+    public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
     //some things need to be deferred to maintain sanity
     public static void registers(IEventBus modEventBus) {
@@ -60,12 +60,12 @@ public class ModSetup {
         Deferred.PLACED_FEAT_REG.register(modEventBus);
     }
 
-    public static void registerEvents(RegisterEvent event){
-        if(event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)){
+    public static void registerEvents(RegisterEvent event) {
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)) {
             IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.onBlocksRegistry(registry);
         }
-        if(event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)){
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS)) {
             IForgeRegistry<Item> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.onBlockItemsRegistry(registry);
             ItemsRegistry.onItemRegistry(registry);

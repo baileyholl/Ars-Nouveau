@@ -50,62 +50,62 @@ public class FindItem extends Goal {
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
-    public List<ItemEntity> nearbyItems(){
-       return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), starbuncle.isTamed() ? TRUSTED_TARGET_SELECTOR : NONTAMED_TARGET_SELECTOR);
+    public List<ItemEntity> nearbyItems() {
+        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), starbuncle.isTamed() ? TRUSTED_TARGET_SELECTOR : NONTAMED_TARGET_SELECTOR);
     }
 
     @Override
     public boolean canContinueToUse() {
-        if(starbuncle.isPickupDisabled())
+        if (starbuncle.isPickupDisabled())
             return false;
         return timeFinding <= 20 * 15 && !itemStuck && !starbuncle.isStuck && starbuncle.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean canUse() {
-        if(starbuncle.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
+        if (starbuncle.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
             return false;
         ItemStack itemstack = starbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
         itemStuck = false;
         destList = new ArrayList<>();
         if (itemstack.isEmpty() && !list.isEmpty()) {
-            for(ItemEntity entity : list){
-                if(!starbuncle.isValidItem(entity.getItem()))
+            for (ItemEntity entity : list) {
+                if (!starbuncle.isValidItem(entity.getItem()))
                     continue;
                 destList.add(entity);
             }
         }
-        if(destList.isEmpty()) {
+        if (destList.isEmpty()) {
             return false;
         }
         Collections.shuffle(destList);
-        for(ItemEntity e : destList){
-            Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(e.position()),1, 9);
-            if(path != null && path.canReach()){
+        for (ItemEntity e : destList) {
+            Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(e.position()), 1, 9);
+            if (path != null && path.canReach()) {
                 this.dest = e;
                 break;
             }
         }
-        if(dest == null){
+        if (dest == null) {
             starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
         }
-        return dest != null && !starbuncle.isStuck  && !nearbyItems().isEmpty();
+        return dest != null && !starbuncle.isStuck && !nearbyItems().isEmpty();
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(dest == null || dest.getItem().isEmpty() || dest.isRemoved()) {
+        if (dest == null || dest.getItem().isEmpty() || dest.isRemoved()) {
             itemStuck = true;
             return;
         }
         timeFinding++;
         starbuncle.minecraftPathNav.stop();
-        Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(dest.position()),1, 9);
-        if(path == null || !path.canReach()){
+        Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(dest.position()), 1, 9);
+        if (path == null || !path.canReach()) {
             stuckTicks++;
-            if(stuckTicks > 20 * 5) { // Give up after 5 seconds of being unpathable, in case we fall or jump into the air
+            if (stuckTicks > 20 * 5) { // Give up after 5 seconds of being unpathable, in case we fall or jump into the air
                 itemStuck = true;
             }
             return;

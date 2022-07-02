@@ -16,10 +16,11 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-public class GuiFamiliarScreen extends BaseBook{
+public class GuiFamiliarScreen extends BaseBook {
     public ArsNouveauAPI api;
     public List<AbstractFamiliarHolder> familiars;
     public Screen parent;
+
     public GuiFamiliarScreen(ArsNouveauAPI api, List<AbstractFamiliarHolder> familiars, Screen parent) {
         this.api = api;
         this.familiars = familiars;
@@ -32,7 +33,7 @@ public class GuiFamiliarScreen extends BaseBook{
         layoutParts();
     }
 
-    public void layoutParts(){
+    public void layoutParts() {
         int xStart = bookLeft + 20;
         int yStart = bookTop + 34;
         final int PER_ROW = 6;
@@ -44,19 +45,21 @@ public class GuiFamiliarScreen extends BaseBook{
             FamiliarButton cell = new FamiliarButton(this, xStart + xOffset, yStart + yOffset, part);
             addRenderableWidget(cell);
         }
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(parent);}));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
+            Minecraft.getInstance().setScreen(parent);
+        }));
 
     }
 
     @Override
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.font.draw(stack,Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, stack);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
     }
 
-    public void onGlyphClick(Button button){
+    public void onGlyphClick(Button button) {
         FamiliarButton button1 = (FamiliarButton) button;
         Networking.INSTANCE.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.getRegistryName(), Minecraft.getInstance().player.getId()));
         Minecraft.getInstance().setScreen(null);

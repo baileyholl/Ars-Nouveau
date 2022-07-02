@@ -8,9 +8,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class CasterUtil {
 
-    public static ISpellCaster getCaster(ItemStack stack){
+    public static ISpellCaster getCaster(ItemStack stack) {
         Item item = stack.getItem();
-        if(item instanceof ICasterTool){
+        if (item instanceof ICasterTool) {
             return ((ICasterTool) item).getSpellCaster(stack);
         }
         return new SpellCaster(stack);

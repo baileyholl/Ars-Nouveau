@@ -15,8 +15,8 @@ public interface ITimedEvent {
     boolean isExpired();
 
     // Methods for sending a timed event as a packet to the client side
-    default CompoundTag serialize(CompoundTag tag){
-        if(getID().isEmpty())
+    default CompoundTag serialize(CompoundTag tag) {
+        if (getID().isEmpty())
             throw new IllegalStateException("Serialize without ID");
         tag.putString("id", getID());
         return tag;
@@ -29,5 +29,7 @@ public interface ITimedEvent {
         return null;
     }
 
-    default String getID(){return "";}
+    default String getID() {
+        return "";
+    }
 }

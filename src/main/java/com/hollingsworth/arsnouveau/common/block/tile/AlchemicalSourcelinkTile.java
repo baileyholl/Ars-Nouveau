@@ -11,9 +11,9 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AlchemicalSourcelinkTile extends SourcelinkTile{
+public class AlchemicalSourcelinkTile extends SourcelinkTile {
 
-    public AlchemicalSourcelinkTile(BlockPos pos, BlockState state){
+    public AlchemicalSourcelinkTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ALCHEMICAL_TILE, pos, state);
     }
 
@@ -30,19 +30,19 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && level.getGameTime() % 20 == 0){
+        if (!level.isClientSide && level.getGameTime() % 20 == 0) {
             BlockPos potionPos = findNearbyPotion(level, worldPosition);
-            if(potionPos != null){
+            if (potionPos != null) {
                 PotionJarTile tile = (PotionJarTile) level.getBlockEntity(potionPos);
                 int mana = 75;
                 Set<MobEffect> effectTypes = new HashSet<>();
-                for(MobEffectInstance e : tile.getFullEffects()){
+                for (MobEffectInstance e : tile.getFullEffects()) {
                     mana += (e.getDuration() / 50);
                     mana += e.getAmplifier() * 250;
                     mana += 150;
                     effectTypes.add(e.getEffect());
                 }
-                if(effectTypes.size() > 1)
+                if (effectTypes.size() > 1)
                     mana *= (1.5 * (effectTypes.size() - 1));
                 addSource(mana);
                 tile.addAmount(-100);
@@ -50,9 +50,9 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
         }
     }
 
-    public static @Nullable BlockPos findNearbyPotion(Level level, BlockPos worldPosition){
-        for(BlockPos p : BlockPos.withinManhattan(worldPosition.below(1), 1, 1,1)){
-            if(level.getBlockEntity(p) instanceof PotionJarTile tile) {
+    public static @Nullable BlockPos findNearbyPotion(Level level, BlockPos worldPosition) {
+        for (BlockPos p : BlockPos.withinManhattan(worldPosition.below(1), 1, 1, 1)) {
+            if (level.getBlockEntity(p) instanceof PotionJarTile tile) {
                 if (tile.getCurrentFill() >= 100) {
                     return p;
                 }

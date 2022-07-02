@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 
 public class AugmentSplit extends AbstractAugment {
     public static AugmentSplit INSTANCE = new AugmentSplit();
@@ -18,7 +18,7 @@ public class AugmentSplit extends AbstractAugment {
 
     @Override
     public SpellTier getTier() {
-        return  SpellTier.THREE;
+        return SpellTier.THREE;
     }
 
     @Override

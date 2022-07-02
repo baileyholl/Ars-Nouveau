@@ -18,16 +18,16 @@ public class RitualCloudshaper extends AbstractRitual {
             incrementProgress();
             if (getProgress() >= 18) {
                 ServerLevel world = (ServerLevel) getWorld();
-                if(!isStorm() && !isRain()){
+                if (!isStorm() && !isRain()) {
                     world.setWeatherParameters(12000, 0, false, false);
                     setFinished();
                 }
-                if(isStorm()){
+                if (isStorm()) {
                     world.setWeatherParameters(0, 1200, true, true);
                     setFinished();
                 }
 
-                if(isRain()){
+                if (isRain()) {
                     world.setWeatherParameters(0, 1200, true, false);
                     setFinished();
                 }
@@ -44,11 +44,11 @@ public class RitualCloudshaper extends AbstractRitual {
 
     }
 
-    public boolean isStorm(){
+    public boolean isStorm() {
         return didConsumeItem(Items.LAPIS_BLOCK);
     }
 
-    public boolean isRain(){
+    public boolean isRain() {
         return didConsumeItem(Items.GUNPOWDER);
     }
 

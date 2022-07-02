@@ -29,7 +29,7 @@ public class WhirlisprigFlowerRenderer extends GeoBlockRenderer<WhirlisprigTile>
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

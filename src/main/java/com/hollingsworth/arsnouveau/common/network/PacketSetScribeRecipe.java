@@ -15,30 +15,30 @@ public class PacketSetScribeRecipe {
     BlockPos scribePos;
     ResourceLocation recipeID;
 
-    public PacketSetScribeRecipe(FriendlyByteBuf buf){
+    public PacketSetScribeRecipe(FriendlyByteBuf buf) {
         this.scribePos = buf.readBlockPos();
         this.recipeID = buf.readResourceLocation();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeBlockPos(scribePos);
         buf.writeResourceLocation(recipeID);
     }
 
-    public PacketSetScribeRecipe(BlockPos scribesPos, ResourceLocation resourceLocation){
+    public PacketSetScribeRecipe(BlockPos scribesPos, ResourceLocation resourceLocation) {
         this.scribePos = scribesPos;
         this.recipeID = resourceLocation;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> {
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if(player == null)
+            if (player == null)
                 return;
-            if(player.level.getBlockEntity(scribePos) instanceof ScribesTile scribesTile){
+            if (player.level.getBlockEntity(scribePos) instanceof ScribesTile scribesTile) {
                 Recipe recipe = player.level.getRecipeManager().byKey(recipeID).orElse(null);
-                if(recipe instanceof GlyphRecipe glyphRecipe) {
+                if (recipe instanceof GlyphRecipe glyphRecipe) {
                     scribesTile.setRecipe(glyphRecipe, player);
                 }
             }

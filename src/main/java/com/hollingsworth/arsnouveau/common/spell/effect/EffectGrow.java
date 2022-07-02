@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectGrow  extends AbstractEffect {
+public class EffectGrow extends AbstractEffect {
     public static EffectGrow INSTANCE = new EffectGrow();
 
     private EffectGrow() {

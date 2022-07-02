@@ -51,21 +51,21 @@ public class SpellSound {
         this.soundName = soundName;
     }
 
-    public CompoundTag serialize(){
+    public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("id",id.toString());
+        tag.putString("id", id.toString());
         return tag;
     }
 
-    public static @Nullable SpellSound fromTag(CompoundTag tag){
-        if(!tag.contains("id"))
+    public static @Nullable SpellSound fromTag(CompoundTag tag) {
+        if (!tag.contains("id"))
             return null;
 
         ResourceLocation id = new ResourceLocation(tag.getString("id"));
         return ArsNouveauAPI.getInstance().getSpellSoundsRegistry().get(id);
     }
 
-    public ResourceLocation getTexturePath(){
+    public ResourceLocation getTexturePath() {
         return new ResourceLocation(this.id.getNamespace(), "textures/sounds/" + this.id.getPath() + ".png");
     }
 

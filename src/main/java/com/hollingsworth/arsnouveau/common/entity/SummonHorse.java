@@ -26,6 +26,7 @@ import java.util.UUID;
 public class SummonHorse extends Horse implements ISummon {
     public int ticksLeft;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonHorse.class, EntityDataSerializers.OPTIONAL_UUID);
+
     public SummonHorse(EntityType<? extends Horse> type, Level worldIn) {
         super(type, worldIn);
     }
@@ -49,9 +50,9 @@ public class SummonHorse extends Horse implements ISummon {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ticksLeft--;
-            if(ticksLeft <= 0) {
+            if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
@@ -71,14 +72,15 @@ public class SummonHorse extends Horse implements ISummon {
     }
 
     @Override
-    protected void dropEquipment() { }
+    protected void dropEquipment() {
+    }
 
     @Override
     public int getExperienceReward() {
         return 0;
     }
 
-    public SimpleContainer getHorseInventory(){
+    public SimpleContainer getHorseInventory() {
         return this.inventory;
     }
 
@@ -100,6 +102,7 @@ public class SummonHorse extends Horse implements ISummon {
     public boolean isFood(ItemStack stack) {
         return false;
     }
+
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);

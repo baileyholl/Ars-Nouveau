@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class BeltOfUnstableGifts extends ArsNouveauCurio {
 
-    public BeltOfUnstableGifts(){
+    public BeltOfUnstableGifts() {
         super();
     }
 
@@ -29,7 +29,7 @@ public class BeltOfUnstableGifts extends ArsNouveauCurio {
         LivingEntity wearer = slotContext.entity();
         if (wearer == null) return;
         if (slotContext.entity().getLevel() instanceof ServerLevel world) {
-            if(world.getGameTime() % (20 * 6)  == 0){
+            if (world.getGameTime() % (20 * 6) == 0) {
                 wearer.addEffect(new MobEffectInstance(effectTable.get(new Random().nextInt(effectTable.size())), 6 * 20, new Random().nextInt(3)));
             }
         }

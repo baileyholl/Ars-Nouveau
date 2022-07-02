@@ -20,15 +20,15 @@ public class LightEvents {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent e) {
-        if(e.player.level.isClientSide)
+        if (e.player.level.isClientSide)
             return;
-        if(e.player.level.getGameTime() % 100 == 0 && e.player.getServer() != null && e.phase == TickEvent.Phase.END && e.player instanceof ServerPlayer serverPlayer) {
+        if (e.player.level.getGameTime() % 100 == 0 && e.player.getServer() != null && e.phase == TickEvent.Phase.END && e.player instanceof ServerPlayer serverPlayer) {
             List<Integer> litID = new ArrayList<>();
-            for(ServerPlayer player : e.player.getServer().getPlayerList().getPlayers()){
-                NonNullList<ItemStack> list =  player.inventory.items;
-                for(int i = 0; i < 9; i++){
+            for (ServerPlayer player : e.player.getServer().getPlayerList().getPlayers()) {
+                NonNullList<ItemStack> list = player.inventory.items;
+                for (int i = 0; i < 9; i++) {
                     ItemStack jar = list.get(i);
-                    if(jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()){
+                    if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()) {
                         litID.add(player.getId());
                         break;
                     }

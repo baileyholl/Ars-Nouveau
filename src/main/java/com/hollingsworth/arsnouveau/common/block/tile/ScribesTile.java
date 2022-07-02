@@ -46,7 +46,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider,IAnimationListener {
+public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     boolean synced;
@@ -63,27 +63,27 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void tick() {
-        if(getBlockState().getValue(ScribesBlock.PART) != BedPart.HEAD)
+        if (getBlockState().getValue(ScribesBlock.PART) != BedPart.HEAD)
             return;
-        if(!level.isClientSide && !synced){
+        if (!level.isClientSide && !synced) {
             updateBlock();
             synced = true;
         }
-        if(craftingTicks > 0)
+        if (craftingTicks > 0)
             craftingTicks--;
 
-        if(recipeID != null && recipeID.equals(new ResourceLocation(""))){
+        if (recipeID != null && recipeID.equals(new ResourceLocation(""))) {
             recipe = null; // Used on client to remove recipe since for some forsaken reason world is missing during load.
         }
 
-        if(recipeID != null && !recipeID.toString().isEmpty() &&  (recipe == null || !recipe.id.equals(recipeID))){
+        if (recipeID != null && !recipeID.toString().isEmpty() && (recipe == null || !recipe.id.equals(recipeID))) {
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
         }
-        if(!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null){
+        if (!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null) {
             boolean foundStack = false;
             List<ItemEntity> nearbyItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(2));
-            for(ItemEntity e : nearbyItems){
-                if(canConsumeItemstack(e.getItem())){
+            for (ItemEntity e : nearbyItems) {
+                if (canConsumeItemstack(e.getItem())) {
                     ItemStack copyStack = e.getItem().copy();
                     copyStack.setCount(1);
                     consumedStacks.add(copyStack);
@@ -94,21 +94,21 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                     break;
                 }
             }
-            if(!foundStack && level.getGameTime() % 20 == 0)
+            if (!foundStack && level.getGameTime() % 20 == 0)
                 checkInventories();
 
-            if(getRemainingRequired().isEmpty() && !crafting){
+            if (getRemainingRequired().isEmpty() && !crafting) {
                 crafting = true;
                 craftingTicks = 120;
                 Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
                 updateBlock();
             }
         }
-        if(level.isClientSide && craftingTicks == 0 && crafting){
+        if (level.isClientSide && craftingTicks == 0 && crafting) {
             crafting = false;
 
         }
-        if(!level.isClientSide && crafting && craftingTicks == 0 && recipe != null){
+        if (!level.isClientSide && crafting && craftingTicks == 0 && recipe != null) {
             level.addFreshEntity(new ItemEntity(level, getX(), getY() + 1, getZ(), recipe.output.copy()));
             recipe = null;
             recipeID = new ResourceLocation("");
@@ -118,7 +118,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
     }
 
-    public void checkInventories(){
+    public void checkInventories() {
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
             if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).isPresent()) {
                 IItemHandler handler = level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
@@ -142,8 +142,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     }
 
-    public boolean consumeStack(ItemStack stack){
-        if(!canConsumeItemstack(stack))
+    public boolean consumeStack(ItemStack stack) {
+        if (!canConsumeItemstack(stack))
             return false;
         ItemStack copyStack = stack.split(1);
         consumedStacks.add(copyStack);
@@ -152,13 +152,13 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         return true;
     }
 
-    public void refundConsumed(){
-        for(ItemStack i : consumedStacks){
+    public void refundConsumed() {
+        for (ItemStack i : consumedStacks) {
             ItemEntity entity = new ItemEntity(level, getX(), getY(), getZ(), i);
             level.addFreshEntity(entity);
             consumedStacks = new ArrayList<>();
         }
-        if(recipe != null) {
+        if (recipe != null) {
             int exp = recipe.exp;
             if (level instanceof ServerLevel serverLevel)
                 ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
@@ -170,15 +170,15 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         updateBlock();
     }
 
-    public void setRecipe(GlyphRecipe recipe, Player player){
-        if(ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()){
+    public void setRecipe(GlyphRecipe recipe, Player player) {
+        if (ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.not_enough_exp"));
             return;
-        }else if(!player.isCreative()){
+        } else if (!player.isCreative()) {
             player.giveExperiencePoints(-recipe.exp);
         }
         ScribesTile tile = getLogicTile();
-        if(tile == null)
+        if (tile == null)
             return;
         tile.refundConsumed();
         tile.recipe = recipe;
@@ -186,14 +186,14 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         tile.updateBlock();
     }
 
-    public static int getTotalPlayerExperience(Player player){
+    public static int getTotalPlayerExperience(Player player) {
         return (int) (getExperienceForLevel(player.experienceLevel) + player.experienceProgress * player.getXpNeededForNextLevel());
     }
 
-    public static int getLevelsFromExp(int exp){
-        if(exp <= 352){
+    public static int getLevelsFromExp(int exp) {
+        if (exp <= 352) {
             return (int) (Math.sqrt(exp + 9) - 3);
-        }else if(exp <= 1507){
+        } else if (exp <= 1507) {
             return (int) (8.1 + Math.sqrt(0.4 * (exp - 195.975)));
         }
         return (int) (18.056 + Math.sqrt(0.222 * (exp - 752.986)));
@@ -210,45 +210,45 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             return (int) (4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
     }
 
-    public @Nullable ScribesTile getLogicTile(){
+    public @Nullable ScribesTile getLogicTile() {
         ScribesTile tile = this;
-        if(!isMasterTile()) {
+        if (!isMasterTile()) {
             BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(ScribesBlock.getConnectedDirection(getBlockState())));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
         }
         return tile;
     }
 
-    public boolean isMasterTile(){
+    public boolean isMasterTile() {
         return getBlockState().getValue(ScribesBlock.PART) == BedPart.HEAD;
     }
 
-    public boolean canConsumeItemstack(ItemStack stack){
-        if(recipe == null)
+    public boolean canConsumeItemstack(ItemStack stack) {
+        if (recipe == null)
             return false;
         return getRemainingRequired().stream().anyMatch(i -> i.test(stack));
     }
 
-    public List<Ingredient> getRemainingRequired(){
-        if(consumedStacks.isEmpty())
+    public List<Ingredient> getRemainingRequired() {
+        if (consumedStacks.isEmpty())
             return recipe.inputs;
         List<Ingredient> unaccountedIngredients = new ArrayList<>();
         List<ItemStack> remainingItems = new ArrayList<>();
-        for(ItemStack stack : consumedStacks){
+        for (ItemStack stack : consumedStacks) {
             remainingItems.add(stack.copy());
         }
-        for(Ingredient ingred : recipe.inputs){
+        for (Ingredient ingred : recipe.inputs) {
             ItemStack matchingStack = null;
 
-            for(ItemStack item : remainingItems){
-                if(ingred.test(item)){
+            for (ItemStack item : remainingItems) {
+                if (ingred.test(item)) {
                     matchingStack = item;
                     break;
                 }
             }
-            if(matchingStack != null){
+            if (matchingStack != null) {
                 remainingItems.remove(matchingStack);
-            }else{
+            } else {
                 unaccountedIngredients.add(ingred);
             }
         }
@@ -258,8 +258,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
-        if(compound.contains("recipe")){
+        stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
+        if (compound.contains("recipe")) {
             recipeID = new ResourceLocation(compound.getString("recipe"));
         }
         CompoundTag itemsTag = new CompoundTag();
@@ -271,14 +271,14 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void saveAdditional(CompoundTag compound) {
-        if(stack != null) {
+        if (stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
-        if(recipe != null){
+        if (recipe != null) {
             compound.putString("recipe", recipe.getId().toString());
-        }else{
+        } else {
             compound.putString("recipe", "");
         }
         NBTUtil.writeItems(compound, "consumed", consumedStacks);
@@ -286,13 +286,13 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         compound.putBoolean("crafting", crafting);
     }
 
-    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
         return PlayState.CONTINUE;
     }
 
     @Override
     public void startAnimation(int arg) {
-        if(controller == null){
+        if (controller == null) {
             System.out.println("NULL CONTROLLER");
             return;
         }
@@ -313,6 +313,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     AnimationFactory factory = new AnimationFactory(this);
     AnimationController controller;
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -382,14 +383,14 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(!isMasterTile()) {
+        if (!isMasterTile()) {
             ScribesTile tile = getLogicTile();
-            if(tile == null)
+            if (tile == null)
                 return;
             tile.getTooltip(tooltip);
             return;
         }
-        if(recipe != null){
+        if (recipe != null) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
         }
     }

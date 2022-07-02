@@ -65,11 +65,11 @@ public class EffectToss extends AbstractEffect {
                 }
                 return true;
             });
-            ItemStack stack = extractStackFromCaster(shooter, spellContext, (stack1) ->{
-                if(stack1.isEmpty())
+            ItemStack stack = extractStackFromCaster(shooter, spellContext, (stack1) -> {
+                if (stack1.isEmpty())
                     return false;
-                for(int i = 0; i < iItemHandler.getSlots(); i++){
-                    if(iItemHandler.isItemValid(i, casterStack)){
+                for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                    if (iItemHandler.isItemValid(i, casterStack)) {
                         return true;
                     }
                 }

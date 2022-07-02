@@ -20,8 +20,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     private ResourceLocation registryName;
     public String name;
     public Glyph glyphItem;
+
     /*ID for NBT data and SpellManager#spellList*/
-    public ResourceLocation getRegistryName(){
+    public ResourceLocation getRegistryName() {
         return this.registryName;
     }
 
@@ -36,14 +37,14 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
-    public AbstractSpellPart(String registryName, String name){
+    public AbstractSpellPart(String registryName, String name) {
         this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
     }
 
     public AbstractSpellPart(ResourceLocation registryName, String name) {
         this.registryName = registryName;
         this.name = name;
-        for(SpellSchool spellSchool : getSchools()){
+        for (SpellSchool spellSchool : getSchools()) {
             spellSchool.addSpellPart(this);
             spellSchools.add(spellSchool);
         }
@@ -52,11 +53,13 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     public abstract int getDefaultManaCost();
 
-    public int getCastingCost(){
+    public int getCastingCost() {
         return COST == null ? getDefaultManaCost() : COST.get();
     }
 
-    public String getName(){return this.name;}
+    public String getName() {
+        return this.name;
+    }
 
     public SpellTier getTier() {
         return SpellTier.ONE;
@@ -66,7 +69,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * Cache the glyph item here because of registry freezing.
      */
     public Glyph getGlyph() {
-        if(glyphItem == null){
+        if (glyphItem == null) {
             glyphItem = new Glyph(this);
         }
         return this.glyphItem;
@@ -75,6 +78,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Returns the set of augments that this spell part can be enhanced by.
      * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
+     *
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
      * @deprecated This will be set to protected in a future update.
      * This should not be accessed directly, but can be overridden.
@@ -92,7 +96,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * A helper for mods to add schools.
      * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
      */
-    protected @Nonnull Set<SpellSchool> getSchools(){
+    protected @Nonnull Set<SpellSchool> getSchools() {
         return setOf();
     }
 
@@ -105,7 +109,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return this.getTier().value - o.getTier().value;
     }
 
-    public Component getBookDescLang(){
+    public Component getBookDescLang() {
         return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
     }
 
@@ -116,7 +120,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public @Nullable ForgeConfigSpec.BooleanValue STARTER_SPELL;
     public @Nullable ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
 
-    public void buildConfig(ForgeConfigSpec.Builder builder){
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
         COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -124,7 +128,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
     }
 
-    /** Returns the number of times that this glyph may be modified by the given augment. */
+    /**
+     * Returns the number of times that this glyph may be modified by the given augment.
+     */
     public int getAugmentLimit(ResourceLocation augmentTag) {
         if (augmentLimits == null) {
             return Integer.MAX_VALUE;
@@ -136,7 +142,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     // Augment limits only apply to cast forms and effects, but not augments.
     public SpellPartConfigUtil.AugmentLimits augmentLimits;
 
-    /** Registers the glyph_limits configuration entry for augmentation limits. */
+    /**
+     * Registers the glyph_limits configuration entry for augmentation limits.
+     */
     protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
@@ -149,14 +157,14 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     // Default value for the starter spell config
-    public boolean defaultedStarterGlyph(){
+    public boolean defaultedStarterGlyph() {
         return false;
     }
 
     /**
      * Used for datagen lang ONLY.
      */
-    public String getBookDescription(){
+    public String getBookDescription() {
         return "";
     }
 
@@ -164,7 +172,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return registryName.getNamespace() + ".glyph_name." + registryName.getPath();
     }
 
-    public String getLocaleName(){
+    public String getLocaleName() {
         return Component.translatable(getLocalizationKey()).getString();
     }
 }

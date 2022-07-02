@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class TimerTurretRenderer extends BasicTurretRenderer{
+public class TimerTurretRenderer extends BasicTurretRenderer {
     public static AnimatedGeoModel model = new GenericModel("spell_turret_timer");
 
     public TimerTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
@@ -16,7 +16,7 @@ public class TimerTurretRenderer extends BasicTurretRenderer{
         super(rendererDispatcherIn, modelProvider);
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

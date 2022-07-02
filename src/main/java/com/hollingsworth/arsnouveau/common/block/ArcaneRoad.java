@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ArcaneRoad extends TickableModBlock {
     private static final AABB AABB = new AABB(0F, 0F, 0F, 1F, .8F, 1F);
+
     @Override
     public void entityInside(BlockState p_196262_1_, Level p_196262_2_, BlockPos p_196262_3_, Entity entity) {
         Vec3 dir = entity.getDeltaMovement();

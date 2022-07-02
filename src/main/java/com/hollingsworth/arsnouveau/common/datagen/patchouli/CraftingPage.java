@@ -20,22 +20,22 @@ public class CraftingPage extends AbstractPage {
         this(itemLike.get().asItem());
     }
 
-    public CraftingPage withRecipe2(String recipe){
+    public CraftingPage withRecipe2(String recipe) {
         object.addProperty("recipe2", recipe);
         return this;
     }
 
-    public CraftingPage withRecipe2(ItemLike recipe){
+    public CraftingPage withRecipe2(ItemLike recipe) {
         object.addProperty("recipe2", getRegistryName(recipe.asItem()).toString());
         return this;
     }
 
-    public CraftingPage withTitle(String title){
+    public CraftingPage withTitle(String title) {
         object.addProperty("title", title);
         return this;
     }
 
-    public CraftingPage withText(String text){
+    public CraftingPage withText(String text) {
         object.addProperty("text", text);
         return this;
     }

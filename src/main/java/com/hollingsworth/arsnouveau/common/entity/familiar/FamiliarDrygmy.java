@@ -37,14 +37,14 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityDrygmy.COLORS).contains(color.getName()))
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityDrygmy.COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color);
             return InteractionResult.SUCCESS;
@@ -54,12 +54,12 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
 
     @Override
     public void onModifier(SpellModifierEvent event) {
-        if(isAlive() && getOwner() != null && getOwner().equals(event.caster) && SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(event.spellPart)){
+        if (isAlive() && getOwner() != null && getOwner().equals(event.caster) && SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(event.spellPart)) {
             event.builder.addDamageModifier(2.0f);
         }
     }
 
-    public void onLootingEvent(LootingLevelEvent event){
+    public void onLootingEvent(LootingLevelEvent event) {
         if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
             if (level.random.nextFloat() > 0.4) {
                 event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
@@ -84,8 +84,8 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
-        if(color.isEmpty())
+        if (color.isEmpty())
             color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
     }
 }

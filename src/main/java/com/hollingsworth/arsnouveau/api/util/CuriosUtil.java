@@ -15,13 +15,13 @@ public class CuriosUtil {
         return CuriosApi.getCuriosHelper().getEquippedCurios(living);
     }
 
-    public static boolean hasItem(@Nullable LivingEntity entity, ItemStack stack){
-        if(entity == null)
+    public static boolean hasItem(@Nullable LivingEntity entity, ItemStack stack) {
+        if (entity == null)
             return false;
         IItemHandlerModifiable items = CuriosUtil.getAllWornItems(entity).orElse(null);
-        if(items != null){
-            for(int i = 0; i < items.getSlots(); i++){
-                if(stack.sameItem(items.getStackInSlot(i))){
+        if (items != null) {
+            for (int i = 0; i < items.getSlots(); i++) {
+                if (stack.sameItem(items.getStackInSlot(i))) {
                     return true;
                 }
             }
@@ -29,7 +29,7 @@ public class CuriosUtil {
         return false;
     }
 
-    public static boolean hasItem(LivingEntity entity, Item item){
+    public static boolean hasItem(LivingEntity entity, Item item) {
         return hasItem(entity, new ItemStack(item));
     }
 }

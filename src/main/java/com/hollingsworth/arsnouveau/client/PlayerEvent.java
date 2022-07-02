@@ -24,18 +24,18 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
         Player entity = event.getPlayer();
-        if(!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
+        if (!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
             return;
-        if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
+        if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public static void onTooltip(final ItemTooltipEvent event){
+    public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), stack);
-        if(level > 0 && new ReactiveCaster(stack).getSpell().isValid()){
+        if (level > 0 && new ReactiveCaster(stack).getSpell().isValid()) {
             Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(Component.literal(spell.getDisplayString()));
         }
@@ -44,9 +44,9 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onItem(final PlayerInteractEvent.RightClickItem event) {
         Player entity = event.getPlayer();
-        if(!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
+        if (!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
             return;
-        if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
+        if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);
         }
     }

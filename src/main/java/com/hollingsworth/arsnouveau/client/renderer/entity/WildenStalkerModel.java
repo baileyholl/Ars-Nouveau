@@ -16,7 +16,7 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
     @Override
     public void setLivingAnimations(WildenStalker entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        if(entity.isFlying())
+        if (entity.isFlying())
             return;
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -35,12 +35,12 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
 //        frontRightArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
 
         frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
-        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
+        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
     }
 
     @Override
     public ResourceLocation getModelResource(WildenStalker wildenStalker) {
-        return wildenStalker.isFlying() ?  new ResourceLocation(ArsNouveau.MODID , "geo/stalker_flying.geo.json") : new ResourceLocation(ArsNouveau.MODID , "geo/stalker_standing.geo.json");
+        return wildenStalker.isFlying() ? new ResourceLocation(ArsNouveau.MODID, "geo/stalker_flying.geo.json") : new ResourceLocation(ArsNouveau.MODID, "geo/stalker_standing.geo.json");
     }
 
     @Override

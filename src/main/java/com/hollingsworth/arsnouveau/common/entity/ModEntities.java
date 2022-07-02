@@ -203,25 +203,25 @@ public class ModEntities {
             .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
 
     public static final RegistryObject<EntityType<EnchantedFallingBlock>> FALLING_BLOCK = registerEntity(
-                    "enchanted_falling_block",(
+            "enchanted_falling_block", (
                     EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
                             .setShouldReceiveVelocityUpdates(true)
                             .setTrackingRange(256)));
 
 
-    public static void registerPlacements(){
+    public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_DRYGMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
 
         SpawnPlacements.register(WILDEN_GUARDIAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
-        SpawnPlacements.register(WILDEN_HUNTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,  ModEntities::canMonsterSpawnInLight);
-        SpawnPlacements.register(WILDEN_STALKER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,  ModEntities::canMonsterSpawnInLight);
+        SpawnPlacements.register(WILDEN_HUNTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
+        SpawnPlacements.register(WILDEN_STALKER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
         SpawnPlacements.register(ENTITY_BLAZING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_CASCADING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_FLOURISHING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_VEXING_WEALD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
-        
+
         LightManager.init();
     }
 

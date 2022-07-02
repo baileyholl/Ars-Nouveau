@@ -10,20 +10,22 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface ISpellHotkeyListener {
 
-    default void onNextKeyPressed(ItemStack stack, ServerPlayer player){
+    default void onNextKeyPressed(ItemStack stack, ServerPlayer player) {
         ISpellCaster iSpellCaster = CasterUtil.getCaster(stack);
         iSpellCaster.setNextSlot();
     }
 
-    default void onPreviousKeyPressed(ItemStack stack, ServerPlayer player){
+    default void onPreviousKeyPressed(ItemStack stack, ServerPlayer player) {
         ISpellCaster iSpellCaster = CasterUtil.getCaster(stack);
         iSpellCaster.setPreviousSlot();
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void onOpenBookMenuKeyPressed(ItemStack stack, Player player){}
+    default void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
+    }
 
     @OnlyIn(Dist.CLIENT)
-    default void onRadialKeyPressed(ItemStack stack, Player player){}
+    default void onRadialKeyPressed(ItemStack stack, Player player) {
+    }
 
 }

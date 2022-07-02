@@ -9,10 +9,10 @@ import javax.annotation.Nullable;
 
 /**
  * Base class for common logic when constructing a {@link SpellValidationError}.
- *
+ * <p>
  * Provides logic around finding the exact localization keys and for building text components that translate both
  * the core message and the glyphs being passed as arguments.
- *
+ * <p>
  * Subclasses of this base class will seek localization keys under
  * <code>"ars_nouveau.spell.validation.exists."</code>
  * or <code>"ars_nouveau.spell.validation.adding."</code>.
@@ -47,8 +47,8 @@ public class BaseSpellValidationError implements SpellValidationError {
     /**
      * Creates a new Spell Validation Error.
      *
-     * @param position the glyph position in the overall spell that was validated.
-     * @param spellPart the actual spell part in the offending position
+     * @param position         the glyph position in the overall spell that was validated.
+     * @param spellPart        the actual spell part in the offending position
      * @param localizationCode the localization code
      */
     public BaseSpellValidationError(int position,
@@ -60,10 +60,10 @@ public class BaseSpellValidationError implements SpellValidationError {
     /**
      * Creates a new Spell Validation Error.
      *
-     * @param position the glyph position in the overall spell that was validated.
-     * @param spellPart the actual spell part in the offending position
+     * @param position         the glyph position in the overall spell that was validated.
+     * @param spellPart        the actual spell part in the offending position
      * @param localizationCode the localization code
-     * @param spellParts arguments to be passed to the i18n system when constructing text components for this error.
+     * @param spellParts       arguments to be passed to the i18n system when constructing text components for this error.
      */
     public BaseSpellValidationError(int position,
                                     AbstractSpellPart spellPart,
@@ -87,6 +87,7 @@ public class BaseSpellValidationError implements SpellValidationError {
     public MutableComponent makeTextComponentExisting() {
         return makeTextComponent("ars_nouveau.spell.validation.exists.");
     }
+
     @Override
     public MutableComponent makeTextComponentAdding() {
         return makeTextComponent("ars_nouveau.spell.validation.adding.");

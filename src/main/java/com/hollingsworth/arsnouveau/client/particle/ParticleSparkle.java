@@ -13,18 +13,18 @@ public class ParticleSparkle extends TextureSheetParticle {
     public float initAlpha = 0;
 
     protected ParticleSparkle(ClientLevel worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, SpriteSet sprite) {
-        super(worldIn, x,y,z,0,0,0);
+        super(worldIn, x, y, z, 0, 0, 0);
         this.colorR = r;
         this.colorG = g;
         this.colorB = b;
-        if (this.colorR > 1.0){
-            this.colorR = this.colorR/255.0f;
+        if (this.colorR > 1.0) {
+            this.colorR = this.colorR / 255.0f;
         }
-        if (this.colorG > 1.0){
-            this.colorG = this.colorG/255.0f;
+        if (this.colorG > 1.0) {
+            this.colorG = this.colorG / 255.0f;
         }
-        if (this.colorB > 1.0){
-            this.colorB = this.colorB/255.0f;
+        if (this.colorB > 1.0) {
+            this.colorB = this.colorB / 255.0f;
         }
         this.setColor(colorR, colorG, colorB);
         this.lifetime = lifetime;
@@ -36,6 +36,7 @@ public class ParticleSparkle extends TextureSheetParticle {
         this.zd = ParticleUtil.inRange(-0.01, 0.01);
         this.pickSprite(sprite);
     }
+
     @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderTypes.EMBER_RENDER;
@@ -43,16 +44,16 @@ public class ParticleSparkle extends TextureSheetParticle {
 
 
     @Override
-    public int getLightColor(float pTicks){
+    public int getLightColor(float pTicks) {
         return 255;
     }
 
 
     @Override
-    public void tick(){
+    public void tick() {
         super.tick();
-        float lifeCoeff = (float)this.age/(float)this.lifetime;
-        this.alpha = 1.0f-lifeCoeff;
+        float lifeCoeff = (float) this.age / (float) this.lifetime;
+        this.alpha = 1.0f - lifeCoeff;
     }
 
     @Override

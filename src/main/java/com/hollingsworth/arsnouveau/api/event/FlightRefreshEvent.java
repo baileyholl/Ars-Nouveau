@@ -8,15 +8,16 @@ import net.minecraftforge.eventbus.api.Cancelable;
 public class FlightRefreshEvent extends PlayerEvent {
 
     private boolean canContinueFlight;
+
     public FlightRefreshEvent(Player entity) {
         super(entity);
     }
 
-    public void setCanFly(boolean canFly){
+    public void setCanFly(boolean canFly) {
         this.canContinueFlight = canFly;
     }
 
-    public boolean canFly(){
+    public boolean canFly() {
         return !this.isCanceled() && canContinueFlight;
     }
 }

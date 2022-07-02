@@ -30,7 +30,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
 
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if(!stack.hasTag())
+        if (!stack.hasTag())
             stack.setTag(new CompoundTag());
     }
 
@@ -45,37 +45,37 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
 
     public static String ITEM_PREFIX = "item_";
 
-    public List<ItemStack> getItems(ItemStack stack){
+    public List<ItemStack> getItems(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         List<ItemStack> stacks = new ArrayList<>();
-        if(tag == null)
+        if (tag == null)
             return stacks;
 
-        for(String s : tag.getAllKeys()){
-            if(s.contains(ITEM_PREFIX)){
+        for (String s : tag.getAllKeys()) {
+            if (s.contains(ITEM_PREFIX)) {
                 stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
         return stacks;
     }
 
-    public static boolean addItem(ItemStack itemToAdd, CompoundTag tag){
+    public static boolean addItem(ItemStack itemToAdd, CompoundTag tag) {
         CompoundTag itemTag = new CompoundTag();
         itemToAdd.save(itemTag);
         tag.put(getItemKey(itemToAdd), itemTag);
         return true;
     }
 
-    public static boolean removeItem(ItemStack itemToRemove, CompoundTag tag){
+    public static boolean removeItem(ItemStack itemToRemove, CompoundTag tag) {
         tag.remove(getItemKey(itemToRemove));
         return true;
     }
 
-    public static boolean containsItem(ItemStack stack, CompoundTag tag){
+    public static boolean containsItem(ItemStack stack, CompoundTag tag) {
         return tag != null && tag.contains(getItemKey(stack));
     }
 
-    public static String getItemKey(ItemStack stack){
+    public static String getItemKey(ItemStack stack) {
         return ITEM_PREFIX + RegistryHelper.getRegistryName(stack.getItem()).toString();
     }
 
@@ -84,13 +84,13 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         return ItemScroll.scribe(world, pos, player, handIn, thisStack);
     }
 
-    public static boolean scribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack){
+    public static boolean scribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack) {
         ItemStack stackToWrite = player.getItemInHand(handIn);
         CompoundTag tag = thisStack.getTag();
-        if(stackToWrite == ItemStack.EMPTY || tag == null)
+        if (stackToWrite == ItemStack.EMPTY || tag == null)
             return false;
 
-        if(containsItem(stackToWrite, tag)) {
+        if (containsItem(stackToWrite, tag)) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_removed"));
             return removeItem(stackToWrite, tag);
         }
@@ -101,15 +101,15 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         CompoundTag tag = stack.getTag();
-        if(tag == null)
+        if (tag == null)
             return;
         List<ItemStack> stacks = new ArrayList<>();
-        for(String s : tag.getAllKeys()){
-            if(s.contains(ITEM_PREFIX)){
+        for (String s : tag.getAllKeys()) {
+            if (s.contains(ITEM_PREFIX)) {
                 stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
-        for(ItemStack s : stacks){
+        for (ItemStack s : stacks) {
             tooltip2.add(s.getHoverName());
         }
     }

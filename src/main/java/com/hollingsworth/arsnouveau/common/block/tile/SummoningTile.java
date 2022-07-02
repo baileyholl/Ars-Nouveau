@@ -19,7 +19,7 @@ public class SummoningTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick() {
-        if(level.isClientSide)
+        if (level.isClientSide)
             return;
 
         if (!converted) {

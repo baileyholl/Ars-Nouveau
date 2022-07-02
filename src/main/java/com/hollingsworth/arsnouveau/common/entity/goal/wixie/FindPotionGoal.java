@@ -22,7 +22,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
     boolean found;
     Potion potionNeeded;
 
-    public FindPotionGoal(EntityWixie wixie){
+    public FindPotionGoal(EntityWixie wixie) {
         super(15);
         this.wixie = wixie;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
@@ -33,15 +33,15 @@ public class FindPotionGoal extends ExtendedRangeGoal {
         super.start();
         BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         found = false;
-        if(tileEntity instanceof WixieCauldronTile) {
+        if (tileEntity instanceof WixieCauldronTile) {
             potionNeeded = ((WixieCauldronTile) tileEntity).getNeededPotion();
             movePos = ((WixieCauldronTile) tileEntity).findNeededPotion(potionNeeded, 300);
             this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
-        }else{
+        } else {
             found = true;
         }
 
-        if(movePos == null)
+        if (movePos == null)
             found = true;
 
 
@@ -50,18 +50,18 @@ public class FindPotionGoal extends ExtendedRangeGoal {
     @Override
     public void tick() {
         super.tick();
-        if(found)
+        if (found)
             return;
 
-        if(movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange){
+        if (movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange) {
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             Level world = wixie.getCommandSenderWorld();
-            if(tile == null) {
+            if (tile == null) {
                 found = true;
                 return;
             }
             PotionJarTile jar = (PotionJarTile) world.getBlockEntity(movePos);
-            if(jar == null){
+            if (jar == null) {
                 found = true;
                 return;
             }
@@ -73,26 +73,26 @@ public class FindPotionGoal extends ExtendedRangeGoal {
             int g = (color >> 8) & 0xFF;
             int b = (color) & 0xFF;
             int a = (color >> 24) & 0xFF;
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r,g,b);
+            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r, g, b);
 
             world.addFreshEntity(aoeProjectile);
-            found= true;
+            found = true;
 
         }
 
-        if(movePos != null && !found) {
-            setPath(movePos.getX(), movePos.getY()+1, movePos.getZ(), 1.2D);
+        if (movePos != null && !found) {
+            setPath(movePos.getX(), movePos.getY() + 1, movePos.getZ(), 1.2D);
         }
     }
 
     @Override
     public boolean canUse() {
-        if(wixie.cauldronPos == null)
+        if (wixie.cauldronPos == null)
             return false;
         BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
 
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasSource && ((WixieCauldronTile) tileEntity).needsPotion()  && !((WixieCauldronTile) tileEntity).isOff;
+                && ((WixieCauldronTile) tileEntity).hasSource && ((WixieCauldronTile) tileEntity).needsPotion() && !((WixieCauldronTile) tileEntity).isOff;
     }
 
     @Override
@@ -100,8 +100,8 @@ public class FindPotionGoal extends ExtendedRangeGoal {
         return !found;
     }
 
-    public void setPath(double x, double y, double z, double speedIn){
-        wixie.getNavigation().moveTo( wixie.getNavigation().createPath(x+0.5, y+0.5, z+0.5, 0), speedIn);
+    public void setPath(double x, double y, double z, double speedIn) {
+        wixie.getNavigation().moveTo(wixie.getNavigation().createPath(x + 0.5, y + 0.5, z + 0.5, 0), speedIn);
     }
 
     @Override

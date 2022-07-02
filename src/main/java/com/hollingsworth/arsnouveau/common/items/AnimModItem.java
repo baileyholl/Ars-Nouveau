@@ -10,7 +10,7 @@ public class AnimModItem extends ModItem implements IAnimatable {
         super(properties);
     }
 
-    public AnimModItem(){
+    public AnimModItem() {
         super();
     }
 
@@ -19,6 +19,7 @@ public class AnimModItem extends ModItem implements IAnimatable {
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

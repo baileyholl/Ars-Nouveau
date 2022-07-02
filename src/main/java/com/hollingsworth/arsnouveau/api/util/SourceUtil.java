@@ -17,7 +17,7 @@ public class SourceUtil {
      * Returns the position where the mana was taken, or null if none were found.
      */
     @Nullable
-    public static BlockPos takeSourceNearby(BlockPos pos, Level world, int range, int mana){
+    public static BlockPos takeSourceNearby(BlockPos pos, Level world, int range, int mana) {
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).getSource() >= mana);
         if (loc.isEmpty())
             return null;
@@ -26,9 +26,9 @@ public class SourceUtil {
         return loc.get();
     }
 
-    public static @Nullable BlockPos takeSourceNearbyWithParticles(BlockPos pos, Level world, int range, int mana){
-        BlockPos result = takeSourceNearby(pos,world,range,mana);
-        if(result != null){
+    public static @Nullable BlockPos takeSourceNearbyWithParticles(BlockPos pos, Level world, int range, int mana) {
+        BlockPos result = takeSourceNearby(pos, world, range, mana);
+        if (result != null) {
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, result, pos);
             world.addFreshEntity(aoeProjectile);
         }
@@ -39,30 +39,30 @@ public class SourceUtil {
      * Searches for nearby mana jars that have enough mana.
      * Returns the position where the mana was taken, or null if none were found.
      */
-    public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int mana){
+    public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int mana) {
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() >= mana);
         return loc.isPresent();
     }
 
     @Nullable
-    public static BlockPos canGiveSourceClosest(BlockPos pos, Level world, int range){
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) ->  world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource());
+    public static BlockPos canGiveSourceClosest(BlockPos pos, Level world, int range) {
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource());
         return loc.orElse(null);
     }
 
-    public static List<BlockPos> canGiveSourceAny(BlockPos pos, Level world, int range){
+    public static List<BlockPos> canGiveSourceAny(BlockPos pos, Level world, int range) {
         List<BlockPos> posList = new ArrayList<>();
-        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b ->{
-            if(world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
+        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+            if (world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
                 posList.add(b.immutable());
         });
         return posList;
     }
 
-    public static List<BlockPos> canTakeSourceAny(BlockPos pos, Level world, int range){
+    public static List<BlockPos> canTakeSourceAny(BlockPos pos, Level world, int range) {
         List<BlockPos> posList = new ArrayList<>();
-        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b ->{
-            if(world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0){
+        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+            if (world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0) {
                 posList.add(b.immutable());
             }
         });

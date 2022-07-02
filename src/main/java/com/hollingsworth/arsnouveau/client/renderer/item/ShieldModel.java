@@ -9,16 +9,16 @@ public class ShieldModel extends AnimatedGeoModel<EnchantersShield> {
 
     @Override
     public ResourceLocation getModelResource(EnchantersShield wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/shield.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/shield.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(EnchantersShield wand) {
-        return  new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_shield.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_shield.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(EnchantersShield wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/shield.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/shield.json");
     }
 }

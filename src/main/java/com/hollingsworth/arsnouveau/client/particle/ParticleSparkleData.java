@@ -13,19 +13,20 @@ public class ParticleSparkleData implements ParticleProvider<ColoredDynamicTypeD
     public static final String NAME = "sparkle";
 
     public static final Random random = new Random();
+
     public ParticleSparkleData(SpriteSet sprite) {
         this.spriteSet = sprite;
     }
 
     @Override
     public Particle createParticle(ColoredDynamicTypeData data, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        return new ParticleSparkle(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(),
+        return new ParticleSparkle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(),
                 data.scale,
-                data.age,  this.spriteSet);
+                data.age, this.spriteSet);
     }
 
     public static ParticleOptions createData(ParticleColor color) {
-        return new ColoredDynamicTypeData(ModParticles.SPARKLE_TYPE.get(), color,.25f,  36);
+        return new ColoredDynamicTypeData(ModParticles.SPARKLE_TYPE.get(), color, .25f, 36);
     }
 
     public static ParticleOptions createData(ParticleColor color, float scale, int age) {

@@ -20,7 +20,7 @@ public class BookwyrmCharm extends AbstractSummonCharm {
 
     @Override
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
-        if (world.getBlockState(pos).getBlock() == Blocks.LECTERN){
+        if (world.getBlockState(pos).getBlock() == Blocks.LECTERN) {
             world.setBlockAndUpdate(pos, BlockRegistry.BOOKWYRM_LECTERN.defaultBlockState().setValue(BookwyrmLectern.FACING, world.getBlockState(pos).getValue(LecternBlock.FACING)));
             return InteractionResult.SUCCESS;
         }

@@ -14,40 +14,41 @@ import java.util.function.Supplier;
 
 public class PacketUpdateCaster {
 
-   Spell spellRecipe;
-   int cast_slot;
-   String spellName;
+    Spell spellRecipe;
+    int cast_slot;
+    String spellName;
 
-    public PacketUpdateCaster(){}
+    public PacketUpdateCaster() {
+    }
 
-    public PacketUpdateCaster(Spell spellRecipe, int cast_slot, String spellName){
+    public PacketUpdateCaster(Spell spellRecipe, int cast_slot, String spellName) {
         this.spellRecipe = spellRecipe;
         this.cast_slot = cast_slot;
         this.spellName = spellName;
     }
 
     //Decoder
-    public PacketUpdateCaster(FriendlyByteBuf buf){
+    public PacketUpdateCaster(FriendlyByteBuf buf) {
         spellRecipe = Spell.fromTag(buf.readNbt());
         cast_slot = buf.readInt();
         spellName = buf.readUtf(32767);
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(spellRecipe.serialize());
         buf.writeInt(cast_slot);
         buf.writeUtf(spellName);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            if(ctx.get().getSender() != null){
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            if (ctx.get().getSender() != null) {
                 InteractionHand hand = StackUtil.getHeldCasterTool(ctx.get().getSender());
-                if(hand == null)
+                if (hand == null)
                     return;
                 ItemStack stack = ctx.get().getSender().getItemInHand(hand);
-                if(spellRecipe != null){
+                if (spellRecipe != null) {
                     ISpellCaster caster = CasterUtil.getCaster(stack);
                     caster.setCurrentSlot(cast_slot);
                     // Update just the recipe, don't overwrite the entire spell.
@@ -55,7 +56,7 @@ public class PacketUpdateCaster {
                     caster.setSpell(spell, cast_slot);
                     caster.setSpellName(spellName, cast_slot);
 
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                 }
             }
         });

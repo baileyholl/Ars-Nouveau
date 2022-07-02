@@ -23,7 +23,6 @@ public class WildenSummon extends Goal {
     }
 
 
-
     @Override
     public void start() {
         super.start();
@@ -36,7 +35,7 @@ public class WildenSummon extends Goal {
         wolf2.ticksLeft = 400;
         wolf2.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
         this.entity.summonCooldown = 400;
-        if(entity.getTarget() != null){
+        if (entity.getTarget() != null) {
             wolf.setTarget(entity.getTarget());
             wolf2.setTarget(entity.getTarget());
         }

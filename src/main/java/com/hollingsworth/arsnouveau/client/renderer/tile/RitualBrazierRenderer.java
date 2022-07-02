@@ -10,7 +10,7 @@ public class RitualBrazierRenderer extends GeoBlockRenderer<RitualBrazierTile> {
         super(rendererDispatcherIn, new RitualBrazierModel());
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(new RitualBrazierModel());
     }
 }

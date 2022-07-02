@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonObject;
 
-public abstract class AbstractPage implements IPatchouliPage{
+public abstract class AbstractPage implements IPatchouliPage {
     JsonObject object = new JsonObject();
 
     @Override

@@ -13,7 +13,8 @@ public class ChimeraSpikeGoal extends Goal {
     EntityChimera boss;
     boolean finished;
     int ticks;
-    public ChimeraSpikeGoal(EntityChimera boss){
+
+    public ChimeraSpikeGoal(EntityChimera boss) {
         this.boss = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -35,15 +36,15 @@ public class ChimeraSpikeGoal extends Goal {
         super.tick();
         ticks++;
         boss.setDefensiveMode(true);
-        boss.setDeltaMovement(0,0,0);
-        if(ticks % 20 == 0 ){
-            for(int i = 0; i < 100; i++){
+        boss.setDeltaMovement(0, 0, 0);
+        if (ticks % 20 == 0) {
+            for (int i = 0; i < 100; i++) {
                 EntityChimeraProjectile entity = new EntityChimeraProjectile(boss.level);
                 entity.shootFromRotation(boss, boss.level.random.nextInt(360), boss.level.random.nextInt(360), 0.0f, (float) (1.0F + ParticleUtil.inRange(0.0, 0.5)), 1.0F);
                 entity.setPos(boss.position.x, boss.position.y + 2, boss.position.z);
                 boss.level.addFreshEntity(entity);
             }
-            for(int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++) {
                 if (this.boss.getTarget() != null) {
                     EntityChimeraProjectile abstractarrowentity = new EntityChimeraProjectile(boss.level);
                     abstractarrowentity.setPos(boss.getX(), boss.getY(), boss.getZ());
@@ -56,7 +57,7 @@ public class ChimeraSpikeGoal extends Goal {
                 }
             }
         }
-        if(ticks >= 120) {
+        if (ticks >= 120) {
             boss.setDefensiveMode(false);
             finished = true;
             boss.spikeCooldown = (int) (500 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());

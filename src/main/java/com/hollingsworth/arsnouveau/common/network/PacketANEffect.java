@@ -33,7 +33,8 @@ public class PacketANEffect {
         this.blue = 180;
         this.args = args;
     }
-    public PacketANEffect(EffectType type, double x, double y, double z,ParticleColor.IntWrapper wrapper, int... args) {
+
+    public PacketANEffect(EffectType type, double x, double y, double z, ParticleColor.IntWrapper wrapper, int... args) {
         this.type = type;
         this.x = x;
         this.y = y;
@@ -45,12 +46,12 @@ public class PacketANEffect {
     }
 
 
-    public PacketANEffect(EffectType type, BlockPos pos, int... args){
+    public PacketANEffect(EffectType type, BlockPos pos, int... args) {
         this(type, pos.getX(), pos.getY(), pos.getZ(), args);
     }
 
-    public PacketANEffect(EffectType type, BlockPos pos, ParticleColor.IntWrapper wrapper, int... args){
-        this(type, pos.getX(), pos.getY(), pos.getZ(),wrapper, args);
+    public PacketANEffect(EffectType type, BlockPos pos, ParticleColor.IntWrapper wrapper, int... args) {
+        this(type, pos.getX(), pos.getY(), pos.getZ(), wrapper, args);
     }
 
     public static PacketANEffect decode(FriendlyByteBuf buf) {
@@ -66,7 +67,7 @@ public class PacketANEffect {
         for (int i = 0; i < args.length; i++) {
             args[i] = buf.readVarInt();
         }
-        return new PacketANEffect(type, x, y, z,new ParticleColor.IntWrapper(red,green,blue), args);
+        return new PacketANEffect(type, x, y, z, new ParticleColor.IntWrapper(red, green, blue), args);
     }
 
     public static void encode(PacketANEffect msg, FriendlyByteBuf buf) {
@@ -94,17 +95,17 @@ public class PacketANEffect {
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
                     ClientLevel world = mc.level;
-                    switch (message.type){
+                    switch (message.type) {
 
-                        case BURST:{
-                            for(int i =0; i < 10; i++){
-                                double d0 = message.x +0.5; //+ world.rand.nextFloat();
-                                double d1 = message.y +1.2;//+ world.rand.nextFloat() ;
-                                double d2 = message.z +.5 ; //+ world.rand.nextFloat();
-                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2,
-                                        (world.random.nextFloat() - 0.5)/3.0,
-                                        (world.random.nextFloat() - 0.5)/3.0,
-                                        (world.random.nextFloat() - 0.5)/3.0);
+                        case BURST: {
+                            for (int i = 0; i < 10; i++) {
+                                double d0 = message.x + 0.5; //+ world.rand.nextFloat();
+                                double d1 = message.y + 1.2;//+ world.rand.nextFloat() ;
+                                double d2 = message.z + .5; //+ world.rand.nextFloat();
+                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)), d0, d1, d2,
+                                        (world.random.nextFloat() - 0.5) / 3.0,
+                                        (world.random.nextFloat() - 0.5) / 3.0,
+                                        (world.random.nextFloat() - 0.5) / 3.0);
                             }
                             break;
                         }
@@ -116,11 +117,11 @@ public class PacketANEffect {
 
         }
     }
+
     public enum EffectType {
         TIMED_GLOW(4), //dest xyz num_particles
         TIMED_HELIX(0),
-        BURST(0)
-        ;
+        BURST(0);
 
         private final int argCount;
 

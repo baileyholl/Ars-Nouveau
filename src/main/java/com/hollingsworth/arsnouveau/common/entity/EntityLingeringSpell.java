@@ -18,7 +18,7 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
-public class EntityLingeringSpell extends EntityProjectileSpell{
+public class EntityLingeringSpell extends EntityProjectileSpell {
 
     public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.FLOAT);
@@ -40,14 +40,14 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
         super(ModEntities.LINGER_SPELL.get(), worldIn, shooter);
     }
 
-    public void setAccelerates(int accelerates){
+    public void setAccelerates(int accelerates) {
         entityData.set(ACCELERATES, accelerates);
     }
 
 
     @Override
     public void tick() {
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             boolean isOnGround = level.getBlockState(blockPosition()).getMaterial().blocksMotion();
             this.setLanded(isOnGround);
         }
@@ -56,39 +56,40 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     }
 
     @Override
-    public void traceAnyHit(@Nullable HitResult raytraceresult, Vec3 thisPosition, Vec3 nextPosition) {}
+    public void traceAnyHit(@Nullable HitResult raytraceresult, Vec3 thisPosition, Vec3 nextPosition) {
+    }
 
     @Override
     public void tickNextPosition() {
-        if(!getLanded()){
+        if (!getLanded()) {
             this.setDeltaMovement(0, -0.2, 0);
-        }else{
+        } else {
             this.setDeltaMovement(0, 0, 0);
         }
         super.tickNextPosition();
     }
 
-    public void castSpells(){
+    public void castSpells() {
         float aoe = getAoe();
         int flatAoe = Math.round(aoe);
-        if(!level.isClientSide && age % (20 - 2* getAccelerates()) == 0){
-            if(isSensitive()){
-                for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))){
+        if (!level.isClientSide && age % (20 - 2 * getAccelerates()) == 0) {
+            if (isSensitive()) {
+                for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
                     spellResolver.onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
-            }else {
+            } else {
                 int i = 0;
-                for(Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
-                    if(entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt)
+                for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
+                    if (entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt)
                         continue;
                     spellResolver.onResolveEffect(level, new EntityHitResult(entity));
                     i++;
-                    if(i > 5)
+                    if (i > 5)
                         break;
                 }
                 totalProcs += i;
-                if(totalProcs>= maxProcs)
+                if (totalProcs >= maxProcs)
                     this.remove(RemovalReason.DISCARDED);
             }
         }
@@ -108,10 +109,10 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     @Override
     public void playParticles() {
         ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), Math.round(getAoe()), 5, 20);
-        ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0),10);
+        ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0), 10);
     }
 
-    public EntityLingeringSpell(PlayMessages.SpawnEntity packet, Level world){
+    public EntityLingeringSpell(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.LINGER_SPELL.get(), world);
     }
 
@@ -124,47 +125,48 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     protected void onHit(HitResult result) {
         if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
-            if(state.getMaterial() == Material.PORTAL){
-                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(),this);
+            if (state.getMaterial() == Material.PORTAL) {
+                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }
             this.setLanded(true);
         }
     }
 
-    public int getAccelerates(){
+    public int getAccelerates() {
         return entityData.get(ACCELERATES);
     }
 
 
-    public void setAoe(float aoe){
+    public void setAoe(float aoe) {
         entityData.set(AOE, aoe);
-    }
-    //for compat
-    @Deprecated
-    public void setAoe(int aoe){
-        entityData.set(AOE, (float)aoe);
     }
 
     //for compat
-    public float getAoe(){
+    @Deprecated
+    public void setAoe(int aoe) {
+        entityData.set(AOE, (float) aoe);
+    }
+
+    //for compat
+    public float getAoe() {
         return (this.isSensitive() ? 1 : 3) + entityData.get(AOE);
     }
 
 
-    public void setLanded(boolean landed){
+    public void setLanded(boolean landed) {
         entityData.set(LANDED, landed);
     }
 
-    public boolean getLanded(){
+    public boolean getLanded() {
         return entityData.get(LANDED);
     }
 
-    public void setSensitive(boolean sensitive){
+    public void setSensitive(boolean sensitive) {
         entityData.set(SENSITIVE, sensitive);
     }
 
-    public boolean isSensitive(){
+    public boolean isSensitive() {
         return entityData.get(SENSITIVE);
     }
 

@@ -93,16 +93,16 @@ public class RuneBlock extends TickableModBlock {
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if(worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
+        if (worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
             rune.touchedEntity = entityIn;
-            worldIn.scheduleTick(pos, this,1);
+            worldIn.scheduleTick(pos, this, 1);
         }
     }
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof RuneTile runeTile){
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RuneTile runeTile) {
             runeTile.disabled = world.hasNeighborSignal(pos);
         }
     }

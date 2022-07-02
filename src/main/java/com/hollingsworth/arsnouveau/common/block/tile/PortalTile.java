@@ -78,10 +78,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
             List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AABB(worldPosition));
             for (Entity e : entities) {
-                if(e instanceof EntityFollowProjectile)
+                if (e instanceof EntityFollowProjectile)
                     continue;
                 level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                e.teleportTo(warpPos.getX()+ 0.5, warpPos.getY(), warpPos.getZ()+ 0.5);
+                e.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
                 ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                         4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                 if (rotationVec != null) {
@@ -101,9 +101,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
     }
 
-    public boolean update(){
-        if(this.worldPosition != null && this.level != null){
-            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 2);
+    public boolean update() {
+        if (this.worldPosition != null && this.level != null) {
+            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 2);
             return true;
         }
         return false;

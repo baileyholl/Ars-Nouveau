@@ -7,7 +7,7 @@ public interface ISpellCasterProvider {
 
     ISpellCaster getSpellCaster();
 
-    default ISpellCaster getSpellCaster(ItemStack stack){
+    default ISpellCaster getSpellCaster(ItemStack stack) {
         return getSpellCaster(stack.getOrCreateTag());
     }
 

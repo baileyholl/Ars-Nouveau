@@ -34,13 +34,13 @@ public class WildenHunterModel extends AnimatedGeoModel<WildenHunter> {
 //        frontRightArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
 
         frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
-        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
+        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
 
     }
 
     @Override
     public ResourceLocation getModelResource(WildenHunter hunter) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/wilden_hunter.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/wilden_hunter.geo.json");
     }
 
     @Override
@@ -50,6 +50,6 @@ public class WildenHunterModel extends AnimatedGeoModel<WildenHunter> {
 
     @Override
     public ResourceLocation getAnimationResource(WildenHunter hunter) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/wilden_hunter_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_hunter_animations.json");
     }
 }

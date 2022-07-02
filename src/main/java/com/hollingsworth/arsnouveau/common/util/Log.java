@@ -7,8 +7,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Logging utility class.
  */
-public final class Log
-{
+public final class Log {
     /**
      * Mod logger.
      */
@@ -17,8 +16,7 @@ public final class Log
     /**
      * Private constructor to hide the public one.
      */
-    private Log()
-    {
+    private Log() {
         /*
          * Intentionally left empty.
          */
@@ -29,8 +27,7 @@ public final class Log
      *
      * @return the logger.
      */
-    public static Logger getLogger()
-    {
+    public static Logger getLogger() {
         return logger;
     }
 }

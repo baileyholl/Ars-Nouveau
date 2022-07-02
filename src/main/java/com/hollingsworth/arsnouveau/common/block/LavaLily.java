@@ -31,13 +31,13 @@ public class LavaLily extends BushBlock {
 
     public static final IntegerProperty LOC = IntegerProperty.create("loc", 0, 2);
 
-    public BlockState getState(Level world, BlockPos pos){
+    public BlockState getState(Level world, BlockPos pos) {
         BlockState state = defaultBlockState();
-        if(world.getBlockState(pos.below()).getBlock() == Blocks.STONE)
+        if (world.getBlockState(pos.below()).getBlock() == Blocks.STONE)
             state = state.setValue(LOC, 0);
-        if(world.getBlockState(pos.below()).getBlock() == Blocks.MAGMA_BLOCK)
+        if (world.getBlockState(pos.below()).getBlock() == Blocks.MAGMA_BLOCK)
             state = state.setValue(LOC, 1);
-        if(world.getBlockState(pos.below()).getBlock() == Blocks.LAVA)
+        if (world.getBlockState(pos.below()).getBlock() == Blocks.LAVA)
             state = state.setValue(LOC, 2);
         return state;
     }

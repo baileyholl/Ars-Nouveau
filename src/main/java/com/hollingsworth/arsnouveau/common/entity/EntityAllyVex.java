@@ -83,10 +83,11 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 3.0f));
         this.targetSelector.addGoal(1, new EntityAllyVex.CopyOwnerTargetGoal(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
-                (entity ) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
+                (entity) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
                         ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
+
     protected PathNavigation createNavigation(Level worldIn) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn);
         flyingpathnavigator.setCanOpenDoors(false);
@@ -226,7 +227,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
     }
 
-    public LivingEntity getOwnerFromID(){
+    public LivingEntity getOwnerFromID() {
         try {
             UUID uuid = this.getOwnerID();
 
@@ -304,12 +305,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
                     EntityAllyVex.this.setDeltaMovement(EntityAllyVex.this.getDeltaMovement().add(vec3d.scale(this.speedModifier * 0.05D / d0)));
                     if (EntityAllyVex.this.getTarget() == null) {
                         Vec3 vec3d1 = EntityAllyVex.this.getDeltaMovement();
-                        EntityAllyVex.this.yRot = -((float) Mth.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
+                        EntityAllyVex.this.yRot = -((float) Mth.atan2(vec3d1.x, vec3d1.z)) * (180F / (float) Math.PI);
                         EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     } else {
                         double d2 = EntityAllyVex.this.getTarget().getX() - EntityAllyVex.this.getX();
                         double d1 = EntityAllyVex.this.getTarget().getZ() - EntityAllyVex.this.getZ();
-                        EntityAllyVex.this.yRot = -((float)Mth.atan2(d2, d1)) * (180F / (float)Math.PI);
+                        EntityAllyVex.this.yRot = -((float) Mth.atan2(d2, d1)) * (180F / (float) Math.PI);
                         EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     }
                 }

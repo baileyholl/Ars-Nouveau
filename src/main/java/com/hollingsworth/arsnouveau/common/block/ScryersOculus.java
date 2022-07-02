@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScryersOculus extends TickableModBlock{
+public class ScryersOculus extends TickableModBlock {
 
     public ScryersOculus() {
         this(defaultProperties().noOcclusion());
@@ -42,7 +42,6 @@ public class ScryersOculus extends TickableModBlock{
     }
 
 
-
     @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
@@ -50,7 +49,7 @@ public class ScryersOculus extends TickableModBlock{
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pHand == InteractionHand.MAIN_HAND && pLevel.isClientSide){
+        if (pHand == InteractionHand.MAIN_HAND && pLevel.isClientSide) {
             openMenu(pLevel, pPos, pPlayer);
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
@@ -68,13 +67,13 @@ public class ScryersOculus extends TickableModBlock{
                 stackList.add(tile.stack);
             }
         }
-        if(slots.isEmpty()){
+        if (slots.isEmpty()) {
             PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_scrolls"));
             return;
         }
         Minecraft.getInstance().setScreen(new GuiRadialMenu(new RadialMenu<>((int scroll) -> {
             ScryerScroll.ScryerScrollData data = new ScryerScroll.ScryerScrollData(stackList.get(scroll));
-            if(data.pos == null){
+            if (data.pos == null) {
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_pos"));
                 return;
             }
@@ -85,6 +84,6 @@ public class ScryersOculus extends TickableModBlock{
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ScryersOculusTile(pPos ,pState);
+        return new ScryersOculusTile(pPos, pState);
     }
 }

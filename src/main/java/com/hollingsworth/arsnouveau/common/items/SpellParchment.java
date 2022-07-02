@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SpellParchment extends ModItem implements ICasterTool {
 
-    public SpellParchment(Properties properties){
+    public SpellParchment(Properties properties) {
         super(properties);
     }
 

@@ -25,14 +25,16 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
-    public StarbuncleRenderer(EntityRendererProvider.Context  manager) {
-        super(manager,new StarbuncleModel());
+    public StarbuncleRenderer(EntityRendererProvider.Context manager) {
+        super(manager, new StarbuncleModel());
 //        this.addLayer(new CarbuncleHeldItemLayer(this));
 //        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
     }
+
     Starbuncle carbuncle;
     MultiBufferSource buffer;
     ResourceLocation text;
+
     @Override
     protected void applyRotations(Starbuncle entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
         super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
@@ -53,7 +55,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
 
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if(bone.getName().equals("item")){
+        if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtils.moveToPivot(bone, stack);
             stack.translate(0, -0.10, 0);
@@ -64,7 +66,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
         //can be generalized as in Starbuncle familiar
-        if(bone.getName().equals("head")){
+        if (bone.getName().equals("head")) {
             CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, this.carbuncle, packedLightIn);
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
@@ -72,13 +74,13 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     }
 
     //TODO use ITextureVariant
-    public ResourceLocation getColor(Starbuncle e){
+    public ResourceLocation getColor(Starbuncle e) {
         String color = e.getEntityData().get(Starbuncle.COLOR).toLowerCase();
 
-        if(color.isEmpty())
+        if (color.isEmpty())
             return ORANGE;
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color + ".png");
     }
 
     @Override

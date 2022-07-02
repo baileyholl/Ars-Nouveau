@@ -46,7 +46,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
         this(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.SOURCE_JAR);
     }
 
-    public SourceJar(Properties properties, String registryName){
+    public SourceJar(Properties properties, String registryName) {
         super(properties, registryName);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
@@ -114,16 +114,16 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        return super.use(state,worldIn,pos,player,handIn,hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if(stack.getTag() == null)
+        if (stack.getTag() == null)
             return;
         int mana = stack.getTag().getCompound("BlockEntityTag").getInt("source");
-        tooltip.add( Component.literal((mana*100) / 10000 + "% full"));
+        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
     }
 }

@@ -43,14 +43,14 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityWixie.COLORS).contains(color.getName()))
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityWixie.COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color);
             return InteractionResult.SUCCESS;
@@ -59,9 +59,9 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     public void potionEvent(PotionEvent.PotionAddedEvent event) {
-        if(!isAlive())
+        if (!isAlive())
             return;
-        if(event.getEntity() != null && !event.getEntity().level.isClientSide && event.getEntity().equals(getOwner())){
+        if (event.getEntity() != null && !event.getEntity().level.isClientSide && event.getEntity().equals(getOwner())) {
             event.getPotionEffect().duration += event.getPotionEffect().duration * .2;
         }
     }
@@ -75,13 +75,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && debuffCooldown > 0)
+        if (!level.isClientSide && debuffCooldown > 0)
             debuffCooldown--;
     }
 
     @Override
     public PlayState walkPredicate(AnimationEvent event) {
-        if(getNavigation().isInProgress())
+        if (getNavigation().isInProgress())
             return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
@@ -100,7 +100,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
     @Override
     public void startAnimation(int arg) {
-        if(arg == EntityWixie.Animations.CAST.ordinal()){
+        if (arg == EntityWixie.Animations.CAST.ordinal()) {
             AnimationController<?> controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
@@ -110,9 +110,9 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
-        if(color.isEmpty())
+        if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
     }
 
     public static class DebuffTargetGoal extends Goal {
@@ -122,18 +122,18 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
                 MobEffects.MOVEMENT_SLOWDOWN, MobEffects.WEAKNESS, MobEffects.LEVITATION, MobEffects.POISON
         ));
 
-        public DebuffTargetGoal(FamiliarWixie wixie){
+        public DebuffTargetGoal(FamiliarWixie wixie) {
             this.wixie = wixie;
         }
 
         @Override
         public void tick() {
             super.tick();
-            if(wixie.getTarget() == null)
+            if (wixie.getTarget() == null)
                 return;
             MobEffect effect = effectTable.get(new Random().nextInt(effectTable.size()));
-            if(effect == MobEffects.POISON){
-                if(wixie.getTarget().isInvertedHealAndHarm())
+            if (effect == MobEffects.POISON) {
+                if (wixie.getTarget().isInvertedHealAndHarm())
                     effect = MobEffects.REGENERATION;
             }
             Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));

@@ -58,7 +58,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
-        if(!level.isClientSide)
+        if (!level.isClientSide)
             FAMILIAR_SET.add(this);
     }
 
@@ -72,7 +72,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         super.onRemovedFromWorld();
     }
 
-    public double getManaReserveModifier(){
+    public double getManaReserveModifier() {
         return manaReserveModifier;
     }
 
@@ -91,12 +91,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     @Override
     public void tick() {
         super.tick();
-        if(this.terminatedFamiliar){
+        if (this.terminatedFamiliar) {
             this.remove(RemovalReason.DISCARDED);
             FamiliarEntity.FAMILIAR_SET.remove(this);
         }
-        if(level.getGameTime() % 20 == 0 && !level.isClientSide){
-            if(getOwnerID() == null || ((ServerLevel)level).getEntity(getOwnerID()) == null || terminatedFamiliar){
+        if (level.getGameTime() % 20 == 0 && !level.isClientSide) {
+            if (getOwnerID() == null || ((ServerLevel) level).getEntity(getOwnerID()) == null || terminatedFamiliar) {
                 this.remove(RemovalReason.DISCARDED);
                 this.terminatedFamiliar = true;
                 FAMILIAR_SET.remove(this);
@@ -106,11 +106,11 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.FLY_INTO_WALL || source == DamageSource.FALL)
+        if (source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.FLY_INTO_WALL || source == DamageSource.FALL)
             return false;
-        if(source.getEntity() == null)
+        if (source.getEntity() == null)
             return false;
-        if(source.getEntity() == getOwner())
+        if (source.getEntity() == getOwner())
             return false;
 
         return super.hurt(source, amount);
@@ -136,15 +136,15 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     }
 
 
-    public boolean canTeleport(){
+    public boolean canTeleport() {
         return getOwner() != null && getOwner().isOnGround();
     }
 
-    public @Nullable LivingEntity getOwner(){
-        if(level.isClientSide || getOwnerID() == null)
+    public @Nullable LivingEntity getOwner() {
+        if (level.isClientSide || getOwnerID() == null)
             return null;
 
-        return (LivingEntity) ((ServerLevel)level).getEntity(getOwnerID());
+        return (LivingEntity) ((ServerLevel) level).getEntity(getOwnerID());
     }
 
     public AnimationFactory factory = new AnimationFactory(this);
@@ -180,12 +180,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         this.getEntityData().set(OWNER_UUID, Optional.of(uuid));
     }
 
-    public ItemStack getCosmeticItem(){
+    public ItemStack getCosmeticItem() {
         return this.entityData.get(COSMETIC);
     }
 
     public void setCosmeticItem(ItemStack stack) {
-        if(!this.entityData.get(COSMETIC).isEmpty())
+        if (!this.entityData.get(COSMETIC).isEmpty())
             this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
         this.entityData.set(COSMETIC, stack);
         this.persistentData.cosmetic = stack;
@@ -215,7 +215,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(!level.isClientSide && getOwner() != null && getOwner().equals(caster)){
+        if (!level.isClientSide && getOwner() != null && getOwner().equals(caster)) {
             this.remove(RemovalReason.DISCARDED);
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             return true;
@@ -226,13 +226,13 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if(getOwnerID() != null)
+        if (getOwnerID() != null)
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
         tag.put("familiarData", getPersistentFamiliarData().toTag(new CompoundTag()));
         tag.putString("holderID", holderID.toString());
         tag.putString("color", this.entityData.get(COLOR));
-        if(!this.entityData.get(COSMETIC).isEmpty()) {
+        if (!this.entityData.get(COSMETIC).isEmpty()) {
             CompoundTag cosmeticTag = new CompoundTag();
             this.entityData.get(COSMETIC).save(cosmeticTag);
             tag.put("cosmetic", cosmeticTag);
@@ -242,7 +242,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if(tag.hasUUID("ownerID"))
+        if (tag.hasUUID("ownerID"))
             setOwnerID(tag.getUUID("ownerID"));
         terminatedFamiliar = tag.getBoolean("terminated");
         this.holderID = new ResourceLocation(tag.getString("holderID"));
@@ -255,22 +255,22 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     @Override
     public void onFamiliarSpawned(FamiliarSummonEvent event) {
-        if(level.isClientSide)
+        if (level.isClientSide)
             return;
         IFamiliar.super.onFamiliarSpawned(event);
-        if(!event.getEntity().equals(this) && event.owner.equals(this.getOwner()))
+        if (!event.getEntity().equals(this) && event.owner.equals(this.getOwner()))
             this.terminatedFamiliar = true;
     }
 
-    public String getColor(){
+    public String getColor() {
         return this.entityData.get(COLOR);
     }
 
-    public void setColor(DyeColor color){
+    public void setColor(DyeColor color) {
         setColor(color.getName());
     }
 
-    public void setColor(String color){
+    public void setColor(String color) {
         this.entityData.set(COLOR, color);
         this.getPersistentFamiliarData().color = color;
         syncTag();
@@ -278,9 +278,10 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     /**
      * Called after the Familiar is returned and summoned from AbstractFamiliarHolder.
+     *
      * @param tag The persistent data tag stored on the player.
      */
-    public void setTagData(@Nullable CompoundTag tag){
+    public void setTagData(@Nullable CompoundTag tag) {
         this.persistentData = deserializePersistentData(tag != null && tag.contains("familiarData") ? tag.getCompound("familiarData") : new CompoundTag());
         syncAfterPersistentFamiliarInit();
     }
@@ -289,9 +290,9 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
      * Sync the data you want to store from the familiar on the player cap here.
      * Get the owner from getOwner
      */
-    public void syncTag(){
+    public void syncTag() {
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner()).orElse(null);
-        if(cap != null && persistentData != null){
+        if (cap != null && persistentData != null) {
             cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(new CompoundTag()));
         }
     }
@@ -299,11 +300,11 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     /**
      * Override and return your own implementation of PersistentData. See FamiliarStarbuncle for an example.
      */
-    public PersistentFamiliarData<?> deserializePersistentData(CompoundTag tag){
+    public PersistentFamiliarData<?> deserializePersistentData(CompoundTag tag) {
         return new PersistentFamiliarData<>(tag);
     }
 
-    public PersistentFamiliarData<?> getPersistentFamiliarData(){
+    public PersistentFamiliarData<?> getPersistentFamiliarData() {
         return persistentData;
     }
 
@@ -311,12 +312,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
      * Called once the Persistent Familiar Data has been constructed.
      * Use this to de-duplify your persistent entity data as it relates to your PersistentFamiliarData.
      */
-    public void syncAfterPersistentFamiliarInit(){
+    public void syncAfterPersistentFamiliarInit() {
         setCustomName(persistentData.name);
-        if(persistentData.color != null){
+        if (persistentData.color != null) {
             setColor(persistentData.color);
         }
-        if(persistentData.cosmetic != null){
+        if (persistentData.cosmetic != null) {
             setCosmeticItem(persistentData.cosmetic);
         }
     }

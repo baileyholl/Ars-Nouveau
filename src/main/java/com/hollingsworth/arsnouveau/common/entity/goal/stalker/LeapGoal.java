@@ -10,7 +10,7 @@ import java.util.EnumSet;
 public class LeapGoal extends Goal {
     WildenStalker stalker;
 
-    public LeapGoal(WildenStalker stalker){
+    public LeapGoal(WildenStalker stalker) {
         this.stalker = stalker;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
@@ -31,7 +31,7 @@ public class LeapGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        if(stalker.timeFlying < 20){
+        if (stalker.timeFlying < 20) {
             stalker.push(0, 0.1, 0);
         }
     }

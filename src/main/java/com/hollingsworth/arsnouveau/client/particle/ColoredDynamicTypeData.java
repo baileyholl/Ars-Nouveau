@@ -19,11 +19,11 @@ public class ColoredDynamicTypeData implements ParticleOptions {
 
     public static final Codec<ColoredDynamicTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
-            Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
-            Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
-            Codec.FLOAT.fieldOf("scale").forGetter(d -> d.scale),
-            Codec.INT.fieldOf("age").forGetter(d -> d.age)
-    )
+                    Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
+                    Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
+                    Codec.FLOAT.fieldOf("scale").forGetter(d -> d.scale),
+                    Codec.INT.fieldOf("age").forGetter(d -> d.age)
+            )
             .apply(instance, ColoredDynamicTypeData::new));
 
     @Override
@@ -44,14 +44,14 @@ public class ColoredDynamicTypeData implements ParticleOptions {
         }
     };
 
-    public ColoredDynamicTypeData(float r, float g, float b, float scale, int age){
+    public ColoredDynamicTypeData(float r, float g, float b, float scale, int age) {
         this.type = ModParticles.LINE_TYPE.get();
         this.color = new ParticleColor(r, g, b);
         this.scale = scale;
         this.age = age;
     }
 
-    public ColoredDynamicTypeData(ParticleType<ColoredDynamicTypeData> particleTypeData, ParticleColor color, float scale, int age){
+    public ColoredDynamicTypeData(ParticleType<ColoredDynamicTypeData> particleTypeData, ParticleColor color, float scale, int age) {
         this.type = particleTypeData;
         this.color = color;
         this.scale = scale;

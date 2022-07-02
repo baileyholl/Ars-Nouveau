@@ -37,14 +37,14 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         Potion flaskPotion = Potions.EMPTY;
         List<MobEffectInstance> effectsList = new ArrayList<>();
         List<MobEffectInstance> flaskEffects = new ArrayList<>();
-        if(output.isEmpty())
+        if (output.isEmpty())
             return ItemStack.EMPTY;
 
         ItemStack flaskPotionStack = ItemStack.EMPTY;
         for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
             final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionFlask) {
-                if(((PotionFlask) ingredient.getItem()).isMax(ingredient))
+                if (((PotionFlask) ingredient.getItem()).isMax(ingredient))
                     return ItemStack.EMPTY;
 
                 CompoundTag tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundTag();
@@ -60,17 +60,17 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionItem) {
                 Potion stackPotion = PotionUtils.getPotion(ingredient);
                 effectsList = PotionUtils.getCustomEffects(ingredient.getTag());
-                if(flaskPotion != Potions.EMPTY && !PotionUtils.getCustomEffects(ingredient.getTag()).equals(PotionUtils.getCustomEffects(flaskPotionStack.getTag())))
+                if (flaskPotion != Potions.EMPTY && !PotionUtils.getCustomEffects(ingredient.getTag()).equals(PotionUtils.getCustomEffects(flaskPotionStack.getTag())))
                     return ItemStack.EMPTY;
-                if(flaskPotion == Potions.EMPTY){
+                if (flaskPotion == Potions.EMPTY) {
                     flaskPotion = stackPotion;
                 }
-                if(!flaskPotion.equals(stackPotion))
+                if (!flaskPotion.equals(stackPotion))
                     return ItemStack.EMPTY;
             }
         }
 
-        if(!output.hasTag()){
+        if (!output.hasTag()) {
             output.setTag(new CompoundTag());
             output.getTag().putInt("count", newCount);
             PotionUtils.setPotion(output, flaskPotion);
@@ -91,11 +91,11 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
-        for(int i = 0; i < nonnulllist.size(); ++i) {
+        for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack item = inv.getItem(i);
             if (item.hasContainerItem()) {
                 nonnulllist.set(i, item.getContainerItem());
-            }else if(item.getItem() instanceof PotionItem){
+            } else if (item.getItem() instanceof PotionItem) {
                 nonnulllist.set(i, new ItemStack(Items.GLASS_BOTTLE));
             }
         }

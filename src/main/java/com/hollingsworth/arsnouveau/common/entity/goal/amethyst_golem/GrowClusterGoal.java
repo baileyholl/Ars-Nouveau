@@ -18,7 +18,8 @@ public class GrowClusterGoal extends Goal {
     int usingTicks;
 
     boolean isDone;
-    public GrowClusterGoal(AmethystGolem golem, Supplier<Boolean> canUse){
+
+    public GrowClusterGoal(AmethystGolem golem, Supplier<Boolean> canUse) {
         this.golem = golem;
         this.canUse = canUse;
     }
@@ -28,14 +29,14 @@ public class GrowClusterGoal extends Goal {
     public void tick() {
         super.tick();
         usingTicks--;
-        if(pathPos != null){
+        if (pathPos != null) {
             golem.getNavigation().tryMoveToBlockPos(pathPos, 1.3f);
-            if(BlockUtil.distanceFrom(golem.blockPosition(), pathPos) <= 2){
+            if (BlockUtil.distanceFrom(golem.blockPosition(), pathPos) <= 2) {
                 golem.setImbueing(true);
                 golem.setImbuePos(pathPos);
             }
         }
-        if(usingTicks <= 0){
+        if (usingTicks <= 0) {
             growCluster();
         }
 
@@ -51,12 +52,12 @@ public class GrowClusterGoal extends Goal {
         golem.goalState = AmethystGolem.AmethystGolemGoalState.GROW;
     }
 
-    public void growCluster(){
+    public void growCluster() {
         int numGrown = 0;
-        for(BlockPos p : golem.buddingBlocks){
-            if(numGrown > 3)
+        for (BlockPos p : golem.buddingBlocks) {
+            if (numGrown > 3)
                 break;
-            if(golem.level.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
+            if (golem.level.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST) {
                 golem.level.getBlockState(p).randomTick((ServerLevel) golem.level, p, golem.getRandom());
                 numGrown++;
             }

@@ -9,12 +9,13 @@ import java.util.Set;
 
 public class MixinPlugin implements IMixinConfigPlugin {
     public boolean viveCraftLoaded;
+
     @Override
     public void onLoad(String mixinPackage) {
-        try{
+        try {
             Class.forName("org.vivecraft.tweaker.VivecraftTransformer");
             viveCraftLoaded = true;
-        }catch (Throwable t){
+        } catch (Throwable t) {
             // Vivecraft not loaded
         }
     }

@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SpellCaster implements ISpellCaster{
+public class SpellCaster implements ISpellCaster {
 
     private Map<Integer, Spell> spells = new HashMap<>();
     private int slot;
     public ItemStack stack = ItemStack.EMPTY;
     public String flavorText = "";
 
-    public SpellCaster(ItemStack stack){
+    public SpellCaster(ItemStack stack) {
         this(stack.getOrCreateTag());
         this.stack = stack;
     }
@@ -64,9 +64,9 @@ public class SpellCaster implements ISpellCaster{
 
     @Override
     public void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot) {
-        if(spells.containsKey(slot)){
+        if (spells.containsKey(slot)) {
             spells.get(slot).setRecipe(spellRecipe);
-        }else{
+        } else {
             spells.put(slot, new Spell(spellRecipe));
         }
         writeItem(stack);
@@ -143,12 +143,12 @@ public class SpellCaster implements ISpellCaster{
         return spells;
     }
 
-    public CompoundTag writeTag(CompoundTag tag){
+    public CompoundTag writeTag(CompoundTag tag) {
         tag.putInt("current_slot", getCurrentSlot());
         tag.putString("flavor", getFlavorText());
         CompoundTag spellTag = new CompoundTag();
 
-        for(int i = 0; i < getMaxSlots(); i++){
+        for (int i = 0; i < getMaxSlots(); i++) {
             Spell spell = getSpell(i);
             spellTag.put("spell" + i, spell.serialize());
         }
@@ -157,22 +157,22 @@ public class SpellCaster implements ISpellCaster{
         return tag;
     }
 
-    public SpellCaster(CompoundTag itemTag){
+    public SpellCaster(CompoundTag itemTag) {
         CompoundTag tag = itemTag.getCompound(getTagID().toString());
 
         this.slot = tag.getInt("current_slot");
         this.flavorText = tag.getString("flavor");
         CompoundTag spellTag = tag.getCompound("spells");
-        for(int i = 0; i < getMaxSlots(); i++){
-            if(spellTag.contains("spell" + i)){
+        for (int i = 0; i < getMaxSlots(); i++) {
+            if (spellTag.contains("spell" + i)) {
                 Spell spell = Spell.fromTag(spellTag.getCompound("spell" + i));
                 spells.put(i, spell);
             }
         }
     }
 
-    public void writeItem(ItemStack stack){
-        if(stack == null || stack.isEmpty()){
+    public void writeItem(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
             return;
         }
         CompoundTag tag = stack.getOrCreateTag();
@@ -184,9 +184,10 @@ public class SpellCaster implements ISpellCaster{
 
     /**
      * Writes this compound data to the provided tag, stored with the caster ID.
+     *
      * @param tag The tag to add this serialized tag to.
      */
-    public void serializeOnTag(CompoundTag tag){
+    public void serializeOnTag(CompoundTag tag) {
         CompoundTag thisData = writeTag(new CompoundTag());
         tag.put(getTagID().toString(), thisData);
     }

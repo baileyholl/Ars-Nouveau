@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 
-public class EnchantingPage extends AbstractPage{
+public class EnchantingPage extends AbstractPage {
 
-    public EnchantingPage(String recipe){
+    public EnchantingPage(String recipe) {
         object.addProperty("recipe", recipe);
     }
 

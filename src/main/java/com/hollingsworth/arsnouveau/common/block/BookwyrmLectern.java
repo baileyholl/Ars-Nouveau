@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
-public class BookwyrmLectern extends SummonBlock{
+public class BookwyrmLectern extends SummonBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public BookwyrmLectern(Properties properties) {
@@ -41,7 +41,7 @@ public class BookwyrmLectern extends SummonBlock{
     @Override
     public void neighborChanged(BlockState p_220069_1_, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
         super.neighborChanged(p_220069_1_, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof BookwyrmLecternTile){
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof BookwyrmLecternTile) {
             ((BookwyrmLecternTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
         }
     }

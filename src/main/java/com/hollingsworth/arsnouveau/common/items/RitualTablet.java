@@ -13,14 +13,14 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RitualTablet extends ModItem{
+public class RitualTablet extends ModItem {
     public AbstractRitual ritual;
 
     public RitualTablet(Properties properties) {
         super(properties);
     }
 
-    public RitualTablet(AbstractRitual ritual){
+    public RitualTablet(AbstractRitual ritual) {
         super(ItemsRegistry.defaultItemProperties());
         this.ritual = ritual;
     }
@@ -28,14 +28,14 @@ public class RitualTablet extends ModItem{
     @Override
     public InteractionResult useOn(UseOnContext context) {
 
-        if(!context.getLevel().isClientSide() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof RitualBrazierTile tile){
-            if(!tile.canTakeAnotherRitual()){
+        if (!context.getLevel().isClientSide() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof RitualBrazierTile tile) {
+            if (!tile.canTakeAnotherRitual()) {
                 context.getPlayer().sendSystemMessage(Component.translatable("ars_nouveau.ritual.no_start"));
                 return InteractionResult.PASS;
             }
 
             tile.setRitual(ritual.getRegistryName());
-            if(!context.getPlayer().isCreative())
+            if (!context.getPlayer().isCreative())
                 context.getItemInHand().shrink(1);
             return InteractionResult.CONSUME;
         }

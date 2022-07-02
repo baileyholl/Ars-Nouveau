@@ -10,32 +10,33 @@ public class PacketUpdateFlight {
 
     public boolean canFly;
     public boolean wasFlying;
+
     //Decoder
-    public PacketUpdateFlight(FriendlyByteBuf buf){
+    public PacketUpdateFlight(FriendlyByteBuf buf) {
         canFly = buf.readBoolean();
         wasFlying = buf.readBoolean();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeBoolean(canFly);
         buf.writeBoolean(wasFlying);
     }
 
-    public PacketUpdateFlight(boolean canFly){
+    public PacketUpdateFlight(boolean canFly) {
         this.canFly = canFly;
     }
 
-    public PacketUpdateFlight(boolean canFly, boolean wasFlying){
+    public PacketUpdateFlight(boolean canFly, boolean wasFlying) {
         this.canFly = canFly;
         this.wasFlying = wasFlying;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
             ArsNouveau.proxy.getPlayer().getAbilities().mayfly = canFly;
             ArsNouveau.proxy.getPlayer().getAbilities().flying = wasFlying;
-        } );
+        });
         ctx.get().setPacketHandled(true);
     }
 

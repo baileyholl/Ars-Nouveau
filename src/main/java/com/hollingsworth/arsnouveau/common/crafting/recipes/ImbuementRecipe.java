@@ -38,7 +38,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     public List<Ingredient> pedestalItems;
 
-    public ImbuementRecipe(ResourceLocation resourceLocation, Ingredient input, ItemStack output, int source, List<Ingredient> pedestalItems){
+    public ImbuementRecipe(ResourceLocation resourceLocation, Ingredient input, ItemStack output, int source, List<Ingredient> pedestalItems) {
         this.id = resourceLocation;
         this.input = input;
         this.output = output;
@@ -46,29 +46,29 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         this.pedestalItems = pedestalItems;
     }
 
-    public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source, List<Ingredient> pedestalItems){
+    public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source, List<Ingredient> pedestalItems) {
         this(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, pedestalItems);
     }
 
-    public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source){
+    public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source) {
         this(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, new ArrayList<>());
     }
 
-    public ImbuementRecipe withPedestalItem(Ingredient i){
+    public ImbuementRecipe withPedestalItem(Ingredient i) {
         this.pedestalItems.add(i);
         return this;
     }
 
-    public ImbuementRecipe withPedestalItem(RegistryObject<? extends ItemLike> i){
+    public ImbuementRecipe withPedestalItem(RegistryObject<? extends ItemLike> i) {
         return withPedestalItem(i.get());
     }
 
-    public ImbuementRecipe withPedestalItem(ItemStack i){
+    public ImbuementRecipe withPedestalItem(ItemStack i) {
         this.pedestalItems.add(Ingredient.of(i));
         return this;
     }
 
-    public ImbuementRecipe withPedestalItem(ItemLike i){
+    public ImbuementRecipe withPedestalItem(ItemLike i) {
         this.pedestalItems.add(Ingredient.of(i));
         return this;
     }
@@ -78,13 +78,13 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         return doesReagentMatch(reagent) && this.pedestalItems.size() == pedestalItems.size() && EnchantingApparatusRecipe.doItemsMatch(pedestalItems, this.pedestalItems);
     }
 
-    public boolean doesReagentMatch(ItemStack reag){
+    public boolean doesReagentMatch(ItemStack reag) {
         return this.input.test(reag);
     }
 
     @Override
     public boolean matches(ImbuementTile pContainer, Level pLevel) {
-        return EnchantingApparatusRecipe.doItemsMatch(pContainer.getPedestalItems(), pedestalItems) &&  this.input.test(pContainer.getItem(0));
+        return EnchantingApparatusRecipe.doItemsMatch(pContainer.getPedestalItems(), pedestalItems) && this.input.test(pContainer.getItem(0));
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID));
     }
 
-    public JsonElement asRecipe(){
+    public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.IMBUEMENT_RECIPE_ID);
         jsonobject.add("input", input.toJson());
@@ -125,7 +125,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         jsonobject.addProperty("count", output.getCount());
         jsonobject.addProperty("source", source);
         JsonArray pedestalArr = new JsonArray();
-        for(Ingredient i : this.pedestalItems){
+        for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
             object.add("item", i.toJson());
             pedestalArr.add(object);
@@ -147,16 +147,16 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
             Item output = GsonHelper.getAsItem(json, "output");
             int count = GsonHelper.getAsInt(json, "count");
             ItemStack outputStack = new ItemStack(output, count);
-            int source = GsonHelper.getAsInt(json,  "source");
-            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
+            int source = GsonHelper.getAsInt(json, "source");
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(JsonElement e : pedestalItems){
+            for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
-                if(GsonHelper.isArrayNode(obj, "item")){
+                if (GsonHelper.isArrayNode(obj, "item")) {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                }else{
+                } else {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 }
                 stacks.add(input);
@@ -168,7 +168,7 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
         @Override
         public void toNetwork(FriendlyByteBuf buf, ImbuementRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
-            for(Ingredient i : recipe.pedestalItems){
+            for (Ingredient i : recipe.pedestalItems) {
                 i.toNetwork(buf);
             }
             recipe.input.toNetwork(buf);
@@ -182,8 +182,10 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
             int length = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
+            for (int i = 0; i < length; i++) {
+                try {
+                    stacks.add(Ingredient.fromNetwork(buffer));
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }

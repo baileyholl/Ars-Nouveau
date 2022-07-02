@@ -20,41 +20,41 @@ import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely
 
 public class RitualDig extends AbstractRitual {
 
-    public RitualDig(){
+    public RitualDig() {
         super();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(tile == null)
+        if (tile == null)
             return;
         EntityRitualProjectile ritualProjectile = new EntityRitualProjectile(getWorld(), getPos().above());
-        ritualProjectile.setPos(ritualProjectile.getX() + 0.5, ritualProjectile.getY(), ritualProjectile.getZ() +0.5);
+        ritualProjectile.setPos(ritualProjectile.getX() + 0.5, ritualProjectile.getY(), ritualProjectile.getZ() + 0.5);
         ritualProjectile.tilePos = getPos();
         getWorld().addFreshEntity(ritualProjectile);
     }
 
-    public boolean canBlockBeHarvested(BlockPos pos){
+    public boolean canBlockBeHarvested(BlockPos pos) {
         return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && SpellUtil.isCorrectHarvestLevel(5, getWorld().getBlockState(pos));
     }
 
-    public void breakBlock(BlockPos pos){
-        if(!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim(ANFakePlayer.getPlayer((ServerLevel) getWorld()), getWorld(), pos)){
+    public void breakBlock(BlockPos pos) {
+        if (!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim(ANFakePlayer.getPlayer((ServerLevel) getWorld()), getWorld(), pos)) {
             return;
         }
         BlockState state = getWorld().getBlockState(pos);
         ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
         state.getBlock().playerDestroy(getWorld(), ANFakePlayer.getPlayer((ServerLevel) getWorld()), pos, getWorld().getBlockState(pos), getWorld().getBlockEntity(pos), stack);
-        destroyBlockSafely(getWorld(), pos, false,  ANFakePlayer.getPlayer((ServerLevel) getWorld()));
+        destroyBlockSafely(getWorld(), pos, false, ANFakePlayer.getPlayer((ServerLevel) getWorld()));
     }
 
     @Override
     public void tick() {
         Level world = tile.getLevel();
-        if(world.getGameTime() % 20 == 0 && !world.isClientSide){
+        if (world.getGameTime() % 20 == 0 && !world.isClientSide) {
             BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
-            if(world.isOutsideBuildHeight(pos)){
+            if (world.isOutsideBuildHeight(pos)) {
                 onEnd();
                 return;
             }

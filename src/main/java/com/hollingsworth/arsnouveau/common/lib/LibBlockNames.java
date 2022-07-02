@@ -90,7 +90,7 @@ public class LibBlockNames {
     public final static String AB_SMOOTH_BASKET = "sas_basket";
     public final static String AB_SMOOTH_CLOVER = "sas_clover";
     public final static String AB_SMOOTH_HERRING = "sas_herring";
-    public final static String AB_SMOOTH_MOSAIC= "sas_mosaic";
+    public final static String AB_SMOOTH_MOSAIC = "sas_mosaic";
     public final static String AB_SMOOTH_ALTERNATING = "sas_alternating";
     public final static String AB_SMOOTH_ASHLAR = "sas_ashlar";
     public final static String SCONCE = "sconce";
@@ -98,7 +98,7 @@ public class LibBlockNames {
     public final static String AS_GOLD_ALT = "as_gold_alt";
     public final static String AS_GOLD_ASHLAR = "as_gold_ashlar";
     public final static String AS_GOLD_BASKET = "as_gold_basket";
-    public static final String AS_GOLD_CLOVER= "as_gold_clover";
+    public static final String AS_GOLD_CLOVER = "as_gold_clover";
     public static final String AS_GOLD_HERRING = "as_gold_herring";
     public static final String AS_GOLD_MOSAIC = "as_gold_mosaic";
 

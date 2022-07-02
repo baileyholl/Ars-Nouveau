@@ -30,6 +30,7 @@ public class ArchwoodChest extends ChestBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ArchwoodChestTile(pos, state);
     }
+
     public static class Item extends BlockItem {
 
         public Item(Block block, Properties props) {

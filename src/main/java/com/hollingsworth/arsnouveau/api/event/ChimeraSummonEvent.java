@@ -22,7 +22,8 @@ public class ChimeraSummonEvent implements ITimedEvent {
     Level world;
     BlockPos pos;
     int ownerID;
-    public ChimeraSummonEvent(int duration, int phase, Level world, BlockPos pos, int ownerID){
+
+    public ChimeraSummonEvent(int duration, int phase, Level world, BlockPos pos, int ownerID) {
         this.duration = duration;
         this.phase = phase;
         this.world = world;
@@ -30,7 +31,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
         this.ownerID = ownerID;
     }
 
-    public static ChimeraSummonEvent get(CompoundTag tag){
+    public static ChimeraSummonEvent get(CompoundTag tag) {
         return new ChimeraSummonEvent(tag.getInt("duration"),
                 tag.getInt("phase"), ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "loc"), -1);
     }
@@ -38,14 +39,14 @@ public class ChimeraSummonEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         duration--;
-        if(serverSide){
+        if (serverSide) {
             Entity owner = world.getEntity(ownerID);
-            if(!(owner instanceof EntityChimera boss)) {
+            if (!(owner instanceof EntityChimera boss)) {
                 duration = 0;
                 return;
             }
             boolean summonedWilden = false;
-            if(duration % 20 ==0) {
+            if (duration % 20 == 0) {
                 RandomSource random = boss.getRandom();
                 SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
 
@@ -61,32 +62,32 @@ public class ChimeraSummonEvent implements ITimedEvent {
                     summonedWilden = true;
                 }
 
-                if(boss.hasHorns() && boss.level.random.nextInt(randBound) == 0){
+                if (boss.hasHorns() && boss.level.random.nextInt(randBound) == 0) {
                     WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER.get(), world);
                     summon(hunter, getPos(), boss.getTarget());
                     summonedWilden = true;
                 }
 
-                if(!summonedWilden && boss.hasSpikes() && boss.level.random.nextInt(randBound) == 0){
+                if (!summonedWilden && boss.hasSpikes() && boss.level.random.nextInt(randBound) == 0) {
                     WildenGuardian guardian = new WildenGuardian(ModEntities.WILDEN_GUARDIAN.get(), world);
                     summon(guardian, getPos(), boss.getTarget());
                     summonedWilden = true;
                 }
             }
-        }else{
+        } else {
             ParticleUtil.spawnRitualAreaEffect(pos, world, world.random, ParticleColor.defaultParticleColor(), 1 + phase * 2);
         }
     }
 
-    public void summon(Mob mob, BlockPos pos, @Nullable LivingEntity target){
+    public void summon(Mob mob, BlockPos pos, @Nullable LivingEntity target) {
         mob.setPos(pos.getX(), pos.getY(), pos.getZ());
         mob.setTarget(target);
         mob.setAggressive(true);
         mob.level.addFreshEntity(mob);
     }
 
-    public BlockPos getPos(){
-        double spawnArea = 2.5 + phase *2;
+    public BlockPos getPos() {
+        double spawnArea = 2.5 + phase * 2;
         return new BlockPos(pos.getX() + ParticleUtil.inRange(-spawnArea, spawnArea), pos.getY() + 2, pos.getZ() + ParticleUtil.inRange(-spawnArea, spawnArea));
     }
 
@@ -105,6 +106,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
     }
 
     public static final String ID = "chimera";
+
     @Override
     public String getID() {
         return ID;

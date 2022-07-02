@@ -19,7 +19,7 @@ public class EruptionEvent implements ITimedEvent {
     int start;
     int particleDelay;
 
-    public EruptionEvent(Level world, BlockPos origin, int delay, int particleDelay){
+    public EruptionEvent(Level world, BlockPos origin, int delay, int particleDelay) {
         this.world = world;
         this.origin = origin;
         this.delay = delay;
@@ -30,8 +30,8 @@ public class EruptionEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         delay--;
-        if(!serverSide && start - delay >= particleDelay){
-            if(world.random.nextInt(5) == 0) {
+        if (!serverSide && start - delay >= particleDelay) {
+            if (world.random.nextInt(5) == 0) {
 //                for(int i = 0 ; i < 10; i ++) {
 //                    (world).addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, origin.getX() + 0.5, origin.getY() +  ParticleUtil.inRange(-0.05, 0.05), origin.getZ() + 0.5,
 //                            ParticleUtil.inRange(-0.05, 0.05), 0.2, ParticleUtil.inRange(-0.05, 0.05));
@@ -40,22 +40,22 @@ public class EruptionEvent implements ITimedEvent {
                 ParticleColor centerColor = new ParticleColor(255, 50, 50);
                 double xzOffset = 0.25;
                 BlockPos pos = origin;
-                for(int i =0; i < intensity; i++){
+                for (int i = 0; i < intensity; i++) {
                     world.addParticle(
                             GlowParticleData.createData(centerColor),
-                            pos.getX() +0.5 + ParticleUtil.inRange(-xzOffset/2, xzOffset/2)  , pos.getY() + 1 + ParticleUtil.inRange(-0.05, 0.2) , pos.getZ() +0.5 + ParticleUtil.inRange(-xzOffset/2, xzOffset/2),
-                            0, ParticleUtil.inRange(0.0, 0.05f),0);
+                            pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
+                            0, ParticleUtil.inRange(0.0, 0.05f), 0);
                 }
-                for(int i =0; i < intensity; i++){
+                for (int i = 0; i < intensity; i++) {
                     world.addParticle(
                             GlowParticleData.createData(centerColor),
-                            pos.getX() +0.5 + ParticleUtil.inRange(-xzOffset, xzOffset)  , pos.getY() +1 + ParticleUtil.inRange(0, 0.7) , pos.getZ() +0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
-                            0,ParticleUtil.inRange(0.0, 0.05f),0);
+                            pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
+                            0, ParticleUtil.inRange(0.0, 0.05f), 0);
                 }
             }
 
         }
-        if(serverSide && delay <= 0){
+        if (serverSide && delay <= 0) {
             world.explode(null, origin.getX(), origin.getY(), origin.getZ(), 5.0f, Explosion.BlockInteraction.NONE);
         }
 
@@ -75,10 +75,12 @@ public class EruptionEvent implements ITimedEvent {
         return tag;
     }
 
-    public static EruptionEvent get(CompoundTag tag){
+    public static EruptionEvent get(CompoundTag tag) {
         return new EruptionEvent(ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "pos"), tag.getInt("delay"), tag.getInt("particleDelay"));
     }
+
     public static final String ID = "eruption";
+
     @Override
     public String getID() {
         return ID;

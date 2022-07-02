@@ -39,41 +39,41 @@ public class EffectCrush extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<CrushRecipe> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
+        for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             BlockState state = world.getBlockState(p);
             Item item = state.getBlock().asItem();
-            if(lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)){
+            if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
                 lastHit = null;
-                for(CrushRecipe recipe : recipes){
-                    if(recipe.matches(item.getDefaultInstance(), world)){
+                for (CrushRecipe recipe : recipes) {
+                    if (recipe.matches(item.getDefaultInstance(), world)) {
                         lastHit = recipe;
                         break;
                     }
                 }
             }
 
-            if(lastHit == null)
+            if (lastHit == null)
                 continue;
 
             List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
             boolean placedBlock = false;
-            for(ItemStack i : outputs){
-                if(!placedBlock && i.getItem() instanceof BlockItem){
+            for (ItemStack i : outputs) {
+                if (!placedBlock && i.getItem() instanceof BlockItem) {
                     world.setBlockAndUpdate(p, ((BlockItem) i.getItem()).getBlock().defaultBlockState());
                     i.shrink(1);
                     placedBlock = true;
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                            new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(),p, false
+                            new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
                     ), world, shooter, spellContext, resolver);
                 }
-                if(!i.isEmpty()){
+                if (!i.isEmpty()) {
                     world.addFreshEntity(new ItemEntity(world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, i));
                 }
             }
-            if(!placedBlock) {
+            if (!placedBlock) {
                 world.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                        new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(),p, false
+                        new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
                 ), world, shooter, spellContext, resolver);
             }
         }

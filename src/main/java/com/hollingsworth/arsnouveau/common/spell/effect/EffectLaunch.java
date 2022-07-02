@@ -41,9 +41,9 @@ public class EffectLaunch extends AbstractEffect {
     public void onResolveBlock(BlockHitResult result, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(result, world, shooter, spellStats, spellContext, resolver);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats);
-        for(BlockPos pos1 : posList) {
+        for (BlockPos pos1 : posList) {
             EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
-            if(entity != null) {
+            if (entity != null) {
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, (GENERIC_DOUBLE.get() * .6) + AMP_VALUE.get() * spellStats.getAmpMultiplier(), 0));
                 entity.hurtMarked = true;
                 entity.fallDistance = 0.0f;

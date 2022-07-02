@@ -37,15 +37,15 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
         Matrix4f matrix4f = matrixStackIn.last().pose();
         this.renderCube(tileEntityIn, f, 0.10F, matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(0)));
 
-        for(int j = 1; j < i; ++j) {
-            this.renderCube(tileEntityIn, f, 2.0F / (float)(35 - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
+        for (int j = 1; j < i; ++j) {
+            this.renderCube(tileEntityIn, f, 2.0F / (float) (35 - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
         }
 
     }
 
     private void renderCube(T tileEntityIn, float p_228883_2_, float p_228883_3_, Matrix4f p_228883_4_, VertexConsumer p_228883_5_) {
-        float f =  (RANDOM.nextFloat() * 0.5F + 0.1F) * p_228883_3_;
-        float f1 =(RANDOM.nextFloat() * 0.5F + 0.4F) * p_228883_3_;
+        float f = (RANDOM.nextFloat() * 0.5F + 0.1F) * p_228883_3_;
+        float f1 = (RANDOM.nextFloat() * 0.5F + 0.4F) * p_228883_3_;
         float f2 = (RANDOM.nextFloat() * 0.5F + 0.5F) * p_228883_3_;
         this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, f, f1, f2, Direction.SOUTH);
         this.renderFace(tileEntityIn, p_228883_4_, p_228883_5_, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, f, f1, f2, Direction.NORTH);
@@ -56,13 +56,13 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
     }
 
     private void renderFace(T tileEntityIn, Matrix4f matrix, VertexConsumer iBuilder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float p_228884_12_, float p_228884_13_, float p_228884_14_, Direction direction) {
-        if(!tileEntityIn.isHorizontal &&( direction == Direction.EAST || direction == Direction.WEST || direction == Direction.SOUTH || direction == Direction.NORTH)){
+        if (!tileEntityIn.isHorizontal && (direction == Direction.EAST || direction == Direction.WEST || direction == Direction.SOUTH || direction == Direction.NORTH)) {
             iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
 
-        }else if(tileEntityIn.isHorizontal && (direction == Direction.UP || direction == Direction.DOWN)) {
+        } else if (tileEntityIn.isHorizontal && (direction == Direction.UP || direction == Direction.DOWN)) {
             iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
             iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();

@@ -14,6 +14,7 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersOculusTile> {
     ScryersEyeModel model;
+
     public ScryerEyeRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, ScryersEyeModel model) {
         super(rendererDispatcherIn, model);
         this.model = model;
@@ -34,7 +35,8 @@ public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersOculusTile> {
         super.render(tile, partialTicks, stack, bufferIn, packedLightIn);
 
     }
-    public static GenericItemBlockRenderer getISTER(){
+
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(new ScryersEyeModel());
     }
 }

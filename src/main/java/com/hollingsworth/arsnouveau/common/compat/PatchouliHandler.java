@@ -5,7 +5,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 public class PatchouliHandler {
 
-    public static boolean isPatchouliWorld(){
+    public static boolean isPatchouliWorld() {
         return Minecraft.getInstance().screen instanceof GuiBookEntry;
     }
 

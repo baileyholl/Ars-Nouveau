@@ -9,9 +9,9 @@ public class ChimeraProjectileModel extends AnimatedGeoModel<EntityChimeraProjec
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/spike.png");
 
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/spike.geo.json");
+    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/spike.geo.json");
 
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID , "animations/spike_animations.json");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/spike_animations.json");
 
     @Override
     public ResourceLocation getModelResource(EntityChimeraProjectile object) {

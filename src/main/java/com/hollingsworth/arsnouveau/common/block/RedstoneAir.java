@@ -20,6 +20,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class RedstoneAir extends Block {
 
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
+
     public RedstoneAir() {
         super(Block.Properties.of(Material.AIR).noCollission().noLootTable());
     }

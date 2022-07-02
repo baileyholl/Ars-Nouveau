@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class SpellContext implements Cloneable{
+public class SpellContext implements Cloneable {
 
     private boolean isCanceled;
 
@@ -33,7 +33,7 @@ public class SpellContext implements Cloneable{
 
     public CompoundTag tag = new CompoundTag();
 
-    public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster){
+    public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster) {
         this.level = level;
         this.spell = spell;
         this.caster = caster;
@@ -42,12 +42,12 @@ public class SpellContext implements Cloneable{
         this.colors = spell.color.clone();
     }
 
-    public @Nullable AbstractSpellPart nextPart(){
+    public @Nullable AbstractSpellPart nextPart() {
         this.currentIndex++;
         AbstractSpellPart part = null;
         try {
             part = getSpell().recipe.get(currentIndex - 1);
-        }catch (Throwable e){ // This can happen if a new spell context is created but does not reset the bounds.
+        } catch (Throwable e) { // This can happen if a new spell context is created but does not reset the bounds.
             System.out.println("=======");
             System.out.println("Invalid spell cast found! This is a bug and should be reported!");
             System.out.println(spell.getDisplayString());
@@ -61,37 +61,37 @@ public class SpellContext implements Cloneable{
         return part;
     }
 
-    public boolean hasNextPart(){
+    public boolean hasNextPart() {
         return spell.isValid() && !isCanceled() && currentIndex < spell.recipe.size();
     }
 
-    public SpellContext resetCastCounter(){
+    public SpellContext resetCastCounter() {
         this.currentIndex = 0;
         this.isCanceled = false;
         return this;
     }
 
-    public SpellContext withCastingTile(BlockEntity tile){
+    public SpellContext withCastingTile(BlockEntity tile) {
         this.castingTile = tile;
         return this;
     }
 
-    public SpellContext withCaster(@Nullable LivingEntity caster){
+    public SpellContext withCaster(@Nullable LivingEntity caster) {
         this.caster = caster;
         return this;
     }
 
-    public SpellContext withColors(ParticleColor colors){
+    public SpellContext withColors(ParticleColor colors) {
         this.colors = colors;
         return this;
     }
 
-    public SpellContext withType(CasterType type){
+    public SpellContext withType(CasterType type) {
         this.type = type;
         return this;
     }
 
-    public SpellContext withSpell(Spell spell){
+    public SpellContext withSpell(Spell spell) {
         this.spell = spell;
         return this;
     }
@@ -101,27 +101,31 @@ public class SpellContext implements Cloneable{
      * This should always default to a fake player if an actual entity did not cast the spell.
      * Generally tiles would set the caster in this context, but casters can be nullable.
      */
-    public @Nonnull LivingEntity getUnwrappedCaster(){
+    public @Nonnull LivingEntity getUnwrappedCaster() {
         LivingEntity shooter = this.caster;
-        if(shooter == null && this.castingTile != null) {
+        if (shooter == null && this.castingTile != null) {
             shooter = ANFakePlayer.getPlayer((ServerLevel) level);
             BlockPos pos = this.castingTile.getBlockPos();
             shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
-        shooter = shooter == null ?  ANFakePlayer.getPlayer((ServerLevel) level) : shooter;
+        shooter = shooter == null ? ANFakePlayer.getPlayer((ServerLevel) level) : shooter;
         return shooter;
     }
 
-    public CasterType getType(){
+    public CasterType getType() {
         return this.type == null ? CasterType.OTHER : type;
     }
 
-    public int getCurrentIndex(){return currentIndex;}
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
 
     /**
      * @param newIndex set the current Index to param, careful with its usage as it might go out of bounds
      */
-    public void setCurrentIndex(int newIndex){this.currentIndex = newIndex;}
+    public void setCurrentIndex(int newIndex) {
+        this.currentIndex = newIndex;
+    }
 
     public boolean isCanceled() {
         return isCanceled;
@@ -136,7 +140,7 @@ public class SpellContext implements Cloneable{
     }
 
     public @Nonnull Spell getRemainingSpell() {
-        if(getCurrentIndex() >= getSpell().recipe.size())
+        if (getCurrentIndex() >= getSpell().recipe.size())
             return Spell.EMPTY;
         return new Spell(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
     }
@@ -173,13 +177,14 @@ public class SpellContext implements Cloneable{
     /**
      * The type of caster that created the spell. Used for removing or changing behaviors of effects that would otherwise cause problems, like GUI opening effects.
      */
-    public static class CasterType{
+    public static class CasterType {
         public static final CasterType RUNE = new CasterType("rune");
         public static final CasterType TURRET = new CasterType("turret");
         public static final CasterType ENTITY = new CasterType("entity");
         public static final CasterType OTHER = new CasterType("other");
         public String id;
-        public CasterType(String id){
+
+        public CasterType(String id) {
             this.id = id;
         }
     }

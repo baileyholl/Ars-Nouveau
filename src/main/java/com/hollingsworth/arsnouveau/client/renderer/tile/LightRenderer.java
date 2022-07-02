@@ -14,7 +14,8 @@ import net.minecraft.world.level.Level;
 
 public class LightRenderer implements BlockEntityRenderer<LightTile> {
 
-    public LightRenderer(BlockEntityRendererProvider.Context context) {}
+    public LightRenderer(BlockEntityRendererProvider.Context context) {
+    }
 
     @Override
     public void render(LightTile lightTile, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {

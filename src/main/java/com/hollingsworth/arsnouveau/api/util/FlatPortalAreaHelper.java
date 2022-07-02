@@ -18,7 +18,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     public FlatPortalAreaHelper() {
     }
 
-    public FlatPortalAreaHelper init(Level world, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState>  foundations) {
+    public FlatPortalAreaHelper init(Level world, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState> foundations) {
         VALID_FRAME = foundations;
         this.world = world;
         this.lowerCorner = this.getLowerCorner(blockPos, Direction.Axis.X, Direction.Axis.Z);
@@ -41,13 +41,13 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         return this;
     }
 
-    public Optional<PortalFrameTester> getNewPortal(Level worldAccess, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState>  foundations) {
+    public Optional<PortalFrameTester> getNewPortal(Level worldAccess, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState> foundations) {
         return getOrEmpty(worldAccess, blockPos, (areaHelper) -> {
             return areaHelper.isValidFrame() && areaHelper.foundPortalBlocks == 0;
         }, axis, foundations);
     }
 
-    public Optional<PortalFrameTester> getOrEmpty(Level worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Predicate<BlockState>  foundations) {
+    public Optional<PortalFrameTester> getOrEmpty(Level worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Predicate<BlockState> foundations) {
         return Optional.of((PortalFrameTester) new FlatPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
     }
 

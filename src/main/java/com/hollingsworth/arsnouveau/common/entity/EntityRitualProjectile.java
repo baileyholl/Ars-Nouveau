@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-public class EntityRitualProjectile extends ColoredProjectile{
+public class EntityRitualProjectile extends ColoredProjectile {
 
     public BlockPos tilePos;
 
@@ -28,6 +28,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
     }
+
     @Override
     public void tick() {
         super.tick();
@@ -40,12 +41,12 @@ public class EntityRitualProjectile extends ColoredProjectile{
         yOld = getY();
         zOld = getZ();
 
-        this.setPos(getX(), getY() + Math.sin(level.getGameTime()/10D)/10, getZ());
+        this.setPos(getX(), getY() + Math.sin(level.getGameTime() / 10D) / 10, getZ());
         xo = getX();
         yo = getY();
         zo = getZ();
 
-        if(level.isClientSide) {
+        if (level.isClientSide) {
             int counter = 0;
             for (double j = 0; j < 3; j++) {
 
@@ -83,13 +84,13 @@ public class EntityRitualProjectile extends ColoredProjectile{
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityRitualProjectile(PlayMessages.SpawnEntity packet, Level world){
+    public EntityRitualProjectile(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ENTITY_RITUAL.get(), world);
     }
 
     @Override
     public boolean save(CompoundTag tag) {
-        if(tilePos != null)
+        if (tilePos != null)
             tag.put("ritpos", NbtUtils.writeBlockPos(tilePos));
         return super.save(tag);
     }
@@ -97,7 +98,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if(compound.contains("ritpos")){
+        if (compound.contains("ritpos")) {
             tilePos = NbtUtils.readBlockPos(compound.getCompound("ritpos"));
         }
     }

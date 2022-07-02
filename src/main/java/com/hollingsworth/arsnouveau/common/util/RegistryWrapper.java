@@ -22,7 +22,7 @@ public class RegistryWrapper<T> implements Supplier<T>, ItemLike {
 
     @Override
     public Item asItem() {
-        if(registryObject.get() instanceof ItemLike itemLike){
+        if (registryObject.get() instanceof ItemLike itemLike) {
             return itemLike.asItem();
         }
         throw new IllegalStateException("RegistryWrapper is not an Item");

@@ -6,7 +6,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FollowSummonerFlyingGoal extends FollowSummonerGoal{
+public class FollowSummonerFlyingGoal extends FollowSummonerGoal {
 
 
     public FollowSummonerFlyingGoal(IFollowingSummon mobEntity, LivingEntity owner, double followSpeedIn, float minDistIn, float maxDistIn) {

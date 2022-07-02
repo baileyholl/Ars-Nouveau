@@ -22,9 +22,9 @@ public abstract class SummonBlock extends TickableModBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         CompoundTag tag = context.getItemInHand().getTag();
-        if(tag != null && tag.contains("BlockEntityTag")){
+        if (tag != null && tag.contains("BlockEntityTag")) {
             tag = tag.getCompound("BlockEntityTag");
-            if(tag.contains("converted") && tag.getBoolean("converted")){
+            if (tag.contains("converted") && tag.getBoolean("converted")) {
                 state = state.setValue(CONVERTED, true);
             }
         }

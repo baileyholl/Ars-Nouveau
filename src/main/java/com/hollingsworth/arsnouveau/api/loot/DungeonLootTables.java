@@ -31,27 +31,28 @@ public class DungeonLootTables {
     public static List<Supplier<ItemStack>> BASIC_LOOT = new ArrayList<>();
     public static List<Supplier<ItemStack>> UNCOMMON_LOOT = new ArrayList<>();
     public static List<Supplier<ItemStack>> RARE_LOOT = new ArrayList<>();
- // /setblock ~ ~ ~ minecraft:chest{LootTable:"minecraft:chests/simple_dungeon"}
+    // /setblock ~ ~ ~ minecraft:chest{LootTable:"minecraft:chests/simple_dungeon"}
     public static Random r = new Random();
+
     static {
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.SOURCE_GEM.get(),1 + r.nextInt(5)));
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_HORN.get(),1 + r.nextInt(3)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.SOURCE_GEM.get(), 1 + r.nextInt(5)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_HORN.get(), 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_SPIKE.get(), 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_WING.get(), 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
-        BASIC_LOOT.add(() ->{
+        BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION.get());
             return stack;
         });
 
-        BASIC_LOOT.add(() ->{
+        BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION.get());
             return stack;
         });
 
-        BASIC_LOOT.add(() ->{
+        BASIC_LOOT.add(() -> {
             ItemStack stack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION.get());
             return stack;
@@ -67,24 +68,24 @@ public class DungeonLootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.SPLIT_ARROW.get(), 16 + r.nextInt(16)));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 16 + r.nextInt(16)));
 
-        UNCOMMON_LOOT.add(() ->{
+        UNCOMMON_LOOT.add(() -> {
             List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
             return new ItemStack(tablets.get(r.nextInt(tablets.size())));
         });
 
         RARE_LOOT.add(() -> makeTome("Xacris' Tiny Hut", new Spell()
-                .add(MethodUnderfoot.INSTANCE)
-                .add(EffectPhantomBlock.INSTANCE)
-                .add(AugmentAOE.INSTANCE, 3)
-                .add(AugmentPierce.INSTANCE, 3)
-        ,"Builds a small hut around the user."));
+                        .add(MethodUnderfoot.INSTANCE)
+                        .add(EffectPhantomBlock.INSTANCE)
+                        .add(AugmentAOE.INSTANCE, 3)
+                        .add(AugmentPierce.INSTANCE, 3)
+                , "Builds a small hut around the user."));
         RARE_LOOT.add(() -> makeTome("Glow Trap", new Spell()
-                .add(MethodTouch.INSTANCE)
-                .add(EffectRune.INSTANCE)
-                .add(EffectSnare.INSTANCE)
-                .add(AugmentExtendTime.INSTANCE)
-                .add(EffectLight.INSTANCE)
-        , "Snares the target and grants other targets Glowing."));
+                        .add(MethodTouch.INSTANCE)
+                        .add(EffectRune.INSTANCE)
+                        .add(EffectSnare.INSTANCE)
+                        .add(AugmentExtendTime.INSTANCE)
+                        .add(EffectLight.INSTANCE)
+                , "Snares the target and grants other targets Glowing."));
 
         RARE_LOOT.add(() -> makeTome("Bailey's Bovine Rocket", new Spell()
                 .add(MethodProjectile.INSTANCE)
@@ -95,23 +96,23 @@ public class DungeonLootTables {
                 .add(AugmentAmplify.INSTANCE)
         ));
         RARE_LOOT.add(() -> makeTome("Arachne's Weaving", new Spell()
-                .add(MethodProjectile.INSTANCE)
-                .add(AugmentSplit.INSTANCE, 2)
-                .add(EffectSnare.INSTANCE )
-                .add(AugmentExtendTime.INSTANCE)
-                .add(AugmentExtendTime.INSTANCE)
-        , "Creates three snaring projectiles."));
+                        .add(MethodProjectile.INSTANCE)
+                        .add(AugmentSplit.INSTANCE, 2)
+                        .add(EffectSnare.INSTANCE)
+                        .add(AugmentExtendTime.INSTANCE)
+                        .add(AugmentExtendTime.INSTANCE)
+                , "Creates three snaring projectiles."));
         RARE_LOOT.add(() -> makeTome("Warp Impact", new Spell()
-                .add(MethodProjectile.INSTANCE)
-                .add(EffectBlink.INSTANCE)
-                .add(EffectExplosion.INSTANCE )
-                .add(AugmentAOE.INSTANCE)
-        , "Teleportation, with style!"));
+                        .add(MethodProjectile.INSTANCE)
+                        .add(EffectBlink.INSTANCE)
+                        .add(EffectExplosion.INSTANCE)
+                        .add(AugmentAOE.INSTANCE)
+                , "Teleportation, with style!"));
 
         RARE_LOOT.add(() -> makeTome("Farfalla's Frosty Flames", new Spell()
                         .add(MethodProjectile.INSTANCE)
                         .add(EffectIgnite.INSTANCE)
-                        .add(EffectDelay.INSTANCE )
+                        .add(EffectDelay.INSTANCE)
                         .add(EffectConjureWater.INSTANCE)
                         .add(EffectFreeze.INSTANCE)
                 , "Creates a fire that quickly freezes to ice."));
@@ -119,17 +120,17 @@ public class DungeonLootTables {
         RARE_LOOT.add(() -> makeTome("Gootastic's Telekinetic Fishing Rod", new Spell()
                 .add(MethodProjectile.INSTANCE)
                 .add(EffectLaunch.INSTANCE)
-                .add(AugmentAmplify.INSTANCE,2)
+                .add(AugmentAmplify.INSTANCE, 2)
                 .add(EffectDelay.INSTANCE)
                 .add(EffectPull.INSTANCE)
-                .add(AugmentAmplify.INSTANCE,2), "The squid's Lovecraftian roots appear to make it immune."
+                .add(AugmentAmplify.INSTANCE, 2), "The squid's Lovecraftian roots appear to make it immune."
         ));
 
         RARE_LOOT.add(() -> makeTome("Potent Toxin", new Spell()
-                .add(MethodProjectile.INSTANCE)
-                .add(EffectHex.INSTANCE)
-                .add(EffectHarm.INSTANCE)
-                .add(AugmentExtendTime.INSTANCE),
+                        .add(MethodProjectile.INSTANCE)
+                        .add(EffectHex.INSTANCE)
+                        .add(EffectHarm.INSTANCE)
+                        .add(AugmentExtendTime.INSTANCE),
                 "Poisons that target and causes them to take additional damage from all sources."
         ));
         RARE_LOOT.add(() -> makeTome("The Shadow's Temporary Tunnel", new Spell()
@@ -168,10 +169,10 @@ public class DungeonLootTables {
         ));
 
         RARE_LOOT.add(() -> makeTome("Knocked out of Orbit", new Spell()
-                        .add(MethodOrbit.INSTANCE)
-                        .add(EffectLaunch.INSTANCE)
+                .add(MethodOrbit.INSTANCE)
+                .add(EffectLaunch.INSTANCE)
                 .add(AugmentAmplify.INSTANCE, 2)
-                        .add(EffectDelay.INSTANCE)
+                .add(EffectDelay.INSTANCE)
                 .add(EffectKnockback.INSTANCE)
                 .add(AugmentAmplify.INSTANCE, 2), "Summons orbiting projectiles that will launch nearby enemies.")
         );
@@ -184,7 +185,7 @@ public class DungeonLootTables {
                 .add(MethodSelf.INSTANCE)
                 .add(EffectSummonDecoy.INSTANCE)
                 .add(EffectBlink.INSTANCE)
-                .add(AugmentAmplify.INSTANCE), "Heroes are so straightforward, so easily befuddled..." , new ParticleColor(25, 255, 255)));
+                .add(AugmentAmplify.INSTANCE), "Heroes are so straightforward, so easily befuddled...", new ParticleColor(25, 255, 255)));
 
         RARE_LOOT.add(() -> makeTome("Xacris's Firework Display", new Spell()
                 .add(MethodProjectile.INSTANCE)
@@ -193,26 +194,26 @@ public class DungeonLootTables {
                 .add(AugmentAOE.INSTANCE)
                 .add(EffectFirework.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE, 4)
-                .add(AugmentAmplify.INSTANCE), "Light up the sky" , new ParticleColor(255, 255, 255)));
+                .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(255, 255, 255)));
     }
 
-    public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool){
+    public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool) {
         return pool.isEmpty() ? ItemStack.EMPTY : pool.get(r.nextInt(pool.size())).get();
     }
 
-    public static List<ItemStack> getRandomRoll(DungeonLootGenerator.DungeonLootEnhancerModifier modifier){
+    public static List<ItemStack> getRandomRoll(DungeonLootGenerator.DungeonLootEnhancerModifier modifier) {
         List<ItemStack> stacks = new ArrayList<>();
 
-        for(int i = 0; i < modifier.commonRolls; i++){
-            if(r.nextDouble() <= modifier.commonChance)
+        for (int i = 0; i < modifier.commonRolls; i++) {
+            if (r.nextDouble() <= modifier.commonChance)
                 stacks.add(getRandomItem(BASIC_LOOT));
         }
 
-        for(int i = 0; i < modifier.uncommonRolls; i++){
-            if(r.nextDouble() <= modifier.uncommonChance)
+        for (int i = 0; i < modifier.uncommonRolls; i++) {
+            if (r.nextDouble() <= modifier.uncommonChance)
                 stacks.add(getRandomItem(UNCOMMON_LOOT));
         }
-        if(Config.SPAWN_TOMES.get()) {
+        if (Config.SPAWN_TOMES.get()) {
             for (int i = 0; i < modifier.rareRolls; i++) {
                 if (r.nextDouble() <= modifier.rareChance)
                     stacks.add(getRandomItem(RARE_LOOT));
@@ -221,7 +222,7 @@ public class DungeonLootTables {
         return stacks;
     }
 
-    public static ItemStack makeTome(String name, Spell spell){
+    public static ItemStack makeTome(String name, Spell spell) {
         ItemStack stack = new ItemStack(ItemsRegistry.CASTER_TOME.get());
         ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setSpell(spell);
@@ -229,15 +230,16 @@ public class DungeonLootTables {
         return stack;
     }
 
-    public static ItemStack makeTome(String name, Spell spell, String flavorText){
+    public static ItemStack makeTome(String name, Spell spell, String flavorText) {
         ItemStack stack = makeTome(name, spell);
-        ISpellCaster spellCaster =  CasterUtil.getCaster(stack);
+        ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setFlavorText(flavorText);
         return stack;
     }
-    public static ItemStack makeTome(String name, Spell spell, String flavorText, ParticleColor particleColor){
+
+    public static ItemStack makeTome(String name, Spell spell, String flavorText, ParticleColor particleColor) {
         ItemStack stack = makeTome(name, spell);
-        ISpellCaster spellCaster =  CasterUtil.getCaster(stack);
+        ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setFlavorText(flavorText);
         spellCaster.setColor(particleColor);
         return stack;

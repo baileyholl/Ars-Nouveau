@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.goal.FollowMobGoal;
 public class FollowMobGoalBackoff extends FollowMobGoal {
     float chance;
     Mob mob;
+
     public FollowMobGoalBackoff(Mob mob, double speed, float stopDistance, float areaSize, float chance) {
         super(mob, speed, stopDistance, areaSize);
         this.chance = chance;

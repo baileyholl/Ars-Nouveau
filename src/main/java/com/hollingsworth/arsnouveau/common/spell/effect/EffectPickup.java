@@ -53,8 +53,8 @@ public class EffectPickup extends AbstractEffect {
             }
         }
         List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
-                posVec.add(expansion,expansion,expansion), posVec.subtract(expansion,expansion,expansion)));
-        for(ExperienceOrb i : orbList) {
+                posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
+        for (ExperienceOrb i : orbList) {
             if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
                 if (MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
                     continue;

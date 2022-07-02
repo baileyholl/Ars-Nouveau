@@ -26,13 +26,14 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe.getParchment;
 
-public class SpellWriteRecipe extends EnchantingApparatusRecipe{
-    public SpellWriteRecipe(ResourceLocation id, List<Ingredient> pedestalItems, int cost){
+public class SpellWriteRecipe extends EnchantingApparatusRecipe {
+    public SpellWriteRecipe(ResourceLocation id, List<Ingredient> pedestalItems, int cost) {
         this.pedestalItems = pedestalItems;
         this.id = id;
         this.sourceCost = cost;
     }
-    public SpellWriteRecipe(List<Ingredient> pedestalItems){
+
+    public SpellWriteRecipe(List<Ingredient> pedestalItems) {
         this.pedestalItems = pedestalItems;
         this.id = new ResourceLocation(ArsNouveau.MODID, "spell_write");
     }
@@ -65,7 +66,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.SPELL_WRITE_RECIPE_ID);
         jsonobject.addProperty("sourceCost", getSourceCost());
         JsonArray pedestalArr = new JsonArray();
-        for(Ingredient i : this.pedestalItems){
+        for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
             object.add("item", i.toJson());
             pedestalArr.add(object);
@@ -90,9 +91,9 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
             for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
-                if(GsonHelper.isArrayNode(obj, "item")){
+                if (GsonHelper.isArrayNode(obj, "item")) {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                }else{
+                } else {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 }
                 stacks.add(input);
@@ -106,8 +107,10 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
             int length = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
+            for (int i = 0; i < length; i++) {
+                try {
+                    stacks.add(Ingredient.fromNetwork(buffer));
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }
@@ -119,7 +122,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
         @Override
         public void toNetwork(FriendlyByteBuf buf, SpellWriteRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
-            for(Ingredient i : recipe.pedestalItems){
+            for (Ingredient i : recipe.pedestalItems) {
                 i.toNetwork(buf);
             }
             buf.writeInt(recipe.sourceCost);

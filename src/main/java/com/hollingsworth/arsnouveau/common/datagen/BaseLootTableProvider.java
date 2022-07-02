@@ -45,7 +45,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
 
     protected abstract void addTables();
 
-    protected LootTable.Builder createManaManchineTable(String name, Block block){
+    protected LootTable.Builder createManaManchineTable(String name, Block block) {
         LootPool.Builder builder = LootPool.lootPool()
                 .name(name)
                 .setRolls(ConstantValue.exactly(1))

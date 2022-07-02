@@ -39,10 +39,10 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
     public static final Codec<MagicTrunkPlacer> CODEC = RecordCodecBuilder.create(builder ->
             builder.group(Codec.intRange(0, 32).fieldOf("base_height").forGetter(placer -> placer.baseHeight),
-            Codec.intRange(0, 24).fieldOf("height_rand_a").forGetter(placer -> placer.heightRandA),
-            Codec.intRange(0, 24).fieldOf("height_rand_b").forGetter(placer -> placer.heightRandB),
-            Codec.BOOL.fieldOf("isWorldGen").forGetter(placer -> placer.isWorldGen))
-            .apply(builder, MagicTrunkPlacer::new));
+                            Codec.intRange(0, 24).fieldOf("height_rand_a").forGetter(placer -> placer.heightRandA),
+                            Codec.intRange(0, 24).fieldOf("height_rand_b").forGetter(placer -> placer.heightRandB),
+                            Codec.BOOL.fieldOf("isWorldGen").forGetter(placer -> placer.isWorldGen))
+                    .apply(builder, MagicTrunkPlacer::new));
 
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
@@ -64,50 +64,50 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         boolean eastB = rand.nextFloat() >= 0.5;
         boolean westB = rand.nextFloat() >= 0.5;
 
-        for(int i = 0; i < foliageHeight; ++i) {
+        for (int i = 0; i < foliageHeight; ++i) {
             int j2 = y + i;
             BlockPos blockpos1 = new BlockPos(x, j2, z);
             if (TreeFeature.isAirOrLeaves(world, blockpos1)) {
                 placeLog(world, consumer, rand, blockpos1, baseTreeFeatureConfig);
-                placeLog(world, consumer,rand, blockpos1.east(),  baseTreeFeatureConfig);
-                placeLog(world,consumer, rand, blockpos1.south(),  baseTreeFeatureConfig);
-                placeLog(world,consumer, rand, blockpos1.east().south(),  baseTreeFeatureConfig);
+                placeLog(world, consumer, rand, blockpos1.east(), baseTreeFeatureConfig);
+                placeLog(world, consumer, rand, blockpos1.south(), baseTreeFeatureConfig);
+                placeLog(world, consumer, rand, blockpos1.east().south(), baseTreeFeatureConfig);
             }
 
-            if(i == 0){
+            if (i == 0) {
                 BlockPos abovePos = pos.above(i);
-                addRoots(world, rand, abovePos.west(),  consumer, baseTreeFeatureConfig, new Direction[]{Direction.NORTH, Direction.WEST});
-                addRoots(world, rand, abovePos.south(2),consumer, baseTreeFeatureConfig, new Direction[]{Direction.SOUTH, Direction.WEST});
-                addRoots(world, rand, abovePos.south().west(), consumer,baseTreeFeatureConfig, new Direction[]{Direction.WEST});
-                addRoots(world, rand, abovePos.south(2).east(),consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST, Direction.SOUTH});
-                addRoots(world, rand, abovePos.east(2), consumer,baseTreeFeatureConfig, new Direction[]{Direction.EAST, Direction.NORTH});
-                addRoots(world, rand, abovePos.east(2).south(),consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST});
-                addRoots(world, rand, abovePos.east().north(), consumer,baseTreeFeatureConfig, new Direction[]{Direction.NORTH});
-                addRoots(world, rand, abovePos.north(), consumer,baseTreeFeatureConfig, new Direction[]{Direction.NORTH, Direction.EAST});
+                addRoots(world, rand, abovePos.west(), consumer, baseTreeFeatureConfig, new Direction[]{Direction.NORTH, Direction.WEST});
+                addRoots(world, rand, abovePos.south(2), consumer, baseTreeFeatureConfig, new Direction[]{Direction.SOUTH, Direction.WEST});
+                addRoots(world, rand, abovePos.south().west(), consumer, baseTreeFeatureConfig, new Direction[]{Direction.WEST});
+                addRoots(world, rand, abovePos.south(2).east(), consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST, Direction.SOUTH});
+                addRoots(world, rand, abovePos.east(2), consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST, Direction.NORTH});
+                addRoots(world, rand, abovePos.east(2).south(), consumer, baseTreeFeatureConfig, new Direction[]{Direction.EAST});
+                addRoots(world, rand, abovePos.east().north(), consumer, baseTreeFeatureConfig, new Direction[]{Direction.NORTH});
+                addRoots(world, rand, abovePos.north(), consumer, baseTreeFeatureConfig, new Direction[]{Direction.NORTH, Direction.EAST});
             }
 
-            if(i > 1 && i > lastBranch){
-                if(northB){
-                    addBranch(world, pos, i, Direction.NORTH,rand, baseTreeFeatureConfig, consumer);
+            if (i > 1 && i > lastBranch) {
+                if (northB) {
+                    addBranch(world, pos, i, Direction.NORTH, rand, baseTreeFeatureConfig, consumer);
                     lastBranch = i;
                     numBranches++;
                     northB = false;
-                }else if(southB){
-                    addBranch(world, pos.relative(Direction.SOUTH), i, Direction.SOUTH,rand, baseTreeFeatureConfig, consumer);
+                } else if (southB) {
+                    addBranch(world, pos.relative(Direction.SOUTH), i, Direction.SOUTH, rand, baseTreeFeatureConfig, consumer);
                     lastBranch = i;
                     numBranches++;
                     southB = false;
-                }else if(eastB){
-                    addBranch(world, pos.relative(Direction.EAST).south(), i, Direction.EAST, rand,baseTreeFeatureConfig, consumer);
+                } else if (eastB) {
+                    addBranch(world, pos.relative(Direction.EAST).south(), i, Direction.EAST, rand, baseTreeFeatureConfig, consumer);
                     lastBranch = i;
                     numBranches++;
                     eastB = false;
-                }else if(westB){
-                    addBranch(world, pos, i, Direction.WEST, rand,baseTreeFeatureConfig, consumer);
+                } else if (westB) {
+                    addBranch(world, pos, i, Direction.WEST, rand, baseTreeFeatureConfig, consumer);
                     lastBranch = i;
                     numBranches++;
                     westB = false;
-                }else if(numBranches == 0){
+                } else if (numBranches == 0) {
                     addBranch(world, pos, i, Direction.NORTH, rand, baseTreeFeatureConfig, consumer);
                     lastBranch = i;
                     numBranches++;
@@ -119,73 +119,73 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
             }
 
-            if(i == foliageHeight - 2){
+            if (i == foliageHeight - 2) {
                 float leafChance = .1f;
 
                 //Bell top
-                addLineLeaves(world, pos.north(4).above(i), Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.north(4).above(i + 1), Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.north(4).above(i), Direction.NORTH, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.north(4).above(i + 1), Direction.NORTH, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
 
-                addLineLeaves(world, pos.north(3).above(i - 1), Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.north(3).above(i - 1), Direction.NORTH, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
 
-                addLineLeaves(world, pos.north(3).above(i), Direction.NORTH, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.north(3).above(i + 1), Direction.NORTH, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.north(2).above(i + 1), Direction.NORTH, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.north(1).above(i + 1), Direction.NORTH, 6,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.north(3).above(i), Direction.NORTH, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.north(3).above(i + 1), Direction.NORTH, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.north(2).above(i + 1), Direction.NORTH, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.north(1).above(i + 1), Direction.NORTH, 6, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.north(2).above(i + 2), Direction.NORTH, 4,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.north(2).above(i + 2), Direction.NORTH, 4, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.east(5).above(i), Direction.EAST, 6, rand,baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.east(5).above(i + 1), Direction.EAST, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.east(4).above(i - 1), Direction.EAST, 6, rand,baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(5).above(i), Direction.EAST, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(5).above(i + 1), Direction.EAST, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(4).above(i - 1), Direction.EAST, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
 
-                addLineLeaves(world, pos.east(4).above(i), Direction.EAST, 6, rand,baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(4).above(i + 1), Direction.EAST, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(3).above(i + 1), Direction.EAST, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(2).above(i + 1), Direction.EAST, 6,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(4).above(i), Direction.EAST, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(4).above(i + 1), Direction.EAST, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(3).above(i + 1), Direction.EAST, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(2).above(i + 1), Direction.EAST, 6, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.east(3).above(i + 2), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(2).above(i + 2), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(1).above(i + 2), Direction.EAST, 4, rand,baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(0).above(i + 2), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(-1).above(i + 2), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(-2).above(i + 2), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(3).above(i + 2), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(2).above(i + 2), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(1).above(i + 2), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(0).above(i + 2), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(-1).above(i + 2), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(-2).above(i + 2), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.west(4).south().above(i), Direction.WEST, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.west(4).south().above(i + 1), Direction.WEST, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.west(4).south().above(i), Direction.WEST, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.west(4).south().above(i + 1), Direction.WEST, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
 
-                addLineLeaves(world, pos.west(3).south().above(i - 1), Direction.WEST, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.west(3).south().above(i), Direction.WEST, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.west(3).south().above(i + 1), Direction.WEST, 6,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.west(3).south().above(i - 1), Direction.WEST, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.west(3).south().above(i), Direction.WEST, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.west(3).south().above(i + 1), Direction.WEST, 6, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.west(2).south().above(i + 1), Direction.WEST, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.west(1).south().above(i + 1), Direction.WEST, 6,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.west(2).south().above(i + 1), Direction.WEST, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.west(1).south().above(i + 1), Direction.WEST, 6, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.west(2).south().above(i + 2), Direction.WEST, 4,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.west(2).south().above(i + 2), Direction.WEST, 4, rand, baseTreeFeatureConfig, consumer);
 
                 // layers 1-2
-                addLineLeaves(world, pos.south(4).east().above(i), Direction.SOUTH, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.south(4).east().above(i + 1), Direction.SOUTH, 6,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.south(4).east().above(i), Direction.SOUTH, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.south(4).east().above(i + 1), Direction.SOUTH, 6, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.south(5).east().above(i), Direction.SOUTH, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.south(5).east().above(i + 1), Direction.SOUTH, 6,rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.south(5).east().above(i), Direction.SOUTH, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.south(5).east().above(i + 1), Direction.SOUTH, 6, rand, baseTreeFeatureConfig, leafChance, consumer);
 
 
-                addLineLeaves(world, pos.south(3).east().above(i + 1), Direction.SOUTH, 6,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.south(2).east().above(i + 1), Direction.SOUTH, 6,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.south(3).east().above(i + 1), Direction.SOUTH, 6, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.south(2).east().above(i + 1), Direction.SOUTH, 6, rand, baseTreeFeatureConfig, consumer);
                 // layer 3
-                addLineLeaves(world, pos.south(3).east().above(i + 2), Direction.SOUTH, 4,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.south(3).east().above(i + 2), Direction.SOUTH, 4, rand, baseTreeFeatureConfig, consumer);
 
 
-                addLineLeaves(world, pos.east(2).above(i + 3), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(1).above(i + 3), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(0).above(i + 3), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
-                addLineLeaves(world, pos.east(-1).above(i + 3), Direction.EAST, 4,rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(2).above(i + 3), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(1).above(i + 3), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(0).above(i + 3), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
+                addLineLeaves(world, pos.east(-1).above(i + 3), Direction.EAST, 4, rand, baseTreeFeatureConfig, consumer);
 
-                addLineLeaves(world, pos.east(2).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.east(1).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.east(0).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
-                addLineLeaves(world, pos.east(-1).above(i + 4), Direction.EAST, 4,rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(2).above(i + 4), Direction.EAST, 4, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(1).above(i + 4), Direction.EAST, 4, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(0).above(i + 4), Direction.EAST, 4, rand, baseTreeFeatureConfig, leafChance, consumer);
+                addLineLeaves(world, pos.east(-1).above(i + 4), Direction.EAST, 4, rand, baseTreeFeatureConfig, leafChance, consumer);
 
 
             }
@@ -205,28 +205,28 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         addLog(world, pos.relative(d, 3).above(1), random, baseTreeFeatureConfig, consumer);
 
         addLineLeaves(world, pos.relative(d).above(1), d, 3, random, baseTreeFeatureConfig, consumer);
-        addLineLeaves(world, pos.relative(d).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
-        addLineLeaves(world, pos.relative(d).above(3), d, 3, random,baseTreeFeatureConfig,consumer);
+        addLineLeaves(world, pos.relative(d).above(2), d, 3, random, baseTreeFeatureConfig, consumer);
+        addLineLeaves(world, pos.relative(d).above(3), d, 3, random, baseTreeFeatureConfig, consumer);
 
-        for(int j = 1; j < 4; j++){
-            addLineLeaves(world, pos.relative(d, j).above(3), d, 3, random,baseTreeFeatureConfig,consumer);
-            addLineLeaves(world, pos.relative(d, j).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
-            addLineLeaves(world, pos.relative(d, j).above(4), d, 3, random,baseTreeFeatureConfig, .1f,consumer);
+        for (int j = 1; j < 4; j++) {
+            addLineLeaves(world, pos.relative(d, j).above(3), d, 3, random, baseTreeFeatureConfig, consumer);
+            addLineLeaves(world, pos.relative(d, j).above(2), d, 3, random, baseTreeFeatureConfig, consumer);
+            addLineLeaves(world, pos.relative(d, j).above(4), d, 3, random, baseTreeFeatureConfig, .1f, consumer);
         }
 
-        for(int i = 0; i < 2; i++){
-            addHollowLine(world, pos.relative(d, 2 + i).above(1), d, 2,random, baseTreeFeatureConfig,consumer);
-            addHollowLine(world, pos.relative(d, 2 + i).above(2), d, 2,random, baseTreeFeatureConfig,consumer);
-            addHollowLine(world, pos.relative(d, 2 + i).above(1), d, 3,random, baseTreeFeatureConfig, 0.1f,consumer);
-            addHollowLine(world, pos.relative(d, 2 + i).above(2), d, 3,random, baseTreeFeatureConfig, 0.1f,consumer);
+        for (int i = 0; i < 2; i++) {
+            addHollowLine(world, pos.relative(d, 2 + i).above(1), d, 2, random, baseTreeFeatureConfig, consumer);
+            addHollowLine(world, pos.relative(d, 2 + i).above(2), d, 2, random, baseTreeFeatureConfig, consumer);
+            addHollowLine(world, pos.relative(d, 2 + i).above(1), d, 3, random, baseTreeFeatureConfig, 0.1f, consumer);
+            addHollowLine(world, pos.relative(d, 2 + i).above(2), d, 3, random, baseTreeFeatureConfig, 0.1f, consumer);
         }
 
-        addLineLeaves(world, pos.relative(d, 4).above(1), d, 3,random, baseTreeFeatureConfig,consumer);
-        addLineLeaves(world, pos.relative(d, 4).above(2), d, 3,random, baseTreeFeatureConfig,consumer);
+        addLineLeaves(world, pos.relative(d, 4).above(1), d, 3, random, baseTreeFeatureConfig, consumer);
+        addLineLeaves(world, pos.relative(d, 4).above(2), d, 3, random, baseTreeFeatureConfig, consumer);
 
 
-        addLineLeaves(world, pos.relative(d, 5).above(1), d, 3,random, baseTreeFeatureConfig, 0.1f,consumer);
-        addLineLeaves(world, pos.relative(d, 5).above(2), d, 3,random, baseTreeFeatureConfig, 0.1f,consumer);
+        addLineLeaves(world, pos.relative(d, 5).above(1), d, 3, random, baseTreeFeatureConfig, 0.1f, consumer);
+        addLineLeaves(world, pos.relative(d, 5).above(2), d, 3, random, baseTreeFeatureConfig, 0.1f, consumer);
 
     }
 
@@ -303,7 +303,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand, pos);
         if (rand.nextDouble() < 0.75 && TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos.immutable(), state, consumer);
-            if(isWorldGen) {
+            if (isWorldGen) {
                 for (int i = 0; i < 2; i++) {
                     if (TreeFeature.validTreePos(world, pos.below())) {
                         pos = pos.below();
@@ -321,27 +321,27 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return false;
     }
 
-    public boolean placeRotatedRoot(LevelSimulatedReader world, RandomSource rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig, Direction direction){
+    public boolean placeRotatedRoot(LevelSimulatedReader world, RandomSource rand, BlockPos pos, BiConsumer<BlockPos, BlockState> consumer, TreeConfiguration baseTreeFeatureConfig, Direction direction) {
         BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand, pos);
-        if(state.hasProperty(RotatedPillarBlock.AXIS)){
+        if (state.hasProperty(RotatedPillarBlock.AXIS)) {
             state = state.setValue(RotatedPillarBlock.AXIS, direction.getAxis());
         }
         if (rand.nextDouble() < 0.6 && validForExtendedRoot(world, pos)) {
             setBlock(world, pos.immutable(), state, consumer);
             int count = 0;
-            while(rand.nextDouble() < 0.8 - count * 0.3){
+            while (rand.nextDouble() < 0.8 - count * 0.3) {
                 count++;
-                if(rand.nextDouble() < 0.7) {
+                if (rand.nextDouble() < 0.7) {
                     direction = rand.nextDouble() < 0.5 ? direction.getClockWise() : direction.getCounterClockWise();
                     state = state.setValue(RotatedPillarBlock.AXIS, direction.getAxis());
                 }
                 pos = pos.relative(direction);
-                if(TreeFeature.validTreePos(world, pos.below())){
+                if (TreeFeature.validTreePos(world, pos.below())) {
                     pos = pos.below();
                 }
-                if(validForExtendedRoot(world, pos)) {
+                if (validForExtendedRoot(world, pos)) {
                     setBlock(world, pos.immutable(), state, consumer);
-                }else{
+                } else {
                     break;
                 }
             }
@@ -350,11 +350,11 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return false;
     }
 
-    public boolean validForExtendedRoot(LevelSimulatedReader world, BlockPos pos){
+    public boolean validForExtendedRoot(LevelSimulatedReader world, BlockPos pos) {
         return TreeFeature.validTreePos(world, pos) || world.isStateAtPosition(pos, (b) -> b.getBlock() == Blocks.DIRT || b.getBlock() == Blocks.GRASS_BLOCK);
     }
 
-    public void setBlock(LevelSimulatedReader world, BlockPos pos, BlockState state, BiConsumer<BlockPos, BlockState> consumer){
+    public void setBlock(LevelSimulatedReader world, BlockPos pos, BlockState state, BiConsumer<BlockPos, BlockState> consumer) {
         consumer.accept(pos, state);
     }
 }

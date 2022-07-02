@@ -18,7 +18,7 @@ public class CreateSpellButton extends GuiImageButton {
     private final ResourceLocation image = new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_icon.png");
 
     public CreateSpellButton(BaseBook parent, int x, int y, Button.OnPress onPress) {
-        super(x, y, 0,0,50, 12, 50, 12, "textures/gui/create_icon.png", onPress);
+        super(x, y, 0, 0, 50, 12, 50, 12, "textures/gui/create_icon.png", onPress);
         this.parent = parent;
     }
 

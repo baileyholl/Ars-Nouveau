@@ -17,7 +17,7 @@ public class CompoundScryer implements IScryer {
 
     List<IScryer> scryerList = new ArrayList<>();
 
-    public CompoundScryer(IScryer... scryerList){
+    public CompoundScryer(IScryer... scryerList) {
         Collections.addAll(this.scryerList, scryerList);
     }
 
@@ -34,7 +34,7 @@ public class CompoundScryer implements IScryer {
             CompoundTag scryerTag = tag.getCompound("scryer_" + i);
             String id = scryerTag.getString("id");
             IScryer scryer = ArsNouveauAPI.getInstance().getScryer(new ResourceLocation(id));
-            if(scryer != null) {
+            if (scryer != null) {
                 compoundScryer.scryerList.add(scryer.fromTag(scryerTag));
             }
         }

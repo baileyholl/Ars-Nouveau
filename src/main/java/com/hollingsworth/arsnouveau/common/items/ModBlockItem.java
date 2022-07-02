@@ -22,12 +22,12 @@ public class ModBlockItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
-    public ModBlockItem withTooltip(Component tip){
+    public ModBlockItem withTooltip(Component tip) {
         tooltip.add(tip);
         return this;
     }
 
-    public ModBlockItem withRarity(Rarity rarity){
+    public ModBlockItem withRarity(Rarity rarity) {
         this.rarity = rarity;
         return this;
     }
@@ -42,7 +42,7 @@ public class ModBlockItem extends BlockItem {
      */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if(tooltip != null && !tooltip.isEmpty()){
+        if (tooltip != null && !tooltip.isEmpty()) {
             tooltip2.addAll(tooltip);
         }
     }

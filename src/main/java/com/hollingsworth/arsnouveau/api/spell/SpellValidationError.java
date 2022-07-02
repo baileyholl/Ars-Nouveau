@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * An indication of some sort of validation error when confirming if a spell is correctly constructed.
- *
+ * <p>
  * Instances of this are obtained from {@link ISpellValidator#validate(List)}.
- *
+ * <p>
  * This interface is not intended to be implemented by clients of the API.
  */
 public interface SpellValidationError {
@@ -31,6 +31,7 @@ public interface SpellValidationError {
      * an existing glyph.
      */
     MutableComponent makeTextComponentExisting();
+
     /**
      * Creates and returns a Text Component with a full error message, where the use case is reporting an issue that
      * will occur if adding a glyph to a spell.

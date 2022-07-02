@@ -51,7 +51,8 @@ public class FollowSummonerGoal extends Goal {
             return false;
         } else if (this.summon instanceof TamableAnimal && ((TamableAnimal) this.summon).isOrderedToSit()) {
             return false;
-        } else return !(this.summon.getSelfEntity().distanceToSqr(livingentity) < (double) (this.minDist * this.minDist));
+        } else
+            return !(this.summon.getSelfEntity().distanceToSqr(livingentity) < (double) (this.minDist * this.minDist));
     }
 
     /**
@@ -60,13 +61,13 @@ public class FollowSummonerGoal extends Goal {
     public boolean canContinueToUse() {
 
         boolean flag = true;
-        if(this.summon instanceof TamableAnimal)
+        if (this.summon instanceof TamableAnimal)
             flag = !((TamableAnimal) this.summon).isOrderedToSit();
 
-        if(this.summon.getSummoner() == null)
+        if (this.summon.getSummoner() == null)
             return false;
 
-        return !this.navigator.isDone() && this.summon.getSelfEntity().distanceToSqr(this.summon.getSummoner()) > (double)(this.maxDist * this.maxDist) && flag;
+        return !this.navigator.isDone() && this.summon.getSelfEntity().distanceToSqr(this.summon.getSummoner()) > (double) (this.maxDist * this.maxDist) && flag;
     }
 
     /**
@@ -94,12 +95,12 @@ public class FollowSummonerGoal extends Goal {
      */
     public void tick() {
 
-        if(this.summon.getSummoner() == null) {
+        if (this.summon.getSummoner() == null) {
 
             return;
         }
-        this.summon.getSelfEntity().getLookControl().setLookAt(this.summon.getSummoner(), 10.0F, (float)this.summon.getSelfEntity().getMaxHeadXRot());
-        if(this.summon instanceof TamableAnimal && ((TamableAnimal) this.summon).isOrderedToSit())
+        this.summon.getSelfEntity().getLookControl().setLookAt(this.summon.getSummoner(), 10.0F, (float) this.summon.getSelfEntity().getMaxHeadXRot());
+        if (this.summon instanceof TamableAnimal && ((TamableAnimal) this.summon).isOrderedToSit())
             return;
 
         if (--this.timeToRecalcPath <= 0) {
@@ -112,8 +113,8 @@ public class FollowSummonerGoal extends Goal {
                     int j = Mth.floor(this.summon.getSummoner().getZ()) - 2;
                     int k = Mth.floor(this.summon.getSummoner().getBoundingBox().minY);
 
-                    for(int l = 0; l <= 4; ++l) {
-                        for(int i1 = 0; i1 <= 4; ++i1) {
+                    for (int l = 0; l <= 4; ++l) {
+                        for (int i1 = 0; i1 <= 4; ++i1) {
                             if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.canTeleportToBlock(new BlockPos(i + l, k - 1, j + i1))) {
                                 this.summon.getSelfEntity().moveTo((float) (i + l) + 0.5F, k, (float) (j + i1) + 0.5F, this.summon.getSelfEntity().getYRot(), this.summon.getSelfEntity().getXRot());
                                 this.navigator.stop();

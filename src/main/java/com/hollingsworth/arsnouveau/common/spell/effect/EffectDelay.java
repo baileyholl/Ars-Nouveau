@@ -28,17 +28,17 @@ public class EffectDelay extends AbstractEffect {
         super(GlyphLib.EffectDelayID, "Delay");
     }
 
-    public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats,BlockHitResult blockResult, Entity hitEntity){
+    public void sendPacket(Level world, HitResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats, BlockHitResult blockResult, Entity hitEntity) {
         spellContext.setCanceled(true);
-        if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
+        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         Spell newSpell = spellContext.getRemainingSpell();
         SpellContext newContext = spellContext.clone().withSpell(newSpell).withCaster(shooter);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
-        int decreasedTime =(int) (20.0 * ((double) EXTEND_TIME.get() - (double)EXTEND_TIME.get()/2.0));
+        int decreasedTime = (int) (20.0 * ((double) EXTEND_TIME.get() - (double) EXTEND_TIME.get() / 2.0));
         duration -= decreasedTime;
         EventQueue.getServerInstance().addEvent(
-                new DelayedSpellEvent(duration , newSpell, rayTraceResult, world, shooter, newContext));
+                new DelayedSpellEvent(duration, newSpell, rayTraceResult, world, shooter, newContext));
         Networking.sendToNearby(world, new BlockPos(safelyGetHitPos(rayTraceResult)),
                 new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity));
     }

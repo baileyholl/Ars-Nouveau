@@ -33,7 +33,7 @@ public class GenericFamiliarRenderer<T extends FamiliarEntity> extends GenericRe
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 
-        if (this.familiar.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())){
+        if (this.familiar.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
             CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, familiar, packedLightIn);
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(familiar)));
         }

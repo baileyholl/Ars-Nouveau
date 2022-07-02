@@ -22,12 +22,13 @@ public class ArcaneCoreTile extends ModdedTile implements IAnimatable {
         data.addAnimationController(new AnimationController(this, "controller", 1, this::spin));
     }
 
-    public PlayState spin(AnimationEvent e){
+    public PlayState spin(AnimationEvent e) {
         e.getController().setAnimation(new AnimationBuilder().addAnimation("gem_spin", true));
         return PlayState.CONTINUE;
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

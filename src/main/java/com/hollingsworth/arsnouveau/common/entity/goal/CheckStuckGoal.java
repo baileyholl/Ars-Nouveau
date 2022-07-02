@@ -16,13 +16,13 @@ public abstract class CheckStuckGoal extends Goal {
     Supplier<BlockPos> lastPos;
     Function<Boolean, Void> setStuck;
 
-    public CheckStuckGoal(Supplier<BlockPos> lastPos, int numTries, Function<Boolean, Void> setStuck){
+    public CheckStuckGoal(Supplier<BlockPos> lastPos, int numTries, Function<Boolean, Void> setStuck) {
         this.lastPos = lastPos;
         this.numTries = numTries;
         this.setStuck = setStuck;
     }
 
-    public void resetStuckCheck(){
+    public void resetStuckCheck() {
         this.countNoProgress = 0;
         this.ticksSinceLastProgress = 0;
         this.lastProgressPos = null;
@@ -36,19 +36,19 @@ public abstract class CheckStuckGoal extends Goal {
     @Override
     public void tick() {
         ticksSinceLastProgress++;
-        if(lastProgressPos == null)
+        if (lastProgressPos == null)
             lastProgressPos = lastPos.get();
 
-        if(ticksSinceLastProgress % 20 == 0){
-            if(lastPos.get().equals(lastProgressPos)){
+        if (ticksSinceLastProgress % 20 == 0) {
+            if (lastPos.get().equals(lastProgressPos)) {
                 countNoProgress++;
-            }else{
+            } else {
                 lastProgressPos = lastPos.get();
                 countNoProgress = 0;
                 setStuck.apply(false);
             }
         }
-        if(countNoProgress >= numTries)
+        if (countNoProgress >= numTries)
             setStuck.apply(true);
     }
 }

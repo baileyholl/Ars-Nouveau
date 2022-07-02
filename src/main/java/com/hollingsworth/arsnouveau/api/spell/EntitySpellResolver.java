@@ -9,12 +9,12 @@ import net.minecraft.world.item.ItemStack;
  */
 public class EntitySpellResolver extends SpellResolver {
 
-    public EntitySpellResolver(SpellContext context){
+    public EntitySpellResolver(SpellContext context) {
         super(context);
     }
 
 
-    public void onCastOnEntity(LivingEntity target){
+    public void onCastOnEntity(LivingEntity target) {
         super.onCastOnEntity(ItemStack.EMPTY, target, InteractionHand.MAIN_HAND);
     }
 

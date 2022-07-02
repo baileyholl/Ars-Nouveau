@@ -39,7 +39,7 @@ public class StarbuncleCharm extends AbstractSummonCharm {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
         Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(stack.getOrCreateTag());
-        if(data.name != null){
+        if (data.name != null) {
             tooltip2.add(data.name);
         }
         tooltip2.add(Component.translatable("ars_nouveau.starbuncle.storing", data.TO_LIST.size()));

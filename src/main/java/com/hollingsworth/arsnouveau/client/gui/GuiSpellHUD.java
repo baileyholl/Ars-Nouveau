@@ -35,11 +35,11 @@ public class GuiSpellHUD extends AbstractContainerEventHandler implements GuiEve
 
     public void drawHUD(PoseStack ms) {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
-        if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null){
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
             int offsetLeft = 10;
-            ISpellCaster caster =  CasterUtil.getCaster(stack);
+            ISpellCaster caster = CasterUtil.getCaster(stack);
             String renderString = caster.getCurrentSlot() + 1 + " " + caster.getSpellName();
-            minecraft.font.drawShadow(ms,renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30 , 0xFFFFFF);
+            minecraft.font.drawShadow(ms, renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
         }
     }
 }

@@ -13,21 +13,21 @@ import java.util.List;
 public class RitualBreed extends AbstractRitual {
     @Override
     protected void tick() {
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
-        }else{
-            if(getWorld().getGameTime() % 200 == 0){
+        } else {
+            if (getWorld().getGameTime() % 200 == 0) {
                 List<Animal> animals = getWorld().getEntitiesOfClass(Animal.class, new AABB(getPos()).inflate(5));
-                if(animals.size() >= 20)
+                if (animals.size() >= 20)
                     return;
                 boolean didWorkOnce = false;
-                for(Animal a : animals){
-                    if(a.getAge() == 0 && a.canFallInLove()){
+                for (Animal a : animals) {
+                    if (a.getAge() == 0 && a.canFallInLove()) {
                         didWorkOnce = true;
                         a.setInLove(null);
                     }
                 }
-                if(didWorkOnce)
+                if (didWorkOnce)
                     setNeedsMana(true);
             }
         }

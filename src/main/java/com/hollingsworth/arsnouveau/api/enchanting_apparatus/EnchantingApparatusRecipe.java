@@ -37,7 +37,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     public boolean keepNbtOfReagent = false;
 
 
-    public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems){
+    public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems) {
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
@@ -45,11 +45,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(result.getItem()).getPath());
     }
 
-    public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result){
+    public EnchantingApparatusRecipe(ResourceLocation id, List<Ingredient> pedestalItems, Ingredient reagent, ItemStack result) {
         this(id, pedestalItems, reagent, result, 0, false);
     }
 
-    public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result, int cost, boolean keepNbtOfReagent){
+    public EnchantingApparatusRecipe(ResourceLocation id, List<Ingredient> pedestalItems, Ingredient reagent, ItemStack result, int cost, boolean keepNbtOfReagent) {
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
@@ -57,7 +57,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         this.id = id;
         this.keepNbtOfReagent = keepNbtOfReagent;
     }
-    public EnchantingApparatusRecipe(){
+
+    public EnchantingApparatusRecipe() {
         reagent = Ingredient.EMPTY;
         result = ItemStack.EMPTY;
         pedestalItems = new ArrayList<>();
@@ -71,14 +72,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         return doesReagentMatch(reagent) && this.pedestalItems.size() == pedestalItems.size() && doItemsMatch(pedestalItems, this.pedestalItems);
     }
 
-    public boolean doesReagentMatch(ItemStack reag){
+    public boolean doesReagentMatch(ItemStack reag) {
         return this.reagent.test(reag);
     }
 
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         ItemStack result = this.result.copy();
-        if(keepNbtOfReagent && reagent.hasTag()) {
+        if (keepNbtOfReagent && reagent.hasTag()) {
             result.setTag(reagent.getTag());
             result.setDamageValue(0);
         }
@@ -89,10 +90,10 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     // Function to check if both arrays are same
     public static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
         StackedContents recipeitemhelper = new StackedContents();
-        for(ItemStack i : inputs)
+        for (ItemStack i : inputs)
             recipeitemhelper.accountStack(i, 1);
 
-        return inputs.size() == recipeItems.size() && (net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs,  recipeItems) != null);
+        return inputs.size() == recipeItems.size() && (net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, recipeItems) != null);
     }
 
     @Override
@@ -119,17 +120,17 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 '}';
     }
 
-    public JsonElement asRecipe(){
+    public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:enchanting_apparatus");
 
         JsonArray pedestalArr = new JsonArray();
-        for(Ingredient i : this.pedestalItems){
+        for (Ingredient i : this.pedestalItems) {
             JsonObject object = new JsonObject();
             object.add("item", i.toJson());
             pedestalArr.add(object);
         }
-        JsonArray reagent =  new JsonArray();
+        JsonArray reagent = new JsonArray();
         reagent.add(this.reagent.toJson());
         jsonobject.add("reagent", reagent);
 
@@ -206,12 +207,12 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
             JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(JsonElement e : pedestalItems){
+            for (JsonElement e : pedestalItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
-                if(GsonHelper.isArrayNode(obj, "item")){
+                if (GsonHelper.isArrayNode(obj, "item")) {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                }else{
+                } else {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 }
                 stacks.add(input);
@@ -227,8 +228,10 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
             ItemStack output = buffer.readItem();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
+            for (int i = 0; i < length; i++) {
+                try {
+                    stacks.add(Ingredient.fromNetwork(buffer));
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }
@@ -243,7 +246,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
             buf.writeInt(recipe.pedestalItems.size());
             recipe.reagent.toNetwork(buf);
             buf.writeItem(recipe.result);
-            for(Ingredient i : recipe.pedestalItems){
+            for (Ingredient i : recipe.pedestalItems) {
                 i.toNetwork(buf);
             }
             buf.writeInt(recipe.sourceCost);

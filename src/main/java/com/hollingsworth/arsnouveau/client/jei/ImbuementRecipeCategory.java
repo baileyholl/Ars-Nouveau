@@ -23,7 +23,7 @@ public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe>
 
     public ImbuementRecipeCategory(IGuiHelper helper) {
         super(helper, (imbuementRecipe -> new MultiProvider(imbuementRecipe.output, imbuementRecipe.pedestalItems, imbuementRecipe.input)));
-        background = helper.createBlankDrawable(114,108);
+        background = helper.createBlankDrawable(114, 108);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockRegistry.IMBUEMENT_BLOCK));
     }
 

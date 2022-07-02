@@ -48,25 +48,25 @@ public class EffectKnockback extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        if(shooter == null)
+        if (shooter == null)
             return;
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
 
-        for(BlockPos p : posList) {
+        for (BlockPos p : posList) {
             EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
-            if(fallingBlock != null) {
+            if (fallingBlock != null) {
                 knockback(fallingBlock, shooter, strength);
                 ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);
             }
         }
     }
 
-    public void knockback(Entity target, LivingEntity shooter, float strength){
-        knockback(target,strength,Mth.sin(shooter.yRot * ((float)Math.PI / 180F)), -Mth.cos(shooter.yRot * ((float)Math.PI / 180F)));
+    public void knockback(Entity target, LivingEntity shooter, float strength) {
+        knockback(target, strength, Mth.sin(shooter.yRot * ((float) Math.PI / 180F)), -Mth.cos(shooter.yRot * ((float) Math.PI / 180F)));
     }
 
     public void knockback(Entity entity, double strength, double xRatio, double zRatio) {
-        if(entity instanceof LivingEntity living)
+        if (entity instanceof LivingEntity living)
             strength *= 1.0D - living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
         if (strength > 0.0D) {
             entity.hasImpulse = true;

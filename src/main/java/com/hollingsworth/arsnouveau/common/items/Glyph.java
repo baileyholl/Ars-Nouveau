@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Glyph extends ModItem{
+public class Glyph extends ModItem {
     public AbstractSpellPart spellPart;
 
     public Glyph(AbstractSpellPart part) {
@@ -33,19 +33,19 @@ public class Glyph extends ModItem{
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        if(worldIn.isClientSide)
+        if (worldIn.isClientSide)
             return super.use(worldIn, playerIn, handIn);
 
-        if(!Config.isGlyphEnabled(this.spellPart.getRegistryName())){
+        if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
             playerIn.sendSystemMessage(Component.translatable("ars_nouveau.spell.disabled"));
             return super.use(worldIn, playerIn, handIn);
         }
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
-        if(playerDataCap != null){
-            if(playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)){
+        if (playerDataCap != null) {
+            if (playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)) {
                 playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
                 return super.use(worldIn, playerIn, handIn);
-            }else if(playerDataCap.unlockGlyph(spellPart)){
+            } else if (playerDataCap.unlockGlyph(spellPart)) {
                 CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
                 playerIn.getItemInHand(handIn).shrink(1);
                 playerIn.sendSystemMessage(Component.literal("Unlocked " + this.spellPart.getName()));
@@ -62,34 +62,34 @@ public class Glyph extends ModItem{
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if(spellPart == null)
+        if (spellPart == null)
             return;
 
-        if(!Config.isGlyphEnabled(this.spellPart.getRegistryName())){
+        if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
-        }else if(spellPart != null){
+        } else if (spellPart != null) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
             tooltip2.add(Component.translatable("ars_nouveau.schools"));
-            for(SpellSchool s : spellPart.spellSchools){
+            for (SpellSchool s : spellPart.spellSchools) {
                 tooltip2.add(s.getTextComponent());
             }
         }
 
-        if(Minecraft.getInstance().player == null)
+        if (Minecraft.getInstance().player == null)
             return;
 
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
-        if(playerDataCap != null){
-            if(playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)){
+        if (playerDataCap != null) {
+            if (playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)) {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));
-            }else{
+            } else {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
             }
         }
         tooltip2.add(Component.translatable(" "));
-        if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())){
+        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())) {
             tooltip2.add(spellPart.getBookDescLang());
-        }else{
+        } else {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
         }
 

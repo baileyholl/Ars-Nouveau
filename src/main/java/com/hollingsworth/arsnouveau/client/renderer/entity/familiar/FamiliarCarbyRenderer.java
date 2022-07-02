@@ -17,12 +17,12 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
         super(manager, new FamiliarCarbyModel<>());
     }
 
-    public ResourceLocation getColor(FamiliarStarbuncle e){
+    public ResourceLocation getColor(FamiliarStarbuncle e) {
         String color = e.getColor().toLowerCase();
 
         if (color.isEmpty()) color = "orange";
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color + ".png");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
 
         @Override
         public ResourceLocation getModelResource(FamiliarStarbuncle carbuncle) {
-            return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle.geo.json");
+            return new ResourceLocation(ArsNouveau.MODID, "geo/carbuncle.geo.json");
         }
 
         @Override
@@ -56,7 +56,7 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
 
         @Override
         public ResourceLocation getAnimationResource(FamiliarStarbuncle carbuncle) {
-            return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
+            return new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");
         }
 
     }

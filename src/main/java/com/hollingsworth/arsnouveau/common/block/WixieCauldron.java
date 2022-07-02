@@ -27,10 +27,10 @@ public class WixieCauldron extends SummonBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
             return InteractionResult.SUCCESS;
 
-        if(player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get() && !player.getMainHandItem().isEmpty()){
+        if (player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get() && !player.getMainHandItem().isEmpty()) {
             ((WixieCauldronTile) worldIn.getBlockEntity(pos)).setRecipes(player, player.getMainHandItem());
             worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
             return InteractionResult.CONSUME;
@@ -47,7 +47,7 @@ public class WixieCauldron extends SummonBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof WixieCauldronTile cauldronTile){
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof WixieCauldronTile cauldronTile) {
             cauldronTile.isOff = world.hasNeighborSignal(pos);
             cauldronTile.updateBlock();
         }

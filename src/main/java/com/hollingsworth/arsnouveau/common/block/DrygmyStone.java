@@ -58,7 +58,7 @@ public class DrygmyStone extends SummonBlock implements SimpleWaterloggedBlock {
             Block.box(0, 3, 8.5, 0, 8, 11.5)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.block());
 
-    public DrygmyStone(){
+    public DrygmyStone() {
         super(defaultProperties().noOcclusion().lightLevel((b) -> 8));
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(BlockStateProperties.WATERLOGGED, false));
     }

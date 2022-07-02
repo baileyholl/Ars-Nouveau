@@ -6,9 +6,9 @@ import top.theillusivec4.caelus.api.CaelusApi;
 
 public class CaelusHandler {
 
-    public static void setFlying(Player entity){
+    public static void setFlying(Player entity) {
         AttributeInstance attributeInstance = entity.getAttribute(CaelusApi.getInstance().getFlightAttribute());
-        if(attributeInstance != null && !attributeInstance.hasModifier(CaelusApi.getInstance().getElytraModifier()))
+        if (attributeInstance != null && !attributeInstance.hasModifier(CaelusApi.getInstance().getElytraModifier()))
             attributeInstance.addTransientModifier(CaelusApi.getInstance().getElytraModifier());
     }
 }

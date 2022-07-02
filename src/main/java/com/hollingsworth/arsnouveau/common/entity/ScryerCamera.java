@@ -155,16 +155,16 @@ public class ScryerCamera extends Entity {
     public void discardCamera() {
         if (!this.level.isClientSide) {
 
-            if(level.getBlockEntity(this.blockPosition()) instanceof ICameraMountable camMount){
+            if (level.getBlockEntity(this.blockPosition()) instanceof ICameraMountable camMount) {
                 camMount.stopViewing();
             }
 
             SectionPos chunkPos = SectionPos.of(this.blockPosition());
             int view = this.viewDistance <= 0 ? this.level.getServer().getPlayerList().getViewDistance() : this.viewDistance;
 
-            for(int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; ++x) {
-                for(int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; ++z) {
-                    ForgeChunkManager.forceChunk((ServerLevel)this.level, ArsNouveau.MODID, this, x, z, false, false);
+            for (int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; ++x) {
+                for (int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; ++z) {
+                    ForgeChunkManager.forceChunk((ServerLevel) this.level, ArsNouveau.MODID, this, x, z, false, false);
                 }
             }
         }

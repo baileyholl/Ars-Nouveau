@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 public class GuiManaHUD extends GuiComponent {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
-    public boolean shouldDisplayBar(){
+    public boolean shouldDisplayBar() {
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
         return (mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand))
@@ -25,11 +25,11 @@ public class GuiManaHUD extends GuiComponent {
     }
 
     public void drawHUD(PoseStack ms, float pt) {
-        if(!shouldDisplayBar())
+        if (!shouldDisplayBar())
             return;
 
         IManaCap mana = CapabilityRegistry.getMana(minecraft.player).orElse(null);
-        if(mana == null)
+        if (mana == null)
             return;
 
         int offsetLeft = 10;
@@ -39,14 +39,14 @@ public class GuiManaHUD extends GuiComponent {
         int height = minecraft.getWindow().getGuiScaledHeight() - 5;
 
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
-        blit(ms,offsetLeft, height - 18, 0, 0, 108, 18, 256, 256);
+        blit(ms, offsetLeft, height - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) (((ClientInfo.ticksInGame + pt) / 3 % (33))) * 6;
 
         // 96
-        RenderSystem.setShaderTexture(0,new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
-        blit(ms,offsetLeft + 9, height - 9, 0, manaOffset, manaLength,6, 256, 256);
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
+        blit(ms, offsetLeft + 9, height - 9, 0, manaOffset, manaLength, 6, 256, 256);
 
-        RenderSystem.setShaderTexture(0,new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
-        blit(ms,offsetLeft, height - 17, 0, 18, 108, 20, 256, 256);
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
+        blit(ms, offsetLeft, height - 17, 0, 18, 108, 20, 256, 256);
     }
 }

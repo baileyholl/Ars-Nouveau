@@ -66,11 +66,11 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     protected EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
 
-    public EntityBookwyrm setRecipe(Spell spell){
+    public EntityBookwyrm setRecipe(Spell spell) {
         this.spellRecipe = spell;
         return this;
     }
@@ -87,7 +87,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.bookwyrm.strict_mode", this.entityData.get(STRICT_MODE)));
     }
 
-    public EntityBookwyrm(Level world, BlockPos lecternPos){
+    public EntityBookwyrm(Level world, BlockPos lecternPos) {
         this(world);
         this.lecternPos = lecternPos;
     }
@@ -95,15 +95,15 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public void tick() {
         super.tick();
-        if(level == null || this.dead || lecternPos == null)
+        if (level == null || this.dead || lecternPos == null)
             return;
         ticksSinceLastSpell += 1;
-        if(!level.isClientSide){
-            if(backoffTicks >= 0)
+        if (!level.isClientSide) {
+            if (backoffTicks >= 0)
                 backoffTicks--;
         }
 
-        if(level.getGameTime() % 20 == 0) {
+        if (level.getGameTime() % 20 == 0) {
             if (!(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile)) {
                 if (!level.isClientSide) {
                     this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
@@ -114,7 +114,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     public boolean hurt(@Nonnull DamageSource source, float p_70097_2_) {
-        if(source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.CACTUS)
+        if (source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.CACTUS)
             return false;
         return super.hurt(source, p_70097_2_);
     }
@@ -143,8 +143,8 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public ItemStack onPlaceBlock() {
         ItemStack heldStack = getHeldStack();
-        if(heldStack.isEmpty())
-            return  ItemStack.EMPTY;
+        if (heldStack.isEmpty())
+            return ItemStack.EMPTY;
         BookwyrmLecternTile tile = getTile();
         return tile == null ? heldStack : tile.getItem(heldStack.getItem());
     }
@@ -155,13 +155,13 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.isRemoved())
+        if (this.isRemoved())
             return false;
 
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
         return true;
@@ -175,14 +175,14 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if(lecternPos != null){
+        if (lecternPos != null) {
             tag.putInt("summoner_x", lecternPos.getX());
             tag.putInt("summoner_y", lecternPos.getY());
             tag.putInt("summoner_z", lecternPos.getZ());
         }
         tag.putInt("last_spell", ticksSinceLastSpell);
 
-        if(!getHeldStack().isEmpty()) {
+        if (!getHeldStack().isEmpty()) {
             CompoundTag itemTag = new CompoundTag();
             getHeldStack().save(itemTag);
             tag.put("held", itemTag);
@@ -195,11 +195,11 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if(tag.contains("summoner_x"))
+        if (tag.contains("summoner_x"))
             lecternPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
         ticksSinceLastSpell = tag.getInt("last_spell");
-        if(tag.contains("held"))
-            setHeldStack(ItemStack.of((CompoundTag)tag.get("held")));
+        if (tag.contains("held"))
+            setHeldStack(ItemStack.of((CompoundTag) tag.get("held")));
 
         this.entityData.set(STRICT_MODE, tag.getBoolean("strict"));
         this.backoffTicks = tag.getInt("backoff");
@@ -228,7 +228,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         return BlockUtil.getAdjacentInventories(level, lecternPos);
     }
 
-    public @Nullable BookwyrmLecternTile getTile(){
+    public @Nullable BookwyrmLecternTile getTile() {
         return lecternPos == null || !(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile) ? null : (BookwyrmLecternTile) level.getBlockEntity(lecternPos);
     }
 
@@ -259,17 +259,17 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         return false;
     }
 
-    public @Nonnull ItemStack getHeldStack(){
+    public @Nonnull ItemStack getHeldStack() {
         return this.entityData.get(HELD_ITEM);
     }
 
-    public void setHeldStack(ItemStack stack){
-        this.entityData.set(HELD_ITEM,stack);
+    public void setHeldStack(ItemStack stack) {
+        this.entityData.set(HELD_ITEM, stack);
     }
 
     @Override
     public void die(DamageSource source) {
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
@@ -296,8 +296,8 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(EntityBookwyrm.COLOR).toLowerCase();
-        if(color.isEmpty())
+        if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
     }
 }

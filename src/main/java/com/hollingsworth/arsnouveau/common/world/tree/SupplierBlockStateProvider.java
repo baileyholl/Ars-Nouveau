@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 
-public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider{
+public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider {
     public SupplierBlockStateProvider(String path) {
         this(new ResourceLocation(ArsNouveau.MODID, path));
     }
@@ -17,7 +17,7 @@ public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvid
     }
 
     public static final Codec<SupplierBlockStateProvider> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.STRING.fieldOf("key").forGetter(d -> d.key.getPath()))
+                    Codec.STRING.fieldOf("key").forGetter(d -> d.key.getPath()))
             .apply(instance, SupplierBlockStateProvider::new));
 
     @Override

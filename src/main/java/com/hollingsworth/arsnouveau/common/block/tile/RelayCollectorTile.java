@@ -18,24 +18,24 @@ public class RelayCollectorTile extends RelayTile {
     @Override
     public void tick() {
         super.tick();
-        if(disabled)
+        if (disabled)
             return;
-        if(!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()){
+        if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
             List<BlockPos> takeList = SourceUtil.canTakeSourceAny(getBlockPos(), level, 5);
 
-            for(BlockPos pos : takeList){
-                if(this.getSource() >= getMaxSource()){
+            for (BlockPos pos : takeList) {
+                if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if(!level.isLoaded(pos))
+                if (!level.isLoaded(pos))
                     continue;
-                if(pos.equals(this.getToPos()) || pos.equals(this.getFromPos()) || !(level.getBlockEntity(pos) instanceof ISourceTile)) {
+                if (pos.equals(this.getToPos()) || pos.equals(this.getFromPos()) || !(level.getBlockEntity(pos) instanceof ISourceTile)) {
                     continue;
                 }
 
 
                 int transferred = transferSource((ISourceTile) level.getBlockEntity(pos), this);
-                if(transferred > 0){
+                if (transferred > 0) {
                     ParticleUtil.spawnFollowProjectile(level, pos, this.worldPosition);
                 }
             }

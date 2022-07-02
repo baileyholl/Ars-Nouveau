@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public interface ICosmeticItem {
 
     //bone model where the item is renderer, all animations that include the bone will be synced with the item
-    default String getBone(){
+    default String getBone() {
         return "head";
     }
 
@@ -21,7 +21,7 @@ public interface ICosmeticItem {
     /**
      * @param entity check if is compatible with the cosmetic item
      */
-    default boolean canWear(LivingEntity entity){
+    default boolean canWear(LivingEntity entity) {
         return true;
     }
 
@@ -31,7 +31,7 @@ public interface ICosmeticItem {
      * the items look in inventory and when it's dropped.
      */
     @OnlyIn(Dist.CLIENT)
-    default ItemTransforms.TransformType getTransformType(){
+    default ItemTransforms.TransformType getTransformType() {
         return ItemTransforms.TransformType.GROUND;
     }
 

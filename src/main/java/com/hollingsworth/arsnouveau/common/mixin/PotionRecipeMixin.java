@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PotionBrewing.class)
 public class PotionRecipeMixin {
-//
+    //
     @Inject(method = "addMix", at = @At("HEAD"))
     private static void addMix(Potion potionEntry, Item potionIngredient, Potion potionResult, CallbackInfo ci) {
         ArsNouveauAPI.getInstance().vanillaPotionRecipes.add(new VanillaPotionRecipe(potionEntry, potionIngredient, potionResult));

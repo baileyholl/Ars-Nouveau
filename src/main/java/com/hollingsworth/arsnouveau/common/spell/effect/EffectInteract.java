@@ -50,9 +50,9 @@ public class EffectInteract extends AbstractEffect {
                 fakePlayer.setPos(e.getX(), e.getY(), e.getZ());
                 ItemStack stack = ((IInteractResponder) shooter).getHeldItem().copy();
                 fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-                e.interact( fakePlayer, InteractionHand.MAIN_HAND);
+                e.interact(fakePlayer, InteractionHand.MAIN_HAND);
                 List<ItemStack> items = new ArrayList<>();
-                if(e instanceof IForgeShearable && fakePlayer.getMainHandItem().getItem() instanceof ShearsItem && ((IForgeShearable) e).isShearable(fakePlayer.getMainHandItem(), world, e.blockPosition())){
+                if (e instanceof IForgeShearable && fakePlayer.getMainHandItem().getItem() instanceof ShearsItem && ((IForgeShearable) e).isShearable(fakePlayer.getMainHandItem(), world, e.blockPosition())) {
                     items.addAll(((IForgeShearable) e).onSheared(fakePlayer, fakePlayer.getMainHandItem(), world, e.blockPosition(),
                             fakePlayer.getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE)));
                 }
@@ -99,13 +99,13 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
-    public void returnItems(HitResult rayTraceResult, Level world, LivingEntity shooter, List<ItemStack> items){
-        for(ItemStack i : items){
-            if(shooter instanceof IPickupResponder){
+    public void returnItems(HitResult rayTraceResult, Level world, LivingEntity shooter, List<ItemStack> items) {
+        for (ItemStack i : items) {
+            if (shooter instanceof IPickupResponder) {
                 ItemStack leftOver = ((IPickupResponder) shooter).onPickup(i);
-                if(!leftOver.isEmpty())
+                if (!leftOver.isEmpty())
                     world.addFreshEntity(new ItemEntity(world, rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z, leftOver));
-            }else{
+            } else {
                 world.addFreshEntity(new ItemEntity(world, rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z, i));
             }
         }

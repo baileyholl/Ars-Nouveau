@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
  * Represents a dynamic light source.
  * This is a straight implementation from LambDynamicLights, a super awesome Fabric mod!
  * https://github.com/LambdAurora/LambDynamicLights
+ *
  * @author LambdAurora
  * @version 1.3.3
  * @since 1.0.0

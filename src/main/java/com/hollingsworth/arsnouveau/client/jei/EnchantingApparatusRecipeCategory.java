@@ -20,10 +20,10 @@ public class EnchantingApparatusRecipeCategory extends MultiInputCategory<Enchan
     public IDrawable background;
     public IDrawable icon;
 
-    public EnchantingApparatusRecipeCategory(IGuiHelper helper){
+    public EnchantingApparatusRecipeCategory(IGuiHelper helper) {
         super(helper, (enchantingApparatusRecipe -> new MultiProvider(enchantingApparatusRecipe.result, enchantingApparatusRecipe.pedestalItems, enchantingApparatusRecipe.reagent)));
-        background = helper.createBlankDrawable(114,108);
-        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
+        background = helper.createBlankDrawable(114, 108);
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class EnchantingApparatusRecipeCategory extends MultiInputCategory<Enchan
     @Override
     public void draw(EnchantingApparatusRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        if(recipe.consumesSource())
-            renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0.0f,100f, 10);
+        if (recipe.consumesSource())
+            renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0.0f, 100f, 10);
     }
 }

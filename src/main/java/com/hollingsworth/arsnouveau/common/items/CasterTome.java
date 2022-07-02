@@ -39,22 +39,22 @@ public class CasterTome extends ModItem implements ICasterTool {
         ISpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         // Let even a new player cast 1 charge of a tome
-        if(spell.getDiscountedCost() > ManaUtil.getMaxMana(playerIn)){
+        if (spell.getDiscountedCost() > ManaUtil.getMaxMana(playerIn)) {
             spell.addDiscount(spell.getDiscountedCost() - ManaUtil.getMaxMana(playerIn));
-        }else{
-            spell.addDiscount(spell.getDiscountedCost()/2);
+        } else {
+            spell.addDiscount(spell.getDiscountedCost() / 2);
         }
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable(""), spell);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if(worldIn == null)
+        if (worldIn == null)
             return;
         ISpellCaster caster = getSpellCaster(stack);
         Spell spell = caster.getSpell();
         tooltip2.add(Component.literal(spell.getDisplayString()));
-        if(!caster.getFlavorText().isEmpty())
+        if (!caster.getFlavorText().isEmpty())
             tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
 
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));

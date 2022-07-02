@@ -31,13 +31,13 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
         super(p_i48289_1_, pos, state);
     }
 
-    public TimerSpellTurretTile(BlockPos pos, BlockState state){
+    public TimerSpellTurretTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.TIMER_SPELL_TURRET_TILE, pos, state);
     }
 
     @Override
     public void tick() {
-        if(!level.isClientSide && ticksPerSignal > 0 && !isOff & level.getGameTime() % ticksPerSignal == 0){
+        if (!level.isClientSide && ticksPerSignal > 0 && !isOff & level.getGameTime() % ticksPerSignal == 0) {
             getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
 
         }
@@ -71,7 +71,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
         update();
     }
 
-    public void addTime(int ticks){
+    public void addTime(int ticks) {
         ticksPerSignal += ticks;
         ticksPerSignal = Math.max(0, ticksPerSignal);
         update();
@@ -80,14 +80,14 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
-        if(ticksPerSignal <= 0 && !isOff){
+        if (ticksPerSignal <= 0 && !isOff) {
             tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
-        }else{
-            tooltip.add(Component.translatable("ars_nouveau.seconds", ticksPerSignal/20));
+        } else {
+            tooltip.add(Component.translatable("ars_nouveau.seconds", ticksPerSignal / 20));
         }
-        if(isOff)
+        if (isOff)
             tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
-        if(isLocked)
+        if (isLocked)
             tooltip.add(Component.translatable("ars_nouveau.locked"));
     }
 

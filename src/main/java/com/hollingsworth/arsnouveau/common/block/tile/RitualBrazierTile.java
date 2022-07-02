@@ -49,63 +49,63 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         super(tileEntityTypeIn, pos, state);
     }
 
-    public RitualBrazierTile(BlockPos p, BlockState s){
+    public RitualBrazierTile(BlockPos p, BlockState s) {
         super(BlockRegistry.RITUAL_TILE, p, s);
     }
 
-    public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity){
+    public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity) {
         Level world = getLevel();
         BlockPos pos = getBlockPos();
         double xzOffset = 0.25;
-        for(int i =0; i < intensity; i++){
+        for (int i = 0; i < intensity; i++) {
             world.addParticle(
                     GlowParticleData.createData(centerColor),
-                    pos.getX() +0.5 + ParticleUtil.inRange(-xzOffset/2, xzOffset/2)  , pos.getY() + 1 + ParticleUtil.inRange(-0.05, 0.2) , pos.getZ() +0.5 + ParticleUtil.inRange(-xzOffset/2, xzOffset/2),
-                    0, ParticleUtil.inRange(0.0, 0.05f),0);
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
+                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
-        for(int i =0; i < intensity; i++){
+        for (int i = 0; i < intensity; i++) {
             world.addParticle(
                     GlowParticleData.createData(outerColor),
-                    pos.getX() +0.5 + ParticleUtil.inRange(-xzOffset, xzOffset)  , pos.getY() +1 + ParticleUtil.inRange(0, 0.7) , pos.getZ() +0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
-                    0,ParticleUtil.inRange(0.0, 0.05f),0);
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
+                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
     }
 
     @Override
     public void tick() {
-        if(isDecorative && level.isClientSide){
+        if (isDecorative && level.isClientSide) {
             makeParticle(color.nextColor(level.random), color.nextColor(level.random), 50);
             return;
         }
 
 
-        if(level.isClientSide && ritual != null){
+        if (level.isClientSide && ritual != null) {
             makeParticle(ritual.getCenterColor(), ritual.getOuterColor(), ritual.getParticleIntensity());
         }
-        if(isOff)
+        if (isOff)
             return;
-        if(ritual != null){
+        if (ritual != null) {
 
-            if(ritual.getContext().isDone){
+            if (ritual.getContext().isDone) {
                 ritual.onEnd();
                 ritual = null;
                 getLevel().playSound(null, getBlockPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 getLevel().setBlock(getBlockPos(), getLevel().getBlockState(getBlockPos()).setValue(RitualBrazierBlock.LIT, false), 3);
                 return;
             }
-            if(!ritual.isRunning() && !level.isClientSide){
-                level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i ->{
-                    if(ritual.canConsumeItem(i.getItem())){
+            if (!ritual.isRunning() && !level.isClientSide) {
+                level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i -> {
+                    if (ritual.canConsumeItem(i.getItem())) {
                         ritual.onItemConsumed(i.getItem());
                         ParticleUtil.spawnPoof((ServerLevel) level, i.blockPosition());
                     }
                 });
             }
-            if(ritual.consumesMana() && ritual.needsManaNow()){
+            if (ritual.consumesMana() && ritual.needsManaNow()) {
                 int cost = ritual.getManaCost();
-                if(SourceUtil.takeSourceNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null){
+                if (SourceUtil.takeSourceNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
                     ritual.setNeedsMana(false);
-                }else{
+                } else {
                     return;
                 }
             }
@@ -113,16 +113,16 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         }
     }
 
-    public boolean isRitualDone(){
+    public boolean isRitualDone() {
         return ritual != null && ritual.getContext().isDone;
     }
 
-    public boolean canRitualStart(){
+    public boolean canRitualStart() {
         return ritual.canStart();
     }
 
-    public void startRitual(){
-        if(ritual == null || !ritual.canStart() || ritual.isRunning())
+    public void startRitual() {
+        if (ritual == null || !ritual.canStart() || ritual.isRunning())
             return;
         getLevel().playSound(null, getBlockPos(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
         ritual.onStart();
@@ -132,14 +132,14 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     public void load(CompoundTag tag) {
         super.load(tag);
         String ritualIDString = tag.getString("ritualID");
-        if(!ritualIDString.isEmpty()){
+        if (!ritualIDString.isEmpty()) {
             ResourceLocation ritualID = new ResourceLocation(ritualIDString);
             ritual = ArsNouveauAPI.getInstance().getRitual(ritualID);
-            if(ritual != null) {
+            if (ritual != null) {
                 ritual.read(tag);
                 ritual.tile = this;
             }
-        }else{
+        } else {
             ritual = null;
         }
         color = ParticleColor.deserialize(tag.getCompound("color"));
@@ -149,10 +149,10 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
 
     @Override
     public void saveAdditional(CompoundTag tag) {
-        if(ritual != null){
+        if (ritual != null) {
             tag.putString("ritualID", ritual.getRegistryName().toString());
             ritual.write(tag);
-        }else{
+        } else {
             tag.remove("ritualID");
         }
         tag.put("color", color.serialize());
@@ -160,13 +160,13 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         tag.putBoolean("off", isOff);
     }
 
-    public boolean canTakeAnotherRitual(){
+    public boolean canTakeAnotherRitual() {
         return this.ritual == null || this.ritual.isRunning();
     }
 
     public void setRitual(ResourceLocation selectedRitual) {
         this.ritual = ArsNouveauAPI.getInstance().getRitual(selectedRitual);
-        if(ritual != null){
+        if (ritual != null) {
             this.ritual.tile = this;
             Level world = getLevel();
             BlockState state = world.getBlockState(getBlockPos());
@@ -178,28 +178,28 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
 
     @Override
     public void getTooltip(List<Component> tooltips) {
-        if(ritual != null){
+        if (ritual != null) {
             tooltips.add(Component.literal(ritual.getName()));
-            if(isOff) {
+            if (isOff) {
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
                 return;
             }
-            if(!ritual.isRunning()){
-                if(!ritual.canStart()){
+            if (!ritual.isRunning()) {
+                if (!ritual.canStart()) {
                     tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet"));
-                }else
+                } else
                     tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting"));
-            }else{
+            } else {
 
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.running"));
             }
-            if(ritual.getConsumedItems().size() != 0) {
+            if (ritual.getConsumedItems().size() != 0) {
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.consumed"));
                 for (ItemStack i : ritual.getConsumedItems()) {
                     tooltips.add(i.getHoverName());
                 }
             }
-            if(ritual.needsManaNow())
+            if (ritual.needsManaNow())
                 tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }

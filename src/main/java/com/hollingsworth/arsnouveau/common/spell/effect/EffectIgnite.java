@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectIgnite  extends AbstractEffect {
+public class EffectIgnite extends AbstractEffect {
     public static EffectIgnite INSTANCE = new EffectIgnite();
 
     private EffectIgnite() {
@@ -78,7 +78,7 @@ public class EffectIgnite  extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE , AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override

@@ -48,28 +48,28 @@ public class EffectFangs extends AbstractEffect {
 
         double d0 = Math.min(targetY, shooter.getY());
         double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
-        float f = (float)Mth.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
+        float f = (float) Mth.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
         int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE); //no decelerate support atm
         double durationModifier = spellStats.getDurationMultiplier();
         // Create fangs in an AOE around the caster
-        if(rayTraceResult instanceof EntityHitResult && shooter.equals(((EntityHitResult) rayTraceResult).getEntity())){
-            for(int i = 0; i < 5; ++i) {
-                float f1 = f + (float)i * (float)Math.PI * 0.4F;
-                int j = (int) (( i + durationModifier) / (1 + accelerate));
-                spawnFangs(world, shooter.getX() + (double)Mth.cos(f1) * 1.5D, shooter.getZ() + (double)Mth.sin(f1) * 1.5D, d0, d1, f1, j,shooter, (float) damage);
+        if (rayTraceResult instanceof EntityHitResult && shooter.equals(((EntityHitResult) rayTraceResult).getEntity())) {
+            for (int i = 0; i < 5; ++i) {
+                float f1 = f + (float) i * (float) Math.PI * 0.4F;
+                int j = (int) ((i + durationModifier) / (1 + accelerate));
+                spawnFangs(world, shooter.getX() + (double) Mth.cos(f1) * 1.5D, shooter.getZ() + (double) Mth.sin(f1) * 1.5D, d0, d1, f1, j, shooter, (float) damage);
             }
 
-            for(int k = 0; k < 8; ++k) {
-                float f2 = f + (float)k * (float)Math.PI * 2.0F / 8.0F + 1.2566371F;
-                int j = (int) (( k + durationModifier) / (1 + accelerate));
-                spawnFangs(world, shooter.getX() + (double)Mth.cos(f2) * 2.5D, shooter.getZ() + (double)Mth.sin(f2) * 2.5D, d0, d1, f2, j, shooter, (float) damage);
+            for (int k = 0; k < 8; ++k) {
+                float f2 = f + (float) k * (float) Math.PI * 2.0F / 8.0F + 1.2566371F;
+                int j = (int) ((k + durationModifier) / (1 + accelerate));
+                spawnFangs(world, shooter.getX() + (double) Mth.cos(f2) * 2.5D, shooter.getZ() + (double) Mth.sin(f2) * 2.5D, d0, d1, f2, j, shooter, (float) damage);
             }
             return;
         }
-        for(int l = 0; l < 16; ++l) {
-            double d2 = 1.25D * (double)(l + 1);
-            int j = (int) (( l + durationModifier) / (1 + accelerate));
-            this.spawnFangs(world, shooter.getX() + (double)Mth.cos(f) * d2, shooter.getZ() + (double)Mth.sin(f) * d2, d0, d1, f, j, shooter, (float) damage);
+        for (int l = 0; l < 16; ++l) {
+            double d2 = 1.25D * (double) (l + 1);
+            int j = (int) ((l + durationModifier) / (1 + accelerate));
+            this.spawnFangs(world, shooter.getX() + (double) Mth.cos(f) * d2, shooter.getZ() + (double) Mth.sin(f) * d2, d0, d1, f, j, shooter, (float) damage);
         }
     }
 
@@ -85,7 +85,7 @@ public class EffectFangs extends AbstractEffect {
         boolean flag = false;
         double d0 = 0.0D;
 
-        while(true) {
+        while (true) {
             BlockPos blockpos1 = blockpos.below();
             BlockState blockstate = world.getBlockState(blockpos1);
             if (blockstate.isFaceSturdy(world, blockpos1, Direction.UP)) {
@@ -108,7 +108,7 @@ public class EffectFangs extends AbstractEffect {
         }
 
         if (flag) {
-           world.addFreshEntity(new EntityEvokerFangs(world, xAngle, (double)blockpos.getY() + d0, zAngle, rotationYaw, tickDelay, caster, damage));
+            world.addFreshEntity(new EntityEvokerFangs(world, xAngle, (double) blockpos.getY() + d0, zAngle, rotationYaw, tickDelay, caster, damage));
         }
 
     }

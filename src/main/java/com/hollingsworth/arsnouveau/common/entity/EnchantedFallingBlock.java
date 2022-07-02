@@ -64,7 +64,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     public float baseDamage;
 
     protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(EnchantedFallingBlock.class, EntityDataSerializers.BLOCK_POS);
-    private IntOpenHashSet piercingIgnoreEntityIds  = new IntOpenHashSet(5);
+    private IntOpenHashSet piercingIgnoreEntityIds = new IntOpenHashSet(5);
 
     public EnchantedFallingBlock(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
         super(p_31950_, p_31951_);
@@ -87,7 +87,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     }
 
     public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, LivingEntity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
-        if(level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile)){
+        if (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile)) {
             return null;
         }
         BlockState blockState = level.getBlockState(pos);
@@ -96,11 +96,11 @@ public class EnchantedFallingBlock extends ColoredProjectile {
         fallingblockentity.setOwner(owner);
         fallingblockentity.context = context;
         fallingblockentity.baseDamage = (float) (9.0f + spellStats.getDamageModifier());
-        if(level.getBlockEntity(pos) instanceof MageBlockTile tile){
+        if (level.getBlockEntity(pos) instanceof MageBlockTile tile) {
             fallingblockentity.setColor(tile.color);
             fallingblockentity.getEntityData().set(SHOULD_COLOR, true);
         }
-        if(resolver.hasFocus(new ItemStack(ItemsRegistry.SHAPERS_FOCUS.get()))){
+        if (resolver.hasFocus(new ItemStack(ItemsRegistry.SHAPERS_FOCUS.get()))) {
             fallingblockentity.hurtEntities = true;
         }
 
@@ -175,7 +175,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
                             }
 
                             if (this.level.setBlock(blockpos, this.blockState, 3)) {
-                                ((ServerLevel)this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level.getBlockState(blockpos)));
+                                ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level.getBlockState(blockpos)));
                                 this.discard();
                                 if (block instanceof Fallable fallable) {
                                     fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
@@ -186,13 +186,14 @@ public class EnchantedFallingBlock extends ColoredProjectile {
                                     if (blockentity != null) {
                                         CompoundTag compoundtag = blockentity.saveWithoutMetadata();
 
-                                        for(String s : this.blockData.getAllKeys()) {
+                                        for (String s : this.blockData.getAllKeys()) {
                                             compoundtag.put(s, this.blockData.get(s).copy());
                                         }
 
                                         try {
                                             blockentity.load(compoundtag);
-                                        } catch (Exception exception) {}
+                                        } catch (Exception exception) {
+                                        }
 
                                         blockentity.setChanged();
                                     }
@@ -219,11 +220,11 @@ public class EnchantedFallingBlock extends ColoredProjectile {
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
     }
 
-    public float getStateDamageBonus(){
+    public float getStateDamageBonus() {
         float destroySpeed = 1.0f;
-        try{
+        try {
             destroySpeed = this.blockState.getDestroySpeed(level, blockPosition());
-        }catch (Exception e){
+        } catch (Exception e) {
             // Passing unexpected values here, catch any errors
         }
 
@@ -232,11 +233,11 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
-        if(!hurtEntities)
+        if (!hurtEntities)
             return;
         super.onHitEntity(pResult);
         Entity entity = pResult.getEntity();
-        float f = (float)this.getDeltaMovement().length();
+        float f = (float) this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((Math.min(f, 2.5) * this.baseDamage) + getStateDamageBonus(), 0.0D, 2.147483647E9D));
         this.piercingIgnoreEntityIds.add(entity.getId());
 
@@ -257,7 +258,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
             entity.setSecondsOnFire(5);
         }
 
-        if (entity.hurt(damagesource, (float)i)) {
+        if (entity.hurt(damagesource, (float) i)) {
             if (isEnderman) {
                 return;
             }
@@ -265,7 +266,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
             if (entity instanceof LivingEntity livingentity) {
 
                 if (this.knockback > 0) {
-                    Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockback * 0.6D);
+                    Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double) this.knockback * 0.6D);
                     if (vec3.lengthSqr() > 0.0D) {
                         livingentity.push(vec3.x, 0.1D, vec3.z);
                     }
@@ -273,7 +274,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(livingentity, owner);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingentity);
+                    EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingentity);
                 }
 
                 this.doPostHurtEffects(livingentity);
@@ -319,7 +320,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
     public void callOnBrokenAfterFall(Block p_149651_, BlockPos p_149652_) {
         if (p_149651_ instanceof Fallable) {
-            ((Fallable)p_149651_).onBrokenAfterFall(this.level, p_149652_,  new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
+            ((Fallable) p_149651_).onBrokenAfterFall(this.level, p_149652_, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
         }
 
     }
@@ -342,10 +343,10 @@ public class EnchantedFallingBlock extends ColoredProjectile {
                     damagesource = DamageSource.FALLING_BLOCK;
                 }
 
-                float f = (float)Math.min(Mth.floor((float)i * this.fallDamagePerDistance), this.fallDamageMax);
+                float f = (float) Math.min(Mth.floor((float) i * this.fallDamagePerDistance), this.fallDamageMax);
                 this.level.getEntities(this, this.getBoundingBox(), predicate).forEach(p_149649_ -> p_149649_.hurt(damagesource, f));
                 boolean flag = this.blockState.is(BlockTags.ANVIL);
-                if (flag && f > 0.0F && this.random.nextFloat() < 0.05F + (float)i * 0.05F) {
+                if (flag && f > 0.0F && this.random.nextFloat() < 0.05F + (float) i * 0.05F) {
                     BlockState blockstate = AnvilBlock.damage(this.blockState);
                     if (blockstate == null) {
                         this.cancelDrop = true;
@@ -446,7 +447,6 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     public boolean isPickable() {
         return !this.isRemoved();
     }
-
 
 
 }

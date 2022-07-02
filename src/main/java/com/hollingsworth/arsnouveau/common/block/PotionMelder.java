@@ -56,6 +56,7 @@ public class PotionMelder extends TickableModBlock implements SimpleWaterloggedB
     protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
         builder.add(WATERLOGGED);
     }
+
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();

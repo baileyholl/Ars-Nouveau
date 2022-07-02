@@ -30,6 +30,7 @@ public class BaseBook extends ModdedScreen {
     public List<SpellValidationError> validationErrors = new ArrayList<>();
     public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
     public ItemRenderer itemre;
+
     public BaseBook() {
         super(Component.literal(""));
         itemre = this.itemRenderer;
@@ -41,10 +42,10 @@ public class BaseBook extends ModdedScreen {
             return fromType(o1) - fromType(o2);
         }
 
-        public int fromType(AbstractSpellPart spellPart){
-            if(spellPart instanceof AbstractCastMethod)
+        public int fromType(AbstractSpellPart spellPart) {
+            if (spellPart instanceof AbstractCastMethod)
                 return 1;
-            if(spellPart instanceof AbstractAugment)
+            if (spellPart instanceof AbstractAugment)
                 return 2;
             return 3;
         }
@@ -67,22 +68,22 @@ public class BaseBook extends ModdedScreen {
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         matrixStack.pushPose();
-        if(scaleFactor != 1) {
+        if (scaleFactor != 1) {
             matrixStack.scale(scaleFactor, scaleFactor, scaleFactor);
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
-        drawScreenAfterScale(matrixStack,mouseX, mouseY, partialTicks);
+        drawScreenAfterScale(matrixStack, mouseX, mouseY, partialTicks);
         matrixStack.popPose();
     }
 
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
+        drawFromTexture(background, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
     }
 
     public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int uOffset, int vOffset, int width, int height, int fileWidth, int fileHeight, PoseStack stack) {
         RenderSystem.setShaderTexture(0, resourceLocation);
-        blit(stack,x, y, uOffset, vOffset, width, height, fileWidth, fileHeight);
+        blit(stack, x, y, uOffset, vOffset, width, height, fileWidth, fileHeight);
     }
 
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
@@ -95,14 +96,14 @@ public class BaseBook extends ModdedScreen {
         stack.pushPose();
         stack.translate(bookLeft, bookTop, 0);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        drawBackgroundElements(stack,mouseX, mouseY, partialTicks);
+        drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
         stack.popPose();
         super.render(stack, mouseX, mouseY, partialTicks);
         drawTooltip(stack, mouseX, mouseY);
     }
 
-    public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal){
-        return new BookSlider(x,y,100,20,prefix, suffix, 1.0D, 255.0D, currentVal, 1,1,true);
+    public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal) {
+        return new BookSlider(x, y, 100, 20, prefix, suffix, 1.0D, 255.0D, currentVal, 1, 1, true);
     }
 }

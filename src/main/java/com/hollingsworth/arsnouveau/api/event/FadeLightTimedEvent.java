@@ -26,7 +26,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     int startLuminance;
     Level level;
 
-    public FadeLightTimedEvent(Level level, Vec3 pos, int duration, int startLuminance){
+    public FadeLightTimedEvent(Level level, Vec3 pos, int duration, int startLuminance) {
         this.targetPos = pos;
         ticksLeft = duration;
         this.starterTicks = duration;
@@ -37,7 +37,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     @Override
     public void tick(boolean serverSide) {
         // We do not want to update the entity on the server.
-        if(!serverSide && !LightManager.shouldUpdateDynamicLight()){
+        if (!serverSide && !LightManager.shouldUpdateDynamicLight()) {
             lambdynlights$luminance = 0;
         }
         if (!serverSide && LightManager.shouldUpdateDynamicLight()) {
@@ -49,7 +49,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
             }
         }
         ticksLeft--;
-        if(ticksLeft <= 0){
+        if (ticksLeft <= 0) {
             this.setDynamicLightEnabled(false);
         }
     }
@@ -91,7 +91,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
 
     @Override
     public void dynamicLightTick() {
-        lambdynlights$luminance = starterTicks == 0 ? 0 : (int) ((double) startLuminance * ((double)ticksLeft / (double) this.starterTicks));
+        lambdynlights$luminance = starterTicks == 0 ? 0 : (int) ((double) startLuminance * ((double) ticksLeft / (double) this.starterTicks));
     }
 
     @Override

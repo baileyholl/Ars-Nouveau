@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class GuiSettingsScreen extends BaseBook{
+public class GuiSettingsScreen extends BaseBook {
 
     public Screen parent;
 
@@ -25,9 +25,11 @@ public class GuiSettingsScreen extends BaseBook{
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(parent);}));
-        SelectableButton dynamicButton = new SelectableButton( bookLeft + 20 , bookTop +34, 0,0, 14,14, 14,14, new ResourceLocation(ArsNouveau.MODID, "textures/gui/settings_dynamic_light_off.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/settings_dynamic_light_on.png"),(b) ->{
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
+            Minecraft.getInstance().setScreen(parent);
+        }));
+        SelectableButton dynamicButton = new SelectableButton(bookLeft + 20, bookTop + 34, 0, 0, 14, 14, 14, 14, new ResourceLocation(ArsNouveau.MODID, "textures/gui/settings_dynamic_light_off.png"),
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/settings_dynamic_light_on.png"), (b) -> {
             SelectableButton button = (SelectableButton) b;
             button.isSelected = !button.isSelected;
             LightManager.toggleLightsAndConfig(!Config.DYNAMIC_LIGHTS_ENABLED.get());
@@ -41,8 +43,8 @@ public class GuiSettingsScreen extends BaseBook{
     @Override
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.settings.title").getString(), 51, 24,  -8355712);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, stack);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.settings.title").getString(), 51, 24, -8355712);
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
     }
 }

@@ -26,7 +26,7 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
 
     @Override
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if(transformType == ItemTransforms.TransformType.GUI){
+        if (transformType == ItemTransforms.TransformType.GUI) {
 
             stack.pushPose();
             MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -36,7 +36,7 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
             RenderSystem.enableDepthTest();
             Lighting.setupFor3DItems();
             stack.popPose();
-        }else {
+        } else {
             render(itemStack.getItem(), stack, bufferIn, combinedLightIn, itemStack, transformType);
         }
     }
@@ -46,7 +46,7 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
         this.currentItemStack = itemStack;
         GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelResource((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource(animatable));
         AnimationEvent itemEvent = new AnimationEvent((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
-        if(modelProvider == null)
+        if (modelProvider == null)
             return;
         modelProvider.setLivingAnimations((IAnimatable) animatable, this.getUniqueID(animatable), itemEvent);
         stack.pushPose();

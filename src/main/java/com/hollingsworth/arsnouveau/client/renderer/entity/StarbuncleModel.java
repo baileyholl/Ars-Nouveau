@@ -18,10 +18,10 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
     @Override
     public void setLivingAnimations(Starbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        if(entity.partyCarby)
+        if (entity.partyCarby)
             return;
         IBone head = this.getAnimationProcessor().getBone("head");
-        if(customPredicate == null)
+        if (customPredicate == null)
             return;
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);
@@ -30,7 +30,7 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getModelResource(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/carbuncle.geo.json");
     }
 
     @Override
@@ -40,6 +40,6 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getAnimationResource(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");
     }
 }

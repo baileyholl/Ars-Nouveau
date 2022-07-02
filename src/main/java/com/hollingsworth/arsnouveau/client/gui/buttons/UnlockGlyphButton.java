@@ -31,8 +31,9 @@ public class UnlockGlyphButton extends Button {
     public boolean playerKnows;
     GlyphUnlockMenu parent;
     public boolean selected;
+
     public UnlockGlyphButton(GlyphUnlockMenu parent, int x, int y, boolean isCraftingSlot, AbstractSpellPart spellPart) {
-        super(x, y,  16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
+        super(x, y, 16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -51,22 +52,21 @@ public class UnlockGlyphButton extends Button {
 
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-        if (visible)
-        {
-            if(this.spellPart != null) {
+        if (visible) {
+            if (this.spellPart != null) {
                 RenderUtils.drawSpellPart(this.spellPart, ms, x, y, 16, !playerKnows);
-                if(selected)
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16,16,16 , ms);
+                if (selected)
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16, ms);
             }
 
-            if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
-                if(parent.api.getSpellpartMap().containsKey(this.spellPart.getRegistryName())) {
+            if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
+                if (parent.api.getSpellpartMap().containsKey(this.spellPart.getRegistryName())) {
                     List<Component> tip = new ArrayList<>();
                     AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.spellPart.getRegistryName());
                     tip.add(Component.translatable(spellPart.getLocalizationKey()));
-                    if(Screen.hasShiftDown()){
+                    if (Screen.hasShiftDown()) {
                         tip.add(spellPart.getBookDescLang());
-                    }else{
+                    } else {
                         tip.add(Component.translatable("ars_nouveau.tier", spellPart.getTier().value).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                         tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
                     }

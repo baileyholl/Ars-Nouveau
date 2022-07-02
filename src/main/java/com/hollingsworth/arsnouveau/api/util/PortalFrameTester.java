@@ -17,11 +17,11 @@ public abstract class PortalFrameTester {
     public BlockPos lowerCorner;
     protected Level world;
 
-    public abstract PortalFrameTester init(Level world, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState> foundations);
+    public abstract PortalFrameTester init(Level world, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState> foundations);
 
-    public abstract Optional<PortalFrameTester> getNewPortal(Level worldAccess, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState> foundations);
+    public abstract Optional<PortalFrameTester> getNewPortal(Level worldAccess, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState> foundations);
 
-    public abstract Optional<PortalFrameTester> getOrEmpty(Level worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis,  Predicate<BlockState> foundations);
+    public abstract Optional<PortalFrameTester> getOrEmpty(Level worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Predicate<BlockState> foundations);
 
     public abstract boolean isAlreadyLitPortalFrame();
 
@@ -99,7 +99,7 @@ public abstract class PortalFrameTester {
                     foundPortalBlocks++;
     }
 
-    public static boolean validStateInsidePortal(BlockState blockState,  Predicate<BlockState>  foundations) {
+    public static boolean validStateInsidePortal(BlockState blockState, Predicate<BlockState> foundations) {
         return blockState.isAir() || blockState.getMaterial().isReplaceable() || blockState.getBlock() instanceof PortalBlock;
     }
 }

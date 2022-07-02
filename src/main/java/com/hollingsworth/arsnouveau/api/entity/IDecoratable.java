@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public interface IDecoratable {
 
     @NotNull ItemStack getCosmeticItem();
+
     void setCosmeticItem(ItemStack cosmeticItem);
 
 }

@@ -10,14 +10,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ArcaneCore extends ModBlock implements EntityBlock {
     public ArcaneCore() {
-        super(defaultProperties().noOcclusion().lightLevel((state) -> 15),LibBlockNames.ARCANE_CORE);
+        super(defaultProperties().noOcclusion().lightLevel((state) -> 15), LibBlockNames.ARCANE_CORE);
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ArcaneCoreTile(pos, state);
     }
-
 
 
     @Override

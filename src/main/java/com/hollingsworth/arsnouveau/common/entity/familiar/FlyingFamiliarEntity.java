@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 
-public class FlyingFamiliarEntity extends FamiliarEntity{
+public class FlyingFamiliarEntity extends FamiliarEntity {
     public FlyingFamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
         this.moveControl = new FlyingMoveControl(this, 10, true);

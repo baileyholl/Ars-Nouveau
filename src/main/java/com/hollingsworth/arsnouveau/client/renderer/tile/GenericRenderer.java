@@ -15,7 +15,7 @@ public class GenericRenderer extends GeoBlockRenderer {
         super(rendererDispatcherIn, new GenericModel(loc));
     }
 
-    public static Supplier<BlockEntityWithoutLevelRenderer> getISTER(String loc){
+    public static Supplier<BlockEntityWithoutLevelRenderer> getISTER(String loc) {
         return () -> new GenericItemBlockRenderer(new GenericModel(loc));
     }
 }

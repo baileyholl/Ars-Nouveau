@@ -68,14 +68,15 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     public void tick() {
         super.tick();
 
-        if(smashCooldown > 0)
+        if (smashCooldown > 0)
             smashCooldown--;
-        if(castCooldown > 0)
+        if (castCooldown > 0)
             castCooldown--;
-        if(!level.isClientSide && level.getGameTime() % 20 == 0 && !this.isDeadOrDying()){
+        if (!level.isClientSide && level.getGameTime() % 20 == 0 && !this.isDeadOrDying()) {
             this.heal(1.0f);
         }
     }
+
     public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
         ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
         if (itemstack.getItem() instanceof BoneMealItem && isBaby()) {
@@ -83,7 +84,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
             if (this.isBaby()) {
                 this.usePlayerItem(p_230254_1_, itemstack);
-                this.ageUp((int)((float)(-i / 20) * 0.1F), true);
+                this.ageUp((int) ((float) (-i / 20) * 0.1F), true);
                 return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
 
@@ -103,7 +104,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos != null){
+        if (storedPos != null) {
             setHome(storedPos);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.home_set"));
         }
@@ -111,7 +112,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public EntityDimensions getDimensions(Pose p_213305_1_) {
-        return isBaby() ? new EntityDimensions(1,1,true) : super.getDimensions(p_213305_1_);
+        return isBaby() ? new EntityDimensions(1, 1, true) : super.getDimensions(p_213305_1_);
     }
 
     @Nullable
@@ -122,13 +123,13 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void die(DamageSource source) {
-        if(!isBaby() && !level.isClientSide){
+        if (!isBaby() && !level.isClientSide) {
 
             setBaby(true);
             refreshDimensions();
             this.setHealth(60);
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition().above());
-            if(source.getEntity() != null && source.getEntity() instanceof Mob)
+            if (source.getEntity() != null && source.getEntity() instanceof Mob)
                 ((Mob) source.getEntity()).setTarget(null);
             return;
         }
@@ -144,23 +145,23 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     @Override
     public void setAge(int age) {
         this.age = age;
-        if(this.age >= 0 && !level.isClientSide){
+        if (this.age >= 0 && !level.isClientSide) {
             this.ageBoundaryReached();
         }
     }
 
-    public void setHome(BlockPos home){
+    public void setHome(BlockPos home) {
         this.entityData.set(HOME, Optional.of(home));
     }
 
-    public @Nullable BlockPos getHome(){
+    public @Nullable BlockPos getHome() {
         return this.entityData.get(HOME).orElse(null);
     }
 
     @Override
     protected void ageBoundaryReached() {
         super.ageBoundaryReached();
-        if(!level.isClientSide)
+        if (!level.isClientSide)
             this.entityData.set(BABY, false);
     }
 
@@ -168,6 +169,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     public boolean isBaby() {
         return this.entityData.get(BABY);
     }
+
     public void onSyncedDataUpdated(EntityDataAccessor<?> p_184206_1_) {
         if (BABY.equals(p_184206_1_)) {
             this.refreshDimensions();
@@ -175,6 +177,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
         super.onSyncedDataUpdated(p_184206_1_);
     }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -184,8 +187,8 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(2, new SmashGoal(this, true,() ->smashCooldown <= 0 && !this.entityData.get(BABY), Animations.SMASH.ordinal(), 25, 5));
-        this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d, 20,15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
+        this.goalSelector.addGoal(2, new SmashGoal(this, true, () -> smashCooldown <= 0 && !this.entityData.get(BABY), Animations.SMASH.ordinal(), 25, 5));
+        this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d, 20, 15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
     }
 
     @Override
@@ -217,30 +220,33 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         entityData.set(BABY, tag.getBoolean("isBaby"));
-        if(NBTUtil.hasBlockPos(tag, "home")){
+        if (NBTUtil.hasBlockPos(tag, "home")) {
             setHome(NBTUtil.getBlockPos(tag, "home"));
         }
         this.smashCooldown = tag.getInt("smash");
         this.castCooldown = tag.getInt("cast");
     }
+
     AnimationController attackController;
+
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this,"run_controller", 1.0f, this::runController));
-        attackController = new AnimationController(this,"attack_controller", 5f, this::attackController);
+        data.addAnimationController(new AnimationController(this, "run_controller", 1.0f, this::runController));
+        attackController = new AnimationController(this, "attack_controller", 5f, this::attackController);
         data.addAnimationController(attackController);
     }
+
     private PlayState attackController(AnimationEvent animationEvent) {
         return PlayState.CONTINUE;
     }
 
     private PlayState runController(AnimationEvent animationEvent) {
-        if(entityData.get(SMASHING) || entityData.get(CASTING))
+        if (entityData.get(SMASHING) || entityData.get(CASTING))
             return PlayState.STOP;
-        if(animationEvent.getController().getCurrentAnimation() != null && !(animationEvent.getController().getCurrentAnimation().animationName.equals("run_master"))) {
+        if (animationEvent.getController().getCurrentAnimation() != null && !(animationEvent.getController().getCurrentAnimation().animationName.equals("run_master"))) {
             return PlayState.STOP;
         }
-        if(animationEvent.isMoving()){
+        if (animationEvent.isMoving()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run_master"));
             return PlayState.CONTINUE;
         }
@@ -248,6 +254,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -255,24 +262,24 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void startAnimation(int arg) {
-        try{
-            if(arg == Animations.SMASH.ordinal()){
+        try {
+            if (arg == Animations.SMASH.ordinal()) {
 
-                if(attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("smash"))) {
+                if (attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("smash"))) {
                     return;
                 }
                 attackController.markNeedsReload();
                 attackController.setAnimation(new AnimationBuilder().addAnimation("smash", false).addAnimation("idle", false));
             }
 
-            if(arg == Animations.CAST.ordinal()){
-                if(attackController.getCurrentAnimation() != null && attackController.getCurrentAnimation().animationName.equals("cast")) {
+            if (arg == Animations.CAST.ordinal()) {
+                if (attackController.getCurrentAnimation() != null && attackController.getCurrentAnimation().animationName.equals("cast")) {
                     return;
                 }
                 attackController.markNeedsReload();
                 attackController.setAnimation(new AnimationBuilder().addAnimation("cast", false).addAnimation("idle", false));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -306,15 +313,15 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(getHome() != null){
+        if (getHome() != null) {
             String home = getHome().getX() + ", " + getHome().getY() + ", " + getHome().getZ();
-            tooltip.add(Component.translatable("ars_nouveau.weald_walker.home",home));
-        }else{
-            tooltip.add(Component.translatable("ars_nouveau.weald_walker.home",Component.translatable("ars_nouveau.nothing").getString()));
+            tooltip.add(Component.translatable("ars_nouveau.weald_walker.home", home));
+        } else {
+            tooltip.add(Component.translatable("ars_nouveau.weald_walker.home", Component.translatable("ars_nouveau.nothing").getString()));
         }
     }
 
-    public enum Animations{
+    public enum Animations {
         CAST,
         SMASH
     }

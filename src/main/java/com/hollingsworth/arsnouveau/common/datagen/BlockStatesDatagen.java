@@ -56,7 +56,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
         registerNormalCube(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
 
-     //   registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
+        //   registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
     }
 
     private void registerDoor(DoorBlock door, String reg) {
@@ -78,11 +78,11 @@ public class BlockStatesDatagen extends BlockStateProvider {
         return new ModelFile.UncheckedModelFile("ars_nouveau:block/" + registry);
     }
 
-    public void buildNormalCube(String registryName){
-        this.models().getBuilder(registryName).parent(new ModelFile.UncheckedModelFile("block/cube_all")).texture("all",getBlockLoc(registryName));
+    public void buildNormalCube(String registryName) {
+        this.models().getBuilder(registryName).parent(new ModelFile.UncheckedModelFile("block/cube_all")).texture("all", getBlockLoc(registryName));
     }
 
-    public ResourceLocation getBlockLoc(String registryName){
-        return new ResourceLocation(ArsNouveau.MODID, "blocks" + "/" +registryName);
+    public ResourceLocation getBlockLoc(String registryName) {
+        return new ResourceLocation(ArsNouveau.MODID, "blocks" + "/" + registryName);
     }
 }

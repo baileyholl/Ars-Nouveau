@@ -16,13 +16,14 @@ public class EarthquakeEvent implements ITimedEvent {
     Level world;
     List<BlockPos> posList = new ArrayList<>();
     int counter;
-    public EarthquakeEvent(Level world, BlockPos origin, BlockPos destination){
+
+    public EarthquakeEvent(Level world, BlockPos origin, BlockPos destination) {
         this.origin = origin;
         this.world = world;
         //for(BlockPos vec : BlockUtil.getLine(origin.getX(), origin.getZ(), destination.getX(), destination.getZ(), 2f)){
-            //System.out.println(vec.toString());
-            //BlockPos adjustedPos = new BlockPos(vec.getX(), origin.getY(), vec.getZ());
-           // posList.add(adjustedPos);
+        //System.out.println(vec.toString());
+        //BlockPos adjustedPos = new BlockPos(vec.getX(), origin.getY(), vec.getZ());
+        // posList.add(adjustedPos);
 //            for(BlockPos p : BlockPos.withinManhattan(adjustedPos.north(4).east(4), 3, 3, 3)){
 //                posList.add(p);
 //            }
@@ -30,7 +31,7 @@ public class EarthquakeEvent implements ITimedEvent {
 //                if(!posList.contains(p))
 //                    posList.add(p.immutable());
 //            }
-          //  posList.add(new BlockPos(vec.getX(), origin.getY(), vec.getZ()));
+        //  posList.add(new BlockPos(vec.getX(), origin.getY(), vec.getZ()));
         //}
     }
 
@@ -41,9 +42,9 @@ public class EarthquakeEvent implements ITimedEvent {
 //        if(counter >= posList.size())
 //            counter = posList.size();
 
-        for(int i = 0; i < 5; i++){
-            if(counter < posList.size()){
-                if(world.getRandom().nextFloat() < 0.5) {
+        for (int i = 0; i < 5; i++) {
+            if (counter < posList.size()) {
+                if (world.getRandom().nextFloat() < 0.5) {
 
                     BlockPos p = posList.get(counter);
                     FallingBlockEntity blockEntity = FallingBlockEntity.fall(world, p, world.getBlockState(p));

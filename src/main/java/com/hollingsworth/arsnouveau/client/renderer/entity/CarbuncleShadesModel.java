@@ -10,6 +10,7 @@ import software.bernie.geckolib3.model.provider.GeoModelProvider;
 
 public class CarbuncleShadesModel extends AnimatedGeoModel<Starbuncle> {
     public GeoModelProvider<Starbuncle> modelProvider;
+
     public CarbuncleShadesModel(GeoModelProvider<Starbuncle> geoModelProvider) {
         this.modelProvider = geoModelProvider;
     }
@@ -17,17 +18,18 @@ public class CarbuncleShadesModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getModelResource(Starbuncle object) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle_shades.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/carbuncle_shades.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Starbuncle o) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_shades.png");
     }
-//carbuncle_animations
+
+    //carbuncle_animations
     @Override
     public ResourceLocation getAnimationResource(Starbuncle animatable) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/starbuncle_animations.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");
     }
 
     @Override

@@ -34,7 +34,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         super(BlockRegistry.ARCANE_RELAY_TILE, pos, state);
     }
 
-    public RelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+    public RelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -58,8 +58,8 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     private BlockPos fromPos;
     public boolean disabled;
 
-    public boolean setTakeFrom(BlockPos pos){
-        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()  || pos.equals(getBlockPos())){
+    public boolean setTakeFrom(BlockPos pos) {
+        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
         }
         this.fromPos = pos;
@@ -67,8 +67,8 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         return true;
     }
 
-    public boolean setSendTo(BlockPos pos ){
-        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())){
+    public boolean setSendTo(BlockPos pos) {
+        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
         }
         this.toPos = pos;
@@ -76,11 +76,11 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         return true;
     }
 
-    public int getMaxDistance(){
+    public int getMaxDistance() {
         return 30;
     }
 
-    public void clearPos(){
+    public void clearPos() {
         this.toPos = null;
         this.fromPos = null;
         update();
@@ -96,32 +96,32 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         return 1000;
     }
 
-    public boolean closeEnough(BlockPos pos){
+    public boolean closeEnough(BlockPos pos) {
         return BlockUtil.distanceFrom(pos, this.worldPosition) <= getMaxDistance() && !pos.equals(getBlockPos());
     }
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()))
+        if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()))
             return;
         // Let relays take from us, no action needed.
-        if(this.setSendTo(storedPos.immutable())) {
+        if (this.setSendTo(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
             ParticleUtil.beam(storedPos, worldPosition, level);
-        }else{
+        } else {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
         }
     }
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos == null || storedPos.equals(getBlockPos()))
+        if (storedPos == null || storedPos.equals(getBlockPos()))
             return;
-        if(level.getBlockEntity(storedPos) instanceof RelayTile)
+        if (level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
-        if(this.setTakeFrom(storedPos.immutable())) {
+        if (this.setTakeFrom(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
-        }else{
+        } else {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
         }
     }
@@ -129,34 +129,34 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public void onWanded(Player playerEntity) {
         this.clearPos();
-        PortUtil.sendMessage(playerEntity,Component.translatable("ars_nouveau.connections.cleared"));
+        PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
     }
 
 
     @Override
     public void tick() {
-        if(level.isClientSide || disabled){
+        if (level.isClientSide || disabled) {
             return;
         }
-        if(level.getGameTime() % 20 != 0)
+        if (level.getGameTime() % 20 != 0)
             return;
 
-        if(fromPos != null && level.isLoaded(fromPos)){
+        if (fromPos != null && level.isLoaded(fromPos)) {
             // Block has been removed
-            if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)){
+            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)) {
                 fromPos = null;
                 update();
                 return;
-            }else if(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile){
+            } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
                 // Transfer mana fromPos to this
-                if(transferSource(fromTile, this) > 0){
+                if (transferSource(fromTile, this) > 0) {
                     update();
                     ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
                 }
             }
         }
 
-        if(toPos != null && level.isLoaded(toPos)){
+        if (toPos != null && level.isLoaded(toPos)) {
             if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)) {
                 toPos = null;
                 update();
@@ -168,15 +168,17 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             }
         }
     }
+
     String TO = "to_";
     String FROM = "from";
+
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if(NBTUtil.hasBlockPos(tag, TO)){
+        if (NBTUtil.hasBlockPos(tag, TO)) {
             this.toPos = NBTUtil.getBlockPos(tag, TO);
         }
-        if(NBTUtil.hasBlockPos(tag, FROM)){
+        if (NBTUtil.hasBlockPos(tag, FROM)) {
             this.fromPos = NBTUtil.getBlockPos(tag, FROM);
         }
         this.disabled = tag.getBoolean("disabled");
@@ -185,15 +187,15 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if(toPos != null) {
+        if (toPos != null) {
             NBTUtil.storeBlockPos(tag, TO, toPos.immutable());
-        }else{
+        } else {
             NBTUtil.removeBlockPos(tag, TO);
         }
 
-        if(fromPos != null) {
+        if (fromPos != null) {
             NBTUtil.storeBlockPos(tag, FROM, fromPos.immutable());
-        }else{
+        } else {
             NBTUtil.removeBlockPos(tag, FROM);
         }
         tag.putBoolean("disabled", disabled);
@@ -201,21 +203,22 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(toPos == null){
+        if (toPos == null) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_to"));
-        }else{
+        } else {
             tooltip.add(Component.translatable("ars_nouveau.relay.one_to", 1));
         }
-        if(fromPos == null){
+        if (fromPos == null) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_from"));
-        }else{
+        } else {
             tooltip.add(Component.translatable("ars_nouveau.relay.one_from", 1));
         }
 
-        if(disabled){
+        if (disabled) {
             tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         }
     }
+
     AnimationFactory factory = new AnimationFactory(this);
 
     @Override

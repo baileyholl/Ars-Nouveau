@@ -114,8 +114,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.owner = owner;
     }
 
-    public void setWeapon(ItemStack item)
-    {
+    public void setWeapon(ItemStack item) {
         this.setItemSlot(EquipmentSlot.MAINHAND, item);
         this.reassessWeaponGoal();
     }
@@ -208,7 +207,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.limitedLifeTicks = lifeTicks;
     }
 
-    public LivingEntity getOwnerFromID(){
+    public LivingEntity getOwnerFromID() {
         try {
             UUID uuid = this.getOwnerID();
 

@@ -43,49 +43,49 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     @Override
     public void tick() {
 
-        if(!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0){
-            if(SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
+        if (!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0) {
+            if (SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
 
         }
 
-        if(!hasMana)
+        if (!hasMana)
             return;
 
         PotionJarTile tile1 = null;
         PotionJarTile tile2 = null;
-        for(Direction d : Direction.values()){
-            if(d == Direction.UP || d == Direction.DOWN)
+        for (Direction d : Direction.values()) {
+            if (d == Direction.UP || d == Direction.DOWN)
                 continue;
-            if(tile1 != null && tile2 != null)
+            if (tile1 != null && tile2 != null)
                 break;
             BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(d));
-            if(tileEntity instanceof PotionJarTile && ((PotionJarTile) tileEntity).getAmount() > 0){
-                if(tile1 == null)
+            if (tileEntity instanceof PotionJarTile && ((PotionJarTile) tileEntity).getAmount() > 0) {
+                if (tile1 == null)
                     tile1 = (PotionJarTile) tileEntity;
                 else
                     tile2 = (PotionJarTile) tileEntity;
 
             }
         }
-        if(tile1 == null || tile2 == null || tile1.getAmount() < 300 || tile2.getAmount() < 300) {
+        if (tile1 == null || tile2 == null || tile1.getAmount() < 300 || tile2.getAmount() < 300) {
             isMixing = false;
             timeMixing = 0;
             return;
         }
         PotionJarTile combJar = null;
-        if(level.getBlockEntity(worldPosition.below()) instanceof PotionJarTile)
+        if (level.getBlockEntity(worldPosition.below()) instanceof PotionJarTile)
             combJar = (PotionJarTile) level.getBlockEntity(worldPosition.below());
 
-        if(combJar == null) {
+        if (combJar == null) {
             isMixing = false;
             timeMixing = 0;
             return;
         }
         List<MobEffectInstance> combined = getCombinedResult(tile1, tile2);
-        if(!(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) && combJar.getAmount() != 0){
+        if (!(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) && combJar.getAmount() != 0) {
             isMixing = false;
             timeMixing = 0;
             return;
@@ -95,15 +95,15 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         timeMixing++;
         ParticleColor color1 = ParticleColor.fromInt(tile1.getColor());
         ParticleColor color2 = ParticleColor.fromInt(tile2.getColor());
-        if(level.isClientSide ) {
+        if (level.isClientSide) {
             //Burning jar
-            if(timeMixing >= 80 && combJar.getPotion() != Potions.EMPTY) {
+            if (timeMixing >= 80 && combJar.getPotion() != Potions.EMPTY) {
                 for (int i = 0; i < 3; i++) {
                     double d0 = worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.25, 0.25);
                     double d1 = worldPosition.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
                     double d2 = worldPosition.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
                     level.addParticle(GlowParticleData.createData(
-                            ParticleColor.fromInt(combJar.getColor())),
+                                    ParticleColor.fromInt(combJar.getColor())),
                             d0, d1, d2,
                             0,
                             0.01f,
@@ -111,67 +111,67 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
                 }
             }
             int offset = 30;
-           if(timeMixing >= 60) {
-               level.addParticle(GlowParticleData.createData(color1),
-                       (float) (worldPosition.getX()) + 0.5 - Math.sin(ClientInfo.ticksInGame / 8D) / 4D,
-                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin(ClientInfo.ticksInGame / 32D), 2.0) / 2d,
-                       (float) (worldPosition.getZ()) + 0.5 - Math.cos(ClientInfo.ticksInGame / 8D) / 4D,
-                       0, 0, 0);
+            if (timeMixing >= 60) {
+                level.addParticle(GlowParticleData.createData(color1),
+                        (float) (worldPosition.getX()) + 0.5 - Math.sin(ClientInfo.ticksInGame / 8D) / 4D,
+                        (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin(ClientInfo.ticksInGame / 32D), 2.0) / 2d,
+                        (float) (worldPosition.getZ()) + 0.5 - Math.cos(ClientInfo.ticksInGame / 8D) / 4D,
+                        0, 0, 0);
 
-               level.addParticle(GlowParticleData.createData(color2),
-                       (float) (worldPosition.getX()) +0.5 - Math.sin((ClientInfo.ticksInGame +offset)  / 8D)/4D,
-                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame +offset)/ 32D), 2.0)/2d,
-                       (float) (worldPosition.getZ()) +0.5 - Math.cos((ClientInfo.ticksInGame +offset) / 8D)/4D,
-                       0, 0, 0);
+                level.addParticle(GlowParticleData.createData(color2),
+                        (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                        (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
+                        (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                        0, 0, 0);
 
-           }
-           if(timeMixing >= 80) {
+            }
+            if (timeMixing >= 80) {
 
-               offset = 50;
-               level.addParticle(GlowParticleData.createData(color1),
-                       (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
-                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
-                       (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
-                       0, 0, 0);
+                offset = 50;
+                level.addParticle(GlowParticleData.createData(color1),
+                        (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                        (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
+                        (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                        0, 0, 0);
 
-               offset = 70;
-               level.addParticle(GlowParticleData.createData(color2),
-                       (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
-                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
-                       (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
-                       0, 0, 0);
-           }
-           if(timeMixing >= 120)
+                offset = 70;
+                level.addParticle(GlowParticleData.createData(color2),
+                        (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                        (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
+                        (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                        0, 0, 0);
+            }
+            if (timeMixing >= 120)
                 timeMixing = 0;
             return;
         }
 
-        if(timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60){
+        if (timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60) {
 
-            EntityFlyingItem item = new EntityFlyingItem(level,tile1.getBlockPos().above(), worldPosition, Math.round(255*color1.getRed()), Math.round(255*color1.getGreen()),Math.round(255*color1.getBlue()))
+            EntityFlyingItem item = new EntityFlyingItem(level, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
                     .withNoTouch();
             item.setDistanceAdjust(2f);
             level.addFreshEntity(item);
-            EntityFlyingItem item2 = new EntityFlyingItem(level,tile2.getBlockPos().above(), worldPosition,  Math.round(255*color2.getRed()), Math.round(255*color2.getGreen()),Math.round(255*color2.getBlue()))
+            EntityFlyingItem item2 = new EntityFlyingItem(level, tile2.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                     .withNoTouch();
             item2.setDistanceAdjust(2f);
             level.addFreshEntity(item2);
         }
-        if(!level.isClientSide && timeMixing >= 120){
+        if (!level.isClientSide && timeMixing >= 120) {
             timeMixing++;
-            if(timeMixing >= 120)
+            if (timeMixing >= 120)
                 timeMixing = 0;
 
             Potion jar1Potion = tile1.getPotion();
 
-            if(combJar.getAmount() == 0){
+            if (combJar.getAmount() == 0) {
                 combJar.setPotion(jar1Potion, combined);
                 combJar.setFill(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-            }else if(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100){
+            } else if (combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) {
                 combJar.addAmount(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
@@ -183,23 +183,25 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
 
     }
 
-    public List<MobEffectInstance> getCombinedCustomResult(PotionJarTile jar1, PotionJarTile jar2){
+    public List<MobEffectInstance> getCombinedCustomResult(PotionJarTile jar1, PotionJarTile jar2) {
         Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(jar1.getCustomEffects());
         set.addAll(jar2.getCustomEffects());
         return new ArrayList<>(set);
     }
 
-    public List<MobEffectInstance> getCombinedResult(PotionJarTile jar1, PotionJarTile jar2){
+    public List<MobEffectInstance> getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
         Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(jar1.getFullEffects());
         set.addAll(jar2.getFullEffects());
         return new ArrayList<>(set);
     }
-    private <E extends BlockEntity  & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+
+    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("spin", true));
         return this.isMixing ? PlayState.CONTINUE : PlayState.STOP;
     }
+
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));

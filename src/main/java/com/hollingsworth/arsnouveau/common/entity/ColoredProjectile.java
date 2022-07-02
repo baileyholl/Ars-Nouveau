@@ -34,15 +34,15 @@ public abstract class ColoredProjectile extends Projectile {
         setOwner(shooter);
     }
 
-    public ParticleColor getParticleColor(){
+    public ParticleColor getParticleColor() {
         return new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
-    public ParticleColor.IntWrapper getParticleColorWrapper(){
+    public ParticleColor.IntWrapper getParticleColorWrapper() {
         return new ParticleColor.IntWrapper(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
-    public void setColor(ParticleColor colors){
+    public void setColor(ParticleColor colors) {
         ParticleColor.IntWrapper wrapper = colors.toWrapper();
         entityData.set(RED, wrapper.r);
         entityData.set(GREEN, wrapper.g);

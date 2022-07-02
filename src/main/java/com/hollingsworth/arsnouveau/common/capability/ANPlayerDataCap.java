@@ -12,13 +12,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ANPlayerDataCap implements IPlayerCap{
+public class ANPlayerDataCap implements IPlayerCap {
 
     public Set<AbstractSpellPart> glyphs = new HashSet<>();
 
     public Set<FamiliarData> familiars = new HashSet<>();
 
-    public ANPlayerDataCap(){}
+    public ANPlayerDataCap() {
+    }
 
     @Override
     public Collection<AbstractSpellPart> getKnownGlyphs() {
@@ -77,7 +78,7 @@ public class ANPlayerDataCap implements IPlayerCap{
 
         CompoundTag glyphsTag = new CompoundTag();
         List<AbstractSpellPart> glyphsList = glyphs.stream().toList();
-        for(int i = 0; i < glyphsList.size(); i++){
+        for (int i = 0; i < glyphsList.size(); i++) {
             glyphsTag.putString("glyph" + i, glyphsList.get(i).getRegistryName().toString());
         }
         glyphsTag.putInt("size", glyphsList.size());
@@ -85,7 +86,7 @@ public class ANPlayerDataCap implements IPlayerCap{
 
         CompoundTag familiarsTag = new CompoundTag();
         List<FamiliarData> familiarsList = familiars.stream().toList();
-        for(int i = 0; i < familiarsList.size(); i++){
+        for (int i = 0; i < familiarsList.size(); i++) {
             familiarsTag.put("familiar" + i, familiarsList.get(i).toTag());
         }
         familiarsTag.putInt("size", familiarsList.size());
@@ -97,7 +98,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     public void deserializeNBT(CompoundTag nbt) {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
         CompoundTag glyphsTag = nbt.getCompound("glyphs");
-        for(int i = 0; i < glyphsTag.getInt("size"); i++) {
+        for (int i = 0; i < glyphsTag.getInt("size"); i++) {
             ResourceLocation id = new ResourceLocation(glyphsTag.getString("glyph" + i));
             AbstractSpellPart part = api.getSpellPart(id);
             if (part != null)
@@ -105,7 +106,7 @@ public class ANPlayerDataCap implements IPlayerCap{
         }
 
         CompoundTag familiarsTag = nbt.getCompound("familiars");
-        for(int i = 0; i < familiarsTag.getInt("size"); i++) {
+        for (int i = 0; i < familiarsTag.getInt("size"); i++) {
             familiars.add(new FamiliarData(familiarsTag.getCompound("familiar" + i)));
         }
     }

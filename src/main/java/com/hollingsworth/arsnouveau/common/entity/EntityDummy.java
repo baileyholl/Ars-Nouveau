@@ -42,7 +42,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         super(p_i48577_1_, p_i48577_2_);
     }
 
-    public EntityDummy(Level world){
+    public EntityDummy(Level world) {
         super(ModEntities.ENTITY_DUMMY.get(), world);
     }
 
@@ -68,7 +68,6 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     }
 
 
-
     @Override
     public boolean isSpectator() {
         return false;
@@ -77,8 +76,8 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
-            if(level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerID()) == null){
+        if (!level.isClientSide) {
+            if (level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerID()) == null) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, false);
@@ -86,7 +85,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
             }
 
             ticksLeft--;
-            if(ticksLeft <= 0) {
+            if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
@@ -102,13 +101,14 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     @Override
     public ItemStack getItemBySlot(EquipmentSlot p_184582_1_) {
-        if(!level.isClientSide)
+        if (!level.isClientSide)
             return ItemStack.EMPTY;
         return level.getPlayerByUUID(getOwnerID()) != null ? level.getPlayerByUUID(getOwnerID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot p_184201_1_, ItemStack p_184201_2_) { }
+    public void setItemSlot(EquipmentSlot p_184201_1_, ItemStack p_184201_2_) {
+    }
 
     public ResourceLocation getSkinTextureLocation() {
         PlayerInfo networkplayerinfo = this.getPlayerInfo();
@@ -123,9 +123,11 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
         return this.playerInfo;
     }
+
     public Component getName() {
         return this.level.getPlayerByUUID(getOwnerID()) == null ? Component.literal("") : this.level.getPlayerByUUID(getOwnerID()).getName();
     }
+
     public Component getDisplayName() {
         MutableComponent iformattabletextcomponent = Component.literal("");
         iformattabletextcomponent = iformattabletextcomponent.append(PlayerTeam.formatNameForTeam(this.getTeam(), this.getName()));
@@ -150,7 +152,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksLeft = tag.getInt("left");
-        if(getOwnerID() != null)
+        if (getOwnerID() != null)
             setOwnerID(tag.getUUID("owner"));
     }
 

@@ -24,7 +24,7 @@ public class ConfiguredSpellSound {
         this.pitch = pitch;
     }
 
-    public CompoundTag serialize(){
+    public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
         tag.put("soundTag", sound == null ? new CompoundTag() : sound.serialize());
         tag.putFloat("volume", volume);
@@ -32,7 +32,7 @@ public class ConfiguredSpellSound {
         return tag;
     }
 
-    public static ConfiguredSpellSound fromTag(CompoundTag tag){
+    public static ConfiguredSpellSound fromTag(CompoundTag tag) {
         SpellSound sound = SpellSound.fromTag(tag.getCompound("soundTag"));
         float volume = tag.getFloat("volume");
         float pitch = tag.getFloat("pitch");

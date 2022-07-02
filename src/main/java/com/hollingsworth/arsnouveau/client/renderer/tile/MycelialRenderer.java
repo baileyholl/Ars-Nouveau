@@ -6,13 +6,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 public class MycelialRenderer extends GeoBlockRenderer<MycelialSourcelinkTile> {
-    public static SourcelinkModel model =  new SourcelinkModel("mycelial");
+    public static SourcelinkModel model = new SourcelinkModel("mycelial");
 
     public MycelialRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

@@ -22,15 +22,15 @@ import java.util.Optional;
 public class RitualHealing extends AbstractRitual {
     @Override
     protected void tick() {
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
-        }else{
-            if(getWorld().getGameTime() % 100 == 0){
+        } else {
+            if (getWorld().getGameTime() % 100 == 0) {
                 List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5));
                 Optional<LivingEntity> player = entities.stream().filter(e -> e instanceof Player).findFirst();
 
                 boolean didWorkOnce = false;
-                for(LivingEntity a : entities) {
+                for (LivingEntity a : entities) {
                     if (a instanceof ZombieVillager zv) {
                         zv.startConverting(player.map(Entity::getUUID).orElse(null), 0);
                         didWorkOnce = true;
@@ -47,7 +47,7 @@ public class RitualHealing extends AbstractRitual {
                         didWorkOnce = true;
                     }
                 }
-                if(didWorkOnce)
+                if (didWorkOnce)
                     setNeedsMana(true);
             }
         }

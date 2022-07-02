@@ -40,11 +40,11 @@ public class ManaCap implements IManaCap {
 
     @Override
     public double setMana(double mana) {
-        if(mana > getMaxMana()){
+        if (mana > getMaxMana()) {
             this.mana = getMaxMana();
-        }else if(mana < 0){
+        } else if (mana < 0) {
             this.mana = 0;
-        }else {
+        } else {
             this.mana = mana;
         }
         return this.getCurrentMana();
@@ -58,29 +58,29 @@ public class ManaCap implements IManaCap {
 
     @Override
     public double removeMana(double manaToRemove) {
-        if(manaToRemove < 0)
+        if (manaToRemove < 0)
             manaToRemove = 0;
         this.setMana(this.getCurrentMana() - manaToRemove);
         return this.getCurrentMana();
     }
 
     @Override
-    public int getGlyphBonus(){
+    public int getGlyphBonus() {
         return glyphBonus;
     }
 
     @Override
-    public void setGlyphBonus(int glyphBonus){
+    public void setGlyphBonus(int glyphBonus) {
         this.glyphBonus = glyphBonus;
     }
 
     @Override
-    public int getBookTier(){
+    public int getBookTier() {
         return bookTier;
     }
 
     @Override
-    public void setBookTier(int bookTier){
+    public void setBookTier(int bookTier) {
         this.bookTier = bookTier;
     }
 

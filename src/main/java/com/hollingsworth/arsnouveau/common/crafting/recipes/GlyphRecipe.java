@@ -42,59 +42,59 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         this.exp = exp;
     }
 
-    public GlyphRecipe withIngredient(Ingredient i ){
+    public GlyphRecipe withIngredient(Ingredient i) {
         this.inputs.add(i);
         return this;
     }
 
-    public GlyphRecipe withIngredient(Ingredient ingredient, int count ){
-        for(int i = 0; i < count; i++){
+    public GlyphRecipe withIngredient(Ingredient ingredient, int count) {
+        for (int i = 0; i < count; i++) {
             withIngredient(ingredient);
         }
         return this;
     }
 
-    public GlyphRecipe withIngredient(TagKey<Item> tag, int count ){
-        for(int i = 0; i < count; i++){
+    public GlyphRecipe withIngredient(TagKey<Item> tag, int count) {
+        for (int i = 0; i < count; i++) {
             withIngredient(Ingredient.of(tag));
         }
         return this;
     }
 
 
-    public GlyphRecipe withItem(ItemLike i){
+    public GlyphRecipe withItem(ItemLike i) {
         this.inputs.add(Ingredient.of(i));
         return this;
     }
 
-    public GlyphRecipe withItem(RegistryObject<? extends ItemLike> i){
+    public GlyphRecipe withItem(RegistryObject<? extends ItemLike> i) {
         return withItem(i.get());
     }
 
-    public GlyphRecipe withItem(RegistryObject<? extends ItemLike> item, int count){
-       return withItem(item.get(), count);
+    public GlyphRecipe withItem(RegistryObject<? extends ItemLike> item, int count) {
+        return withItem(item.get(), count);
     }
 
-    public GlyphRecipe withItem(ItemLike item, int count){
-        for(int i = 0; i < count; i++){
+    public GlyphRecipe withItem(ItemLike item, int count) {
+        for (int i = 0; i < count; i++) {
             withItem(item);
         }
         return this;
     }
 
-    public GlyphRecipe withStack(ItemStack i){
+    public GlyphRecipe withStack(ItemStack i) {
         this.inputs.add(Ingredient.of(i));
         return this;
     }
 
-    public GlyphRecipe withStack(ItemStack stack, int count){
-        for(int i = 0; i < count; i++){
+    public GlyphRecipe withStack(ItemStack stack, int count) {
+        for (int i = 0; i < count; i++) {
             withStack(stack);
         }
         return this;
     }
 
-    public AbstractSpellPart getSpellPart(){
+    public AbstractSpellPart getSpellPart() {
         return ((Glyph) this.output.getItem()).spellPart;
     }
 
@@ -133,12 +133,12 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         return RecipeRegistry.GLYPH_TYPE.get();
     }
 
-    public JsonElement asRecipe(){
+    public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.GLYPH_RECIPE_ID);
         jsonobject.addProperty("count", this.output.getCount());
         JsonArray pedestalArr = new JsonArray();
-        for(Ingredient i : this.inputs){
+        for (Ingredient i : this.inputs) {
             JsonObject object = new JsonObject();
             object.add("item", i.toJson());
             pedestalArr.add(object);
@@ -160,12 +160,12 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
             JsonArray inputItems = GsonHelper.getAsJsonArray(json, "inputItems");
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(JsonElement e : inputItems){
+            for (JsonElement e : inputItems) {
                 JsonObject obj = e.getAsJsonObject();
                 Ingredient input = null;
-                if(GsonHelper.isArrayNode(obj, "item")){
+                if (GsonHelper.isArrayNode(obj, "item")) {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                }else{
+                } else {
                     input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 }
                 stacks.add(input);
@@ -177,7 +177,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         @Override
         public void toNetwork(FriendlyByteBuf buf, GlyphRecipe recipe) {
             buf.writeInt(recipe.inputs.size());
-            for(Ingredient i : recipe.inputs){
+            for (Ingredient i : recipe.inputs) {
                 i.toNetwork(buf);
             }
             buf.writeItem(recipe.output);
@@ -190,8 +190,10 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
             int length = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
+            for (int i = 0; i < length; i++) {
+                try {
+                    stacks.add(Ingredient.fromNetwork(buffer));
+                } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }

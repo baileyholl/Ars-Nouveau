@@ -32,7 +32,7 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
 
     }
 
-    static class DummyRender extends net.minecraft.client.renderer.RenderType{
+    static class DummyRender extends net.minecraft.client.renderer.RenderType {
         public static final RenderType RenderBlock = create("IntangibleRenderBlock",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
@@ -55,7 +55,7 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
 
 
     private void renderModelBrightnessColorQuads(PoseStack.Pose matrixEntry, VertexConsumer builder, float red, float green, float blue, float alpha, List<BakedQuad> listQuads, int combinedLightsIn, int combinedOverlayIn) {
-        for(BakedQuad bakedquad : listQuads) {
+        for (BakedQuad bakedquad : listQuads) {
             float f;
             float f1;
             float f2;
@@ -76,9 +76,9 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
     @Override
     public void render(IntangibleAirTile tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = Block.stateById(tileEntityIn.stateID);
-        if(renderState == null)
+        if (renderState == null)
             return;
-        double scale = ((double)tileEntityIn.duration)/(double)tileEntityIn.maxLength;
+        double scale = ((double) tileEntityIn.duration) / (double) tileEntityIn.maxLength;
 
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);

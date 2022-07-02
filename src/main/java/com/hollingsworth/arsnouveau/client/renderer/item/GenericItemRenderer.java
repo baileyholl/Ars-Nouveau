@@ -17,12 +17,14 @@ public class GenericItemRenderer extends GeoItemRenderer<AnimModItem> {
     public GenericItemRenderer(AnimatedGeoModel<AnimModItem> modelProvider) {
         super(modelProvider);
     }
+
     public boolean isTranslucent;
+
     public GenericItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet, AnimatedGeoModel<AnimModItem> modelProvider) {
         super(dispatcher, modelSet, modelProvider);
     }
 
-    public GenericItemRenderer withTranslucency(){
+    public GenericItemRenderer withTranslucency() {
         this.isTranslucent = true;
         return this;
     }

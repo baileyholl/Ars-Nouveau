@@ -51,20 +51,20 @@ public class EnchantingApparatusBlock extends TickableModBlock {
         }
         if (tile.catalystItem == null || tile.catalystItem.isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
-            if(recipe == null){
+            if (recipe == null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
-            }else if(recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())){
+            } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
-            }else{
-                if(tile.attemptCraft(player.getMainHandItem(), player)){
+            } else {
+                if (tile.attemptCraft(player.getMainHandItem(), player)) {
                     tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);
                 }
             }
-        }else{
+        } else {
             ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.catalystItem);
             world.addFreshEntity(item);
             tile.catalystItem = ItemStack.EMPTY;
-            if(tile.attemptCraft(player.getMainHandItem(), player)){
+            if (tile.attemptCraft(player.getMainHandItem(), player)) {
                 tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);
             }
         }

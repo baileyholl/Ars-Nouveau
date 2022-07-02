@@ -17,7 +17,7 @@ public class ApparatusPage extends AbstractPage {
         this(getRegistryName(itemLike.asItem()).toString());
     }
 
-    public ApparatusPage(RegistryObject<? extends ItemLike> itemLike){
+    public ApparatusPage(RegistryObject<? extends ItemLike> itemLike) {
         this(itemLike.get());
     }
 

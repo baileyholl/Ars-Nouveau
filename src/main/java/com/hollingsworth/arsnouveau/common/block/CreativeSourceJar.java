@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CreativeSourceJar extends SourceJar {
 
-    public CreativeSourceJar(){
+    public CreativeSourceJar() {
         super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.CREATIVE_SOURCE_JAR);
     }
 

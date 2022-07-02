@@ -9,17 +9,17 @@ public class SpellBowModel extends AnimatedGeoModel<SpellBow> {
 
     @Override
     public ResourceLocation getModelResource(SpellBow wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/spellbow.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/spellbow.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SpellBow wand) {
-        return  new ResourceLocation(ArsNouveau.MODID, "textures/items/spellbow.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/items/spellbow.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SpellBow wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/wand_animation.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wand_animation.json");
     }
 
 

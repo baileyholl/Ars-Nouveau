@@ -38,7 +38,7 @@ public class DyeRecipe extends ShapelessRecipe {
                 DyeColor color = DyeColor.getColor(ingredient);
                 if (!ingredient.isEmpty() && color != null) {
 
-                    output.getTag().putInt("color",color.getId());
+                    output.getTag().putInt("color", color.getId());
 
                 }
             }

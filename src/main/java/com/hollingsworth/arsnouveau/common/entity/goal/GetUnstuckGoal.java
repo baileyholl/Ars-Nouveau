@@ -20,7 +20,8 @@ public class GetUnstuckGoal extends CheckStuckGoal {
     Mob entity;
     boolean isStuckTrying;
     Function<Boolean, Void> setUnstuck;
-    public GetUnstuckGoal(Mob entity, Supplier<Boolean> isStuck, Function<Boolean, Void> setUnstuck){
+
+    public GetUnstuckGoal(Mob entity, Supplier<Boolean> isStuck, Function<Boolean, Void> setUnstuck) {
         super(entity::blockPosition, 4, null);
         this.entity = entity;
         this.isStuck = isStuck;
@@ -29,7 +30,7 @@ public class GetUnstuckGoal extends CheckStuckGoal {
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
-    public Void setStuckTrying(boolean isStuck){
+    public Void setStuckTrying(boolean isStuck) {
         this.isStuckTrying = isStuck;
         return null;
     }
@@ -61,9 +62,9 @@ public class GetUnstuckGoal extends CheckStuckGoal {
         if (targetPos == null)
             return;
 
-        if(BlockUtil.distanceFrom(entity.blockPosition(), targetPos) > 0.5){
+        if (BlockUtil.distanceFrom(entity.blockPosition(), targetPos) > 0.5) {
             entity.getNavigation().moveTo(getPath(targetPos), 1.2D);
-        }else{
+        } else {
             setUnstuck.apply(false);
             targetPos = null;
             return;
@@ -74,26 +75,26 @@ public class GetUnstuckGoal extends CheckStuckGoal {
         }
     }
 
-    public BlockPos getNextTarget(){
+    public BlockPos getNextTarget() {
         numUnstucks++;
-        if(numUnstucks >= directions.length)
+        if (numUnstucks >= directions.length)
             return null;
         Direction direction = directions[numUnstucks];
-        if(entity.getMotionDirection() == direction){
+        if (entity.getMotionDirection() == direction) {
             return getNextTarget();
         }
-        for(int i = 3; i > 1; i--){
+        for (int i = 3; i > 1; i--) {
             BlockPos posToMove = entity.blockPosition().relative(direction, i);
             Path path = getPath(posToMove);
-            if(path != null && path.canReach()){
+            if (path != null && path.canReach()) {
                 return posToMove;
-            }else if(getPath(posToMove.below()) != null && getPath(posToMove.below()).canReach()){
+            } else if (getPath(posToMove.below()) != null && getPath(posToMove.below()).canReach()) {
                 return posToMove.below();
-            }else if(getPath(posToMove.below(2)) != null && getPath(posToMove.below(2)).canReach()){
+            } else if (getPath(posToMove.below(2)) != null && getPath(posToMove.below(2)).canReach()) {
                 return posToMove.below(2);
-            }else if(getPath(posToMove.above()) != null && getPath(posToMove.above()).canReach()){
+            } else if (getPath(posToMove.above()) != null && getPath(posToMove.above()).canReach()) {
                 return posToMove.above();
-            }else if(getPath(posToMove.above(2)) != null && getPath(posToMove.above(2)).canReach()){
+            } else if (getPath(posToMove.above(2)) != null && getPath(posToMove.above(2)).canReach()) {
                 return posToMove.above(2);
             }
         }
@@ -101,7 +102,7 @@ public class GetUnstuckGoal extends CheckStuckGoal {
         return getNextTarget();
     }
 
-    public Path getPath(BlockPos p){
+    public Path getPath(BlockPos p) {
         return entity.getNavigation().createPath(p, 0);
     }
 }

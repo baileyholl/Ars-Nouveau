@@ -42,12 +42,12 @@ public class RandomFlyingGoal extends WaterAvoidingRandomStrollGoal {
         Iterator iterator = iterable.iterator();
 
         BlockPos blockpos1;
-        while(true) {
+        while (true) {
             if (!iterator.hasNext()) {
                 return null;
             }
 
-            blockpos1 = (BlockPos)iterator.next();
+            blockpos1 = (BlockPos) iterator.next();
             if (!blockpos.equals(blockpos1)) {
                 Block block = this.mob.level.getBlockState(blockpos$mutable1.set(blockpos1).move(Direction.DOWN)).getBlock();
                 boolean flag = block instanceof LeavesBlock || block.defaultBlockState().is(BlockTags.LOGS);
@@ -57,6 +57,6 @@ public class RandomFlyingGoal extends WaterAvoidingRandomStrollGoal {
             }
         }
 
-        return new Vec3(blockpos1.getX(),blockpos1.getY(),blockpos1.getZ());
+        return new Vec3(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
     }
 }

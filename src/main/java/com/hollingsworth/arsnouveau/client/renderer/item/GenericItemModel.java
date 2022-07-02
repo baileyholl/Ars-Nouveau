@@ -6,7 +6,8 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class GenericItemModel extends AnimatedGeoModel<AnimBlockItem> {
     AnimatedGeoModel model;
-    public GenericItemModel(AnimatedGeoModel model){
+
+    public GenericItemModel(AnimatedGeoModel model) {
         this.model = model;
     }
 

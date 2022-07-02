@@ -17,8 +17,8 @@ public class MimicItemScroll extends ItemScroll {
 
     @Override
     public SortPref getSortPref(ItemStack stackToStore, CompoundTag scrollTag, IItemHandler inventory) {
-        for(int i = 0; i < inventory.getSlots(); i++){
-            if(inventory.getStackInSlot(i).sameItemStackIgnoreDurability(stackToStore))
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            if (inventory.getStackInSlot(i).sameItemStackIgnoreDurability(stackToStore))
                 return SortPref.HIGHEST;
         }
         return SortPref.INVALID;

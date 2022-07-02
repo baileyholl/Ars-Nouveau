@@ -14,25 +14,25 @@ public class SpellSchool {
     private Set<SpellSchool> subSchools = new HashSet<>();
     private Set<AbstractSpellPart> spellParts = new HashSet<>();
 
-    public SpellSchool(String id){
+    public SpellSchool(String id) {
         this.id = id;
     }
 
-    public boolean isPartOfSchool(AbstractSpellPart part){
-        if(getSpellParts().contains(part))
+    public boolean isPartOfSchool(AbstractSpellPart part) {
+        if (getSpellParts().contains(part))
             return true;
-        for(SpellSchool spellSchool : getSubSchools()){
-            if(spellSchool.getSpellParts().contains(part))
+        for (SpellSchool spellSchool : getSubSchools()) {
+            if (spellSchool.getSpellParts().contains(part))
                 return true;
         }
         return false;
     }
 
-    public boolean addSpellPart(AbstractSpellPart spellPart){
+    public boolean addSpellPart(AbstractSpellPart spellPart) {
         return getSpellParts().add(spellPart);
     }
 
-    public Component getTextComponent(){
+    public Component getTextComponent() {
         return Component.translatable("ars_nouveau.school." + getId());
     }
 
@@ -48,7 +48,7 @@ public class SpellSchool {
         this.subSchools = subSchools;
     }
 
-    public SpellSchool withSubSchool(SpellSchool spellSchool){
+    public SpellSchool withSubSchool(SpellSchool spellSchool) {
         this.getSubSchools().add(spellSchool);
         return this;
     }

@@ -19,7 +19,7 @@ public class DrygmyCharm extends AbstractSummonCharm {
 
     @Override
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
-        if(world.getBlockState(pos).getBlock() == Blocks.MOSSY_COBBLESTONE){
+        if (world.getBlockState(pos).getBlock() == Blocks.MOSSY_COBBLESTONE) {
             world.setBlockAndUpdate(pos, BlockRegistry.DRYGMY_BLOCK.defaultBlockState());
             return InteractionResult.SUCCESS;
         }
@@ -28,7 +28,7 @@ public class DrygmyCharm extends AbstractSummonCharm {
 
     @Override
     public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
-        if(tile instanceof DrygmyTile) {
+        if (tile instanceof DrygmyTile) {
             EntityDrygmy drygmy = new EntityDrygmy(world, true);
             drygmy.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addFreshEntity(drygmy);

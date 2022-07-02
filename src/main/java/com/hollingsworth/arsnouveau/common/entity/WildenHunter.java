@@ -30,7 +30,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class  WildenHunter extends Monster implements IAnimatable, IAnimationListener {
+public class WildenHunter extends Monster implements IAnimatable, IAnimationListener {
     AnimationFactory manager = new AnimationFactory(this);
 
     public WildenHunter(EntityType<? extends Monster> type, Level worldIn) {
@@ -43,6 +43,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
 
     public int ramCooldown = 0;
     public int summonCooldown = 0;
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -54,10 +55,11 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        if(Config.HUNTER_ATTACK_ANIMALS.get())
+        if (Config.HUNTER_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
     }
+
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.WOLF_HURT;
     }
@@ -80,7 +82,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
 
     @Override
     public void playSound(SoundEvent soundIn, float volume, float pitch) {
-        super.playSound(soundIn, volume, pitch -0.5f);
+        super.playSound(soundIn, volume, pitch - 0.5f);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
         return SoundEvents.WOLF_GROWL;
     }
 
-    public static AttributeSupplier.Builder getModdedAttributes(){
+    public static AttributeSupplier.Builder getModdedAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
@@ -101,21 +103,21 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
     @Override
     public void tick() {
         super.tick();
-        if(level.isClientSide)
+        if (level.isClientSide)
             return;
-        if(ramCooldown > 0)
+        if (ramCooldown > 0)
             ramCooldown--;
-        if(summonCooldown > 0)
+        if (summonCooldown > 0)
             summonCooldown--;
     }
 
     @Override
     public void startAnimation(int arg) {
-        try{
-            if(controller == null)
+        try {
+            if (controller == null)
                 return;
-            if(arg == Animations.ATTACK.ordinal()){
-                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
+            if (arg == Animations.ATTACK.ordinal()) {
+                if (controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
                         controller.getCurrentAnimation().animationName.equals("howl"))) {
                     return;
                 }
@@ -123,20 +125,20 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
                 controller.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
             }
 
-            if(arg == Animations.RAM.ordinal()){
-                if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
+            if (arg == Animations.RAM.ordinal()) {
+                if (controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
                     return;
                 }
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("attack2").addAnimation("idle"));
             }
 
-            if(arg == Animations.HOWL.ordinal()){
+            if (arg == Animations.HOWL.ordinal()) {
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -147,6 +149,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
     }
 
     AnimationController controller;
+
     @Override
     public void registerControllers(AnimationData animationData) {
         controller = new AnimationController(this, "attackController", 1, this::attackPredicate);
@@ -158,7 +161,7 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
         return manager;
     }
 
-    public enum Animations{
+    public enum Animations {
         ATTACK,
         RAM,
         HOWL

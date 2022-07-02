@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class BasicReductionCaster extends SpellCaster{
+public class BasicReductionCaster extends SpellCaster {
 
     Function<Spell, Spell> modificationFunc;
 

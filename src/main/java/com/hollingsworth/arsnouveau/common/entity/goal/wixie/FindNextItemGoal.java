@@ -23,7 +23,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     ItemStack getStack;
     boolean found;
 
-    public FindNextItemGoal(EntityWixie wixie){
+    public FindNextItemGoal(EntityWixie wixie) {
         super(10);
         this.wixie = wixie;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
@@ -34,18 +34,18 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         super.start();
         Level world = wixie.getCommandSenderWorld();
         WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
-        if(tile == null || tile.inventories == null) {
+        if (tile == null || tile.inventories == null) {
             found = true;
             return;
         }
         getStack = tile.craftManager.getNextItem();
-        if(getStack.isEmpty()){
+        if (getStack.isEmpty()) {
             found = true;
             return;
         }
         Set<Item> itemSet = new HashSet<>();
         itemSet.add(getStack.getItem());
-        for(BlockPos b : tile.inventories){
+        for (BlockPos b : tile.inventories) {
             if (!(world.getBlockEntity(b) instanceof Container i))
                 continue;
             if (i.hasAnyOf(itemSet)) {
@@ -64,11 +64,11 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
 
     @Override
     public boolean canUse() {
-        if(wixie.cauldronPos == null)
+        if (wixie.cauldronPos == null)
             return false;
         BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasSource && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff &&  !((WixieCauldronTile) tileEntity).craftManager.getNextItem().isEmpty();
+                && ((WixieCauldronTile) tileEntity).hasSource && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff && !((WixieCauldronTile) tileEntity).craftManager.getNextItem().isEmpty();
     }
 
     @Override
@@ -79,24 +79,24 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     @Override
     public void tick() {
         super.tick();
-        if(!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange){
+        if (!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange) {
 
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             Level world = wixie.getCommandSenderWorld();
-            if(tile == null) {
+            if (tile == null) {
                 found = true;
                 return;
             }
 
-            for(BlockPos b : tile.inventories){
+            for (BlockPos b : tile.inventories) {
 
                 if (!(world.getBlockEntity(b) instanceof Container i))
                     continue;
-                for(int j = 0; j < i.getContainerSize(); j++) {
+                for (int j = 0; j < i.getContainerSize(); j++) {
                     if (i.getItem(j).getItem() == getStack.getItem()) {
                         found = true;
                         ItemStack stackToGive = i.getItem(j).copy();
-                        tile.spawnFlyingItem(b,stackToGive);
+                        tile.spawnFlyingItem(b, stackToGive);
                         stackToGive.setCount(1);
                         tile.giveItem(stackToGive);
                         i.getItem(j).shrink(1);
@@ -105,18 +105,18 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                         break;
                     }
                 }
-                if(found)
+                if (found)
                     break;
             }
         }
 
-        if(movePos != null && !found) {
-            setPath(movePos.getX(), movePos.getY()+1, movePos.getZ(), 1.2D);
+        if (movePos != null && !found) {
+            setPath(movePos.getX(), movePos.getY() + 1, movePos.getZ(), 1.2D);
         }
     }
 
-    public void setPath(double x, double y, double z, double speedIn){
-        wixie.getNavigation().moveTo( wixie.getNavigation().createPath(x+0.5, y+0.5, z+0.5, 0), speedIn);
+    public void setPath(double x, double y, double z, double speedIn) {
+        wixie.getNavigation().moveTo(wixie.getNavigation().createPath(x + 0.5, y + 0.5, z + 0.5, 0), speedIn);
     }
 
 }

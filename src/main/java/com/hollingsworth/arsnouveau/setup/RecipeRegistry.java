@@ -36,25 +36,25 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeSerializer<EnchantmentRecipe>> ENCHANTMENT_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTMENT_RECIPE_ID, () -> new EnchantmentRecipe.Serializer());
 
     public static final RegistryObject<RecipeType<CrushRecipe>> CRUSH_TYPE = RECIPE_TYPES.register(CRUSH_RECIPE_ID, () -> new ModRecipeType());
-    public static final RegistryObject<RecipeSerializer<CrushRecipe>> CRUSH_SERIALIZER = RECIPE_SERIALIZERS.register(CRUSH_RECIPE_ID,() -> new CrushRecipe.Serializer());
+    public static final RegistryObject<RecipeSerializer<CrushRecipe>> CRUSH_SERIALIZER = RECIPE_SERIALIZERS.register(CRUSH_RECIPE_ID, () -> new CrushRecipe.Serializer());
 
-    public static final RegistryObject<RecipeType<ImbuementRecipe>> IMBUEMENT_TYPE = RECIPE_TYPES.register(IMBUEMENT_RECIPE_ID,() -> new ModRecipeType());
-    public static final RegistryObject<RecipeSerializer<ImbuementRecipe>> IMBUEMENT_SERIALIZER = RECIPE_SERIALIZERS.register(IMBUEMENT_RECIPE_ID,() -> new ImbuementRecipe.Serializer());
+    public static final RegistryObject<RecipeType<ImbuementRecipe>> IMBUEMENT_TYPE = RECIPE_TYPES.register(IMBUEMENT_RECIPE_ID, () -> new ModRecipeType());
+    public static final RegistryObject<RecipeSerializer<ImbuementRecipe>> IMBUEMENT_SERIALIZER = RECIPE_SERIALIZERS.register(IMBUEMENT_RECIPE_ID, () -> new ImbuementRecipe.Serializer());
 
 
-    public static final RegistryObject<RecipeType<BookUpgradeRecipe>> BOOK_UPGRADE_TYPE = RECIPE_TYPES.register("book_upgrade",() -> new ModRecipeType());
-    public static final RegistryObject<RecipeSerializer<BookUpgradeRecipe>> BOOK_UPGRADE_RECIPE = RECIPE_SERIALIZERS.register("book_upgrade",() -> new BookUpgradeRecipe.Serializer());
+    public static final RegistryObject<RecipeType<BookUpgradeRecipe>> BOOK_UPGRADE_TYPE = RECIPE_TYPES.register("book_upgrade", () -> new ModRecipeType());
+    public static final RegistryObject<RecipeSerializer<BookUpgradeRecipe>> BOOK_UPGRADE_RECIPE = RECIPE_SERIALIZERS.register("book_upgrade", () -> new BookUpgradeRecipe.Serializer());
 
-    public static final RegistryObject<RecipeType<PotionFlaskRecipe>> POTION_FLASK_TYPE = RECIPE_TYPES.register("potion_flask",() -> new ModRecipeType());
+    public static final RegistryObject<RecipeType<PotionFlaskRecipe>> POTION_FLASK_TYPE = RECIPE_TYPES.register("potion_flask", () -> new ModRecipeType());
     public static final RegistryObject<RecipeSerializer<PotionFlaskRecipe>> POTION_FLASK_RECIPE = RECIPE_SERIALIZERS.register("potion_flask", () -> new PotionFlaskRecipe.Serializer());
 
 
-    public static final RegistryObject<RecipeType<DyeRecipe>> DYE_TYPE = RECIPE_TYPES.register("dye",() -> new ModRecipeType());
-    public static final RegistryObject<RecipeSerializer<DyeRecipe>> DYE_RECIPE = RECIPE_SERIALIZERS.register("dye",() -> new DyeRecipe.Serializer());
+    public static final RegistryObject<RecipeType<DyeRecipe>> DYE_TYPE = RECIPE_TYPES.register("dye", () -> new ModRecipeType());
+    public static final RegistryObject<RecipeSerializer<DyeRecipe>> DYE_RECIPE = RECIPE_SERIALIZERS.register("dye", () -> new DyeRecipe.Serializer());
 
 
     public static final RegistryObject<RecipeType<ReactiveEnchantmentRecipe>> REACTIVE_TYPE = RECIPE_TYPES.register(REACTIVE_RECIPE_ID, () -> new ModRecipeType());
-    public static final RegistryObject<RecipeSerializer<ReactiveEnchantmentRecipe>> REACTIVE_RECIPE = RECIPE_SERIALIZERS.register(REACTIVE_RECIPE_ID,() -> new ReactiveEnchantmentRecipe.Serializer());
+    public static final RegistryObject<RecipeSerializer<ReactiveEnchantmentRecipe>> REACTIVE_RECIPE = RECIPE_SERIALIZERS.register(REACTIVE_RECIPE_ID, () -> new ReactiveEnchantmentRecipe.Serializer());
 
 
     public static final RegistryObject<RecipeType<SpellWriteRecipe>> SPELL_WRITE_TYPE = RECIPE_TYPES.register(SPELL_WRITE_RECIPE_ID, () -> new ModRecipeType());

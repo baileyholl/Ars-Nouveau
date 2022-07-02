@@ -9,16 +9,16 @@ public class WandModel extends AnimatedGeoModel<Wand> {
 
     @Override
     public ResourceLocation getModelResource(Wand wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/wand.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/wand.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Wand wand) {
-        return  new ResourceLocation(ArsNouveau.MODID, "textures/items/wand.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/items/wand.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(Wand wand) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/wand_animation.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wand_animation.json");
     }
 }

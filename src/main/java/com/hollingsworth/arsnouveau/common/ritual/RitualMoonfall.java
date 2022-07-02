@@ -12,10 +12,10 @@ import net.minecraft.server.level.ServerLevel;
 public class RitualMoonfall extends AbstractRitual {
     @Override
     protected void tick() {
-        ParticleUtil.spawnRitualSkyEffect(this, tile, rand, new ParticleColor.IntWrapper(50+  rand.nextInt(50), 50+ rand.nextInt(50), 200 + rand.nextInt(55)));
-        if(getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
+        ParticleUtil.spawnRitualSkyEffect(this, tile, rand, new ParticleColor.IntWrapper(50 + rand.nextInt(50), 50 + rand.nextInt(50), 200 + rand.nextInt(55)));
+        if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
-            if(getProgress() >= 18){
+            if (getProgress() >= 18) {
                 ServerLevel world = (ServerLevel) getWorld();
                 world.setDayTime(MathUtil.getNextDaysTime(world, MathUtil.NIGHT_TIME));
                 setFinished();

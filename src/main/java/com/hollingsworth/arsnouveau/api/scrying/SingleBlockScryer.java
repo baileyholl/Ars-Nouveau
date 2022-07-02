@@ -21,7 +21,7 @@ public class SingleBlockScryer implements IScryer {
 
     @Override
     public boolean shouldRevealBlock(BlockState state, BlockPos p, Player player) {
-        if(block == null)
+        if (block == null)
             return false;
         return state.getBlock() == block;
     }
@@ -35,7 +35,7 @@ public class SingleBlockScryer implements IScryer {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        if(block != null)
+        if (block != null)
             tag.putString("block", RegistryHelper.getRegistryName(block).toString());
         return IScryer.super.toTag(tag);
     }

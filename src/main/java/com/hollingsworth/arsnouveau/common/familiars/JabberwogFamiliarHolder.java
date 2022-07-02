@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 
 public class JabberwogFamiliarHolder extends AbstractFamiliarHolder {
 
-    public JabberwogFamiliarHolder(){
+    public JabberwogFamiliarHolder() {
         super(LibEntityNames.FAMILIAR_JABBERWOG, (e) -> e instanceof Starbuncle);
     }
 

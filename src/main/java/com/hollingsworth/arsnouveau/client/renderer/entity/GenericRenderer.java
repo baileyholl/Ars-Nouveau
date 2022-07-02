@@ -14,7 +14,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import javax.annotation.Nullable;
 
 public class GenericRenderer<T extends LivingEntity & IAnimatable> extends GeoEntityRenderer<T> {
-    public GenericRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> model){
+    public GenericRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> model) {
         super(renderManager, model);
     }
 

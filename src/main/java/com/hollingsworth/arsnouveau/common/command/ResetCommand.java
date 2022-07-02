@@ -24,8 +24,8 @@ public class ResetCommand {
     }
 
     private static int resetPlayers(CommandSourceStack source, Collection<? extends Entity> entities) {
-        for(Entity e : entities){
-            if(!(e instanceof LivingEntity))
+        for (Entity e : entities) {
+            if (!(e instanceof LivingEntity))
                 continue;
             CapabilityRegistry.getMana((LivingEntity) e).ifPresent(iMana -> {
                 iMana.setBookTier(0);

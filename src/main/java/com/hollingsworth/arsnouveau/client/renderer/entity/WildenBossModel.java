@@ -15,8 +15,8 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/chimera.png");
     private static final ResourceLocation DEFENSIVE_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/chimera_defense.png");
 
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/wilden_chimera.geo.json");
-    public static final ResourceLocation DEFENSIVE_MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/wilden_chimera_defense.geo.json");
+    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera.geo.json");
+    public static final ResourceLocation DEFENSIVE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera_defense.geo.json");
 
 
     @Override
@@ -26,7 +26,7 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.037453292F + 0.45f);
-        head.setRotationY(extraData.netHeadYaw * 0.012453292F );
+        head.setRotationY(extraData.netHeadYaw * 0.012453292F);
         this.getBone("wings").setHidden(!entity.hasWings());
         this.getBone("spikes_lower_body").setHidden(!entity.hasSpikes());
         this.getBone("spikes_upper_body").setHidden(!entity.hasSpikes());

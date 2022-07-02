@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ManaCapAttacher {
-    private static class ManaCapProvider implements ICapabilityProvider, INBTSerializable<CompoundTag>{
+    private static class ManaCapProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
         public static final ResourceLocation IDENTIFIER = new ResourceLocation(ArsNouveau.MODID, "mana");
 

@@ -18,7 +18,7 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
         super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
     }
 
-    public SourceJarTile(BlockEntityType<? extends SourceJarTile> tileTileEntityType, BlockPos pos, BlockState state){
+    public SourceJarTile(BlockEntityType<? extends SourceJarTile> tileTileEntityType, BlockPos pos, BlockState state) {
         super(tileTileEntityType, pos, state);
     }
 
@@ -29,19 +29,19 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
 
     @Override
     public void tick() {
-        if(level.isClientSide) {
+        if (level.isClientSide) {
             // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
         }
         BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
-        if(this.getSource() > 0 && this.getSource() < 1000)
+        if (this.getSource() > 0 && this.getSource() < 1000)
             fillState = 1;
-        else if(this.getSource() != 0){
+        else if (this.getSource() != 0) {
             fillState = (this.getSource() / 1000) + 1;
         }
-        if(state.hasProperty(SourceJar.fill))
-            level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState),3);
+        if (state.hasProperty(SourceJar.fill))
+            level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState), 3);
     }
 
 
@@ -52,6 +52,6 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getSource()*100) / this.getMaxSource()));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getSource() * 100) / this.getMaxSource()));
     }
 }

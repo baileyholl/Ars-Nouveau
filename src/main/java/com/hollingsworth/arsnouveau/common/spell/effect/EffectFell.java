@@ -58,6 +58,7 @@ public class EffectFell extends AbstractEffect {
     }
 
     public ForgeConfigSpec.IntValue AOE_BONUS;
+
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
@@ -65,7 +66,7 @@ public class EffectFell extends AbstractEffect {
         AOE_BONUS = builder.comment("Additional max blocks per AOE").defineInRange("aoe_bonus", 50, 0, Integer.MAX_VALUE);
     }
 
-    public boolean isTree(BlockState blockstate){
+    public boolean isTree(BlockState blockstate) {
         return blockstate.is(BlockTagProvider.FELLABLE);
     }
 

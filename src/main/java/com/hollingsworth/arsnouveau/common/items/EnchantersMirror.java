@@ -37,13 +37,13 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimationData data) {
+    }
 
     AnimationFactory factory = new AnimationFactory(this);
 
     @Override
-    public AnimationFactory getFactory()
-    {
+    public AnimationFactory getFactory() {
         return this.factory;
     }
 

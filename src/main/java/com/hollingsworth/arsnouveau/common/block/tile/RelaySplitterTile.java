@@ -23,7 +23,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         super(BlockRegistry.RELAY_SPLITTER_TILE, pos, state);
     }
 
-    public RelaySplitterTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+    public RelaySplitterTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -34,7 +34,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public boolean setSendTo(BlockPos pos) {
-        return closeEnough(pos)  && toList.add(pos) && update();
+        return closeEnough(pos) && toList.add(pos) && update();
     }
 
     @Override
@@ -44,53 +44,53 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         update();
     }
 
-    public void processFromList(){
-        if(fromList.isEmpty())
+    public void processFromList() {
+        if (fromList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / fromList.size();
-        for(BlockPos fromPos : fromList){
-            if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile)){
+        for (BlockPos fromPos : fromList) {
+            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile)) {
                 stale.add(fromPos);
                 continue;
             }
-            if(transferSource(fromTile, this, ratePer) > 0){
+            if (transferSource(fromTile, this, ratePer) > 0) {
                 createParticles(fromPos, worldPosition);
             }
         }
-        for(BlockPos s : stale)
+        for (BlockPos s : stale)
             fromList.remove(s);
 
     }
 
-    public void createParticles(BlockPos from, BlockPos to){
+    public void createParticles(BlockPos from, BlockPos to) {
         ParticleUtil.spawnFollowProjectile(level, from, to);
     }
 
-    public void processToList(){
-        if(toList.isEmpty())
+    public void processToList() {
+        if (toList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / toList.size();
-        for(BlockPos toPos : toList){
-            if(!level.isLoaded(toPos))
+        for (BlockPos toPos : toList) {
+            if (!level.isLoaded(toPos))
                 continue;
-            if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile)){
+            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile)) {
                 stale.add(toPos);
                 continue;
             }
             int transfer = transferSource(this, toTile, ratePer);
-            if(transfer > 0){
+            if (transfer > 0) {
                 createParticles(worldPosition, toPos);
             }
         }
-        for(BlockPos s : stale)
+        for (BlockPos s : stale)
             toList.remove(s);
     }
 
     @Override
     public void tick() {
-        if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
+        if (level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
             return;
 
         processFromList();
@@ -115,17 +115,17 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         toList = new ArrayList<>();
         int counter = 0;
 
-        while(NBTUtil.hasBlockPos(tag, "from_" + counter)){
+        while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
             BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
-            if(!this.fromList.contains(pos))
+            if (!this.fromList.contains(pos))
                 this.fromList.add(pos);
             counter++;
         }
 
         counter = 0;
-        while(NBTUtil.hasBlockPos(tag, "to_" + counter)){
+        while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
             BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
-            if(!this.toList.contains(pos))
+            if (!this.toList.contains(pos))
                 this.toList.add(NBTUtil.getBlockPos(tag, "to_" + counter));
             counter++;
         }
@@ -136,25 +136,25 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         int counter = 0;
-        for(BlockPos p : this.fromList){
-            NBTUtil.storeBlockPos(tag, "from_" +counter, p);
+        for (BlockPos p : this.fromList) {
+            NBTUtil.storeBlockPos(tag, "from_" + counter, p);
             counter++;
         }
         counter = 0;
-        for(BlockPos p : this.toList){
-            NBTUtil.storeBlockPos(tag, "to_" +counter, p);
-            counter ++;
+        for (BlockPos p : this.toList) {
+            NBTUtil.storeBlockPos(tag, "to_" + counter, p);
+            counter++;
         }
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(toList == null || toList.isEmpty()) {
+        if (toList == null || toList.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_to"));
         } else {
             tooltip.add(Component.translatable("ars_nouveau.relay.one_to", toList.size()));
         }
-        if(fromList == null || fromList.isEmpty()) {
+        if (fromList == null || fromList.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.relay.no_from"));
         } else {
             tooltip.add(Component.translatable("ars_nouveau.relay.one_from", fromList.size()));

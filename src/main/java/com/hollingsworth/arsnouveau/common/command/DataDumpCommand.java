@@ -35,8 +35,8 @@ public class DataDumpCommand {
         dispatcher.register(Commands.literal("ars-data")
                 .requires(sender -> sender.hasPermission(2)) // Op required
                 .then(Commands.literal("dump")
-                .then(Commands.literal("augment-compatibility-csv")
-                .executes(DataDumpCommand::dumpAugmentCompat)))
+                        .then(Commands.literal("augment-compatibility-csv")
+                                .executes(DataDumpCommand::dumpAugmentCompat)))
         );
     }
 

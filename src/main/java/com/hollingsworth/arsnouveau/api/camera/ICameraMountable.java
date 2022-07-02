@@ -16,10 +16,10 @@ import net.minecraftforge.network.PacketDistributor;
 
 public interface ICameraMountable {
 
-    default void mountCamera(Level level, BlockPos pos, Player player){
+    default void mountCamera(Level level, BlockPos pos, Player player) {
         if (!level.isClientSide) {
-            ServerLevel serverLevel = (ServerLevel)level;
-            ServerPlayer serverPlayer = (ServerPlayer)player;
+            ServerLevel serverLevel = (ServerLevel) level;
+            ServerPlayer serverPlayer = (ServerPlayer) player;
             SectionPos chunkPos = SectionPos.of(pos);
             int viewDistance = serverPlayer.server.getPlayerList().getViewDistance();
             Entity var10 = serverPlayer.getCamera();
@@ -32,8 +32,8 @@ public interface ICameraMountable {
 
             level.addFreshEntity(dummyEntity);
 
-            for(int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; ++x) {
-                for(int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; ++z) {
+            for (int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; ++x) {
+                for (int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; ++z) {
                     ForgeChunkManager.forceChunk(serverLevel, ArsNouveau.MODID, dummyEntity, x, z, true, false);
                 }
             }

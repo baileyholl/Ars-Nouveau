@@ -16,7 +16,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemTagProvider extends ItemTagsProvider {
-    public static TagKey<Item> SUMMON_BED_ITEMS =  ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+    public static TagKey<Item> SUMMON_BED_ITEMS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
     public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(new ResourceLocation("forge:gems/source"));
     public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(new ResourceLocation("forge:storage_blocks/source"));
     public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(new ResourceLocation("forge:logs/archwood"));
@@ -115,7 +115,7 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(ItemTags.WOODEN_BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
         this.tag(ItemTags.DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
         this.tag(ItemTags.WOODEN_DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
-        this.tag(ItemTags.SAPLINGS).add( BlockRegistry.BLAZING_SAPLING.asItem(),
+        this.tag(ItemTags.SAPLINGS).add(BlockRegistry.BLAZING_SAPLING.asItem(),
                 BlockRegistry.CASCADING_SAPLING.asItem(),
                 BlockRegistry.FLOURISHING_SAPLING.asItem(),
                 BlockRegistry.VEXING_SAPLING.asItem());
@@ -131,7 +131,7 @@ public class ItemTagProvider extends ItemTagsProvider {
                 ItemsRegistry.WILDEN_SPIKE.get(),
                 ItemsRegistry.WILDEN_WING.get());
 
-        this.tag(SUMMON_BED_ITEMS).add( BlockRegistry.RED_SBED.asItem(),
+        this.tag(SUMMON_BED_ITEMS).add(BlockRegistry.RED_SBED.asItem(),
                 BlockRegistry.GREEN_SBED.asItem(),
                 BlockRegistry.YELLOW_SBED.asItem(),
                 BlockRegistry.BLUE_SBED.asItem(),

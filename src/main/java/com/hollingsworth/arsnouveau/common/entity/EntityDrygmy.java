@@ -86,21 +86,21 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         addGoalsAfterConstructor();
     }
 
-    public EntityDrygmy(Level world, boolean tamed){
+    public EntityDrygmy(Level world, boolean tamed) {
         super(ModEntities.ENTITY_DRYGMY.get(), world);
         setTamed(tamed);
         addGoalsAfterConstructor();
     }
 
-    public @Nullable DrygmyTile getHome(){
-        if(homePos == null || !(level.getBlockEntity(homePos) instanceof DrygmyTile))
+    public @Nullable DrygmyTile getHome() {
+        if (homePos == null || !(level.getBlockEntity(homePos) instanceof DrygmyTile))
             return null;
         return (DrygmyTile) level.getBlockEntity(homePos);
     }
 
     @Override
     public void die(DamageSource source) {
-        if(!level.isClientSide && isTamed()){
+        if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
@@ -109,13 +109,13 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             this.entityData.set(COLOR, color.getName());
             player.getMainHandItem().shrink(1);
@@ -127,27 +127,27 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && channelCooldown > 0){
+        if (!level.isClientSide && channelCooldown > 0) {
             channelCooldown--;
         }
 
-        if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && homePos != null && !(level.getBlockEntity(homePos) instanceof DrygmyTile)) {
+        if (!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && homePos != null && !(level.getBlockEntity(homePos) instanceof DrygmyTile)) {
             this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
             return;
         }
 
-        if(level.isClientSide && isChanneling() && getChannelEntity() != -1){
+        if (level.isClientSide && isChanneling() && getChannelEntity() != -1) {
             Entity entity = level.getEntity(getChannelEntity());
-            if(entity == null || entity.isRemoved())
+            if (entity == null || entity.isRemoved())
                 return;
             Vec3 vec = entity.position;
             level.addParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
-                    (float) (vec.x) - Math.sin((ClientInfo.ticksInGame ) / 8D) ,
-                    (float) (vec.y) + Math.sin(ClientInfo.ticksInGame/5d)/8D + 0.5  ,
-                    (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D) ,
+                    (float) (vec.x) - Math.sin((ClientInfo.ticksInGame) / 8D),
+                    (float) (vec.y) + Math.sin(ClientInfo.ticksInGame / 5d) / 8D + 0.5,
+                    (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D),
                     0, 0, 0);
         }
-        if (!isTamed() && !this.entityData.get(BEING_TAMED) && level.getGameTime() % 40 == 0 ) {
+        if (!isTamed() && !this.entityData.get(BEING_TAMED) && level.getGameTime() % 40 == 0) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 pickUpItem(itementity);
             }
@@ -172,7 +172,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     }
 
     private PlayState animationPredicate(AnimationEvent event) {
-        if(isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())){
+        if (isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("channel"));
             return PlayState.CONTINUE;
         }
@@ -184,16 +184,16 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     }
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor(){
-        if(this.level.isClientSide())
+    protected void addGoalsAfterConstructor() {
+        if (this.level.isClientSide())
             return;
 
-        for(WrappedGoal goal : getGoals()){
+        for (WrappedGoal goal : getGoals()) {
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
     }
 
-    public List<WrappedGoal> getGoals(){
+    public List<WrappedGoal> getGoals() {
         return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
@@ -208,41 +208,43 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         this.entityData.define(COLOR, "brown");
     }
 
-    public boolean holdingEssence(){
+    public boolean holdingEssence() {
         return this.entityData.get(HOLDING_ESSENCE);
     }
 
-    public void setHoldingEssence(boolean holdingEssence){
+    public void setHoldingEssence(boolean holdingEssence) {
         this.entityData.set(HOLDING_ESSENCE, holdingEssence);
     }
 
-    public boolean isTamed(){
+    public boolean isTamed() {
         return this.entityData.get(TAMED);
     }
 
-    public void setTamed(boolean tamed){
+    public void setTamed(boolean tamed) {
         this.entityData.set(TAMED, tamed);
     }
 
-    public boolean isChanneling(){
+    public boolean isChanneling() {
         return this.entityData.get(CHANNELING);
     }
 
-    public void setChanneling(boolean channeling){
-        this.entityData.set(CHANNELING,channeling);
+    public void setChanneling(boolean channeling) {
+        this.entityData.set(CHANNELING, channeling);
     }
 
-    public int getChannelEntity(){
+    public int getChannelEntity() {
         return this.entityData.get(CHANNELING_ENTITY);
     }
 
-    public void setChannelingEntity(int entityID){
+    public void setChannelingEntity(int entityID) {
         this.entityData.set(CHANNELING_ENTITY, entityID);
     }
 
     @Override
-    protected void registerGoals() { }
-    public List<WrappedGoal> getTamedGoals(){
+    protected void registerGoals() {
+    }
+
+    public List<WrappedGoal> getTamedGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
         list.add(new WrappedGoal(2, new CollectEssenceGoal(this)));
@@ -250,7 +252,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return list;
     }
 
-    public List<WrappedGoal> getUntamedGoals(){
+    public List<WrappedGoal> getUntamedGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new FollowMobGoalBackoff(this, 1.0D, 3.0F, 7.0F, 0.5f)));
         list.add(new WrappedGoal(5, new FollowPlayerGoal(this, 1.0D, 3.0F, 7.0F)));
@@ -259,9 +261,10 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         list.add(new WrappedGoal(1, new UntamedFindItemGoal(this,
                 () -> !this.isTamed() && !this.entityData.get(BEING_TAMED)
-                ,(itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()))));
+                , (itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()))));
         return list;
     }
+
     @Override
     public void getTooltip(List<Component> tooltip) {
     }
@@ -274,7 +277,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
 
     @Override
     protected void pickUpItem(ItemEntity itemEntity) {
-        if(!isTamed() && !entityData.get(BEING_TAMED) && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()) {
+        if (!isTamed() && !entityData.get(BEING_TAMED) && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()) {
             entityData.set(BEING_TAMED, true);
             itemEntity.getItem().shrink(1);
             this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, this.getSoundSource(), 1.0F, 1.0F);
@@ -320,10 +323,10 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if(NBTUtil.hasBlockPos(tag, "home"))
+        if (NBTUtil.hasBlockPos(tag, "home"))
             this.homePos = NBTUtil.getBlockPos(tag, "home");
         setTamed(tag.getBoolean("tamed"));
-        if(!setBehaviors){
+        if (!setBehaviors) {
             tryResetGoals();
             setBehaviors = true;
         }
@@ -335,7 +338,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     }
 
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
-    public void tryResetGoals(){
+    public void tryResetGoals() {
         this.goalSelector.availableGoals = new LinkedHashSet<>();
         this.addGoalsAfterConstructor();
     }
@@ -343,8 +346,8 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
-        if(color.isEmpty())
+        if (color.isEmpty())
             color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
     }
 }

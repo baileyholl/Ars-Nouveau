@@ -10,6 +10,7 @@ import java.util.EnumSet;
 
 public class DiveAttackGoal extends Goal {
     WildenStalker stalker;
+
     public DiveAttackGoal(WildenStalker stalker) {
         this.stalker = stalker;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -32,7 +33,7 @@ public class DiveAttackGoal extends Goal {
             return false;
         } else if (!livingentity.isAlive()) {
             return false;
-        } else if (!(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player)livingentity).isCreative()) {
+        } else if (!(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player) livingentity).isCreative()) {
             return this.canUse();
         } else {
             return false;

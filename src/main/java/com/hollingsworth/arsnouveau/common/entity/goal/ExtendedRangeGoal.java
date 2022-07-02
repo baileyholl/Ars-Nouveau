@@ -9,25 +9,25 @@ public class ExtendedRangeGoal extends Goal {
     public double startDistance;
     public double extendedRange;
 
-    public ExtendedRangeGoal(int ticksPerDistance){
+    public ExtendedRangeGoal(int ticksPerDistance) {
         this.ticksPerDistance = ticksPerDistance;
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(startDistance == 0) {
+        if (startDistance == 0) {
             extendedRange = 0.0;
             return;
         }
         ticksRunning++;
-        if(ticksRunning > startDistance * ticksPerDistance){
+        if (ticksRunning > startDistance * ticksPerDistance) {
             extendedRange = 0.5 + ((ticksRunning - startDistance * ticksPerDistance) / ticksPerDistance) * 0.5;
 
         }
     }
 
-    public void reset(){
+    public void reset() {
         ticksRunning = 0;
         extendedRange = 0;
         startDistance = 0;

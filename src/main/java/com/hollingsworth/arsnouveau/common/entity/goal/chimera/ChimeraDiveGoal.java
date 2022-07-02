@@ -20,7 +20,8 @@ public class ChimeraDiveGoal extends Goal {
     BlockPos divePos;
     BlockPos startPos;
     BlockPos hoverPos;
-    public ChimeraDiveGoal(EntityChimera boss){
+
+    public ChimeraDiveGoal(EntityChimera boss) {
         this.boss = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -51,53 +52,53 @@ public class ChimeraDiveGoal extends Goal {
     public void tick() {
         super.tick();
         ticksFlying++;
-        if(ticksFlying < 60){
+        if (ticksFlying < 60) {
             boss.setFlying(true);
             boss.getNavigation().setCanFloat(true);
             boss.flyingNavigator.moveTo(hoverPos.getX(), hoverPos.getY(), hoverPos.getZ(), 1.0f);
             boss.setDeltaMovement(boss.getDeltaMovement().add(0, 0.005, 0));
-            if(boss.getTarget() != null) {
+            if (boss.getTarget() != null) {
                 EntityChimera.faceBlock(boss.getTarget().blockPosition(), boss);
             }
         }
 
-        if(ticksFlying > 60){
+        if (ticksFlying > 60) {
             isDiving = true;
             boss.diving = true;
 
-            if(divePos == null){
-                if(boss.getTarget() != null) {
+            if (divePos == null) {
+                if (boss.getTarget() != null) {
                     divePos = boss.getTarget().blockPosition().below();
                     // Seek the ground below
-                    for(int i = 1; i < 50; i++){
-                        if(boss.level.getBlockState(divePos).isAir()) {
+                    for (int i = 1; i < 50; i++) {
+                        if (boss.level.getBlockState(divePos).isAir()) {
                             divePos = divePos.below();
-                        }else{
+                        } else {
                             break;
                         }
                     }
                 }
                 Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.DIVE_BOMB.ordinal()));
             }
-            if(divePos != null) {
+            if (divePos != null) {
                 boss.flyingNavigator.moveTo(divePos.getX() + 0.5, divePos.getY(), divePos.getZ(), 4f);
                 boss.orbitOffset = new Vec3(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
             }
         }
-        if((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) ||  (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
+        if ((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) || (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
             makeExplosion();
             endGoal();
         }
-        if(isDiving && (boss.isInWall() || boss.horizontalCollision || boss.verticalCollision)){
+        if (isDiving && (boss.isInWall() || boss.horizontalCollision || boss.verticalCollision)) {
             makeExplosion();
             endGoal();
         }
-        if(isDiving && divePos == null && boss.getTarget() == null){
+        if (isDiving && divePos == null && boss.getTarget() == null) {
             endGoal();
         }
     }
 
-    public void endGoal(){
+    public void endGoal() {
         boss.getNavigation().setCanFloat(false);
         boss.getNavigation().stop();
         boss.setFlying(false);
@@ -107,13 +108,13 @@ public class ChimeraDiveGoal extends Goal {
         boss.getNavigation().setCanFloat(false);
         boss.diving = false;
         boss.setNoGravity(false);
-        boss.setDeltaMovement(0,0,0);
+        boss.setDeltaMovement(0, 0, 0);
         boss.getNavigation().moveTo(this.boss.getTarget() != null ? this.boss.getTarget() : this.boss, 0.0f);
         finished = true;
 
     }
 
-    public void makeExplosion(){
+    public void makeExplosion() {
         Explosion.BlockInteraction mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss) ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE;
         boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, mode);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));

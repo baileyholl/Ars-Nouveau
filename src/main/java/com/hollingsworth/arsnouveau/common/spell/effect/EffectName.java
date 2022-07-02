@@ -51,7 +51,7 @@ public class EffectName extends AbstractEffect {
         }
         rayTraceResult.getEntity().setCustomName((newName != null) ? newName : Component.empty());
         if (rayTraceResult.getEntity() instanceof Mob) {
-            ((Mob)rayTraceResult.getEntity()).setPersistenceRequired();
+            ((Mob) rayTraceResult.getEntity()).setPersistenceRequired();
         }
 
     }
@@ -59,6 +59,7 @@ public class EffectName extends AbstractEffect {
     public SpellTier getTier() {
         return SpellTier.TWO;
     }
+
     @Nonnull
     @Override
     public Set<SpellSchool> getSchools() {

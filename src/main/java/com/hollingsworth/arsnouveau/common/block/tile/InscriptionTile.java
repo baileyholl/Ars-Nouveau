@@ -12,6 +12,7 @@ public class InscriptionTile extends ModdedTile implements ITickable, IAnimatabl
     public InscriptionTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
+
     public InscriptionTile(BlockPos pos, BlockState state) {
         super(null, pos, state);
     }
@@ -27,6 +28,7 @@ public class InscriptionTile extends ModdedTile implements ITickable, IAnimatabl
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

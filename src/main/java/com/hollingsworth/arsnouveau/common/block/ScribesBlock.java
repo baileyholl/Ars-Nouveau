@@ -57,6 +57,7 @@ public class ScribesBlock extends TickableModBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
         MinecraftForge.EVENT_BUS.register(this);
     }
+
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     @Override
@@ -75,15 +76,15 @@ public class ScribesBlock extends TickableModBlock {
             return InteractionResult.SUCCESS;
         }
 
-        if(state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
+        if (state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
-            if(tile == null)
+            if (tile == null)
                 return InteractionResult.PASS;
         }
 
-        if(!player.isShiftKeyDown()) {
-            if(tile.consumeStack(player.getItemInHand(handIn))) {
+        if (!player.isShiftKeyDown()) {
+            if (tile.consumeStack(player.getItemInHand(handIn))) {
                 return InteractionResult.SUCCESS;
             }
 
@@ -92,7 +93,7 @@ public class ScribesBlock extends TickableModBlock {
                 world.addFreshEntity(item);
                 tile.stack = ItemStack.EMPTY;
             } else if (!player.getInventory().getSelected().isEmpty()) {
-                if(!tile.stack.isEmpty()){
+                if (!tile.stack.isEmpty()) {
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
@@ -104,14 +105,14 @@ public class ScribesBlock extends TickableModBlock {
             world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
 //            world.updateNeighborsAt(tile.getBlockPos(), state.getBlock());
         }
-        if(player.isShiftKeyDown()){
+        if (player.isShiftKeyDown()) {
             ItemStack stack = tile.stack;
 
-            if(stack == null || stack.isEmpty())
+            if (stack == null || stack.isEmpty())
                 return InteractionResult.SUCCESS;
 
-            if(stack.getItem() instanceof IScribeable){
-                ((IScribeable) stack.getItem()).onScribe(world,pos,player,handIn, stack);
+            if (stack.getItem() instanceof IScribeable) {
+                ((IScribeable) stack.getItem()).onScribe(world, pos, player, handIn, stack);
 
             }
         }
@@ -122,7 +123,7 @@ public class ScribesBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.stack != null){
+        if (worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.stack != null) {
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.stack));
             tile.refundConsumed();
         }
@@ -147,8 +148,8 @@ public class ScribesBlock extends TickableModBlock {
     }
 
     // If the user breaks the other side of the table, this side needs to drop its item
-    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2){
-        if(!world.isClientSide()) {
+    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+        if (!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof ScribesTile tile && ((ScribesTile) entity).stack != null) {
                 world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).stack));
@@ -165,6 +166,7 @@ public class ScribesBlock extends TickableModBlock {
             return super.updateShape(state, direction, state2, world, pos, pos2);
         }
     }
+
     private static Direction getNeighbourDirection(BedPart p_208070_0_, Direction p_208070_1_) {
         return p_208070_0_ == BedPart.FOOT ? p_208070_1_ : p_208070_1_.getOpposite();
     }
@@ -172,11 +174,11 @@ public class ScribesBlock extends TickableModBlock {
 
     @SubscribeEvent
     public void rightClick(PlayerInteractEvent.RightClickBlock event) {
-        if(!(event.getWorld().getBlockEntity(event.getPos()) instanceof ScribesTile))
+        if (!(event.getWorld().getBlockEntity(event.getPos()) instanceof ScribesTile))
             return;
         Level world = event.getWorld();
         BlockPos pos = event.getPos();
-        if(world.getBlockState(pos).getBlock() instanceof ScribesBlock){
+        if (world.getBlockState(pos).getBlock() instanceof ScribesBlock) {
             BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getPlayer(), event.getHand(), null);
             event.setCanceled(true);
         }
@@ -186,6 +188,7 @@ public class ScribesBlock extends TickableModBlock {
         Direction direction = p_226862_0_.getValue(FACING);
         return p_226862_0_.getValue(PART) == BedPart.HEAD ? direction.getOpposite() : direction;
     }
+
     public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
         Direction direction = getConnectedDirection(p_220053_1_).getOpposite();
         return switch (direction) {

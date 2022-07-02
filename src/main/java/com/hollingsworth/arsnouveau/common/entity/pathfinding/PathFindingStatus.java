@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-public enum PathFindingStatus
-{
+public enum PathFindingStatus {
     IN_PROGRESS_COMPUTING,
     IN_PROGRESS_FOLLOWING,
     CALCULATION_COMPLETE,

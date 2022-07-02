@@ -22,9 +22,10 @@ import javax.annotation.Nullable;
 public class WardBlock extends ModBlock {
 
     public WardBlock() {
-        super(defaultProperties().lightLevel((bs)->7), "warding_stone");
-       // this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        super(defaultProperties().lightLevel((bs) -> 7), "warding_stone");
+        // this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
+
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     @Override
@@ -39,7 +40,7 @@ public class WardBlock extends ModBlock {
     }
 
 
-//    @Deprecated
+    //    @Deprecated
 //    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 //        if(context.getEntity() == null)
 //            return state.getShape(worldIn, pos);
@@ -58,6 +59,7 @@ public class WardBlock extends ModBlock {
             world.setBlock(pos, state.setValue(BlockStateProperties.FACING, getFacingFromEntity(pos, entity)), 2);
         }
     }
+
     @Override
     public boolean collisionExtendsVertically(BlockState state, BlockGetter world, BlockPos pos, Entity collidingEntity) {
         return collidingEntity instanceof Mob;

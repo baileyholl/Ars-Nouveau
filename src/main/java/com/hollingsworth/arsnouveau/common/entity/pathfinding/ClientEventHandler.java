@@ -14,19 +14,16 @@ import static com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.Ab
  * Used to handle client events.
  */
 @OnlyIn(Dist.CLIENT)
-public class ClientEventHandler
-{
+public class ClientEventHandler {
     /**
      * Used to catch the renderWorldLastEvent in order to draw the debug nodes for pathfinding.
      *
      * @param event the catched event.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void renderWorldLastEvent(final RenderLevelLastEvent event)
-    {
+    public static void renderWorldLastEvent(final RenderLevelLastEvent event) {
         ClientInfo.partialTicks = event.getPartialTick();
-        if (DEBUG_DRAW)
-        {
+        if (DEBUG_DRAW) {
             Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
         }
         LightManager.updateAll(event.getLevelRenderer());

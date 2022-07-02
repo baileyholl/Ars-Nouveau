@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 public class CameraUtil {
     public static boolean isPlayerMountedOnCamera(LivingEntity entity) {
         if (entity instanceof Player player) {
-            return player.level.isClientSide ? ClientCameraUtil.isPlayerMountedOnCamera() : ((ServerPlayer)player).getCamera() instanceof ScryerCamera;
+            return player.level.isClientSide ? ClientCameraUtil.isPlayerMountedOnCamera() : ((ServerPlayer) player).getCamera() instanceof ScryerCamera;
         } else {
             return false;
         }

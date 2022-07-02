@@ -25,15 +25,15 @@ public class EntityFollowProjectile extends ColoredProjectile {
     public static final EntityDataAccessor<Integer> DESPAWN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
 
     private int age;
-//    int age;
+    //    int age;
     int maxAge = 500;
 
-    public EntityFollowProjectile(Level world){
+    public EntityFollowProjectile(Level world) {
         super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world, 0, 0, 0);
     }
 
 
-    public void setDespawnDistance(int distance){
+    public void setDespawnDistance(int distance) {
         getEntityData().set(DESPAWN, distance);
     }
 
@@ -42,7 +42,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
-        setPos(from.x + 0.5, from.y+ 0.5, from.z+ 0.5);
+        setPos(from.x + 0.5, from.y + 0.5, from.z + 0.5);
         this.entityData.set(RED, 255);
         this.entityData.set(GREEN, 25);
         this.entityData.set(BLUE, 180);
@@ -59,7 +59,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
 
     }
 
-    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to,ParticleColor.IntWrapper color) {
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to, ParticleColor.IntWrapper color) {
         this(worldIn, from, to, color.r, color.g, color.b);
     }
 
@@ -73,13 +73,13 @@ public class EntityFollowProjectile extends ColoredProjectile {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(to,new BlockPos(0,0,0));
-        this.entityData.define(from,new BlockPos(0,0,0));
+        this.entityData.define(to, new BlockPos(0, 0, 0));
+        this.entityData.define(from, new BlockPos(0, 0, 0));
         this.entityData.define(SPAWN_TOUCH, defaultsBurst());
         this.entityData.define(DESPAWN, 10);
     }
 
-    public boolean defaultsBurst(){
+    public boolean defaultsBurst() {
         return false;
     }
 
@@ -89,15 +89,15 @@ public class EntityFollowProjectile extends ColoredProjectile {
         super.tick();
 
         this.age++;
-        if(age > maxAge) {
+        if (age > maxAge) {
             this.remove(RemovalReason.DISCARDED);
             return;
         }
         Vec3 vec3d2 = this.getDeltaMovement();
         BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
-        if(BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)){
-            if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
-                ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
+        if (BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)) {
+            if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
+                ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
             }
             this.remove(RemovalReason.DISCARDED);
             return;
@@ -109,21 +109,21 @@ public class EntityFollowProjectile extends ColoredProjectile {
         double motionY = this.getDeltaMovement().y;
         double motionZ = this.getDeltaMovement().z;
 
-        if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0){
-            double targetX = dest.getX()+0.5;
-            double targetY = dest.getY()+0.5;
-            double targetZ = dest.getZ()+0.5;
-            Vec3 targetVector = new Vec3(targetX-posX,targetY-posY,targetZ-posZ);
+        if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0) {
+            double targetX = dest.getX() + 0.5;
+            double targetY = dest.getY() + 0.5;
+            double targetZ = dest.getZ() + 0.5;
+            Vec3 targetVector = new Vec3(targetX - posX, targetY - posY, targetZ - posZ);
             double length = targetVector.length();
-            targetVector = targetVector.scale(0.3/length);
-            double weight  = 0;
-            if (length <= 3){
-                weight = 0.9*((3.0-length)/3.0);
+            targetVector = targetVector.scale(0.3 / length);
+            double weight = 0;
+            if (length <= 3) {
+                weight = 0.9 * ((3.0 - length) / 3.0);
             }
 
-            motionX = (0.9-weight)*motionX+(0.1+weight)*targetVector.x;
-            motionY = (0.9-weight)*motionY+(0.1+weight)*targetVector.y;
-            motionZ = (0.9-weight)*motionZ+(0.1+weight)*targetVector.z;
+            motionX = (0.9 - weight) * motionX + (0.1 + weight) * targetVector.x;
+            motionY = (0.9 - weight) * motionY + (0.1 + weight) * targetVector.y;
+            motionZ = (0.9 - weight) * motionZ + (0.1 + weight) * targetVector.z;
         }
 
         posX += motionX;
@@ -133,15 +133,15 @@ public class EntityFollowProjectile extends ColoredProjectile {
 
         this.setDeltaMovement(motionX, motionY, motionZ);
 
-        if(level.isClientSide && this.age > 1) {
+        if (level.isClientSide && this.age > 1) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;
-            float dist = (float) (Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 8.0f);
-            for (double i = 0.0; i <= dist; i ++){
-                double coeff = (i/dist);
-                level.addParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE))),
-                         (getX() + deltaX * coeff),  (getY() + deltaY * coeff), (getZ() + deltaZ * coeff),
+            float dist = (float) (Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8.0f);
+            for (double i = 0.0; i <= dist; i++) {
+                double coeff = (i / dist);
+                level.addParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
+                        (getX() + deltaX * coeff), (getY() + deltaY * coeff), (getZ() + deltaZ * coeff),
                         0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
 
             }
@@ -151,7 +151,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
 
     @Override
     public void setRemoved(RemovalReason reason) {
-        if(reason == RemovalReason.UNLOADED_TO_CHUNK)
+        if (reason == RemovalReason.UNLOADED_TO_CHUNK)
             reason = RemovalReason.DISCARDED;
         super.setRemoved(reason);
     }
@@ -166,21 +166,23 @@ public class EntityFollowProjectile extends ColoredProjectile {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        if(from != null)
-            NBTUtil.storeBlockPos(compound, "from",  this.entityData.get(EntityFollowProjectile.from));
-        if(to != null)
-            NBTUtil.storeBlockPos(compound, "to",  this.entityData.get(EntityFollowProjectile.to));
+        if (from != null)
+            NBTUtil.storeBlockPos(compound, "from", this.entityData.get(EntityFollowProjectile.from));
+        if (to != null)
+            NBTUtil.storeBlockPos(compound, "to", this.entityData.get(EntityFollowProjectile.to));
     }
+
     @Override
     public void baseTick() {
         super.baseTick();
     }
+
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityFollowProjectile(PlayMessages.SpawnEntity packet, Level world){
+    public EntityFollowProjectile(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world);
     }
 
@@ -188,6 +190,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     public EntityType<?> getType() {
         return ModEntities.ENTITY_FOLLOW_PROJ.get();
     }
+
     @Override
     public boolean isNoGravity() {
         return true;

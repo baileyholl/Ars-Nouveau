@@ -36,9 +36,12 @@ public class DefaultTableProvider extends LootTableProvider {
     public DefaultTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
+
     private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
+
     public static class BlockLootTable extends BlockLoot {
         public List<Block> list = new ArrayList<>();
+
         @Override
         protected void addTables() {
             registerDropSelf(BlockRegistry.AB_ALTERNATE);
@@ -81,7 +84,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ARCHWOOD_BUTTON);
             registerDropSelf(BlockRegistry.ARCHWOOD_STAIRS);
             registerDropSelf(BlockRegistry.ARCHWOOD_SLABS);
-           // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
+            // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
             registerDropSelf(BlockRegistry.ARCHWOOD_FENCE_GATE);
             registerDropSelf(BlockRegistry.ARCHWOOD_TRAPDOOR);
             registerDropSelf(BlockRegistry.ARCHWOOD_PPlate);
@@ -152,34 +155,35 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SCRYERS_CRYSTAL);
             registerDropSelf(BlockRegistry.SCRYERS_OCULUS);
         }
+
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {
             list.add(block);
             this.add(block, LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(prop, isValue)))))));
         }
-        public void registerLeavesAndSticks(Block leaves, Block sapling){
+
+        public void registerLeavesAndSticks(Block leaves, Block sapling) {
             list.add(leaves);
             this.add(leaves, l_state -> createLeavesDrops(l_state, sapling, DEFAULT_SAPLING_DROP_RATES));
         }
 
-        public void registerDropDoor(Block block){
+        public void registerDropDoor(Block block) {
             list.add(block);
             this.add(block, BlockLoot::createDoorTable);
         }
 
-        public void registerDropSelf(Block block){
+        public void registerDropSelf(Block block) {
             list.add(block);
             dropSelf(block);
         }
 
-        public void registerDrop(Block input, ItemLike output){
+        public void registerDrop(Block input, ItemLike output) {
             list.add(input);
             dropOther(input, output);
         }
 
         @Override
-        protected Iterable<Block> getKnownBlocks()
-        {
+        protected Iterable<Block> getKnownBlocks() {
             return list;
         }
 
@@ -195,8 +199,7 @@ public class DefaultTableProvider extends LootTableProvider {
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker)
-    {
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker) {
         map.forEach((p_218436_2_, p_218436_3_) -> {
             LootTables.validate(validationtracker, p_218436_2_, p_218436_3_);
         });

@@ -38,7 +38,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     public static List<AbstractCastMethod> sympatheticMethods = new ArrayList<>();
 
-    static{
+    static {
         sympatheticMethods.add(MethodSelf.INSTANCE);
         sympatheticMethods.add(MethodOrbit.INSTANCE);
     }
@@ -49,14 +49,14 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
         return builder;
     }
 
-    public static boolean containsThis(Level world, Entity entity){
-        if(!world.isClientSide && entity instanceof Player) {
+    public static boolean containsThis(Level world, Entity entity) {
+        if (!world.isClientSide && entity instanceof Player) {
             IItemHandlerModifiable items = CuriosUtil.getAllWornItems((LivingEntity) entity).orElse(null);
-            if(items != null){
-                for(int i = 0; i < items.getSlots(); i++){
+            if (items != null) {
+                for (int i = 0; i < items.getSlots(); i++) {
                     Item item = items.getStackInSlot(i).getItem();
-                    if(item instanceof SummoningFocus){
-                       return true;
+                    if (item instanceof SummoningFocus) {
+                        return true;
                     }
 
                 }
@@ -66,8 +66,8 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
     }
 
     @SubscribeEvent
-    public static void summonedEvent(SummonEvent event){
-        if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))){
+    public static void summonedEvent(SummonEvent event) {
+        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))) {
             event.summon.setTicksLeft(event.summon.getTicksLeft() * 2);
             if (event.summon.getLivingEntity() != null) {
                 event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 500, 2));
@@ -75,12 +75,13 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
             }
         }
     }
+
     @SubscribeEvent
-    public static void castSpell(SpellCastEvent event){
-        if(!event.getWorld().isClientSide && event.getEntity() instanceof Player &&  SummoningFocus.containsThis(event.getWorld(), event.getEntityLiving())){
-            if(event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())){
-                for(LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)){
-                    if(event.getEntityLiving().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))){
+    public static void castSpell(SpellCastEvent event) {
+        if (!event.getWorld().isClientSide && event.getEntity() instanceof Player && SummoningFocus.containsThis(event.getWorld(), event.getEntityLiving())) {
+            if (event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())) {
+                for (LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)) {
+                    if (event.getEntityLiving().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))) {
                         EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.getWorld(), event.spell, i).withColors(event.context.getColors()));
                         spellResolver.onCast(ItemStack.EMPTY, i.level);
                     }
@@ -88,11 +89,12 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
             }
         }
     }
+
     @SubscribeEvent
-    public static void summonDeathEvent(SummonEvent.Death event){
-        if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))){
+    public static void summonDeathEvent(SummonEvent.Death event) {
+        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))) {
             DamageSource source = event.source;
-            if(source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner((ServerLevel) event.world)){
+            if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner((ServerLevel) event.world)) {
                 source.getEntity().hurt(DamageSource.thorns(source.getEntity()).bypassArmor(), 5.0f);
             }
         }

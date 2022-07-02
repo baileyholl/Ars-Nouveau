@@ -26,7 +26,7 @@ public class ModdedScreen extends Screen {
         int persistentScale = Math.min(0, maxScale);
         double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
 
-        if(persistentScale > 0 && newGuiScale != oldGuiScale) {
+        if (persistentScale > 0 && newGuiScale != oldGuiScale) {
             scaleFactor = (float) newGuiScale / (float) res.getGuiScale();
 
             res.setGuiScale(newGuiScale);
@@ -50,7 +50,7 @@ public class ModdedScreen extends Screen {
 
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY,partialTicks);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     public final void resetTooltip() {

@@ -19,7 +19,7 @@ public class PathCommand {
     }
 
     private static int setPathing(CommandSourceStack source, ImmutableList<? extends Entity> of) {
-        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) of.get(0)),
+        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) of.get(0)),
                 new PacketTogglePathing());
         return 1;
     }

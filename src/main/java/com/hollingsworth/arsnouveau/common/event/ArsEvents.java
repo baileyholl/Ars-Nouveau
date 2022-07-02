@@ -12,10 +12,11 @@ import net.minecraftforge.fml.common.Mod;
 public class ArsEvents {
 
     @SubscribeEvent
-    public static void maxCalc(MaxManaCalcEvent e){ }
+    public static void maxCalc(MaxManaCalcEvent e) {
+    }
 
     @SubscribeEvent
-    public static void regenCalc(ManaRegenCalcEvent e){
+    public static void regenCalc(ManaRegenCalcEvent e) {
         if (e.getEntityLiving() != null && e.getEntityLiving().hasEffect(ModPotions.HEX_EFFECT.get())) {
             e.setRegen(e.getRegen() / 2.0);
         }

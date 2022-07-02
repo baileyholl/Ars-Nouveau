@@ -15,7 +15,7 @@ public class FlyHelper extends MoveControl {
 
     public void tick() {
         WildenStalker mob = (WildenStalker) this.mob;
-        if(!mob.isFlying()){
+        if (!mob.isFlying()) {
             super.tick();
             return;
         }
@@ -25,17 +25,17 @@ public class FlyHelper extends MoveControl {
 
         }
 
-        float f = (float)(mob.orbitOffset.x - mob.getX());
-        float f1 = (float)(mob.orbitOffset.y - mob.getY());
-        float f2 = (float)(mob.orbitOffset.z - mob.getZ());
+        float f = (float) (mob.orbitOffset.x - mob.getX());
+        float f1 = (float) (mob.orbitOffset.y - mob.getY());
+        float f2 = (float) (mob.orbitOffset.z - mob.getZ());
         double d0 = Mth.sqrt(f * f + f2 * f2);
-        double d1 = 1.0D - (double)Mth.abs(f1 * 0.7F) / d0;
-        f = (float)((double)f * d1);
-        f2 = (float)((double)f2 * d1);
+        double d1 = 1.0D - (double) Mth.abs(f1 * 0.7F) / d0;
+        f = (float) ((double) f * d1);
+        f2 = (float) ((double) f2 * d1);
         d0 = Mth.sqrt(f * f + f2 * f2);
         double d2 = Mth.sqrt(f * f + f2 * f2 + f1 * f1);
         float f3 = mob.yRot;
-        float f4 = (float)Mth.atan2(f2, f);
+        float f4 = (float) Mth.atan2(f2, f);
         float f5 = Mth.wrapDegrees(mob.yRot + 90.0F);
         float f6 = Mth.wrapDegrees(f4 * (180F / (float) Math.PI));
         mob.yRot = Mth.approachDegrees(f5, f6, 4.0F) - 90.0F;

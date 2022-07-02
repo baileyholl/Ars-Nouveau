@@ -22,6 +22,7 @@ import java.util.UUID;
 public class SummonWolf extends Wolf implements ISummon {
     public int ticksLeft;
     public boolean isWildenSummon;
+
     public SummonWolf(EntityType<? extends Wolf> type, Level worldIn) {
         super(type, worldIn);
     }
@@ -29,15 +30,16 @@ public class SummonWolf extends Wolf implements ISummon {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ticksLeft--;
-            if(ticksLeft <= 0) {
+            if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }
     }
+
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonWolf.class, EntityDataSerializers.OPTIONAL_UUID);
 
     @Override

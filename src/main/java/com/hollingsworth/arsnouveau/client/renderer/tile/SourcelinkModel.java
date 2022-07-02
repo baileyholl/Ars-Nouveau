@@ -9,10 +9,10 @@ public class SourcelinkModel<T extends SourcelinkTile> extends AnimatedGeoModel<
 
     public ResourceLocation modelLocation;
     public ResourceLocation textLoc;
-    public ResourceLocation animationLoc = new ResourceLocation(ArsNouveau.MODID , "animations/volcanic_sourcelink_animations.json");
+    public ResourceLocation animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/volcanic_sourcelink_animations.json");
 
-    public SourcelinkModel(String name){
-        this.modelLocation = new ResourceLocation(ArsNouveau.MODID , "geo/" + name + "_sourcelink.geo.json");
+    public SourcelinkModel(String name) {
+        this.modelLocation = new ResourceLocation(ArsNouveau.MODID, "geo/" + name + "_sourcelink.geo.json");
         this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/" + name + "_sourcelink.png");
     }
 

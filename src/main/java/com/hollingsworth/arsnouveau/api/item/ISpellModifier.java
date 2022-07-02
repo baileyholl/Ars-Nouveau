@@ -13,7 +13,7 @@ public interface ISpellModifier {
     /**
      * Adjust spell stats with this interface as it pertains to a specific spellPart, usually an effect.
      */
-    default SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext){
+    default SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
         return builder;
     }
 

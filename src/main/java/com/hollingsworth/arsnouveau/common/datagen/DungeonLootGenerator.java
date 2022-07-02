@@ -21,25 +21,26 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
     public DungeonLootGenerator(DataGenerator gen, String modid) {
         super(gen, modid);
     }
+
     public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(new ResourceLocation("forge:loot_modifier_serializers"), ArsNouveau.MODID);
     public static final RegistryObject<DungeonLootEnhancerModifier.Serializer> DUNGEON_LOOT = GLM.register("dungeon_loot", DungeonLootGenerator.DungeonLootEnhancerModifier.Serializer::new);
 
     @Override
     protected void start() {
-        add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(  new LootItemCondition[] {
+        add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(new LootItemCondition[]{
                 getList(new String[]{
-                        "chests/simple_dungeon","chests/jungle_temple", "chests/abandoned_mineshaft","chests/bastion_treasure","chests/desert_pyramid","chests/end_city_treasure",
-                        "chests/ruined_portal","chests/pillager_outpost", "chests/nether_bridge","chests/stronghold_corridor",  "chests/stronghold_crossing", "chests/stronghold_library"
-                        ,"chests/woodland_mansion", "chests/underwater_ruin_big", "chests/underwater_ruin_small"
+                        "chests/simple_dungeon", "chests/jungle_temple", "chests/abandoned_mineshaft", "chests/bastion_treasure", "chests/desert_pyramid", "chests/end_city_treasure",
+                        "chests/ruined_portal", "chests/pillager_outpost", "chests/nether_bridge", "chests/stronghold_corridor", "chests/stronghold_crossing", "chests/stronghold_library"
+                        , "chests/woodland_mansion", "chests/underwater_ruin_big", "chests/underwater_ruin_small"
                 })
         }));
     }
 
-    public LootItemCondition getList(String[] chests){
+    public LootItemCondition getList(String[] chests) {
         LootItemCondition.Builder condition = null;
 
-        for(String s : chests){
-            if(condition == null) {
+        for (String s : chests) {
+            if (condition == null) {
                 condition = LootTableIdCondition.builder(new ResourceLocation(s));
                 continue;
             }
@@ -74,7 +75,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
             super(conditionsIn);
             this.commonChance = 0.30;
             this.uncommonChance = 0.2;
-            this.rareChance =  0.1;
+            this.rareChance = 0.1;
 
             this.commonRolls = 3;
             this.uncommonRolls = 2;

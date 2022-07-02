@@ -87,9 +87,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     private boolean setBehaviors;
 
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
-        if(event.isMoving()){
+        if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
-        }else{
+        } else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         }
         return PlayState.CONTINUE;
@@ -112,8 +112,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(player.getCommandSenderWorld().isClientSide)
-            return super.mobInteract(player,hand);
+        if (player.getCommandSenderWorld().isClientSide)
+            return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem()) {
             List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
@@ -122,22 +122,22 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
             }
         }
-        return super.mobInteract(player,hand);
+        return super.mobInteract(player, hand);
     }
 
-    public String getColor(){
+    public String getColor() {
         return this.entityData.get(COLOR);
     }
 
-    public static String getColorFromStack(ItemStack stack){
-        if(stack.is(Tags.Items.DYES)){
-            if(stack.is(Tags.Items.DYES_GREEN)){
+    public static String getColorFromStack(ItemStack stack) {
+        if (stack.is(Tags.Items.DYES)) {
+            if (stack.is(Tags.Items.DYES_GREEN)) {
                 return "summer";
-            }else if(stack.is(Tags.Items.DYES_ORANGE)){
+            } else if (stack.is(Tags.Items.DYES_ORANGE)) {
                 return "autumn";
-            }else if(stack.is(Tags.Items.DYES_YELLOW)){
+            } else if (stack.is(Tags.Items.DYES_YELLOW)) {
                 return "spring";
-            }else if(stack.is(Tags.Items.DYES_WHITE)){
+            } else if (stack.is(Tags.Items.DYES_WHITE)) {
                 return "winter";
             }
         }
@@ -146,41 +146,41 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
-        if(hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !this.entityData.get(TAMED))
+        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !this.entityData.get(TAMED))
             return InteractionResult.PASS;
-        
+
         ItemStack stack = player.getItemInHand(hand);
         String color = getColorFromStack(stack);
-        if(color != null && !getColor().equals(color)){
+        if (color != null && !getColor().equals(color)) {
             this.entityData.set(COLOR, color);
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }
 
-        if(stack.isEmpty()) {
+        if (stack.isEmpty()) {
             int moodScore = entityData.get(MOOD_SCORE);
-            if(moodScore < 250){
+            if (moodScore < 250) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.unhappy"));
-            }else if(moodScore <= 500){
+            } else if (moodScore <= 500) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.content"));
-            }else if(moodScore <= 750){
+            } else if (moodScore <= 750) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.happy"));
-            }else if(moodScore < 1000){
+            } else if (moodScore < 1000) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.very_happy"));
-            }else{
+            } else {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.extremely_happy"));
             }
             int numDrops = diversityScore / 2;
-            if(numDrops <= 5){
+            if (numDrops <= 5) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.okay_diversity"));
-            }else if(numDrops <= 10){
+            } else if (numDrops <= 10) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.diverse_enough"));
-            }else if(numDrops <= 20){
+            } else if (numDrops <= 20) {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.very_diverse"));
-            }else{
+            } else {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.extremely_diverse"));
             }
-            if(ignoreItems != null && !ignoreItems.isEmpty()) {
+            if (ignoreItems != null && !ignoreItems.isEmpty()) {
                 StringBuilder status = new StringBuilder();
                 status.append(Component.translatable("ars_nouveau.whirlisprig.ignore_list").getString());
                 for (ItemStack i : ignoreItems) {
@@ -191,23 +191,23 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
             return InteractionResult.SUCCESS;
         }
-        if(!(stack.getItem() instanceof BlockItem))
+        if (!(stack.getItem() instanceof BlockItem))
             return InteractionResult.PASS;
         BlockState state = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         int score = WhirlisprigTile.getScore(state);
-        if(score > 0 && getTile() != null && getTile().scoreMap != null && getTile().scoreMap.get(state) != null && getTile().scoreMap.get(state) >= 50){
+        if (score > 0 && getTile() != null && getTile().scoreMap != null && getTile().scoreMap.get(state) != null && getTile().scoreMap.get(state) >= 50) {
             PortUtil.sendMessage(player, Component.translatable("whirlisprig.toomuch"));
             return InteractionResult.SUCCESS;
         }
 
-        if(score == 0) {
+        if (score == 0) {
             PortUtil.sendMessage(player, Component.translatable("whirlisprig.notinterested"));
         }
-        if(score == 1){
+        if (score == 1) {
             PortUtil.sendMessage(player, Component.translatable("whirlisprig.likes"));
         }
 
-        if(score == 2){
+        if (score == 2) {
             PortUtil.sendMessage(player, Component.translatable("whirlisprig.excited"));
         }
         return InteractionResult.SUCCESS;
@@ -216,14 +216,14 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     public Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
         MinecraftForge.EVENT_BUS.register(this);
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
     public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
         super(ModEntities.WHIRLISPRIG_TYPE.get(), world);
         MinecraftForge.EVENT_BUS.register(this);
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         this.flowerPos = pos;
         addGoalsAfterConstructor();
@@ -232,75 +232,74 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void tick() {
         super.tick();
-        if(!this.level.isClientSide){
-            if(level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
+        if (!this.level.isClientSide) {
+            if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
                 this.remove(RemovalReason.DISCARDED);
                 return;
             }
 
             this.timeSinceBonemeal++;
             this.timeSinceGen++;
-            if(level.getGameTime() % 20 == 0 && flowerPos != null && isTamed() && getTile() != null){
+            if (level.getGameTime() % 20 == 0 && flowerPos != null && isTamed() && getTile() != null) {
                 this.entityData.set(MOOD_SCORE, getTile().moodScore);
                 this.diversityScore = getTile().diversityScore;
             }
         }
 
-        if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && flowerPos != null && !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
+        if (!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && flowerPos != null && !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
             this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
             return;
         }
 
-        if(this.droppingShards) {
+        if (this.droppingShards) {
             tamingTime++;
-            if(tamingTime % 20 == 0 && !level.isClientSide())
+            if (tamingTime % 20 == 0 && !level.isClientSide())
                 Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
 
-            if(tamingTime > 60 && !level.isClientSide) {
+            if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS, 1 + level.random.nextInt(1));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 this.remove(RemovalReason.DISCARDED);
-                level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f );
-            }
-            else if (tamingTime > 55 && level.isClientSide){
-                for(int i =0; i < 10; i++){
+                level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
+            } else if (tamingTime > 55 && level.isClientSide) {
+                for (int i = 0; i < 10; i++) {
                     double d0 = getX();
-                    double d1 = getY()+0.1;
+                    double d1 = getY() + 0.1;
                     double d2 = getZ();
-                    level.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (level.random.nextFloat() * 1 - 0.5)/3, (level.random.nextFloat() * 1 - 0.5)/3, (level.random.nextFloat() * 1 - 0.5)/3);
+                    level.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (level.random.nextFloat() * 1 - 0.5) / 3, (level.random.nextFloat() * 1 - 0.5) / 3, (level.random.nextFloat() * 1 - 0.5) / 3);
                 }
             }
         }
     }
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor(){
-        if(this.level.isClientSide())
+    protected void addGoalsAfterConstructor() {
+        if (this.level.isClientSide())
             return;
 
-        for(WrappedGoal goal : getGoals()){
+        for (WrappedGoal goal : getGoals()) {
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
     }
 
-    public List<WrappedGoal> getGoals(){
+    public List<WrappedGoal> getGoals() {
         return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
-    public boolean isTamed(){
+    public boolean isTamed() {
         return this.entityData.get(TAMED);
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
+        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
             return false;
         return super.hurt(source, amount);
     }
 
     @Override
     public void die(DamageSource source) {
-        if(!level.isClientSide && isTamed()){
+        if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
@@ -309,17 +308,17 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
 
-    public List<WrappedGoal> getTamedGoals(){
+    public List<WrappedGoal> getTamedGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
         list.add(new WrappedGoal(2, new BonemealGoal(this, () -> this.flowerPos, 10)));
-        list.add(new WrappedGoal(2, new InspectPlantGoal(this, () -> this.flowerPos,15)));
-        list.add(new WrappedGoal(1, new GoBackHomeGoal(this, () -> this.flowerPos,20)));
+        list.add(new WrappedGoal(2, new InspectPlantGoal(this, () -> this.flowerPos, 15)));
+        list.add(new WrappedGoal(1, new GoBackHomeGoal(this, () -> this.flowerPos, 20)));
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         return list;
     }
 
-    public List<WrappedGoal> getUntamedGoals(){
+    public List<WrappedGoal> getUntamedGoals() {
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new FollowMobGoalBackoff(this, 1.0D, 3.0F, 7.0F, 0.5f)));
         list.add(new WrappedGoal(5, new FollowPlayerGoal(this, 1.0D, 3.0F, 7.0F)));
@@ -330,8 +329,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         return list;
     }
 
-    public WhirlisprigTile getTile(){
-        if(this.flowerPos == null || !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)){
+    public WhirlisprigTile getTile() {
+        if (this.flowerPos == null || !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
             return null;
         }
         return (WhirlisprigTile) level.getBlockEntity(flowerPos);
@@ -339,7 +338,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @SubscribeEvent
     public void treeGrow(SaplingGrowTreeEvent event) {
-        if(!this.entityData.get(TAMED) && BlockUtil.distanceFrom(this.blockPosition(), event.getPos()) <= 10) {
+        if (!this.entityData.get(TAMED) && BlockUtil.distanceFrom(this.blockPosition(), event.getPos()) <= 10) {
             this.droppingShards = true;
         }
     }
@@ -349,17 +348,17 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(!this.entityData.get(TAMED))
+        if (!this.entityData.get(TAMED))
             return;
         int mood = this.entityData.get(MOOD_SCORE);
         String moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_unhappy").getString();
-        if(mood >= 1000)
+        if (mood >= 1000)
             moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_extremely_happy").getString();
-        else if(mood >= 750)
+        else if (mood >= 750)
             moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_very_happy").getString();
-        else if(mood >= 500)
+        else if (mood >= 500)
             moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_happy").getString();
-        else if(mood >= 250)
+        else if (mood >= 250)
             moodStr = Component.translatable("ars_nouveau.whirlisprig.tooltip_content").getString();
         tooltip.add(Component.literal(Component.translatable("ars_nouveau.whirlisprig.tooltip_mood").getString() + moodStr));
     }
@@ -387,12 +386,12 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if(tag.contains("summoner_x"))
+        if (tag.contains("summoner_x"))
             flowerPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
         timeSinceBonemeal = tag.getInt("bonemeal");
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
         this.entityData.set(Whirlisprig.MOOD_SCORE, tag.getInt("score"));
-        if(!setBehaviors){
+        if (!setBehaviors) {
             tryResetGoals();
             setBehaviors = true;
         }
@@ -400,8 +399,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         this.entityData.set(COLOR, tag.getString("color"));
         this.timeSinceGen = tag.getInt("genTime");
     }
+
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
-    public void tryResetGoals(){
+    public void tryResetGoals() {
         this.goalSelector.availableGoals = new LinkedHashSet<>();
         this.addGoalsAfterConstructor();
     }
@@ -409,7 +409,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if(flowerPos != null){
+        if (flowerPos != null) {
             tag.putInt("summoner_x", flowerPos.getX());
             tag.putInt("summoner_y", flowerPos.getY());
             tag.putInt("summoner_z", flowerPos.getZ());
@@ -433,13 +433,13 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.isRemoved())
+        if (this.isRemoved())
             return false;
 
-        if(!level.isClientSide && isTamed()){
+        if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
         return this.isTamed();
@@ -447,6 +447,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" +(getColor().isEmpty() ? "summer" : getColor()) + ".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
     }
 }

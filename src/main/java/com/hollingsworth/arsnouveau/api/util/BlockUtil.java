@@ -31,78 +31,79 @@ import static java.lang.Math.abs;
 
 public class BlockUtil {
 
-    public static BlockPos toPos(Vec3 vec){
+    public static BlockPos toPos(Vec3 vec) {
         return new BlockPos(vec.x, vec.y, vec.z);
     }
 
-    public static boolean isTreeBlock(BlockState block){
+    public static boolean isTreeBlock(BlockState block) {
         return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
 
-    public static boolean containsStateInRadius(Level world, BlockPos start, int radius, Class clazz){
-        for(double x = start.getX() - radius; x <= start.getX() + radius; x++){
-            for(double y = start.getY() - radius; y <= start.getY() + radius; y++){
-                for(double z = start.getZ() - radius; z <= start.getZ() + radius; z++){
-                    BlockPos pos = new BlockPos( x, y, z);
-                    if(!pos.equals(start) && world.getBlockState(pos).getBlock().getClass().equals(clazz)) {
+    public static boolean containsStateInRadius(Level world, BlockPos start, int radius, Class clazz) {
+        for (double x = start.getX() - radius; x <= start.getX() + radius; x++) {
+            for (double y = start.getY() - radius; y <= start.getY() + radius; y++) {
+                for (double z = start.getZ() - radius; z <= start.getZ() + radius; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    if (!pos.equals(start) && world.getBlockState(pos).getBlock().getClass().equals(clazz)) {
                         return true;
                     }
                 }
             }
         }
         return false;
-    } 
+    }
 
-    public static double distanceFrom(BlockPos start, BlockPos end){
-        if(start == null || end == null)
+    public static double distanceFrom(BlockPos start, BlockPos end) {
+        if (start == null || end == null)
             return 0;
         return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2) + Math.pow(start.getZ() - end.getZ(), 2));
     }
 
-    public static double distanceFrom(Vec3 start, BlockPos end){
-        if(start == null || end == null)
+    public static double distanceFrom(Vec3 start, BlockPos end) {
+        if (start == null || end == null)
             return 0;
         return Math.sqrt(Math.pow(start.x - end.getX(), 2) + Math.pow(start.y - end.getY(), 2) + Math.pow(start.z - end.getZ(), 2));
     }
 
-    public static double distanceFrom(Vec3 start, Vec3 end){
+    public static double distanceFrom(Vec3 start, Vec3 end) {
         return Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2) + Math.pow(start.z - end.z, 2));
     }
-    public static boolean destroyBlockSafely(Level world, BlockPos pos, boolean dropBlock, LivingEntity caster){
-        if(!(world instanceof ServerLevel))
+
+    public static boolean destroyBlockSafely(Level world, BlockPos pos, boolean dropBlock, LivingEntity caster) {
+        if (!(world instanceof ServerLevel))
             return false;
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
+        if (MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
 
     }
 
-    public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos){
+    public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos) {
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity));
+        return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity));
     }
 
-    public static void safelyUpdateState(Level world, BlockPos pos, BlockState state){
-        if(!world.isOutsideBuildHeight(pos))
+    public static void safelyUpdateState(Level world, BlockPos pos, BlockState state) {
+        if (!world.isOutsideBuildHeight(pos))
             world.sendBlockUpdated(pos, state, state, 3);
     }
 
-    public static void safelyUpdateState(Level world, BlockPos pos){
+    public static void safelyUpdateState(Level world, BlockPos pos) {
         safelyUpdateState(world, pos, world.getBlockState(pos));
     }
 
-    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock){
+    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock) {
         return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
-    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock, @Nullable LivingEntity caster){
-        if(!(world instanceof ServerLevel))
+    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock, @Nullable LivingEntity caster) {
+        if (!(world instanceof ServerLevel))
             return false;
 
         Player playerEntity = caster instanceof Player ? (Player) caster : ANFakePlayer.getPlayer((ServerLevel) world);
-        if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
+        if (MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), playerEntity)))
             return false;
 
         return destroyBlockWithoutSound(world, pos, dropBlock);
@@ -112,7 +113,7 @@ public class BlockUtil {
         return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
-    private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn){
+    private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn) {
         BlockState blockstate = world.getBlockState(pos);
         if (blockstate.isAir()) {
             return false;
@@ -127,41 +128,40 @@ public class BlockUtil {
         }
     }
 
-    public static List<IItemHandler> getAdjacentInventories(Level world, BlockPos pos){
-        if(world == null || pos == null)return new ArrayList<>();
+    public static List<IItemHandler> getAdjacentInventories(Level world, BlockPos pos) {
+        if (world == null || pos == null) return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
-        for(Direction d : Direction.values()){
+        for (Direction d : Direction.values()) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(d));
-            if(tileEntity == null)
+            if (tileEntity == null)
                 continue;
 
-            if(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
+            if (tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
                 iInventories.add(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null));
         }
 
         return iInventories;
     }
 
-    public static ItemStack insertItemAdjacent(Level world, BlockPos pos, ItemStack stack){
-        for(IItemHandler i : BlockUtil.getAdjacentInventories(world, pos)){
-            if(stack == ItemStack.EMPTY || stack == null)
+    public static ItemStack insertItemAdjacent(Level world, BlockPos pos, ItemStack stack) {
+        for (IItemHandler i : BlockUtil.getAdjacentInventories(world, pos)) {
+            if (stack == ItemStack.EMPTY || stack == null)
                 break;
             stack = ItemHandlerHelper.insertItemStacked(i, stack, false);
         }
         return stack;
     }
 
-    public static ItemStack getItemAdjacent(Level world, BlockPos pos, Predicate<ItemStack> matchPredicate){
+    public static ItemStack getItemAdjacent(Level world, BlockPos pos, Predicate<ItemStack> matchPredicate) {
         ItemStack stack = ItemStack.EMPTY;
-        for(IItemHandler inv : BlockUtil.getAdjacentInventories(world, pos)){
-            for(int i = 0; i < inv.getSlots(); ++i) {
-                if(matchPredicate.test(inv.getStackInSlot(i)))
+        for (IItemHandler inv : BlockUtil.getAdjacentInventories(world, pos)) {
+            for (int i = 0; i < inv.getSlots(); ++i) {
+                if (matchPredicate.test(inv.getStackInSlot(i)))
                     return inv.getStackInSlot(i);
             }
         }
         return stack;
     }
-
 
 
     public static List<BlockPos> getLine(int x0, int y0, int x1, int y1, float wd) {
@@ -195,6 +195,7 @@ public class BlockUtil {
         }
         return vects;
     }
+
     /**
      * Find the closest block near the points.
      *
@@ -207,26 +208,19 @@ public class BlockUtil {
      * @return the coordinates of the found block.
      */
     @Nullable
-    public static BlockPos scanForBlockNearPoint(final Level world, final BlockPos point, final int radiusX, final int radiusY, final int radiusZ, final int height)
-    {
+    public static BlockPos scanForBlockNearPoint(final Level world, final BlockPos point, final int radiusX, final int radiusY, final int radiusZ, final int height) {
         @Nullable BlockPos closestCoords = null;
         double minDistance = Double.MAX_VALUE;
 
-        for (int j = point.getY(); j <= point.getY() + radiusY; j++)
-        {
-            for (int i = point.getX() - radiusX; i <= point.getX() + radiusX; i++)
-            {
-                for (int k = point.getZ() - radiusZ; k <= point.getZ() + radiusZ; k++)
-                {
-                    if (wontSuffocate(world, i, j, k, height))
-                    {
+        for (int j = point.getY(); j <= point.getY() + radiusY; j++) {
+            for (int i = point.getX() - radiusX; i <= point.getX() + radiusX; i++) {
+                for (int k = point.getZ() - radiusZ; k <= point.getZ() + radiusZ; k++) {
+                    if (wontSuffocate(world, i, j, k, height)) {
                         BlockPos tempCoords = new BlockPos(i, j, k);
 
-                        if (world.getBlockState(tempCoords.below()).getMaterial().isSolid() || world.getBlockState(tempCoords.below(2)).getMaterial().isSolid())
-                        {
+                        if (world.getBlockState(tempCoords.below()).getMaterial().isSolid() || world.getBlockState(tempCoords.below(2)).getMaterial().isSolid()) {
                             final double distance = getDistanceSquared(tempCoords, point);
-                            if (closestCoords == null || distance < minDistance)
-                            {
+                            if (closestCoords == null || distance < minDistance) {
                                 closestCoords = tempCoords;
                                 minDistance = distance;
                             }
@@ -237,6 +231,7 @@ public class BlockUtil {
         }
         return closestCoords;
     }
+
     /**
      * Checks if the blocks above that point are all non-motion blocking
      *
@@ -248,11 +243,9 @@ public class BlockUtil {
      * @return true if no blocks block motion
      */
     private static boolean wontSuffocate(Level world, final int x, final int y, final int z, final int height) {
-        for (int dy = 0; dy < height; dy++)
-        {
+        for (int dy = 0; dy < height; dy++) {
             final BlockState state = world.getBlockState(new BlockPos(x, y + dy, z));
-            if (state.getMaterial().blocksMotion())
-            {
+            if (state.getMaterial().blocksMotion()) {
                 return false;
             }
         }
@@ -267,21 +260,20 @@ public class BlockUtil {
      * @param block2 position two.
      * @return squared distance.
      */
-    public static long getDistanceSquared(BlockPos block1, BlockPos block2)
-    {
+    public static long getDistanceSquared(BlockPos block1, BlockPos block2) {
         final long xDiff = (long) block1.getX() - block2.getX();
         final long yDiff = (long) block1.getY() - block2.getY();
         final long zDiff = (long) block1.getZ() - block2.getZ();
 
         final long result = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
-        if (result < 0)
-        {
+        if (result < 0) {
             throw new IllegalStateException("max-sqrt is to high! Failure to catch overflow with "
                     + xDiff + " | " + yDiff + " | " + zDiff);
         }
         return result;
     }
 
-    private BlockUtil(){}
+    private BlockUtil() {
+    }
 
 }

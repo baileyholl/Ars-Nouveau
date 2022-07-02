@@ -22,9 +22,13 @@ public class Networking {
     public static SimpleChannel INSTANCE;
 
     private static int ID = 0;
-    public static int nextID(){return ID++;}
-    public static void registerMessages(){
-        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ArsNouveau.MODID, "network"), () -> "1.0", s->true, s->true);
+
+    public static int nextID() {
+        return ID++;
+    }
+
+    public static void registerMessages() {
+        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ArsNouveau.MODID, "network"), () -> "1.0", s -> true, s -> true);
 
         INSTANCE.registerMessage(nextID(),
                 PacketOpenSpellBook.class,
@@ -189,7 +193,7 @@ public class Networking {
 
     }
 
-    public static void sendToNearby(Level world, BlockPos pos, Object toSend){
+    public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
         if (world instanceof ServerLevel ws) {
             ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
                     .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)

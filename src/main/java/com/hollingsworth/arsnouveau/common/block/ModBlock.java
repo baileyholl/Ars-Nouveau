@@ -14,7 +14,7 @@ public class ModBlock extends Block {
         super(properties);
     }
 
-    public ModBlock(Properties properties){
+    public ModBlock(Properties properties) {
         super(properties);
     }
 
@@ -22,7 +22,7 @@ public class ModBlock extends Block {
         super(defaultProperties());
     }
 
-    public static Block.Properties defaultProperties(){
+    public static Block.Properties defaultProperties() {
         return Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 6.0f);
     }
 

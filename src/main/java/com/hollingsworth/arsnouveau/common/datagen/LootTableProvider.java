@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-public class LootTableProvider extends BaseLootTableProvider{
+public class LootTableProvider extends BaseLootTableProvider {
     public LootTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
@@ -36,7 +36,7 @@ public class LootTableProvider extends BaseLootTableProvider{
                         .apply(SetContainerContents.setContents(BlockRegistry.POTION_JAR_TYPE)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
-        blockTables.put(BlockRegistry.POTION_JAR,LootTable.lootTable().withPool(potionJarBuilder));
+        blockTables.put(BlockRegistry.POTION_JAR, LootTable.lootTable().withPool(potionJarBuilder));
 
         putEntityTable(ModEntities.WILDEN_STALKER.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))

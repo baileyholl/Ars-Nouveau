@@ -24,45 +24,46 @@ import net.minecraft.world.phys.Vec2;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class WarpScroll extends ModItem{
+public class WarpScroll extends ModItem {
     public WarpScroll() {
         super(ItemsRegistry.defaultItemProperties());
     }
 
     @Override
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-        if(entity.getCommandSenderWorld().isClientSide)
+        if (entity.getCommandSenderWorld().isClientSide)
             return false;
 
         String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
         WarpScrollData data = new WarpScrollData(stack);
-        if(data.isValid()
+        if (data.isValid()
                 && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
                 && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                 && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
                 || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName))
-                && SourceUtil.takeSourceNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
+                && SourceUtil.takeSourceNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
-            world.sendParticles(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1.0,  pos.getZ(),
-                    10,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+            world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
+                    10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
             stack.shrink(1);
             return true;
         }
         return false;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         WarpScrollData data = new WarpScrollData(stack);
-        if(hand == InteractionHand.OFF_HAND)
+        if (hand == InteractionHand.OFF_HAND)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
-        if(!(world instanceof ServerLevel serverLevel))
+        if (!(world instanceof ServerLevel serverLevel))
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
-        if(data.isValid()){
+        if (data.isValid()) {
             if (!data.canTeleportWithDim(player.getCommandSenderWorld().dimension().location().toString())) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
                 return InteractionResultHolder.fail(stack);
@@ -72,29 +73,29 @@ public class WarpScroll extends ModItem{
             Vec2 rotation = data.getRotation();
             player.setXRot(rotation.x);
             player.setYRot(rotation.y);
-            serverLevel.sendParticles(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1.0,  pos.getZ(),
-                    10,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+            serverLevel.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
+                    10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
             stack.shrink(1);
             return InteractionResultHolder.pass(stack);
         }
-        if(player.isShiftKeyDown()){
+        if (player.isShiftKeyDown()) {
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL.get());
             WarpScrollData newData = new WarpScrollData(newWarpStack);
             newData.setData(player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector());
             boolean didAdd;
-            if(stack.getCount() == 1){
+            if (stack.getCount() == 1) {
                 stack = newWarpStack;
                 didAdd = true;
-            }else{
+            } else {
                 didAdd = player.addItem(newWarpStack);
-                if(didAdd)
+                if (didAdd)
                     stack.shrink(1);
             }
-            if(!didAdd){
+            if (!didAdd) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));
                 return InteractionResultHolder.fail(stack);
-            }else{
+            } else {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
             }
         }
@@ -104,7 +105,7 @@ public class WarpScroll extends ModItem{
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         WarpScrollData data = new WarpScrollData(stack);
-        if(!data.isValid()){
+        if (!data.isValid()) {
             tooltip.add(Component.translatable("ars_nouveau.warp_scroll.no_location"));
             return;
         }
@@ -122,19 +123,19 @@ public class WarpScroll extends ModItem{
             super(stack);
         }
 
-        public boolean isValid(){
+        public boolean isValid() {
             return pos != null && dimension != null && rotation != null;
         }
 
-        public boolean canTeleportWithDim(String dim){
+        public boolean canTeleportWithDim(String dim) {
             return dimension != null && dimension.equals(dim);
         }
 
-        public boolean canTeleportWithDim(Level level){
+        public boolean canTeleportWithDim(Level level) {
             return canTeleportWithDim(level.dimension().location().toString());
         }
 
-        public void setData(BlockPos pos, String dimension, Vec2 rotation){
+        public void setData(BlockPos pos, String dimension, Vec2 rotation) {
             this.pos = pos;
             this.dimension = dimension;
             this.rotation = rotation;
@@ -143,7 +144,7 @@ public class WarpScroll extends ModItem{
 
         @Override
         public void readFromNBT(CompoundTag tag1) {
-            if(tag1 == null || tag1.isEmpty())
+            if (tag1 == null || tag1.isEmpty())
                 return;
             pos = tag1.contains("x") ? new BlockPos(tag1.getInt("x"), tag1.getInt("y"), tag1.getInt("z")) : null;
             dimension = tag1.getString("dim");
@@ -152,15 +153,15 @@ public class WarpScroll extends ModItem{
 
         @Override
         public void writeToNBT(CompoundTag tag) {
-            if(pos != null){
+            if (pos != null) {
                 tag.putInt("x", pos.getX());
                 tag.putInt("y", pos.getY());
                 tag.putInt("z", pos.getZ());
             }
-            if(dimension != null){
+            if (dimension != null) {
                 tag.putString("dim", dimension);
             }
-            if(rotation != null){
+            if (rotation != null) {
                 tag.putFloat("xRot", rotation.x);
                 tag.putFloat("yRot", rotation.y);
             }

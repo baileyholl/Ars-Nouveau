@@ -40,7 +40,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         registry.addRecipeCategories(
-            new GlyphRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+                new GlyphRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new CrushRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new ImbuementRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new EnchantingApparatusRecipeCategory(registry.getJeiHelpers().getGuiHelper())
@@ -54,14 +54,14 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<CrushRecipe> crushRecipes = new ArrayList<>();
         List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get());
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for(Recipe<?> i : manager.getRecipes()){
-            if(i instanceof GlyphRecipe glyphRecipe){
+        for (Recipe<?> i : manager.getRecipes()) {
+            if (i instanceof GlyphRecipe glyphRecipe) {
                 recipeList.add(glyphRecipe);
             }
-            if(i instanceof EnchantingApparatusRecipe enchantingApparatusRecipe && !(i instanceof EnchantmentRecipe)  && !(i instanceof SpellWriteRecipe)){
+            if (i instanceof EnchantingApparatusRecipe enchantingApparatusRecipe && !(i instanceof EnchantmentRecipe) && !(i instanceof SpellWriteRecipe)) {
                 apparatus.add(enchantingApparatusRecipe);
             }
-            if(i instanceof CrushRecipe crushRecipe){
+            if (i instanceof CrushRecipe crushRecipe) {
                 crushRecipes.add(crushRecipe);
             }
         }

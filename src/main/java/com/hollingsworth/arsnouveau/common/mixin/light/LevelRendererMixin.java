@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(LevelRenderer.class)
-public abstract class LevelRendererMixin{
+public abstract class LevelRendererMixin {
 
     @Inject(
             method = "getLightColor(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)I",
@@ -22,7 +22,7 @@ public abstract class LevelRendererMixin{
     private static void onGetLightmapCoordinates(BlockAndTintGetter world, BlockState state, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
         if (!LightManager.shouldUpdateDynamicLight())
             return; // Do not touch to the value.
-        if(!world.getBlockState(pos).isSolidRender(world, pos))
+        if (!world.getBlockState(pos).isSolidRender(world, pos))
             cir.setReturnValue(LightManager.getLightmapWithDynamicLight(pos, cir.getReturnValue()));
     }
 }

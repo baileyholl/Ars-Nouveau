@@ -16,7 +16,7 @@ public class SoundButton extends Button {
     public SpellSound sound;
 
     public SoundButton(SoundScreen parent, int x, int y, SpellSound sound, Button.OnPress onPress) {
-        super(x, y,  16, 16, Component.nullToEmpty(""),onPress);
+        super(x, y, 16, 16, Component.nullToEmpty(""), onPress);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -28,8 +28,8 @@ public class SoundButton extends Button {
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         if (visible && sound != null) {
-            GuiSpellBook.drawFromTexture(sound.getTexturePath(), x, y, 0, 0, 16, 16,16,16 , ms);
-            if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
+            GuiSpellBook.drawFromTexture(sound.getTexturePath(), x, y, 0, 0, 16, 16, 16, 16, ms);
+            if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 List<Component> tip = new ArrayList<>();
                 tip.add(sound.getSoundName());
                 parent.tooltip = tip;

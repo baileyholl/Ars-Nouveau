@@ -67,7 +67,7 @@ public class EffectCut extends AbstractEffect {
             Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
             entity.setItemInHand(InteractionHand.MAIN_HAND, shears);
             // TODO Replace with AN shears
-            if(world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() ||
+            if (world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() ||
                     world.getBlockEntity(p) instanceof ArcanePedestalTile || world.getBlockEntity(p) instanceof ScribesTile))
                 continue;
             entity.setPos(p.getX(), p.getY(), p.getZ());

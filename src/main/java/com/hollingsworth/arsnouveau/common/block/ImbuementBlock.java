@@ -35,24 +35,24 @@ public class ImbuementBlock extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!(worldIn.getBlockEntity(pos) instanceof ImbuementTile tile))
+        if (!(worldIn.getBlockEntity(pos) instanceof ImbuementTile tile))
             return InteractionResult.SUCCESS;
-        if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
-        if(tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()){
+        if (tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()) {
 
             tile.stack = player.getItemInHand(handIn).copy();
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
-            if(recipe == null){
+            if (recipe == null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
                 tile.stack = ItemStack.EMPTY;
-            }else{
+            } else {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
                 tile.update();
             }
-        }else{
+        } else {
 
             ItemEntity item = new ItemEntity(worldIn, player.getX(), player.getY(), player.getZ(), tile.stack.copy());
             worldIn.addFreshEntity(item);
@@ -60,9 +60,9 @@ public class ImbuementBlock extends TickableModBlock {
             tile.stack = player.getInventory().getSelected().copy();
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
-            if(recipe != null){
+            if (recipe != null) {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
-            }else{
+            } else {
                 tile.stack = ItemStack.EMPTY;
             }
             tile.draining = false;
@@ -74,7 +74,7 @@ public class ImbuementBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(!(worldIn.getBlockEntity(pos) instanceof ImbuementTile))
+        if (!(worldIn.getBlockEntity(pos) instanceof ImbuementTile))
             return;
         ItemStack stack = ((ImbuementTile) worldIn.getBlockEntity(pos)).stack;
         worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));

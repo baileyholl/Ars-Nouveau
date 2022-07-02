@@ -27,7 +27,7 @@ public class Deferred {
     public static final DeferredRegister<Feature<?>> FEAT_REG = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
     public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFG_REG = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, MODID);
     public static final DeferredRegister<PlacedFeature> PLACED_FEAT_REG = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, MODID);
-    public static final RegistryObject<Feature<BlockStateConfiguration>> LIGHT_FEATURE = FEAT_REG.register( "lights", () -> new SingleBlockFeature(BlockStateConfiguration.CODEC) {
+    public static final RegistryObject<Feature<BlockStateConfiguration>> LIGHT_FEATURE = FEAT_REG.register("lights", () -> new SingleBlockFeature(BlockStateConfiguration.CODEC) {
         @Override
         public boolean place(FeaturePlaceContext<BlockStateConfiguration> pContext) {
             return false;
@@ -35,9 +35,9 @@ public class Deferred {
 
         @Override
         public void onStatePlace(WorldGenLevel seed, ChunkGenerator chunkGenerator, RandomSource rand, BlockPos pos, BlockStateConfiguration config) {
-            if(seed instanceof WorldGenRegion world){
+            if (seed instanceof WorldGenRegion world) {
                 RandomSource random = world.getRandom();
-                if(world.getBlockEntity(pos) instanceof LightTile tile){
+                if (world.getBlockEntity(pos) instanceof LightTile tile) {
                     tile.color = new ParticleColor(
                             Math.max(10, random.nextInt(255)),
                             Math.max(10, random.nextInt(255)),
@@ -51,5 +51,5 @@ public class Deferred {
             () -> new ConfiguredFeature<>(LIGHT_FEATURE.get(), new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.defaultBlockState())));
 
     public static final RegistryObject<PlacedFeature> PLACED_LIGHTS = PLACED_FEAT_REG.register("placed_lights", () ->
-            new PlacedFeature(Holder.direct(CONFIGURED_LIGHTS.get()), VegetationPlacements.worldSurfaceSquaredWithCount(1)) );
+            new PlacedFeature(Holder.direct(CONFIGURED_LIGHTS.get()), VegetationPlacements.worldSurfaceSquaredWithCount(1)));
 }

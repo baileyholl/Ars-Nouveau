@@ -18,14 +18,14 @@ public class IntangibleAirTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick() {
-        if(level.isClientSide)
+        if (level.isClientSide)
             return;
         duration++;
-        if(duration > maxLength){
+        if (duration > maxLength) {
             level.setBlockAndUpdate(worldPosition, Block.stateById(stateID));
 
         }
-        level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 2);
+        level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 2);
     }
 
     @Override

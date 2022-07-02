@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
-public class NoviceArmor extends MagicArmor{
+public class NoviceArmor extends MagicArmor {
 
     public NoviceArmor(EquipmentSlot slot) {
         super(Materials.novice, slot, ItemsRegistry.defaultItemProperties());

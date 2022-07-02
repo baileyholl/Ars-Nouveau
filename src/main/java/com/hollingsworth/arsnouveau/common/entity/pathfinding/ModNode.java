@@ -5,8 +5,7 @@ import net.minecraft.core.BlockPos;
 /**
  * Nodes used in pathfinding.
  */
-public class ModNode implements Comparable<ModNode>
-{
+public class ModNode implements Comparable<ModNode> {
     /**
      * Values used in the generation of the hash of the node.
      */
@@ -95,8 +94,7 @@ public class ModNode implements Comparable<ModNode>
      * @param pos       coordinates of node.
      * @param heuristic heuristic estimate.
      */
-    public ModNode(final BlockPos pos, final double heuristic)
-    {
+    public ModNode(final BlockPos pos, final double heuristic) {
         this(null, pos, 0, heuristic, heuristic);
     }
 
@@ -109,8 +107,7 @@ public class ModNode implements Comparable<ModNode>
      * @param heuristic heuristic estimate.
      * @param score     node total score.
      */
-    public ModNode(final ModNode parent, final BlockPos pos, final double cost, final double heuristic, final double score)
-    {
+    public ModNode(final ModNode parent, final BlockPos pos, final double cost, final double heuristic, final double score) {
         this.parent = parent;
         this.pos = pos;
         this.steps = parent == null ? 0 : (parent.steps + 1);
@@ -121,26 +118,21 @@ public class ModNode implements Comparable<ModNode>
     }
 
     @Override
-    public int compareTo(final ModNode o)
-    {
+    public int compareTo(final ModNode o) {
         //  Comparing doubles and returning value as int; can't simply cast the result
-        if (score < o.score)
-        {
+        if (score < o.score) {
             return -1;
         }
 
-        if (score > o.score)
-        {
+        if (score > o.score) {
             return 1;
         }
 
-        if (heuristic < o.heuristic)
-        {
+        if (heuristic < o.heuristic) {
             return -1;
         }
 
-        if (heuristic > o.heuristic)
-        {
+        if (heuristic > o.heuristic) {
             return 1;
         }
 
@@ -149,20 +141,17 @@ public class ModNode implements Comparable<ModNode>
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return hash;
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if (o != null && o.getClass() == this.getClass())
-        {
+    public boolean equals(final Object o) {
+        if (o != null && o.getClass() == this.getClass()) {
             final ModNode other = (ModNode) o;
             return pos.getX() == other.pos.getX()
-                     && pos.getY() == other.pos.getY()
-                     && pos.getZ() == other.pos.getZ();
+                    && pos.getY() == other.pos.getY()
+                    && pos.getZ() == other.pos.getZ();
         }
 
         return false;
@@ -173,8 +162,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return true if so.
      */
-    public boolean isClosed()
-    {
+    public boolean isClosed() {
         return closed;
     }
 
@@ -183,8 +171,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return true if so.
      */
-    public boolean isLadder()
-    {
+    public boolean isLadder() {
         return ladder;
     }
 
@@ -193,16 +180,14 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return true if so.
      */
-    public boolean isSwimming()
-    {
+    public boolean isSwimming() {
         return swimming;
     }
 
     /**
      * Sets the node as closed.
      */
-    public void setClosed()
-    {
+    public void setClosed() {
         closed = true;
     }
 
@@ -211,8 +196,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return the amount.
      */
-    public int getCounterVisited()
-    {
+    public int getCounterVisited() {
         return counterVisited;
     }
 
@@ -221,8 +205,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param counterVisited amount to set.
      */
-    public void setCounterVisited(final int counterVisited)
-    {
+    public void setCounterVisited(final int counterVisited) {
         this.counterVisited = counterVisited;
     }
 
@@ -231,8 +214,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return the score.
      */
-    public double getScore()
-    {
+    public double getScore() {
         return score;
     }
 
@@ -241,8 +223,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param score the score.
      */
-    public void setScore(final double score)
-    {
+    public void setScore(final double score) {
         this.score = score;
     }
 
@@ -251,8 +232,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return the cost.
      */
-    public double getCost()
-    {
+    public double getCost() {
         return cost;
     }
 
@@ -261,8 +241,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param cost the cost.
      */
-    public void setCost(final double cost)
-    {
+    public void setCost(final double cost) {
         this.cost = cost;
     }
 
@@ -271,8 +250,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return the steps.
      */
-    public int getSteps()
-    {
+    public int getSteps() {
         return steps;
     }
 
@@ -281,24 +259,21 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param steps the amount.
      */
-    public void setSteps(final int steps)
-    {
+    public void setSteps(final int steps) {
         this.steps = steps;
     }
 
     /**
      * Sets the node as a ladder node.
      */
-    public void setLadder()
-    {
+    public void setLadder() {
         ladder = true;
     }
 
     /**
      * Sets the node as a swimming node.
      */
-    public void setSwimming()
-    {
+    public void setSwimming() {
         swimming = true;
     }
 
@@ -307,8 +282,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return the heuristic.
      */
-    public double getHeuristic()
-    {
+    public double getHeuristic() {
         return heuristic;
     }
 
@@ -317,8 +291,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param heuristic the heuristic.
      */
-    public void setHeuristic(final double heuristic)
-    {
+    public void setHeuristic(final double heuristic) {
         this.heuristic = heuristic;
     }
 
@@ -327,8 +300,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return the amount.
      */
-    public int getCounterAdded()
-    {
+    public int getCounterAdded() {
         return counterAdded;
     }
 
@@ -337,8 +309,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param counterAdded amount to set.
      */
-    public void setCounterAdded(final int counterAdded)
-    {
+    public void setCounterAdded(final int counterAdded) {
         this.counterAdded = counterAdded;
     }
 
@@ -347,8 +318,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @param isOnRails if on rails.
      */
-    public void setOnRails(final boolean isOnRails)
-    {
+    public void setOnRails(final boolean isOnRails) {
         this.isOnRails = isOnRails;
     }
 
@@ -357,17 +327,16 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return true if so.
      */
-    public boolean isOnRails()
-    {
+    public boolean isOnRails() {
         return isOnRails;
     }
 
     /**
      * Marks the node as reached by the worker
+     *
      * @param reached if reached or reset.
      */
-    public void setReachedByWorker(final boolean reached)
-    {
+    public void setReachedByWorker(final boolean reached) {
         isReachedByWorker = reached;
     }
 
@@ -376,16 +345,14 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return reached
      */
-    public boolean isReachedByWorker()
-    {
+    public boolean isReachedByWorker() {
         return isReachedByWorker;
     }
 
     /**
      * Marks the node as reached by the worker
      */
-    public void setCornerNode(boolean isCornerNode)
-    {
+    public void setCornerNode(boolean isCornerNode) {
         this.isCornerNode = isCornerNode;
     }
 
@@ -394,8 +361,7 @@ public class ModNode implements Comparable<ModNode>
      *
      * @return reached
      */
-    public boolean isCornerNode()
-    {
+    public boolean isCornerNode() {
         return isCornerNode;
     }
 }

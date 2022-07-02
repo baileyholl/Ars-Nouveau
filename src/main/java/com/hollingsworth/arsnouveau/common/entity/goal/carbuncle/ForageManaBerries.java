@@ -47,7 +47,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if(entity.isPickupDisabled() || entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !entity.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
+        if (entity.isPickupDisabled() || entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !entity.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;
@@ -62,16 +62,16 @@ public class ForageManaBerries extends Goal {
     public void tick() {
         super.tick();
         timeSpent++;
-        if(this.pos == null || entity.isStuck) {
+        if (this.pos == null || entity.isStuck) {
             return;
         }
 
-        if(BlockUtil.distanceFrom(entity.position, pos) >= 2.0){
+        if (BlockUtil.distanceFrom(entity.position, pos) >= 2.0) {
             entity.getNavigation().tryMoveToBlockPos(pos, 1.2d);
-        }else if(world.getBlockState(pos).getBlock() instanceof SourceBerryBush){
+        } else if (world.getBlockState(pos).getBlock() instanceof SourceBerryBush) {
             int i = world.getBlockState(pos).getValue(AGE);
             boolean flag = i == 3;
-            entity.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
+            entity.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
             int j = 1 + world.random.nextInt(2);
             SourceBerryBush.popResource(world, pos, new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, j + (flag ? 1 : 0)));
             world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
@@ -82,17 +82,17 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if(pos == null || entity.isPickupDisabled())
+        if (pos == null || entity.isPickupDisabled())
             return false;
 
         return timeSpent <= 20 * 15 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof SourceBerryBush && world.getBlockState(pos).getValue(AGE) > 1;
     }
 
-    public BlockPos getNearbyManaBerry(){
+    public BlockPos getNearbyManaBerry() {
         List<BlockPos> posList = new ArrayList<>();
-        for(BlockPos blockpos : BlockPos.withinManhattan(entity.blockPosition(), 10, 3, 10)) {
+        for (BlockPos blockpos : BlockPos.withinManhattan(entity.blockPosition(), 10, 3, 10)) {
             if (world.getBlockState(blockpos).getBlock() instanceof SourceBerryBush && world.getBlockState(blockpos).getValue(AGE) > 1) {
-               posList.add(blockpos.immutable());
+                posList.add(blockpos.immutable());
             }
         }
         return posList.isEmpty() ? null : posList.get(world.random.nextInt(posList.size()));

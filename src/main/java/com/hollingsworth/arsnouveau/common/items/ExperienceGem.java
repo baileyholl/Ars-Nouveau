@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.Map;
 
-public abstract class ExperienceGem extends ModItem{
+public abstract class ExperienceGem extends ModItem {
 
     public ExperienceGem(Properties properties) {
         super(properties);
@@ -23,17 +23,17 @@ public abstract class ExperienceGem extends ModItem{
 
 
     public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
-        if(!world.isClientSide) {
-            if(playerEntity.isCrouching()){
+        if (!world.isClientSide) {
+            if (playerEntity.isCrouching()) {
                 int val = getValue() * playerEntity.getItemInHand(hand).getCount();
                 val = repairPlayerItems(playerEntity, val, val);
-                if(val > 0)
+                if (val > 0)
                     playerEntity.giveExperiencePoints(val);
-                playerEntity.getItemInHand(hand).shrink( playerEntity.getItemInHand(hand).getCount());
-            }else{
+                playerEntity.getItemInHand(hand).shrink(playerEntity.getItemInHand(hand).getCount());
+            } else {
                 int val = getValue();
                 val = repairPlayerItems(playerEntity, val, val);
-                if(val > 0)
+                if (val > 0)
                     playerEntity.giveExperiencePoints(val);
                 playerEntity.getItemInHand(hand).shrink(1);
             }

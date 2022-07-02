@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.camera;
 
-import com.hollingsworth.arsnouveau.common.camera.CameraController;
 import com.hollingsworth.arsnouveau.common.camera.ANIChunkStorageProvider;
+import com.hollingsworth.arsnouveau.common.camera.CameraController;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
@@ -94,8 +94,7 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
                 chunk = new LevelChunk(level, chunkPos);
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
                 cameraStorage.replace(index, chunk);
-            }
-            else
+            } else
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
 
             level.onChunkLoaded(chunkPos);

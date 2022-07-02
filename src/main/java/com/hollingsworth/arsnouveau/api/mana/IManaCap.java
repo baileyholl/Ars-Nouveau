@@ -17,15 +17,17 @@ public interface IManaCap extends INBTSerializable<CompoundTag> {
 
     double removeMana(final double manaToRemove);
 
-    default int getGlyphBonus(){
+    default int getGlyphBonus() {
         return 0;
     }
 
-    default int getBookTier(){
+    default int getBookTier() {
         return 0;
     }
 
-    default void setGlyphBonus(int bonus){}
+    default void setGlyphBonus(int bonus) {
+    }
 
-    default void setBookTier(int tier){}
+    default void setBookTier(int tier) {
+    }
 }

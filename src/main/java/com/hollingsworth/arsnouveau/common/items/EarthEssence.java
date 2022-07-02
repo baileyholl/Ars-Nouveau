@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EarthEssence extends ModItem{
+public class EarthEssence extends ModItem {
     public EarthEssence(Properties properties) {
         super(properties);
     }
@@ -26,11 +26,11 @@ public class EarthEssence extends ModItem{
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
 
-        if(pContext.getPlayer().level.isClientSide){
+        if (pContext.getPlayer().level.isClientSide) {
             return super.useOn(pContext);
         }
 
-        if(pContext.getLevel().getBlockState(pContext.getClickedPos()).is(BlockTags.DIRT)){
+        if (pContext.getLevel().getBlockState(pContext.getClickedPos()).is(BlockTags.DIRT)) {
             pContext.getLevel().setBlock(pContext.getClickedPos(), Blocks.GRASS_BLOCK.defaultBlockState(), 3);
             pContext.getItemInHand().shrink(1);
         }

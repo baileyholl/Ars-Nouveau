@@ -18,10 +18,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class WildenGuardianRenderer  extends GenericRenderer<WildenGuardian> {
+public class WildenGuardianRenderer extends GenericRenderer<WildenGuardian> {
     public WildenGuardianRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WildenGuardianModel());
     }
+
     private static final ResourceLocation GUARDIAN_BEAM_TEXTURE = new ResourceLocation("textures/entity/guardian_beam.png");
     private static final RenderType BEAM_RENDER_TYPE = RenderType.entityCutoutNoCull(GUARDIAN_BEAM_TEXTURE);
 
@@ -33,7 +34,7 @@ public class WildenGuardianRenderer  extends GenericRenderer<WildenGuardian> {
             if (livingEntityIn.hasTargetedEntity()) {
                 LivingEntity livingentity = livingEntityIn.getTargetedEntity();
                 if (livingentity != null) {
-                    Vec3 vector3d = this.getPosition(livingentity, (double)livingentity.getBbHeight() * 0.5D, 1.0F);
+                    Vec3 vector3d = this.getPosition(livingentity, (double) livingentity.getBbHeight() * 0.5D, 1.0F);
                     Vec3 vector3d1 = this.getPosition(livingEntityIn, livingEntityIn.getEyeHeight(), 1.0F);
                     return camera.isVisible(new AABB(vector3d1.x, vector3d1.y, vector3d1.z, vector3d.x, vector3d.y, vector3d.z));
                 }
@@ -54,39 +55,39 @@ public class WildenGuardianRenderer  extends GenericRenderer<WildenGuardian> {
             float f3 = entityIn.getEyeHeight() / 2;
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.0D, f3, 0.0D);
-            Vec3 vector3d = this.getPosition(livingentity, (double)livingentity.getBbHeight() * 0.5D, partialTicks);
+            Vec3 vector3d = this.getPosition(livingentity, (double) livingentity.getBbHeight() * 0.5D, partialTicks);
             Vec3 vector3d1 = this.getPosition(entityIn, f3, partialTicks);
             Vec3 vector3d2 = vector3d.subtract(vector3d1);
-            float f4 = (float)(vector3d2.length() + 1.0D);
+            float f4 = (float) (vector3d2.length() + 1.0D);
             vector3d2 = vector3d2.normalize();
-            float f5 = (float)Math.acos(vector3d2.y);
-            float f6 = (float)Math.atan2(vector3d2.z, vector3d2.x);
-            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees((((float)Math.PI / 2F) - f6) * (180F / (float)Math.PI)));
-            matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(f5 * (180F / (float)Math.PI)));
+            float f5 = (float) Math.acos(vector3d2.y);
+            float f6 = (float) Math.atan2(vector3d2.z, vector3d2.x);
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees((((float) Math.PI / 2F) - f6) * (180F / (float) Math.PI)));
+            matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(f5 * (180F / (float) Math.PI)));
             int i = 1;
             float f7 = f1 * 0.05F * -1.5F;
             float f8 = f * f;
-            int j = 64 + (int)(f8 * 191.0F);
-            int k = 32 + (int)(f8 * 191.0F);
-            int l = 128 - (int)(f8 * 64.0F);
+            int j = 64 + (int) (f8 * 191.0F);
+            int k = 32 + (int) (f8 * 191.0F);
+            int l = 128 - (int) (f8 * 64.0F);
             float f9 = 0.2F;
             float f10 = 0.282F;
             float f11 = Mth.cos(f7 + 2.3561945F) * 0.282F;
             float f12 = Mth.sin(f7 + 2.3561945F) * 0.282F;
-            float f13 = Mth.cos(f7 + ((float)Math.PI / 4F)) * 0.282F;
-            float f14 = Mth.sin(f7 + ((float)Math.PI / 4F)) * 0.282F;
+            float f13 = Mth.cos(f7 + ((float) Math.PI / 4F)) * 0.282F;
+            float f14 = Mth.sin(f7 + ((float) Math.PI / 4F)) * 0.282F;
             float f15 = Mth.cos(f7 + 3.926991F) * 0.282F;
             float f16 = Mth.sin(f7 + 3.926991F) * 0.282F;
             float f17 = Mth.cos(f7 + 5.4977875F) * 0.282F;
             float f18 = Mth.sin(f7 + 5.4977875F) * 0.282F;
-            float f19 = Mth.cos(f7 + (float)Math.PI) * 0.2F;
-            float f20 = Mth.sin(f7 + (float)Math.PI) * 0.2F;
+            float f19 = Mth.cos(f7 + (float) Math.PI) * 0.2F;
+            float f20 = Mth.sin(f7 + (float) Math.PI) * 0.2F;
             float f21 = Mth.cos(f7 + 0.0F) * 0.2F;
             float f22 = Mth.sin(f7 + 0.0F) * 0.2F;
-            float f23 = Mth.cos(f7 + ((float)Math.PI / 2F)) * 0.2F;
-            float f24 = Mth.sin(f7 + ((float)Math.PI / 2F)) * 0.2F;
-            float f25 = Mth.cos(f7 + ((float)Math.PI * 1.5F)) * 0.2F;
-            float f26 = Mth.sin(f7 + ((float)Math.PI * 1.5F)) * 0.2F;
+            float f23 = Mth.cos(f7 + ((float) Math.PI / 2F)) * 0.2F;
+            float f24 = Mth.sin(f7 + ((float) Math.PI / 2F)) * 0.2F;
+            float f25 = Mth.cos(f7 + ((float) Math.PI * 1.5F)) * 0.2F;
+            float f26 = Mth.sin(f7 + ((float) Math.PI * 1.5F)) * 0.2F;
             float f27 = 0.0F;
             float f28 = 0.4999F;
             float f29 = -1.0F + f2;
@@ -115,6 +116,7 @@ public class WildenGuardianRenderer  extends GenericRenderer<WildenGuardian> {
             matrixStackIn.popPose();
         }
     }
+
     private Vec3 getPosition(LivingEntity entityLivingBaseIn, double yOffset, float partialTicks) {
         double d0 = Mth.lerp(partialTicks, entityLivingBaseIn.xOld, entityLivingBaseIn.getX());
         double d1 = Mth.lerp(partialTicks, entityLivingBaseIn.yOld, entityLivingBaseIn.getY()) + yOffset;

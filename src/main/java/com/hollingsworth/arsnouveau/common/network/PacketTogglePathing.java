@@ -9,20 +9,20 @@ import java.util.function.Supplier;
 public class PacketTogglePathing {
 
 
-
     //Decoder
-    public PacketTogglePathing(FriendlyByteBuf buf){
+    public PacketTogglePathing(FriendlyByteBuf buf) {
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
 
     }
 
-    public PacketTogglePathing(){ }
+    public PacketTogglePathing() {
+    }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> AbstractPathJob.DEBUG_DRAW = !AbstractPathJob.DEBUG_DRAW);
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> AbstractPathJob.DEBUG_DRAW = !AbstractPathJob.DEBUG_DRAW);
         ctx.get().setPacketHandled(true);
     }
 }

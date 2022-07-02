@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 
-public class ReactiveUpgradePage extends AbstractPage{
+public class ReactiveUpgradePage extends AbstractPage {
 
-    public ReactiveUpgradePage(){
+    public ReactiveUpgradePage() {
 
     }
 

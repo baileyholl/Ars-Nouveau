@@ -18,7 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-public class TimerSpellTurret extends BasicSpellTurret{
+public class TimerSpellTurret extends BasicSpellTurret {
 
     public TimerSpellTurret(Properties properties) {
         super(properties);
@@ -37,7 +37,7 @@ public class TimerSpellTurret extends BasicSpellTurret{
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
-        if(handIn == InteractionHand.MAIN_HAND) {
+        if (handIn == InteractionHand.MAIN_HAND) {
             if ((stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return super.use(state, worldIn, pos, player, handIn, hit);
             if (worldIn.getBlockEntity(pos) instanceof TimerSpellTurretTile timerSpellTurretTile) {
@@ -51,8 +51,8 @@ public class TimerSpellTurret extends BasicSpellTurret{
 
     @Override
     public void attack(BlockState state, Level level, BlockPos pos, Player player) {
-        if(!level.isClientSide && level.getBlockEntity(pos) instanceof TimerSpellTurretTile tile){
-            if(!tile.isLocked){
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof TimerSpellTurretTile tile) {
+            if (!tile.isLocked) {
                 tile.addTime(-20 * (player.isShiftKeyDown() ? 10 : 1));
             }
         }
@@ -60,13 +60,13 @@ public class TimerSpellTurret extends BasicSpellTurret{
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile tile){
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile tile) {
             tile.isOff = world.hasNeighborSignal(pos);
             tile.update();
         }
     }
 
     @SubscribeEvent
-    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e){
+    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e) {
     }
 }

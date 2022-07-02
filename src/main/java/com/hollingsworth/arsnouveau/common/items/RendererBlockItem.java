@@ -7,7 +7,7 @@ import net.minecraftforge.client.IItemRenderProperties;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class RendererBlockItem extends AnimBlockItem{
+public abstract class RendererBlockItem extends AnimBlockItem {
 
 
     public RendererBlockItem(Block block, Properties props) {

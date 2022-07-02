@@ -8,9 +8,10 @@ public class ManaBoost extends Enchantment {
     protected ManaBoost() {
         super(Rarity.UNCOMMON, EnchantmentCategory.ARMOR, new EquipmentSlot[]{EquipmentSlot.CHEST, EquipmentSlot.FEET, EquipmentSlot.HEAD, EquipmentSlot.LEGS});
     }
+
     @Override
     public int getMinCost(int enchantmentLevel) {
-        return 1+11*(enchantmentLevel-1);
+        return 1 + 11 * (enchantmentLevel - 1);
     }
 
     @Override

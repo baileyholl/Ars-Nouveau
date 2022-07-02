@@ -48,16 +48,16 @@ import net.minecraftforge.fml.common.Mod;
 public class EventHandler {
 
 
-    @SubscribeEvent(priority= EventPriority.LOWEST)
-    public static void itemPickupEvent( EntityItemPickupEvent event) {
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void itemPickupEvent(EntityItemPickupEvent event) {
         Player player = event.getPlayer();
         ItemStack pickingUp = event.getItem().getItem();
         boolean voided = VoidJar.tryVoiding(player, pickingUp);
         if (voided) event.setResult(Event.Result.ALLOW);
     }
 
-    @SubscribeEvent(priority= EventPriority.LOWEST)
-    public static void itemPickupEvent( PlayerEvent.ItemPickupEvent event) {
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void itemPickupEvent(PlayerEvent.ItemPickupEvent event) {
         Player player = event.getPlayer();
         ItemStack pickingUp = event.getStack();
         VoidJar.tryVoiding(player, pickingUp);
@@ -65,43 +65,42 @@ public class EventHandler {
 
 
     @SubscribeEvent
-    public static void livingHurtEvent(LivingHurtEvent e){
-       if(!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof Player && e.getEntityLiving().isBlocking()){
-           if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD.asItem())){
-               e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
-               e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
-           }
-       }
+    public static void livingHurtEvent(LivingHurtEvent e) {
+        if (!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof Player && e.getEntityLiving().isBlocking()) {
+            if (e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD.asItem())) {
+                e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
+                e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
+            }
+        }
     }
 
     @SubscribeEvent
-    public static void livingAttackEvent(LivingAttackEvent e){
-        if(e.getSource() == DamageSource.HOT_FLOOR && e.getEntityLiving() != null && !e.getEntity().getCommandSenderWorld().isClientSide){
+    public static void livingAttackEvent(LivingAttackEvent e) {
+        if (e.getSource() == DamageSource.HOT_FLOOR && e.getEntityLiving() != null && !e.getEntity().getCommandSenderWorld().isClientSide) {
             Level world = e.getEntity().level;
-            if(world.getBlockState(e.getEntityLiving().blockPosition()).getBlock() instanceof LavaLily){
+            if (world.getBlockState(e.getEntityLiving().blockPosition()).getBlock() instanceof LavaLily) {
                 e.setCanceled(true);
             }
         }
     }
 
 
-
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
         if (e.getEntityLiving() == null || !e.getEntityLiving().hasEffect(ModPotions.SNARE_EFFECT.get()))
             return;
-        e.getEntityLiving().setDeltaMovement(0,0,0);
+        e.getEntityLiving().setDeltaMovement(0, 0, 0);
 
     }
 
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if(e.getEntityLiving().getCommandSenderWorld().isClientSide || !Config.SPAWN_BOOK.get())
+        if (e.getEntityLiving().getCommandSenderWorld().isClientSide || !Config.SPAWN_BOOK.get())
             return;
         CompoundTag tag = e.getPlayer().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
-        if(tag.getBoolean(book_tag))
+        if (tag.getBoolean(book_tag))
             return;
 
         LivingEntity entity = e.getEntityLiving();
@@ -112,15 +111,15 @@ public class EventHandler {
 
 
     @SubscribeEvent
-    public static void clientTickEnd(TickEvent.ClientTickEvent event){
-        if(event.phase == TickEvent.Phase.END){
+    public static void clientTickEnd(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
             ClientInfo.ticksInGame++;
         }
     }
 
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onGlideTick(TickEvent.PlayerTickEvent event){
+    public static void onGlideTick(TickEvent.PlayerTickEvent event) {
         if (ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT.get())) {
             CaelusHandler.setFlying(event.player);
         }
@@ -156,7 +155,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void entityHeal(LivingHealEvent e){
+    public static void entityHeal(LivingHealEvent e) {
         LivingEntity entity = e.getEntityLiving();
         if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get())) {
             e.setAmount(e.getAmount() / 2.0f);
@@ -164,7 +163,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void dispelEvent(DispelEvent event){
+    public static void dispelEvent(DispelEvent event) {
         if (event.rayTraceResult instanceof EntityHitResult && ((EntityHitResult) event.rayTraceResult).getEntity() instanceof LivingEntity entity) {
             if (entity instanceof Witch) {
                 if (entity.getHealth() <= entity.getMaxHealth() / 2) {
@@ -179,13 +178,14 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void commandRegister(RegisterCommandsEvent event){
+    public static void commandRegister(RegisterCommandsEvent event) {
         ResetCommand.register(event.getDispatcher());
         DataDumpCommand.register(event.getDispatcher());
         PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
     }
 
-    private EventHandler(){}
+    private EventHandler() {
+    }
 
 }

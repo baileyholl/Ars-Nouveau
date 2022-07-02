@@ -87,6 +87,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         RESTING,
         NONE
     }
+
     public StarbuncleGoalState goalState;
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
@@ -295,7 +296,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             setToPos(storedPos);
         }
-        if(level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
+        if (level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
             data.bedPos = storedPos.immutable();
         }
@@ -420,7 +421,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
-            if(!this.getCosmeticItem().isEmpty()){
+            if (!this.getCosmeticItem().isEmpty()) {
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getCosmeticItem().copy()));
             }
         }
@@ -529,18 +530,18 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         return this.getMainHandItem();
     }
 
-    public ItemStack getCosmeticItem(){
+    public ItemStack getCosmeticItem() {
         return this.entityData.get(HEAD_COSMETIC);
     }
 
-    public void setCosmeticItem(ItemStack stack){
-        if(!this.entityData.get(HEAD_COSMETIC).isEmpty())
+    public void setCosmeticItem(ItemStack stack) {
+        if (!this.entityData.get(HEAD_COSMETIC).isEmpty())
             this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(HEAD_COSMETIC)));
         this.entityData.set(HEAD_COSMETIC, stack);
         this.data.cosmetic = stack;
     }
 
-    public boolean isPickupDisabled(){
+    public boolean isPickupDisabled() {
         return this.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
@@ -554,7 +555,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             charm.setTag(data.toTag(new CompoundTag()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), charm.copy()));
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getHeldStack()));
-            if(!this.getCosmeticItem().isEmpty()){
+            if (!this.getCosmeticItem().isEmpty()) {
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getCosmeticItem().copy()));
             }
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
@@ -600,7 +601,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         tag.putBoolean("stuck", isStuck);
     }
 
-    public void restoreFromTag(){
+    public void restoreFromTag() {
         if (data.color != null)
             this.entityData.set(COLOR, data.color);
 
@@ -609,7 +610,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         if (data.pathBlock != null) {
             setPathBlockDesc(Component.translatable(data.pathBlock.getDescriptionId()).getString());
         }
-        if(data.cosmetic != null && !data.cosmetic.isEmpty())
+        if (data.cosmetic != null && !data.cosmetic.isEmpty())
             this.entityData.set(HEAD_COSMETIC, data.cosmetic);
         setCustomName(data.name);
     }
@@ -684,7 +685,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public ItemScroll.SortPref isValidStorePos(@Nullable BlockPos b, ItemStack stack) {
-        if(stack == null || stack.isEmpty() || b == null)
+        if (stack == null || stack.isEmpty() || b == null)
             return ItemScroll.SortPref.INVALID;
         return canDepositItem(level.getBlockEntity(b), stack);
     }
@@ -694,14 +695,14 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return null;
 
         for (BlockPos p : data.FROM_LIST) {
-            if(isPositionValidTake(p))
+            if (isPositionValidTake(p))
                 return p;
         }
         return null;
     }
 
     public boolean isPositionValidTake(BlockPos p) {
-        if(p == null || level.getBlockEntity(p) == null)
+        if (p == null || level.getBlockEntity(p) == null)
             return false;
         IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if (iItemHandler == null)
@@ -819,17 +820,21 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
-        @Nonnull public List<BlockPos> TO_LIST = new ArrayList<>();
-        @Nonnull public List<BlockPos> FROM_LIST = new ArrayList<>();
-        @Nonnull public List<ItemStack> allowedItems = new ArrayList<>();
-        @Nonnull public List<ItemStack> ignoreItems = new ArrayList<>();
+        @Nonnull
+        public List<BlockPos> TO_LIST = new ArrayList<>();
+        @Nonnull
+        public List<BlockPos> FROM_LIST = new ArrayList<>();
+        @Nonnull
+        public List<ItemStack> allowedItems = new ArrayList<>();
+        @Nonnull
+        public List<ItemStack> ignoreItems = new ArrayList<>();
         public Block pathBlock;
         public BlockPos bedPos;
         public boolean whitelist;
         public boolean blacklist;
 
 
-        public StarbuncleData(CompoundTag tag){
+        public StarbuncleData(CompoundTag tag) {
             super(tag);
 
             FROM_LIST = new ArrayList<>();
@@ -858,11 +863,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             allowedItems = NBTUtil.readItems(tag, "allowed_");
             ignoreItems = NBTUtil.readItems(tag, "ignored_");
             bedPos = NBTUtil.getBlockPos(tag, "bed_");
-            if(bedPos.equals(BlockPos.ZERO))
+            if (bedPos.equals(BlockPos.ZERO))
                 bedPos = null;
         }
 
-        public CompoundTag toTag(CompoundTag tag){
+        public CompoundTag toTag(CompoundTag tag) {
             super.toTag(tag);
             int counter = 0;
             for (BlockPos p : FROM_LIST) {
@@ -883,7 +888,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 NBTUtil.writeItems(tag, "ignored_", ignoreItems);
             if (pathBlock != null)
                 tag.putString("path", getRegistryName(pathBlock).toString());
-            if(bedPos != null)
+            if (bedPos != null)
                 NBTUtil.storeBlockPos(tag, "bed_", bedPos);
             return tag;
         }

@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class WildenBossRenderer extends GeoEntityRenderer<EntityChimera> {
     public WildenBossRenderer(EntityRendererProvider.Context renderManager) {
-      super(renderManager, new WildenBossModel());
+        super(renderManager, new WildenBossModel());
     }
 
     @Override

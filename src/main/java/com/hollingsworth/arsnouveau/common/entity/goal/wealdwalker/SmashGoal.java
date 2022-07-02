@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 public class SmashGoal extends AnimatedAttackGoal {
 
     WealdWalker walker;
+
     public SmashGoal(WealdWalker entity, boolean followUnseen, Supplier<Boolean> canAttack, int animationID, int animationLength, int attackRange) {
         super(entity, followUnseen, canAttack, animationID, animationLength, attackRange, 1.2f);
         this.walker = entity;
@@ -29,7 +30,7 @@ public class SmashGoal extends AnimatedAttackGoal {
     @Override
     protected void attack(LivingEntity target) {
         super.attack(target);
-        target.knockback(1.2F, Mth.sin(walker.yRot * ((float)Math.PI / 180F)), -Mth.cos(walker.yRot * ((float)Math.PI / 180F)));
+        target.knockback(1.2F, Mth.sin(walker.yRot * ((float) Math.PI / 180F)), -Mth.cos(walker.yRot * ((float) Math.PI / 180F)));
         walker.smashCooldown = 60;
     }
 
@@ -40,5 +41,6 @@ public class SmashGoal extends AnimatedAttackGoal {
     }
 
     @Override
-    public void look(LivingEntity entity) { }
+    public void look(LivingEntity entity) {
+    }
 }

@@ -70,17 +70,17 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
 
 
-    public static boolean isGlyphEnabled(ResourceLocation tag){
+    public static boolean isGlyphEnabled(ResourceLocation tag) {
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
-        if(spellPart == null){
+        if (spellPart == null) {
             throw new IllegalArgumentException("Spell Part with id " + tag + " does not exist in registry. Did you pass the right ID?");
         }
 
         return spellPart.ENABLED == null || spellPart.ENABLED.get();
     }
 
-    public static boolean isGlyphEnabled(AbstractSpellPart tag){
-       return isGlyphEnabled(tag.getRegistryName());
+    public static boolean isGlyphEnabled(AbstractSpellPart tag) {
+        return isGlyphEnabled(tag.getRegistryName());
     }
 
     static {
@@ -90,13 +90,13 @@ public class Config {
         CLIENT_BUILDER.comment("Lighting").push("lights");
         DYNAMIC_LIGHTS_ENABLED = CLIENT_BUILDER.comment("If dynamic lights are enabled").define("lightsEnabled", false);
         TOUCH_LIGHT_LUMINANCE = CLIENT_BUILDER.comment("How bright the touch light is").defineInRange("touchLightLuminance", 8, 0, 15);
-        TOUCH_LIGHT_DURATION = CLIENT_BUILDER.comment("How long the touch light lasts in ticks").defineInRange("touchLightDuration", 8, 0,40);
+        TOUCH_LIGHT_DURATION = CLIENT_BUILDER.comment("How long the touch light lasts in ticks").defineInRange("touchLightDuration", 8, 0, 40);
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
-        DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(),(o) -> true);
+        DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
-        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost",250,0,10000);
+        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
-                .defineInRange("whirlisprigProgress",250,0,10000);
+                .defineInRange("whirlisprigProgress", 250, 0, 10000);
         HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", true);
         STALKER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Stalker attack animals?").define("stalkerHuntsAnimals", false);
         GUARDIAN_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Defender attack animals?").define("defenderHuntsAnimals", false);
@@ -104,11 +104,11 @@ public class Config {
 
         SERVER_BUILDER.pop();
         SERVER_BUILDER.push(DRYGMY_CATEGORY);
-        DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much source drygmys consume per generation").defineInRange("drygmyManaCost",1000,0,10000);
-        DRYGMY_MAX_PROGRESS = SERVER_BUILDER.comment("How many channels must occur before a drygmy produces loot").defineInRange("drygmyMaxProgress",20,0,300);
-        DRYGMY_UNIQUE_BONUS = SERVER_BUILDER.comment("Bonus number of items a drygmy produces per unique mob").defineInRange("drygmyUniqueBonus",2,0,300);
-        DRYGMY_BASE_ITEM = SERVER_BUILDER.comment("Base number of items a drygmy produces per cycle before bonuses.").defineInRange("drygmyBaseItems",1,Integer.MIN_VALUE,Integer.MAX_VALUE);
-        DRYGMY_QUANTITY_CAP = SERVER_BUILDER.comment("Max Bonus number of items a drygmy produces from nearby entities. Each entity equals 1 item.").defineInRange("drygmyQuantityCap",5,0,300);
+        DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much source drygmys consume per generation").defineInRange("drygmyManaCost", 1000, 0, 10000);
+        DRYGMY_MAX_PROGRESS = SERVER_BUILDER.comment("How many channels must occur before a drygmy produces loot").defineInRange("drygmyMaxProgress", 20, 0, 300);
+        DRYGMY_UNIQUE_BONUS = SERVER_BUILDER.comment("Bonus number of items a drygmy produces per unique mob").defineInRange("drygmyUniqueBonus", 2, 0, 300);
+        DRYGMY_BASE_ITEM = SERVER_BUILDER.comment("Base number of items a drygmy produces per cycle before bonuses.").defineInRange("drygmyBaseItems", 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        DRYGMY_QUANTITY_CAP = SERVER_BUILDER.comment("Max Bonus number of items a drygmy produces from nearby entities. Each entity equals 1 item.").defineInRange("drygmyQuantityCap", 5, 0, 300);
 
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Mana").push("mana");
@@ -136,13 +136,15 @@ public class Config {
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
-    public static boolean isStarterEnabled(AbstractSpellPart e){
+    public static boolean isStarterEnabled(AbstractSpellPart e) {
         return e.STARTER_SPELL != null && e.STARTER_SPELL.get();
     }
 
     @SubscribeEvent
-    public static void onLoad(final ModConfigEvent.Loading configEvent) { }
+    public static void onLoad(final ModConfigEvent.Loading configEvent) {
+    }
 
     @SubscribeEvent
-    public static void onReload(final ModConfigEvent.Reloading configEvent) { }
+    public static void onReload(final ModConfigEvent.Reloading configEvent) {
+    }
 }

@@ -73,7 +73,7 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public void onProjectileHit(Level worldIn, BlockState state, BlockHitResult hit, Projectile projectile) {
-        if(worldIn.getBlockEntity(hit.getBlockPos()) instanceof PortalTile tile){
+        if (worldIn.getBlockEntity(hit.getBlockPos()) instanceof PortalTile tile) {
             tile.warp(projectile);
         }
     }
@@ -86,12 +86,11 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if(worldIn.getBlockEntity(pos) instanceof PortalTile tile && !(entityIn instanceof Player)){
+        if (worldIn.getBlockEntity(pos) instanceof PortalTile tile && !(entityIn instanceof Player)) {
             tile.warp(entityIn);
             entityIn.fallDistance = 0;
         }
     }
-
 
 
     public boolean trySpawnPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
@@ -104,9 +103,9 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public boolean trySpawnHoriztonalPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName){
+    public boolean trySpawnHoriztonalPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
         FlatPortalAreaHelper helper = new FlatPortalAreaHelper().init(worldIn, stackPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
-        if(helper.isValidFrame()){
+        if (helper.isValidFrame()) {
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
                 worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.X), 18);
                 if (worldIn.getBlockEntity(blockPos) instanceof PortalTile tile) {
@@ -136,6 +135,7 @@ public class PortalBlock extends TickableModBlock {
     }
 
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+
     /**
      * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
      * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
@@ -147,10 +147,10 @@ public class PortalBlock extends TickableModBlock {
         Direction.Axis direction$axis = facing.getAxis();
         Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
         boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
-        if(worldIn.getBlockEntity(currentPos) instanceof PortalTile portal && portal.isHorizontal){
+        if (worldIn.getBlockEntity(currentPos) instanceof PortalTile portal && portal.isHorizontal) {
             FlatPortalAreaHelper frameTester = new FlatPortalAreaHelper();
             frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
-            if(!frameTester.isValidFrame()){
+            if (!frameTester.isValidFrame()) {
                 return Blocks.AIR.defaultBlockState();
             }
             return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -191,6 +191,7 @@ public class PortalBlock extends TickableModBlock {
         private int width;
         private BlockPos warpPos;
         private int dimId;
+
         public Size(LevelAccessor worldIn, BlockPos pos, Direction.Axis axisIn) {
             this.world = worldIn;
             this.axis = axisIn;
@@ -203,7 +204,7 @@ public class PortalBlock extends TickableModBlock {
             }
 
             //TODO check this
-            for(BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
+            for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
             }
 
             int i = this.getDistanceUntilEdge(pos, this.leftDir) - 1;
@@ -224,7 +225,7 @@ public class PortalBlock extends TickableModBlock {
 
         protected int getDistanceUntilEdge(BlockPos pos, Direction directionIn) {
             int i;
-            for(i = 0; i < 22; ++i) {
+            for (i = 0; i < 22; ++i) {
                 BlockPos blockpos = pos.relative(directionIn, i);
                 if (!this.canReplace(this.world.getBlockState(blockpos)) || !isPortalFrame(this.world, blockpos.below())) {
                     break;
@@ -235,7 +236,7 @@ public class PortalBlock extends TickableModBlock {
             return isPortalFrame(this.world, framePos) ? i : 0;
         }
 
-        public boolean isPortalFrame(LevelAccessor world, BlockPos pos){
+        public boolean isPortalFrame(LevelAccessor world, BlockPos pos) {
             return world.getBlockState(pos).is(BlockTagProvider.DECORATIVE_AN);
         }
 
@@ -249,8 +250,8 @@ public class PortalBlock extends TickableModBlock {
 
         protected int calculatePortalHeight() {
             label56:
-            for(this.height = 0; this.height < 21; ++this.height) {
-                for(int i = 0; i < this.width; ++i) {
+            for (this.height = 0; this.height < 21; ++this.height) {
+                for (int i = 0; i < this.width; ++i) {
                     BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i).above(this.height);
                     BlockState blockstate = this.world.getBlockState(blockpos);
                     if (!this.canReplace(blockstate)) {
@@ -276,7 +277,7 @@ public class PortalBlock extends TickableModBlock {
                 }
             }
 
-            for(int j = 0; j < this.width; ++j) {
+            for (int j = 0; j < this.width; ++j) {
                 BlockPos framePos = this.bottomLeft.relative(this.rightDir, j).above(this.height);
                 if (!isPortalFrame(this.world, framePos)) {
                     this.height = 0;
@@ -304,12 +305,12 @@ public class PortalBlock extends TickableModBlock {
         }
 
         public void placePortalBlocks(WarpScroll.WarpScrollData data, String displayName) {
-            for(int i = 0; i < this.width; ++i) {
+            for (int i = 0; i < this.width; ++i) {
                 BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
 
-                for(int j = 0; j < this.height; ++j) {
+                for (int j = 0; j < this.height; ++j) {
                     this.world.setBlock(blockpos.above(j), BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, this.axis), 18);
-                    if(this.world.getBlockEntity(blockpos.above(j)) instanceof PortalTile tile){
+                    if (this.world.getBlockEntity(blockpos.above(j)) instanceof PortalTile tile) {
                         tile.warpPos = data.getPos();
                         tile.dimID = data.getDimension();
                         tile.rotationVec = data.getRotation();

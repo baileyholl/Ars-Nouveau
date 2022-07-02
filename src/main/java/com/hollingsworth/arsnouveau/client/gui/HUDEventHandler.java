@@ -31,6 +31,7 @@ public class HUDEventHandler {
     private static final GuiManaHUD manaHUD = new GuiManaHUD();
     private static final GuiEntityInfoHUD entityHUD = new GuiEntityInfoHUD();
     private static final GuiScrollHUD scrollHUD = new GuiScrollHUD();
+
     /**
      * Render the current spell when the SpellBook is held in the players hand
      *
@@ -53,21 +54,21 @@ public class HUDEventHandler {
         HitResult mouseOver = Minecraft.getInstance().hitResult;
         if (mouseOver != null && mouseOver.getType() == HitResult.Type.ENTITY) {
 
-          EntityHitResult result = (EntityHitResult) mouseOver;
-          if(result.getEntity() instanceof ITooltipProvider) {
-              List<Component> components = new ArrayList<>();
-              ((ITooltipProvider) result.getEntity()).getTooltip(components);
-              entityHUD.drawHUD(event.getPoseStack(), components);
-          }
-          if(result.getEntity() instanceof ItemFrame){
-              scrollHUD.drawHUD(event.getPoseStack(), (ItemFrame) result.getEntity());
-          }
+            EntityHitResult result = (EntityHitResult) mouseOver;
+            if (result.getEntity() instanceof ITooltipProvider) {
+                List<Component> components = new ArrayList<>();
+                ((ITooltipProvider) result.getEntity()).getTooltip(components);
+                entityHUD.drawHUD(event.getPoseStack(), components);
+            }
+            if (result.getEntity() instanceof ItemFrame) {
+                scrollHUD.drawHUD(event.getPoseStack(), (ItemFrame) result.getEntity());
+            }
 
         }
         if (mouseOver != null && mouseOver.getType() == HitResult.Type.BLOCK) {
             BlockHitResult result = (BlockHitResult) mouseOver;
             BlockPos pos = result.getBlockPos();
-            if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider tooltipProvider){
+            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider tooltipProvider) {
                 List<Component> components = new ArrayList<>();
                 tooltipProvider.getTooltip(components);
                 entityHUD.drawHUD(event.getPoseStack(), components);

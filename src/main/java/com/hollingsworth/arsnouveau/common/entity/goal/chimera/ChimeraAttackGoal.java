@@ -29,6 +29,7 @@ public class ChimeraAttackGoal extends Goal {
     public int timeAnimating = 0;
     public boolean arrived = false;
     public boolean done = false;
+
     public ChimeraAttackGoal(EntityChimera p_i1636_1_, boolean p_i1636_4_) {
         this.mob = p_i1636_1_;
         this.speedModifier = 1.8f;
@@ -43,7 +44,7 @@ public class ChimeraAttackGoal extends Goal {
 
     public boolean canUse() {
         long i = this.mob.level.getGameTime();
-        if(!this.mob.canAttack())
+        if (!this.mob.canAttack())
             return false;
         if (i - this.lastCanUseCheck < 20L) {
             return false;
@@ -76,7 +77,7 @@ public class ChimeraAttackGoal extends Goal {
 
     public boolean canContinueToUse() {
         LivingEntity livingentity = this.mob.getTarget();
-        if(!this.mob.canAttack())
+        if (!this.mob.canAttack())
             return false;
         if (livingentity == null || done) {
             return false;
@@ -87,7 +88,7 @@ public class ChimeraAttackGoal extends Goal {
         } else if (!this.mob.isWithinRestriction(livingentity.blockPosition())) {
             return false;
         } else {
-            return !(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player)livingentity).isCreative();
+            return !(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player) livingentity).isCreative();
         }
     }
 
@@ -108,12 +109,12 @@ public class ChimeraAttackGoal extends Goal {
     public void tick() {
         LivingEntity livingentity = this.mob.getTarget();
         this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
-        if(arrived){
+        if (arrived) {
             timeAnimating++;
-            if(timeAnimating == 15){
+            if (timeAnimating == 15) {
                 this.attack(livingentity);
             }
-            if(timeAnimating >= 20){
+            if (timeAnimating >= 20) {
                 this.attack(livingentity);
                 this.done = true;
             }
@@ -122,7 +123,7 @@ public class ChimeraAttackGoal extends Goal {
 
         double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
         this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
-        if(BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= 3){
+        if (BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= 3) {
             this.arrived = true;
             Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), EntityChimera.Animations.ATTACK.ordinal()));
         }
@@ -159,7 +160,7 @@ public class ChimeraAttackGoal extends Goal {
 
     protected void attack(LivingEntity target) {
         double d0 = 3;
-        if (BlockUtil.distanceFrom(target.position, this.mob.position) <= d0 ) {
+        if (BlockUtil.distanceFrom(target.position, this.mob.position) <= d0) {
             this.ticksUntilNextAttack = 20;
             this.mob.doHurtTarget(target);
         }

@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-
 import java.util.stream.Stream;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
@@ -36,6 +35,7 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
         super(properties);
         registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(BlockStateProperties.WATERLOGGED, false));
     }
+
     public WhirlisprigFlower() {
         this(Block.Properties.of(Material.PLANT).sound(SoundType.SPORE_BLOSSOM).noOcclusion().strength(2.0f, 6.0f));
     }
@@ -47,8 +47,7 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
             Block.box(10.07, 11.107, 6, 14.072, 12.107, 10),
             Block.box(6, 11.107, 10.077, 10, 12.1, 14.07),
             Block.box(6, 11.107, 1.93, 10, 12.1, 5.93)
-            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
 
     @Nullable
@@ -72,6 +71,7 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
         super.createBlockStateDefinition(builder);
         builder.add(WATERLOGGED);
     }
+
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();

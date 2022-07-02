@@ -20,34 +20,34 @@ public abstract class AbstractFamiliarHolder {
         this(new ResourceLocation(ArsNouveau.MODID, id), isConversionEntity);
     }
 
-    public AbstractFamiliarHolder(ResourceLocation id, Predicate<Entity> isConversionEntity){
+    public AbstractFamiliarHolder(ResourceLocation id, Predicate<Entity> isConversionEntity) {
         this.id = id;
         this.isEntity = isConversionEntity;
     }
 
     public abstract IFamiliar getSummonEntity(Level world, CompoundTag tag);
 
-    public ItemStack getOutputItem(){
+    public ItemStack getOutputItem() {
         return new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem(getRegistryName()));
     }
 
-    public ResourceLocation getRegistryName(){
+    public ResourceLocation getRegistryName() {
         return this.id;
     }
 
-    public Component getLangDescription(){
+    public Component getLangDescription() {
         return Component.translatable(this.id.getNamespace() + ".familiar_desc." + this.id.getPath());
     }
 
-    public Component getLangName(){
+    public Component getLangName() {
         return Component.translatable(this.id.getNamespace() + ".familiar_name." + this.id.getPath());
     }
 
-    public String getBookName(){
+    public String getBookName() {
         return "";
     }
 
-    public String getBookDescription(){
+    public String getBookDescription() {
         return "";
     }
 }

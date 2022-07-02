@@ -11,25 +11,25 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class RelayWarpTile extends RelaySplitterTile {
 
-    public RelayWarpTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+    public RelayWarpTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    public RelayWarpTile(BlockPos pos, BlockState state){
+    public RelayWarpTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.RELAY_WARP_TILE, pos, state);
     }
 
     @Override
     public void createParticles(BlockPos from, BlockPos to) {
-        if(level.getBlockEntity(to) instanceof RelayWarpTile) {
+        if (level.getBlockEntity(to) instanceof RelayWarpTile) {
             ParticleUtil.spawnTouchPacket(level, getBlockPos(), new ParticleColor.IntWrapper(220, 50, 220));
-            ParticleUtil.spawnTouchPacket(level, to,  new ParticleColor.IntWrapper(220, 50, 220));
-        }else{
+            ParticleUtil.spawnTouchPacket(level, to, new ParticleColor.IntWrapper(220, 50, 220));
+        } else {
             super.createParticles(from, to);
         }
     }
 
-    public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate){
+    public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate) {
         if (to instanceof RelayWarpTile toWarp) {
             double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
             double probLoss = adjustedDist / 100.0;

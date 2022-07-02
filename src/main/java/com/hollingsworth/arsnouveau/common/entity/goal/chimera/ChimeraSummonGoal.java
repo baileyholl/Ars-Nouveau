@@ -19,7 +19,7 @@ public class ChimeraSummonGoal extends Goal {
     public boolean done;
     public boolean howling;
 
-    public ChimeraSummonGoal(EntityChimera boss){
+    public ChimeraSummonGoal(EntityChimera boss) {
         this.mob = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -52,7 +52,7 @@ public class ChimeraSummonGoal extends Goal {
     public void tick() {
         super.tick();
 
-        if(!howling) {
+        if (!howling) {
             Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), EntityChimera.Animations.HOWL.ordinal()));
             ChimeraSummonEvent summonEvent = new ChimeraSummonEvent(40 + mob.getPhase() * 20, mob.getPhase(), mob.level, mob.blockPosition(), this.mob.getId());
             EventQueue.getServerInstance().addEvent(summonEvent);
@@ -62,7 +62,7 @@ public class ChimeraSummonGoal extends Goal {
         howling = true;
         timeSummoning++;
 
-        if(timeSummoning >= 80) {
+        if (timeSummoning >= 80) {
             done = true;
             mob.summonCooldown = (int) (1000 + ParticleUtil.inRange(-100, 100) + mob.getCooldownModifier());
         }

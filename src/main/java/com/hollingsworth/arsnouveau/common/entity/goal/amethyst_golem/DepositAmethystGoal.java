@@ -18,7 +18,7 @@ public class DepositAmethystGoal extends Goal {
     int usingTicks;
     boolean isDone;
 
-    public DepositAmethystGoal(AmethystGolem golem, Supplier<Boolean> canUse){
+    public DepositAmethystGoal(AmethystGolem golem, Supplier<Boolean> canUse) {
         this.golem = golem;
         this.canUse = canUse;
     }
@@ -32,24 +32,24 @@ public class DepositAmethystGoal extends Goal {
     public void tick() {
         super.tick();
         usingTicks--;
-        if(usingTicks <= 0){
+        if (usingTicks <= 0) {
             isDone = true;
             deposit();
             return;
         }
-        if(golem.getHome() == null)
+        if (golem.getHome() == null)
             return;
 
-        if(BlockUtil.distanceFrom(golem.blockPosition(), golem.getHome()) <= 2){
+        if (BlockUtil.distanceFrom(golem.blockPosition(), golem.getHome()) <= 2) {
             isDone = true;
             deposit();
         }
         golem.getNavigation().tryMoveToBlockPos(golem.getHome(), 1);
     }
 
-    public void deposit(){
+    public void deposit() {
         BlockEntity tileEntity = golem.getLevel().getBlockEntity(golem.getHome());
-        if(tileEntity == null)
+        if (tileEntity == null)
             return;
         IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if (iItemHandler != null) {
@@ -83,7 +83,7 @@ public class DepositAmethystGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if(golem.getHome() == null || golem.getHeldStack().isEmpty())
+        if (golem.getHome() == null || golem.getHeldStack().isEmpty())
             return false;
         BlockEntity entity = golem.getLevel().getBlockEntity(golem.getHome());
         return canUse.get() && entity != null && entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();

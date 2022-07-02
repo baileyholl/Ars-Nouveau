@@ -15,12 +15,12 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
 
     }
 
-    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, PoseStack stack, MultiBufferSource iRenderTypeBuffer){
+    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, PoseStack stack, MultiBufferSource iRenderTypeBuffer) {
         stack.pushPose();
         tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
         entityItem.setYHeadRot(tileEntityIn.frames);
         entityItem.age = (int) tileEntityIn.frames;
-        Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,stack, iRenderTypeBuffer,15728880);
+        Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5, 1, 0.5, entityItem.yRot, 2.0f, stack, iRenderTypeBuffer, 15728880);
 
         stack.popPose();
     }
@@ -31,7 +31,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
 
-        if(tileEntityIn.stack == null)
+        if (tileEntityIn.stack == null)
             return;
 
         if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
@@ -43,7 +43,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
         entityItem.setYHeadRot(tileEntityIn.frames);
         entityItem.age = (int) tileEntityIn.frames;
-        Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,matrixStack, iRenderTypeBuffer,i);
+        Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5, 1, 0.5, entityItem.yRot, 2.0f, matrixStack, iRenderTypeBuffer, i);
 
         matrixStack.popPose();
     }

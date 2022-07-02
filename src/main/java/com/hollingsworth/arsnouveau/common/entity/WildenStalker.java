@@ -62,7 +62,7 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        if(Config.STALKER_ATTACK_ANIMALS.get())
+        if (Config.STALKER_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
     }
@@ -70,23 +70,23 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
-            if(leapCooldown > 0)
+        if (!level.isClientSide) {
+            if (leapCooldown > 0)
                 leapCooldown--;
 
-            if(this.isFlying() && this.isOnGround())
+            if (this.isFlying() && this.isOnGround())
                 this.setFlying(false);
 
-            if(this.isFlying()) {
+            if (this.isFlying()) {
                 timeFlying++;
-            }else
+            } else
                 timeFlying = 0;
         }
     }
 
     @Override
     public boolean doHurtTarget(Entity entityIn) {
-        if(!level.isClientSide && entityIn instanceof LivingEntity && level.getDifficulty() == Difficulty.HARD)
+        if (!level.isClientSide && entityIn instanceof LivingEntity && level.getDifficulty() == Difficulty.HARD)
             ((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0));
         return super.doHurtTarget(entityIn);
     }
@@ -118,39 +118,41 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
 
     @Override
     public void startAnimation(int arg) {
-        try{
-            if(arg == Animations.DIVE.ordinal()){
+        try {
+            if (arg == Animations.DIVE.ordinal()) {
                 flyController.markNeedsReload();
                 flyController.setAnimation(new AnimationBuilder().addAnimation("dive", true));
             }
 
-            if(arg == Animations.FLY.ordinal()){
+            if (arg == Animations.FLY.ordinal()) {
                 flyController.markNeedsReload();
                 flyController.setAnimation(new AnimationBuilder().addAnimation("flying", true));
             }
 
-            if(arg == Animations.ATTACK.ordinal()){
-                if(groundController.getCurrentAnimation() != null && (groundController.getCurrentAnimation().animationName.equals("attack"))){
+            if (arg == Animations.ATTACK.ordinal()) {
+                if (groundController.getCurrentAnimation() != null && (groundController.getCurrentAnimation().animationName.equals("attack"))) {
                     return;
                 }
                 groundController.markNeedsReload();
                 groundController.setAnimation(new AnimationBuilder().addAnimation("attack", false).addAnimation("idle"));
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private <E extends Entity> PlayState flyPredicate(AnimationEvent event) {
         return isFlying() ? PlayState.CONTINUE : PlayState.STOP;
     }
 
-    private<E extends Entity> PlayState groundPredicate(AnimationEvent e){
+    private <E extends Entity> PlayState groundPredicate(AnimationEvent e) {
         return isFlying() ? PlayState.STOP : PlayState.CONTINUE;
     }
 
     AnimationController flyController;
     AnimationController groundController;
+
     @Override
     public void registerControllers(AnimationData animationData) {
         flyController = new AnimationController(this, "flyController", 1, this::flyPredicate);
@@ -158,21 +160,23 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         groundController = new AnimationController(this, "groundController", 1, this::groundPredicate);
         animationData.addAnimationController(groundController);
     }
+
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
     }
 
     protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
-        if(!this.isFlying())
+        if (!this.isFlying())
             super.checkFallDamage(y, onGroundIn, state, pos);
     }
 
 
     @Override
     public void travel(Vec3 travelVector) {
-        if(!this.isFlying()) {
+        if (!this.isFlying()) {
             super.travel(travelVector);
             return;
         }
@@ -206,7 +210,7 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         this.calculateEntityAnimation(this, false);
     }
 
-    public static AttributeSupplier.Builder getModdedAttributes(){
+    public static AttributeSupplier.Builder getModdedAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
@@ -229,7 +233,7 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         this.entityData.set(isFlying, flying);
     }
 
-    public enum Animations{
+    public enum Animations {
         ATTACK,
         DIVE,
         FLY

@@ -25,17 +25,17 @@ public class EntityEvokerFangs extends EvokerFangs {
     private UUID casterUuid;
 
     float damage;
+
     public EntityEvokerFangs(EntityType<? extends EvokerFangs> p_i50170_1_, Level p_i50170_2_) {
         super(p_i50170_1_, p_i50170_2_);
     }
-
 
 
     public EntityEvokerFangs(Level worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float damage) {
         this(EntityType.EVOKER_FANGS, worldIn);
         this.warmupDelayTicks = p_i47276_9_;
         this.setOwner(casterIn);
-        this.yRot = p_i47276_8_ * (180F / (float)Math.PI);
+        this.yRot = p_i47276_8_ * (180F / (float) Math.PI);
         this.setPos(x, y, z);
         this.damage = damage;
     }
@@ -54,10 +54,10 @@ public class EntityEvokerFangs extends EvokerFangs {
             if (this.clientSideAttackStarted) {
                 --this.lifeTicks;
                 if (this.lifeTicks == 14) {
-                    for(int i = 0; i < 12; ++i) {
-                        double d0 = this.getX() + (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.getBbWidth() * 0.5D;
+                    for (int i = 0; i < 12; ++i) {
+                        double d0 = this.getX() + (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.getBbWidth() * 0.5D;
                         double d1 = this.getY() + 0.05D + this.random.nextDouble();
-                        double d2 = this.getZ() + (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.getBbWidth() * 0.5D;
+                        double d2 = this.getZ() + (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.getBbWidth() * 0.5D;
                         double d3 = (this.random.nextDouble() * 2.0D - 1.0D) * 0.3D;
                         double d4 = 0.3D + this.random.nextDouble() * 0.3D;
                         double d5 = (this.random.nextDouble() * 2.0D - 1.0D) * 0.3D;
@@ -67,13 +67,13 @@ public class EntityEvokerFangs extends EvokerFangs {
             }
         } else if (--this.warmupDelayTicks < 0) {
             if (this.warmupDelayTicks == -8) {
-                for(LivingEntity livingentity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2D, 0.0D, 0.2D))) {
+                for (LivingEntity livingentity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2D, 0.0D, 0.2D))) {
                     this.damage(livingentity);
                 }
             }
 
             if (!this.sentSpikeEvent) {
-                this.level.broadcastEntityEvent(this, (byte)4);
+                this.level.broadcastEntityEvent(this, (byte) 4);
                 this.sentSpikeEvent = true;
             }
 
@@ -97,6 +97,7 @@ public class EntityEvokerFangs extends EvokerFangs {
             }
         }
     }
+
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
@@ -135,7 +136,7 @@ public class EntityEvokerFangs extends EvokerFangs {
             return 0.0F;
         } else {
             int i = this.lifeTicks - 2;
-            return i <= 0 ? 1.0F : 1.0F - ((float)i - partialTicks) / 20.0F;
+            return i <= 0 ? 1.0F : 1.0F - ((float) i - partialTicks) / 20.0F;
         }
     }
 }

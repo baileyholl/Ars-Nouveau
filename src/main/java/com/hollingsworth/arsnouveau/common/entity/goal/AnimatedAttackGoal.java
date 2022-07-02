@@ -54,7 +54,7 @@ public class AnimatedAttackGoal extends Goal {
 
     public boolean canUse() {
         long i = this.mob.level.getGameTime();
-        if(!canAttack.get())
+        if (!canAttack.get())
             return false;
         if (i - this.lastCanUseCheck < 20L) {
             return false;
@@ -87,7 +87,7 @@ public class AnimatedAttackGoal extends Goal {
 
     public boolean canContinueToUse() {
         LivingEntity livingentity = this.mob.getTarget();
-        if(!canAttack.get())
+        if (!canAttack.get())
             return false;
         if (livingentity == null || done) {
             return false;
@@ -98,7 +98,7 @@ public class AnimatedAttackGoal extends Goal {
         } else if (!this.mob.isWithinRestriction(livingentity.blockPosition())) {
             return false;
         } else {
-            return !(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player)livingentity).isCreative();
+            return !(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player) livingentity).isCreative();
         }
     }
 
@@ -116,21 +116,21 @@ public class AnimatedAttackGoal extends Goal {
 
     }
 
-    public void arrivedTick(){
+    public void arrivedTick() {
         timeAnimating++;
-        if(timeAnimating >= animationLength){
-            if(this.mob.getTarget() != null)
+        if (timeAnimating >= animationLength) {
+            if (this.mob.getTarget() != null)
                 this.attack(this.mob.getTarget());
             this.done = true;
         }
     }
 
-    public void look(LivingEntity entity){
-        if(entity != null)
+    public void look(LivingEntity entity) {
+        if (entity != null)
             this.mob.getLookControl().setLookAt(entity, 30.0F, 30.0F);
     }
 
-    public void onArrive(){
+    public void onArrive() {
         this.arrived = true;
         Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), animationID));
     }
@@ -138,14 +138,14 @@ public class AnimatedAttackGoal extends Goal {
     public void tick() {
         LivingEntity livingentity = this.mob.getTarget();
         look(livingentity);
-        if(arrived){
+        if (arrived) {
             arrivedTick();
             return;
         }
 
         double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
         this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
-        if(BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= attackRange){
+        if (BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= attackRange) {
             onArrive();
         }
         if ((this.followingTargetEvenIfNotSeen || this.mob.getSensing().hasLineOfSight(livingentity)) && this.ticksUntilNextPathRecalculation <= 0 && (this.pathedTargetX == 0.0D && this.pathedTargetY == 0.0D && this.pathedTargetZ == 0.0D || livingentity.distanceToSqr(this.pathedTargetX, this.pathedTargetY, this.pathedTargetZ) >= 1.0D || this.mob.getRandom().nextFloat() < 0.05F)) {

@@ -13,14 +13,14 @@ public class OpenChestEvent implements ITimedEvent {
     public BlockPos pos;
     FakePlayer fakePlayer;
 
-    public OpenChestEvent(ServerLevel level, BlockPos pos, int duration){
+    public OpenChestEvent(ServerLevel level, BlockPos pos, int duration) {
         this.duration = duration;
         this.level = level;
         this.pos = pos;
         fakePlayer = ANFakePlayer.getPlayer(level);
     }
 
-    public void open(){
+    public void open() {
         try {
             if (level.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
                 fakePlayer.level = level;
@@ -28,19 +28,19 @@ public class OpenChestEvent implements ITimedEvent {
                 fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                 fakePlayer.containerMenu = chestBlockEntity.createMenu(fakePlayer.containerCounter, fakePlayer.inventory, fakePlayer);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void attemptClose(){
+    public void attemptClose() {
         try {
             if (level.getBlockEntity(pos) instanceof ChestBlockEntity) {
                 fakePlayer.level = level;
                 fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                 fakePlayer.containerMenu = null;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -48,7 +48,7 @@ public class OpenChestEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         duration--;
-        if(duration <= 0){
+        if (duration <= 0) {
             attemptClose();
         }
     }

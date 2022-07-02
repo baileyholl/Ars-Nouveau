@@ -58,29 +58,29 @@ public class EffectFirework extends AbstractEffect {
         }
     }
 
-    public ItemStack getCorrectFirework(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter){
+    public ItemStack getCorrectFirework(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter) {
         ItemStack firework = getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier());
         ItemStack foundStack = getItemFromCaster(shooter, spellContext, Items.FIREWORK_ROCKET);
         return !foundStack.isEmpty() ? foundStack : firework;
     }
 
-    public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context){
+    public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context) {
         FireworkRocketEntity fireworkrocketentity;
-        if(context.getType() == SpellContext.CasterType.TURRET){
+        if (context.getType() == SpellContext.CasterType.TURRET) {
             BlockPos pos = rayTraceResult.getBlockPos();
             Direction direction = rayTraceResult.getDirection().getOpposite();
             fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true);
             fireworkrocketentity.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), 0.5F, 1.0F);
-        }else{
+        } else {
             BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
             fireworkrocketentity = new FireworkRocketEntity(world, shooter,
-                    pos.getX() + 0.5 + i *ParticleUtil.inRange(-0.3, 0.3), pos.getY() + 0.5, pos.getZ() + 0.5 + i *ParticleUtil.inRange(-0.3, 0.3),
+                    pos.getX() + 0.5 + i * ParticleUtil.inRange(-0.3, 0.3), pos.getY() + 0.5, pos.getZ() + 0.5 + i * ParticleUtil.inRange(-0.3, 0.3),
                     fireworkStack);
         }
         world.addFreshEntity(fireworkrocketentity);
     }
 
-    public void spawnFireworkOnEntity(EntityHitResult rayTraceResult, Level world, LivingEntity shooter, ItemStack firework){
+    public void spawnFireworkOnEntity(EntityHitResult rayTraceResult, Level world, LivingEntity shooter, ItemStack firework) {
         FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(world, firework, (LivingEntity) rayTraceResult.getEntity());
         fireworkrocketentity.setOwner(shooter);
         world.addFreshEntity(fireworkrocketentity);
@@ -112,20 +112,20 @@ public class EffectFirework extends AbstractEffect {
     public static FireworkRocketItem.Shape[] shapes = FireworkRocketItem.Shape.values();
     private static List<DyeColor> dyes;
 
-    public static List<DyeColor> getColorfulDyes(){
-        if(dyes == null){
+    public static List<DyeColor> getColorfulDyes() {
+        if (dyes == null) {
             dyes = Arrays.stream(DyeColor.values())
                     .filter(d -> d != DyeColor.BLACK && d != DyeColor.GRAY && d != DyeColor.LIGHT_GRAY && d != DyeColor.BROWN).collect(Collectors.toList());
         }
         return dyes;
     }
 
-    public static ItemStack getFirework(int numGunpowder, int numStars){
+    public static ItemStack getFirework(int numGunpowder, int numStars) {
         ItemStack stack = new ItemStack(Items.FIREWORK_ROCKET);
         CompoundTag rocketTag = stack.getOrCreateTagElement("Fireworks");
-        rocketTag.putByte("Flight", (byte)numGunpowder);
+        rocketTag.putByte("Flight", (byte) numGunpowder);
         ListTag listnbt = new ListTag();
-        for(int i = 0; i < numStars; i++){
+        for (int i = 0; i < numStars; i++) {
             listnbt.add(getRandomStar().getTagElement("Explosion"));
         }
         if (!listnbt.isEmpty()) {
@@ -134,19 +134,19 @@ public class EffectFirework extends AbstractEffect {
         return stack;
     }
 
-    public static ItemStack getRandomStar(){
+    public static ItemStack getRandomStar() {
         ItemStack star = new ItemStack(Items.FIREWORK_STAR);
         CompoundTag starTag = star.getOrCreateTagElement("Explosion");
         Random random = new Random();
         FireworkRocketItem.Shape fireworkrocketitem$shape = shapes[random.nextInt(shapes.length)];
         List<Integer> list = Lists.newArrayList();
-        for(int i = 0; i < random.nextInt(8); i++){
+        for (int i = 0; i < random.nextInt(8); i++) {
             list.add(getColorfulDyes().get(random.nextInt(getColorfulDyes().size())).getFireworkColor());
         }
         starTag.putBoolean("Flicker", random.nextBoolean());
         starTag.putBoolean("Trail", random.nextBoolean());
         starTag.putIntArray("Colors", list);
-        starTag.putByte("Type", (byte)fireworkrocketitem$shape.getId());
+        starTag.putByte("Type", (byte) fireworkrocketitem$shape.getId());
         return star;
     }
 

@@ -34,7 +34,7 @@ public class EffectPull extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if(shooter == null)
+        if (shooter == null)
             return;
         Entity target = rayTraceResult.getEntity();
         Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
@@ -46,12 +46,12 @@ public class EffectPull extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult blockHitResult, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, blockHitResult.getBlockPos(), blockHitResult, spellStats);
-        for(BlockPos p : posList) {
-            if(!canBlockBeHarvested(spellStats, world, p)) {
+        for (BlockPos p : posList) {
+            if (!canBlockBeHarvested(spellStats, world, p)) {
                 continue;
             }
             EnchantedFallingBlock fallingblockentity = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
-            if(fallingblockentity != null) {
+            if (fallingblockentity != null) {
                 setMotion(fallingblockentity, blockHitResult, spellStats);
                 ShapersFocus.tryPropagateEntitySpell(fallingblockentity, world, shooter, spellContext, resolver);
             }
@@ -59,7 +59,7 @@ public class EffectPull extends AbstractEffect {
     }
 
 
-    public void setMotion(Entity entity, BlockHitResult blockHitResult, SpellStats spellStats){
+    public void setMotion(Entity entity, BlockHitResult blockHitResult, SpellStats spellStats) {
         double scalar = 0.5 + ParticleUtil.inRange(-0.05, 0.05) + spellStats.getAmpMultiplier() * .3;
         Vec3i directionVec = blockHitResult.getDirection().getNormal();
         Vec3 deltaVec = new Vec3(directionVec.getX() * scalar, directionVec.getY() * scalar + 0.1, directionVec.getZ() * scalar);

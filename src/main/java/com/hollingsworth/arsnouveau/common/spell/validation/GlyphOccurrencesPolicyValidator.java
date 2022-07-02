@@ -34,7 +34,8 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
     }
 
     @Override
-    protected void finish(Map<ResourceLocation, Integer> context, List<SpellValidationError> validationErrors) {}
+    protected void finish(Map<ResourceLocation, Integer> context, List<SpellValidationError> validationErrors) {
+    }
 
     private static class GlyphOccurrencesPolicySpellValidationError extends BaseSpellValidationError {
         public GlyphOccurrencesPolicySpellValidationError(int position, AbstractSpellPart part, int limit) {

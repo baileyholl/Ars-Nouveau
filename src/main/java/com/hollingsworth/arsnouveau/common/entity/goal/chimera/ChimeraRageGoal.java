@@ -27,7 +27,7 @@ public class ChimeraRageGoal extends Goal {
     boolean finished;
     public int ticks;
 
-    public ChimeraRageGoal(EntityChimera chimera){
+    public ChimeraRageGoal(EntityChimera chimera) {
         this.chimera = chimera;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -41,7 +41,7 @@ public class ChimeraRageGoal extends Goal {
     public void tick() {
         super.tick();
         ticks++;
-        if(ticks >= 40)
+        if (ticks >= 40)
             finished = true;
     }
 
@@ -56,10 +56,10 @@ public class ChimeraRageGoal extends Goal {
         chimera.removeAllEffects();
         chimera.gainPhaseBuffs();
         LivingEntity target = chimera.getTarget();
-        if(target != null && !target.isOnGround()){
+        if (target != null && !target.isOnGround()) {
             target.removeEffect(MobEffects.SLOW_FALLING);
         }
-        if(target != null) {
+        if (target != null) {
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(chimera.level, new Spell().add(MethodTouch.INSTANCE).add(EffectLaunch.INSTANCE)
                     .add(EffectDelay.INSTANCE)
                     .add(EffectPull.INSTANCE)

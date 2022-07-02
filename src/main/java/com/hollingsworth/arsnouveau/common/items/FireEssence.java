@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FireEssence extends ModItem{
+public class FireEssence extends ModItem {
     public FireEssence(Properties properties) {
         super(properties);
     }

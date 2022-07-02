@@ -38,7 +38,7 @@ public class EffectCraft extends AbstractEffect {
         return 50;
     }
 
-    public static class CustomWorkbench extends CraftingMenu{
+    public static class CustomWorkbench extends CraftingMenu {
 
         public CustomWorkbench(int id, Inventory playerInventory) {
             super(id, playerInventory);

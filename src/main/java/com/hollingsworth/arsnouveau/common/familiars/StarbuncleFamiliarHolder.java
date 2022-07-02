@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 
 public class StarbuncleFamiliarHolder extends AbstractFamiliarHolder {
 
-    public StarbuncleFamiliarHolder(){
+    public StarbuncleFamiliarHolder() {
         super(LibEntityNames.FAMILIAR_STARBUNCLE, (e) -> e instanceof Starbuncle);
     }
 

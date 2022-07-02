@@ -18,7 +18,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-public class VitalicSourcelinkTile extends SourcelinkTile{
+public class VitalicSourcelinkTile extends SourcelinkTile {
     public VitalicSourcelinkTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
@@ -26,7 +26,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     // Test for a quark tag that has disabled baby growth.
     private static final String TAG_POISONED = "quark:poison_potato_applied";
 
-    public VitalicSourcelinkTile(BlockPos pos, BlockState state){
+    public VitalicSourcelinkTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.VITALIC_TILE, pos, state);
     }
 
@@ -38,14 +38,14 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && level.getGameTime() % 60 == 0){
-            for(Animal entity : level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))){
-                if(entity.isBaby()){
-                    if(entity.getAge() < 0){
-                        if(ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)){
+        if (!level.isClientSide && level.getGameTime() % 60 == 0) {
+            for (Animal entity : level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))) {
+                if (entity.isBaby()) {
+                    if (entity.getAge() < 0) {
+                        if (ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)) {
                             return;
                         }
-                        entity.setAge(Math.min(0,entity.getAge() + 500));
+                        entity.setAge(Math.min(0, entity.getAge() + 500));
                         this.addSource(10);
                         ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition);
                     }
@@ -63,7 +63,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
 
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent e) {
-        if(e.getEntityLiving().level.isClientSide || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon)
+        if (e.getEntityLiving().level.isClientSide || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon)
             return;
         int mana = 200;
         SourcelinkEventQueue.addManaEvent(e.getEntityLiving().level, VitalicSourcelinkTile.class, mana, e, e.getEntityLiving().blockPosition());

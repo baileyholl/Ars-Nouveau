@@ -34,24 +34,24 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWaterloggedBlock {
 
     public ArcanePedestal() {
-        super(ModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
+        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.ARCANE_PEDESTAL);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(handIn != InteractionHand.MAIN_HAND)
+        if (handIn != InteractionHand.MAIN_HAND)
             return InteractionResult.PASS;
-        if(!world.isClientSide && world.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
+        if (!world.isClientSide && world.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
             if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
-                if(world.getBlockState(pos.above()).getMaterial() != Material.AIR)
+                if (world.getBlockState(pos.above()).getMaterial() != Material.AIR)
                     return InteractionResult.SUCCESS;
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
                 tile.stack = ItemStack.EMPTY;
             } else if (!player.getInventory().getSelected().isEmpty()) {
-                if(tile.stack != null){
+                if (tile.stack != null) {
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
@@ -61,13 +61,13 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }
-        return  InteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(worldIn.getBlockEntity(pos) instanceof ArcanePedestalTile tile && tile.stack != null){
+        if (worldIn.getBlockEntity(pos) instanceof ArcanePedestalTile tile && tile.stack != null) {
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.stack));
         }
     }
@@ -81,10 +81,12 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ArcanePedestalTile(pos, state);
     }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
         builder.add(WATERLOGGED);
     }
+
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();

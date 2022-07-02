@@ -72,10 +72,10 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
             @Override
             public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel world, BlockPos pos, FakePlayer fakePlayer, Position iposition, Direction direction) {
-                EntityProjectileSpell spell = new EntityProjectileSpell(world,resolver);
+                EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
                 spell.setPos(iposition.x(), iposition.y(), iposition.z());
-                spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+                spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), 0.5f, 0);
                 world.addFreshEntity(spell);
             }
         });
@@ -84,24 +84,24 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             @Override
             public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction direction) {
                 BlockPos touchPos = new BlockPos(dispensePosition.x(), dispensePosition.y(), dispensePosition.z());
-                if(direction == Direction.WEST || direction == Direction.NORTH){
+                if (direction == Direction.WEST || direction == Direction.NORTH) {
                     touchPos = touchPos.relative(direction);
                 }
-                if(direction == Direction.DOWN) // Why do I need to do this? Why does the vanilla dispenser code not offset correctly for DOWN?
+                if (direction == Direction.DOWN) // Why do I need to do this? Why does the vanilla dispenser code not offset correctly for DOWN?
                     touchPos = touchPos.below();
                 resolver.onCastOnBlock(new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
-                                direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false));
+                        direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false));
             }
         });
     }
 
-    public void shootSpell(ServerLevel world, BlockPos pos ) {
-        if (! (world.getBlockEntity(pos) instanceof BasicSpellTurretTile tile)) return;
+    public void shootSpell(ServerLevel world, BlockPos pos) {
+        if (!(world.getBlockEntity(pos) instanceof BasicSpellTurretTile tile)) return;
         ISpellCaster caster = tile.getSpellCaster();
-        if(caster.getSpell().isEmpty())
+        if (caster.getSpell().isEmpty())
             return;
         int manaCost = tile.getManaCost();
-        if(manaCost > 0 && SourceUtil.takeSourceNearbyWithParticles(pos, world, 10, manaCost) == null)
+        if (manaCost > 0 && SourceUtil.takeSourceNearbyWithParticles(pos, world, 10, manaCost) == null)
             return;
         Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
         Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
@@ -110,7 +110,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer)
                 .withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET));
-        if(resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
+        if (resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, tile, world, pos, fakePlayer, iposition, direction);
             caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
         }
@@ -121,7 +121,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         boolean neighborSignal = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
         boolean isTriggered = state.getValue(TRIGGERED);
         if (neighborSignal && !isTriggered) {
-            worldIn.scheduleTick(pos, this,4);
+            worldIn.scheduleTick(pos, this, 4);
             worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.TRUE), 4);
 
         } else if (!neighborSignal && isTriggered) {
@@ -144,9 +144,9 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
      */
     public static Position getDispensePosition(BlockSource coords) {
         Direction direction = coords.getBlockState().getValue(FACING);
-        double d0 = coords.x() + 0.5D * (double)direction.getStepX();
-        double d1 = coords.y() + 0.5D * (double)direction.getStepY();
-        double d2 = coords.z() + 0.5D * (double)direction.getStepZ();
+        double d0 = coords.x() + 0.5D * (double) direction.getStepX();
+        double d1 = coords.y() + 0.5D * (double) direction.getStepY();
+        double d2 = coords.z() + 0.5D * (double) direction.getStepZ();
         return new PositionImpl(d0, d1, d2);
     }
 
@@ -177,7 +177,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(handIn == InteractionHand.MAIN_HAND){
+        if (handIn == InteractionHand.MAIN_HAND) {
             ItemStack stack = player.getItemInHand(handIn);
             if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return InteractionResult.SUCCESS;

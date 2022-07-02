@@ -11,6 +11,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 
 /**
  * https://github.com/Choonster-Minecraft-Mods/TestMod3/blob/1.14.4/src/main/java/choonster/testmod3/crafting/recipe/RecipeUtil.java
+ *
  * @author Choonster
  */
 public class RecipeUtil {

@@ -72,5 +72,6 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
         this.toAvoid = null;
     }
 
-    public void tick() { }
+    public void tick() {
+    }
 }

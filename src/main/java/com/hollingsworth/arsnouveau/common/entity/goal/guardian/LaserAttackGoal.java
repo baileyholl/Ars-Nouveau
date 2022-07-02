@@ -75,7 +75,7 @@ public class LaserAttackGoal extends Goal {
                 }
 
                 livingentity.hurt(DamageSource.indirectMagic(this.guardian, this.guardian), f);
-                livingentity.hurt(DamageSource.mobAttack(this.guardian), (float)this.guardian.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                livingentity.hurt(DamageSource.mobAttack(this.guardian), (float) this.guardian.getAttributeValue(Attributes.ATTACK_DAMAGE));
                 livingentity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
 
 

@@ -13,24 +13,24 @@ public class PacketOpenSpellBook {
 
 
     //Decoder
-    public PacketOpenSpellBook(FriendlyByteBuf buf){
+    public PacketOpenSpellBook(FriendlyByteBuf buf) {
         stack = buf.readItem();
         tier = buf.readInt();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeItem(stack);
         buf.writeInt(tier);
     }
 
-    public PacketOpenSpellBook(ItemStack stack, int tier){
+    public PacketOpenSpellBook(ItemStack stack, int tier) {
         this.stack = stack;
         this.tier = tier;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> GuiSpellBook.open(stack, tier));
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> GuiSpellBook.open(stack, tier));
         ctx.get().setPacketHandled(true);
     }
 

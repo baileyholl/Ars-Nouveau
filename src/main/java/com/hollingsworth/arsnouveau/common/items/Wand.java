@@ -33,10 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Wand extends ModItem  implements IAnimatable, ICasterTool {
+public class Wand extends ModItem implements IAnimatable, ICasterTool {
     public AnimationFactory factory = new AnimationFactory(this);
 
-    public Wand(Properties properties){
+    public Wand(Properties properties) {
         super(properties);
     }
 
@@ -58,12 +58,11 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
 
     @Override
     public void registerControllers(AnimationData data) {
-       data.addAnimationController(new AnimationController(this, "controller", 20, this::predicate));
+        data.addAnimationController(new AnimationController(this, "controller", 20, this::predicate));
     }
 
     @Override
-    public AnimationFactory getFactory()
-    {
+    public AnimationFactory getFactory() {
         return this.factory;
     }
 
@@ -92,6 +91,7 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
         getInformation(stack, worldIn, tooltip2, flagIn);
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
+
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         super.initializeClient(consumer);

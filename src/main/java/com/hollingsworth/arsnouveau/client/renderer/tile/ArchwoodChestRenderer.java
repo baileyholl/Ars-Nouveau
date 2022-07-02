@@ -37,6 +37,7 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
     private final ModelPart doubleRightLock;
     private boolean xmasTextures;
     public static Block invBlock = null;
+
     public ArchwoodChestRenderer(BlockEntityRendererProvider.Context context) {
         Calendar calendar = Calendar.getInstance();
         if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26) {
@@ -63,7 +64,7 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
         ChestType chesttype = blockstate.hasProperty(ChestBlock.TYPE) ? blockstate.getValue(ChestBlock.TYPE) : ChestType.SINGLE;
         Block block = blockstate.getBlock();
         if (block instanceof AbstractChestBlock) {
-            AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock)block;
+            AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock) block;
             boolean flag1 = chesttype != ChestType.SINGLE;
             ms.pushPose();
             float f = blockstate.getValue(ChestBlock.FACING).toYRot();
@@ -99,7 +100,7 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
 
     private void render(PoseStack p_228871_1_, VertexConsumer p_228871_2_, ModelPart p_228871_3_, ModelPart p_228871_4_, ModelPart p_228871_5_, float p_228871_6_, int p_228871_7_, int p_228871_8_) {
 
-        p_228871_3_.xRot = -(p_228871_6_ * ((float)Math.PI / 2F));
+        p_228871_3_.xRot = -(p_228871_6_ * ((float) Math.PI / 2F));
         p_228871_4_.xRot = p_228871_3_.xRot;
         p_228871_3_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
         p_228871_4_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
@@ -107,14 +108,14 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
     }
 
     protected Material getMaterial(T tileEntity, ChestType chestType) {
-        switch(chestType) {
+        switch (chestType) {
             case LEFT:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau","entity/archwood_chest_left"));
+                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau", "entity/archwood_chest_left"));
             case RIGHT:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau","entity/archwood_chest_right"));
+                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau", "entity/archwood_chest_right"));
             case SINGLE:
             default:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau","entity/archwood_chest"));
+                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau", "entity/archwood_chest"));
         }
     }
 }

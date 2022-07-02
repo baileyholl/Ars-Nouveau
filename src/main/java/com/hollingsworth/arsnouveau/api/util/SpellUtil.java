@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 public class SpellUtil {
 
-    public static boolean postEvent(SpellCastEvent e){
+    public static boolean postEvent(SpellCastEvent e) {
         return MinecraftForge.EVENT_BUS.post(e);
     }
 
@@ -41,11 +41,11 @@ public class SpellUtil {
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, SpellStats stats) {
         double aoeBonus = stats.getAoeMultiplier();
         int pierceBonus = stats.getBuffCount(AugmentPierce.INSTANCE);
-        return calcAOEBlocks(caster, origin, mop, aoeBonus,  pierceBonus);
+        return calcAOEBlocks(caster, origin, mop, aoeBonus, pierceBonus);
     }
 
     public static boolean isCorrectHarvestLevel(int strength, BlockState state) {
-        Tier tier = switch (strength){
+        Tier tier = switch (strength) {
             case 1:
                 yield Tiers.WOOD;
             case 2:
@@ -59,7 +59,7 @@ public class SpellUtil {
             default:
                 yield Tiers.WOOD;
         };
-        if(strength > 5)
+        if (strength > 5)
             tier = Tiers.NETHERITE;
         return TierSortingRegistry.isCorrectTierForDrops(tier, state);
     }
@@ -75,8 +75,8 @@ public class SpellUtil {
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {
         Vec3i hitVec = caster.getDirection().getNormal();
-        if(caster instanceof FakePlayer){ // Do I know why I need this? No. But I do, or else spell turrets break on the wrong plane.
-            mop = new BlockHitResult( mop.getLocation(), mop.getDirection(), mop.getBlockPos(), false);
+        if (caster instanceof FakePlayer) { // Do I know why I need this? No. But I do, or else spell turrets break on the wrong plane.
+            mop = new BlockHitResult(mop.getLocation(), mop.getDirection(), mop.getBlockPos(), false);
         }
 
         return calcAOEBlocks(hitVec, origin, mop, width, height, depth, distance);
@@ -85,6 +85,7 @@ public class SpellUtil {
     public static List<BlockPos> calcAOEBlocks(Vec3 hitVec, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {
         return calcAOEBlocks(Direction.getNearest(hitVec.x, hitVec.y, hitVec.z).getOpposite().getNormal(), origin, mop, width, height, depth, distance);
     }
+
     // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java
     public static List<BlockPos> calcAOEBlocks(Vec3i facingVec, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
@@ -140,14 +141,14 @@ public class SpellUtil {
         }
 
         ArrayList<BlockPos> builder = new ArrayList<>();
-        for(int xp = start.getX(); xp != start.getX() + x; xp += x / Mth.abs(x)) {
-            for(int yp = start.getY(); yp != start.getY() + y; yp += y / Mth.abs(y)) {
-                for(int zp = start.getZ(); zp != start.getZ() + z; zp += z / Mth.abs(z)) {
+        for (int xp = start.getX(); xp != start.getX() + x; xp += x / Mth.abs(x)) {
+            for (int yp = start.getY(); yp != start.getY() + y; yp += y / Mth.abs(y)) {
+                for (int zp = start.getZ(); zp != start.getZ() + z; zp += z / Mth.abs(z)) {
                     // don't add the origin block
-                    if(xp == origin.getX() && yp == origin.getY() && zp == origin.getZ()) {
+                    if (xp == origin.getX() && yp == origin.getY() && zp == origin.getZ()) {
                         continue;
                     }
-                    if(distance > 0 && Mth.abs(xp - origin.getX()) + Mth.abs(yp - origin.getY()) + Mth.abs(
+                    if (distance > 0 && Mth.abs(xp - origin.getX()) + Mth.abs(yp - origin.getY()) + Mth.abs(
                             zp - origin.getZ()) > distance) {
                         continue;
                     }
@@ -161,7 +162,7 @@ public class SpellUtil {
         return builder;
     }
 
-    public static Set<BlockPos> DFSBlockstates(Level world, BlockPos start, int maxBlocks, Predicate<BlockState> isMatch){
+    public static Set<BlockPos> DFSBlockstates(Level world, BlockPos start, int maxBlocks, Predicate<BlockState> isMatch) {
         return DFSBlockstates(world, Collections.singleton(start), maxBlocks, isMatch);
     }
 
@@ -170,7 +171,7 @@ public class SpellUtil {
         HashSet<BlockPos> searched = new HashSet<>(start);
         HashSet<BlockPos> found = new HashSet<>();
 
-        while(!searchQueue.isEmpty() && found.size() < maxBlocks) {
+        while (!searchQueue.isEmpty() && found.size() < maxBlocks) {
             BlockPos current = searchQueue.removeFirst();
             BlockState state = world.getBlockState(current);
             if (isMatch.test(state)) {
@@ -186,7 +187,7 @@ public class SpellUtil {
         return found;
     }
 
-    public static HitResult rayTrace(Entity entity, double length, float lookOffset, boolean hitLiquids){
+    public static HitResult rayTrace(Entity entity, double length, float lookOffset, boolean hitLiquids) {
         HitResult result = entity.pick(length, lookOffset, hitLiquids);
         EntityHitResult entityLookedAt = MathUtil.getLookedAtEntity(entity, 25);
         return entityLookedAt == null ? result : entityLookedAt;

@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 
 import java.util.List;
 
-/** Spell validator that asserts that the spell is non-empty. */
+/**
+ * Spell validator that asserts that the spell is non-empty.
+ */
 public class NonEmptySpellValidator extends AbstractSpellValidator {
     @Override
     protected void validateImpl(List<AbstractSpellPart> spellRecipe, List<SpellValidationError> validationErrors) {

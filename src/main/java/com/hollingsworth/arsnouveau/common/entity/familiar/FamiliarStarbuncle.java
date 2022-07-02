@@ -34,7 +34,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null){
+        if (!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null) {
             getOwner().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1, false, false, true));
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1, false, false, true));
         }
@@ -42,16 +42,16 @@ public class FamiliarStarbuncle extends FamiliarEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(!player.level.isClientSide && player.equals(getOwner())){
+        if (!player.level.isClientSide && player.equals(getOwner())) {
             ItemStack stack = player.getItemInHand(hand);
-            if(stack.is(Tags.Items.NUGGETS_GOLD)){
+            if (stack.is(Tags.Items.NUGGETS_GOLD)) {
                 stack.shrink(1);
                 RitualScrying.grantScrying((ServerPlayer) player, 3 * 20 * 60, new CompoundScryer(new TagScryer(Tags.Blocks.ORES_GOLD), new TagScryer(BlockTags.GOLD_ORES)));
                 return InteractionResult.SUCCESS;
             }
             if (player.getMainHandItem().is(Tags.Items.DYES)) {
                 DyeColor color = DyeColor.getColor(stack);
-                if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(Starbuncle.carbyColors).contains(color.getName()))
+                if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(Starbuncle.carbyColors).contains(color.getName()))
                     return InteractionResult.SUCCESS;
                 setColor(color);
                 return InteractionResult.SUCCESS;
@@ -60,7 +60,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         return super.mobInteract(player, hand);
     }
 
-    public String getColor(){
+    public String getColor() {
         return this.entityData.get(COLOR);
     }
 

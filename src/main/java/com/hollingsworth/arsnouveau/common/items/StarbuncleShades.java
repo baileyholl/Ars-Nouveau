@@ -25,7 +25,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if(pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)){
+        if (pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)) {
             starbuncle.setCosmeticItem(pStack.split(1));
             return InteractionResult.SUCCESS;
         }
@@ -47,7 +47,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     //scaling applied to the renderer
     @Override
     public Vec3 getScaling() {
-        return new Vec3(1.0,1.0,1.0);
+        return new Vec3(1.0, 1.0, 1.0);
     }
 
 

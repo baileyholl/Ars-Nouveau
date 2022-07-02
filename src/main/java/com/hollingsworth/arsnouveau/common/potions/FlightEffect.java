@@ -31,7 +31,7 @@ public class FlightEffect extends MobEffect {
     @Override
     public void removeAttributeModifiers(LivingEntity entity, AttributeMap p_111187_2_, int p_111187_3_) {
         super.removeAttributeModifiers(entity, p_111187_2_, p_111187_3_);
-        if(entity instanceof Player player){
+        if (entity instanceof Player player) {
             boolean canFly = player.isCreative() || player.isSpectator();
             player.abilities.mayfly = canFly;
             player.abilities.flying = canFly;

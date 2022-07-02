@@ -13,10 +13,10 @@ public class SpellDamageEvent extends Event {
     public float damage;
 
     public SpellDamageEvent(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage) {
-            this.damageSource = source;
-            this.caster = shooter;
-            this.target = entity;
-            this.damage = totalDamage;
+        this.damageSource = source;
+        this.caster = shooter;
+        this.target = entity;
+        this.damage = totalDamage;
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Material;
 
-public class RunicChalk extends ModItem{
+public class RunicChalk extends ModItem {
     public RunicChalk() {
         super(ItemsRegistry.defaultItemProperties().durability(15));
     }
@@ -18,15 +18,16 @@ public class RunicChalk extends ModItem{
     public InteractionResult useOn(UseOnContext context) {
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
-        if(world.isClientSide)
+        if (world.isClientSide)
             return super.useOn(context);
 
-        if(world.getBlockState(pos.above()).getMaterial() == Material.AIR){
+        if (world.getBlockState(pos.above()).getMaterial() == Material.AIR) {
             world.setBlockAndUpdate(pos.above(), BlockRegistry.RUNE_BLOCK.defaultBlockState());
-            if(world.getBlockEntity(pos.above()) instanceof RuneTile){
+            if (world.getBlockEntity(pos.above()) instanceof RuneTile) {
                 ((RuneTile) world.getBlockEntity(pos.above())).uuid = context.getPlayer().getUUID();
             }
-            context.getItemInHand().hurtAndBreak(1, context.getPlayer(), (t)->{});
+            context.getItemInHand().hurtAndBreak(1, context.getPlayer(), (t) -> {
+            });
         }
         return InteractionResult.SUCCESS;
     }

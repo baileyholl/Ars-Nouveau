@@ -7,8 +7,7 @@ import java.util.function.Function;
 /**
  * Configuration values for pathing, used by pathjobs and normally set through the navigator
  */
-public class PathingOptions
-{
+public class PathingOptions {
     /**
      * Additional cost of jumping and dropping - base 1.
      */
@@ -58,15 +57,15 @@ public class PathingOptions
     /**
      * Whether to use minecart rail pathing
      */
-    private boolean canUseRails  = false;
+    private boolean canUseRails = false;
     /**
      * Can swim
      */
-    private boolean canSwim      = false;
+    private boolean canSwim = false;
     /**
      * Allowed to enter doors?
      */
-    private boolean enterDoors   = false;
+    private boolean enterDoors = false;
     /**
      * Allowed to open doors?
      */
@@ -76,151 +75,133 @@ public class PathingOptions
     /**
      * Whether to path through vines.
      */
-    private boolean canClimbVines  = false;
+    private boolean canClimbVines = false;
 
     private boolean canFitInOneCube = false;
 
 
     private Function<BlockState, Boolean> isRoad = blockState -> false;
 
-    public PathingOptions()
-    {}
+    public PathingOptions() {
+    }
 
-    public boolean canOpenDoors()
-    {
+    public boolean canOpenDoors() {
         return canOpenDoors;
     }
 
-    public void setCanOpenDoors(final boolean canOpenDoors)
-    {
+    public void setCanOpenDoors(final boolean canOpenDoors) {
         this.canOpenDoors = canOpenDoors;
     }
 
-    public boolean canUseRails()
-    {
+    public boolean canUseRails() {
         return canUseRails;
     }
 
-    public void setCanUseRails(final boolean canUseRails)
-    {
+    public void setCanUseRails(final boolean canUseRails) {
         this.canUseRails = canUseRails;
     }
 
-    public boolean canSwim()
-    {
+    public boolean canSwim() {
         return canSwim;
     }
 
-    public void setCanSwim(final boolean canSwim)
-    {
+    public void setCanSwim(final boolean canSwim) {
         this.canSwim = canSwim;
     }
 
-    public boolean canEnterDoors()
-    {
+    public boolean canEnterDoors() {
         return enterDoors;
     }
 
-    public void setEnterDoors(final boolean enterDoors)
-    {
+    public void setEnterDoors(final boolean enterDoors) {
         this.enterDoors = enterDoors;
     }
 
-    public void setCanFitInOneCube(final boolean canFitInOneCube){
+    public void setCanFitInOneCube(final boolean canFitInOneCube) {
         this.canFitInOneCube = canFitInOneCube;
     }
 
-    public boolean canFitInOneCube(){
+    public boolean canFitInOneCube() {
         return this.canFitInOneCube;
     }
 
-    public Function<BlockState, Boolean> getIsRoad(){
+    public Function<BlockState, Boolean> getIsRoad() {
         return this.isRoad;
     }
 
-    public PathingOptions withStartSwimCost(final double startSwimCost)
-    {
+    public PathingOptions withStartSwimCost(final double startSwimCost) {
         swimCostEnter = startSwimCost;
         return this;
     }
 
-    public PathingOptions withSwimCost(final double swimCost)
-    {
+    public PathingOptions withSwimCost(final double swimCost) {
         this.swimCost = swimCost;
         return this;
     }
 
-    public PathingOptions withJumpCost(final double jumpCost)
-    {
+    public PathingOptions withJumpCost(final double jumpCost) {
         this.jumpCost = jumpCost;
         return this;
     }
 
-    public PathingOptions withDropCost(final double dropCost)
-    {
+    public PathingOptions withDropCost(final double dropCost) {
         this.dropCost = dropCost;
         return this;
     }
 
-    public PathingOptions withOnPathCost(final double onPathCost)
-    {
+    public PathingOptions withOnPathCost(final double onPathCost) {
         this.onPathCost = onPathCost;
         return this;
     }
 
-    public PathingOptions withOnRailCost(final double onRailCost)
-    {
+    public PathingOptions withOnRailCost(final double onRailCost) {
         this.onRailCost = onRailCost;
         return this;
     }
 
-    public PathingOptions withRailExitCost(final double railExitCost)
-    {
+    public PathingOptions withRailExitCost(final double railExitCost) {
         railsExitCost = railExitCost;
         return this;
     }
 
-    public PathingOptions withToggleCost(final double toggleCost)
-    {
+    public PathingOptions withToggleCost(final double toggleCost) {
         traverseToggleAbleCost = toggleCost;
         return this;
     }
 
 
-    public void setCanClimbVines(final boolean canClimbVines)
-    {
+    public void setCanClimbVines(final boolean canClimbVines) {
         this.canClimbVines = canClimbVines;
     }
 
 
-    public PathingOptions withRoadState(Function<BlockState, Boolean> function){
+    public PathingOptions withRoadState(Function<BlockState, Boolean> function) {
         this.isRoad = function;
         return this;
     }
 
-    public boolean canClimbVines()
-    {
+    public boolean canClimbVines() {
         return canClimbVines;
     }
+
     /**
      * Sets swimming ability
      *
      * @param canswim whether swimming is allowed
      * @return
      */
-    public PathingOptions withCanSwim(final boolean canswim)
-    {
+    public PathingOptions withCanSwim(final boolean canswim) {
         setCanSwim(canswim);
         return this;
     }
 
     /**
      * Set door opening capability
+     *
      * @param canEnter whether we can enter doors
      * @return
      */
-    public PathingOptions withCanEnterDoors(final boolean canEnter)
-    {
+    public PathingOptions withCanEnterDoors(final boolean canEnter) {
         setEnterDoors(canEnter);
         return this;
     }

@@ -12,40 +12,41 @@ import java.util.function.Supplier;
 
 public class PacketHotkeyPressed {
 
-    public enum Key{
+    public enum Key {
         NEXT,
         PREVIOUS
     }
+
     Key key;
 
-    public PacketHotkeyPressed(Key key){
+    public PacketHotkeyPressed(Key key) {
         this.key = key;
     }
 
     //Decoder
-    public PacketHotkeyPressed(FriendlyByteBuf buf){
+    public PacketHotkeyPressed(FriendlyByteBuf buf) {
         this.key = Key.valueOf(buf.readUtf());
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(key.name());
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if(player != null){
+            if (player != null) {
                 InteractionHand hand = StackUtil.getHeldCasterTool(player);
-                if(hand == null)
+                if (hand == null)
                     return;
                 ItemStack stack = player.getItemInHand(hand);
-                if(!(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener)){
+                if (!(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener)) {
                     return;
                 }
-                if(key == Key.NEXT){
+                if (key == Key.NEXT) {
                     hotkeyListener.onNextKeyPressed(stack, player);
-                }else if(key == Key.PREVIOUS){
+                } else if (key == Key.PREVIOUS) {
                     hotkeyListener.onPreviousKeyPressed(stack, player);
                 }
             }

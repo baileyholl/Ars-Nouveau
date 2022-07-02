@@ -19,7 +19,7 @@ public class CollectEssenceGoal extends Goal {
     boolean approached;
     int timeChanneling;
 
-    public CollectEssenceGoal(EntityDrygmy drygmy){
+    public CollectEssenceGoal(EntityDrygmy drygmy) {
         this.drygmy = drygmy;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
@@ -38,7 +38,7 @@ public class CollectEssenceGoal extends Goal {
     public void start() {
         super.start();
         DrygmyTile tile = drygmy.getHome();
-        if(tile == null)
+        if (tile == null)
             return;
         target = tile.getRandomEntity();
         complete = false;
@@ -54,40 +54,40 @@ public class CollectEssenceGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        if(complete || target == null)
+        if (complete || target == null)
             return;
 
-        if(!approached && BlockUtil.distanceFrom(drygmy.position, target.position) >= 2){
+        if (!approached && BlockUtil.distanceFrom(drygmy.position, target.position) >= 2) {
             Path path = drygmy.getNavigation().createPath(target.getX(), target.getY(), target.getZ(), 1);
-            if(path == null || !path.canReach()){
+            if (path == null || !path.canReach()) {
                 approached = true;
                 drygmy.getNavigation().stop();
                 return;
             }
             drygmy.getNavigation().moveTo(path, 1.0);
-        }else{
+        } else {
             drygmy.setChannelingEntity(target.getId());
-            drygmy.getLookControl().setLookAt(target, 10.0F, (float)drygmy.getMaxHeadXRot());
+            drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
             drygmy.getNavigation().stop();
             this.approached = true;
             drygmy.setChanneling(true);
             timeChanneling++;
-            if(timeChanneling >= 100){
+            if (timeChanneling >= 100) {
                 drygmy.setChanneling(false);
                 drygmy.setHoldingEssence(true);
                 drygmy.setChannelingEntity(-1);
                 this.complete = true;
                 BlockPos homePos = drygmy.getHome().getBlockPos();
                 BlockPos targetPos = target.blockPosition();
-                if(homePos.getY() >= targetPos.getY() - 2){
+                if (homePos.getY() >= targetPos.getY() - 2) {
                     targetPos = targetPos.above(homePos.getY() - targetPos.getY());
                 }
 
                 EntityFlyingItem item = new EntityFlyingItem(drygmy.level,
                         targetPos, homePos,
                         50,
-                       255,
-                       20);
+                        255,
+                        20);
                 drygmy.level.addFreshEntity(item);
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();

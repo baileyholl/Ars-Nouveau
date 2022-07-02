@@ -36,9 +36,11 @@ import java.util.Map;
  */
 public interface ISpellCaster {
 
-    @Nonnull Spell getSpell();
+    @Nonnull
+    Spell getSpell();
 
-    @Nonnull Spell getSpell(int slot);
+    @Nonnull
+    Spell getSpell(int slot);
 
     int getMaxSlots();
 
@@ -46,17 +48,17 @@ public interface ISpellCaster {
 
     void setCurrentSlot(int slot);
 
-    default void setNextSlot(){
+    default void setNextSlot() {
         int slot = getCurrentSlot() + 1;
-        if(slot >= getMaxSlots()){
+        if (slot >= getMaxSlots()) {
             slot = 0;
         }
         setCurrentSlot(slot);
     }
 
-    default void setPreviousSlot(){
+    default void setPreviousSlot() {
         int slot = getCurrentSlot() - 1;
-        if(slot < 0)
+        if (slot < 0)
             slot = getMaxSlots() - 1;
         setCurrentSlot(slot);
     }
@@ -77,11 +79,12 @@ public interface ISpellCaster {
 
     void setColor(ParticleColor color, int slot);
 
-    @Nonnull ConfiguredSpellSound getSound(int slot);
+    @Nonnull
+    ConfiguredSpellSound getSound(int slot);
 
     void setSound(ConfiguredSpellSound sound, int slot);
 
-    default ConfiguredSpellSound getCurrentSound(){
+    default ConfiguredSpellSound getCurrentSound() {
         return getSound(getCurrentSlot());
     }
 
@@ -100,48 +103,48 @@ public interface ISpellCaster {
     Map<Integer, Spell> getSpells();
 
     @Nonnull
-    default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster){
+    default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster) {
         return caster.getSpell();
     }
 
-    default Spell modifySpellBeforeCasting(Level worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell){
+    default Spell modifySpellBeforeCasting(Level worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell) {
         return spell;
     }
 
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage, @Nonnull Spell spell){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage, @Nonnull Spell spell) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
-        if(worldIn.isClientSide)
+        if (worldIn.isClientSide)
             return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
         spell = modifySpellBeforeCasting(worldIn, playerIn, handIn, spell);
-        if(!spell.isValid() && invalidMessage != null) {
-            PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
+        if (!spell.isValid() && invalidMessage != null) {
+            PortUtil.sendMessageNoSpam(playerIn, invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, playerIn), worldIn, playerIn, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
         HitResult result = SpellUtil.rayTrace(playerIn, 5, 0, isSensitive);
-        if(result instanceof BlockHitResult blockHit){
+        if (result instanceof BlockHitResult blockHit) {
             BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
-            if(tile instanceof ScribesTile)
+            if (tile instanceof ScribesTile)
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
-            if(!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockState(blockHit.getBlockPos()).is(BlockTagProvider.IGNORE_TILE))){
+            if (!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockState(blockHit.getBlockPos()).is(BlockTagProvider.IGNORE_TILE))) {
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
 
         }
 
 
-        if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
+        if (result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity) {
             if (resolver.onCastOnEntity(stack, entityHitResult.getEntity(), handIn))
                 playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
+        if (result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)) {
             UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
-            if(resolver.onCastOnBlock(context))
+            if (resolver.onCastOnBlock(context))
                 playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
@@ -151,23 +154,23 @@ public interface ISpellCaster {
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, Component invalidMessage){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, Component invalidMessage) {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
-    default void copyFromCaster(ISpellCaster other){
-        for(int i = 0; i < getMaxSlots() && i < other.getMaxSlots(); i++){
+    default void copyFromCaster(ISpellCaster other) {
+        for (int i = 0; i < getMaxSlots() && i < other.getMaxSlots(); i++) {
             setSpell(other.getSpell(i), i);
             setFlavorText(other.getFlavorText());
         }
     }
 
-    default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
+    default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn) {
         return new SpellResolver(context);
     }
 
-    default void playSound(BlockPos pos, Level worldIn, @Nullable Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
-        if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
+    default void playSound(BlockPos pos, Level worldIn, @Nullable Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source) {
+        if (configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
             return;
         worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
     }

@@ -25,15 +25,15 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
     int timeLooking;
     int timePerforming;
 
-    public InspectPlantGoal(Whirlisprig entity, Supplier<BlockPos> from, int maxDistanceFrom){
+    public InspectPlantGoal(Whirlisprig entity, Supplier<BlockPos> from, int maxDistanceFrom) {
         super(from, maxDistanceFrom);
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
         this.entity = entity;
     }
 
-    public boolean hasVisibleSide(BlockPos pos){
-        for(Direction d : Direction.values()){
-            if(entity.level.getBlockState(pos.relative(d)).getMaterial() == Material.AIR)
+    public boolean hasVisibleSide(BlockPos pos) {
+        for (Direction d : Direction.values()) {
+            if (entity.level.getBlockState(pos.relative(d)).getMaterial() == Material.AIR)
                 return true;
         }
         return false;
@@ -41,17 +41,17 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
 
     @Override
     public void tick() {
-        if(this.pos == null) {
+        if (this.pos == null) {
             return;
         }
         timePerforming--;
-        if(BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.5){
+        if (BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.5) {
             entity.getNavigation().moveTo(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 1.2);
-        }else{
+        } else {
             ServerLevel world = (ServerLevel) entity.level;
-            entity.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
-            if(world.random.nextInt(20) == 0)
-                world.sendParticles(ParticleTypes.HEART, this.pos.getX() +0.5, this.pos.getY()+1.1, this.pos.getZ()+0.5, 1, ParticleUtil.inRange(-0.2, 0.2),0,ParticleUtil.inRange(-0.2, 0.2),0.01);
+            entity.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
+            if (world.random.nextInt(20) == 0)
+                world.sendParticles(ParticleTypes.HEART, this.pos.getX() + 0.5, this.pos.getY() + 1.1, this.pos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
             this.timeLooking--;
         }
     }
@@ -71,12 +71,12 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
     public void start() {
         int range = 4;
         List<BlockPos> list = new ArrayList<>();
-        BlockPos.betweenClosedStream(entity.blockPosition().offset(range, range, range), entity.blockPosition().offset(-range, -range, -range)).forEach(bp ->{
-            if(WhirlisprigTile.getScore(entity.level.getBlockState(bp)) > 0 && hasVisibleSide(bp) && isInRange(bp)){
+        BlockPos.betweenClosedStream(entity.blockPosition().offset(range, range, range), entity.blockPosition().offset(-range, -range, -range)).forEach(bp -> {
+            if (WhirlisprigTile.getScore(entity.level.getBlockState(bp)) > 0 && hasVisibleSide(bp) && isInRange(bp)) {
                 list.add(bp.immutable());
             }
         });
-        if(list.isEmpty())
+        if (list.isEmpty())
             return;
         pos = list.get(entity.level.random.nextInt(list.size()));
         this.timeLooking = 120;

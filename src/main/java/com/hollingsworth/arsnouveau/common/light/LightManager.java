@@ -37,11 +37,11 @@ public class LightManager {
     public static int lastUpdateCount = 0;
     private static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
-    public static void init(){
+    public static void init() {
 
-        register(EntityType.PLAYER, (p ->{
-            if(p instanceof Player player){
-                NonNullList<ItemStack> list =  player.inventory.items;
+        register(EntityType.PLAYER, (p -> {
+            if (p instanceof Player player) {
+                NonNullList<ItemStack> list = player.inventory.items;
                 for (int i = 0; i < 9; i++) {
                     ItemStack jar = list.get(i);
                     if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()) {
@@ -52,7 +52,7 @@ public class LightManager {
 
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
-        register(ModEntities.FALLING_BLOCK.get(), (p) ->{
+        register(ModEntities.FALLING_BLOCK.get(), (p) -> {
             EnchantedFallingBlock enchantedFallingBlock = (EnchantedFallingBlock) p;
             return p.isOnFire() ? 15 : enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
@@ -76,14 +76,14 @@ public class LightManager {
         }));
     }
 
-    public static void register(EntityType<? extends Entity> type, Function<Entity, Integer> luminanceFunction){
+    public static void register(EntityType<? extends Entity> type, Function<Entity, Integer> luminanceFunction) {
         if (!LIGHT_REGISTRY.containsKey(type)) {
             LIGHT_REGISTRY.put(type, new ArrayList<>());
         }
         LIGHT_REGISTRY.get(type).add(luminanceFunction);
     }
 
-    public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry(){
+    public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry() {
         return LIGHT_REGISTRY;
     }
 
@@ -103,6 +103,7 @@ public class LightManager {
         dynamicLightSources.add(lightSource);
         lightSourcesLock.writeLock().unlock();
     }
+
     /**
      * Returns whether the light source is tracked or not.
      *
@@ -141,7 +142,7 @@ public class LightManager {
      * @param lightSource the light source to remove
      */
     public static void removeLightSource(LambDynamicLight lightSource) {
-       lightSourcesLock.writeLock().lock();
+        lightSourcesLock.writeLock().lock();
 
         var sourceIterator = dynamicLightSources.iterator();
         LambDynamicLight it;
@@ -203,8 +204,9 @@ public class LightManager {
 
     public static void scheduleChunkRebuild(@NotNull LevelRenderer renderer, int x, int y, int z) {
         if (Minecraft.getInstance().level != null)
-           renderer.setSectionDirty(x, y, z);
+            renderer.setSectionDirty(x, y, z);
     }
+
     /**
      * Updates all light sources.
      *
@@ -216,7 +218,7 @@ public class LightManager {
         lastUpdate = now;
         lastUpdateCount = 0;
 
-       lightSourcesLock.readLock().lock();
+        lightSourcesLock.readLock().lock();
         for (var lightSource : dynamicLightSources) {
             if (lightSource.lambdynlights$updateDynamicLight(renderer)) {
                 lastUpdateCount++;
@@ -230,8 +232,8 @@ public class LightManager {
      * Updates the tracked chunk sets.
      *
      * @param chunkPos the packed chunk position
-     * @param old the set of old chunk coordinates to remove this chunk from it
-     * @param newPos the set of new chunk coordinates to add this chunk to it
+     * @param old      the set of old chunk coordinates to remove this chunk from it
+     * @param newPos   the set of new chunk coordinates to add this chunk to it
      */
     public static void updateTrackedChunks(@NotNull BlockPos chunkPos, @Nullable LongOpenHashSet old, @Nullable LongOpenHashSet newPos) {
         if (old != null || newPos != null) {
@@ -242,6 +244,7 @@ public class LightManager {
                 newPos.add(pos);
         }
     }
+
     public static int getLightmapWithDynamicLight(@NotNull BlockPos pos, int lightmap) {
         return getLightmapWithDynamicLight(getDynamicLightLevel(pos), lightmap);
     }
@@ -250,7 +253,7 @@ public class LightManager {
      * Returns the lightmap with combined light levels.
      *
      * @param dynamicLightLevel the dynamic light level
-     * @param lightmap the vanilla lightmap coordinates
+     * @param lightmap          the vanilla lightmap coordinates
      * @return the modified lightmap coordinates
      */
     public static int getLightmapWithDynamicLight(double dynamicLightLevel, int lightmap) {
@@ -270,7 +273,7 @@ public class LightManager {
         return lightmap;
     }
 
-    public static int getBlockLightNoPatch(int light ){ // Reverts the forge patch to LightTexture.block
+    public static int getBlockLightNoPatch(int light) { // Reverts the forge patch to LightTexture.block
         return light >> 4 & '\uffff';
     }
 
@@ -290,13 +293,15 @@ public class LightManager {
 
         return Mth.clamp(result, 0, 15);
     }
+
     private static final double MAX_RADIUS = 7.75;
     private static final double MAX_RADIUS_SQUARED = MAX_RADIUS * MAX_RADIUS;
+
     /**
      * Returns the dynamic light level generated by the light source at the specified position.
      *
-     * @param pos the position
-     * @param lightSource the light source
+     * @param pos               the position
+     * @param lightSource       the light source
      * @param currentLightLevel the current surrounding dynamic light level
      * @return the dynamic light level at the specified position
      */
@@ -337,14 +342,14 @@ public class LightManager {
         }
     }
 
-    public static boolean shouldUpdateDynamicLight(){
+    public static boolean shouldUpdateDynamicLight() {
         return Config.DYNAMIC_LIGHTS_ENABLED != null && Config.DYNAMIC_LIGHTS_ENABLED.get();
     }
 
-    public static void toggleLightsAndConfig(boolean enabled){
+    public static void toggleLightsAndConfig(boolean enabled) {
         Config.DYNAMIC_LIGHTS_ENABLED.set(enabled);
         Config.DYNAMIC_LIGHTS_ENABLED.save();
-        if(!enabled){
+        if (!enabled) {
             clearLightSources();
         }
     }

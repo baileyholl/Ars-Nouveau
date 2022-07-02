@@ -23,7 +23,7 @@ public class PatchouliBuilder {
         this.withCategory(category);
     }
 
-    public PatchouliBuilder(ResourceLocation category, ItemLike itemLike){
+    public PatchouliBuilder(ResourceLocation category, ItemLike itemLike) {
         this.category = category;
         withName(itemLike.asItem().getDescriptionId());
         this.name = getRegistryName(itemLike.asItem()).getPath();
@@ -35,57 +35,57 @@ public class PatchouliBuilder {
         this(category, itemLike.get());
     }
 
-    public PatchouliBuilder withName(String path){
+    public PatchouliBuilder withName(String path) {
         object.addProperty("name", path);
         this.name = path;
         return this;
     }
 
-    public PatchouliBuilder withSortNum(int num){
+    public PatchouliBuilder withSortNum(int num) {
         object.addProperty("sortnum", num);
         return this;
     }
 
-    public PatchouliBuilder withPage(IPatchouliPage page){
+    public PatchouliBuilder withPage(IPatchouliPage page) {
         pages.add(page.build());
         return this;
     }
 
-    public PatchouliBuilder withIcon(String path){
+    public PatchouliBuilder withIcon(String path) {
         object.addProperty("icon", path);
         return this;
     }
 
-    public PatchouliBuilder withIcon(ItemLike item){
+    public PatchouliBuilder withIcon(ItemLike item) {
         object.addProperty("icon", getRegistryName(item.asItem()).toString());
         return this;
     }
 
-    public PatchouliBuilder withIcon(RegistryObject item){
-        object.addProperty("icon", getRegistryName(((ItemLike)item.get()).asItem()).toString());
+    public PatchouliBuilder withIcon(RegistryObject item) {
+        object.addProperty("icon", getRegistryName(((ItemLike) item.get()).asItem()).toString());
         return this;
     }
 
-    private PatchouliBuilder withCategory(ResourceLocation path){
+    private PatchouliBuilder withCategory(ResourceLocation path) {
         object.addProperty("category", path.toString());
         return this;
     }
 
-    public PatchouliBuilder withTextPage(String contents){
+    public PatchouliBuilder withTextPage(String contents) {
         pages.add(new TextPage(contents).build());
         return this;
     }
 
-    public PatchouliBuilder withLocalizedText(String id){
+    public PatchouliBuilder withLocalizedText(String id) {
         textCounter++;
         return withTextPage("ars_nouveau.page" + textCounter + "." + id);
     }
 
-    public PatchouliBuilder withLocalizedText(){
+    public PatchouliBuilder withLocalizedText() {
         return withLocalizedText(this.name);
     }
 
-    public JsonObject build(){
+    public JsonObject build() {
         this.object.add("pages", pages);
         return this.object;
     }

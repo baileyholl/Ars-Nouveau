@@ -123,27 +123,27 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectSummonUndead.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withItem(Items.BONE, 1).withItem(Items.WITHER_SKELETON_SKULL));
         add(get(EffectName.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.NAME_TAG));
         add(get(EffectSenseMagic.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(ItemsRegistry.DOWSING_ROD).withItem(ItemsRegistry.STARBUNCLE_SHARD));
-        for(GlyphRecipe recipe : recipes){
-            Path path = getScribeGlyphPath(output,  recipe.output.getItem());
+        for (GlyphRecipe recipe : recipes) {
+            Path path = getScribeGlyphPath(output, recipe.output.getItem());
             DataProvider.saveStable(cache, recipe.asRecipe(), path);
         }
     }
 
-    public void add(GlyphRecipe recipe){
+    public void add(GlyphRecipe recipe) {
         recipes.add(recipe);
     }
 
-    public GlyphRecipe get(AbstractSpellPart spellPart){
+    public GlyphRecipe get(AbstractSpellPart spellPart) {
         return new GlyphRecipe(spellPart.getRegistryName(),
                 ArsNouveauAPI.getInstance().getGlyphItem(spellPart).getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
     }
 
-    public int getExpFromTier(AbstractSpellPart spellPart){
+    public int getExpFromTier(AbstractSpellPart spellPart) {
 
-        return switch (spellPart.getTier().value){
-            case(1):
+        return switch (spellPart.getTier().value) {
+            case (1):
                 yield 27;
-            case(2):
+            case (2):
                 yield 55;
             case 3:
                 yield 160;
@@ -156,6 +156,7 @@ public class GlyphRecipeProvider implements DataProvider {
         return pathIn.resolve("data/ars_nouveau/recipes/" + getRegistryName(glyph).getPath() + ".json");
 
     }
+
     @Override
     public String getName() {
         return "Glyph Recipes";

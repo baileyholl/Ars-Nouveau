@@ -7,20 +7,21 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiblockPage extends AbstractPage{
+public class MultiblockPage extends AbstractPage {
     List<Mapping> mappings = new ArrayList<>();
     String[][] pattern;
-    public MultiblockPage(String name, String[][] pattern){
+
+    public MultiblockPage(String name, String[][] pattern) {
         this.object.addProperty("name", name);
         this.pattern = pattern;
     }
 
-    public MultiblockPage withText(String text){
+    public MultiblockPage withText(String text) {
         object.addProperty("text", text);
         return this;
     }
 
-    public MultiblockPage withMapping(String letter, String object){
+    public MultiblockPage withMapping(String letter, String object) {
         mappings.add(new Mapping(letter, object));
         return this;
     }
@@ -34,15 +35,15 @@ public class MultiblockPage extends AbstractPage{
     public JsonObject build() {
         JsonObject multiblock = new JsonObject();
         JsonArray pattern = new JsonArray();
-        for(String[] obj : this.pattern){
+        for (String[] obj : this.pattern) {
             JsonArray array = new JsonArray();
-            for(String s : obj)
+            for (String s : obj)
                 array.add(s);
             pattern.add(array);
         }
         multiblock.add("pattern", pattern);
         JsonObject mapping = new JsonObject();
-        for(Mapping m : this.mappings){
+        for (Mapping m : this.mappings) {
             mapping.addProperty(m.letter, m.object);
         }
         multiblock.add("mapping", mapping);

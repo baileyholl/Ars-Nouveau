@@ -22,11 +22,11 @@ public interface IFamiliar {
 
     void setOwnerID(UUID uuid);
 
-    default Entity getThisEntity(){
+    default Entity getThisEntity() {
         return (Entity) this;
     }
 
-    default @Nullable Entity getOwnerServerside(){
+    default @Nullable Entity getOwnerServerside() {
         return ((ServerLevel) getThisEntity().level).getEntity(getOwnerID());
     }
 
@@ -34,17 +34,17 @@ public interface IFamiliar {
      * Called if another familiar is summoned in the world, not including this one.
      * Used for maintaining the familiar limit in the world.
      */
-    default void onFamiliarSpawned(FamiliarSummonEvent event){
-        if(event.owner.equals(getOwner()) && !event.getEntity().equals(this)){
+    default void onFamiliarSpawned(FamiliarSummonEvent event) {
+        if (event.owner.equals(getOwner()) && !event.getEntity().equals(this)) {
             this.getThisEntity().remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
-    default @Nullable LivingEntity getOwner(){
-        if(getThisEntity().level.isClientSide || getOwnerID() == null)
+    default @Nullable LivingEntity getOwner() {
+        if (getThisEntity().level.isClientSide || getOwnerID() == null)
             return null;
 
-        return (LivingEntity) ((ServerLevel)getThisEntity().level).getEntity(getOwnerID());
+        return (LivingEntity) ((ServerLevel) getThisEntity().level).getEntity(getOwnerID());
     }
 
     default boolean wantsToAttack(LivingEntity ownerLastHurt, LivingEntity owner) {

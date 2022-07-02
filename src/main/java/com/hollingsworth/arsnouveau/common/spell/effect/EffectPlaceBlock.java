@@ -47,21 +47,21 @@ public class EffectPlaceBlock extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         BlockHitResult result = rayTraceResult;
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
-        for(BlockPos pos1 : posList) {
+        for (BlockPos pos1 : posList) {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
-            if(spellContext.castingTile instanceof IPlaceBlockResponder){
+            if (spellContext.castingTile instanceof IPlaceBlockResponder) {
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
                 if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item))
                     return;
 
                 fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                if (MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
                     continue;
                 }
                 // Special offset for touch
                 boolean isTouch = spellContext.getSpell().recipe.get(0) instanceof MethodTouch;
                 BlockState blockTargetted = isTouch ? world.getBlockState(hitPos.relative(result.getDirection().getOpposite())) : world.getBlockState(hitPos.relative(result.getDirection()));
-                if(blockTargetted.getMaterial() != Material.AIR)
+                if (blockTargetted.getMaterial() != Material.AIR)
                     continue;
                 // Special offset because we are placing a block against the face we are looking at (in the case of touch)
                 Direction direction = isTouch ? result.getDirection().getOpposite() : result.getDirection();
@@ -73,7 +73,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                         new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
                                 context.hitResult.getDirection(), affectedPos, false),
                         world, shooter, spellContext, resolver);
-            }else if(shooter instanceof IPlaceBlockResponder){
+            } else if (shooter instanceof IPlaceBlockResponder) {
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
                 if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item))
                     return;
@@ -85,9 +85,9 @@ public class EffectPlaceBlock extends AbstractEffect {
                 }
                 attemptPlace(world, stack, item, result, fakePlayer);
 
-            }else if(shooter instanceof Player playerEntity){
-                NonNullList<ItemStack> list =  playerEntity.inventory.items;
-                if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
+            } else if (shooter instanceof Player playerEntity) {
+                NonNullList<ItemStack> list = playerEntity.inventory.items;
+                if (!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
                 if (MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), playerEntity))) {
                     continue;
@@ -95,10 +95,10 @@ public class EffectPlaceBlock extends AbstractEffect {
                 for (int i = 0; i < 9; i++) {
                     ItemStack stack = list.get(i);
 
-                    if(stack.getItem() instanceof BlockItem blockItem && world instanceof ServerLevel){
+                    if (stack.getItem() instanceof BlockItem blockItem && world instanceof ServerLevel) {
                         BlockHitResult resolveResult = new BlockHitResult(new Vec3(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
                         InteractionResult resultType = attemptPlace(world, stack, blockItem, resolveResult, fakePlayer);
-                        if(InteractionResult.FAIL != resultType) {
+                        if (InteractionResult.FAIL != resultType) {
                             BlockPos affectedPos = resolveResult.getBlockPos();
                             ShapersFocus.tryPropagateBlockSpell(
                                     new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
@@ -112,7 +112,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         }
     }
 
-    public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer){
+    public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer) {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
         return item.place(context);

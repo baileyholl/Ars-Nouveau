@@ -15,7 +15,7 @@ public class FamOwnerHurtTargetGoal extends TargetGoal {
     private LivingEntity ownerLastHurt;
     private int timestamp;
 
-    public FamOwnerHurtTargetGoal(IFamiliar familiar){
+    public FamOwnerHurtTargetGoal(IFamiliar familiar) {
         super((Mob) familiar.getThisEntity(), false);
         this.familiar = familiar;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));

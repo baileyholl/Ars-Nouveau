@@ -7,26 +7,26 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 public class PortUtil {
-    public static void sendMessage(Entity playerEntity, Component component){
-        if(playerEntity == null)
+    public static void sendMessage(Entity playerEntity, Component component) {
+        if (playerEntity == null)
             return;
         playerEntity.sendSystemMessage(component);
     }
 
-    public static void sendMessageNoSpam(Entity playerEntity, Component component){
+    public static void sendMessageNoSpam(Entity playerEntity, Component component) {
         if (playerEntity instanceof Player) {
             Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, false), (Player) playerEntity);
         }
     }
 
-    public static void sendMessageCenterScreen(Entity playerEntity, Component component){
+    public static void sendMessageCenterScreen(Entity playerEntity, Component component) {
         if (playerEntity instanceof Player) {
             Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, true), (Player) playerEntity);
         }
     }
 
     @Deprecated
-    public static void sendMessage(Entity playerEntity, String message){
+    public static void sendMessage(Entity playerEntity, String message) {
         sendMessage(playerEntity, Component.literal(message));
     }
 

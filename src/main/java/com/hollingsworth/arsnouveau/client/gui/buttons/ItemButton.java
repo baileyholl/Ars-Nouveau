@@ -18,13 +18,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemButton extends GuiImageButton{
+public class ItemButton extends GuiImageButton {
 
     public String spellTag;
     public Ingredient ingredient = Ingredient.of();
 
     public ItemButton(BaseBook parent, int x, int y) {
-        super( x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", (b) -> {});
+        super(x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", (b) -> {
+        });
         this.spellTag = "";
         this.resourceIcon = "";
         this.parent = parent;
@@ -37,18 +38,17 @@ public class ItemButton extends GuiImageButton{
 
     @Override
     public void render(PoseStack ms, int parX, int parY, float partialTicks) {
-        if (visible)
-        {
+        if (visible) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
-            if(!this.resourceIcon.equals("")){
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon), x + 3, y + 2, u, v, 16, 16, 16, 16,ms);
+            if (!this.resourceIcon.equals("")) {
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon), x + 3, y + 2, u, v, 16, 16, 16, 16, ms);
             }
             if (ingredient != null && ingredient.getItems().length != 0) {
                 ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];
-                if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
-                    if(parent instanceof GlyphUnlockMenu menu){
+                if (parent.isMouseInRelativeRange(parX, parY, x, y, width, height)) {
+                    if (parent instanceof GlyphUnlockMenu menu) {
                         Font font = Minecraft.getInstance().font;
                         List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, parent.getTooltipFromItem(stack), parX, width, height, font, font));
                         menu.renderTooltipInternal(ms, components, parX, parY);

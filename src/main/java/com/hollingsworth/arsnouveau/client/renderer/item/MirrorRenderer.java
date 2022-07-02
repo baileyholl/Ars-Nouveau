@@ -7,11 +7,12 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class MirrorRenderer extends GeoItemRenderer<EnchantersMirror> {
     public static AnimatedGeoModel model = new GenericModel("enchanters_mirror", "items");
+
     public MirrorRenderer() {
         super(model);
     }
 
-    public static GenericItemBlockRenderer getISTER(){
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 
 public class AugmentExtract extends AbstractAugment {
     public static AugmentExtract INSTANCE = new AugmentExtract();

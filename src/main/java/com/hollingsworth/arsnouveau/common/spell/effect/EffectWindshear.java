@@ -39,8 +39,8 @@ public class EffectWindshear extends AbstractEffect {
             dealDamage(world, shooter, (float) (DAMAGE.get() + numBlocks), spellStats, rayTraceResult.getEntity(), DamageSource.FALL);
             Vec3 vec = rayTraceResult.getEntity().position;
             for (int i = 0; i < 10; i++) {
-                ((ServerLevel)world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y +0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2),30,
-                        ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2),ParticleUtil.inRange(-0.2, 0.2), 0.3);
+                ((ServerLevel) world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y + 0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2), 30,
+                        ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), 0.3);
             }
         }
     }

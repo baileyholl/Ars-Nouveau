@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public interface IFollowingSummon {
     EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(TamableAnimal.class, EntityDataSerializers.OPTIONAL_UUID);
+
     Level getWorld();
 
     PathNavigation getPathNav();

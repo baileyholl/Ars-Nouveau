@@ -12,8 +12,8 @@ public class AlchemicalRenderer extends GeoBlockRenderer<AlchemicalSourcelinkTil
     public AlchemicalRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
     }
-    
-    public static GenericItemBlockRenderer getISTER(){
+
+    public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 }

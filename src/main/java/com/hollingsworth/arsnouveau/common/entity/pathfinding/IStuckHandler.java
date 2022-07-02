@@ -3,8 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 /**
  * Stuck handler for pathing, gets called to check/deal with stuck status
  */
-public interface IStuckHandler
-{
+public interface IStuckHandler {
     /**
      * Checks if the navigator is stuck
      *

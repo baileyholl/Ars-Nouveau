@@ -50,15 +50,20 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Shadow
     public abstract boolean isRemoved();
 
-    @Shadow private ChunkPos chunkPosition;
+    @Shadow
+    private ChunkPos chunkPosition;
 
-    @Shadow public abstract Level getLevel();
+    @Shadow
+    public abstract Level getLevel();
 
-    @Shadow public abstract BlockPos getOnPos();
+    @Shadow
+    public abstract BlockPos getOnPos();
 
-    @Shadow public abstract double getZ(double pScale);
+    @Shadow
+    public abstract double getZ(double pScale);
 
-    @Shadow public abstract Vec3 position();
+    @Shadow
+    public abstract Vec3 position();
 
     @Unique
     protected int lambdynlights$luminance = 0;
@@ -78,7 +83,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         // We do not want to update the entity on the server.
-        if(level.isClientSide && !LightManager.shouldUpdateDynamicLight()){
+        if (level.isClientSide && !LightManager.shouldUpdateDynamicLight()) {
             lambdynlights$luminance = 0;
         }
         if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight() && LightManager.getLightRegistry().containsKey(getType())) {
@@ -97,11 +102,12 @@ public abstract class LightEntityMixin implements LambDynamicLight {
             this.setDynamicLightEnabled(false);
         }
     }
-    @Inject(method = "onClientRemoval", at=@At("TAIL"))
-    public void removed(CallbackInfo ci){
+
+    @Inject(method = "onClientRemoval", at = @At("TAIL"))
+    public void removed(CallbackInfo ci) {
         if (this.level.isClientSide()) {
             this.setDynamicLightEnabled(false);
-            if(lambdynlights$luminance > 0)
+            if (lambdynlights$luminance > 0)
                 EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(this.getLevel(), this.position(), 8, lambdynlights$luminance));
         }
     }

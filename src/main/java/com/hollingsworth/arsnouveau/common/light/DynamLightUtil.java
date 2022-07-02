@@ -16,10 +16,10 @@ public class DynamLightUtil {
         return coord >> 4;
     }
 
-    public static int getLuminance(Entity entity){
+    public static int getLuminance(Entity entity) {
         int level = 0;
-        if(LightManager.getLightRegistry().containsKey(entity.getType())){
-            for(Function<Entity, Integer> function : LightManager.getLightRegistry().get(entity.getType())){
+        if (LightManager.getLightRegistry().containsKey(entity.getType())) {
+            for (Function<Entity, Integer> function : LightManager.getLightRegistry().get(entity.getType())) {
                 int val = function.apply(entity);
                 level = Math.max(val, level);
             }

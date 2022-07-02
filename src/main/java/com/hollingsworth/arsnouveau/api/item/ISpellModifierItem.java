@@ -15,7 +15,7 @@ public interface ISpellModifierItem extends ISpellModifier {
     /**
      * A helper method for when used by an item.
      */
-    default SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext){
+    default SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
         return applyModifiers(builder, spellPart, rayTraceResult, world, shooter, spellContext);
     }
 

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 /**
  * Main class of the Ars Nouveau API.
- *
+ * <p>
  * Obtain an instance with {@link ArsNouveauAPI#getInstance()}.
  * FOR ADDON AUTHORS: All registration should occur from YOUR MOD CONSTRUCTOR. BEFORE ITEMS REGISTER.
  * If you need to access data from other addons, use the FMLLoadingComplete event.
@@ -49,7 +49,7 @@ public class ArsNouveauAPI {
 
     /**
      * Map of all spells to be registered in the spell system
-     *
+     * <p>
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
@@ -77,9 +77,13 @@ public class ArsNouveauAPI {
 
     private ConcurrentHashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new ConcurrentHashMap<>();
 
-    /** Validator to use when crafting a spell in the spell book. */
+    /**
+     * Validator to use when crafting a spell in the spell book.
+     */
     private ISpellValidator craftingSpellValidator;
-    /** Validator to use when casting a spell. */
+    /**
+     * Validator to use when casting a spell.
+     */
     private ISpellValidator castingSpellValidator;
 
     private List<IEnchantingRecipe> enchantingApparatusRecipes = new ArrayList<>();
@@ -88,19 +92,19 @@ public class ArsNouveauAPI {
 
     private List<BrewingRecipe> brewingRecipes = new ArrayList<>();
 
-    public List<AbstractSpellPart> getDefaultStartingSpells(){
+    public List<AbstractSpellPart> getDefaultStartingSpells() {
         return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
-    public Item getGlyphItem(AbstractSpellPart spell){
+    public Item getGlyphItem(AbstractSpellPart spell) {
         return spell.glyphItem;
     }
 
-    public Item getFamiliarItem(ResourceLocation id){
+    public Item getFamiliarItem(ResourceLocation id) {
         return familiarScriptMap.get(id);
     }
 
-    public AbstractSpellPart registerSpell(AbstractSpellPart part){
+    public AbstractSpellPart registerSpell(AbstractSpellPart part) {
         glyphItemMap.put(part.getRegistryName(), part::getGlyph);
 
         //register the spell part's config in
@@ -114,20 +118,20 @@ public class ArsNouveauAPI {
         return spellpartMap.put(part.getRegistryName(), part);
     }
 
-    public AbstractRitual registerRitual(AbstractRitual ritual){
+    public AbstractRitual registerRitual(AbstractRitual ritual) {
         return ritualMap.put(ritual.getRegistryName(), ritual);
     }
 
-    public AbstractFamiliarHolder registerFamiliar(AbstractFamiliarHolder familiar){
+    public AbstractFamiliarHolder registerFamiliar(AbstractFamiliarHolder familiar) {
         return familiarHolderMap.put(familiar.getRegistryName(), familiar);
     }
 
-    public @Nullable AbstractRitual getRitual(ResourceLocation id){
-        if(!ritualMap.containsKey(id))
+    public @Nullable AbstractRitual getRitual(ResourceLocation id) {
+        if (!ritualMap.containsKey(id))
             return null;
-        try{
+        try {
             return ritualMap.get(id).getClass().getDeclaredConstructor().newInstance();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -141,23 +145,23 @@ public class ArsNouveauAPI {
         return spellpartMap;
     }
 
-    public Map<ResourceLocation, Supplier<Glyph>> getGlyphItemMap(){
+    public Map<ResourceLocation, Supplier<Glyph>> getGlyphItemMap() {
         return glyphItemMap;
     }
 
-    public Map<ResourceLocation, AbstractRitual> getRitualMap(){
+    public Map<ResourceLocation, AbstractRitual> getRitualMap() {
         return ritualMap;
     }
 
-    public Map<ResourceLocation, RitualTablet> getRitualItemMap(){
+    public Map<ResourceLocation, RitualTablet> getRitualItemMap() {
         return ritualParchmentMap;
     }
 
-    public Map<ResourceLocation, AbstractFamiliarHolder> getFamiliarHolderMap(){
+    public Map<ResourceLocation, AbstractFamiliarHolder> getFamiliarHolderMap() {
         return this.familiarHolderMap;
     }
 
-    public Map<ResourceLocation, FamiliarScript> getFamiliarScriptMap(){
+    public Map<ResourceLocation, FamiliarScript> getFamiliarScriptMap() {
         return this.familiarScriptMap;
     }
 
@@ -169,17 +173,17 @@ public class ArsNouveauAPI {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
         List<IEnchantingRecipe> recipesByType = new ArrayList<>(); // todo lazy init enchanting types
-        for(RecipeType<? extends IEnchantingRecipe> type : enchantingRecipeTypes){
+        for (RecipeType<? extends IEnchantingRecipe> type : enchantingRecipeTypes) {
             recipesByType.addAll(manager.getAllRecipesFor(type));
         }
         recipes.addAll(recipesByType);
         return recipes;
     }
 
-    public List<BrewingRecipe> getAllPotionRecipes(){
-        if(brewingRecipes.isEmpty()){
-            BrewingRecipeRegistry.getRecipes().forEach(ib ->{
-                if(ib instanceof BrewingRecipe brewingRecipe)
+    public List<BrewingRecipe> getAllPotionRecipes() {
+        if (brewingRecipes.isEmpty()) {
+            BrewingRecipeRegistry.getRecipes().forEach(ib -> {
+                if (ib instanceof BrewingRecipe brewingRecipe)
                     brewingRecipes.add(brewingRecipe);
             });
 
@@ -202,7 +206,7 @@ public class ArsNouveauAPI {
      * onto caster items, which generally have a built-in cast method.
      */
     public ISpellValidator getSpellCraftingSpellValidator() {
-        if(craftingSpellValidator == null)
+        if (craftingSpellValidator == null)
             craftingSpellValidator = new StandardSpellValidator(false);
         return craftingSpellValidator;
     }
@@ -212,31 +216,34 @@ public class ArsNouveauAPI {
      * This validator enforces all rules, asserting that a spell can be cast.
      */
     public ISpellValidator getSpellCastingSpellValidator() {
-        if(castingSpellValidator == null) // Lazy init this because we need configs to load.
+        if (castingSpellValidator == null) // Lazy init this because we need configs to load.
             castingSpellValidator = new StandardSpellValidator(true);
         return castingSpellValidator;
     }
 
-    public @Nullable IScryer getScryer(ResourceLocation id){
+    public @Nullable IScryer getScryer(ResourceLocation id) {
         return this.scryerMap.get(id);
     }
 
-    public boolean registerScryer(IScryer scryer){
+    public boolean registerScryer(IScryer scryer) {
         this.scryerMap.put(scryer.getRegistryName(), scryer);
         return true;
     }
 
-    public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry(){
+    public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry() {
         return this.spellSoundsRegistry;
     }
 
-    public SpellSound registerSpellSound(SpellSound sound){
+    public SpellSound registerSpellSound(SpellSound sound) {
         return this.spellSoundsRegistry.put(sound.getId(), sound);
     }
 
-    private ArsNouveauAPI(){}
+    private ArsNouveauAPI() {
+    }
 
-    /** Retrieves a handle to the singleton instance. */
+    /**
+     * Retrieves a handle to the singleton instance.
+     */
     public static ArsNouveauAPI getInstance() {
         return INSTANCE;
     }
@@ -244,7 +251,7 @@ public class ArsNouveauAPI {
     // This is needed internally by the mod, so just make it eagerly.
     private static final ArsNouveauAPI INSTANCE = new ArsNouveauAPI();
 
-    static{
+    static {
         //think we just gotta ensure the path exists once
         FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID), ArsNouveau.MODID);
     }

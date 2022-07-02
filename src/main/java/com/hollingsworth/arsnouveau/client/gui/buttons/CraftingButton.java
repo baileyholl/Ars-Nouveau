@@ -15,14 +15,14 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CraftingButton extends GuiImageButton{
+public class CraftingButton extends GuiImageButton {
     int slotNum;
     public ResourceLocation spellTag;
     public AbstractSpellPart abstractSpellPart;
     public List<SpellValidationError> validationErrors;
 
     public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.OnPress onPress) {
-        super( x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
+        super(x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
         this.slotNum = slotNum;
         this.spellTag = ArsNouveauAPI.EMPTY_KEY;
         this.resourceIcon = "";
@@ -39,20 +39,19 @@ public class CraftingButton extends GuiImageButton{
 
     @Override
     public void render(PoseStack ms, int parX, int parY, float partialTicks) {
-        if (visible)
-        {
+        if (visible) {
             if (validationErrors.isEmpty()) {
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             } else {
                 RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
             }
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
-            if(this.abstractSpellPart != null) {
+            if (this.abstractSpellPart != null) {
                 RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x + 3, y + 2, 16, !validationErrors.isEmpty());
             }
-            if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
+            if (parent.isMouseInRelativeRange(parX, parY, x, y, width, height)) {
 
-                if(parent.api.getSpellpartMap().containsKey(this.spellTag)) {
+                if (parent.api.getSpellpartMap().containsKey(this.spellTag)) {
                     List<Component> tooltip = new LinkedList<>();
                     tooltip.add(Component.translatable(parent.api.getSpellpartMap().get(this.spellTag).getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {

@@ -28,10 +28,10 @@ public class GravityEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
         super.applyEffectTick(livingEntity, p_76394_2_);
-        if(!livingEntity.isOnGround()){
+        if (!livingEntity.isOnGround()) {
             boolean isTooHigh = true;
             Level world = livingEntity.level;
-            if(livingEntity instanceof Player) {
+            if (livingEntity instanceof Player) {
                 for (int i = 1; i < 3; i++) {
                     if (world.getBlockState(livingEntity.blockPosition().below(i)).getMaterial() != Material.AIR) {
                         isTooHigh = false;
@@ -39,7 +39,7 @@ public class GravityEffect extends MobEffect {
                     }
                 }
             }
-            if(isTooHigh){
+            if (isTooHigh) {
                 livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().add(0, -0.5, 0));
                 livingEntity.hurtMarked = true;
             }
@@ -47,16 +47,17 @@ public class GravityEffect extends MobEffect {
         }
 
     }
+
     // Disable flight here because items tick after our potions
     @SubscribeEvent
-    public static void entityTick(TickEvent.PlayerTickEvent e){
+    public static void entityTick(TickEvent.PlayerTickEvent e) {
         if (e.phase == TickEvent.Phase.END && e.player.hasEffect(ModPotions.GRAVITY_EFFECT.get()) && !e.player.isOnGround() && !e.player.isCreative()) {
             e.player.abilities.flying = false;
         }
     }
 
     @SubscribeEvent
-    public static void entityHurt(LivingHurtEvent e){
+    public static void entityHurt(LivingHurtEvent e) {
         if (e.getSource().equals(DamageSource.FALL) && e.getEntityLiving().hasEffect(ModPotions.GRAVITY_EFFECT.get())) {
             e.setAmount(e.getAmount() * 2.0f);
         }

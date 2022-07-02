@@ -45,7 +45,7 @@ public class BookSlider extends ForgeSlider {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(pPoseStack, this.x, this.y, 0,0, 100,20 , this.width, this.height);
+        this.blit(pPoseStack, this.x, this.y, 0, 0, 100, 20, this.width, this.height);
 //        this.blit(pPoseStack, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
 //        this.blit(pPoseStack, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
         this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);

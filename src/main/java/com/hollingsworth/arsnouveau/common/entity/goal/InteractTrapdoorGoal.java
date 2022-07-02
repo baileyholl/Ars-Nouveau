@@ -58,10 +58,10 @@ public class InteractTrapdoorGoal extends Goal {
         } else if (!this.mob.horizontalCollision) {
             return false;
         } else {
-            GroundPathNavigation groundpathnavigator = (GroundPathNavigation)this.mob.getNavigation();
+            GroundPathNavigation groundpathnavigator = (GroundPathNavigation) this.mob.getNavigation();
             Path path = groundpathnavigator.getPath();
             if (path != null && !path.isDone() && groundpathnavigator.canOpenDoors()) {
-                for(int i = 0; i < Math.min(path.getNextNodeIndex() + 2, path.getNodeCount()); ++i) {
+                for (int i = 0; i < Math.min(path.getNextNodeIndex() + 2, path.getNodeCount()); ++i) {
                     Node pathpoint = path.getNode(i);
                     this.doorPos = new BlockPos(pathpoint.x, pathpoint.y, pathpoint.z);
                     if (!(this.mob.distanceToSqr(this.doorPos.getX(), this.mob.getY(), this.doorPos.getZ()) > 2.25D)) {
@@ -81,10 +81,9 @@ public class InteractTrapdoorGoal extends Goal {
         }
     }
 
-    public boolean isWoodenTrapdoor(){
+    public boolean isWoodenTrapdoor() {
         return mob.level.getBlockState(doorPos).getBlock() instanceof TrapDoorBlock && mob.level.getBlockState(doorPos).getMaterial() == Material.WOOD;
     }
-
 
 
     public boolean canContinueToUse() {
@@ -93,13 +92,13 @@ public class InteractTrapdoorGoal extends Goal {
 
     public void start() {
         this.passed = false;
-        this.doorOpenDirX = (float)((double)this.doorPos.getX() + 0.5D - this.mob.getX());
-        this.doorOpenDirZ = (float)((double)this.doorPos.getZ() + 0.5D - this.mob.getZ());
+        this.doorOpenDirX = (float) ((double) this.doorPos.getX() + 0.5D - this.mob.getX());
+        this.doorOpenDirZ = (float) ((double) this.doorPos.getZ() + 0.5D - this.mob.getZ());
     }
 
     public void tick() {
-        float f = (float)((double)this.doorPos.getX() + 0.5D - this.mob.getX());
-        float f1 = (float)((double)this.doorPos.getZ() + 0.5D - this.mob.getZ());
+        float f = (float) ((double) this.doorPos.getX() + 0.5D - this.mob.getX());
+        float f1 = (float) ((double) this.doorPos.getZ() + 0.5D - this.mob.getZ());
         float f2 = this.doorOpenDirX * f + this.doorOpenDirZ * f1;
         if (f2 < 0.0F) {
             this.passed = true;

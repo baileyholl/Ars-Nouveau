@@ -12,17 +12,18 @@ import java.util.stream.Stream;
 public class PotionIngredient extends Ingredient {
     private final ItemStack stack;
 
-    public PotionIngredient(ItemStack stack){
+    public PotionIngredient(ItemStack stack) {
         super(Stream.of(new ItemValue(stack)));
         this.stack = stack;
     }
-    public static PotionIngredient fromPotion(Potion potion){
+
+    public static PotionIngredient fromPotion(Potion potion) {
         ItemStack stack = new ItemStack(Items.POTION);
         PotionUtils.setPotion(stack, potion);
         return new PotionIngredient(stack);
     }
 
-    public ItemStack getStack(){
+    public ItemStack getStack() {
         return stack;
     }
 

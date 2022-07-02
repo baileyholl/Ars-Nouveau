@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 
 public interface ISpellCastListener {
 
-    default void onCast(SpellCastEvent event){}
+    default void onCast(SpellCastEvent event) {
+    }
 
-    default void onModifier(SpellModifierEvent event){}
+    default void onModifier(SpellModifierEvent event) {
+    }
 }

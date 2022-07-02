@@ -22,12 +22,14 @@ public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingAppa
     public EnchantingApparatusRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(p_i226006_1_, new GenericModel<>("enchanting_apparatus"));
     }
+
     MultiBufferSource buffer;
     EnchantingApparatusTile tile;
     ResourceLocation text;
+
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if(bone.getName().equals("frame_all") && tile.catalystItem != null){
+        if (bone.getName().equals("frame_all") && tile.catalystItem != null) {
 
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();

@@ -17,11 +17,11 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     @Override
     public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if(world.isClientSide() || world.getGameTime() % 200 !=  0 || stack.getDamageValue() == 0)
+        if (world.isClientSide() || world.getGameTime() % 200 != 0 || stack.getDamageValue() == 0)
             return;
 
         CapabilityRegistry.getMana(player).ifPresent(mana -> {
-            if(mana.getCurrentMana() > 20){
+            if (mana.getCurrentMana() > 20) {
                 mana.removeMana(20);
                 stack.setDamageValue(stack.getDamageValue() - 1);
             }

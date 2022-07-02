@@ -13,7 +13,7 @@ import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
-public class DelayedSpellEvent implements ITimedEvent{
+public class DelayedSpellEvent implements ITimedEvent {
     private int duration;
     private final Spell spell;
     private final SpellContext context;
@@ -21,7 +21,7 @@ public class DelayedSpellEvent implements ITimedEvent{
     private final Level world;
     private final @Nullable LivingEntity shooter;
 
-    public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context){
+    public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context) {
         this.duration = delay;
         this.spell = spell;
         this.result = result;
@@ -33,16 +33,16 @@ public class DelayedSpellEvent implements ITimedEvent{
     @Override
     public void tick(boolean serverSide) {
         duration--;
-        if(duration <= 0 && serverSide){
+        if (duration <= 0 && serverSide) {
             resolveSpell();
-        }else if(!serverSide && result != null){
+        } else if (!serverSide && result != null) {
             BlockPos hitVec = result instanceof EntityHitResult ? ((EntityHitResult) result).getEntity().blockPosition() : new BlockPos(result.getLocation());
             ParticleUtil.spawnTouch((ClientLevel) world, hitVec, context.getColors());
         }
     }
 
-    public void resolveSpell(){
-        if(world == null)
+    public void resolveSpell() {
+        if (world == null)
             return;
         SpellResolver resolver = new SpellResolver(context);
         resolver.onResolveEffect(world, result);

@@ -69,24 +69,24 @@ public class EffectExchange extends AbstractEffect {
             handlers = ((IPlaceBlockResponder) spellContext.castingTile).getInventory();
         }
 
-        if(shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)
+        if (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)
             handlers = ((IPlaceBlockResponder) shooter).getInventory();
 
         Block firstBlock = null;
-        for(BlockPos pos1 : posList) {
+        for (BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
 
-            if(!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock() ||
+            if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock() ||
                     world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR
-                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)){
+                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }
-            if(isRealPlayer(shooter) && spellContext.castingTile == null) {
+            if (isRealPlayer(shooter) && spellContext.castingTile == null) {
                 firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, fakePlayer, spellContext, resolver);
-            } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
+            } else if ((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)) {
                 boolean shouldBreak = false;
-                for(IItemHandler i : handlers){
-                    for(int slot = 0; slot < i.getSlots(); slot++){
+                for (IItemHandler i : handlers) {
+                    for (int slot = 0; slot < i.getSlots(); slot++) {
                         ItemStack stack = i.getStackInSlot(slot);
                         if (stack.getItem() instanceof BlockItem item) {
                             if (item.getBlock() == origState.getBlock())
@@ -104,7 +104,7 @@ public class EffectExchange extends AbstractEffect {
                             }
                         }
                     }
-                    if(shouldBreak)
+                    if (shouldBreak)
                         break;
                 }
 
@@ -174,7 +174,7 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. "
-        + "When used on entities, the locations of the caster and the entity hit are swapped.";
+                + "When used on entities, the locations of the caster and the entity hit are swapped.";
     }
 
     @Override

@@ -13,18 +13,18 @@ public class PacketAnimEntity {
     int entityID;
     int anim;
 
-    public PacketAnimEntity(int entityID){
+    public PacketAnimEntity(int entityID) {
         this.entityID = entityID;
         this.anim = 0;
     }
 
-    public PacketAnimEntity(int entityID, int anim){
+    public PacketAnimEntity(int entityID, int anim) {
         this.entityID = entityID;
         this.anim = anim;
     }
 
     public static PacketAnimEntity decode(FriendlyByteBuf buf) {
-        return new PacketAnimEntity(buf.readInt(),buf.readInt());
+        return new PacketAnimEntity(buf.readInt(), buf.readInt());
     }
 
     public static void encode(PacketAnimEntity msg, FriendlyByteBuf buf) {
@@ -45,8 +45,8 @@ public class PacketAnimEntity {
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
                     ClientLevel world = mc.level;
-                    if(world.getEntity(m.entityID) instanceof IAnimationListener){
-                        ((IAnimationListener)world.getEntity(m.entityID)).startAnimation(m.anim);
+                    if (world.getEntity(m.entityID) instanceof IAnimationListener) {
+                        ((IAnimationListener) world.getEntity(m.entityID)).startAnimation(m.anim);
                     }
                 }
             });

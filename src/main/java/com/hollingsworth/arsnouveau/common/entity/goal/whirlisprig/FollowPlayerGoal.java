@@ -25,6 +25,7 @@ public class FollowPlayerGoal extends Goal {
     private float oldWaterCost;
     private final float areaSize;
     private final float probability;
+
     public FollowPlayerGoal(Mob mob, double speedModifier, float stopDistance, float areaSize, float probability) {
         this.entity = mob;
         this.followPredicate = Objects::nonNull;
@@ -38,6 +39,7 @@ public class FollowPlayerGoal extends Goal {
             throw new IllegalArgumentException("Unsupported mob type for FollowMobGoal");
         }
     }
+
     public FollowPlayerGoal(Mob mob, double speedModifier, float stopDistance, float areaSize) {
         this(mob, speedModifier, stopDistance, areaSize, 0.001f);
     }
@@ -49,7 +51,7 @@ public class FollowPlayerGoal extends Goal {
     public boolean canUse() {
         List<Player> list = this.entity.level.getEntitiesOfClass(Player.class, this.entity.getBoundingBox().inflate(this.areaSize), this.followPredicate);
         if (!list.isEmpty()) {
-            for(Player mobentity : list) {
+            for (Player mobentity : list) {
                 if (!mobentity.isInvisible()) {
                     this.followingEntity = mobentity;
                     return true;
@@ -64,7 +66,7 @@ public class FollowPlayerGoal extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean canContinueToUse() {
-        return this.followingEntity != null && !this.navigation.isDone() && this.entity.distanceToSqr(this.followingEntity) > (double)(this.stopDistance * this.stopDistance);
+        return this.followingEntity != null && !this.navigation.isDone() && this.entity.distanceToSqr(this.followingEntity) > (double) (this.stopDistance * this.stopDistance);
     }
 
     /**
@@ -90,19 +92,19 @@ public class FollowPlayerGoal extends Goal {
      */
     public void tick() {
         if (this.followingEntity != null && !this.entity.isLeashed()) {
-            this.entity.getLookControl().setLookAt(this.followingEntity, 10.0F, (float)this.entity.getMaxHeadXRot());
+            this.entity.getLookControl().setLookAt(this.followingEntity, 10.0F, (float) this.entity.getMaxHeadXRot());
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = 10;
                 double d0 = this.entity.getX() - this.followingEntity.getX();
                 double d1 = this.entity.getY() - this.followingEntity.getY();
                 double d2 = this.entity.getZ() - this.followingEntity.getZ();
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-                if (!(d3 <= (double)(this.stopDistance * this.stopDistance))) {
+                if (!(d3 <= (double) (this.stopDistance * this.stopDistance))) {
                     this.navigation.moveTo(this.followingEntity, this.speedModifier);
                 } else {
                     this.navigation.stop();
 
-                    if (d3 <= (double)this.stopDistance) {
+                    if (d3 <= (double) this.stopDistance) {
                         double d4 = this.followingEntity.getX() - this.entity.getX();
                         double d5 = this.followingEntity.getZ() - this.entity.getZ();
                         this.navigation.moveTo(this.entity.getX() - d4, this.entity.getY(), this.entity.getZ() - d5, this.speedModifier);

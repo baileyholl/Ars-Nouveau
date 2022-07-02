@@ -17,22 +17,22 @@ public class GuiScrollHUD extends GuiComponent {
 
     private static final Minecraft minecraft = Minecraft.getInstance();
 
-    public void drawHUD(PoseStack matrixStack, ItemFrame entity){
-        if(entity.getItem().getItem() instanceof ItemScroll){
+    public void drawHUD(PoseStack matrixStack, ItemFrame entity) {
+        if (entity.getItem().getItem() instanceof ItemScroll) {
             ItemStack stack = entity.getItem();
             CompoundTag tag = stack.getTag();
-            if(tag == null)
+            if (tag == null)
                 return;
             List<ItemStack> stacks = new ArrayList<>();
-            for(String s : tag.getAllKeys()){
-                if(s.contains(ITEM_PREFIX)){
+            for (String s : tag.getAllKeys()) {
+                if (s.contains(ITEM_PREFIX)) {
                     stacks.add(ItemStack.of(tag.getCompound(s)));
                 }
             }
             int offsetLeft = 5;
-            fill(matrixStack, offsetLeft, 50, 100+ offsetLeft, 0, 300000);
+            fill(matrixStack, offsetLeft, 50, 100 + offsetLeft, 0, 300000);
             int counter = 0;
-            for(ItemStack s : stacks){
+            for (ItemStack s : stacks) {
                 minecraft.font.drawShadow(matrixStack, s.getHoverName().getString(), offsetLeft, 5f + 10 * counter, 0xFFFFFF);
                 counter++;
             }

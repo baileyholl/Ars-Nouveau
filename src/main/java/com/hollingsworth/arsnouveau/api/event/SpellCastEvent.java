@@ -12,13 +12,13 @@ public class SpellCastEvent extends LivingEvent {
     public Spell spell;
     public SpellContext context;
 
-    public SpellCastEvent(Spell spell, SpellContext context){
+    public SpellCastEvent(Spell spell, SpellContext context) {
         super(context.getUnwrappedCaster());
         this.spell = spell;
         this.context = context;
     }
 
-    public Level getWorld(){
+    public Level getWorld() {
         return this.getEntityLiving().level;
     }
 }

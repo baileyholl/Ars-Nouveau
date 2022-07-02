@@ -32,32 +32,32 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
 
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityBookwyrm.COLORS).contains(color.getName()))
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(EntityBookwyrm.COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color);
             return InteractionResult.SUCCESS;
         }
 
-        return super.mobInteract(player,  hand);
+        return super.mobInteract(player, hand);
 
     }
 
     @Override
     public void onCast(SpellCastEvent event) {
-        if(isAlive() && getOwner() != null && getOwner().equals(event.getEntity()))
+        if (isAlive() && getOwner() != null && getOwner().equals(event.getEntity()))
             event.spell.addDiscount((int) (event.spell.getDiscountedCost() * .15));
     }
 
     @Override
     public void onModifier(SpellModifierEvent event) {
-        if(isAlive() && getOwner() != null && getOwner().equals(event.caster) && SpellSchools.ELEMENTAL.isPartOfSchool(event.spellPart)){
+        if (isAlive() && getOwner() != null && getOwner().equals(event.caster) && SpellSchools.ELEMENTAL.isPartOfSchool(event.spellPart)) {
             event.builder.addDamageModifier(1.0f);
         }
     }
@@ -81,8 +81,8 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
-        if(color.isEmpty())
+        if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color +".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
     }
 }

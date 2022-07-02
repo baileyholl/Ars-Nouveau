@@ -11,25 +11,26 @@ import java.util.function.Supplier;
 public class PacketUpdateBookGUI {
 
     public ItemStack bookStack;
+
     //Decoder
-    public PacketUpdateBookGUI(FriendlyByteBuf buf){
+    public PacketUpdateBookGUI(FriendlyByteBuf buf) {
         bookStack = buf.readItem();
     }
 
     //Encoder
-    public void toBytes(FriendlyByteBuf buf){
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeItem(bookStack);
     }
 
-    public PacketUpdateBookGUI(ItemStack stack){
+    public PacketUpdateBookGUI(ItemStack stack) {
         this.bookStack = stack;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            if(ArsNouveau.proxy.getMinecraft().screen instanceof GuiSpellBook)
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            if (ArsNouveau.proxy.getMinecraft().screen instanceof GuiSpellBook)
                 ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().screen).bookStack = bookStack;
-        } );
+        });
         ctx.get().setPacketHandled(true);
     }
 

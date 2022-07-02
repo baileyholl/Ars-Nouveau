@@ -33,6 +33,7 @@ import net.minecraftforge.network.PlayMessages;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
 // Copy of LightningBoltEntity
 public class LightningEntity extends LightningBolt {
     private int lightningState;
@@ -97,22 +98,22 @@ public class LightningEntity extends LightningBolt {
                 this.level.setSkyFlashTime(2);
             } else if (!this.effectOnly) {
                 List<Entity> list = this.level.getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
-                for(Entity entity : list) {
+                for (Entity entity : list) {
                     if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this)) {
                         float origDamage = this.getDamage();
                         this.setDamage(this.getDamage(entity));
                         EntityStruckByLightningEvent event = new EntityStruckByLightningEvent(entity, this);
                         MinecraftForge.EVENT_BUS.post(event);
-                        if(event.isCanceled())
+                        if (event.isCanceled())
                             continue;
                         entity.thunderHit((ServerLevel) this.level, this);
                         this.setDamage(origDamage);
-                        if(!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity){
+                        if (!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity) {
                             MobEffectInstance effectInstance = ((LivingEntity) entity).getEffect(ModPotions.SHOCKED_EFFECT.get());
                             int amp = effectInstance != null ? effectInstance.getAmplifier() : -1;
                             ((LivingEntity) entity).addEffect(new MobEffectInstance(ModPotions.SHOCKED_EFFECT.get(), 200 + 10 * 20 * extendTimes, Math.min(2, amp + 1)));
                         }
-                        if(!level.isClientSide && !hitEntities.contains(entity.getId()))
+                        if (!level.isClientSide && !hitEntities.contains(entity.getId()))
                             hitEntities.add(entity.getId());
 
                     }
@@ -133,7 +134,7 @@ public class LightningEntity extends LightningBolt {
                 this.level.setBlockAndUpdate(blockpos, blockstate);
             }
 
-            for(int i = 0; i < extraIgnitions; ++i) {
+            for (int i = 0; i < extraIgnitions; ++i) {
                 BlockPos blockpos1 = blockpos.offset(this.random.nextInt(3) - 1, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1);
                 blockstate = BaseFireBlock.getState(this.level, blockpos1);
                 if (this.level.getBlockState(blockpos1).isAir() && blockstate.canSurvive(this.level, blockpos1)) {
@@ -145,21 +146,21 @@ public class LightningEntity extends LightningBolt {
     }
 
 
-    public float getDamage(Entity entity){
+    public float getDamage(Entity entity) {
         float baseDamage = getDamage() + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
         int multiplier = 1;
-        for(ItemStack i : entity.getArmorSlots()){
+        for (ItemStack i : entity.getArmorSlots()) {
             IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);
-            if(energyStorage != null){
+            if (energyStorage != null) {
                 multiplier++;
             }
         }
-        if(entity instanceof LivingEntity){
+        if (entity instanceof LivingEntity) {
             IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
-            if(energyStorage != null)
+            if (energyStorage != null)
                 multiplier++;
             energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
-            if(energyStorage != null)
+            if (energyStorage != null)
                 multiplier++;
         }
         return baseDamage * multiplier;

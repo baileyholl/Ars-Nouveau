@@ -11,7 +11,7 @@ public class RelayDepositBlock extends Relay {
         super();
     }
 
-    public RelayDepositBlock(){
+    public RelayDepositBlock() {
         super();
     }
 

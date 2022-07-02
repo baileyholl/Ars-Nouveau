@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * Interface describing a spell validator.  Validators are functions that analyze a spell and indicate if the spell
  * violates the rules defined by the specific implementation of this interface.
- *
+ * <p>
  * Clients should obtain an instance of this interface from {@link com.hollingsworth.arsnouveau.api.ArsNouveauAPI}.
- *
+ * <p>
  * This interface is not intended to be implemented by clients of the API.
  */
 public interface ISpellValidator {

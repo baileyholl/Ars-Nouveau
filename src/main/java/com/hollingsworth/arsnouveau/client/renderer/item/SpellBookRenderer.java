@@ -23,7 +23,7 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 import java.util.Collections;
 
 public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
-    public SpellBookRenderer(){
+    public SpellBookRenderer() {
         super(new SpellBookModel());
     }
 
@@ -34,7 +34,7 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
 
     @Override
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if(transformType == ItemTransforms.TransformType.GUI){
+        if (transformType == ItemTransforms.TransformType.GUI) {
             stack.pushPose();
             MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
             Lighting.setupForFlatItems();
@@ -43,7 +43,7 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
             RenderSystem.enableDepthTest();
             Lighting.setupFor3DItems();
             stack.popPose();
-        }else {
+        } else {
             render(itemStack.getItem(), stack, bufferIn, combinedLightIn, itemStack, transformType);
         }
     }

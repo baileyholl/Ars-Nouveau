@@ -27,7 +27,7 @@ public class ImbuementRecipeProvider implements DataProvider {
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public ImbuementRecipeProvider(DataGenerator generatorIn){
+    public ImbuementRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
     }
 
@@ -54,7 +54,7 @@ public class ImbuementRecipeProvider implements DataProvider {
         recipes.add(new ImbuementRecipe("conjuration_essence", Recipes.SOURCE_GEM, new ItemStack(ItemsRegistry.CONJURATION_ESSENCE.get()), 2000)
                 .withPedestalItem(ItemsRegistry.WILDEN_HORN)
                 .withPedestalItem(ItemsRegistry.STARBUNCLE_SHARD)
-                        .withPedestalItem(Items.BOOK));
+                .withPedestalItem(Items.BOOK));
 
         recipes.add(new ImbuementRecipe("abjuration_essence", Recipes.SOURCE_GEM, new ItemStack(ItemsRegistry.ABJURATION_ESSENCE.get()), 2000)
                 .withPedestalItem(Items.FERMENTED_SPIDER_EYE)
@@ -67,15 +67,16 @@ public class ImbuementRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.CLOCK));
 
         Path output = this.generator.getOutputFolder();
-        for(ImbuementRecipe g : recipes){
+        for (ImbuementRecipe g : recipes) {
             Path path = getRecipePath(output, g.getId().getPath());
             DataProvider.saveStable(cache, g.asRecipe(), path);
         }
     }
 
-    private static Path getRecipePath(Path pathIn, String str){
+    private static Path getRecipePath(Path pathIn, String str) {
         return pathIn.resolve("data/ars_nouveau/recipes/" + str + ".json");
     }
+
     @Override
     public String getName() {
         return "Imbuement";

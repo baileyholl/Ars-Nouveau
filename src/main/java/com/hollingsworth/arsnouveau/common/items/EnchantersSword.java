@@ -45,11 +45,11 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
         super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
-        if(world.isClientSide() || world.getGameTime() % 200 !=  0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
+        if (world.isClientSide() || world.getGameTime() % 200 != 0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
             return;
 
         CapabilityRegistry.getMana((LivingEntity) entity).ifPresent(mana -> {
-            if(mana.getCurrentMana() > 20){
+            if (mana.getCurrentMana() > 20) {
                 mana.removeMana(20);
                 stack.setDamageValue(stack.getDamageValue() - 1);
             }
@@ -92,7 +92,8 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) { }
+    public void registerControllers(AnimationData animationData) {
+    }
 
     public AnimationFactory factory = new AnimationFactory(this);
 

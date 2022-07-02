@@ -24,20 +24,20 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
     public ItemEntity entity;
     public ItemStack stack = ItemStack.EMPTY;
 
-    public ArcanePedestalTile(BlockPos pos, BlockState state){
+    public ArcanePedestalTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_PEDESTAL_TILE, pos, state);
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        stack = compound.contains("itemStack") ? ItemStack.of((CompoundTag)compound.get("itemStack")) : ItemStack.EMPTY;
+        stack = compound.contains("itemStack") ? ItemStack.of((CompoundTag) compound.get("itemStack")) : ItemStack.EMPTY;
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if(stack != null) {
+        if (stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             tag.put("itemStack", reagentTag);

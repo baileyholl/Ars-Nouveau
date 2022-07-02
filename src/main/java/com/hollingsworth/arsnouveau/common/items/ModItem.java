@@ -22,7 +22,7 @@ public class ModItem extends Item {
         super(properties);
     }
 
-    public ModItem(){
+    public ModItem() {
         this(ItemsRegistry.defaultItemProperties());
     }
 
@@ -31,7 +31,7 @@ public class ModItem extends Item {
         return this;
     }
 
-    public ModItem withRarity(Rarity rarity){
+    public ModItem withRarity(Rarity rarity) {
         this.rarity = rarity;
         return this;
     }
@@ -46,7 +46,7 @@ public class ModItem extends Item {
      */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
-        if(tooltip != null && !tooltip.isEmpty()){
+        if (tooltip != null && !tooltip.isEmpty()) {
             tooltip2.addAll(tooltip);
         }
     }

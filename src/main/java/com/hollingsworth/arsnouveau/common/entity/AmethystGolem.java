@@ -70,7 +70,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     public PathNavigation minecraftPathNav;
     public AmethystGolemGoalState goalState;
 
-    public enum AmethystGolemGoalState{
+    public enum AmethystGolemGoalState {
         NONE,
         CONVERT,
         GROW,
@@ -109,35 +109,35 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
         this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
         this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null && !isImbueing() && getHeldStack().isEmpty()));
-        this.goalSelector.addGoal(2, new PickupAmethystGoal(this,() -> getHome() != null && pickupCooldown <= 0));
-        this.goalSelector.addGoal(2, new DepositAmethystGoal(this,() -> getHome() != null && !getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(2, new PickupAmethystGoal(this, () -> getHome() != null && pickupCooldown <= 0));
+        this.goalSelector.addGoal(2, new DepositAmethystGoal(this, () -> getHome() != null && !getHeldStack().isEmpty()));
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(harvestCooldown > 0)
+        if (harvestCooldown > 0)
             harvestCooldown--;
-        if(growCooldown > 0)
+        if (growCooldown > 0)
             growCooldown--;
-        if(convertCooldown > 0)
+        if (convertCooldown > 0)
             convertCooldown--;
-        if(scanCooldown > 0){
+        if (scanCooldown > 0) {
             scanCooldown--;
         }
-        if(pickupCooldown > 0)
+        if (pickupCooldown > 0)
             pickupCooldown--;
-        if(!level.isClientSide && scanCooldown == 0 && getHome() != null){
+        if (!level.isClientSide && scanCooldown == 0 && getHome() != null) {
             scanCooldown = 20 * 60 * 3;
             scanBlocks();
         }
 
-        if(level.isClientSide && isImbueing() && getImbuePos() != null){
+        if (level.isClientSide && isImbueing() && getImbuePos() != null) {
             Vec3 vec = new Vec3(getImbuePos().getX() + 0.5, getImbuePos().getY(), getImbuePos().getZ() + 0.5);
             level.addParticle(GlowParticleData.createData(new ParticleColor(255, 50, 150)),
-                    (float) (vec.x) - Math.sin((ClientInfo.ticksInGame ) / 8D) ,
-                    (float) (vec.y) + Math.sin(ClientInfo.ticksInGame/5d)/8D + 0.5  ,
-                    (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D) ,
+                    (float) (vec.x) - Math.sin((ClientInfo.ticksInGame) / 8D),
+                    (float) (vec.y) + Math.sin(ClientInfo.ticksInGame / 5d) / 8D + 0.5,
+                    (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D),
                     0, 0, 0);
         }
     }
@@ -150,41 +150,41 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         return this.getMainHandItem();
     }
 
-    public boolean isStomping(){
+    public boolean isStomping() {
         return this.entityData.get(STOMPING);
     }
 
-    public void setStomping(boolean imbueing){
-        this.entityData.set(STOMPING,imbueing);
+    public void setStomping(boolean imbueing) {
+        this.entityData.set(STOMPING, imbueing);
     }
 
-    public boolean isImbueing(){
+    public boolean isImbueing() {
         return this.entityData.get(IMBUEING);
     }
 
-    public void setImbueing(boolean imbueing){
-        this.entityData.set(IMBUEING,imbueing);
+    public void setImbueing(boolean imbueing) {
+        this.entityData.set(IMBUEING, imbueing);
     }
 
-    public BlockPos getImbuePos(){
+    public BlockPos getImbuePos() {
         return this.entityData.get(IMBUE_POS);
     }
 
-    public void setImbuePos(BlockPos pos){
-        this.entityData.set(IMBUE_POS,pos);
+    public void setImbuePos(BlockPos pos) {
+        this.entityData.set(IMBUE_POS, pos);
     }
 
-    public void scanBlocks(){
+    public void scanBlocks() {
         BlockPos pos = getHome().immutable();
         amethystBlocks = new ArrayList<>();
         buddingBlocks = new ArrayList<>();
-        for(BlockPos b : BlockPos.betweenClosed(pos.below(3).south(5).east(5), pos.above(10).north(5).west(5))){
-            if(level.getBlockState(b).isAir())
+        for (BlockPos b : BlockPos.betweenClosed(pos.below(3).south(5).east(5), pos.above(10).north(5).west(5))) {
+            if (level.getBlockState(b).isAir())
                 continue;
-            if(level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK){
+            if (level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK) {
                 amethystBlocks.add(b.immutable());
             }
-            if(level.getBlockState(b).getBlock() == Blocks.BUDDING_AMETHYST){
+            if (level.getBlockState(b).getBlock() == Blocks.BUDDING_AMETHYST) {
                 buddingBlocks.add(b.immutable());
 
             }
@@ -199,7 +199,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
 
     @Override
     public void onFinishedConnectionFirst(@javax.annotation.Nullable BlockPos storedPos, @javax.annotation.Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos != null){
+        if (storedPos != null) {
             setHome(storedPos);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.home_set"));
         }
@@ -207,7 +207,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(getHome() != null){
+        if (getHome() != null) {
             tooltip.add(Component.translatable("ars_nouveau.gathering_at", getHome().toShortString()));
         }
     }
@@ -245,7 +245,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         NBTUtil.storeBlockPos(tag, "home", getHome());
         tag.putInt("grow", growCooldown);
         tag.putInt("convert", convertCooldown);
-        tag.putInt("harvest",harvestCooldown);
+        tag.putInt("harvest", harvestCooldown);
         tag.putInt("pickup", pickupCooldown);
 
         if (getHeldStack() != null) {
@@ -258,7 +258,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if(NBTUtil.hasBlockPos(tag, "home")){
+        if (NBTUtil.hasBlockPos(tag, "home")) {
             setHome(NBTUtil.getBlockPos(tag, "home"));
         }
         this.growCooldown = tag.getInt("grow");
@@ -275,38 +275,39 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         data.addAnimationController(new AnimationController<>(this, "run_controller", 1.0f, this::runController));
         data.addAnimationController(new AnimationController<>(this, "attack_controller", 5f, this::attackController));
     }
+
     private PlayState attackController(AnimationEvent animationEvent) {
         return PlayState.CONTINUE;
     }
 
     private PlayState runController(AnimationEvent animationEvent) {
-        if(isStomping()){
+        if (isStomping()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("harvest2"));
             return PlayState.CONTINUE;
         }
 
-        if(isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())){
+        if (isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("tending_master"));
             return PlayState.CONTINUE;
         }
-        if(animationEvent.isMoving()){
+        if (animationEvent.isMoving()) {
             String anim = getHeldStack().isEmpty() ? "run" : "run_carry";
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation(anim));
             return PlayState.CONTINUE;
         }
 
-        if(!getHeldStack().isEmpty()){
+        if (!getHeldStack().isEmpty()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("carry_idle"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
-    public void setHome(BlockPos home){
+    public void setHome(BlockPos home) {
         this.entityData.set(HOME, Optional.of(home));
     }
 
-    public @Nullable BlockPos getHome(){
+    public @Nullable BlockPos getHome() {
         return this.entityData.get(HOME).orElse(null);
     }
 

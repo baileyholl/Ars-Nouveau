@@ -34,7 +34,7 @@ public class RuneRenderer extends GeoBlockRenderer<RuneTile> {
                        int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         ParticleColor color = animatable.spell.color;
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn,
-                animatable.isCharged ? color.getRed() : red, animatable.isCharged ? color.getGreen() : green,  animatable.isCharged ? color.getBlue() : blue, alpha);
+                animatable.isCharged ? color.getRed() : red, animatable.isCharged ? color.getGreen() : green, animatable.isCharged ? color.getBlue() : blue, alpha);
 
     }
 

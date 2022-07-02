@@ -39,7 +39,7 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
-    public ItemStack getStack(LivingEntity shooter){
+    public ItemStack getStack(LivingEntity shooter) {
         return new ItemStack(Items.DIAMOND_PICKAXE);
 //        if(isRealPlayer(shooter)){
 //            ItemStack mainHand = getPlayer(shooter, (ServerLevel)shooter.level).getMainHandItem();
@@ -59,32 +59,32 @@ public class EffectBreak extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
         ItemStack stack = spellStats.hasBuff(AugmentSensitive.INSTANCE) ? new ItemStack(Items.SHEARS) : getStack(shooter);
 
-        for(BlockPos pos1 : posList) {
+        for (BlockPos pos1 : posList) {
             state = world.getBlockState(pos1);
 
-            if(!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1) || state.is(BlockTagProvider.BREAK_BLACKLIST)){
+            if (!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1) || state.is(BlockTagProvider.BREAK_BLACKLIST)) {
                 continue;
             }
-            if(spellStats.hasBuff(AugmentExtract.INSTANCE)) {
+            if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
                 stack.enchant(Enchantments.SILK_TOUCH, 1);
                 state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                if(!state.is(BlockTagProvider.NO_BREAK_DROP))
+                if (!state.is(BlockTagProvider.NO_BREAK_DROP))
                     destroyBlockSafely(world, pos1, false, shooter);
-            }else if(spellStats.hasBuff(AugmentFortune.INSTANCE)) {
+            } else if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
                 int bonus = spellStats.getBuffCount(AugmentFortune.INSTANCE);
                 stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
                 state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, bonus, 0));
                 state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                if(!state.is(BlockTagProvider.NO_BREAK_DROP))
+                if (!state.is(BlockTagProvider.NO_BREAK_DROP))
                     destroyBlockSafely(world, pos1, false, shooter);
             } else {
                 state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                if(!state.is(BlockTagProvider.NO_BREAK_DROP))
+                if (!state.is(BlockTagProvider.NO_BREAK_DROP))
                     destroyBlockSafely(world, pos1, false, shooter);
                 state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, 0, 0));
             }
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                    new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(),pos1, false
+                    new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false
             ), world, shooter, spellContext, resolver);
         }
     }

@@ -14,9 +14,9 @@ public class SoundRegistry {
     public static final String FIRE_FAMILY_LIB = "fire_family";
     public static final String NO_SOUND_LIB = "empty";
 
-    @ObjectHolder(value =  ArsNouveau.MODID + ":" + FIRE_FAMILY_LIB, registryName = "minecraft:sound_events")
+    @ObjectHolder(value = ArsNouveau.MODID + ":" + FIRE_FAMILY_LIB, registryName = "minecraft:sound_events")
     public static SoundEvent FIRE_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, FIRE_FAMILY_LIB));
-    @ObjectHolder(value = ArsNouveau.MODID + ":" +NO_SOUND_LIB, registryName = "minecraft:sound_events")
+    @ObjectHolder(value = ArsNouveau.MODID + ":" + NO_SOUND_LIB, registryName = "minecraft:sound_events")
     public static SoundEvent EMPTY_SOUND_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, NO_SOUND_LIB));
 
 

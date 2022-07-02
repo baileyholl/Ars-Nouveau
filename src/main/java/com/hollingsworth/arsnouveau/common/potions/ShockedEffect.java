@@ -18,7 +18,7 @@ public class ShockedEffect extends MobEffect {
 
     @Override
     public boolean isDurationEffectTick(int duration, int amp) {
-        int j =  25 >> amp;
+        int j = 25 >> amp;
         if (j > 0) {
             return duration % j == 0;
         } else {
@@ -29,22 +29,22 @@ public class ShockedEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int amp) {
         int multiplier = 0;
-        for(ItemStack i : entity.getArmorSlots()){
+        for (ItemStack i : entity.getArmorSlots()) {
             IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);
-            if(energyStorage != null){
+            if (energyStorage != null) {
                 multiplier++;
             }
         }
 
         IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
-        if(energyStorage != null)
+        if (energyStorage != null)
             multiplier++;
         energyStorage = entity.getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
-        if(energyStorage != null)
+        if (energyStorage != null)
             multiplier++;
-        if(multiplier > 0){
+        if (multiplier > 0) {
             int numTicks = 0;
-            if(entity instanceof Player){
+            if (entity instanceof Player) {
                 CompoundTag tag = entity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
             }
             entity.hurt(DamageSource.LIGHTNING_BOLT, 20 * multiplier * (amp + 1));

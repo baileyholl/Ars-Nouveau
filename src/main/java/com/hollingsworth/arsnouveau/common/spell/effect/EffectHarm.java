@@ -18,7 +18,9 @@ import java.util.Set;
 public class EffectHarm extends AbstractEffect {
     public static EffectHarm INSTANCE = new EffectHarm();
 
-    private EffectHarm() {super(GlyphLib.EffectHarmID, "Harm" ); }
+    private EffectHarm() {
+        super(GlyphLib.EffectHarmID, "Harm");
+    }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {

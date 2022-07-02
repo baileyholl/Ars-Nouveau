@@ -31,7 +31,7 @@ public class FluidBlockItem extends BlockItem {
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         BlockHitResult blockraytraceresult = getPlayerPOVHitResult(worldIn, playerIn, ClipContext.Fluid.ANY);
         BlockHitResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getBlockPos().above());
-        if(worldIn.getBlockState(blockraytraceresult.getBlockPos()).isAir())
+        if (worldIn.getBlockState(blockraytraceresult.getBlockPos()).isAir())
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
         super.useOn(new UseOnContext(playerIn, handIn, blockraytraceresult1));
         return new InteractionResultHolder<>(InteractionResult.FAIL, playerIn.getItemInHand(handIn));

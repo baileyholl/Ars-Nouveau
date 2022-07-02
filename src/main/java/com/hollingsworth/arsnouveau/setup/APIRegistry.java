@@ -117,7 +117,7 @@ public class APIRegistry {
         api.registerScryer(TagScryer.INSTANCE);
     }
 
-    public static void postInit(){
+    public static void postInit() {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
         api.getEnchantingRecipeTypes().add(RecipeRegistry.APPARATUS_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE.get());
@@ -125,7 +125,7 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
     }
 
-    public static void registerFamiliar(AbstractFamiliarHolder familiar){
+    public static void registerFamiliar(AbstractFamiliarHolder familiar) {
         ArsNouveauAPI.getInstance().registerFamiliar(familiar);
     }
 
@@ -133,7 +133,7 @@ public class APIRegistry {
         ArsNouveauAPI.getInstance().registerSpell(spellPart);
     }
 
-    public static void registerRitual(AbstractRitual ritual){
+    public static void registerRitual(AbstractRitual ritual) {
         ArsNouveauAPI.getInstance().registerRitual(ritual);
     }
 

@@ -10,10 +10,10 @@ import java.util.List;
 
 /**
  * Primary class containing the logic to decide if a spell's recipe is <em>valid</em>.
- *
+ * <p>
  * That is to say if it contains all the required elements to be cast, and that it does not violate any configured
  * limits to spell construction such as limits on the number of times a given glyph may appear.
- *
+ * <p>
  * Instances of this class should be obtained from {@link com.hollingsworth.arsnouveau.api.ArsNouveauAPI}.
  */
 public class StandardSpellValidator implements ISpellValidator {
@@ -53,10 +53,10 @@ public class StandardSpellValidator implements ISpellValidator {
         if (enforceCastTimeValidations) {
             validators.add(NON_EMPTY_SPELL);
             validators.add(REQUIRE_CAST_METHOD_START);
-            if(Config.ENFORCE_AUGMENT_CAP_ON_CAST.get()){
+            if (Config.ENFORCE_AUGMENT_CAP_ON_CAST.get()) {
                 validators.add(EFFECT_AUGMENTATION_POLICY);
             }
-            if(Config.ENFORCE_GLYPH_LIMIT_ON_CAST.get()){
+            if (Config.ENFORCE_GLYPH_LIMIT_ON_CAST.get()) {
                 validators.add(GLYPH_OCCURRENCES_POLICY);
             }
         }

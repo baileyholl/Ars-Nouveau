@@ -14,8 +14,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /**
  * Check if we can walk on a surface, drop into, or neither.
  */
-public enum SurfaceType
-{
+public enum SurfaceType {
     WALKABLE,
     DROPABLE,
     NOT_PASSABLE;
@@ -27,8 +26,7 @@ public enum SurfaceType
      * @param pos        the position.
      * @return true if the block at that location can be walked on.
      */
-    public static SurfaceType getSurfaceType(final BlockGetter world, final BlockState blockState, final BlockPos pos)
-    {
+    public static SurfaceType getSurfaceType(final BlockGetter world, final BlockState blockState, final BlockPos pos) {
         final Block block = blockState.getBlock();
         if (block instanceof FenceBlock
                 || block instanceof FenceGateBlock
@@ -38,38 +36,32 @@ public enum SurfaceType
                 || block instanceof BarrelBlock
                 || block instanceof BambooBlock
                 || block instanceof DoorBlock
-                || block instanceof MagmaBlock)
-        {
+                || block instanceof MagmaBlock) {
             return SurfaceType.NOT_PASSABLE;
         }
 
         final VoxelShape shape = blockState.getShape(world, pos);
-        if (shape.max(Direction.Axis.Y) > 1.0)
-        {
+        if (shape.max(Direction.Axis.Y) > 1.0) {
             return SurfaceType.NOT_PASSABLE;
         }
 
         final FluidState fluid = world.getFluidState(pos);
-        if (blockState.getBlock() == Blocks.LAVA || (fluid != null && !fluid.isEmpty() && (fluid.getType() == Fluids.LAVA || fluid.getType() == Fluids.FLOWING_LAVA)))
-        {
+        if (blockState.getBlock() == Blocks.LAVA || (fluid != null && !fluid.isEmpty() && (fluid.getType() == Fluids.LAVA || fluid.getType() == Fluids.FLOWING_LAVA))) {
             return SurfaceType.NOT_PASSABLE;
         }
 
-        if (isWater(world, pos, blockState, fluid))
-        {
+        if (isWater(world, pos, blockState, fluid)) {
             return SurfaceType.WALKABLE;
         }
 
-        if (block instanceof SignBlock || block instanceof VineBlock)
-        {
+        if (block instanceof SignBlock || block instanceof VineBlock) {
             return SurfaceType.DROPABLE;
         }
 
         if ((blockState.getMaterial().isSolid() && (shape.max(Direction.Axis.X) - shape.min(Direction.Axis.X)) > 0.75
                 && (shape.max(Direction.Axis.Z) - shape.min(Direction.Axis.Z)) > 0.75)
                 || (blockState.getBlock() == Blocks.SNOW && blockState.getValue(SnowLayerBlock.LAYERS) > 1)
-                || block instanceof CarpetBlock)
-        {
+                || block instanceof CarpetBlock) {
             return SurfaceType.WALKABLE;
         }
 
@@ -82,8 +74,7 @@ public enum SurfaceType
      * @param pos the pos in the world.
      * @return true if so.
      */
-    public static boolean isWater(final BlockGetter world, final BlockPos pos)
-    {
+    public static boolean isWater(final BlockGetter world, final BlockPos pos) {
         return isWater(world, pos, null, null);
     }
 
@@ -95,31 +86,25 @@ public enum SurfaceType
      * @param pFluidState existing fluidstate or null
      * @return true if so.
      */
-    public static boolean isWater(final BlockGetter world, final BlockPos pos, BlockState pState, FluidState pFluidState)
-    {
+    public static boolean isWater(final BlockGetter world, final BlockPos pos, BlockState pState, FluidState pFluidState) {
         BlockState state = pState;
-        if (state == null)
-        {
+        if (state == null) {
             state = world.getBlockState(pos);
         }
 
-        if (state.canOcclude())
-        {
+        if (state.canOcclude()) {
             return false;
         }
-        if (state.getBlock() == Blocks.WATER)
-        {
+        if (state.getBlock() == Blocks.WATER) {
             return true;
         }
 
         FluidState fluidState = pFluidState;
-        if (fluidState == null)
-        {
+        if (fluidState == null) {
             fluidState = world.getFluidState(pos);
         }
 
-        if (fluidState == null || fluidState.isEmpty())
-        {
+        if (fluidState == null || fluidState.isEmpty()) {
             return false;
         }
 

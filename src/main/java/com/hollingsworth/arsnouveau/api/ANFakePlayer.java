@@ -32,13 +32,12 @@ public class ANFakePlayer extends FakePlayer {
         super(world, PROFILE);
         connection = new FakePlayNetHandler(world.getServer(), this);
     }
+
     private static WeakReference<ANFakePlayer> FAKE_PLAYER = null;
 
-    public static ANFakePlayer getPlayer(ServerLevel world)
-    {
+    public static ANFakePlayer getPlayer(ServerLevel world) {
         ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
-        if (ret == null)
-        {
+        if (ret == null) {
             ret = new ANFakePlayer(world);
             FAKE_PLAYER = new WeakReference<>(ret);
         }
@@ -56,15 +55,18 @@ public class ANFakePlayer extends FakePlayer {
     public Component getDisplayName() {
         return Component.literal("AN_Fake_Player");
     }
+
     private static class FakePlayNetHandler extends ServerGamePacketListenerImpl {
         public FakePlayNetHandler(MinecraftServer server, ServerPlayer playerIn) {
             super(server, NETWORK_MANAGER, playerIn);
         }
 
         @Override
-        public void send(Packet<?> packetIn) {}
+        public void send(Packet<?> packetIn) {
+        }
 
         @Override
-        public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
+        public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) {
+        }
     }
 }

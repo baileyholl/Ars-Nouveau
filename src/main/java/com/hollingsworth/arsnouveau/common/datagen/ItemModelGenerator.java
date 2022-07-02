@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
-import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
-import com.hollingsworth.arsnouveau.common.items.Glyph;
-import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
@@ -99,14 +96,15 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
     }
 
 
-
     @Override
     public String getName() {
         return "Ars Nouveau Item Models";
     }
+
     private ResourceLocation registryName(final Item item) {
         return Preconditions.checkNotNull(getRegistryName(item), "Item %s has a null registry name", item);
     }
+
     private ResourceLocation itemTexture(final Item item) {
         final ResourceLocation name = registryName(item);
         return new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath());
