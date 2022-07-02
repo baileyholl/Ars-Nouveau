@@ -13,6 +13,10 @@
 	"enchantment.ars_nouveau.mana_regen.desc": "Increases the mana regeneration of the player.",
 	"enchantment.ars_nouveau.mana_boost.desc": "Increases the maximum mana of the player.",
 	"enchantment.ars_nouveau.reactive.desc": "Has a chance to cast the inscribed spell on tool use or player hurt.",
+
+	"attribute.name.ars_nouveau.mana_regen": "Mana Regeneration",
+	"attribute.name.ars_nouveau.max_mana": "Max Mana",
+
 	"entity.ars_nouveau.bookwyrm": "Bookwyrm",
 	"entity.ars_nouveau.starbuncle": "Starbuncle",
 	"item.ars_nouveau.archmage_robes":"Archmage Robes",
