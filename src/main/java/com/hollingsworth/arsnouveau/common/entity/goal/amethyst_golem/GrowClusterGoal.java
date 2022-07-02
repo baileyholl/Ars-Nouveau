@@ -6,9 +6,10 @@ import com.hollingsworth.arsnouveau.common.util.ArrayUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
+
+import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
 
 public class GrowClusterGoal extends Goal {
 
@@ -54,10 +55,10 @@ public class GrowClusterGoal extends Goal {
 
     public void growCluster() {
         int numGrown = 0;
-        for (BlockPos p : golem.buddingBlocks) {
+        for(BlockPos p : golem.buddingBlocks){
             if (numGrown > 3)
                 break;
-            if (golem.level.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST) {
+            if (golem.level.getBlockState(p).is(BUDDING_BLOCKS)) {
                 golem.level.getBlockState(p).randomTick((ServerLevel) golem.level, p, golem.getRandom());
                 numGrown++;
             }

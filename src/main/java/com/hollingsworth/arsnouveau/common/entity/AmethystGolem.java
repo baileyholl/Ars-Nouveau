@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
+
 public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
@@ -184,9 +186,9 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
             if (level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK) {
                 amethystBlocks.add(b.immutable());
             }
-            if (level.getBlockState(b).getBlock() == Blocks.BUDDING_AMETHYST) {
-                buddingBlocks.add(b.immutable());
 
+            if (level.getBlockState(b).is(BUDDING_BLOCKS)) {
+                buddingBlocks.add(b.immutable());
             }
         }
     }

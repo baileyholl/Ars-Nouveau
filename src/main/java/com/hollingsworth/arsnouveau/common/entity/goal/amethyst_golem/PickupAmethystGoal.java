@@ -4,12 +4,13 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.function.Supplier;
+
+import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.SHARD_TAG;
 
 public class PickupAmethystGoal extends Goal {
 
@@ -41,7 +42,7 @@ public class PickupAmethystGoal extends Goal {
             return;
         }
 
-        if (targetEntity == null || targetEntity.isRemoved() || targetEntity.getItem().getItem() != Items.AMETHYST_SHARD) {
+        if (targetEntity == null || targetEntity.isRemoved() || !targetEntity.getItem().is(SHARD_TAG)) {
             isDone = true;
             return;
         }
@@ -56,8 +57,9 @@ public class PickupAmethystGoal extends Goal {
 
     public void collectStacks() {
 
-        for (ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))) {
-            if (i.getItem().getItem() != Items.AMETHYST_SHARD)
+
+        for(ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class,new AABB(golem.getHome()).inflate(10))){
+            if (!i.getItem().is(SHARD_TAG))
                 continue;
             int maxTake = golem.getHeldStack().getMaxStackSize() - golem.getHeldStack().getCount();
             if (golem.getHeldStack().isEmpty()) {
@@ -85,8 +87,8 @@ public class PickupAmethystGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 80;
-        for (ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))) {
-            if (entity.getItem().getItem() == Items.AMETHYST_SHARD) {
+        for(ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))){
+            if (entity.getItem().is(SHARD_TAG)) {
                 golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
                 targetEntity = entity;
                 break;

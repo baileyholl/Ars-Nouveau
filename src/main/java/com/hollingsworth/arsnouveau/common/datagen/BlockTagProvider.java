@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 public class BlockTagProvider extends BlockTagsProvider {
 
-    public static TagKey<Block> IGNORE_TILE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+    public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
     public static TagKey<Block> SUMMON_BED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
     public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
@@ -26,6 +26,9 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
     public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
     public static TagKey<Block> FELLABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
+    public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
+    public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
+
 
     private final DataGenerator generator;
 
@@ -36,7 +39,8 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
-        // super.addTags();
+        this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
+        this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 BlockRegistry.ARCANE_STONE,
                 BlockRegistry.RELAY,
