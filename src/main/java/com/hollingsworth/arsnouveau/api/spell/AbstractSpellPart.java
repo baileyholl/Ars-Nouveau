@@ -17,9 +17,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
 
-    private ResourceLocation registryName;
+    private final ResourceLocation registryName;
     public String name;
     public Glyph glyphItem;
+
     /*ID for NBT data and SpellManager#spellList*/
     public ResourceLocation getRegistryName(){
         return this.registryName;
@@ -76,7 +77,6 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * Returns the set of augments that this spell part can be enhanced by.
      * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
-     * @deprecated This will be set to protected in a future update.
      * This should not be accessed directly, but can be overridden.
      */
     protected abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
@@ -109,7 +109,6 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
     }
 
-    // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
     public @Nullable ForgeConfigSpec CONFIG;
     public @Nullable ForgeConfigSpec.IntValue COST;
     public @Nullable ForgeConfigSpec.BooleanValue ENABLED;
