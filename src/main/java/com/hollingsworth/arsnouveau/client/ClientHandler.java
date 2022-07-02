@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarWhir
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamiliarRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
+import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -28,6 +29,8 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -194,22 +197,22 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void initColors(final ColorHandlerEvent.Item event) {
-//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-//                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-//                ItemsRegistry.POTION_FLASK);
-//
-//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-//                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-//                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
-//
-//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-//                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-//                ItemsRegistry.POTION_FLASK_AMPLIFY);
-//
-//        event.getBlockColors().register((state, reader, pos, tIndex) ->
-//                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
-//                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
-//                        : -1, BlockRegistry.POTION_JAR);
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK_AMPLIFY);
+
+        event.getBlockColors().register((state, reader, pos, tIndex) ->
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
+                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
+                        : -1, BlockRegistry.POTION_JAR);
     }
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
