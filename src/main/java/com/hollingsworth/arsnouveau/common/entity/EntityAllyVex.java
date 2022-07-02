@@ -100,14 +100,6 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.owner = owner;
     }
 
-
-    /**
-     * Called to update the entity's position/logic.
-     */
-    public void tick() {
-        super.tick();
-    }
-
     @Override
     public Level getWorld() {
         return this.level;

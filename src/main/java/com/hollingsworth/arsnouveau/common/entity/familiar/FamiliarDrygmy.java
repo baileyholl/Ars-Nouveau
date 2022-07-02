@@ -31,11 +31,6 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;

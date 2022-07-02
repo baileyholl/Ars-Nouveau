@@ -29,7 +29,6 @@ public class RitualDisintegration extends AbstractRitual {
     @Override
     public void onStart() {
         super.onStart();
-        if (tile == null) return;
     }
 
     @Override

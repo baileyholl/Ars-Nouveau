@@ -46,8 +46,6 @@ public class SpellUtil {
 
     public static boolean isCorrectHarvestLevel(int strength, BlockState state) {
         Tier tier = switch (strength) {
-            case 1:
-                yield Tiers.WOOD;
             case 2:
                 yield Tiers.STONE;
             case 3:

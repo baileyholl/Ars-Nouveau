@@ -24,11 +24,6 @@ public class LeapGoal extends Goal {
     }
 
     @Override
-    public boolean canContinueToUse() {
-        return super.canContinueToUse();
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (stalker.timeFlying < 20) {

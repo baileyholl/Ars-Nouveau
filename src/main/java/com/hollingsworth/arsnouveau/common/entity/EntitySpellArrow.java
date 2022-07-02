@@ -294,11 +294,6 @@ public class EntitySpellArrow extends Arrow {
 
     }
 
-    @Override
-    public boolean isNoPhysics() {
-        return super.isNoPhysics();
-    }
-
     protected void onHitBlock(BlockHitResult p_230299_1_) {
         BlockState blockstate = this.level.getBlockState(p_230299_1_.getBlockPos());
         blockstate.onProjectileHit(this.level, blockstate, p_230299_1_, this);

@@ -51,6 +51,6 @@ public class MultiblockPage extends AbstractPage {
         return super.build();
     }
 
-    public static record Mapping(String letter, String object) {
+    public record Mapping(String letter, String object) {
     }
 }

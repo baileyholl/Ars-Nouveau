@@ -20,7 +20,7 @@ public class SpellPartConfigUtil {
      * Expected format is "glyphtag=limit"
      * Example: "fortune=3"
      */
-    private static final Pattern AUGMENT_LIMITS_PATTERN = Pattern.compile("([^/=]+)=(\\p{Digit}+)");
+    private static final Pattern AUGMENT_LIMITS_PATTERN = Pattern.compile("([^/=]+)=(\\d+)");
 
     /**
      * Class used to encapsulate the logic around parsing and printing the augment limit configuration.

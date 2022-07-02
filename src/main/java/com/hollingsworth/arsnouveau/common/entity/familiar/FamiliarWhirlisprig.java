@@ -80,11 +80,6 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
     public PlayState walkPredicate(AnimationEvent event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));

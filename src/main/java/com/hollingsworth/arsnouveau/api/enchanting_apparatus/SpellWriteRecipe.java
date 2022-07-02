@@ -41,7 +41,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe {
 
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
-        int level = EnchantmentHelper.getEnchantments(reagent).getOrDefault(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 0);
+        int level = EnchantmentHelper.getEnchantments(reagent).getOrDefault(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), 0);
         ItemStack parchment = getParchment(pedestalItems);
         return !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty() && level > 0 && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
     }

@@ -173,11 +173,6 @@ public class EntityFollowProjectile extends ColoredProjectile {
     }
 
     @Override
-    public void baseTick() {
-        super.baseTick();
-    }
-
-    @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }

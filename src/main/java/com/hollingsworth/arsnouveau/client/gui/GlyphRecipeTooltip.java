@@ -107,7 +107,7 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
     }
 
     @OnlyIn(Dist.CLIENT)
-    static enum Texture {
+    enum Texture {
         SLOT(0, 0, 18, 20),
         BLOCKED_SLOT(0, 40, 18, 20),
         BORDER_VERTICAL(0, 18, BORDER_WIDTH, 20),
@@ -121,7 +121,7 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
         public final int w;
         public final int h;
 
-        private Texture(int p_169928_, int p_169929_, int p_169930_, int p_169931_) {
+        Texture(int p_169928_, int p_169929_, int p_169930_, int p_169931_) {
             this.x = p_169928_;
             this.y = p_169929_;
             this.w = p_169930_;

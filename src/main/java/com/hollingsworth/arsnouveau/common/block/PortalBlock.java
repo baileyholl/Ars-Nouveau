@@ -203,7 +203,7 @@ public class PortalBlock extends TickableModBlock {
                 this.rightDir = Direction.SOUTH;
             }
 
-            //TODO check this
+            // Some cursed decompiled mojang code
             for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
             }
 

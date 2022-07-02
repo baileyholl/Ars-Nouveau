@@ -318,9 +318,4 @@ public class EntityProjectileSpell extends ColoredProjectile {
         tag.putInt("pierce", this.pierceLeft);
         tag.putBoolean("gravity", isNoGravity);
     }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
 }

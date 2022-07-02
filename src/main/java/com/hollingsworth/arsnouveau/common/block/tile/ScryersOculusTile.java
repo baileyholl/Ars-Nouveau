@@ -94,7 +94,9 @@ public class ScryersOculusTile extends ModdedTile implements IAnimatable, ITicka
         }
 
         float f2;
-        for (f2 = pBlockEntity.tRot - pBlockEntity.rot; f2 >= (float) Math.PI; f2 -= ((float) Math.PI * 2F)) {
+        f2 = pBlockEntity.tRot - pBlockEntity.rot;
+        while (f2 >= (float) Math.PI) {
+            f2 -= ((float) Math.PI * 2F);
         }
 
         while (f2 < -(float) Math.PI) {

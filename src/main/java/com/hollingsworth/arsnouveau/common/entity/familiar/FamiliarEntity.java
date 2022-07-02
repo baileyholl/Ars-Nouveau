@@ -67,11 +67,6 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         return false;
     }
 
-    @Override
-    public void onRemovedFromWorld() {
-        super.onRemovedFromWorld();
-    }
-
     public double getManaReserveModifier() {
         return manaReserveModifier;
     }

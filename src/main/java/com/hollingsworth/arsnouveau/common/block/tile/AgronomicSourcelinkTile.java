@@ -24,16 +24,6 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
         return 1000;
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
-    public int getSource() {
-        return super.getSource();
-    }
-
     @SubscribeEvent
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
         int mana = 20;

@@ -476,7 +476,7 @@ public class PatchouliProvider implements DataProvider {
         }
     }
 
-    public static record PatchouliPage(PatchouliBuilder builder, Path path) {
+    public record PatchouliPage(PatchouliBuilder builder, Path path) {
         @Override
         public Path path() {
             return path;

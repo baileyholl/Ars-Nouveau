@@ -82,16 +82,7 @@ public class KeyHandler {
 
     }
 
-    public static void sendUpdatePacket(ItemStack stack, int newMode) {
-//        ISpellCaster caster = CasterUtil.getCaster(stack);
-//        String recipe = caster.getSpell(newMode).serialize();
-//        String name = caster.getSpellName(newMode);
-//        Networking.INSTANCE.sendToServer(new PacketUpdateCaster(recipe, newMode, name));
-    }
-
     public static void sendHotkeyPacket(PacketHotkeyPressed.Key key) {
         Networking.INSTANCE.sendToServer(new PacketHotkeyPressed(key));
     }
-
-
 }

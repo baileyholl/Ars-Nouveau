@@ -47,15 +47,6 @@ public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFalli
                     }
                 }
                 net.minecraftforge.client.ForgeHooksClient.setRenderType(null);
-                if (pEntity.getEntityData().get(EnchantedFallingBlock.SHOULD_COLOR)) {
-//                    RenderSystem.setShaderColor(
-//                           255,
-//                            pEntity.getParticleColorWrapper().g,
-//                            pEntity.getParticleColorWrapper().b,
-//                            1.0f
-//                    );
-
-                }
                 pMatrixStack.popPose();
                 super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
             }

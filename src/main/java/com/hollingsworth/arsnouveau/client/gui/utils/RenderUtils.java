@@ -60,7 +60,6 @@ public class RenderUtils {
 
         if (renderTransparent) {
             RenderSystem.depthMask(true);
-            ;
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 

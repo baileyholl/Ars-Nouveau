@@ -74,11 +74,6 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public void syncAfterPersistentFamiliarInit() {
-        super.syncAfterPersistentFamiliarInit();
-    }
-
-    @Override
     public ResourceLocation getTexture(LivingEntity entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
         if (color.isEmpty())
