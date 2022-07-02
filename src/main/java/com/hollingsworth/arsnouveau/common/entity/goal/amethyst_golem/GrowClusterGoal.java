@@ -55,7 +55,7 @@ public class GrowClusterGoal extends Goal {
 
     public void growCluster() {
         int numGrown = 0;
-        for(BlockPos p : golem.buddingBlocks){
+        for (BlockPos p : golem.buddingBlocks) {
             if (numGrown > 3)
                 break;
             if (golem.level.getBlockState(p).is(BUDDING_BLOCKS)) {

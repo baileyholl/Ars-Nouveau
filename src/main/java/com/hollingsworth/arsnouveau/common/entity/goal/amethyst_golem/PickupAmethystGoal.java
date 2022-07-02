@@ -58,7 +58,7 @@ public class PickupAmethystGoal extends Goal {
     public void collectStacks() {
 
 
-        for(ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class,new AABB(golem.getHome()).inflate(10))){
+        for (ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))) {
             if (!i.getItem().is(SHARD_TAG))
                 continue;
             int maxTake = golem.getHeldStack().getMaxStackSize() - golem.getHeldStack().getCount();
@@ -87,7 +87,7 @@ public class PickupAmethystGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 80;
-        for(ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))){
+        for (ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))) {
             if (entity.getItem().is(SHARD_TAG)) {
                 golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
                 targetEntity = entity;

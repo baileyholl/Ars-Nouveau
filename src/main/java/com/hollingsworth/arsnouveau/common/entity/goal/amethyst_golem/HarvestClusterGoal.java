@@ -74,8 +74,8 @@ public class HarvestClusterGoal extends Goal {
     }
 
 
-    public boolean hasCluster(BlockPos p){
-        for(Direction d : Direction.values()){
+    public boolean hasCluster(BlockPos p) {
+        for (Direction d : Direction.values()) {
             if (golem.level.getBlockState(p.relative(d)).is(CLUSTER_BLOCKS)) {
                 return true;
             }

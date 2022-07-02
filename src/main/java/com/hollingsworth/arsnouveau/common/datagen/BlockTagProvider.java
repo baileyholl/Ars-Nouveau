@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 public class BlockTagProvider extends BlockTagsProvider {
 
-    public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+    public static TagKey<Block> IGNORE_TILE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
     public static TagKey<Block> SUMMON_BED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
     public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
