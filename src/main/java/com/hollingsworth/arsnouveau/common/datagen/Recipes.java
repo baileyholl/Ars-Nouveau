@@ -601,6 +601,7 @@ public class Recipes extends RecipeProvider {
                 if(s.equals(LibBlockNames.SOURCESTONE))
                     continue;
                 makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
+                shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_to_sourcestone"));
             }
         }
     }
