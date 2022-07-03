@@ -4,14 +4,18 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
@@ -185,6 +189,42 @@ public class StarbyTransportBehavior extends StarbyBehavior {
     public boolean canGoToBed() {
         return getValidTakePos() != null ||
                 (!starbuncle.getHeldStack().isEmpty() && getValidStorePos(starbuncle.getHeldStack()) != null);
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@org.jetbrains.annotations.Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
+        if (storedPos == null)
+            return;
+        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
+            setToPos(storedPos);
+        }
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@org.jetbrains.annotations.Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
+        if (storedPos == null)
+            return;
+
+        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
+            setFromPos(storedPos);
+        }
+    }
+
+
+    public void setFromPos(BlockPos fromPos) {
+//        if (!data.FROM_LIST.contains(fromPos))
+//            data.FROM_LIST.add(fromPos.immutable());
+//        this.entityData.set(FROM_POS_SIZE, data.FROM_LIST.size());
+    }
+
+    public void setToPos(BlockPos toPos) {
+//        if (!data.TO_LIST.contains(toPos))
+//            data.TO_LIST.add(toPos.immutable());
+//        this.entityData.set(TO_POS_SIZE, data.TO_LIST.size());
     }
 
     @Override

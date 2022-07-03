@@ -59,7 +59,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.CapabilityItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -276,27 +275,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null)
-            return;
-        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
-            setToPos(storedPos);
-        }
-        if (level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
-            data.bedPos = storedPos.immutable();
-        }
+        dynamicBehavior.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
     }
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null)
-            return;
-
-        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
-            setFromPos(storedPos);
-        }
+        dynamicBehavior.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
     }
 
     @Override
@@ -564,18 +548,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public boolean canCollideWith(Entity p_241849_1_) {
         return true;
-    }
-
-    public void setFromPos(BlockPos fromPos) {
-        if (!data.FROM_LIST.contains(fromPos))
-            data.FROM_LIST.add(fromPos.immutable());
-        this.entityData.set(FROM_POS_SIZE, data.FROM_LIST.size());
-    }
-
-    public void setToPos(BlockPos toPos) {
-        if (!data.TO_LIST.contains(toPos))
-            data.TO_LIST.add(toPos.immutable());
-        this.entityData.set(TO_POS_SIZE, data.TO_LIST.size());
     }
 
     public void setColor(String color) {
