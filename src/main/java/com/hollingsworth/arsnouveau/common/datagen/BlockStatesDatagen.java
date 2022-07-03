@@ -30,24 +30,16 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerOnlyState(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
 
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
-                registerDirectionalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
-            } else {
-                registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
-            }
+            registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
         }
 
-    }
-
-    private void registerDirectionalCube(Block block, String registry) {
-        //buildNormalCube(registry);
-        horizontalBlock(block, getUncheckedModel(registry));
     }
 
     private void registerOnlyState(Block block, String registry) {
         simpleBlock(block, getUncheckedModel(registry));
     }
 
+    //waiting for forge PR to fix the datagen
     private void registerDoor(DoorBlock door, String reg) {
         doorBlock(door, reg, getBlockLoc(reg + "_bottom"), getBlockLoc(reg + "_top"));
     }
@@ -60,7 +52,11 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     public void registerNormalCube(Block block, String registry) {
         buildNormalCube(registry);
-        simpleBlock(block, getUncheckedModel(registry));
+        if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(registry)) {
+            horizontalBlock(block, getUncheckedModel(registry));
+        } else {
+            simpleBlock(block, getUncheckedModel(registry));
+        }
     }
 
     public static ModelFile getUncheckedModel(String registry) {
@@ -74,4 +70,5 @@ public class BlockStatesDatagen extends BlockStateProvider {
     public ResourceLocation getBlockLoc(String registryName) {
         return new ResourceLocation(ArsNouveau.MODID, "blocks" + "/" + registryName);
     }
+
 }
