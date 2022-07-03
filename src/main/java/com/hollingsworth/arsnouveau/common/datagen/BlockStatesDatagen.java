@@ -21,18 +21,31 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        registerNormalCube(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
-        registerNormalCube(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED);
-        registerNormalCube(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED);
-        registerNormalCube(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED);
-        registerNormalCube(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED);
-        registerNormalCube(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
-        registerNormalCube(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
+        registerOnlyState(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
+        registerOnlyState(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED);
+        registerOnlyState(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED);
+        registerOnlyState(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED);
+        registerOnlyState(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED);
+        registerOnlyState(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
+        registerOnlyState(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
 
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
+            if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
+                registerDirectionalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
+            } else {
+                registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
+            }
         }
 
+    }
+
+    private void registerDirectionalCube(Block block, String registry) {
+        //buildNormalCube(registry);
+        horizontalBlock(block, getUncheckedModel(registry));
+    }
+
+    private void registerOnlyState(Block block, String registry) {
+        simpleBlock(block, getUncheckedModel(registry));
     }
 
     private void registerDoor(DoorBlock door, String reg) {
