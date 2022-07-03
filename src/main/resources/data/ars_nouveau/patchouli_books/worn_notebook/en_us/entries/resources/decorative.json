@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:arcane_stone",
+      "recipe": "ars_nouveau:source_stone",
       "recipe2": "ars_nouveau:as_gold_stone"
     }
   ]

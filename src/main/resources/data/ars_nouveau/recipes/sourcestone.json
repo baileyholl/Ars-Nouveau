@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "x": {
-      "item": "ars_nouveau:arcane_stone"
+      "tag": "forge:stone"
     },
     "y": {
-      "tag": "forge:nuggets/gold"
+      "tag": "forge:gems/source"
     }
   },
   "pattern": [
@@ -15,6 +15,6 @@
   ],
   "result": {
     "count": 8,
-    "item": "ars_nouveau:as_gold_stone"
+    "item": "ars_nouveau:sourcestone"
   }
 }
