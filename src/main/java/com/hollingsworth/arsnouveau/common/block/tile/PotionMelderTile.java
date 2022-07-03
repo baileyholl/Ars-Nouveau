@@ -202,9 +202,15 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         return this.isMixing ? PlayState.CONTINUE : PlayState.STOP;
     }
 
+    private <E extends BlockEntity & IAnimatable> PlayState floatPredicate(AnimationEvent<E> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
+        return PlayState.CONTINUE;
+    }
+
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController(this, "float", 0, this::floatPredicate));
     }
 
     @Override
