@@ -22,9 +22,7 @@ public class WixieCharm extends AbstractSummonCharm {
      * Called when this item is used when targetting a Block
      */
     public InteractionResult useOn(UseOnContext context) {
-
-
-        return InteractionResult.SUCCESS;
+        return super.useOn(context);
     }
 
     @Override
