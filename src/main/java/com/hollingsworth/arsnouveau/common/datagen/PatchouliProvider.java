@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.io.IOException;
@@ -56,6 +58,7 @@ public class PatchouliProvider implements DataProvider {
     }
 
     public void addEntries() {
+        Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
         for (Enchantment g : enchants) {
             addEnchantmentPage(g);
         }
@@ -233,9 +236,8 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText(), getPath(RESOURCES, "archwood"));
 
         addPage(new PatchouliBuilder(RESOURCES, "decorative")
-                .withIcon(BlockRegistry.ARCANE_BRICKS)
-                .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.ARCANE_STONE).withRecipe2(BlockRegistry.AS_GOLD_STONE)), getPath(RESOURCES, "decorative"));
+                .withIcon(SOURCESTONE)
+                .withLocalizedText(), getPath(RESOURCES, "decorative"));
 
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.LAVA_LILY)
                 .withLocalizedText()

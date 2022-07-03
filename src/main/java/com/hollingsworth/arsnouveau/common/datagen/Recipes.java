@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -34,6 +35,7 @@ public class Recipes extends RecipeProvider {
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         {
+            Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
             makeArmor("novice", consumer, ItemsRegistry.MAGE_FIBER);
             makeArmor("apprentice", consumer, ItemsRegistry.BLAZE_FIBER);
             makeArmor("archmage", consumer, ItemsRegistry.END_FIBER);
@@ -70,14 +72,14 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_PEDESTAL).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
                     .pattern(" x ")
-                    .pattern("xxx").define('x', BlockRegistry.ARCANE_STONE).save(consumer);
+                    .pattern("xxx").define('x', SOURCESTONE).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ENCHANTING_APP_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xyx")
                     .pattern("x x")
                     .pattern("zzz").define('x', Tags.Items.INGOTS_IRON)
                     .define('y', Tags.Items.GEMS_DIAMOND)
-                    .define('z', BlockRegistry.ARCANE_STONE).save(consumer);
+                    .define('z', SOURCESTONE).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.MUNDANE_BELT).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("   ")
@@ -90,12 +92,6 @@ public class Recipes extends RecipeProvider {
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', SOURCE_GEM).save(consumer);
-
-
-            ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_BRICKS, 4).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("xx ")
-                    .pattern("xx ")
-                    .pattern("   ").define('x', BlockRegistry.ARCANE_STONE).save(consumer);
 
 
             ShapedRecipeBuilder.shaped(BlockRegistry.SCRIBES_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -113,10 +109,10 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_CORE_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
                     .pattern("y y")
-                    .pattern("xxx").define('y', Tags.Items.INGOTS_GOLD).define('x', BlockRegistry.ARCANE_STONE).save(consumer);
+                    .pattern("xxx").define('y', Tags.Items.INGOTS_GOLD).define('x', SOURCESTONE).save(consumer);
 
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_STONE, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+            ShapedRecipeBuilder.shaped(SOURCESTONE, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx").define('y', SOURCE_GEM).define('x', Tags.Items.STONE).save(consumer);
@@ -127,22 +123,6 @@ public class Recipes extends RecipeProvider {
                     .pattern("xyx").define('x', BlockRegistry.ARCHWOOD_PLANK)
                     .define('y', Tags.Items.INGOTS_GOLD).save(consumer);
 
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_ALTERNATE, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.ARCANE_BRICKS, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_HERRING, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_BASKET, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_MOSAIC, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_CLOVER, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.ARCANE_STONE);
-
-
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_BASKET, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_CLOVER, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_HERRING, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_MOSAIC, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_ALTERNATING, LibBlockNames.ARCANE_STONE);
-            makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_SMOOTH_ASHLAR, LibBlockNames.ARCANE_STONE);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.BLANK_PARCHMENT, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("yyy")
@@ -357,19 +337,8 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.LAPIS_BLOCK)
                     .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_alt"));
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.AS_GOLD_STONE, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("xxx")
-                    .pattern("xyx")
-                    .pattern("xxx").define('y', Tags.Items.NUGGETS_GOLD).define('x', BlockRegistry.ARCANE_STONE).save(consumer);
 
             STONECUTTER_COUNTER = 1;
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_ALT, LibBlockNames.AS_GOLD_STONE);
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_ASHLAR, LibBlockNames.AS_GOLD_STONE);
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_BASKET, LibBlockNames.AS_GOLD_STONE);
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_CLOVER, LibBlockNames.AS_GOLD_STONE);
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_HERRING, LibBlockNames.AS_GOLD_STONE);
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_STONE);
-            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_STONE);
             ShapedRecipeBuilder.shaped(BlockRegistry.ALCHEMICAL_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern(" s ")
                     .pattern("gig")
@@ -627,6 +596,12 @@ public class Recipes extends RecipeProvider {
                     .define('x', Items.TINTED_GLASS)
                     .define('y', ItemsRegistry.SOURCE_GEM)
                     .save(consumer);
+            // stonecutter for sourcestone
+            for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+                if(s.equals(LibBlockNames.SOURCESTONE))
+                    continue;
+                makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
+            }
         }
     }
 
