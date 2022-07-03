@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column_horizontal",
   "textures": {
-    "all": "ars_nouveau:blocks/smooth_gilded_sourcestone_large_bricks"
+    "end": "ars_nouveau:blocks/smooth_gilded_sourcestone_large_bricks_2",
+    "side": "ars_nouveau:blocks/smooth_gilded_sourcestone_large_bricks"
   }
 }

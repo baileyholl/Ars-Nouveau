@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,7 +24,7 @@ public class LightBlock extends ModBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(defaultProperties().lightLevel((bs) -> bs.getValue(LIGHT_LEVEL) == 0 ? 14 : bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f, 0f), LibBlockNames.LIGHT_BLOCK);
+        super(defaultProperties().lightLevel((bs) -> bs.getValue(LIGHT_LEVEL) == 0 ? 14 : bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f, 0f));
     }
 
     @Override

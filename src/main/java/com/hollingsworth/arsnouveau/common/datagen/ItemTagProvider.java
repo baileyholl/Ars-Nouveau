@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.versions.forge.ForgeVersion;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemTagProvider extends ItemTagsProvider {
@@ -23,7 +24,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     public static TagKey<Item> MAGIC_FOOD = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food"));
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
     public static TagKey<Item> SHARD_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/shard"));
-
+    public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "fruits/berry"));
     public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_126530_, p_126531_, modId, existingFileHelper);
     }
@@ -31,6 +32,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags() {
 
+        this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
 
         this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),

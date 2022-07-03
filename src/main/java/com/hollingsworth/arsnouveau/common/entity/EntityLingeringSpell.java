@@ -137,22 +137,14 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         return entityData.get(ACCELERATES);
     }
 
-
     public void setAoe(float aoe) {
         entityData.set(AOE, aoe);
-    }
-
-    //for compat
-    @Deprecated
-    public void setAoe(int aoe) {
-        entityData.set(AOE, (float) aoe);
     }
 
     //for compat
     public float getAoe() {
         return (this.isSensitive() ? 1 : 3) + entityData.get(AOE);
     }
-
 
     public void setLanded(boolean landed) {
         entityData.set(LANDED, landed);

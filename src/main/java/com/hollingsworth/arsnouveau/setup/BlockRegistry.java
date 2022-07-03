@@ -418,7 +418,11 @@ public class BlockRegistry {
         registry.register(LibBlockNames.PURPLE_SBED, new SummonBed());
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            registry.register(s, new ModBlock());
+            if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
+                registry.register(s, new DirectionalModBlock());
+            } else {
+                registry.register(s, new ModBlock());
+            }
         }
 
     }
