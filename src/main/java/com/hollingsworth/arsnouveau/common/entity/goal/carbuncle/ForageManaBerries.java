@@ -24,11 +24,13 @@ public class ForageManaBerries extends Goal {
     private final Level world;
     int timeSpent;
     BlockPos pos;
+    StarbyTransportBehavior behavior;
 
-    public ForageManaBerries(Starbuncle starbuncle) {
+    public ForageManaBerries(Starbuncle starbuncle, StarbyTransportBehavior transportBehavior) {
         this.entity = starbuncle;
         this.world = entity.level;
         this.setFlags(EnumSet.of(Flag.MOVE));
+        this.behavior = transportBehavior;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if (entity.isPickupDisabled() || entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !entity.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
+        if (entity.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;
@@ -62,7 +64,7 @@ public class ForageManaBerries extends Goal {
     public void tick() {
         super.tick();
         timeSpent++;
-        if (this.pos == null || entity.isStuck) {
+        if (this.pos == null) {
             return;
         }
 
@@ -85,7 +87,7 @@ public class ForageManaBerries extends Goal {
         if (pos == null || entity.isPickupDisabled())
             return false;
 
-        return timeSpent <= 20 * 15 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof SourceBerryBush && world.getBlockState(pos).getValue(AGE) > 1;
+        return timeSpent <= 20 * 15 && world.getBlockState(pos).getBlock() instanceof SourceBerryBush && world.getBlockState(pos).getValue(AGE) > 1;
     }
 
     public BlockPos getNearbyManaBerry() {

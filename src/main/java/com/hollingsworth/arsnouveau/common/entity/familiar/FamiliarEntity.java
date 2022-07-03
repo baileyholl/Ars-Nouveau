@@ -54,7 +54,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     public boolean terminatedFamiliar;
     public ResourceLocation holderID;
-    public PersistentFamiliarData<?> persistentData = new PersistentFamiliarData<>(new CompoundTag());
+    public PersistentFamiliarData persistentData = new PersistentFamiliarData<>(new CompoundTag());
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
@@ -224,7 +224,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         if (getOwnerID() != null)
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
-        tag.put("familiarData", getPersistentFamiliarData().toTag(new CompoundTag()));
+        tag.put("familiarData", getPersistentFamiliarData().toTag(this, new CompoundTag()));
         tag.putString("holderID", holderID.toString());
         tag.putString("color", this.entityData.get(COLOR));
         if (!this.entityData.get(COSMETIC).isEmpty()) {
@@ -288,18 +288,18 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public void syncTag() {
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner()).orElse(null);
         if (cap != null && persistentData != null) {
-            cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(new CompoundTag()));
+            cap.getFamiliarData(getHolderID()).entityTag.put("familiarData", persistentData.toTag(this, new CompoundTag()));
         }
     }
 
     /**
      * Override and return your own implementation of PersistentData. See FamiliarStarbuncle for an example.
      */
-    public PersistentFamiliarData<?> deserializePersistentData(CompoundTag tag) {
+    public PersistentFamiliarData deserializePersistentData(CompoundTag tag) {
         return new PersistentFamiliarData<>(tag);
     }
 
-    public PersistentFamiliarData<?> getPersistentFamiliarData() {
+    public PersistentFamiliarData getPersistentFamiliarData() {
         return persistentData;
     }
 

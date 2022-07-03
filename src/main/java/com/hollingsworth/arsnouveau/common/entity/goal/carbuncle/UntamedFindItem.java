@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,15 +14,16 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FindItem extends Goal {
+public class UntamedFindItem extends Goal {
     private Starbuncle starbuncle;
     boolean itemStuck;
     int timeFinding;
     int stuckTicks;
     List<ItemEntity> destList = new ArrayList<>();
     ItemEntity dest;
-    public StarbyTransportBehavior behavior;
-    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.isValidItem(itemEntity.getItem());
+
+
+    private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD);
 
     @Override
     public void stop() {
@@ -43,14 +45,13 @@ public class FindItem extends Goal {
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.HUNTING_ITEM;
     }
 
-    public FindItem(Starbuncle starbuncle, StarbyTransportBehavior transportBehavior) {
+    public UntamedFindItem(Starbuncle starbuncle) {
         this.starbuncle = starbuncle;
-        this.behavior = transportBehavior;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     public List<ItemEntity> nearbyItems() {
-        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), TRUSTED_TARGET_SELECTOR);
+        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), NONTAMED_TARGET_SELECTOR);
     }
 
     @Override
@@ -62,18 +63,14 @@ public class FindItem extends Goal {
 
     @Override
     public boolean canUse() {
-        if (starbuncle.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
+        if (!starbuncle.getHeldStack().isEmpty())
             return false;
         ItemStack itemstack = starbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
         itemStuck = false;
         destList = new ArrayList<>();
         if (itemstack.isEmpty() && !list.isEmpty()) {
-            for (ItemEntity entity : list) {
-                if (!behavior.isValidItem(entity.getItem()))
-                    continue;
-                destList.add(entity);
-            }
+            destList.addAll(list);
         }
         if (destList.isEmpty()) {
             return false;
