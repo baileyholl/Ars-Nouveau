@@ -45,7 +45,6 @@ public class GuiSpellBook extends BaseBook {
     public EditBox spell_name;
     public NoShadowTextField searchBar;
     public GuiSpellSlot selected_slot;
-    public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
     public List<AbstractSpellPart> unlockedSpells = new ArrayList<>();
     public List<AbstractSpellPart> displayedGlyphs;
@@ -68,7 +67,6 @@ public class GuiSpellBook extends BaseBook {
         this.api = ArsNouveauAPI.getInstance();
         this.selectedSpellSlot = 0;
         craftingCells = new ArrayList<>();
-        this.max_spell_tier = tier;
         this.unlockedSpells = unlockedSpells;
         this.displayedGlyphs = new ArrayList<>(this.unlockedSpells);
         this.validationErrors = new LinkedList<>();
