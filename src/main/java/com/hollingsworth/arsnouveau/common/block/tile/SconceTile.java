@@ -70,21 +70,23 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
 
         double centerX = 0.0;
         double centerZ = 0.0;
+        double xOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+        double zOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
         if (state.getValue(ScribesBlock.FACING) == Direction.NORTH) {
-            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.8 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX = pos.getX() + 0.5 + xOffset;
+            centerZ = pos.getZ() + 0.8 + zOffset;
         }
         if (state.getValue(ScribesBlock.FACING) == Direction.SOUTH) {
-            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.2 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX = pos.getX() + 0.5 + xOffset;
+            centerZ = pos.getZ() + 0.2 + zOffset;
         }
         if (state.getValue(ScribesBlock.FACING) == Direction.EAST) {
-            centerX = pos.getX() + 0.2 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX = pos.getX() + 0.2 + xOffset;
+            centerZ = pos.getZ() + 0.5 + zOffset;
         }
         if (state.getValue(ScribesBlock.FACING) == Direction.WEST) {
-            centerX = pos.getX() + 0.8 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX = pos.getX() + 0.8 + xOffset;
+            centerZ = pos.getZ() + 0.5 + zOffset;
         }
 
         ParticleColor nextColor = this.color.nextColor(this.level.random);
@@ -93,7 +95,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
         for (int i = 0; i < intensity; i++) {
             level.addParticle(
                     GlowParticleData.createData(nextColor),
-                    centerX, pos.getY() + 0.8 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
+                    centerX, pos.getY() + 0.9 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
                     0, ParticleUtil.inRange(0.0, 0.03f), 0);
 
         }
