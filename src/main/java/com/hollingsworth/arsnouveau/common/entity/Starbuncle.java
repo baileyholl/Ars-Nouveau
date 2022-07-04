@@ -16,13 +16,10 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.UntamedFindItem
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -55,7 +52,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -73,7 +69,7 @@ import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IBehaviorSyncable {
 
     public enum StarbuncleGoalState {
         FORAGING,
@@ -86,9 +82,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     public StarbuncleGoalState goalState;
     private MinecoloniesAdvancedPathNavigate pathNavigate;
-
-    public static final EntityDataAccessor<Integer> TO_POS_SIZE = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> FROM_POS_SIZE = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
@@ -146,6 +139,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
+    public void setBehavior(ChangeableBehavior behavior) {
+        this.dynamicBehavior = behavior;
+    }
+
+    @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
         animationData.addAnimationController(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
@@ -165,7 +163,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     private PlayState dancePredicate(AnimationEvent event) {
-        if (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8) {
+        if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master"));
             return PlayState.CONTINUE;
         }
@@ -208,14 +206,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void attemptTame() {
         if (!isTamed() && this.getHeldStack().is(Tags.Items.NUGGETS_GOLD)) {
             tamingTime++;
-            if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
-                this.remove(RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
+                this.remove(RemovalReason.DISCARDED);
             } else if (tamingTime > 55 && level.isClientSide) {
                 for (int i = 0; i < 10; i++) {
                     double d0 = getX();
@@ -226,7 +222,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             }
         }
     }
-
 
     @Override
     public void tick() {
@@ -261,13 +256,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         attemptTame();
     }
 
-
     @Override
     public void onWanded(Player playerEntity) {
-        data.FROM_LIST = new ArrayList<>();
-        data.TO_LIST = new ArrayList<>();
-        this.entityData.set(TO_POS_SIZE, 0);
-        this.entityData.set(FROM_POS_SIZE, 0);
+        this.dynamicBehavior.onWanded(playerEntity);
         data.pathBlock = null;
         data.bedPos = null;
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.cleared"));
@@ -281,23 +272,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         dynamicBehavior.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void handleEntityEvent(byte id) {
-        if (id == 45) {
-            ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
-            if (!itemstack.isEmpty()) {
-                for (int i = 0; i < 8; ++i) {
-                    Vec3 vec3d = (new Vec3(((double) this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).xRot(-this.getXRot() * ((float) Math.PI / 180F)).yRot(-this.getYRot() * ((float) Math.PI / 180F));
-                    this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemstack), this.getX() + this.getLookAngle().x / 2.0D, this.getY(), this.getZ() + this.getLookAngle().z / 2.0D, vec3d.x, vec3d.y + 0.05D, vec3d.z);
-                }
-            }
-        } else {
-            super.handleEntityEvent(id);
-        }
-
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -400,12 +374,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.path"));
         }
 
-        if (player.getMainHandItem().isEmpty() && this.isTamed()) {
-            StringBuilder status = new StringBuilder();
-            if (!status.toString().isEmpty())
-                PortUtil.sendMessage(player, status.toString());
-        }
-
         return InteractionResult.SUCCESS;
     }
 
@@ -418,8 +386,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(TAMED, false);
-        this.entityData.define(TO_POS_SIZE, 0);
-        this.entityData.define(FROM_POS_SIZE, 0);
         this.entityData.define(COLOR, COLORS.ORANGE.name());
         this.entityData.define(PATH_BLOCK, "");
         this.entityData.define(HEAD_COSMETIC, ItemStack.EMPTY);
@@ -472,7 +438,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         return this.isTamed();
     }
 
-
     private boolean setBehaviors;
 
     @Override
@@ -492,7 +457,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         restoreFromTag();
     }
 
-
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -510,8 +474,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         if (data.color != null)
             this.entityData.set(COLOR, data.color);
 
-        this.entityData.set(TO_POS_SIZE, data.TO_LIST.size());
-        this.entityData.set(FROM_POS_SIZE, data.FROM_LIST.size());
         if (data.pathBlock != null) {
             setPathBlockDesc(Component.translatable(data.pathBlock.getDescriptionId()).getString());
         }
@@ -531,10 +493,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if (!isTamed())
-            return;
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS_SIZE)));
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS_SIZE)));
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
@@ -579,37 +537,16 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
-
         @Nonnull
         public List<BlockPos> TO_LIST = new ArrayList<>();
         @Nonnull
         public List<BlockPos> FROM_LIST = new ArrayList<>();
-
         public Block pathBlock;
         public BlockPos bedPos;
         public CompoundTag behaviorTag;
 
         public StarbuncleData(CompoundTag tag) {
             super(tag);
-
-            FROM_LIST = new ArrayList<>();
-            TO_LIST = new ArrayList<>();
-            int counter = 0;
-
-            while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
-                BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
-                if (!this.FROM_LIST.contains(pos))
-                    this.FROM_LIST.add(pos);
-                counter++;
-            }
-
-            counter = 0;
-            while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
-                BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
-                if (!this.TO_LIST.contains(pos))
-                    this.TO_LIST.add(pos);
-                counter++;
-            }
 
             if (tag.contains("path")) {
                 pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
@@ -624,18 +561,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         @Override
         public CompoundTag toTag(Starbuncle starbuncle, CompoundTag tag) {
             super.toTag(starbuncle, tag);
-            int counter = 0;
-            for (BlockPos p : FROM_LIST) {
-                NBTUtil.storeBlockPos(tag, "from_" + counter, p);
-                counter++;
-            }
-            counter = 0;
-            for (BlockPos p : TO_LIST) {
-                NBTUtil.storeBlockPos(tag, "to_" + counter, p);
-                counter++;
-            }
-
-
             if (pathBlock != null)
                 tag.putString("path", getRegistryName(pathBlock).toString());
             if (bedPos != null)

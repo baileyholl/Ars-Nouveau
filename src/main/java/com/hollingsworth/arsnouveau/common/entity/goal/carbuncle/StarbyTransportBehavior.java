@@ -198,7 +198,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
             return;
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
-            setToPos(storedPos);
+            addToPos(storedPos);
         }
     }
 
@@ -210,21 +210,25 @@ public class StarbyTransportBehavior extends StarbyBehavior {
 
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
-            setFromPos(storedPos);
+            addFromPos(storedPos);
         }
     }
 
-
-    public void setFromPos(BlockPos fromPos) {
-//        if (!data.FROM_LIST.contains(fromPos))
-//            data.FROM_LIST.add(fromPos.immutable());
-//        this.entityData.set(FROM_POS_SIZE, data.FROM_LIST.size());
+    @Override
+    public void onWanded(Player playerEntity) {
+        super.onWanded(playerEntity);
+        FROM_LIST = new ArrayList<>();
+        TO_LIST = new ArrayList<>();
     }
 
-    public void setToPos(BlockPos toPos) {
-//        if (!data.TO_LIST.contains(toPos))
-//            data.TO_LIST.add(toPos.immutable());
-//        this.entityData.set(TO_POS_SIZE, data.TO_LIST.size());
+    public void addFromPos(BlockPos fromPos) {
+        if (!FROM_LIST.contains(fromPos))
+            FROM_LIST.add(fromPos.immutable());
+    }
+
+    public void addToPos(BlockPos toPos) {
+        if (!TO_LIST.contains(toPos))
+            TO_LIST.add(toPos.immutable());
     }
 
     @Override
