@@ -10,10 +10,6 @@ import net.minecraft.world.level.material.Material;
 
 public class ModBlock extends Block {
 
-    public ModBlock(Properties properties, String registry) {
-        super(properties);
-    }
-
     public ModBlock(Properties properties) {
         super(properties);
     }

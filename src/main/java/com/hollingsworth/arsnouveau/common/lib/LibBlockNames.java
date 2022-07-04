@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.lib;
 
+import java.util.List;
+
 public class LibBlockNames {
 
     public static final String STATE_PROVIDER = "an_stateprovider";
@@ -116,7 +118,6 @@ public class LibBlockNames {
     public static final String ARCHWOOD_CHEST = "archwood_chest";
     public static final String SPELL_PRISM = "spell_prism";
     public static final String WHIRLISPRIG_BLOCK = "whirlisprig_flower";
-    public static final String INSCRIPTION_BLOCK = "inscription_table";
     public static final String RELAY_COLLECTOR = "relay_collector";
 
     public static final String RED_SBED = "red_sbed";
@@ -136,4 +137,6 @@ public class LibBlockNames {
             GILDED_SOURCESTONE_MOSAIC, GILDED_SOURCESTONE_BASKET, GILDED_SOURCESTONE_ALTERNATING, GILDED_SOURCESTONE_LARGE_BRICKS, GILDED_SOURCESTONE_SMALL_BRICKS,
             SMOOTH_GILDED_SOURCESTONE_MOSAIC, SMOOTH_GILDED_SOURCESTONE_BASKET, SMOOTH_GILDED_SOURCESTONE_ALTERNATING, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_SMALL_BRICKS,
     };
+
+    public static final List<String> DIRECTIONAL_SOURCESTONE = List.of(GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS);
 }

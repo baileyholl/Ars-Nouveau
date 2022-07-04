@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 public class WardBlock extends ModBlock {
 
     public WardBlock() {
-        super(defaultProperties().lightLevel((bs) -> 7), "warding_stone");
+        super(defaultProperties().lightLevel((bs) -> 7));
         // this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 

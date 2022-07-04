@@ -418,7 +418,11 @@ public class BlockRegistry {
         registry.register(LibBlockNames.PURPLE_SBED, new SummonBed());
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            registry.register(s, new ModBlock());
+            if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
+                registry.register(s, new DirectionalModBlock());
+            } else {
+                registry.register(s, new ModBlock());
+            }
         }
 
     }
@@ -489,7 +493,12 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("enchanting_apparatus");
             }
         });
-        registry.register(LibBlockNames.ARCANE_PEDESTAL, new BlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()));
+        registry.register(LibBlockNames.ARCANE_PEDESTAL, new RendererBlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return ArcanePedestalRenderer::getISTER;
+            }
+        });
         registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {

@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -35,7 +34,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final VoxelShape shape = Block.box(1D, 0.0D, 1.0D, 15, 13, 15);
     public ArcanePedestal() {
-        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.ARCANE_PEDESTAL);
+        super(ModBlock.defaultProperties().noOcclusion());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
@@ -56,9 +55,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
-
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
-
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }

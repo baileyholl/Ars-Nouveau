@@ -11,10 +11,12 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -99,6 +101,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
                     this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
                     clearItems();
                     ParticleUtil.spawnPoof((ServerLevel) level, worldPosition);
+                    level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_FINISH, SoundSource.BLOCKS, 1, 1);
                 }
 
                 this.isCrafting = false;
@@ -157,6 +160,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         this.isCrafting = true;
         updateBlock();
         Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
+        level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_CHANNEL, SoundSource.BLOCKS, 1, 1);
         return true;
     }
 
@@ -290,10 +294,11 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        idleController = new AnimationController(this, "controller", 1, this::idlePredicate);
+        idleController = new AnimationController(this, "controller", 0, this::idlePredicate);
         animationData.addAnimationController(idleController);
-        craftController = new AnimationController(this, "craft_controller", 1, this::craftPredicate);
+        craftController = new AnimationController(this, "craft_controller", 0, this::craftPredicate);
         animationData.addAnimationController(craftController);
+        animationData.setResetSpeedInTicks(0.0);
     }
 
     AnimationFactory manager = new AnimationFactory(this);
@@ -318,6 +323,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     @Override
     public void startAnimation(int arg) {
         if (craftController != null) {
+//            this.manager.getOrCreateAnimationData(this.hashCode());
             craftController.markNeedsReload();
             craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
         }
