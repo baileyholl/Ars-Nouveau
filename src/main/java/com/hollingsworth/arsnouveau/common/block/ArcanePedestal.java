@@ -55,9 +55,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
-
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
-
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }

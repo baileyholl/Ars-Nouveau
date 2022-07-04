@@ -15,5 +15,19 @@
         "volume": 0.75
       }
     ]
+  },
+  "ea_channel": {
+    "sounds": [
+      {
+        "name": "ars_nouveau:apparatus_channel"
+      }
+    ]
+  },
+  "ea_finish": {
+    "sounds": [
+      {
+        "name": "ars_nouveau:apparatus_finish"
+      }
+    ]
   }
 }
