@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -40,5 +41,9 @@ public class ArcanePedestalRenderer extends GeoBlockRenderer<ArcanePedestalTile>
         Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5, 1, 0.5,
                 entityItem.yRot, 2.0f, matrixStack, iRenderTypeBuffer, packedLightIn);
         matrixStack.popPose();
+    }
+
+    public static GenericItemBlockRenderer getISTER() {
+        return new GenericItemBlockRenderer(model);
     }
 }

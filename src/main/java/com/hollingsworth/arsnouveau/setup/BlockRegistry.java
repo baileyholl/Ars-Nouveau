@@ -493,7 +493,12 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("enchanting_apparatus");
             }
         });
-        registry.register(LibBlockNames.ARCANE_PEDESTAL, new BlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()));
+        registry.register(LibBlockNames.ARCANE_PEDESTAL, new RendererBlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return ArcanePedestalRenderer::getISTER;
+            }
+        });
         registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
