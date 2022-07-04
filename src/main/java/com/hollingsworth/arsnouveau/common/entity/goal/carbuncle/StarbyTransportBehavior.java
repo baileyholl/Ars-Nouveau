@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -38,6 +39,24 @@ public class StarbyTransportBehavior extends StarbyBehavior {
 
     public StarbyTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
+        if(!entity.isTamed())
+            return;
+        int counter = 0;
+
+        while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
+            BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
+            if (!this.FROM_LIST.contains(pos))
+                this.FROM_LIST.add(pos);
+            counter++;
+        }
+
+        counter = 0;
+        while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
+            BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
+            if (!this.TO_LIST.contains(pos))
+                this.TO_LIST.add(pos);
+            counter++;
+        }
         goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
         goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
         goals.add(new WrappedGoal(3, new StoreItemGoal(starbuncle, this)));
@@ -222,37 +241,48 @@ public class StarbyTransportBehavior extends StarbyBehavior {
     }
 
     public void addFromPos(BlockPos fromPos) {
-        if (!FROM_LIST.contains(fromPos))
+        if (!FROM_LIST.contains(fromPos)) {
             FROM_LIST.add(fromPos.immutable());
+            syncTag();
+        }
     }
 
     public void addToPos(BlockPos toPos) {
-        if (!TO_LIST.contains(toPos))
+        if (!TO_LIST.contains(toPos)) {
             TO_LIST.add(toPos.immutable());
+            syncTag();
+        }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        FROM_LIST = new ArrayList<>();
-        TO_LIST = new ArrayList<>();
         int counter = 0;
-
-        while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
-            BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
-            if (!this.FROM_LIST.contains(pos))
-                this.FROM_LIST.add(pos);
+        for (BlockPos p : FROM_LIST) {
+            NBTUtil.storeBlockPos(tag, "from_" + counter, p);
             counter++;
         }
-
         counter = 0;
-        while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
-            BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
-            if (!this.TO_LIST.contains(pos))
-                this.TO_LIST.add(pos);
+        for (BlockPos p : TO_LIST) {
+            NBTUtil.storeBlockPos(tag, "to_" + counter, p);
             counter++;
         }
         return tag;
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+        super.getTooltip(tooltip);
+        StarbyTransportBehavior behavior = (StarbyTransportBehavior) BehaviorRegistry.create(starbuncle, starbuncle.getEntityData().get(Starbuncle.BEHAVIOR_TAG));
+        if(behavior != null){
+            tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", behavior.TO_LIST.size()));
+            tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", behavior.FROM_LIST.size()));
+        }
+
+    }
+
+    public void syncTag(){
+        starbuncle.getEntityData().set(Starbuncle.BEHAVIOR_TAG, this.toTag(new CompoundTag()));
     }
 
     @Override

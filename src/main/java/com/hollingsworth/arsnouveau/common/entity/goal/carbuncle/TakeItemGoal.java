@@ -125,7 +125,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
     @Override
     public boolean canUse() {
-        return starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed();
+        return starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0;
     }
 
     @Override

@@ -17,7 +17,7 @@ public class BehaviorRegistry {
 
     public static ChangeableBehavior create(Entity entity, CompoundTag tag){
         CreateFromTag create = REGISTRY.get(new ResourceLocation(tag.getString("id")));
-        return create.create(entity, tag);
+        return create == null ? null : create.create(entity, tag);
     }
 
     static{

@@ -87,7 +87,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> PATH_BLOCK = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<ItemStack> HEAD_COSMETIC = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.ITEM_STACK);
-
+    public static final EntityDataAccessor<CompoundTag> BEHAVIOR_TAG = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.COMPOUND_TAG);
     private int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     private int lastAABBCalc;
@@ -374,7 +374,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.path"));
         }
 
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -389,6 +389,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.entityData.define(COLOR, COLORS.ORANGE.name());
         this.entityData.define(PATH_BLOCK, "");
         this.entityData.define(HEAD_COSMETIC, ItemStack.EMPTY);
+        this.entityData.define(BEHAVIOR_TAG, new CompoundTag());
     }
 
     @Override
@@ -453,8 +454,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.goalSelector.availableGoals = new LinkedHashSet<>();
             this.addGoalsAfterConstructor();
             setBehaviors = true;
+            restoreFromTag();
         }
-        restoreFromTag();
     }
 
     @Override
@@ -482,6 +483,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         setCustomName(data.name);
         if(data.behaviorTag != null){
             this.dynamicBehavior = BehaviorRegistry.create(this, data.behaviorTag);
+            this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+            this.addGoalsAfterConstructor();
         }
     }
 
@@ -493,6 +496,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        dynamicBehavior.getTooltip(tooltip);
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
