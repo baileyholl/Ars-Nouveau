@@ -49,7 +49,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if (entity.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
+        if (behavior.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;
@@ -84,7 +84,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (pos == null || entity.isPickupDisabled())
+        if (pos == null || behavior.isPickupDisabled())
             return false;
 
         return timeSpent <= 20 * 15 && world.getBlockState(pos).getBlock() instanceof SourceBerryBush && world.getBlockState(pos).getValue(AGE) > 1;

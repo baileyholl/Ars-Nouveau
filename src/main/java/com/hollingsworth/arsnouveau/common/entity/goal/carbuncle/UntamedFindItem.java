@@ -56,8 +56,6 @@ public class UntamedFindItem extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (starbuncle.isPickupDisabled())
-            return false;
         return timeFinding <= 20 * 15 && !itemStuck && starbuncle.getHeldStack().isEmpty();
     }
 

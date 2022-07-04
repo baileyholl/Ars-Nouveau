@@ -374,7 +374,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.path"));
         }
 
-        return InteractionResult.PASS;
+        return dynamicBehavior.mobInteract(player, hand);
     }
 
     @Override
@@ -414,10 +414,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(HEAD_COSMETIC)));
         this.entityData.set(HEAD_COSMETIC, stack);
         this.data.cosmetic = stack;
-    }
-
-    public boolean isPickupDisabled() {
-        return this.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
     @Override

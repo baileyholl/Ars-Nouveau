@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -103,6 +104,10 @@ public class StarbyTransportBehavior extends StarbyBehavior {
         if (stack == null || stack.isEmpty() || b == null)
             return ItemScroll.SortPref.INVALID;
         return canDepositItem(level.getBlockEntity(b), stack);
+    }
+
+    public boolean isPickupDisabled() {
+        return starbuncle.getCosmeticItem().getItem() == ItemsRegistry.STARBUNCLE_SHADES.get();
     }
 
     public @Nullable BlockPos getValidTakePos() {
