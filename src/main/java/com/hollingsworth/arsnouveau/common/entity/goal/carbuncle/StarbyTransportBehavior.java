@@ -67,7 +67,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
     @Override
     public void pickUpItem(ItemEntity itemEntity) {
         super.pickUpItem(itemEntity);
-        if(!isValidItem(itemEntity.getItem()))
+        if(!canStoreStack(itemEntity.getItem()))
             return;
         starbuncle.setHeldStack(itemEntity.getItem());
         itemEntity.remove(Entity.RemovalReason.DISCARDED);
@@ -85,7 +85,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
     }
 
     public BlockPos getValidStorePos(ItemStack stack) {
-        if (TO_LIST.isEmpty())
+        if (TO_LIST.isEmpty() || stack.isEmpty())
             return null;
         BlockPos returnPos = null;
         ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
@@ -128,7 +128,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
         if (iItemHandler == null)
             return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
-            if (!iItemHandler.getStackInSlot(j).isEmpty() && isValidItem(iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null) {
+            if (!iItemHandler.getStackInSlot(j).isEmpty() && canStoreStack(iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null) {
                 return true;
             }
         }
@@ -139,7 +139,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
      * Returns the maximum stack size an inventory can accept for a particular stack. Does all needed validity checks.
      */
     public int getMaxTake(ItemStack stack) {
-        if (!isValidItem(stack)) {
+        if (!canStoreStack(stack)) {
             return -1;
         }
         BlockPos validStorePos = getValidStorePos(stack);
@@ -151,21 +151,19 @@ public class StarbyTransportBehavior extends StarbyBehavior {
 
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack handlerStack = handler.getStackInSlot(i);
-            if (ItemHandlerHelper.canItemStacksStack(handler.getStackInSlot(i), stack) || handlerStack.isEmpty()) {
-                if (handlerStack.isEmpty())
-                    return handler.getSlotLimit(i);
-
+            if(handlerStack.isEmpty()){
+                return handler.getSlotLimit(i);
+            }else if (ItemHandlerHelper.canItemStacksStack(handler.getStackInSlot(i), stack)) {
                 int maxRoom = handlerStack.getMaxStackSize() - handlerStack.getCount();
-                if (maxRoom > 0)
+                if (maxRoom > 0) {
                     return Math.min(maxRoom, handler.getSlotLimit(i));
+                }
             }
         }
         return -1;
     }
 
-    public boolean isValidItem(ItemStack stack) {
-        if (stack.isEmpty())
-            return false;
+    public boolean canStoreStack(ItemStack stack) {
         BlockPos storePos = getValidStorePos(stack);
         if (storePos == null) {
             return false;

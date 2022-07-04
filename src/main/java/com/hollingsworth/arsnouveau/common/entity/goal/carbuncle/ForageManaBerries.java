@@ -49,7 +49,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if (behavior.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
+        if (behavior.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.canStoreStack(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;

@@ -21,7 +21,7 @@ public class FindItem extends Goal {
     List<ItemEntity> destList = new ArrayList<>();
     ItemEntity dest;
     public StarbyTransportBehavior behavior;
-    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.isValidItem(itemEntity.getItem());
+    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.canStoreStack(itemEntity.getItem());
 
     @Override
     public void stop() {
@@ -70,7 +70,7 @@ public class FindItem extends Goal {
         destList = new ArrayList<>();
         if (itemstack.isEmpty() && !list.isEmpty()) {
             for (ItemEntity entity : list) {
-                if (!behavior.isValidItem(entity.getItem()))
+                if (!behavior.canStoreStack(entity.getItem()))
                     continue;
                 destList.add(entity);
             }
