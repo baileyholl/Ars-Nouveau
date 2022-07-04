@@ -65,20 +65,17 @@ public class TakeItemGoal extends ExtendedRangeGoal {
                 int count = behavior.getMaxTake(iItemHandler.getStackInSlot(j));
                 if (count <= 0)
                     continue;
-                behavior.getValidStorePos(iItemHandler.getStackInSlot(j));
-
                 starbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
-
                 starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
 
                 if (world instanceof ServerLevel serverLevel) {
-                    // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     try {
                         OpenChestEvent event = new OpenChestEvent(serverLevel, takePos, 20);
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
-                    } catch (Throwable ignored) {
+                    } catch (Exception ignored) {
+                        // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     }
                 }
                 break;

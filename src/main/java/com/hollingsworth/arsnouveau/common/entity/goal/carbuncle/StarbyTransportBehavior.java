@@ -189,16 +189,14 @@ public class StarbyTransportBehavior extends StarbyBehavior {
         for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(tile.getBlockPos()).inflate(1))) {
             // Check if these frames are attached to the tile
             BlockEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            if (adjTile == null || !adjTile.equals(tile))
+            if (adjTile == null || !adjTile.equals(tile) || i.getItem().isEmpty())
                 continue;
 
-            if (i.getItem().isEmpty())
-                continue;
 
             ItemStack stackInFrame = i.getItem();
 
-            if (stackInFrame.getItem() instanceof ItemScroll itemScroll) {
-                pref = itemScroll.getSortPref(stack, stackInFrame.getOrCreateTag(), handler);
+            if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
+                pref = scrollItem.getSortPref(stack, stackInFrame.getOrCreateTag(), handler);
                 // If our item frame just contains a normal item
             } else if (i.getItem().getItem() != stack.getItem()) {
                 return ItemScroll.SortPref.INVALID;
