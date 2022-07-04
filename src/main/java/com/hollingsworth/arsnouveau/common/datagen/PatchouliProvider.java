@@ -351,7 +351,7 @@ public class PatchouliProvider implements DataProvider {
                         new String[]{"B0PB"},
                         new String[]{"BPPB"},
                         new String[]{" BB "}
-                }).withMapping("B", "ars_nouveau:arcane_bricks").withMapping("P", "ars_nouveau:portal")
+                }).withMapping("B", "ars_nouveau:sourcestone").withMapping("P", "ars_nouveau:portal")
                         .withMapping("0", "ars_nouveau:portal").withText(getLangPath("warp_portal", 4))), getPath(MACHINES, "warp_portal"));
 
         addBasicItem(BlockRegistry.AGRONOMIC_SOURCELINK, SOURCE, new CraftingPage(BlockRegistry.AGRONOMIC_SOURCELINK));
