@@ -9,12 +9,6 @@ public abstract class ItemstackData extends AbstractData {
     public ItemstackData(ItemStack stack) {
         super(stack.getOrCreateTag());
         this.stack = stack;
-        readFromNBT(getItemTag(stack));
-    }
-
-    @Override
-    public void writeToNBT(CompoundTag tag) {
-        writeItem();
     }
 
     /**

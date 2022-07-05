@@ -191,6 +191,12 @@ public class Networking {
                 PacketSyncLitEntities::new,
                 PacketSyncLitEntities::handle);
 
+        INSTANCE.registerMessage(nextID(),
+                PacketSyncBehaviorData.class,
+                PacketSyncBehaviorData::toBytes,
+                PacketSyncBehaviorData::new,
+                PacketSyncBehaviorData.Handler::handle);
+
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

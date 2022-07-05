@@ -681,6 +681,8 @@
 	"ars_nouveau.summoning": "Summoning",
 	"ars_nouveau.item_transport": "Item Transport",
 	"ars_nouveau.filtering": "Filtering",
+	"ars_nouveau.filtering_with": "Filtering with: %s",
+	"ars_nouveau.filter_set": "Filter set.",
 	"ars_nouveau.pathing": "Pathing",
 	"block.ars_nouveau.archwood_chest": "Archwood Chest",
 	"block.ars_nouveau.spell_prism": "Spell Prism",
@@ -1004,6 +1006,7 @@
 	"block.ars_nouveau.smooth_gilded_sourcestone_basketweave": "Smooth Gilded Sourcestone: Basketweave",
 	"block.ars_nouveau.smooth_gilded_sourcestone_alternating": "Smooth Gilded Sourcestone: Alternating",
 	"block.ars_nouveau.smooth_gilded_sourcestone_large_bricks": "Smooth Gilded Sourcestone: Large Bricks",
-	"block.ars_nouveau.smooth_gilded_sourcestone_small_bricks": "Smooth Gilded Sourcestone: Small Bricks"
+	"block.ars_nouveau.smooth_gilded_sourcestone_small_bricks": "Smooth Gilded Sourcestone: Small Bricks",
+	"tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table."
 
 }

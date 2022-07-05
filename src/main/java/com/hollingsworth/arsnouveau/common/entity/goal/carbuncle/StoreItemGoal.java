@@ -22,11 +22,13 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     private final Starbuncle starbuncle;
     BlockPos storePos;
     boolean unreachable;
+    StarbyTransportBehavior behavior;
 
-    public StoreItemGoal(Starbuncle starbuncle) {
+    public StoreItemGoal(Starbuncle starbuncle, StarbyTransportBehavior transportBehavior) {
         super(25);
         this.starbuncle = starbuncle;
         this.setFlags(EnumSet.of(Flag.MOVE));
+        this.behavior = transportBehavior;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     @Override
     public void start() {
         super.start();
-        storePos = starbuncle.getValidStorePos(starbuncle.getHeldStack());
+        storePos = behavior.getValidStorePos(starbuncle.getHeldStack());
         if (storePos == null) {
             starbuncle.setBackOff(60 + starbuncle.level.random.nextInt(60));
         }
@@ -55,7 +57,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
         // Retry the valid position
-        if (this.ticksRunning % 100 == 0 && starbuncle.isValidStorePos(storePos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID) {
+        if (this.ticksRunning % 100 == 0 && behavior.isValidStorePos(storePos, starbuncle.getHeldStack()) != ItemScroll.SortPref.INVALID) {
             storePos = null;
             return;
         }

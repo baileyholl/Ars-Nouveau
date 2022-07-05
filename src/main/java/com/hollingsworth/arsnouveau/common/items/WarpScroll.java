@@ -121,6 +121,12 @@ public class WarpScroll extends ModItem {
 
         public WarpScrollData(ItemStack stack) {
             super(stack);
+            CompoundTag tag1 = getItemTag(stack);
+            if (tag1 == null || tag1.isEmpty())
+                return;
+            pos = tag1.contains("x") ? new BlockPos(tag1.getInt("x"), tag1.getInt("y"), tag1.getInt("z")) : null;
+            dimension = tag1.getString("dim");
+            rotation = new Vec2(tag1.getFloat("xRot"), tag1.getFloat("yRot"));
         }
 
         public boolean isValid() {
@@ -140,15 +146,6 @@ public class WarpScroll extends ModItem {
             this.dimension = dimension;
             this.rotation = rotation;
             writeItem();
-        }
-
-        @Override
-        public void readFromNBT(CompoundTag tag1) {
-            if (tag1 == null || tag1.isEmpty())
-                return;
-            pos = tag1.contains("x") ? new BlockPos(tag1.getInt("x"), tag1.getInt("y"), tag1.getInt("z")) : null;
-            dimension = tag1.getString("dim");
-            rotation = new Vec2(tag1.getFloat("xRot"), tag1.getFloat("yRot"));
         }
 
         @Override

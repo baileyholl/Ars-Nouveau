@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items.itemscrolls;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -16,7 +15,8 @@ public class AllowItemScroll extends ItemScroll {
     }
 
     @Override
-    public SortPref getSortPref(ItemStack stackToStore, CompoundTag scrollTag, IItemHandler inventory) {
-        return !ItemScroll.containsItem(stackToStore, scrollTag) ? SortPref.INVALID : SortPref.HIGH;
+    public SortPref getSortPref(ItemStack stackToStore, ItemStack scrollStack, IItemHandler inventory) {
+        ItemScrollData data = new ItemScrollData(scrollStack);
+        return data.containsStack(stackToStore) ? SortPref.HIGH : SortPref.INVALID;
     }
 }
