@@ -102,14 +102,6 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
         this.playRecoil = true;
     }
 
-    public boolean update() {
-        if (this.worldPosition != null && this.level != null) {
-            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 2);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public ISpellCaster getSpellCaster() {
         return spellCaster;

@@ -46,7 +46,7 @@ import java.util.List;
 
 public class EnchantingApparatusTile extends AnimatedTile implements Container, ITickable, IAnimatable, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    public ItemStack catalystItem = ItemStack.EMPTY;
+    private ItemStack catalystItem = ItemStack.EMPTY;
     public ItemEntity entity;
 
     public boolean isCrafting;
@@ -85,8 +85,10 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         }
 
         if (isCrafting) {
-            if (this.getRecipe(catalystItem, null) == null)
+            if (this.getRecipe(catalystItem, null) == null) {
                 this.isCrafting = false;
+                setChanged();
+            }
             counter += 1;
         }
 
@@ -100,11 +102,13 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
                     pedestalItems.forEach(i -> i = null);
                     this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
                     clearItems();
+                    setChanged();
                     ParticleUtil.spawnPoof((ServerLevel) level, worldPosition);
                     level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_FINISH, SoundSource.BLOCKS, 1, 1);
                 }
 
                 this.isCrafting = false;
+                setChanged();
             }
             updateBlock();
         }
@@ -117,6 +121,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
                 tile.stack = tile.stack.getContainerItem();
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);
+                tile.setChanged();
             }
         }
     }
@@ -168,15 +173,16 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         if (isCrafting || stack.isEmpty())
             return false;
         IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
-
         return recipe != null && (!recipe.consumesSource() || (recipe.consumesSource() && SourceUtil.hasSourceNearby(worldPosition, level, 10, recipe.getSourceCost())));
     }
 
-    public void updateBlock() {
+    public boolean updateBlock() {
         if (counter == 0)
             counter = 1;
         BlockState state = level.getBlockState(worldPosition);
         level.sendBlockUpdated(worldPosition, state, state, 2);
+        setChanged();
+        return true;
     }
 
     @Override
@@ -197,7 +203,6 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         }
         tag.putBoolean("is_crafting", isCrafting);
         tag.putInt("counter", counter);
-
     }
 
     @Override
@@ -310,7 +315,6 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
-
         return PlayState.CONTINUE;
     }
 
@@ -322,10 +326,22 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     @Override
     public void startAnimation(int arg) {
-        if (craftController != null) {
-//            this.manager.getOrCreateAnimationData(this.hashCode());
-            craftController.markNeedsReload();
-            craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
+        try {
+            if (craftController != null) {
+                craftController.markNeedsReload();
+                craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+    }
+
+    public ItemStack getCatalystItem() {
+        return catalystItem;
+    }
+
+    public void setCatalystItem(ItemStack catalystItem) {
+        this.catalystItem = catalystItem;
+        setChanged();
     }
 }

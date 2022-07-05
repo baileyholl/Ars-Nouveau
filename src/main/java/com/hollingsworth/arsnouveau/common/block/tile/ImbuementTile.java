@@ -104,7 +104,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             recipe = null;
             if (this.draining) {
                 this.draining = false;
-                update();
+                updateBlock();
             }
             return;
         }
@@ -125,13 +125,13 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                 level.addFreshEntity(item);
                 if (!draining) {
                     draining = true;
-                    update();
+                    updateBlock();
                 }
             } else {
                 this.addSource(10);
                 if (draining) {
                     draining = false;
-                    update();
+                    updateBlock();
                 }
             }
 
@@ -141,7 +141,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             this.setItem(0, recipe.output.copy());
             this.addSource(-recipe.source);
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleUtil.defaultParticleColorWrapper());
-            update();
+            updateBlock();
         }
     }
 
@@ -215,6 +215,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public ItemStack removeItemNoUpdate(int index) {
         ItemStack stack = this.stack.copy();
         this.stack = ItemStack.EMPTY;
+        setChanged();
         return stack;
     }
 

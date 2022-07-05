@@ -66,8 +66,8 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
     public List<ArcanePedestalTile> getSurroundingPedestals() {
         List<ArcanePedestalTile> inventories = new ArrayList<>();
         for (BlockPos p : BlockPos.betweenClosed(getBlockPos().below().east().north(), getBlockPos().above().west().south())) {
-            if (level.getBlockEntity(p) instanceof ArcanePedestalTile) {
-                inventories.add((ArcanePedestalTile) level.getBlockEntity(p));
+            if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestal) {
+                inventories.add(pedestal);
             }
         }
         return inventories;
@@ -110,6 +110,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
 
     @Override
     public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
     }

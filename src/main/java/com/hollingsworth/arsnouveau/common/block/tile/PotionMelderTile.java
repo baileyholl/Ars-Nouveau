@@ -42,11 +42,10 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
 
     @Override
     public void tick() {
-
         if (!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0) {
             if (SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+                updateBlock();
             }
 
         }
@@ -76,8 +75,8 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             return;
         }
         PotionJarTile combJar = null;
-        if (level.getBlockEntity(worldPosition.below()) instanceof PotionJarTile)
-            combJar = (PotionJarTile) level.getBlockEntity(worldPosition.below());
+        if (level.getBlockEntity(worldPosition.below()) instanceof PotionJarTile potionJarTile)
+            combJar = potionJarTile;
 
         if (combJar == null) {
             isMixing = false;
@@ -170,17 +169,15 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+                updateBlock();
             } else if (combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) {
                 combJar.addAmount(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+                updateBlock();
             }
         }
-
-
     }
 
     public List<MobEffectInstance> getCombinedCustomResult(PotionJarTile jar1, PotionJarTile jar2) {

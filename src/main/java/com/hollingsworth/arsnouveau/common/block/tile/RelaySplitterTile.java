@@ -29,19 +29,19 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public boolean setTakeFrom(BlockPos pos) {
-        return closeEnough(pos) && fromList.add(pos) && update();
+        return closeEnough(pos) && fromList.add(pos) && updateBlock();
     }
 
     @Override
     public boolean setSendTo(BlockPos pos) {
-        return closeEnough(pos) && toList.add(pos) && update();
+        return closeEnough(pos) && toList.add(pos) && updateBlock();
     }
 
     @Override
     public void clearPos() {
         this.toList.clear();
         this.fromList.clear();
-        update();
+        updateBlock();
     }
 
     public void processFromList() {
@@ -50,6 +50,9 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / fromList.size();
         for (BlockPos fromPos : fromList) {
+            if (!level.isLoaded(fromPos))
+                continue;
+
             if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile)) {
                 stale.add(fromPos);
                 continue;
@@ -58,8 +61,10 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 createParticles(fromPos, worldPosition);
             }
         }
-        for (BlockPos s : stale)
+        for (BlockPos s : stale) {
             fromList.remove(s);
+            updateBlock();
+        }
 
     }
 
@@ -84,8 +89,10 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 createParticles(worldPosition, toPos);
             }
         }
-        for (BlockPos s : stale)
+        for (BlockPos s : stale) {
             toList.remove(s);
+            updateBlock();
+        }
     }
 
     @Override
@@ -95,7 +102,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
         processFromList();
         processToList();
-        update();
+        updateBlock();
     }
 
     @Override

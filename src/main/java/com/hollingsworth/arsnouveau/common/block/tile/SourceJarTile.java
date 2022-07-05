@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -12,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class SourceJarTile extends AbstractSourceMachine implements ITickable, ITooltipProvider {
+public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider {
 
     public SourceJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
@@ -28,11 +27,8 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
     }
 
     @Override
-    public void tick() {
-        if (level.isClientSide) {
-            // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
-            return;
-        }
+    public boolean updateBlock() {
+        super.updateBlock();
         BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
         if (this.getSource() > 0 && this.getSource() < 1000)
@@ -42,8 +38,8 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
         }
         if (state.hasProperty(SourceJar.fill))
             level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState), 3);
+        return true;
     }
-
 
     @Override
     public int getTransferRate() {

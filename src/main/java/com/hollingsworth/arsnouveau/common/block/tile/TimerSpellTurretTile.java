@@ -37,9 +37,8 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
 
     @Override
     public void tick() {
-        if (!level.isClientSide && ticksPerSignal > 0 && !isOff & level.getGameTime() % ticksPerSignal == 0) {
+        if (!level.isClientSide && ticksPerSignal > 0 && !isOff && level.getGameTime() % ticksPerSignal == 0) {
             getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
-
         }
     }
 
@@ -68,13 +67,13 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     @Override
     public void onWanded(Player playerEntity) {
         this.isLocked = !isLocked;
-        update();
+        updateBlock();
     }
 
     public void addTime(int ticks) {
         ticksPerSignal += ticks;
         ticksPerSignal = Math.max(0, ticksPerSignal);
-        update();
+        updateBlock();
     }
 
     @Override

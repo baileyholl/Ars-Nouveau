@@ -159,11 +159,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public boolean matches(EnchantingApparatusTile tile, Level worldIn) {
-        return isMatch(tile.getPedestalItems(), tile.catalystItem, tile, null);
+        return isMatch(tile.getPedestalItems(), tile.getCatalystItem(), tile, null);
     }
 
     public boolean matches(EnchantingApparatusTile tile, Level worldIn, @Nullable Player playerEntity) {
-        return isMatch(tile.getPedestalItems(), tile.catalystItem, tile, playerEntity);
+        return isMatch(tile.getPedestalItems(), tile.getCatalystItem(), tile, playerEntity);
     }
 
     @Override

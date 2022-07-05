@@ -52,7 +52,7 @@ public class Relay extends TickableModBlock implements SimpleWaterloggedBlock {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RelayTile relayTile) {
             relayTile.disabled = world.hasNeighborSignal(pos);
-            relayTile.update();
+            relayTile.updateBlock();
         }
     }
 

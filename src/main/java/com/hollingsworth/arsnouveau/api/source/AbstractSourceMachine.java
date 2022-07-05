@@ -40,7 +40,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
             this.source = this.getMaxSource();
         if (this.source < 0)
             this.source = 0;
-        update();
+        updateBlock();
         return this.source;
     }
 
@@ -59,22 +59,14 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         if (source == 0)
             return this.getSource();
         this.setSource(this.getSource() - source);
-        update();
+        updateBlock();
         return this.getSource();
     }
 
     @Override
     public void setMaxSource(int max) {
         this.maxSource = max;
-        update();
-    }
-
-    public boolean update() {
-        if (this.worldPosition != null && this.level != null) {
-            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-            return true;
-        }
-        return false;
+        updateBlock();
     }
 
     @Override

@@ -27,12 +27,10 @@ public class RelayCollectorTile extends RelayTile {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if (!level.isLoaded(pos))
-                    continue;
-                if (pos.equals(this.getToPos()) || pos.equals(this.getFromPos()) || !(level.getBlockEntity(pos) instanceof ISourceTile)) {
+
+                if (!level.isLoaded(pos) || pos.equals(this.getToPos()) || pos.equals(this.getFromPos()) || !(level.getBlockEntity(pos) instanceof ISourceTile)) {
                     continue;
                 }
-
 
                 int transferred = transferSource((ISourceTile) level.getBlockEntity(pos), this);
                 if (transferred > 0) {

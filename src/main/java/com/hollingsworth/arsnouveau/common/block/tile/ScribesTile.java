@@ -78,6 +78,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
         if (recipeID != null && !recipeID.toString().isEmpty() && (recipe == null || !recipe.id.equals(recipeID))) {
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
+            setChanged();
         }
         if (!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null) {
             boolean foundStack = false;
@@ -106,7 +107,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
         if (level.isClientSide && craftingTicks == 0 && crafting) {
             crafting = false;
-
+            setChanged();
         }
         if (!level.isClientSide && crafting && craftingTicks == 0 && recipe != null) {
             level.addFreshEntity(new ItemEntity(level, getX(), getY() + 1, getZ(), recipe.output.copy()));
@@ -293,7 +294,6 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     @Override
     public void startAnimation(int arg) {
         if (controller == null) {
-            System.out.println("NULL CONTROLLER");
             return;
         }
         controller.markNeedsReload();
@@ -353,6 +353,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     @Override
     public void setItem(int pIndex, ItemStack pStack) {
         this.stack = pStack;
+        setChanged();
     }
 
     @Override

@@ -77,6 +77,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             ticksUntilCharge = 20 * 2;
+            updateBlock();
         } catch (Exception e) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.rune.error"));
             e.printStackTrace();
@@ -131,8 +132,11 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             if (fromPos != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
-            } else
+                updateBlock();
+            } else {
                 ticksUntilCharge = 20 * 3;
+                updateBlock();
+            }
         }
     }
 
@@ -165,9 +169,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-
-    }
+    public void registerControllers(AnimationData data) {}
 
     AnimationFactory factory = new AnimationFactory(this);
 

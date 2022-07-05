@@ -29,13 +29,13 @@ public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingAppa
 
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (bone.getName().equals("frame_all") && tile.catalystItem != null) {
+        if (bone.getName().equals("frame_all") && tile.getCatalystItem() != null) {
 
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
             double z = tile.getBlockPos().getZ();
-            if (tile.entity == null || !ItemStack.matches(tile.entity.getItem(), tile.catalystItem)) {
-                tile.entity = new ItemEntity(tile.getLevel(), x, y, z, tile.catalystItem);
+            if (tile.entity == null || !ItemStack.matches(tile.entity.getItem(), tile.getCatalystItem())) {
+                tile.entity = new ItemEntity(tile.getLevel(), x, y, z, tile.getCatalystItem());
             }
             stack.pushPose();
             RenderUtils.translate(bone, stack);
