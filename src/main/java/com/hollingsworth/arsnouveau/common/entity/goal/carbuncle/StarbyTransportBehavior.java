@@ -12,6 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -58,10 +60,24 @@ public class StarbyTransportBehavior extends StarbyBehavior {
                 this.TO_LIST.add(pos);
             counter++;
         }
+        if(tag.contains("itemScroll"))
+            this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
         goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
         goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
         goals.add(new WrappedGoal(3, new StoreItemGoal(starbuncle, this)));
         goals.add(new WrappedGoal(3, new TakeItemGoal(starbuncle, this)));
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if(stack.getItem() instanceof ItemScroll scroll){
+            this.itemScroll = stack.copy();
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
+            syncTag();
+        }
+
+        return super.mobInteract(player, hand);
     }
 
     @Override
@@ -168,7 +184,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
         if (storePos == null) {
             return false;
         }
-        if(itemScroll != null && itemScroll.getItem() instanceof ItemScroll scrollItem && scrollItem.getSortPref(stack, itemScroll.getOrCreateTag(),
+        if(itemScroll != null && itemScroll.getItem() instanceof ItemScroll scrollItem && scrollItem.getSortPref(stack, itemScroll,
                 level.getBlockEntity(storePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null)) == ItemScroll.SortPref.INVALID) {
             return false;
         }
@@ -194,7 +210,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
             ItemStack stackInFrame = i.getItem();
 
             if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
-                pref = scrollItem.getSortPref(stack, stackInFrame.getOrCreateTag(), handler);
+                pref = scrollItem.getSortPref(stack, stackInFrame, handler);
                 // If our item frame just contains a normal item
             } else if (i.getItem().getItem() != stack.getItem()) {
                 return ItemScroll.SortPref.INVALID;
@@ -268,6 +284,9 @@ public class StarbyTransportBehavior extends StarbyBehavior {
             NBTUtil.storeBlockPos(tag, "to_" + counter, p);
             counter++;
         }
+        if(itemScroll != null) {
+            tag.put("itemScroll", itemScroll.serializeNBT());
+        }
         return tag;
     }
 
@@ -278,6 +297,9 @@ public class StarbyTransportBehavior extends StarbyBehavior {
         if(behavior != null){
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", behavior.TO_LIST.size()));
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", behavior.FROM_LIST.size()));
+            if(behavior.itemScroll != null && !behavior.itemScroll.isEmpty()) {
+                tooltip.add(Component.translatable("ars_nouveau.filtering_with", behavior.itemScroll.getHoverName().getString()));
+            }
         }
 
     }
