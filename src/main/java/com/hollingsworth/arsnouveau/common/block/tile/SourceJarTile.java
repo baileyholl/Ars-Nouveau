@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -11,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider {
+public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider, ITickable {
 
     public SourceJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
