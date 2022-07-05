@@ -59,8 +59,12 @@ public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingAppa
 
     @Override
     public void render(BlockEntity tile, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int lightIn, int overlayIn) {
-        super.render(tile, v, matrixStack, iRenderTypeBuffer, lightIn, overlayIn);
-        EnchantingApparatusTile tileEntityIn = (EnchantingApparatusTile) tile;
-        this.tile = tileEntityIn;
+        try {
+            super.render(tile, v, matrixStack, iRenderTypeBuffer, lightIn, overlayIn);
+            EnchantingApparatusTile tileEntityIn = (EnchantingApparatusTile) tile;
+            this.tile = tileEntityIn;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

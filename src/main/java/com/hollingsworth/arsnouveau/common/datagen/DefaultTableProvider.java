@@ -111,7 +111,6 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
             registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
-            registerDropSelf(BlockRegistry.SCRIBES_BLOCK);
             registerDropSelf(BlockRegistry.RELAY);
             registerDropSelf(BlockRegistry.RELAY_SPLITTER);
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
