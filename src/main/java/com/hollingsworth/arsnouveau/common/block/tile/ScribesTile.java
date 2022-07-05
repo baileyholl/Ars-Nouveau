@@ -49,7 +49,7 @@ import java.util.List;
 
 public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider,IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    public ItemStack stack = ItemStack.EMPTY;
+    private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
     public List<ItemStack> consumedStacks = new ArrayList<>();
     public GlyphRecipe recipe;
@@ -79,6 +79,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
         if(recipeID != null && !recipeID.toString().isEmpty() &&  (recipe == null || !recipe.id.equals(recipeID))){
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
+            updateBlock();
         }
         if(!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null){
             boolean foundStack = false;
@@ -355,6 +356,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     @Override
     public void setItem(int pIndex, ItemStack pStack) {
         this.stack = pStack;
+        updateBlock();
     }
 
     @Override
@@ -395,5 +397,13 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if(recipe != null){
             tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
         }
+    }
+
+    public ItemStack getStack() {
+        return stack;
+    }
+
+    public void setStack(ItemStack stack) {
+        this.stack = stack;
     }
 }

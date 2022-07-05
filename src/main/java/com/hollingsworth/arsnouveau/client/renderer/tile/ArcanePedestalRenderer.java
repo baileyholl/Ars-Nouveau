@@ -31,11 +31,11 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
 
-        if(tileEntityIn.stack == null)
+        if(tileEntityIn.getStack() == null)
             return;
 
-        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
-            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.stack);
+        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.getStack())) {
+            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.getStack());
         }
 
         ItemEntity entityItem = tileEntityIn.entity;

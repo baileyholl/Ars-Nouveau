@@ -46,7 +46,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         if(!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0){
             if(SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+                updateBlock();
             }
 
         }
@@ -82,12 +82,14 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         if(combJar == null) {
             isMixing = false;
             timeMixing = 0;
+            setChanged();
             return;
         }
         List<MobEffectInstance> combined = getCombinedResult(tile1, tile2);
         if(!(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) && combJar.getAmount() != 0){
             isMixing = false;
             timeMixing = 0;
+            setChanged();
             return;
         }
 
@@ -156,6 +158,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
                     .withNoTouch();
             item2.setDistanceAdjust(2f);
             level.addFreshEntity(item2);
+            setChanged();
         }
         if(!level.isClientSide && timeMixing >= 120){
             timeMixing++;
@@ -170,13 +173,13 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+                updateBlock();
             }else if(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100){
                 combJar.addAmount(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+                updateBlock();
             }
         }
 

@@ -53,7 +53,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public ItemStack craftingItem;
     public int entityID;
     public boolean hasSource;
-    public boolean isOff;
+    private boolean isOff;
     public boolean isCraftingPotion;
     public boolean needsPotionStorage;
     RecipeWrapper recipeWrapper;
@@ -241,6 +241,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         }else if(playerEntity != null){
             PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.wixie.recipe_set"));
         }
+        setChanged();
     }
 
 
@@ -428,6 +429,15 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             tooltip.add(new TranslatableComponent("ars_nouveau.wixie.needs_storage"));
 
         return;
+    }
+
+    public boolean isOff() {
+        return isOff;
+    }
+
+    public void setOff(boolean off) {
+        isOff = off;
+        updateBlock();
     }
 
     public static class CraftingProgress{

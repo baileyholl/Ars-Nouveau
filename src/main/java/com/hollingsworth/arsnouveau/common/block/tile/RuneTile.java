@@ -82,6 +82,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
 
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             ticksUntilCharge = 20 * 2;
+            setChanged();
         }catch (Exception e){
             PortUtil.sendMessage(entity, new TranslatableComponent("ars_nouveau.rune.error"));
             e.printStackTrace();

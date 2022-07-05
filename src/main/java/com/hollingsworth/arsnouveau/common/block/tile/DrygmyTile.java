@@ -101,7 +101,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public void giveProgress(){
         if(progress < getMaxProgress()){
             progress += 1;
-            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+            updateBlock();
         }
 
     }
