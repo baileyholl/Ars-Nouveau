@@ -69,7 +69,7 @@ import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IBehaviorSyncable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable {
 
     public enum StarbuncleGoalState {
         FORAGING,
@@ -138,9 +138,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         return state.getBlock() instanceof DirtPathBlock || (data.pathBlock != null && data.pathBlock == state.getBlock());
     }
 
-    @Override
     public void setBehavior(ChangeableBehavior behavior) {
         this.dynamicBehavior = behavior;
+        getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
     }
 
     @Override

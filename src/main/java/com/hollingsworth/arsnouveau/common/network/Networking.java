@@ -190,12 +190,7 @@ public class Networking {
                 PacketSyncLitEntities::toBytes,
                 PacketSyncLitEntities::new,
                 PacketSyncLitEntities::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketSyncBehaviorData.class,
-                PacketSyncBehaviorData::toBytes,
-                PacketSyncBehaviorData::new,
-                PacketSyncBehaviorData.Handler::handle);
+        
 
     }
 
