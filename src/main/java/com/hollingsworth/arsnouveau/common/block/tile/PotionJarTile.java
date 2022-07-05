@@ -32,7 +32,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
 
     private int amount;
     private Potion potion = Potions.EMPTY;
-    public boolean isLocked;
+    private boolean isLocked;
     private List<MobEffectInstance> customEffects = new ArrayList<>();
 
     public PotionJarTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
@@ -47,7 +47,6 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
     @Override
     public void tick() {
         if(level.isClientSide) {
-            // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
         }
         BlockState state = level.getBlockState(worldPosition);
@@ -58,17 +57,14 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
             fillState = (this.getCurrentFill() / 1000) + 1;
         }
 
-
         if(level.getGameTime() % 20 == 0){
             if(this.getAmount() <= 0 && this.potion != Potions.EMPTY && !this.isLocked) {
                 this.potion = Potions.EMPTY;
                 this.customEffects = new ArrayList<>();
                 level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState),3);
+                setChanged();
             }
         }
-
-
-
         level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState),3);
     }
 
@@ -85,9 +81,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
             this.isLocked = false;
             playerEntity.sendMessage(new TranslatableComponent("ars_nouveau.unlocked"), Util.NIL_UUID);
         }
-
-        BlockState state = level.getBlockState(worldPosition);
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        updateBlock();
     }
 
     public void setPotion(Potion potion, List<MobEffectInstance> effectInstances){
@@ -97,6 +91,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
             if (!potion.getEffects().contains(e))
                 customEffects.add(e);
         }
+        setChanged();
     }
 
     public void setPotion(ItemStack stack){
@@ -105,6 +100,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
 
     private void setPotion(Potion potion){
         this.potion = potion == null ? Potions.EMPTY : potion;
+        updateBlock();
     }
 
     public @Nonnull Potion getPotion(){
@@ -126,13 +122,14 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
     public void addAmount(Potion potion, int fill){
         setPotion(potion);
         addAmount(fill);
+        setChanged();
     }
 
     public void addAmount(int fill){
         setAmount(Math.min(getMaxFill(), getAmount() + fill));
         if(getAmount() <= 0 && !this.isLocked)
             this.potion = Potions.EMPTY;
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        updateBlock();
     }
 
     @Override
@@ -236,6 +233,15 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
     public void setAmount(int amount) {
         this.amount = amount;
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        setChanged();
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 }
 

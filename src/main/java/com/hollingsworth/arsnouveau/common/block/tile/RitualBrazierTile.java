@@ -110,6 +110,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                 int cost = ritual.getManaCost();
                 if(SourceUtil.takeSourceNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null){
                     ritual.setNeedsMana(false);
+                    setChanged();
                 }else{
                     return;
                 }

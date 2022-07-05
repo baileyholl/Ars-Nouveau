@@ -195,6 +195,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             }
             BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
             tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
+            tile.setChanged();
             PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.alert.spell_set"));
             worldIn.sendBlockUpdated(pos, state, state, 2);
         }

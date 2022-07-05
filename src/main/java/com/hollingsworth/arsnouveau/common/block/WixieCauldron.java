@@ -49,7 +49,7 @@ public class WixieCauldron extends SummonBlock {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if(!world.isClientSide() && world.getBlockEntity(pos) instanceof WixieCauldronTile cauldronTile){
-            cauldronTile.isOff = world.hasNeighborSignal(pos);
+            cauldronTile.setOff(world.hasNeighborSignal(pos));
             cauldronTile.updateBlock();
         }
     }

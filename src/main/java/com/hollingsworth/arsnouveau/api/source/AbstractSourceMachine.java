@@ -72,6 +72,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     public boolean update(){
         if(this.worldPosition != null && this.level != null){
             level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 3);
+            setChanged();
             return true;
         }
         return false;
