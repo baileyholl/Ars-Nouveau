@@ -104,6 +104,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.targetSelector.addGoal(3,new NearestAttackableTargetGoal(this, Mob.class, 10, false, true,
                 (entity) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
                         ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && ((LivingEntity)entity).getKillCredit() != null && ((LivingEntity)entity).getKillCredit().equals(this.owner))
+                && entity != this.owner
         ));
     }
 
