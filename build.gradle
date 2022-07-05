@@ -24,7 +24,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '3.0.5'
+version = '3.0.6'
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -164,8 +164,8 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 
     /*implementation*/compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
-    implementation fg.deobf("curse.maven:byg-247560:3848133") // BYG
-    implementation fg.deobf("curse.maven:bop-220318:3852435") // BOP
+//    implementation fg.deobf("curse.maven:byg-247560:3848133") // BYG
+//    implementation fg.deobf("curse.maven:bop-220318:3852435") // BOP
 
     implementation fg.deobf("curse.maven:exp-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
