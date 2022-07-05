@@ -59,9 +59,10 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 createParticles(fromPos, worldPosition);
             }
         }
-        for(BlockPos s : stale)
+        for(BlockPos s : stale) {
             fromList.remove(s);
-
+            setChanged();
+        }
     }
 
     public void createParticles(BlockPos from, BlockPos to){
@@ -85,8 +86,10 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 createParticles(worldPosition, toPos);
             }
         }
-        for(BlockPos s : stale)
+        for(BlockPos s : stale) {
             toList.remove(s);
+            setChanged();
+        }
     }
 
     @Override
