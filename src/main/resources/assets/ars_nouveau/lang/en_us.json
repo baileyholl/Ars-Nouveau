@@ -1007,6 +1007,12 @@
 	"block.ars_nouveau.smooth_gilded_sourcestone_alternating": "Smooth Gilded Sourcestone: Alternating",
 	"block.ars_nouveau.smooth_gilded_sourcestone_large_bricks": "Smooth Gilded Sourcestone: Large Bricks",
 	"block.ars_nouveau.smooth_gilded_sourcestone_small_bricks": "Smooth Gilded Sourcestone: Small Bricks",
-	"tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table."
+	"tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table.",
+	"item.ars_nouveau.mendosteen_pod": "Mendosteen",
+	"item.ars_nouveau.frostaya_pod": "Frostaya",
+	"item.ars_nouveau.bombegranate_pod": "Bombegranate",
+	"item.ars_nouveau.bastion_pod": "Bastion Fruit",
+	"item.ars_nouveau.alchemists_crown": "Alchemist's Crown",
+	"block.ars_nouveau.potion_diffuser": "Potion Diffuser"
 
 }

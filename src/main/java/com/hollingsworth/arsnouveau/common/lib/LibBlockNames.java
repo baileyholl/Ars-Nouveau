@@ -132,7 +132,7 @@ public class LibBlockNames {
     public static final String SCRYERS_CRYSTAL = "scryers_crystal";
 
     public static final String FROSTAYA_POD = "frostaya_pod";
-    public static final String BOMBEGRANTE_POD = "bombegrante_pod";
+    public static final String BOMBEGRANATE_POD = "bombegranate_pod";
     public static final String MENDOSTEEN_POD = "mendosteen_pod";
     public static final String BASTION_POD = "bastion_pod";
     public static final String POTION_DIFFUSER = "potion_diffuser";

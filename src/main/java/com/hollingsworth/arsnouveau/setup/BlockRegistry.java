@@ -326,7 +326,7 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.FROSTAYA_POD, registryName = BlockRegistryKey)
     public static ArchfruitPod FROSTAYA_POD;
 
-    @ObjectHolder(value = prepend + LibBlockNames.BOMBEGRANTE_POD, registryName = BlockRegistryKey)
+    @ObjectHolder(value = prepend + LibBlockNames.BOMBEGRANATE_POD, registryName = BlockRegistryKey)
     public static ArchfruitPod BOMBEGRANTE_POD;
 
     @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockRegistryKey)
@@ -439,7 +439,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG));
         registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG));
         registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG));
-        registry.register(LibBlockNames.BOMBEGRANTE_POD, new ArchfruitPod(() -> BLAZING_LOG));
+        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG));
         registry.register(LibBlockNames.POTION_DIFFUSER, new PotionDiffuserBlock());
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
@@ -699,7 +699,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_DIFFUSER, getDefaultBlockItem(BlockRegistry.POTION_DIFFUSER));
         registry.register(LibBlockNames.MENDOSTEEN_POD, new ItemNameBlockItem(BlockRegistry.MENDOSTEEN_POD, defaultItemProperties()));
         registry.register(LibBlockNames.BASTION_POD, new ItemNameBlockItem(BlockRegistry.BASTION_POD, defaultItemProperties()));
-        registry.register(LibBlockNames.BOMBEGRANTE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties()));
+        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties()));
         registry.register(LibBlockNames.FROSTAYA_POD, new ItemNameBlockItem(BlockRegistry.FROSTAYA_POD, defaultItemProperties()));
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){

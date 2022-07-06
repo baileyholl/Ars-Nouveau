@@ -20,4 +20,5 @@ public class PotionDiffuserBlock extends TickableModBlock {
     public <T extends BlockEntity> GameEventListener getListener(ServerLevel p_221121_, T p_221122_) {
         return super.getListener(p_221121_, p_221122_);
     }
+    
 }
