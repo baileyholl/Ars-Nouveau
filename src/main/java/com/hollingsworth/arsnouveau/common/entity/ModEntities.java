@@ -12,11 +12,11 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
@@ -44,7 +44,7 @@ public class ModEntities {
             LibEntityNames.SPELL_PROJ,
             EntityType.Builder.<EntityProjectileSpell>of(EntityProjectileSpell::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f).noSave()
-                    .setTrackingRange(20)
+                    .setTrackingRange(20).fireImmune()
                     .setShouldReceiveVelocityUpdates(true)
                     .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
     public static final RegistryObject<EntityType<EntityAllyVex>> ALLY_VEX = registerEntity(
@@ -65,7 +65,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<EntityFollowProjectile>> ENTITY_FOLLOW_PROJ = registerEntity(
             LibEntityNames.FOLLOW_PROJ,
             EntityType.Builder.<EntityFollowProjectile>of(EntityFollowProjectile::new, MobCategory.MISC)
-                    .sized(0.5f, 0.5f).noSave()
+                    .sized(0.5f, 0.5f).noSave().fireImmune()
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
 
@@ -80,7 +80,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<EntityFlyingItem>> ENTITY_FLYING_ITEM = registerEntity(
             LibEntityNames.FLYING_ITEM,
             EntityType.Builder.<EntityFlyingItem>of(EntityFlyingItem::new, MobCategory.MISC)
-                    .sized(0.5f, 0.5f)
+                    .sized(0.5f, 0.5f).fireImmune()
                     .setTrackingRange(10).setUpdateInterval(60)
                     .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new).noSave());
     public static final RegistryObject<EntityType<EntityRitualProjectile>> ENTITY_RITUAL = registerEntity(
@@ -143,7 +143,7 @@ public class ModEntities {
             EntityType.Builder.<EntityDrygmy>of(EntityDrygmy::new, MobCategory.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
     public static final RegistryObject<EntityType<EntityOrbitProjectile>> ORBIT_SPELL = registerEntity(
             LibEntityNames.ORBIT_PROJECTILE,
-            EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f)
+            EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).fireImmune()
                     .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityOrbitProjectile::new));
     public static final RegistryObject<EntityType<EntityChimeraProjectile>> ENTITY_CHIMERA_SPIKE = registerEntity(
             LibEntityNames.CHIMERA_SPIKE,
@@ -225,8 +225,8 @@ public class ModEntities {
         LightManager.init();
     }
 
-    public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn)
+    public static boolean canMonsterSpawnInLight(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
+        return Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
                 && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 

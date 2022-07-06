@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "ars_nouveau:blocks/as_gold_mosaic"
-  }
-}

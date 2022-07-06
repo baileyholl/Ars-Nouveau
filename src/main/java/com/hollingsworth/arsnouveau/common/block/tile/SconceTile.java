@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,38 +61,36 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
         if (!level.isClientSide() || !lit)
             return;
         BlockPos pos = getBlockPos();
-        RandomSource rand = level.random;
         double xzOffset = 0.15;
         BlockState state = getLevel().getBlockState(getBlockPos());
         if (!(state.getBlock() instanceof SconceBlock))
             return;
 
-        double centerX = 0.0;
-        double centerZ = 0.0;
+        double xOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+        double zOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+        double centerX = pos.getX() + xOffset;
+        double centerZ = pos.getZ() + zOffset;
         if (state.getValue(ScribesBlock.FACING) == Direction.NORTH) {
-            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.8 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX += 0.5;
+            centerZ += 0.8;
         }
         if (state.getValue(ScribesBlock.FACING) == Direction.SOUTH) {
-            centerX = pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.2 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX += 0.5;
+            centerZ += 0.2;
         }
         if (state.getValue(ScribesBlock.FACING) == Direction.EAST) {
-            centerX = pos.getX() + 0.2 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX += 0.2;
+            centerZ += 0.5;
         }
         if (state.getValue(ScribesBlock.FACING) == Direction.WEST) {
-            centerX = pos.getX() + 0.8 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
-            centerZ = pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);
+            centerX += 0.8;
+            centerZ += 0.5;
         }
-
         ParticleColor nextColor = this.color.nextColor(this.level.random);
-        int intensity = 10;
-
-        for (int i = 0; i < intensity; i++) {
+        for (int i = 0; i < 10; i++) {
             level.addParticle(
                     GlowParticleData.createData(nextColor),
-                    centerX, pos.getY() + 0.8 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
+                    centerX, pos.getY() + 0.9 + ParticleUtil.inRange(-0.00, 0.1), centerZ,
                     0, ParticleUtil.inRange(0.0, 0.03f), 0);
 
         }

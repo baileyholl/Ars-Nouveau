@@ -50,7 +50,7 @@ public class ImbuementBlock extends TickableModBlock {
                 tile.stack = ItemStack.EMPTY;
             } else {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
-                tile.update();
+                tile.updateBlock();
             }
         } else {
 
@@ -66,7 +66,7 @@ public class ImbuementBlock extends TickableModBlock {
                 tile.stack = ItemStack.EMPTY;
             }
             tile.draining = false;
-            tile.update();
+            tile.updateBlock();
         }
         return InteractionResult.SUCCESS;
     }

@@ -14,11 +14,14 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ArcanePedestalTile extends AnimatedTile implements Container {
+public class ArcanePedestalTile extends AnimatedTile implements Container, IAnimatable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public float frames;
     public ItemEntity entity;
@@ -113,5 +116,15 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
     public void invalidateCaps() {
         itemHandler.invalidate();
         super.invalidateCaps();
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {}
+
+    AnimationFactory factory = new AnimationFactory(this);
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }

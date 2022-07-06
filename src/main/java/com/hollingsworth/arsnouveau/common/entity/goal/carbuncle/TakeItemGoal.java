@@ -19,12 +19,13 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     Starbuncle starbuncle;
     BlockPos takePos;
     boolean unreachable;
+    StarbyTransportBehavior behavior;
 
-
-    public TakeItemGoal(Starbuncle starbuncle) {
+    public TakeItemGoal(Starbuncle starbuncle, StarbyTransportBehavior transportBehavior) {
         super(25);
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.starbuncle = starbuncle;
+        this.behavior = transportBehavior;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     @Override
     public void start() {
         super.start();
-        takePos = starbuncle.getValidTakePos();
+        takePos = behavior.getValidTakePos();
         unreachable = false;
         if (starbuncle.isTamed() && takePos != null && starbuncle.getHeldStack().isEmpty()) {
             startDistance = BlockUtil.distanceFrom(starbuncle.position, takePos);
@@ -61,23 +62,20 @@ public class TakeItemGoal extends ExtendedRangeGoal {
             return;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
             if (!iItemHandler.getStackInSlot(j).isEmpty()) {
-                int count = starbuncle.getMaxTake(iItemHandler.getStackInSlot(j));
+                int count = behavior.getMaxTake(iItemHandler.getStackInSlot(j));
                 if (count <= 0)
                     continue;
-                starbuncle.getValidStorePos(iItemHandler.getStackInSlot(j));
-
                 starbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
-
                 starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
 
                 if (world instanceof ServerLevel serverLevel) {
-                    // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     try {
                         OpenChestEvent event = new OpenChestEvent(serverLevel, takePos, 20);
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
-                    } catch (Throwable ignored) {
+                    } catch (Exception ignored) {
+                        // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     }
                 }
                 break;
@@ -96,7 +94,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
         // Retry the valid position
-        if (this.ticksRunning % 100 == 0 && !starbuncle.isPositionValidTake(takePos)) {
+        if (this.ticksRunning % 100 == 0 && !behavior.isPositionValidTake(takePos)) {
             takePos = null;
             return;
         }
@@ -119,12 +117,12 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && !starbuncle.isStuck && starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed() && takePos != null;
+        return !unreachable && starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed() && takePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return !starbuncle.isStuck && starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed();
+        return starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0;
     }
 
     @Override

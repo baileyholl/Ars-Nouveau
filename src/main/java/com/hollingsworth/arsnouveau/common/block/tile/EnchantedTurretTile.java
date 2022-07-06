@@ -29,10 +29,8 @@ public class EnchantedTurretTile extends BasicSpellTurretTile implements IPickup
         data.addAnimationController(new AnimationController<>(this, "spinController", 0, this::spinPredicate));
     }
 
-
     public PlayState spinPredicate(AnimationEvent event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("gem_rotation", true));
         return PlayState.CONTINUE;
     }
-
 }

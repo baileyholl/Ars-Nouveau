@@ -54,7 +54,6 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     @Override
     public void tick() {
         super.tick();
-
         if (level.isClientSide) {
             for (int i = 0; i < progress / 2; i++) {
                 level.addParticle(
@@ -66,21 +65,19 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
                         getBlockPos().getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), getBlockPos().getY() + 1 + ParticleUtil.inRange(-0.1, 0.1), getBlockPos().getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
                         0, 0, 0);
             }
+        }else {
+            if (level.getGameTime() % 100 == 0) {
+                refreshEntitiesAndBonus();
+            }
 
-        }
+            if (level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null) {
+                this.needsMana = false;
+                updateBlock();
+            }
 
-
-        if (!level.isClientSide && level.getGameTime() % 100 == 0) {
-            refreshEntitiesAndBonus();
-        }
-
-        if (!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null) {
-            this.needsMana = false;
-            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-        }
-
-        if (!level.isClientSide && level.getGameTime() % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()) {
-            generateItems();
+            if (level.getGameTime() % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()) {
+                generateItems();
+            }
         }
     }
 
@@ -100,7 +97,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public void giveProgress() {
         if (progress < getMaxProgress()) {
             progress += 1;
-            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+            updateBlock();
         }
 
     }
@@ -137,6 +134,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof Player)).collect(Collectors.toList());
         uniqueEntities = nearbyEntities.stream().map(l -> EntityType.getKey(l.getType())).collect(Collectors.toSet());
         this.bonus = uniqueEntities.size() * Config.DRYGMY_UNIQUE_BONUS.get() + Math.min(Config.DRYGMY_QUANTITY_CAP.get(), nearbyEntities.size());
+        updateBlock();
     }
 
     public void generateItems() {
@@ -168,14 +166,14 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             }
             exp += entity.getExperienceReward();
 
-            if (entity instanceof Mob) {
+            if (entity instanceof Mob mob) {
                 // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.
-                ((Mob) entity).xpReward = oldExp;
+                mob.xpReward = oldExp;
             }
         }
         // Pull our items randomly and break once our stack count is over our max item list
         int itemsPicked = 0;
-        if (stacks.size() > 0) {
+        if (!stacks.isEmpty()) {
             for (int i = 0; i < numberItems; i++) {
                 ItemStack stack = stacks.get(level.random.nextInt(stacks.size())).copy();
                 itemsPicked += stack.getCount();
@@ -200,7 +198,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
         this.progress = 0;
         this.needsMana = true;
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        updateBlock();
     }
 
 

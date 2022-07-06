@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.ArrayList;
@@ -21,9 +20,8 @@ public class FindItem extends Goal {
     int stuckTicks;
     List<ItemEntity> destList = new ArrayList<>();
     ItemEntity dest;
-
-    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && starbuncle.isValidItem(itemEntity.getItem());
-    private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET;
+    public StarbyTransportBehavior behavior;
+    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.canStoreStack(itemEntity.getItem());
 
     @Override
     public void stop() {
@@ -45,25 +43,26 @@ public class FindItem extends Goal {
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.HUNTING_ITEM;
     }
 
-    public FindItem(Starbuncle starbuncle) {
+    public FindItem(Starbuncle starbuncle, StarbyTransportBehavior transportBehavior) {
         this.starbuncle = starbuncle;
+        this.behavior = transportBehavior;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     public List<ItemEntity> nearbyItems() {
-        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), starbuncle.isTamed() ? TRUSTED_TARGET_SELECTOR : NONTAMED_TARGET_SELECTOR);
+        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), TRUSTED_TARGET_SELECTOR);
     }
 
     @Override
     public boolean canContinueToUse() {
-        if (starbuncle.isPickupDisabled())
+        if (behavior.isPickupDisabled())
             return false;
-        return timeFinding <= 20 * 15 && !itemStuck && !starbuncle.isStuck && starbuncle.getHeldStack().isEmpty();
+        return timeFinding <= 20 * 15 && !itemStuck && starbuncle.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean canUse() {
-        if (starbuncle.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
+        if (behavior.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
             return false;
         ItemStack itemstack = starbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
@@ -71,7 +70,7 @@ public class FindItem extends Goal {
         destList = new ArrayList<>();
         if (itemstack.isEmpty() && !list.isEmpty()) {
             for (ItemEntity entity : list) {
-                if (!starbuncle.isValidItem(entity.getItem()))
+                if (!behavior.canStoreStack(entity.getItem()))
                     continue;
                 destList.add(entity);
             }
@@ -90,7 +89,7 @@ public class FindItem extends Goal {
         if (dest == null) {
             starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
         }
-        return dest != null && !starbuncle.isStuck && !nearbyItems().isEmpty();
+        return dest != null && !nearbyItems().isEmpty();
     }
 
     @Override

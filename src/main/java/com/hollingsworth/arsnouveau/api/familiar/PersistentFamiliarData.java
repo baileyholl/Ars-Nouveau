@@ -16,7 +16,7 @@ public class PersistentFamiliarData<T extends Entity> {
         this.cosmetic = tag.contains("cosmetic") ? ItemStack.of(tag.getCompound("cosmetic")) : null;
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public CompoundTag toTag(T entity, CompoundTag tag) {
         if (name != null)
             tag.putString("name", Component.Serializer.toJson(name));
         if (color != null) {

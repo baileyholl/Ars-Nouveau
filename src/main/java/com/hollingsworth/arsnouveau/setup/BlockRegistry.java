@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -75,8 +76,6 @@ public class BlockRegistry {
     public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey)
     public static MageBloomCrop MAGE_BLOOM_CROP;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCANE_BRICKS, registryName = BlockRegistryKey)
-    public static ModBlock ARCANE_BRICKS;
     @ObjectHolder(value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey)
     public static ScribesBlock SCRIBES_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockEntityRegistryKey)
@@ -103,34 +102,6 @@ public class BlockRegistry {
     public static ArcaneCore ARCANE_CORE_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.ARCANE_CORE, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_ALTERNATE, registryName = BlockRegistryKey)
-    public static ModBlock AB_ALTERNATE;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_BASKET, registryName = BlockRegistryKey)
-    public static ModBlock AB_BASKET;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_HERRING, registryName = BlockRegistryKey)
-    public static ModBlock AB_HERRING;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_MOSAIC, registryName = BlockRegistryKey)
-    public static ModBlock AB_MOSAIC;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCANE_STONE, registryName = BlockRegistryKey)
-    public static ModBlock ARCANE_STONE;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_SLAB, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_SLAB;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_CLOVER, registryName = BlockRegistryKey)
-    public static ModBlock AB_CLOVER;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_BASKET, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_BASKET;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_CLOVER, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_CLOVER;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_HERRING, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_HERRING;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_MOSAIC, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_MOSAIC;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_ALTERNATING, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_ALTERNATING;
-    @ObjectHolder(value = prepend + LibBlockNames.AB_SMOOTH_ASHLAR, registryName = BlockRegistryKey)
-    public static ModBlock AB_SMOOTH_ASHLAR;
     @ObjectHolder(value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockRegistryKey)
     public static EnchantedSpellTurret ENCHANTED_SPELL_TURRET;
     @ObjectHolder(value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockEntityRegistryKey)
@@ -245,88 +216,103 @@ public class BlockRegistry {
     public static DrygmyStone DRYGMY_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<DrygmyTile> DRYGMY_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_ALT, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_ALT;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_ASHLAR, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_ASHLAR;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_BASKET, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_BASKET;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_CLOVER, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_CLOVER;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_HERRING, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_HERRING;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_MOSAIC, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_MOSAIC;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_SLAB, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_SLAB;
-    @ObjectHolder(value = prepend + LibBlockNames.AS_GOLD_STONE, registryName = BlockRegistryKey)
-    public static ModBlock AS_GOLD_STONE;
     @ObjectHolder(value = prepend + LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockRegistryKey)
     public static AlchemicalSourcelinkBlock ALCHEMICAL_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<AlchemicalSourcelinkTile> ALCHEMICAL_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.VITALIC_SOURCELINK, registryName = BlockRegistryKey)
     public static VitalicSourcelinkBlock VITALIC_BLOCK;
+
     @ObjectHolder(value = prepend + LibBlockNames.VITALIC_SOURCELINK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<VitalicSourcelinkTile> VITALIC_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockRegistryKey)
     public static MycelialSourcelinkBlock MYCELIAL_BLOCK;
+
     @ObjectHolder(value = prepend + LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<MycelialSourcelinkTile> MYCELIAL_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_DEPOSIT, registryName = BlockRegistryKey)
     public static RelayDepositBlock RELAY_DEPOSIT;
+
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_DEPOSIT, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<RelayDepositTile> RELAY_DEPOSIT_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockRegistryKey)
     public static RelayWarpBlock RELAY_WARP;
+
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<RelayWarpTile> RELAY_WARP_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockRegistryKey)
     public static BookwyrmLectern BOOKWYRM_LECTERN;
+
     @ObjectHolder(value = prepend + LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<BookwyrmLecternTile> BOOKWYRM_LECTERN_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockRegistryKey)
     public static BasicSpellTurret BASIC_SPELL_TURRET;
+
     @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<BasicSpellTurretTile> BASIC_SPELL_TURRET_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockRegistryKey)
     public static TimerSpellTurret TIMER_SPELL_TURRET;
+
     @ObjectHolder(value = prepend + LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_CHEST, registryName = BlockRegistryKey)
     public static ArchwoodChest ARCHWOOD_CHEST;
+
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_CHEST, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<ArchwoodChestTile> ARCHWOOD_CHEST_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.SPELL_PRISM, registryName = BlockRegistryKey)
     public static SpellPrismBlock SPELL_PRISM;
+
     @ObjectHolder(value = prepend + LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockRegistryKey)
     public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
+
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockRegistryKey)
     public static RelayCollectorBlock RELAY_COLLECTOR;
+
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.RED_SBED, registryName = BlockRegistryKey)
     public static SummonBed RED_SBED;
+
     @ObjectHolder(value = prepend + LibBlockNames.BLUE_SBED, registryName = BlockRegistryKey)
     public static SummonBed BLUE_SBED;
+
     @ObjectHolder(value = prepend + LibBlockNames.GREEN_SBED, registryName = BlockRegistryKey)
     public static SummonBed GREEN_SBED;
+
     @ObjectHolder(value = prepend + LibBlockNames.ORANGE_SBED, registryName = BlockRegistryKey)
     public static SummonBed ORANGE_SBED;
+
     @ObjectHolder(value = prepend + LibBlockNames.YELLOW_SBED, registryName = BlockRegistryKey)
     public static SummonBed YELLOW_SBED;
+
     @ObjectHolder(value = prepend + LibBlockNames.PURPLE_SBED, registryName = BlockRegistryKey)
     public static SummonBed PURPLE_SBED;
+
     @ObjectHolder(value = prepend + LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
     public static BlockStateProviderType<?> stateProviderType;
+
     @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_OCULUS, registryName = BlockRegistryKey)
     public static ScryersOculus SCRYERS_OCULUS;
+
     @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_OCULUS, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<ScryersOculusTile> SCRYERS_OCULUS_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockRegistryKey)
     public static ScryerCrystal SCRYERS_CRYSTAL;
+
     @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<ScryerCrystalTile> SCRYER_CRYSTAL_TILE;
 
@@ -409,34 +395,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_JAR_BLOCK, new PotionJar(ModBlock.defaultProperties().noOcclusion()));
         registry.register(LibBlockNames.POTION_MELDER_BLOCK, new PotionMelder(ModBlock.defaultProperties().noOcclusion()));
 
-        registry.register(LibBlockNames.ARCANE_BRICKS, new ModBlock());
-
-        registry.register(LibBlockNames.AB_SMOOTH_BASKET, new ModBlock());
-        registry.register(LibBlockNames.AB_SMOOTH_CLOVER, new ModBlock());
-        registry.register(LibBlockNames.AB_SMOOTH_HERRING, new ModBlock());
-        registry.register(LibBlockNames.AB_SMOOTH_MOSAIC, new ModBlock());
-        registry.register(LibBlockNames.AB_SMOOTH_ALTERNATING, new ModBlock());
-        registry.register(LibBlockNames.AB_SMOOTH_ASHLAR, new ModBlock());
-
-        registry.register(LibBlockNames.AB_ALTERNATE, new ModBlock());
-        registry.register(LibBlockNames.ARCANE_STONE, new ModBlock());
-        registry.register(LibBlockNames.AB_BASKET, new ModBlock());
-        registry.register(LibBlockNames.AB_HERRING, new ModBlock());
-        registry.register(LibBlockNames.AB_MOSAIC, new ModBlock());
-
-        registry.register(LibBlockNames.AB_SMOOTH, new ModBlock());
-        registry.register(LibBlockNames.AB_SMOOTH_SLAB, new ModBlock());
-        registry.register(LibBlockNames.AB_CLOVER, new ModBlock());
-
-        registry.register(LibBlockNames.AS_GOLD_ALT, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_ASHLAR, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_BASKET, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_CLOVER, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_HERRING, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_MOSAIC, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_SLAB, new ModBlock());
-        registry.register(LibBlockNames.AS_GOLD_STONE, new ModBlock());
-
         //Sourcelinks
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
         registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new AgronomicSourcelinkBlock());
@@ -458,6 +416,14 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ORANGE_SBED, new SummonBed());
         registry.register(LibBlockNames.YELLOW_SBED, new SummonBed());
         registry.register(LibBlockNames.PURPLE_SBED, new SummonBed());
+
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
+                registry.register(s, new DirectionalModBlock());
+            } else {
+                registry.register(s, new ModBlock());
+            }
+        }
 
     }
 
@@ -527,8 +493,12 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("enchanting_apparatus");
             }
         });
-        registry.register(LibBlockNames.ARCANE_PEDESTAL, new BlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()));
-        registry.register(LibBlockNames.ARCANE_BRICKS, new BlockItem(BlockRegistry.ARCANE_BRICKS, defaultItemProperties()));
+        registry.register(LibBlockNames.ARCANE_PEDESTAL, new RendererBlockItem(BlockRegistry.ARCANE_PEDESTAL, defaultItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return ArcanePedestalRenderer::getISTER;
+            }
+        });
         registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -541,7 +511,6 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("source_relay");
             }
         });
-        //registry.register(LibBlockNames.RUNE, new BlockItem(BlockRegistry.RUNE_BLOCK, new Item.Properties()));
         registry.register(LibBlockNames.PORTAL, new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()));
         registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
             @Override
@@ -561,11 +530,6 @@ public class BlockRegistry {
                 return ArcaneCoreRenderer::getISTER;
             }
         });
-        registry.register(LibBlockNames.AB_ALTERNATE, getDefaultBlockItem(BlockRegistry.AB_ALTERNATE));
-        registry.register(LibBlockNames.AB_BASKET, getDefaultBlockItem(BlockRegistry.AB_BASKET));
-        registry.register(LibBlockNames.AB_HERRING, getDefaultBlockItem(BlockRegistry.AB_HERRING));
-        registry.register(LibBlockNames.AB_MOSAIC, getDefaultBlockItem(BlockRegistry.AB_MOSAIC));
-        registry.register(LibBlockNames.ARCANE_STONE, getDefaultBlockItem(BlockRegistry.ARCANE_STONE));
         registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VOLCANIC_BLOCK, defaultItemProperties().fireResistant()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -587,10 +551,7 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("source_deposit");
             }
         });
-//
-        registry.register(LibBlockNames.AB_SMOOTH_SLAB, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_SLAB));
-        registry.register(LibBlockNames.AB_SMOOTH, getDefaultBlockItem(BlockRegistry.AB_SMOOTH));
-        registry.register(LibBlockNames.AB_CLOVER, getDefaultBlockItem(BlockRegistry.AB_CLOVER));
+
         registry.register(LibBlockNames.CASCADING_LEAVES, getDefaultBlockItem(BlockRegistry.CASCADING_LEAVE));
         registry.register(LibBlockNames.CASCADING_LOG, getDefaultBlockItem(BlockRegistry.CASCADING_LOG));
         registry.register(LibBlockNames.CASCADING_SAPLING, getDefaultBlockItem(BlockRegistry.CASCADING_SAPLING));
@@ -644,23 +605,8 @@ public class BlockRegistry {
             }
         });
 
-        registry.register(LibBlockNames.AB_SMOOTH_BASKET, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_BASKET));
-        registry.register(LibBlockNames.AB_SMOOTH_CLOVER, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_CLOVER));
-        registry.register(LibBlockNames.AB_SMOOTH_HERRING, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_HERRING));
-        registry.register(LibBlockNames.AB_SMOOTH_MOSAIC, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_MOSAIC));
-        registry.register(LibBlockNames.AB_SMOOTH_ALTERNATING, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ALTERNATING));
-        registry.register(LibBlockNames.AB_SMOOTH_ASHLAR, getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ASHLAR));
-        registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
+         registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
         registry.register(LibBlockNames.DRYGMY_STONE, getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK));
-
-        registry.register(LibBlockNames.AS_GOLD_ALT, getDefaultBlockItem(BlockRegistry.AS_GOLD_ALT));
-        registry.register(LibBlockNames.AS_GOLD_ASHLAR, getDefaultBlockItem(BlockRegistry.AS_GOLD_ASHLAR));
-        registry.register(LibBlockNames.AS_GOLD_BASKET, getDefaultBlockItem(BlockRegistry.AS_GOLD_BASKET));
-        registry.register(LibBlockNames.AS_GOLD_CLOVER, getDefaultBlockItem(BlockRegistry.AS_GOLD_CLOVER));
-        registry.register(LibBlockNames.AS_GOLD_HERRING, getDefaultBlockItem(BlockRegistry.AS_GOLD_HERRING));
-        registry.register(LibBlockNames.AS_GOLD_MOSAIC, getDefaultBlockItem(BlockRegistry.AS_GOLD_MOSAIC));
-        registry.register(LibBlockNames.AS_GOLD_SLAB, getDefaultBlockItem(BlockRegistry.AS_GOLD_SLAB));
-        registry.register(LibBlockNames.AS_GOLD_STONE, getDefaultBlockItem(BlockRegistry.AS_GOLD_STONE));
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new RendererBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -725,6 +671,12 @@ public class BlockRegistry {
                 return ScryerEyeRenderer::getISTER;
             }
         }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
+
+       for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+           registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+       }
+
+
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {
@@ -746,4 +698,7 @@ public class BlockRegistry {
     static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
 
 
+    public static Block getBlock(String s) {
+        return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
+    }
 }

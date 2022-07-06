@@ -67,7 +67,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
     public void render(GeoModel model, Object animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         IBone top = model.getBone("bow_top").get();
         IBone gem = model.getBone("gem").get();
-        IBone bottom = model.getBone("bow_top2").get();
+        IBone bottom = model.getBone("bow_bot").get();
         float outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 10.0f) % 360;
         top.setRotationZ((float) Math.toRadians(-10.0));
         top.setRotationY(0.0f);

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -44,18 +45,9 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         protected void addTables() {
-            registerDropSelf(BlockRegistry.AB_ALTERNATE);
-            registerDropSelf(BlockRegistry.ARCANE_BRICKS);
 
             registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
-            registerDropSelf(BlockRegistry.ARCANE_STONE);
-            registerDropSelf(BlockRegistry.AB_BASKET);
-            registerDropSelf(BlockRegistry.AB_HERRING);
-            registerDropSelf(BlockRegistry.AB_MOSAIC);
             registerDropSelf(BlockRegistry.ENCHANTED_SPELL_TURRET);
-            registerDropSelf(BlockRegistry.AB_CLOVER);
-            registerDropSelf(BlockRegistry.AB_SMOOTH_SLAB);
-            registerDropSelf(BlockRegistry.AB_SMOOTH);
 
             registerDropSelf(BlockRegistry.BLAZING_LOG);
             registerDropSelf(BlockRegistry.VEXING_LOG);
@@ -100,26 +92,12 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropDoor(BlockRegistry.ARCHWOOD_DOOR);
             registerDropSelf(BlockRegistry.SOURCE_GEM_BLOCK);
 
-            registerDropSelf(BlockRegistry.AB_SMOOTH_BASKET);
-            registerDropSelf(BlockRegistry.AB_SMOOTH_CLOVER);
-            registerDropSelf(BlockRegistry.AB_SMOOTH_HERRING);
-            registerDropSelf(BlockRegistry.AB_SMOOTH_MOSAIC);
-            registerDropSelf(BlockRegistry.AB_SMOOTH_ALTERNATING);
-            registerDropSelf(BlockRegistry.AB_SMOOTH_ASHLAR);
             registerDropSelf(BlockRegistry.POTION_MELDER);
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
             registerDropSelf(BlockRegistry.SCONCE_BLOCK);
             registerBedCondition(BlockRegistry.SCRIBES_BLOCK, ScribesBlock.PART, BedPart.HEAD);
             registerDrop(BlockRegistry.DRYGMY_BLOCK, Items.MOSSY_COBBLESTONE);
 
-            registerDropSelf(BlockRegistry.AS_GOLD_ALT);
-            registerDropSelf(BlockRegistry.AS_GOLD_ASHLAR);
-            registerDropSelf(BlockRegistry.AS_GOLD_BASKET);
-            registerDropSelf(BlockRegistry.AS_GOLD_CLOVER);
-            registerDropSelf(BlockRegistry.AS_GOLD_HERRING);
-            registerDropSelf(BlockRegistry.AS_GOLD_MOSAIC);
-            registerDropSelf(BlockRegistry.AS_GOLD_SLAB);
-            registerDropSelf(BlockRegistry.AS_GOLD_STONE);
             registerDropSelf(BlockRegistry.VITALIC_BLOCK);
             registerDropSelf(BlockRegistry.ALCHEMICAL_BLOCK);
             registerDropSelf(BlockRegistry.MYCELIAL_BLOCK);
@@ -133,8 +111,6 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
             registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
-            registerDropSelf(BlockRegistry.SCRIBES_BLOCK);
-            registerDropSelf(BlockRegistry.ARCANE_BRICKS);
             registerDropSelf(BlockRegistry.RELAY);
             registerDropSelf(BlockRegistry.RELAY_SPLITTER);
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
@@ -154,6 +130,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ORANGE_SBED);
             registerDropSelf(BlockRegistry.SCRYERS_CRYSTAL);
             registerDropSelf(BlockRegistry.SCRYERS_OCULUS);
+            for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+                registerDropSelf(BlockRegistry.getBlock(s));
+            }
         }
 
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {

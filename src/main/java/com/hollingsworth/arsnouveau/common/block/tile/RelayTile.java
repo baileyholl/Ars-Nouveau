@@ -63,7 +63,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             return false;
         }
         this.fromPos = pos;
-        update();
+        updateBlock();
         return true;
     }
 
@@ -72,7 +72,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             return false;
         }
         this.toPos = pos;
-        update();
+        updateBlock();
         return true;
     }
 
@@ -83,7 +83,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     public void clearPos() {
         this.toPos = null;
         this.fromPos = null;
-        update();
+        updateBlock();
     }
 
     @Override
@@ -115,10 +115,9 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null || storedPos.equals(getBlockPos()))
+        if (storedPos == null || storedPos.equals(getBlockPos()) || level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
-        if (level.getBlockEntity(storedPos) instanceof RelayTile)
-            return;
+
         if (this.setTakeFrom(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
         } else {
@@ -145,12 +144,12 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             // Block has been removed
             if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)) {
                 fromPos = null;
-                update();
+                updateBlock();
                 return;
             } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
                 // Transfer mana fromPos to this
                 if (transferSource(fromTile, this) > 0) {
-                    update();
+                    updateBlock();
                     ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
                 }
             }
@@ -159,7 +158,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (toPos != null && level.isLoaded(toPos)) {
             if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)) {
                 toPos = null;
-                update();
+                updateBlock();
                 return;
             }
             AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);

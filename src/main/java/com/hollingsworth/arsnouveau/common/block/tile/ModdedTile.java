@@ -33,10 +33,14 @@ public class ModdedTile extends BlockEntity {
         handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
     }
 
-    public void updateBlock() {
-        BlockState state = level.getBlockState(worldPosition);
-        level.sendBlockUpdated(worldPosition, state, state, 3);
-        setChanged();
+    public boolean updateBlock() {
+        if(level != null) {
+            BlockState state = level.getBlockState(worldPosition);
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+            setChanged();
+            return true;
+        }
+        return false;
     }
 
     @Override

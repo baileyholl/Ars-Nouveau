@@ -7,13 +7,15 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.Block;
 
 public class GoToBedGoal extends Goal {
-    int ticksSleeping;
+
     boolean unreachable;
     public Starbuncle starbuncle;
     BlockPos bedPos;
+    public StarbyBehavior behavior;
 
-    public GoToBedGoal(Starbuncle starbuncle) {
+    public GoToBedGoal(Starbuncle starbuncle, StarbyBehavior behavior) {
         this.starbuncle = starbuncle;
+        this.behavior = behavior;
     }
 
     @Override
@@ -53,10 +55,7 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || starbuncle.getValidTakePos() != null) {
-            return false;
-        }
-        if (!starbuncle.getHeldStack().isEmpty() && starbuncle.getValidStorePos(starbuncle.getHeldStack()) != null) {
+        if (starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || !behavior.canGoToBed()) {
             return false;
         }
         Block onBlock = starbuncle.level.getBlockState(new BlockPos(bedPos)).getBlock();

@@ -7,8 +7,6 @@ import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.IInteractResponder;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -52,7 +50,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantTextureProvider {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantTextureProvider {
 
     public static final EntityDataAccessor<String> SPELL_STRING = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
@@ -134,20 +132,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
-    @Override
-    public @Nonnull ItemStack onPickup(ItemStack stack) {
-        BookwyrmLecternTile tile = getTile();
-        return tile == null ? stack : tile.insertItem(stack);
-    }
 
-    @Override
-    public ItemStack onPlaceBlock() {
-        ItemStack heldStack = getHeldStack();
-        if (heldStack.isEmpty())
-            return ItemStack.EMPTY;
-        BookwyrmLecternTile tile = getTile();
-        return tile == null ? heldStack : tile.getItem(heldStack.getItem());
-    }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
@@ -221,11 +206,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
         }
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public List<IItemHandler> getInventory() {
-        return BlockUtil.getAdjacentInventories(level, lecternPos);
     }
 
     public @Nullable BookwyrmLecternTile getTile() {

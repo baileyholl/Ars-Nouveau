@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,9 +32,9 @@ import javax.annotation.Nonnull;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWaterloggedBlock {
-
+    public static final VoxelShape shape = Block.box(1D, 0.0D, 1.0D, 15, 13, 15);
     public ArcanePedestal() {
-        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.ARCANE_PEDESTAL);
+        super(ModBlock.defaultProperties().noOcclusion());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
@@ -55,9 +55,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
-
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
-
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }
@@ -74,7 +72,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return Block.box(1D, 0.0D, 1.0D, 15, 16, 15);
+        return shape;
     }
 
     @Override
@@ -105,5 +103,10 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }

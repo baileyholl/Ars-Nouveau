@@ -11,6 +11,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BlockStatesDatagen extends BlockStateProvider {
 
@@ -20,45 +21,25 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-//        simpleBlock(BlockRegistry.ARCANE_STONE, new ModelFile.UncheckedModelFile("ars_nouveau:block/arcane_ore"));
-        registerNormalCube(BlockRegistry.ARCANE_STONE, LibBlockNames.ARCANE_STONE);
-        registerNormalCube(BlockRegistry.ARCANE_BRICKS, LibBlockNames.ARCANE_BRICKS);
-        registerNormalCube(BlockRegistry.AB_ALTERNATE, LibBlockNames.AB_ALTERNATE);
-        registerNormalCube(BlockRegistry.AB_BASKET, LibBlockNames.AB_BASKET);
-        registerNormalCube(BlockRegistry.AB_HERRING, LibBlockNames.AB_HERRING);
-        registerNormalCube(BlockRegistry.AB_MOSAIC, LibBlockNames.AB_MOSAIC);
+        registerOnlyState(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
+        registerOnlyState(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED);
+        registerOnlyState(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED);
+        registerOnlyState(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED);
+        registerOnlyState(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED);
+        registerOnlyState(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
+        registerOnlyState(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
 
-        registerNormalCube(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER);
-        registerNormalCube(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH);
-        registerNormalCube(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB);
-        registerNormalCube(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
+            registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
+        }
 
-        registerNormalCube(BlockRegistry.AB_SMOOTH_BASKET, LibBlockNames.AB_SMOOTH_BASKET);
-        registerNormalCube(BlockRegistry.AB_SMOOTH_CLOVER, LibBlockNames.AB_SMOOTH_CLOVER);
-        registerNormalCube(BlockRegistry.AB_SMOOTH_HERRING, LibBlockNames.AB_SMOOTH_HERRING);
-        registerNormalCube(BlockRegistry.AB_SMOOTH_MOSAIC, LibBlockNames.AB_SMOOTH_MOSAIC);
-        registerNormalCube(BlockRegistry.AB_SMOOTH_ALTERNATING, LibBlockNames.AB_SMOOTH_ALTERNATING);
-        registerNormalCube(BlockRegistry.AB_SMOOTH_ASHLAR, LibBlockNames.AB_SMOOTH_ASHLAR);
-
-        registerNormalCube(BlockRegistry.AS_GOLD_ALT, LibBlockNames.AS_GOLD_ALT);
-        registerNormalCube(BlockRegistry.AS_GOLD_ASHLAR, LibBlockNames.AS_GOLD_ASHLAR);
-        registerNormalCube(BlockRegistry.AS_GOLD_BASKET, LibBlockNames.AS_GOLD_BASKET);
-        registerNormalCube(BlockRegistry.AS_GOLD_CLOVER, LibBlockNames.AS_GOLD_CLOVER);
-        registerNormalCube(BlockRegistry.AS_GOLD_HERRING, LibBlockNames.AS_GOLD_HERRING);
-        registerNormalCube(BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_MOSAIC);
-        registerNormalCube(BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_SLAB);
-        registerNormalCube(BlockRegistry.AS_GOLD_STONE, LibBlockNames.AS_GOLD_STONE);
-
-        registerNormalCube(BlockRegistry.RED_SBED, LibBlockNames.RED_SBED);
-        registerNormalCube(BlockRegistry.BLUE_SBED, LibBlockNames.BLUE_SBED);
-        registerNormalCube(BlockRegistry.GREEN_SBED, LibBlockNames.GREEN_SBED);
-        registerNormalCube(BlockRegistry.YELLOW_SBED, LibBlockNames.YELLOW_SBED);
-        registerNormalCube(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
-        registerNormalCube(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
-
-        //   registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
     }
 
+    private void registerOnlyState(Block block, String registry) {
+        simpleBlock(block, getUncheckedModel(registry));
+    }
+
+    //waiting for forge PR to fix the datagen
     private void registerDoor(DoorBlock door, String reg) {
         doorBlock(door, reg, getBlockLoc(reg + "_bottom"), getBlockLoc(reg + "_top"));
     }
@@ -71,7 +52,11 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     public void registerNormalCube(Block block, String registry) {
         buildNormalCube(registry);
-        simpleBlock(block, getUncheckedModel(registry));
+        if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(registry)) {
+            horizontalBlock(block, getUncheckedModel(registry));
+        } else {
+            simpleBlock(block, getUncheckedModel(registry));
+        }
     }
 
     public static ModelFile getUncheckedModel(String registry) {
@@ -85,4 +70,5 @@ public class BlockStatesDatagen extends BlockStateProvider {
     public ResourceLocation getBlockLoc(String registryName) {
         return new ResourceLocation(ArsNouveau.MODID, "blocks" + "/" + registryName);
     }
+
 }

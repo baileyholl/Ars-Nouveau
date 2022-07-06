@@ -72,6 +72,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             if (SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 6, 50) != null) {
                 this.hasSource = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
+                setChanged();
             }
         }
 
@@ -242,6 +243,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         } else if (playerEntity != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.recipe_set"));
         }
+        setChanged();
     }
 
 
@@ -251,6 +253,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             if (level.getBlockEntity(bPos) instanceof Container)
                 inventories.add(bPos.immutable());
         }
+        setChanged();
     }
 
     public @Nullable BlockPos findPotionStorage(Potion passedPot) {
@@ -308,6 +311,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             ParticleUtil.spawnPoof((ServerLevel) level, worldPosition.above());
             entityID = wixie.getId();
             tickCounter = 0;
+            setChanged();
             return;
         }
         if (tickCounter % 10 == 0 && !level.isClientSide) {

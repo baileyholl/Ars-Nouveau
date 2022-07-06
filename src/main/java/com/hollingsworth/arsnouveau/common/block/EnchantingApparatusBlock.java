@@ -49,7 +49,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return InteractionResult.SUCCESS;
         }
-        if (tile.catalystItem == null || tile.catalystItem.isEmpty()) {
+        if (tile.getCatalystItem() == null || tile.getCatalystItem().isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if (recipe == null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
@@ -57,15 +57,15 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
             } else {
                 if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                    tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);
+                    tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
                 }
             }
         } else {
-            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.catalystItem);
+            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getCatalystItem());
             world.addFreshEntity(item);
-            tile.catalystItem = ItemStack.EMPTY;
+            tile.setCatalystItem(ItemStack.EMPTY);
             if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);
+                tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
             }
         }
 
@@ -81,8 +81,8 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.catalystItem != null) {
-            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.catalystItem));
+        if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.getCatalystItem() != null) {
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getCatalystItem()));
         }
     }
 

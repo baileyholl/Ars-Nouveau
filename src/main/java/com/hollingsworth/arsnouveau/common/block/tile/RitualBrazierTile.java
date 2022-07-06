@@ -91,6 +91,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                 ritual = null;
                 getLevel().playSound(null, getBlockPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 getLevel().setBlock(getBlockPos(), getLevel().getBlockState(getBlockPos()).setValue(RitualBrazierBlock.LIT, false), 3);
+                updateBlock();
                 return;
             }
             if (!ritual.isRunning() && !level.isClientSide) {
@@ -105,6 +106,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                 int cost = ritual.getManaCost();
                 if (SourceUtil.takeSourceNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
                     ritual.setNeedsMana(false);
+                    updateBlock();
                 } else {
                     return;
                 }
@@ -174,6 +176,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         }
         this.isDecorative = false;
         level.playSound(null, getBlockPos(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.0f, 1.0f);
+        updateBlock();
     }
 
     @Override
@@ -226,5 +229,6 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         this.isDecorative = true;
         BlockState state = world.getBlockState(getBlockPos());
         world.setBlock(getBlockPos(), state.setValue(RitualBrazierBlock.LIT, true), 3);
+        updateBlock();
     }
 }

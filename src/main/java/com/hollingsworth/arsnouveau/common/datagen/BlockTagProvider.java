@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.nio.file.Path;
 
@@ -42,7 +44,6 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
-                BlockRegistry.ARCANE_STONE,
                 BlockRegistry.RELAY,
                 BlockRegistry.ARCANE_CORE_BLOCK,
                 BlockRegistry.ENCHANTING_APP_BLOCK,
@@ -70,29 +71,6 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.BASIC_SPELL_TURRET,
                 BlockRegistry.TIMER_SPELL_TURRET,
                 BlockRegistry.SPELL_PRISM,
-                BlockRegistry.AB_SMOOTH_CLOVER,
-                BlockRegistry.AB_SMOOTH_HERRING,
-                BlockRegistry.AB_SMOOTH_MOSAIC,
-                BlockRegistry.AB_SMOOTH_ALTERNATING,
-                BlockRegistry.AB_SMOOTH_ASHLAR,
-                BlockRegistry.AS_GOLD_ALT,
-                BlockRegistry.AS_GOLD_ASHLAR,
-                BlockRegistry.AS_GOLD_BASKET,
-                BlockRegistry.AS_GOLD_CLOVER,
-                BlockRegistry.AS_GOLD_HERRING,
-                BlockRegistry.AS_GOLD_MOSAIC,
-                BlockRegistry.AS_GOLD_STONE,
-                BlockRegistry.AS_GOLD_SLAB,
-                BlockRegistry.ARCANE_STONE,
-                BlockRegistry.AB_BASKET,
-                BlockRegistry.AB_HERRING,
-                BlockRegistry.AB_MOSAIC,
-                BlockRegistry.AB_CLOVER,
-                BlockRegistry.AB_SMOOTH_SLAB,
-                BlockRegistry.AB_SMOOTH,
-                BlockRegistry.AB_ALTERNATE,
-                BlockRegistry.ARCANE_BRICKS,
-                BlockRegistry.AB_SMOOTH_BASKET,
                 BlockRegistry.SCRYERS_CRYSTAL,
                 BlockRegistry.SCRYERS_OCULUS
         );
@@ -134,30 +112,11 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.VEXING_LEAVES
         );
 
-        this.tag(DECORATIVE_AN)
-                .add(BlockRegistry.AB_SMOOTH_BASKET,
-                        BlockRegistry.AB_SMOOTH_CLOVER,
-                        BlockRegistry.AB_SMOOTH_HERRING,
-                        BlockRegistry.AB_SMOOTH_MOSAIC,
-                        BlockRegistry.AB_SMOOTH_ALTERNATING,
-                        BlockRegistry.AB_SMOOTH_ASHLAR,
-                        BlockRegistry.AS_GOLD_ALT,
-                        BlockRegistry.AS_GOLD_ASHLAR,
-                        BlockRegistry.AS_GOLD_BASKET,
-                        BlockRegistry.AS_GOLD_CLOVER,
-                        BlockRegistry.AS_GOLD_HERRING,
-                        BlockRegistry.AS_GOLD_MOSAIC,
-                        BlockRegistry.AS_GOLD_STONE,
-                        BlockRegistry.AS_GOLD_SLAB,
-                        BlockRegistry.ARCANE_STONE,
-                        BlockRegistry.AB_BASKET,
-                        BlockRegistry.AB_HERRING,
-                        BlockRegistry.AB_MOSAIC,
-                        BlockRegistry.AB_CLOVER,
-                        BlockRegistry.AB_SMOOTH_SLAB,
-                        BlockRegistry.AB_SMOOTH,
-                        BlockRegistry.AB_ALTERNATE,
-                        BlockRegistry.ARCANE_BRICKS);
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
+            this.tag(DECORATIVE_AN).add(block);
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+        }
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,

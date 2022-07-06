@@ -86,6 +86,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             source = 2000;
         }
         this.progress += progress;
+        setChanged();
         return source;
     }
 

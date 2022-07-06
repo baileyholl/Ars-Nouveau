@@ -16,7 +16,7 @@
       "multiblock": {
         "mapping": {
           "0": "ars_nouveau:portal",
-          "B": "ars_nouveau:arcane_bricks",
+          "B": "ars_nouveau:sourcestone",
           "P": "ars_nouveau:portal"
         },
         "pattern": [

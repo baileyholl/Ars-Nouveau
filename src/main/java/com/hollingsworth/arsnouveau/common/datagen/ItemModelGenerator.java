@@ -49,14 +49,7 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 //
 //
 //        });
-        getBuilder(LibBlockNames.ARCANE_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCANE_STONE));
-        getBuilder(LibBlockNames.AB_ALTERNATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_ALTERNATE));
-        getBuilder(LibBlockNames.AB_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_BASKET));
-        getBuilder(LibBlockNames.AB_HERRING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_HERRING));
-        getBuilder(LibBlockNames.AB_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_MOSAIC));
-        getBuilder(LibBlockNames.AB_SMOOTH).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH));
-        getBuilder(LibBlockNames.AB_SMOOTH_SLAB).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_SLAB));
-        getBuilder(LibBlockNames.AB_CLOVER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_CLOVER));
+
 
         getBuilder(LibBlockNames.STRIPPED_AWLOG_BLUE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.STRIPPED_AWLOG_BLUE));
         getBuilder(LibBlockNames.STRIPPED_AWWOOD_BLUE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.STRIPPED_AWWOOD_BLUE));
@@ -67,32 +60,18 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.STRIPPED_AWLOG_PURPLE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.STRIPPED_AWLOG_PURPLE));
         getBuilder(LibBlockNames.STRIPPED_AWWOOD_PURPLE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.STRIPPED_AWWOOD_PURPLE));
         getBuilder(LibBlockNames.SOURCE_GEM_BLOCK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCE_GEM_BLOCK));
-
-        getBuilder(LibBlockNames.AB_SMOOTH_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_BASKET));
-        getBuilder(LibBlockNames.AB_SMOOTH_CLOVER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_CLOVER));
-        getBuilder(LibBlockNames.AB_SMOOTH_HERRING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_HERRING));
-        getBuilder(LibBlockNames.AB_SMOOTH_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_MOSAIC));
-        getBuilder(LibBlockNames.AB_SMOOTH_ALTERNATING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_ALTERNATING));
-        getBuilder(LibBlockNames.AB_SMOOTH_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_ASHLAR));
-
         getBuilder(ItemsRegistry.EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.EXPERIENCE_GEM.get()));
         getBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.GREATER_EXPERIENCE_GEM.get()));
-
-        getBuilder(LibBlockNames.AS_GOLD_ALT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ALT));
-        getBuilder(LibBlockNames.AS_GOLD_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ASHLAR));
-        getBuilder(LibBlockNames.AS_GOLD_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_BASKET));
-        getBuilder(LibBlockNames.AS_GOLD_CLOVER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_CLOVER));
-        getBuilder(LibBlockNames.AS_GOLD_HERRING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_HERRING));
-        getBuilder(LibBlockNames.AS_GOLD_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_MOSAIC));
-        getBuilder(LibBlockNames.AS_GOLD_SLAB).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_SLAB));
-        getBuilder(LibBlockNames.AS_GOLD_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_STONE));
-
         getBuilder(LibBlockNames.RED_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.RED_SBED));
         getBuilder(LibBlockNames.BLUE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.BLUE_SBED));
         getBuilder(LibBlockNames.GREEN_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GREEN_SBED));
         getBuilder(LibBlockNames.YELLOW_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.YELLOW_SBED));
         getBuilder(LibBlockNames.ORANGE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ORANGE_SBED));
         getBuilder(LibBlockNames.PURPLE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.PURPLE_SBED));
+
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
+        }
     }
 
 

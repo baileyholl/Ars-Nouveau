@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.BonemealGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.InspectPlantGoal;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -116,11 +117,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem()) {
-            List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
-            if (!items.isEmpty()) {
-                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.get().getItems(stack);
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
-            }
+            ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(stack);
+            this.ignoreItems =  new ArrayList<>(scrollData.getItems());
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
         }
         return super.mobInteract(player, hand);
     }

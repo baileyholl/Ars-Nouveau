@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import net.minecraft.core.BlockPos;
@@ -13,11 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class TimerSpellTurret extends BasicSpellTurret {
 
     public TimerSpellTurret(Properties properties) {
@@ -62,11 +57,7 @@ public class TimerSpellTurret extends BasicSpellTurret {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile tile) {
             tile.isOff = world.hasNeighborSignal(pos);
-            tile.update();
+            tile.updateBlock();
         }
-    }
-
-    @SubscribeEvent
-    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e) {
     }
 }
