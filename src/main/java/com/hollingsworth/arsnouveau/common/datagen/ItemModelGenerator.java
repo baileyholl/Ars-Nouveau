@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -68,10 +69,24 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.YELLOW_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.YELLOW_SBED));
         getBuilder(LibBlockNames.ORANGE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ORANGE_SBED));
         getBuilder(LibBlockNames.PURPLE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.PURPLE_SBED));
-
+        stateUnchecked(LibBlockNames.MENDOSTEEN_POD);
+        stateUnchecked(LibBlockNames.BASTION_POD);
+        stateUnchecked(LibBlockNames.FROSTAYA_POD);
+        stateUnchecked(LibBlockNames.BOMBEGRANTE_POD);
+        itemUnchecked(ItemsRegistry.ALCHEMISTS_CROWN);
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
         }
+    }
+
+    public void itemUnchecked(RegistryWrapper<? extends Item> item){
+        getBuilder(item.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", itemTexture(item.get()));
+
+    }
+
+    public void stateUnchecked(String name){
+        getBuilder(name).parent(BlockStatesDatagen.getUncheckedModel(name));
     }
 
 

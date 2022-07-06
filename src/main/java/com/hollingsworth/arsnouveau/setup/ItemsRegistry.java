@@ -263,6 +263,10 @@ public class ItemsRegistry {
     public static RegistryWrapper<AnnotatedCodex> ANNOTATED_CODEX = register(LibItemNames.ANNOTATED_CODEX, () -> new AnnotatedCodex());
     public static RegistryWrapper<ScryerScroll> SCRYER_SCROLL = register(LibItemNames.SCRYER_SCROLL, () -> new ScryerScroll().withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")));
 
+    public static RegistryWrapper<ModItem> WIXIE_HAT = register(LibItemNames.WIXIE_HAT, () -> new WixieHat().withTooltip("tooltip.ars_nouveau.wixie_hat"));
+    public static RegistryWrapper<ModItem> ALCHEMISTS_CROWN = register(LibItemNames.ALCHEMISTS_CROWN, () -> new AlchemistsCrown().withTooltip("tooltip.ars_nouveau.wixie_hat"));
+
+
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));

@@ -174,6 +174,11 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_CRYSTAL, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRYERS_OCULUS, RenderType.cutout());
 
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MENDOSTEEN_POD, RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASTION_POD, RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BOMBEGRANTE_POD, RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FROSTAYA_POD, RenderType.cutoutMipped());
+
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
