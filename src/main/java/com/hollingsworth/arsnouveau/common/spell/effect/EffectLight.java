@@ -36,8 +36,8 @@ public class EffectLight extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof ILightable) {
-            ((ILightable) rayTraceResult.getEntity()).onLight(rayTraceResult, world, shooter, spellStats, spellContext);
+        if (rayTraceResult.getEntity() instanceof ILightable iLightable) {
+            iLightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
         }
 
         if (!(rayTraceResult.getEntity() instanceof LivingEntity))
@@ -55,6 +55,9 @@ public class EffectLight extends AbstractEffect {
             return;
 
         if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof ILightable lightable) {
+            lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
+            return;
+        }else if(world.getBlockState(rayTraceResult.getBlockPos()).getBlock() instanceof ILightable lightable){
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
         }
