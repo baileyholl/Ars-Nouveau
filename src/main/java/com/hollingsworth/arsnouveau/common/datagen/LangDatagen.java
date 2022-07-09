@@ -25,11 +25,11 @@ public class LangDatagen extends LanguageProvider {
         for (FamiliarScript i : arsNouveauAPI.getFamiliarScriptMap().values()) {
             add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
             add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
-            add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), ".script_name. " + i.familiar.getBookName());
+            add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
         }
         for (RitualTablet i : arsNouveauAPI.getRitualItemMap().values()) {
             add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
-            add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), ".ritual_name." + i.ritual.getLangName());
+            add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
         }
     }
 }
