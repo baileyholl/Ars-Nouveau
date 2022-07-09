@@ -118,21 +118,21 @@ public abstract class AbstractRitual {
         return getRegistryName().getNamespace() + ".ritual_desc." + getRegistryName().getPath();
     }
 
-    public int getManaCost() {
+    public int getSourceCost() {
         return 0;
     }
 
-    public boolean consumesMana() {
-        return getManaCost() > 0;
+    public boolean consumesSource() {
+        return getSourceCost() > 0;
     }
 
-    public void setNeedsMana(boolean needMana) {
-        getContext().needsManaToRun = needMana;
+    public void setNeedsSource(boolean needMana) {
+        getContext().needsSourceToRun = needMana;
         BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
     }
 
-    public boolean needsManaNow() {
-        return getContext().needsManaToRun;
+    public boolean needsSourceNow() {
+        return getContext().needsSourceToRun;
     }
 
     public void write(CompoundTag tag) {

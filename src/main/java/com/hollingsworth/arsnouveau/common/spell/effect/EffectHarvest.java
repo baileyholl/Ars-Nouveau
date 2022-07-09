@@ -34,14 +34,14 @@ public class EffectHarvest extends AbstractEffect {
         super(GlyphLib.EffectHarvestID, "Harvest");
     }
 
-    public void harvestNetherwart(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public static void harvestNetherwart(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if (state.getValue(NetherWartBlock.AGE) != 3)
             return;
         processAndSpawnDrops(pos, state, world, shooter, spellStats, spellContext);
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
     }
 
-    public void processAndSpawnDrops(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public static void processAndSpawnDrops(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         List<ItemStack> cropDrops = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
         if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
             cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerLevel) world, pos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)));
@@ -70,8 +70,8 @@ public class EffectHarvest extends AbstractEffect {
                 state = world.getBlockState(blockpos);
             }
             if (state.getBlock() instanceof NetherWartBlock) {
-                this.harvestNetherwart(blockpos, state, world, shooter, spellStats, spellContext);
-                return;
+                harvestNetherwart(blockpos, state, world, shooter, spellStats, spellContext);
+                continue;
             }
 
             if (!(state.getBlock() instanceof CropBlock))

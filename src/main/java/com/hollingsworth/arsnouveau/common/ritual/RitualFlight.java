@@ -33,7 +33,7 @@ public class RitualFlight extends AbstractRitual {
     }
 
     @Override
-    public int getManaCost() {
+    public int getSourceCost() {
         return 200;
     }
 
@@ -72,7 +72,7 @@ public class RitualFlight extends AbstractRitual {
             BlockEntity tileEntity = entity.level.getBlockEntity(pos);
             if (tileEntity instanceof RitualBrazierTile) {
                 if (((RitualBrazierTile) tileEntity).ritual instanceof RitualFlight) {
-                    ((RitualBrazierTile) tileEntity).ritual.setNeedsMana(true);
+                    ((RitualBrazierTile) tileEntity).ritual.setNeedsSource(true);
                     entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 90 * 20));
                 }
             }
@@ -88,7 +88,7 @@ public class RitualFlight extends AbstractRitual {
                         stalePositions.add(p);
                         continue;
                     }
-                    if (!ritualFlight.needsManaNow()) {
+                    if (!ritualFlight.needsSourceNow()) {
                         foundPos = p;
                         break;
                     }
@@ -114,7 +114,7 @@ public class RitualFlight extends AbstractRitual {
                     Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
                     BlockEntity tile = e.getPlayer().level.getBlockEntity(validPos);
                     if (tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight) {
-                        ((RitualBrazierTile) tile).ritual.setNeedsMana(true);
+                        ((RitualBrazierTile) tile).ritual.setNeedsSource(true);
                     }
                 }
             }

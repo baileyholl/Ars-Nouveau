@@ -28,7 +28,7 @@ public class RitualBreed extends AbstractRitual {
                     }
                 }
                 if (didWorkOnce)
-                    setNeedsMana(true);
+                    setNeedsSource(true);
             }
         }
     }
@@ -44,7 +44,7 @@ public class RitualBreed extends AbstractRitual {
     }
 
     @Override
-    public int getManaCost() {
+    public int getSourceCost() {
         return 500;
     }
 
