@@ -26,7 +26,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     private int ticksPerSignal = 20;
     public boolean isLocked;
     public boolean isOff;
-
+    public int ticksElapsed;
     public TimerSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
     }
@@ -37,8 +37,10 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
 
     @Override
     public void tick() {
-        if (!level.isClientSide && ticksPerSignal > 0 && !isOff && level.getGameTime() % ticksPerSignal == 0) {
+        ticksElapsed++;
+        if(!level.isClientSide && ticksPerSignal > 0 && !isOff && ticksElapsed >= ticksPerSignal){
             getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
+            ticksElapsed = 0;
         }
     }
 
@@ -73,6 +75,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     public void addTime(int ticks) {
         ticksPerSignal += ticks;
         ticksPerSignal = Math.max(0, ticksPerSignal);
+        ticksElapsed = 0;
         updateBlock();
     }
 
@@ -96,6 +99,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
         this.isLocked = tag.getBoolean("locked");
         this.ticksPerSignal = tag.getInt("time");
         this.isOff = tag.getBoolean("off");
+        this.ticksElapsed = tag.getInt("ticksElapsed");
     }
 
     @Override
@@ -104,5 +108,6 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
         tag.putBoolean("locked", isLocked);
         tag.putInt("time", ticksPerSignal);
         tag.putBoolean("off", isOff);
+        tag.putInt("ticksElapsed", ticksElapsed);
     }
 }
