@@ -107,6 +107,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
 
     @Override
     public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
     }
