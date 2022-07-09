@@ -1,0 +1,11 @@
+{
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:red_archwood_sapling",
+  "name": "ars_nouveau.page.archwood_forest",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.archwood_forest"
+    }
+  ]
+}

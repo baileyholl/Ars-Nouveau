@@ -18,7 +18,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeClient(), new LangDatagen(event.getGenerator(), ArsNouveau.MODID, "en_us"));
 
-        event.getGenerator().addProvider(event.includeServer(), new Recipes(event.getGenerator()));
+        event.getGenerator().addProvider(event.includeServer(), new RecipeDatagen(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new BlockTagProvider(event.getGenerator(), event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new BlockStatesDatagen(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));

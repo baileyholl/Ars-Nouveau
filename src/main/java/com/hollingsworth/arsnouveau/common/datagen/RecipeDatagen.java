@@ -21,8 +21,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
-public class Recipes extends RecipeProvider {
-    public Recipes(DataGenerator generatorIn) {
+public class RecipeDatagen extends RecipeProvider {
+    public RecipeDatagen(DataGenerator generatorIn) {
         super(generatorIn);
     }
 
@@ -208,7 +208,7 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
 
             shapelessBuilder(BlockRegistry.SCONCE_BLOCK)
-                    .requires(Recipes.SOURCE_GEM)
+                    .requires(RecipeDatagen.SOURCE_GEM)
                     .requires(Ingredient.of(Tags.Items.NUGGETS_GOLD), 2)
                     .save(consumer);
 
@@ -308,7 +308,7 @@ public class Recipes extends RecipeProvider {
                     .requires(BlockRegistry.VEXING_LOG)
                     .requires(Items.SPIDER_EYE, 3)
                     .requires(Items.GLOWSTONE)
-                    .requires(Recipes.SOURCE_GEM_BLOCK)
+                    .requires(RecipeDatagen.SOURCE_GEM_BLOCK)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.FLIGHT))
@@ -587,7 +587,7 @@ public class Recipes extends RecipeProvider {
                     .requires(Tags.Items.DYES_YELLOW).save(consumer);
             shapelessBuilder(BlockRegistry.SCRYERS_CRYSTAL)
                     .requires(Items.ENDER_EYE)
-                    .requires(Recipes.SOURCE_GEM).save(consumer);
+                    .requires(RecipeDatagen.SOURCE_GEM).save(consumer);
 
             shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
             shapelessBuilder(ItemsRegistry.SPELL_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
@@ -603,6 +603,8 @@ public class Recipes extends RecipeProvider {
                 makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
                 shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_to_sourcestone"));
             }
+
+            shapelessBuilder(getRitualItem(RitualLib.HARVEST)).requires(BlockRegistry.FLOURISHING_LOG).requires(ItemsRegistry.EARTH_ESSENCE).requires(Items.IRON_HOE).save(consumer);
         }
     }
 

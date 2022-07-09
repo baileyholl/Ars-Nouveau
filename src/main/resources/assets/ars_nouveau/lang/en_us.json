@@ -746,7 +746,6 @@
 	"ars_nouveau.page.archwood": "Archwood Trees",
 	"ars_nouveau.page1.archwood": "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands.",
 	"ars_nouveau.page1.decorative": "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.",
-	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold and source gem ore. Additionally, magical creatures such as Starbuncles, Whirlisprigs, and Drygmys have a much higher chance of spawning.",
 	"ars_nouveau.wilden": "Wilden",
 	"ars_nouveau.page.decorative": "Decorative Blocks",
 	"ars_nouveau.page.sconce":"A decorative light. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color.",
@@ -1009,6 +1008,7 @@
 	"block.ars_nouveau.smooth_gilded_sourcestone_alternating": "Smooth Gilded Sourcestone: Alternating",
 	"block.ars_nouveau.smooth_gilded_sourcestone_large_bricks": "Smooth Gilded Sourcestone: Large Bricks",
 	"block.ars_nouveau.smooth_gilded_sourcestone_small_bricks": "Smooth Gilded Sourcestone: Small Bricks",
-	"tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table."
-
+	"tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table.",
+	"ars_nouveau.page.archwood_forest": "Archwood Forest",
+	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome."
 }

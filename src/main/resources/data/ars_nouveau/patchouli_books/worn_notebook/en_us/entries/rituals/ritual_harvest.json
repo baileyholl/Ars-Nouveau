@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_harvest",
+  "name": "item.ars_nouveau.ritual_harvest",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.ritual_desc.ritual_harvest"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ritual_harvest"
+    }
+  ]
+}
