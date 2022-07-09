@@ -1013,6 +1013,11 @@
 	"item.ars_nouveau.bombegranate_pod": "Bombegranate",
 	"item.ars_nouveau.bastion_pod": "Bastion Fruit",
 	"item.ars_nouveau.alchemists_crown": "Alchemist's Crown",
-	"block.ars_nouveau.potion_diffuser": "Potion Diffuser"
-
+	"block.ars_nouveau.potion_diffuser": "Potion Diffuser",
+	"ars_nouveau.melder.from_capped": "Melders can only meld two jars. Clear the melder by using the Dominion Wand while sneaking to remove all jars.",
+	"ars_nouveau.melder.to_set": "Melder will send combined potions to this jar.",
+	"ars_nouveau.melder.from_set": "%s of 2 melding jars set.",
+	"ars_nouveau.melder.no_to_pos": "No melding destination set. Wand the Melder to your desired Potion Jar.",
+	"ars_nouveau.melder.needs_potion": "Linked jars need potion",
+	"ars_nouveau.melder.destination_invalid": "Destination cannot accept the mixed potion."
 }
