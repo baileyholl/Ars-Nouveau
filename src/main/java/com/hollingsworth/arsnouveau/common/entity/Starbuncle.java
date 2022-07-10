@@ -104,6 +104,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public Starbuncle(EntityType<Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
+        dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         addGoalsAfterConstructor();
         this.moveControl = new MovementHandler(this);
     }
@@ -113,6 +114,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.setTamed(tamed);
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
+        dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         addGoalsAfterConstructor();
     }
 
