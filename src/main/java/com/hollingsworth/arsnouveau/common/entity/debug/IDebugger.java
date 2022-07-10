@@ -5,7 +5,11 @@ import java.io.PrintWriter;
 
 public interface IDebugger {
 
-    void addEntityEvent(DebugEvent event);
+    default void addEntityEvent(DebugEvent event){
+        addEntityEvent(event, false);
+    }
+
+    void addEntityEvent(DebugEvent event, boolean storeDuplicate);
 
     void writeFile(PrintWriter writer) throws IOException;
 }

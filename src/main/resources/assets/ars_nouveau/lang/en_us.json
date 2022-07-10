@@ -1019,5 +1019,6 @@
 	"ars_nouveau.melder.from_set": "%s of 2 melding jars set.",
 	"ars_nouveau.melder.no_to_pos": "No melding destination set. Wand the Melder to your desired Potion Jar.",
 	"ars_nouveau.melder.needs_potion": "Linked jars need potion",
-	"ars_nouveau.melder.destination_invalid": "Destination cannot accept the mixed potion."
+	"ars_nouveau.melder.destination_invalid": "Destination cannot accept the mixed potion.",
+	"arsnouveau.debug.log_created": "Log file created: %s"
 }

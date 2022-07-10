@@ -10,6 +10,10 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
+import com.hollingsworth.arsnouveau.common.entity.debug.EntityDebugger;
+import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
+import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.AvoidEntityGoalMC;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.UntamedFindItem;
@@ -36,10 +40,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -69,7 +70,8 @@ import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider {
+
 
     public enum StarbuncleGoalState {
         FORAGING,
@@ -79,7 +81,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         RESTING,
         NONE
     }
-
+    public EntityDebugger debugger = new EntityDebugger(this);
     public StarbuncleGoalState goalState;
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
@@ -104,6 +106,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public Starbuncle(EntityType<Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
+        dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
+
         addGoalsAfterConstructor();
         this.moveControl = new MovementHandler(this);
     }
@@ -113,6 +117,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.setTamed(tamed);
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
+        dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         addGoalsAfterConstructor();
     }
 
@@ -232,6 +237,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             System.out.println(this);
             return;
         }
+
         if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }
@@ -398,7 +404,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public void setHeldStack(ItemStack stack) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack == null ? ItemStack.EMPTY : stack);
     }
 
     public ItemStack getHeldStack() {
@@ -534,6 +540,16 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         BLUE,
         RED,
         YELLOW
+    }
+
+    @Override
+    public IDebugger getDebugger() {
+        return debugger;
+    }
+
+    public void addGoalDebug(Goal goal, DebugEvent debugEvent){
+        debugEvent.id = goal.getClass().getSimpleName() + "_" + debugEvent.id;
+        addDebugEvent(debugEvent);
     }
 
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -52,6 +53,9 @@ public class ForageManaBerries extends Goal {
         if (behavior.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.canStoreStack(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
+        if(pos == null){
+            entity.addGoalDebug(this, new DebugEvent("NoBerries", "No Berries Nearby"));
+        }
         return pos != null;
     }
 
@@ -70,6 +74,7 @@ public class ForageManaBerries extends Goal {
 
         if (BlockUtil.distanceFrom(entity.position, pos) >= 2.0) {
             entity.getNavigation().tryMoveToBlockPos(pos, 1.2d);
+            entity.addGoalDebug(this, new DebugEvent("PathTo", "Moving to berry " + pos.toString()));
         } else if (world.getBlockState(pos).getBlock() instanceof SourceBerryBush) {
             int i = world.getBlockState(pos).getValue(AGE);
             boolean flag = i == 3;
@@ -78,6 +83,7 @@ public class ForageManaBerries extends Goal {
             SourceBerryBush.popResource(world, pos, new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, j + (flag ? 1 : 0)));
             world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlock(pos, world.getBlockState(pos).setValue(AGE, 1), 2);
+            entity.addGoalDebug(this, new DebugEvent("PickedBerry", "Popped berries at " + pos.getX() + "," + pos.getY() + "," + pos.getZ()));
             pos = null;
         }
     }

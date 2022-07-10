@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.core.BlockPos;
@@ -40,32 +41,38 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     @Override
     public void start() {
         super.start();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
         takePos = behavior.getValidTakePos();
         unreachable = false;
         if (starbuncle.isTamed() && takePos != null && starbuncle.getHeldStack().isEmpty()) {
             startDistance = BlockUtil.distanceFrom(starbuncle.position, takePos);
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
+            starbuncle.addGoalDebug(this, new DebugEvent("SetPath", "Set path to " + takePos.toString()));
         }
         if (takePos == null) {
             starbuncle.setBackOff(60 + starbuncle.level.random.nextInt(60));
+            starbuncle.addGoalDebug(this, new DebugEvent("NoValidTake", "No valid take position"));
+            return;
         }
-        starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
+        starbuncle.addGoalDebug(this, new DebugEvent("TakeItemGoal", "Started taking item from " + takePos.toString()));
     }
 
 
     public void getItem() {
         Level world = starbuncle.level;
-        if (world.getBlockEntity(takePos) == null)
-            return;
         IItemHandler iItemHandler = world.getBlockEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-        if (iItemHandler == null)
+        if (iItemHandler == null) {
+            starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + takePos.toString()));
+            takePos = null;
             return;
-        for (int j = 0; j < iItemHandler.getSlots(); j++) {
+        }
+        for (int j = 0; j < iItemHandler.getSlots() && starbuncle.getHeldStack().isEmpty(); j++) {
             if (!iItemHandler.getStackInSlot(j).isEmpty()) {
                 int count = behavior.getMaxTake(iItemHandler.getStackInSlot(j));
                 if (count <= 0)
                     continue;
                 starbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
+                starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + count + "x " + starbuncle.getHeldStack().getHoverName().getString() + " from " + takePos.toString()));
                 starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
 
@@ -78,14 +85,18 @@ public class TakeItemGoal extends ExtendedRangeGoal {
                         // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     }
                 }
-                break;
             }
+        }
+        if(starbuncle.getHeldStack().isEmpty()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
+            takePos = null;
         }
     }
 
     public void setPath(double x, double y, double z, double speedIn) {
         starbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
         if (starbuncle.getNavigation().getPath() != null && !starbuncle.getNavigation().getPath().canReach()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("Unreachable", "Unreachable at " + takePos.toString()));
             unreachable = true;
         }
     }
@@ -96,37 +107,33 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         // Retry the valid position
         if (this.ticksRunning % 100 == 0 && !behavior.isPositionValidTake(takePos)) {
             takePos = null;
+            starbuncle.addGoalDebug(this, new DebugEvent("TakeBecomeInvalid", "Invalid at take retry" ));
             return;
         }
         if (starbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(starbuncle.position(), takePos) <= 2d + this.extendedRange) {
             Level world = starbuncle.level;
             BlockEntity tileEntity = world.getBlockEntity(takePos);
-            if (tileEntity == null)
-                return;
-            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-            if (iItemHandler != null) {
-                getItem();
+            if (tileEntity == null) {
+                takePos = null;
+                starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
                 return;
             }
+            getItem();
         }
 
         if (takePos != null && starbuncle.getHeldStack().isEmpty()) {
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.3D);
+            starbuncle.addGoalDebug(this, new DebugEvent("path_set", "path set to " + takePos.toString()));
         }
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && starbuncle.isTamed() && takePos != null;
+        return !unreachable && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && takePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return starbuncle.getHeldStack() != null && starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0;
-    }
-
-    @Override
-    public boolean isInterruptable() {
-        return super.isInterruptable();
+        return starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() <= 0;
     }
 }

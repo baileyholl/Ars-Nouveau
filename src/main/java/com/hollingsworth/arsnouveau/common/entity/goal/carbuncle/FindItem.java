@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -57,7 +58,11 @@ public class FindItem extends Goal {
     public boolean canContinueToUse() {
         if (behavior.isPickupDisabled())
             return false;
-        return timeFinding <= 20 * 15 && !itemStuck && starbuncle.getHeldStack().isEmpty();
+        if(timeFinding > 20 * 15){
+            starbuncle.addGoalDebug(this, new DebugEvent("TooLong", "Stopped finding item, time finding expired"));
+            return false;
+        }
+        return !itemStuck && starbuncle.getHeldStack().isEmpty();
     }
 
     @Override
@@ -76,6 +81,7 @@ public class FindItem extends Goal {
             }
         }
         if (destList.isEmpty()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("NoStacks", "No storable items nearby"));
             return false;
         }
         Collections.shuffle(destList);
@@ -83,11 +89,13 @@ public class FindItem extends Goal {
             Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(e.position()), 1, 9);
             if (path != null && path.canReach()) {
                 this.dest = e;
+                starbuncle.addGoalDebug(this, new DebugEvent("DestSet", "Dest set to " + e));
                 break;
             }
         }
         if (dest == null) {
             starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
+            starbuncle.addGoalDebug(this, new DebugEvent("NotReachable", "No pathable items nearby"));
         }
         return dest != null && !nearbyItems().isEmpty();
     }
@@ -97,6 +105,7 @@ public class FindItem extends Goal {
         super.tick();
         if (dest == null || dest.getItem().isEmpty() || dest.isRemoved()) {
             itemStuck = true;
+            starbuncle.addGoalDebug(this, new DebugEvent("ItemRemoved", "Item removed during goal"));
             return;
         }
         timeFinding++;
@@ -106,15 +115,18 @@ public class FindItem extends Goal {
             stuckTicks++;
             if (stuckTicks > 20 * 5) { // Give up after 5 seconds of being unpathable, in case we fall or jump into the air
                 itemStuck = true;
+                starbuncle.addGoalDebug(this, new DebugEvent("ItemStuck", "Item stuck for 5 seconds. Ending goal"));
             }
             return;
         }
         ItemStack itemstack = starbuncle.getHeldStack();
         if (!itemstack.isEmpty()) {
             itemStuck = true;
+            starbuncle.addGoalDebug(this, new DebugEvent("ItemPickup", "Received item, ending."));
             return;
         }
         starbuncle.getNavigation().moveTo(dest, 1.4d);
+        starbuncle.addGoalDebug(this, new DebugEvent("PathTo", "Pathing to " + dest));
     }
 
     @Override

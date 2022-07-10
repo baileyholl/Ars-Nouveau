@@ -37,13 +37,6 @@ public class Config {
 
 
     public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
-    public static Integer DEFAULT_STARBUNCLE_WEIGHT = 5;
-    public static Integer DEFAULT_WHIRLISPRIG_WEIGHT = 5;
-    public static Integer DEFAULT_DRYGMY_WEIGHT = 5;
-
-    public static Integer DEFAULT_WGUARDIAN_WEIGHT = 50;
-    public static Integer DEFAULT_WSTALKER_WEIGHT = 50;
-    public static Integer DEFAULT_WHUNTER_WEIGHT = 50;
 
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
@@ -68,6 +61,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
 
     public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
+    public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
 
 
     public static boolean isGlyphEnabled(ResourceLocation tag) {
@@ -128,10 +122,15 @@ public class Config {
                 .define("enforceCapOnCast", true);
         ENFORCE_GLYPH_LIMIT_ON_CAST = SERVER_BUILDER.comment("Enforce glyph per spell limit on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceGlyphLimitOnCast", true);
-
+        SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Items").push("item");
         CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Debug").push("debug");
+        MAX_LOG_EVENTS = SERVER_BUILDER.comment("Max number of log events to keep on entities. Lowering this number may make it difficult to debug why your entities are stuck.").defineInRange("maxLogEvents", 100, 0, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+
         SERVER_CONFIG = SERVER_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
