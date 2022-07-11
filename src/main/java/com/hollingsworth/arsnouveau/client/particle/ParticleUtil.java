@@ -125,9 +125,9 @@ public class ParticleUtil {
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
             if (rand.nextInt(chance) == 0) {
                 for (int i = 0; i < rand.nextInt(numParticles); i++) {
-                    double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
+                    double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
                     double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
-                    double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
+                    double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
                     world.addParticle(ParticleLineData.createData(color),
                             x, y, z,
                             x, y + ParticleUtil.inRange(0.5, 5), z);

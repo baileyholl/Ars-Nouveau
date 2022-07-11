@@ -11,7 +11,7 @@ public class RitualContext {
     public int progress;
     public boolean isDone;
     public boolean isStarted;
-    public boolean needsManaToRun; // Marks the last time mana was consumed or added.
+    public boolean needsSourceToRun; // Marks the last time mana was consumed or added.
     public List<ItemStack> consumedItems;
 
     public RitualContext() {
@@ -19,7 +19,7 @@ public class RitualContext {
         isDone = false;
         this.isStarted = false;
         consumedItems = new ArrayList<>();
-        needsManaToRun = false;
+        needsSourceToRun = false;
     }
 
 
@@ -27,7 +27,7 @@ public class RitualContext {
         tag.putInt("progress", progress);
         tag.putBoolean("complete", isDone);
         tag.putBoolean("started", isStarted);
-        tag.putBoolean("needsMana", needsManaToRun);
+        tag.putBoolean("needsMana", needsSourceToRun);
         NBTUtil.writeItems(tag, "item_", consumedItems);
     }
 
@@ -37,7 +37,7 @@ public class RitualContext {
         context.isDone = tag.getBoolean("complete");
         context.isStarted = tag.getBoolean("started");
         context.consumedItems = NBTUtil.readItems(tag, "item_");
-        context.needsManaToRun = tag.getBoolean("needsMana");
+        context.needsSourceToRun = tag.getBoolean("needsMana");
         return context;
     }
 }

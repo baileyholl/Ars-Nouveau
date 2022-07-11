@@ -96,6 +96,7 @@ public class APIRegistry {
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualBinding());
         registerRitual(new RitualAwakening());
+        registerRitual(new RitualHarvest());
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());
         registerFamiliar(new WhirlisprigFamiliarHolder());

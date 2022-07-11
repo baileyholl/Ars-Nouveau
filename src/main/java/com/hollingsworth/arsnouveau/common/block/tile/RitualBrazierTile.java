@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
+import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -28,17 +30,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.List;
 
-public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable {
+public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable, IPickupResponder {
     public AbstractRitual ritual;
     AnimationFactory manager = new AnimationFactory(this);
     public boolean isDecorative;
@@ -102,10 +101,10 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                     }
                 });
             }
-            if (ritual.consumesMana() && ritual.needsManaNow()) {
-                int cost = ritual.getManaCost();
+            if (ritual.consumesSource() && ritual.needsSourceNow()) {
+                int cost = ritual.getSourceCost();
                 if (SourceUtil.takeSourceNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
-                    ritual.setNeedsMana(false);
+                    ritual.setNeedsSource(false);
                     updateBlock();
                 } else {
                     return;
@@ -196,13 +195,13 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
 
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.running"));
             }
-            if (ritual.getConsumedItems().size() != 0) {
+            if (!ritual.getConsumedItems().isEmpty()) {
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.consumed"));
                 for (ItemStack i : ritual.getConsumedItems()) {
                     tooltips.add(i.getHoverName());
                 }
             }
-            if (ritual.needsManaNow())
+            if (ritual.needsSourceNow())
                 tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }
     }
@@ -210,12 +209,6 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "idle", 0, this::idlePredicate));
-    }
-
-    private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> pAnimationEvent) {
-        pAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("gem_float", true));
-        return PlayState.CONTINUE;
     }
 
     @Override
@@ -230,5 +223,11 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         BlockState state = world.getBlockState(getBlockPos());
         world.setBlock(getBlockPos(), state.setValue(RitualBrazierBlock.LIT, true), 3);
         updateBlock();
+    }
+
+    @NotNull
+    @Override
+    public ItemStack onPickup(ItemStack stack) {
+        return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 }

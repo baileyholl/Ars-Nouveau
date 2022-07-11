@@ -235,6 +235,11 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.CASCADING_SAPLING)
                 .withLocalizedText(), getPath(RESOURCES, "archwood"));
 
+        addPage(new PatchouliBuilder(RESOURCES, "archwood_forest")
+                .withIcon(BlockRegistry.BLAZING_SAPLING)
+                .withLocalizedText(), getPath(RESOURCES, "archwood_forest"));
+
+
         addPage(new PatchouliBuilder(RESOURCES, "decorative")
                 .withIcon(SOURCESTONE)
                 .withLocalizedText(), getPath(RESOURCES, "decorative"));

@@ -41,7 +41,7 @@ public class RitualOvergrowth extends AbstractRitual {
                     }
                 }
                 if (didWorkOnce)
-                    setNeedsMana(true);
+                    setNeedsSource(true);
             } else {
                 int range = 5;
                 boolean didWorkOnce = false;
@@ -52,7 +52,7 @@ public class RitualOvergrowth extends AbstractRitual {
                         }
                 }
                 if (didWorkOnce)
-                    setNeedsMana(true);
+                    setNeedsSource(true);
             }
         }
 
@@ -63,7 +63,7 @@ public class RitualOvergrowth extends AbstractRitual {
     }
 
     @Override
-    public int getManaCost() {
+    public int getSourceCost() {
         return 500;
     }
 

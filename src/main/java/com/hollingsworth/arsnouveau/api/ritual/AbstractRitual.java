@@ -107,7 +107,7 @@ public abstract class AbstractRitual {
     }
 
     public String getName() {
-        return Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString();
+        return Component.translatable("ars_nouveau.tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
     public String getDescription() {
@@ -118,21 +118,21 @@ public abstract class AbstractRitual {
         return getRegistryName().getNamespace() + ".ritual_desc." + getRegistryName().getPath();
     }
 
-    public int getManaCost() {
+    public int getSourceCost() {
         return 0;
     }
 
-    public boolean consumesMana() {
-        return getManaCost() > 0;
+    public boolean consumesSource() {
+        return getSourceCost() > 0;
     }
 
-    public void setNeedsMana(boolean needMana) {
-        getContext().needsManaToRun = needMana;
+    public void setNeedsSource(boolean needMana) {
+        getContext().needsSourceToRun = needMana;
         BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
     }
 
-    public boolean needsManaNow() {
-        return getContext().needsManaToRun;
+    public boolean needsSourceNow() {
+        return getContext().needsSourceToRun;
     }
 
     public void write(CompoundTag tag) {

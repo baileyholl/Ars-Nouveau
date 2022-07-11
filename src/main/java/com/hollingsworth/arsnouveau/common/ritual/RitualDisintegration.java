@@ -75,12 +75,12 @@ public class RitualDisintegration extends AbstractRitual {
                 }
             }
             if (didWorkOnce)
-                setNeedsMana(true);
+                setNeedsSource(true);
         }
     }
 
     @Override
-    public int getManaCost() {
+    public int getSourceCost() {
         return 300;
     }
 

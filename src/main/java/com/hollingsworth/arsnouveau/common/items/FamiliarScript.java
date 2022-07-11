@@ -49,6 +49,10 @@ public class FamiliarScript extends ModItem {
         return super.use(worldIn, playerIn, handIn);
     }
 
+    @Override
+    public Component getName(ItemStack pStack) {
+        return Component.translatable("ars_nouveau.bound_script", familiar.getLangName().getString());
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {

@@ -3,7 +3,11 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -46,5 +50,15 @@ public class RitualTablet extends ModItem {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
         tooltip2.add(Component.translatable("tooltip.ars_nouveau.tablet"));
+        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())) {
+            tooltip2.add(Component.translatable(ritual.getDescriptionKey()));
+        } else {
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift").withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        }
+    }
+
+    @Override
+    public Component getName(ItemStack pStack) {
+        return Component.literal(ritual.getName());
     }
 }

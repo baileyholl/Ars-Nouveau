@@ -10,6 +10,7 @@ public class CreativeSourceJar extends SourceJar {
 
     public CreativeSourceJar() {
         super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.CREATIVE_SOURCE_JAR);
+        registerDefaultState(this.defaultBlockState().setValue(SourceJar.fill, 11));
     }
 
     @Override

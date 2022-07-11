@@ -67,8 +67,8 @@ public class HarvestClusterGoal extends Goal {
             BlockState state = level.getBlockState(p.relative(d));
             if (state.is(CLUSTER_BLOCKS)) {
                 ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
-                state.getBlock().playerDestroy(level, ANFakePlayer.getPlayer(level), p, state, level.getBlockEntity(p), stack);
-                destroyBlockSafely(level, p, false, ANFakePlayer.getPlayer(level));
+                state.getBlock().playerDestroy(level, ANFakePlayer.getPlayer(level), p.relative(d), state, level.getBlockEntity(p), stack);
+                destroyBlockSafely(level, p.relative(d), false, ANFakePlayer.getPlayer(level));
             }
         }
     }

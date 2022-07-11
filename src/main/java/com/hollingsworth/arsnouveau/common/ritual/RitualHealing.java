@@ -48,7 +48,7 @@ public class RitualHealing extends AbstractRitual {
                     }
                 }
                 if (didWorkOnce)
-                    setNeedsMana(true);
+                    setNeedsSource(true);
             }
         }
     }
@@ -74,7 +74,7 @@ public class RitualHealing extends AbstractRitual {
     }
 
     @Override
-    public int getManaCost() {
+    public int getSourceCost() {
         return 200;
     }
 }
