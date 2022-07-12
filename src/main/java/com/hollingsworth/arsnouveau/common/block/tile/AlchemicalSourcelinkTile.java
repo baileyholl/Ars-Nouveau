@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -53,7 +54,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
     public static @Nullable BlockPos findNearbyPotion(Level level, BlockPos worldPosition){
         for(BlockPos p : BlockPos.withinManhattan(worldPosition.below(1), 1, 1,1)){
             if(level.getBlockEntity(p) instanceof PotionJarTile tile) {
-                if (tile.getCurrentFill() >= 100) {
+                if (tile.getCurrentFill() >= 100 && tile.getPotion() != Potions.EMPTY && tile.getPotion() != Potions.WATER) {
                     return p;
                 }
             }
