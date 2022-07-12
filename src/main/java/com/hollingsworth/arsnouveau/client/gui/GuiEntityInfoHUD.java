@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -93,9 +94,9 @@ public class GuiEntityInfoHUD {
             tooltipHeight += 2; // gap between title lines and next lines
             tooltipHeight += (tooltip.size() - 1) * 10;
         }
-        int xOffset = 20; //cfg.overlayOffsetX.get();
-        int posX = width / 2 +  xOffset;//cfg.overlayOffsetX.get();
-        int posY = height / 2 + 0;//cfg.overlayOffsetY.get();
+        int xOffset = Config.TOOLTIP_X_OFFSET.get();
+        int posX = width / 2 +  xOffset;
+        int posY = height / 2 + + Config.TOOLTIP_Y_OFFSET.get();
 
         posX = Math.min(posX, width - tooltipTextWidth - 20);
         posY = Math.min(posY, height - tooltipHeight - 20);
