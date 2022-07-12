@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
+import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarCarbyRenderer;
@@ -199,6 +200,8 @@ public class ClientHandler {
 
         cameraOverlay = OverlayRegistry.registerOverlayTop("ars_nouveau:camera_overlay", ClientHandler::cameraOverlay);
         OverlayRegistry.enableOverlay(cameraOverlay, false);
+
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT,"Ars Nouveau Tooltip", GuiEntityInfoHUD.OVERLAY);
     }
 
     @SubscribeEvent
