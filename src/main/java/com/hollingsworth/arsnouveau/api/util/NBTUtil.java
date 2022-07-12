@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,9 +31,17 @@ public class NBTUtil {
         return tag;
     }
 
+    @Deprecated
     public static BlockPos getBlockPos(CompoundTag tag, String prefix) {
         return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
+
+    public static @Nullable BlockPos getNullablePos(CompoundTag tag, String prefix) {
+        if(!tag.contains(prefix + "_x"))
+            return null;
+        return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
+    }
+
 
     public static boolean hasBlockPos(CompoundTag tag, String prefix) {
         return tag.contains(prefix + "_x");

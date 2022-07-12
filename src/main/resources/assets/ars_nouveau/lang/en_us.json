@@ -1027,5 +1027,6 @@
 	"ars_nouveau.melder.destination_invalid": "Destination cannot accept the mixed potion.",
 	"arsnouveau.debug.log_created": "Log file created: %s",
 	"ars_nouveau.page.archwood_forest": "Archwood Forest",
-	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome."
+	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome.",
+	"ars_nouveau.melder.too_far": "Jars must be within 3 blocks."
 }

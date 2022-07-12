@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamil
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -215,9 +216,14 @@ public class ClientHandler {
                 ItemsRegistry.POTION_FLASK_AMPLIFY);
 
         event.getBlockColors().register((state, reader, pos, tIndex) ->
-                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
-                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
+                        ? jarTile.getColor()
                         : -1, BlockRegistry.POTION_JAR);
+
+        event.getBlockColors().register((state, reader, pos, tIndex) ->
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
+                        ? melderTile.getColor()
+                        : -1, BlockRegistry.POTION_MELDER);
     }
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
