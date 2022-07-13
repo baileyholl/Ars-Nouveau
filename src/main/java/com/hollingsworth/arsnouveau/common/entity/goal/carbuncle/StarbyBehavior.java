@@ -46,4 +46,9 @@ public class StarbyBehavior extends ChangeableBehavior {
     protected ResourceLocation getRegistryName() {
         return new ResourceLocation(ArsNouveau.MODID, "starby");
     }
+
+    public void syncTag(){
+        starbuncle.getEntityData().set(Starbuncle.BEHAVIOR_TAG, this.toTag(new CompoundTag()));
+    }
+
 }
