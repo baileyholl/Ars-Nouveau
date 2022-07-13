@@ -11,6 +11,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.Map;
 
+import net.minecraft.world.item.Item.Properties;
+
 public abstract class ExperienceGem extends ModItem {
 
     public ExperienceGem(Properties properties) {

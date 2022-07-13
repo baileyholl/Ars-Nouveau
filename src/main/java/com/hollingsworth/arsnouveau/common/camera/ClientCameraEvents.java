@@ -18,7 +18,7 @@ public class ClientCameraEvents {
     }
 
     @SubscribeEvent
-    public static void onClickInput(InputEvent.ClickInputEvent event) {
+    public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
         if (ClientCameraUtil.isPlayerMountedOnCamera()) {
             event.setCanceled(true);
             event.setSwingHand(false);

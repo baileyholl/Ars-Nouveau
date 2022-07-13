@@ -50,6 +50,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantTextureProvider {
 
     public static final EntityDataAccessor<String> SPELL_STRING = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);

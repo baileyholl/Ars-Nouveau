@@ -17,6 +17,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class FindNextItemGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BookwyrmLectern extends SummonBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 

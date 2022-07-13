@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -17,8 +17,8 @@ public class HUDEventHandler {
      * @param event The event
      */
     @SubscribeEvent
-    public static void renderSpellHUD(final RenderGameOverlayEvent.Post event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
+    public static void renderSpellHUD(final RenderGuiOverlayEvent.Post event) {
+        if (event.getType() != RenderGuiOverlayEvent.ElementType.ALL) return;
         spellHUD.drawHUD(event.getPoseStack());
         manaHUD.drawHUD(event.getPoseStack(), event.getPartialTick());
     }

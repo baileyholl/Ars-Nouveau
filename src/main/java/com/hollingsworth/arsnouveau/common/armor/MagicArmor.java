@@ -16,6 +16,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
+import net.minecraft.world.item.Item.Properties;
+
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     public MagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {

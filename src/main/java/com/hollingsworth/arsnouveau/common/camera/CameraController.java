@@ -15,8 +15,8 @@ import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -190,19 +190,19 @@ public class CameraController {
     }
 
     public static void saveOverlayStates() {
-        jumpBarElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.JUMP_BAR_ELEMENT).isEnabled();
-        experienceBarElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT).isEnabled();
-        potionIconsElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.POTION_ICONS_ELEMENT).isEnabled();
+        jumpBarElementEnabledPreviously = GuiOverlayManager.getEntry(ForgeGui.JUMP_BAR_ELEMENT).isEnabled();
+        experienceBarElementEnabledPreviously = GuiOverlayManager.getEntry(ForgeGui.EXPERIENCE_BAR_ELEMENT).isEnabled();
+        potionIconsElementEnabledPreviously = GuiOverlayManager.getEntry(ForgeGui.POTION_ICONS_ELEMENT).isEnabled();
     }
 
     public static void restoreOverlayStates() {
         if (jumpBarElementEnabledPreviously)
-            OverlayRegistry.enableOverlay(ForgeIngameGui.JUMP_BAR_ELEMENT, true);
+            GuiOverlayManager.enableOverlay(ForgeGui.JUMP_BAR_ELEMENT, true);
 
         if (experienceBarElementEnabledPreviously)
-            OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, true);
+            GuiOverlayManager.enableOverlay(ForgeGui.EXPERIENCE_BAR_ELEMENT, true);
 
         if (potionIconsElementEnabledPreviously)
-            OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, true);
+            GuiOverlayManager.enableOverlay(ForgeGui.POTION_ICONS_ELEMENT, true);
     }
 }

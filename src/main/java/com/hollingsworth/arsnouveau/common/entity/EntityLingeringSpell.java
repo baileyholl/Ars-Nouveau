@@ -18,6 +18,8 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityLingeringSpell extends EntityProjectileSpell {
 
     public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);

@@ -69,6 +69,8 @@ import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable {
 
     public enum StarbuncleGoalState {

@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class EarthEssence extends ModItem {
     public EarthEssence(Properties properties) {
         super(properties);

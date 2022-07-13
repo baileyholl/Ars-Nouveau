@@ -13,9 +13,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ScreenOpenEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.event.ScreenEvent.Open;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -29,7 +29,7 @@ public class CameraEvents {
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-        ServerPlayer player = (ServerPlayer) event.getPlayer();
+        ServerPlayer player = (ServerPlayer) event.getEntity();
 
         if (player.getCamera() instanceof ScryerCamera cam) {
             if (player.level.getBlockEntity(cam.blockPosition()) instanceof ICameraMountable camBe)
@@ -41,7 +41,7 @@ public class CameraEvents {
 
     @SubscribeEvent
     public static void onDamageTaken(LivingHurtEvent event) {
-        LivingEntity entity = event.getEntityLiving();
+        LivingEntity entity = event.getEntity();
         Level level = entity.level;
 
         if (!level.isClientSide && entity instanceof ServerPlayer player && CameraUtil.isPlayerMountedOnCamera(entity))
@@ -50,33 +50,33 @@ public class CameraEvents {
 
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (CameraUtil.isPlayerMountedOnCamera(event.getPlayer())) {
+        if (CameraUtil.isPlayerMountedOnCamera(event.getEntity())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onLeftClickBlock(LeftClickBlock event) {
-        if (CameraUtil.isPlayerMountedOnCamera(event.getPlayer())) {
+        if (CameraUtil.isPlayerMountedOnCamera(event.getEntity())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        if (CameraUtil.isPlayerMountedOnCamera(event.getPlayer()))
+        if (CameraUtil.isPlayerMountedOnCamera(event.getEntity()))
             event.setCanceled(true);
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onGuiOpen(ScreenOpenEvent event) {
+    public static void onGuiOpen(Open event) {
         Screen screen = event.getScreen();
         if (screen instanceof TitleScreen || screen instanceof JoinMultiplayerScreen) {
-            OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, false);
-            OverlayRegistry.enableOverlay(ForgeIngameGui.JUMP_BAR_ELEMENT, true);
-            OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, true);
-            OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, true);
+            GuiOverlayManager.enableOverlay(ClientHandler.cameraOverlay, false);
+            GuiOverlayManager.enableOverlay(ForgeGui.JUMP_BAR_ELEMENT, true);
+            GuiOverlayManager.enableOverlay(ForgeGui.EXPERIENCE_BAR_ELEMENT, true);
+            GuiOverlayManager.enableOverlay(ForgeGui.POTION_ICONS_ELEMENT, true);
         }
 
     }

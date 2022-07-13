@@ -37,9 +37,9 @@ import static com.hollingsworth.arsnouveau.api.util.DropDistribution.rand;
 public class ScryEvents {
     @SubscribeEvent
     public static void playerLoginEvent(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getPlayer().level.isClientSide && event.getPlayer().hasEffect(ModPotions.SCRYING_EFFECT.get())) {
-            CompoundTag tag = event.getPlayer().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()), new PacketGetPersistentData(tag));
+        if (!event.getEntity().level.isClientSide && event.getEntity().hasEffect(ModPotions.SCRYING_EFFECT.get())) {
+            CompoundTag tag = event.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new PacketGetPersistentData(tag));
         }
     }
 

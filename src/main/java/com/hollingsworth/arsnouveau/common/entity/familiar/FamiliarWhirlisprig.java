@@ -65,14 +65,14 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         if (!isAlive())
             return;
 
-        if (!event.getEntityLiving().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
+        if (!event.getEntity().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
             if (event.getItem().getItem().getFoodProperties() != null && event.getItem().getItem().isEdible()) {
                 FoodProperties food = event.getItem().getItem().getFoodProperties();
                 float saturationModifier = food.getSaturationModifier();
                 int nutrition = food.getNutrition();
                 float satAmount = nutrition * saturationModifier * 2.0f;
-                if (event.getEntityLiving() instanceof Player) {
-                    FoodData stats = ((Player) event.getEntityLiving()).getFoodData();
+                if (event.getEntity() instanceof Player) {
+                    FoodData stats = ((Player) event.getEntity()).getFoodData();
                     stats.saturationLevel += satAmount * .4f;
                 }
             }

@@ -23,8 +23,8 @@ public class PlayerEvent {
 
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
-        Player entity = event.getPlayer();
-        if (!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
+        Player entity = event.getEntity();
+        if (!event.getLevel().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getLevel().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
             return;
         if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);
@@ -43,8 +43,8 @@ public class PlayerEvent {
 
     @SubscribeEvent
     public static void onItem(final PlayerInteractEvent.RightClickItem event) {
-        Player entity = event.getPlayer();
-        if (!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
+        Player entity = event.getEntity();
+        if (!event.getLevel().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
             return;
         if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);

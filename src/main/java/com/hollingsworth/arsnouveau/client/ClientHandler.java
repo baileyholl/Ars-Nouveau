@@ -36,11 +36,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -131,7 +131,7 @@ public class ClientHandler {
 
     }
 
-    public static IIngameOverlay cameraOverlay;
+    public static IGuiOverlay cameraOverlay;
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
@@ -192,14 +192,14 @@ public class ClientHandler {
             });
         });
 
-        cameraOverlay = OverlayRegistry.registerOverlayTop("ars_nouveau:camera_overlay", ClientHandler::cameraOverlay);
-        OverlayRegistry.enableOverlay(cameraOverlay, false);
+        cameraOverlay = GuiOverlayManager.registerOverlayTop("ars_nouveau:camera_overlay", ClientHandler::cameraOverlay);
+        GuiOverlayManager.enableOverlay(cameraOverlay, false);
 
-        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT,"Ars Nouveau Tooltip", GuiEntityInfoHUD.OVERLAY);
+        GuiOverlayManager.registerOverlayAbove(ForgeGui.HOTBAR_ELEMENT,"Ars Nouveau Tooltip", GuiEntityInfoHUD.OVERLAY);
     }
 
     @SubscribeEvent
-    public static void initColors(final ColorHandlerEvent.Item event) {
+    public static void initColors(final RegisterColorHandlersEvent.Item event) {
         event.getItemColors().register((stack, color) -> color > 0 ? -1 :
                 (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
                 ItemsRegistry.POTION_FLASK);
@@ -218,7 +218,7 @@ public class ClientHandler {
                         : -1, BlockRegistry.POTION_JAR);
     }
 
-    public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
+    public static void cameraOverlay(ForgeGui gui, PoseStack pose, float partialTicks, int width, int height) {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();

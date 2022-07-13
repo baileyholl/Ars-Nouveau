@@ -43,7 +43,7 @@ public class ManaCapEvents {
 
     @SubscribeEvent
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent e) {
-        syncPlayerEvent(e.getPlayer());
+        syncPlayerEvent(e.getEntity());
     }
 
     @SubscribeEvent
@@ -61,12 +61,12 @@ public class ManaCapEvents {
 
     @SubscribeEvent
     public static void playerLoggedIn(PlayerEvent.StartTracking e) {
-        syncPlayerEvent(e.getPlayer());
+        syncPlayerEvent(e.getEntity());
     }
 
     @SubscribeEvent
     public static void playerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
-        syncPlayerEvent(e.getPlayer());
+        syncPlayerEvent(e.getEntity());
     }
 
     public static void syncPlayerEvent(Player playerEntity) {

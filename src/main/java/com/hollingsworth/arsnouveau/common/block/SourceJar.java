@@ -38,6 +38,8 @@ import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
 
     public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);

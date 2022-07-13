@@ -93,8 +93,8 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
         for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack item = inv.getItem(i);
-            if (item.hasContainerItem()) {
-                nonnulllist.set(i, item.getContainerItem());
+            if (item.hasCraftingRemainingItem()) {
+                nonnulllist.set(i, item.getCraftingRemainingItem());
             } else if (item.getItem() instanceof PotionItem) {
                 nonnulllist.set(i, new ItemStack(Items.GLASS_BOTTLE));
             }

@@ -63,10 +63,10 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
 
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent e) {
-        if (e.getEntityLiving().level.isClientSide || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon)
+        if (e.getEntity().level.isClientSide || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon)
             return;
         int mana = 200;
-        SourcelinkEventQueue.addManaEvent(e.getEntityLiving().level, VitalicSourcelinkTile.class, mana, e, e.getEntityLiving().blockPosition());
+        SourcelinkEventQueue.addManaEvent(e.getEntity().level, VitalicSourcelinkTile.class, mana, e, e.getEntity().blockPosition());
     }
 
     @Override

@@ -8,8 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -58,10 +58,10 @@ public class PacketSetCameraView {
                 if (isCamera) {
                     CameraController.resetOverlaysAfterDismount = true;
                     CameraController.saveOverlayStates();
-                    OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, false);
-                    OverlayRegistry.enableOverlay(ForgeIngameGui.JUMP_BAR_ELEMENT, false);
-                    OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, false);
-                    OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, true);
+                    GuiOverlayManager.enableOverlay(ForgeGui.EXPERIENCE_BAR_ELEMENT, false);
+                    GuiOverlayManager.enableOverlay(ForgeGui.JUMP_BAR_ELEMENT, false);
+                    GuiOverlayManager.enableOverlay(ForgeGui.POTION_ICONS_ELEMENT, false);
+                    GuiOverlayManager.enableOverlay(ClientHandler.cameraOverlay, true);
 //                    OverlayRegistry.enableOverlay(ClientHandler.hotbarBindOverlay, false);
                 }
             }

@@ -50,6 +50,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantTextureProvider {
     AnimationFactory manager = new AnimationFactory(this);
 

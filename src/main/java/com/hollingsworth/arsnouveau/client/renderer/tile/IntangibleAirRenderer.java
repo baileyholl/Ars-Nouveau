@@ -26,6 +26,8 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard;
+
 public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirTile> {
 
     public IntangibleAirRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
