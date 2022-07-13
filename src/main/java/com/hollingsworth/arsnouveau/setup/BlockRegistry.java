@@ -622,12 +622,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SOURCE_GEM_BLOCK, getDefaultBlockItem(BlockRegistry.SOURCE_GEM_BLOCK));
 
         registry.register(LibBlockNames.POTION_JAR_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_JAR));
-        registry.register(LibBlockNames.POTION_MELDER_BLOCK, new RendererBlockItem(BlockRegistry.POTION_MELDER, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return PotionMelderRenderer::getISTER;
-            }
-        });
+        registry.register(LibBlockNames.POTION_MELDER_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_MELDER));
 
          registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
         registry.register(LibBlockNames.DRYGMY_STONE, getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK));

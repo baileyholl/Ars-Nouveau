@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarCarbyRenderer;
@@ -13,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -45,6 +47,7 @@ import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -218,6 +221,10 @@ public class ClientHandler {
                         (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
                 ItemsRegistry.POTION_FLASK_AMPLIFY);
 
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        new ParticleColor(200, 0, 200).getColor(),
+                ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
+
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
                         ? jarTile.getColor()
@@ -227,6 +234,7 @@ public class ClientHandler {
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
                         ? melderTile.getColor()
                         : -1, BlockRegistry.POTION_MELDER);
+
     }
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {

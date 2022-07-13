@@ -12,10 +12,12 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -151,7 +154,9 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         take2.addAmount(-300);
         hasSource = false;
         ParticleColor color2 = ParticleColor.fromInt(combJar.getColor());
-        EntityFlyingItem item2 = new EntityFlyingItem(level, worldPosition, combJar.getBlockPos().above(), Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+        EntityFlyingItem item2 = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ()+ 0.5),
+                new Vec3(combJar.getX() + 0.5, combJar.getY(), combJar.getZ() + 0.5),
+                Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                 .withNoTouch();
         item2.setDistanceAdjust(2f);
         level.addFreshEntity(item2);
@@ -275,14 +280,15 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(!hasSource){
-            tooltip.add(Component.translatable("ars_nouveau.apparatus.nomana"));
+            tooltip.add(Component.translatable("ars_nouveau.apparatus.nomana").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
-        tooltip.add(Component.translatable("ars_nouveau.melder.from_set", fromJars.size()));
+        if(fromJars.size() < 2)
+            tooltip.add(Component.translatable("ars_nouveau.melder.from_set", fromJars.size()).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         if(toPos == null){
-            tooltip.add(Component.translatable("ars_nouveau.melder.no_to_pos"));
+            tooltip.add(Component.translatable("ars_nouveau.melder.no_to_pos").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
         if(toPos != null && fromJars.size() == 2 && hasSource && !isMixing && !takeJarsValid()){
-            tooltip.add(Component.translatable("ars_nouveau.melder.needs_potion"));
+            tooltip.add(Component.translatable("ars_nouveau.melder.needs_potion").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
         if(fromJars.size() >= 2 && toPos != null && level.getBlockEntity(toPos) instanceof PotionJarTile combJar){
             PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
@@ -292,7 +298,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             }
             List<MobEffectInstance> combined = getCombinedResult(tile1, tile2);
             if(!canDestinationAccept(combJar, combined)){
-                tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid"));
+                tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
         }
     }

@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+		"parent": "block/cube_all",
 	"textures": {
 		"1": "ars_nouveau:blocks/potion_still",
 		"3": "ars_nouveau:blocks/potion_melder",

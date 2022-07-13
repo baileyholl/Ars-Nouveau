@@ -35,27 +35,24 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Float> OFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
-    public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
+    public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to, int r, int g, int b) {
         this(ModEntities.ENTITY_FLYING_ITEM.get(), worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
         this.maxAge = (int) Math.floor(from.subtract(to).length() * 5);
         setPos(from.x + 0.5, from.y, from.z + 0.5);
-        this.entityData.set(RED, 255);
-        this.entityData.set(GREEN, 25);
-        this.entityData.set(BLUE, 180);
-    }
-
-    public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to) {
-        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
-    }
-
-    public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
-        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
         this.entityData.set(RED, r);
         this.entityData.set(GREEN, g);
         this.entityData.set(BLUE, b);
+    }
+
+    public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()), 255, 25, 180);
+    }
+
+    public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()), r,g,b);
     }
 
     public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, Level world) {
