@@ -50,6 +50,7 @@ public class ItemsRegistry {
     public static FoodProperties SOURCE_PIE_FOOD = new FoodProperties.Builder().nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20, 1), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_ROLL_FOOD = new FoodProperties.Builder().nutrition(8).saturationMod(0.6F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20), 1.0f).alwaysEat().build();
 
+    public static FoodProperties BAGUETTE_FOOD = new FoodProperties.Builder().nutrition(3).saturationMod(0.1F).alwaysEat().build();
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
@@ -262,6 +263,8 @@ public class ItemsRegistry {
     public static RegistryWrapper<AmethystGolemCharm> AMETHYST_GOLEM_CHARM = register(LibItemNames.AMETHYST_GOLEM_CHARM, () -> new AmethystGolemCharm().withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm")));
     public static RegistryWrapper<AnnotatedCodex> ANNOTATED_CODEX = register(LibItemNames.ANNOTATED_CODEX, () -> new AnnotatedCodex());
     public static RegistryWrapper<ScryerScroll> SCRYER_SCROLL = register(LibItemNames.SCRYER_SCROLL, () -> new ScryerScroll().withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")));
+
+    public static RegistryWrapper<Baguette> BAGUETTE = register(LibItemNames.BAGUETTE, () -> new Baguette(defaultItemProperties().food(BAGUETTE_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.baguette")));
 
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {

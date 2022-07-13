@@ -35,8 +35,11 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
 
         this.tag(MAGIC_FOOD)
-                .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
-                        ItemsRegistry.SOURCE_BERRY_ROLL.get());
+                .add(
+                        ItemsRegistry.SOURCE_BERRY_PIE.get(),
+                        ItemsRegistry.SOURCE_BERRY_ROLL.get(),
+                        ItemsRegistry.BAGUETTE.get()
+                );
         this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
                 .add(Items.DIRT).addTag(Tags.Items.SEEDS);
 
