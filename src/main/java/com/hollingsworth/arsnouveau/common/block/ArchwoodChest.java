@@ -21,8 +21,6 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ArchwoodChest extends ChestBlock {
     public ArchwoodChest() {
         super(BlockBehaviour.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD), () -> BlockRegistry.ARCHWOOD_CHEST_TILE);
@@ -44,7 +42,7 @@ public class ArchwoodChest extends ChestBlock {
             super.initializeClient(consumer);
             consumer.accept(new IClientItemExtensions() {
                 @Override
-                public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                     Minecraft mc = Minecraft.getInstance();
 
                     return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {

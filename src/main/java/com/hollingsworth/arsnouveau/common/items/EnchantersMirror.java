@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatable, ISpellModifierItem {
 
     public EnchantersMirror(Properties properties) {
@@ -96,7 +94,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
             private final BlockEntityWithoutLevelRenderer renderer = new MirrorRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });

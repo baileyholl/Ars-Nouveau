@@ -67,7 +67,7 @@ public class KeyHandler {
     }
 
     @SubscribeEvent
-    public static void mouseEvent(final InputEvent.Post event) {
+    public static void mouseEvent(final InputEvent.MouseButton event) {
 
         if (MINECRAFT.player == null || MINECRAFT.screen != null || event.getAction() != 1)
             return;

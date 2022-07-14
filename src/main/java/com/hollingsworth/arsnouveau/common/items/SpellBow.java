@@ -279,7 +279,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
             private final BlockEntityWithoutLevelRenderer renderer = new SpellBowRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });

@@ -45,8 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
 
     public SpellTier tier;
@@ -139,7 +137,7 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
             private final BlockEntityWithoutLevelRenderer renderer = new SpellBookRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });

@@ -32,8 +32,6 @@ import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
@@ -110,8 +108,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new SwordRenderer();
 
-            @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });

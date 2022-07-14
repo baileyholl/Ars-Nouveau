@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -10,30 +9,29 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.common.loot.LootTableIdCondition;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 
+//TODO: Restore dungeon loot
 public class DungeonLootGenerator extends GlobalLootModifierProvider {
 
     public DungeonLootGenerator(DataGenerator gen, String modid) {
         super(gen, modid);
     }
 
-    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(new ResourceLocation("forge:loot_modifier_serializers"), ArsNouveau.MODID);
-    public static final RegistryObject<DungeonLootEnhancerModifier.Serializer> DUNGEON_LOOT = GLM.register("dungeon_loot", DungeonLootGenerator.DungeonLootEnhancerModifier.Serializer::new);
+//    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(new ResourceLocation("forge:loot_modifier_serializers"), ArsNouveau.MODID);
+//    public static final RegistryObject<DungeonLootEnhancerModifier.Serializer> DUNGEON_LOOT = GLM.register("dungeon_loot", DungeonLootGenerator.DungeonLootEnhancerModifier.Serializer::new);
 
     @Override
     protected void start() {
-        add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(new LootItemCondition[]{
-                getList(new String[]{
-                        "chests/simple_dungeon", "chests/jungle_temple", "chests/abandoned_mineshaft", "chests/bastion_treasure", "chests/desert_pyramid", "chests/end_city_treasure",
-                        "chests/ruined_portal", "chests/pillager_outpost", "chests/nether_bridge", "chests/stronghold_corridor", "chests/stronghold_crossing", "chests/stronghold_library"
-                        , "chests/woodland_mansion", "chests/underwater_ruin_big", "chests/underwater_ruin_small"
-                })
-        }));
+//        add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(new LootItemCondition[]{
+//                getList(new String[]{
+//                        "chests/simple_dungeon", "chests/jungle_temple", "chests/abandoned_mineshaft", "chests/bastion_treasure", "chests/desert_pyramid", "chests/end_city_treasure",
+//                        "chests/ruined_portal", "chests/pillager_outpost", "chests/nether_bridge", "chests/stronghold_corridor", "chests/stronghold_crossing", "chests/stronghold_library"
+//                        , "chests/woodland_mansion", "chests/underwater_ruin_big", "chests/underwater_ruin_small"
+//                })
+//        }));
     }
 
     public LootItemCondition getList(String[] chests) {
@@ -88,32 +86,38 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
             return generatedLoot;
         }
 
-        public static class Serializer extends GlobalLootModifierSerializer<DungeonLootEnhancerModifier> {
-            @Override
-            public DungeonLootEnhancerModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] conditions) {
-                return new DungeonLootEnhancerModifier(conditions,
-                        object.get("common_chance").getAsDouble(),
-                        object.get("uncommon_chance").getAsDouble(),
-                        object.get("rare_chance").getAsDouble(),
-                        object.get("common_rolls").getAsInt(),
-                        object.get("uncommon_rolls").getAsInt(),
-                        object.get("rare_rolls").getAsInt()
-
-                );
-            }
-
-            @Override
-            public JsonObject write(DungeonLootEnhancerModifier instance) {
-                final JsonObject obj = this.makeConditions(instance.conditions);
-                obj.addProperty("common_chance", instance.commonChance);
-                obj.addProperty("uncommon_chance", instance.uncommonChance);
-                obj.addProperty("rare_chance", instance.rareChance);
-
-                obj.addProperty("common_rolls", instance.commonRolls);
-                obj.addProperty("uncommon_rolls", instance.uncommonRolls);
-                obj.addProperty("rare_rolls", instance.rareRolls);
-                return obj;
-            }
+        @Override
+        public Codec<? extends IGlobalLootModifier> codec() {
+            return null;
         }
     }
 }
+//        public static class Serializer extends GlobalLootModifierSerializer<DungeonLootEnhancerModifier> {
+//            @Override
+//            public DungeonLootEnhancerModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] conditions) {
+//                return new DungeonLootEnhancerModifier(conditions,
+//                        object.get("common_chance").getAsDouble(),
+//                        object.get("uncommon_chance").getAsDouble(),
+//                        object.get("rare_chance").getAsDouble(),
+//                        object.get("common_rolls").getAsInt(),
+//                        object.get("uncommon_rolls").getAsInt(),
+//                        object.get("rare_rolls").getAsInt()
+//
+//                );
+//            }
+//
+//            @Override
+//            public JsonObject write(DungeonLootEnhancerModifier instance) {
+//                final JsonObject obj = this.makeConditions(instance.conditions);
+//                obj.addProperty("common_chance", instance.commonChance);
+//                obj.addProperty("uncommon_chance", instance.uncommonChance);
+//                obj.addProperty("rare_chance", instance.rareChance);
+//
+//                obj.addProperty("common_rolls", instance.commonRolls);
+//                obj.addProperty("uncommon_rolls", instance.uncommonRolls);
+//                obj.addProperty("rare_rolls", instance.rareRolls);
+//                return obj;
+//            }
+//        }
+//    }
+

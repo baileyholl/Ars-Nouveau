@@ -3,10 +3,9 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -27,10 +26,10 @@ public class ModKeyBindings {
 
 
     @SubscribeEvent
-    public static void registerKeyBindings(final FMLClientSetupEvent event) {
-        ClientRegistry.registerKeyBinding(OPEN_BOOK);
-        ClientRegistry.registerKeyBinding(OPEN_RADIAL_HUD);
-        ClientRegistry.registerKeyBinding(PREVIOUS_SLOT);
-        ClientRegistry.registerKeyBinding(NEXT_SLOT);
+    public static void registerKeyBindings(RegisterKeyMappingsEvent event) {
+        event.register(OPEN_BOOK);
+        event.register(OPEN_RADIAL_HUD);
+        event.register(NEXT_SLOT);
+        event.register(PREVIOUS_SLOT);
     }
 }

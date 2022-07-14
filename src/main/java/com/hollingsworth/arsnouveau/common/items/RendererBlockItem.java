@@ -7,8 +7,6 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import net.minecraft.world.item.Item.Properties;
-
 public abstract class RendererBlockItem extends AnimBlockItem {
 
 
@@ -23,7 +21,7 @@ public abstract class RendererBlockItem extends AnimBlockItem {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return getRenderer().get();
             }
         });

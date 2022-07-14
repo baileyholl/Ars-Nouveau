@@ -2,20 +2,11 @@ package com.hollingsworth.arsnouveau.common.camera;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
-import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ScreenEvent.Open;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -66,19 +57,6 @@ public class CameraEvents {
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
         if (CameraUtil.isPlayerMountedOnCamera(event.getEntity()))
             event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void onGuiOpen(Open event) {
-        Screen screen = event.getScreen();
-        if (screen instanceof TitleScreen || screen instanceof JoinMultiplayerScreen) {
-            GuiOverlayManager.enableOverlay(ClientHandler.cameraOverlay, false);
-            GuiOverlayManager.enableOverlay(ForgeGui.JUMP_BAR_ELEMENT, true);
-            GuiOverlayManager.enableOverlay(ForgeGui.EXPERIENCE_BAR_ELEMENT, true);
-            GuiOverlayManager.enableOverlay(ForgeGui.POTION_ICONS_ELEMENT, true);
-        }
-
     }
 
 }

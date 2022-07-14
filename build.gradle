@@ -147,7 +147,7 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:23.0.0'
 
-    implementation fg.deobf("vazkii.patchouli:Patchouli:1.19-73")
+    implementation fg.deobf("vazkii.patchouli:Patchouli:1.19-74")
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
@@ -163,7 +163,7 @@ dependencies {
 //    implementation fg.deobf("curse.maven:exp-64760:3577168")
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 
-    /*implementation*/compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
+    /*implementation*///compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
 //    implementation fg.deobf("curse.maven:byg-247560:3848133") // BYG
 //    implementation fg.deobf("curse.maven:bop-220318:3852435") // BOP
 

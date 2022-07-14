@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.camera.CameraController;
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import net.minecraft.client.CameraType;
@@ -8,8 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -48,22 +45,11 @@ public class PacketSetCameraView {
                 if (isCamera) {
                     CameraController.previousCameraType = mc.options.getCameraType();
                     mc.options.setCameraType(CameraType.FIRST_PERSON);
-//                    mc.gui.setOverlayMessage(Utils.localize("mount.onboard", mc.options.keyShift.getTranslatedKeyMessage()), false);
                     CameraController.setRenderPosition(entity);
                 } else if (CameraController.previousCameraType != null)
                     mc.options.setCameraType(CameraController.previousCameraType);
 
                 mc.levelRenderer.allChanged();
-
-                if (isCamera) {
-                    CameraController.resetOverlaysAfterDismount = true;
-                    CameraController.saveOverlayStates();
-                    GuiOverlayManager.enableOverlay(ForgeGui.EXPERIENCE_BAR_ELEMENT, false);
-                    GuiOverlayManager.enableOverlay(ForgeGui.JUMP_BAR_ELEMENT, false);
-                    GuiOverlayManager.enableOverlay(ForgeGui.POTION_ICONS_ELEMENT, false);
-                    GuiOverlayManager.enableOverlay(ClientHandler.cameraOverlay, true);
-//                    OverlayRegistry.enableOverlay(ClientHandler.hotbarBindOverlay, false);
-                }
             }
         });
         ctx.get().setPacketHandled(true);

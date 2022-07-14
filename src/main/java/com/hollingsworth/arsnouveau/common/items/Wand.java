@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class Wand extends ModItem implements IAnimatable, ICasterTool {
     public AnimationFactory factory = new AnimationFactory(this);
 
@@ -101,7 +99,7 @@ public class Wand extends ModItem implements IAnimatable, ICasterTool {
             private final BlockEntityWithoutLevelRenderer renderer = new WandRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });

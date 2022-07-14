@@ -20,8 +20,6 @@ import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class EnchantersShield extends ShieldItem implements IAnimatable {
 
     public EnchantersShield() {
@@ -80,7 +78,7 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
             private final BlockEntityWithoutLevelRenderer renderer = new ShieldRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });
