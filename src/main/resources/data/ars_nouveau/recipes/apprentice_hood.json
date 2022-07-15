@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "ars_nouveau",
-  "pattern": [
-    "xxx",
-    "x x",
-    "   "
-  ],
   "key": {
     "x": {
       "item": "ars_nouveau:blaze_fiber"
     }
   },
+  "pattern": [
+    "xxx",
+    "x x",
+    "   "
+  ],
   "result": {
     "item": "ars_nouveau:apprentice_hood"
   }

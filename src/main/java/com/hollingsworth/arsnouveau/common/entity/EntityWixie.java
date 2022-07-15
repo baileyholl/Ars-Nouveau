@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
@@ -8,29 +11,32 @@ import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoa
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindPotionGoal;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -41,18 +47,20 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable {
+public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantTextureProvider {
     AnimationFactory manager = new AnimationFactory(this);
 
-    public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityWixie.class, DataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
 
     public BlockPos cauldronPos;
     public int inventoryBackoff;
 
     private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-        if(getNavigator().hasPath())
+        if (getNavigation().isInProgress())
             return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
@@ -65,16 +73,22 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     private <P extends IAnimatable> PlayState summonPredicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
     }
+
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    public int getExperienceReward() {
         return 0;
     }
 
+    AnimationController<?> summonController;
+    AnimationController<?> castController;
+
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "idleController", 20, this::idlePredicate));
-        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "castController", 1, this::castPredicate));
-        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "summonController", 1, this::summonPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+        castController = new AnimationController<>(this, "castController", 1, this::castPredicate);
+        summonController = new AnimationController<>(this, "summonController", 1, this::summonPredicate);
+        animationData.addAnimationController(castController);
+        animationData.addAnimationController(summonController);
     }
 
     @Override
@@ -82,148 +96,179 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         return manager;
     }
 
-    protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, World worldIn) {
+    protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
-        MinecraftForge.EVENT_BUS.register(this);
-        this.moveController =  new FlyingMovementController(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
-    public EntityWixie(World world, boolean isTamed, BlockPos pos) {
-        super(ModEntities.ENTITY_WIXIE_TYPE, world);
-        MinecraftForge.EVENT_BUS.register(this);
+    public EntityWixie(Level world, boolean isTamed, BlockPos pos) {
+        super(ModEntities.ENTITY_WIXIE_TYPE.get(), world);
         this.cauldronPos = pos;
-        this.moveController =  new FlyingMovementController(this, 10, true);
-        this.dataManager.set(TAMED, isTamed);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
+        this.entityData.set(TAMED, isTamed);
         addGoalsAfterConstructor();
+    }
+
+    public static String[] COLORS = {"white", "green", "blue", "black", "red"};
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
+            return InteractionResult.SUCCESS;
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (player.getMainHandItem().is(Tags.Items.DYES)) {
+            DyeColor color = DyeColor.getColor(stack);
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
+                return InteractionResult.SUCCESS;
+            this.entityData.set(COLOR, color.getName());
+            player.getMainHandItem().shrink(1);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote && (cauldronPos == null || !(world.getTileEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.attackEntityFrom(DamageSource.causePlayerDamage(FakePlayerFactory.getMinecraft((ServerWorld)world)), 99);
-        if(!world.isRemote && inventoryBackoff > 0){
+        if (!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
+            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
+        if (!level.isClientSide && inventoryBackoff > 0) {
             inventoryBackoff--;
         }
 
     }
 
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
-    public List<PrioritizedGoal> getTamedGoals(){
-        List<PrioritizedGoal> list = new ArrayList<>();
-        list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindPotionGoal(this)));
-        list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
+    public List<WrappedGoal> getTamedGoals() {
+        List<WrappedGoal> list = new ArrayList<>();
+        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
+        list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
+        list.add(new WrappedGoal(2, new FindPotionGoal(this)));
+        list.add(new WrappedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
 
-    public List<PrioritizedGoal> getUntamedGoals(){
-        List<PrioritizedGoal> list = new ArrayList<>();
-        list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindPotionGoal(this)));
-        list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
+    public List<WrappedGoal> getUntamedGoals() {
+        List<WrappedGoal> list = new ArrayList<>();
+        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
+        list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
+        list.add(new WrappedGoal(2, new FindPotionGoal(this)));
+        list.add(new WrappedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
 
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor(){
-        if(this.world.isRemote())
+    protected void addGoalsAfterConstructor() {
+        if (this.level.isClientSide())
             return;
 
-        for(PrioritizedGoal goal : getGoals()){
+        for (WrappedGoal goal : getGoals()) {
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
     }
 
-    public List<PrioritizedGoal> getGoals(){
-        return this.dataManager.get(TAMED) ? getTamedGoals() : getUntamedGoals();
+    public List<WrappedGoal> getGoals() {
+        return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(TAMED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(TAMED, false);
+        this.entityData.define(COLOR, "blue");
     }
 
     @Override
-    public boolean canDespawn(double p_213397_1_) {
+    public boolean removeWhenFarAway(double p_213397_1_) {
         return false;
     }
 
     @Override
-    protected PathNavigator createNavigator(World world) {
-        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
+    protected PathNavigation createNavigation(Level world) {
+        FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanSwim(true);
-        flyingpathnavigator.setCanEnterDoors(true);
+        flyingpathnavigator.setCanFloat(true);
+        flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
-    public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.func_233666_p_().createMutableAttribute(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
-                .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D);
+
+    public static AttributeSupplier.Builder attributes() {
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+                .add(Attributes.MAX_HEALTH, 6.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
 
     @Override
-    public void readAdditional(CompoundNBT tag) {
-        super.readAdditional(tag);
-        if(tag.contains("summoner_x"))
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("summoner_x"))
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
 
-        this.dataManager.set(TAMED, tag.getBoolean("tamed"));
+        this.entityData.set(TAMED, tag.getBoolean("tamed"));
+        if (tag.contains("color"))
+            this.entityData.set(COLOR, tag.getString("color"));
+
     }
 
     @Override
-    public void writeAdditional(CompoundNBT tag) {
-        super.writeAdditional(tag);
-        if(cauldronPos != null){
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        if (cauldronPos != null) {
             tag.putInt("summoner_x", cauldronPos.getX());
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        tag.putBoolean("tamed", this.dataManager.get(TAMED));
+        tag.putBoolean("tamed", this.entityData.get(TAMED));
+        tag.putString("color", this.entityData.get(COLOR));
     }
 
     @Override
     public void startAnimation(int arg) {
-        if(arg == Animations.CAST.ordinal()){
-            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
-            controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
-        }else if(arg == Animations.SUMMON_ITEM.ordinal()){
-            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("summonController");
-            controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
+        if (arg == Animations.CAST.ordinal() && castController != null) {
+            castController.markNeedsReload();
+            castController.setAnimation(new AnimationBuilder().addAnimation("cast", false));
+        } else if (arg == Animations.SUMMON_ITEM.ordinal() && summonController != null) {
+            summonController.markNeedsReload();
+            summonController.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
         }
     }
+
     @Override
-    public void onDeath(DamageSource source) {
-        if(!world.isRemote ){
+    public void die(DamageSource source) {
+        if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
 
         }
-        super.onDeath(source);
+        super.die(source);
     }
+
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.removed)
+        if (this.isRemoved())
             return false;
 
-        if(!world.isRemote ){
+        if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack.copy()));
-            ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
-            this.remove();
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+            this.remove(RemovalReason.DISCARDED);
         }
         return true;
     }
 
-    public enum Animations{
+    @Override
+    public ResourceLocation getTexture(LivingEntity entity) {
+        String color = getEntityData().get(EntityWixie.COLOR).toLowerCase();
+        if (color.isEmpty())
+            color = "blue";
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+    }
+
+    public enum Animations {
         CAST,
         SUMMON_ITEM
     }

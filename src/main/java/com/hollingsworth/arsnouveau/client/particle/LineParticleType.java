@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.core.particles.ParticleType;
 
 public class LineParticleType extends ParticleType<ColoredDynamicTypeData> {
     public LineParticleType() {
@@ -9,7 +9,7 @@ public class LineParticleType extends ParticleType<ColoredDynamicTypeData> {
     }
 
     @Override
-    public Codec<ColoredDynamicTypeData> func_230522_e_() {
+    public Codec<ColoredDynamicTypeData> codec() {
         return ColoredDynamicTypeData.CODEC;
     }
 }

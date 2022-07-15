@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "ars_nouveau:blocks/mana_berry_bush_stage2"
-  }
-}

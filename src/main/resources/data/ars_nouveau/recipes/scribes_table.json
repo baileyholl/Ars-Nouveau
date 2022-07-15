@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "xxx",
-    "yzy",
-    "y y"
-  ],
   "key": {
     "x": {
-      "tag": "minecraft:wooden_slabs"
+      "item": "ars_nouveau:archwood_slab"
     },
     "y": {
       "item": "minecraft:stick"
     },
     "z": {
-      "tag": "minecraft:logs"
+      "tag": "forge:logs/archwood"
     }
   },
+  "pattern": [
+    "xxx",
+    "yzy",
+    "y y"
+  ],
   "result": {
     "item": "ars_nouveau:scribes_table"
   }

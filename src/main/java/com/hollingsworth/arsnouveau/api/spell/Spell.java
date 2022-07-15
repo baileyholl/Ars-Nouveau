@@ -1,125 +1,235 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getEquippedAugments;
+public class Spell implements Cloneable {
+    public static final Spell EMPTY = new Spell();
 
-public class Spell {
+    public List<AbstractSpellPart> recipe = new ArrayList<>();
+    public String name = "";
+    public ParticleColor color = ParticleColor.defaultParticleColor();
+    public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+    /**
+     * The discount removed from the casting cost of the spell.
+     * This value is not saved, but is set to 0 after each cast.
+     */
+    private int discount = 0;
 
-    public List<AbstractSpellPart> recipe;
-    private int cost;
 
-    public Spell(List<AbstractSpellPart> recipe){
+    public Spell(List<AbstractSpellPart> recipe) {
         this.recipe = recipe == null ? new ArrayList<>() : recipe; // Safe check for tiles initializing a null
-        this.cost = getInitialCost();
     }
 
-    public Spell(){
-        this.recipe = new ArrayList<>();
-        this.cost = 0;
+    public Spell() {
     }
 
-    public int getSpellSize(){
+    public Spell(AbstractSpellPart... spellParts) {
+        super();
+        add(spellParts);
+    }
+
+    public Spell add(AbstractSpellPart spellPart) {
+        recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell add(AbstractSpellPart... spellParts) {
+        for (AbstractSpellPart part : spellParts)
+            add(part);
+        return this;
+    }
+
+    public Spell add(AbstractSpellPart spellPart, int count) {
+        for (int i = 0; i < count; i++)
+            recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell setRecipe(@Nonnull List<AbstractSpellPart> recipe) {
+        this.recipe = recipe;
+        return this;
+    }
+
+    public int getSpellSize() {
         return recipe.size();
     }
 
-    public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster){
+    public @Nullable AbstractCastMethod getCastMethod() {
+        if (this.recipe == null || this.recipe.isEmpty())
+            return null;
+        return this.recipe.get(0) instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.get(0) : null;
+
+    }
+
+    public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster) {
         ArrayList<AbstractAugment> augments = new ArrayList<>();
-        if(recipe == null || recipe.isEmpty())
+        if (recipe == null || recipe.isEmpty())
             return augments;
-        for(int j = startPosition + 1; j < recipe.size(); j++){
-            AbstractSpellPart next_spell = recipe.get(j);
-            if(next_spell instanceof AbstractAugment){
-                augments.add((AbstractAugment) next_spell);
-            }else{
+        for (int j = startPosition + 1; j < recipe.size(); j++) {
+            AbstractSpellPart nextGlyph = recipe.get(j);
+            if (nextGlyph instanceof AbstractAugment augment) {
+                augments.add(augment);
+            } else {
                 break;
             }
         }
-        // Add augment bonuses from equipment
-        if(caster != null)
-            augments.addAll(getEquippedAugments(caster));
+
         return augments;
     }
 
-    public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, Class<? extends AbstractAugment> augmentClass){
-        return (int) getAugments(startPosition, caster).stream().filter(a -> a.getClass().equals(augmentClass)).count();
+    public int getInstanceCount(AbstractSpellPart spellPart) {
+        int count = 0;
+        for (AbstractSpellPart abstractSpellPart : this.recipe) {
+            if (abstractSpellPart.equals(spellPart))
+                count++;
+        }
+        return count;
     }
 
-    private int getInitialCost(){
+    public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, AbstractAugment augment) {
+        return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
+    }
+
+
+    /**
+     * Returns the cost of casting this spell with discounts.
+     * Does not reset the discount value.
+     * THIS SHOULD NOT BE USED FOR EXPENDING MANA.
+     */
+    public int getDiscountedCost() {
+        return Math.max(0, getNoDiscountCost() - discount);
+    }
+
+    /**
+     * Returns the original cost of casting this spell without discounts.
+     * THIS SHOULD NOT BE USED FOR EXPENDING MANA.
+     */
+    public int getNoDiscountCost() {
         int cost = 0;
-        if(recipe == null)
+        if (recipe == null)
             return cost;
-        for (int i = 0; i < recipe.size(); i++) {
-            AbstractSpellPart spell = recipe.get(i);
-            if (!(spell instanceof AbstractAugment)) {
-                List<AbstractAugment> augments = getAugments(i, null);
-                cost += spell.getAdjustedManaCost(augments);
-            }
+        for (AbstractSpellPart spell : recipe) {
+            cost += spell.getCastingCost();
         }
+        cost = Math.max(0, cost);
         return cost;
     }
 
-    public int getCastingCost(){
-        return Math.max(0, cost);
+    /**
+     * Returns the final cost of the spell with all discounts applied.
+     * This will reset the discount to 0, so this should only be used before expending mana.
+     */
+    public int getFinalCostAndReset() {
+        int cost = getDiscountedCost();
+        discount = 0;
+        return cost;
     }
 
-    public void setCost(int cost){
-        this.cost = cost;
+    public void addDiscount(int discount) {
+        this.discount += discount;
     }
 
-    public String serialize(){
-        List<String> tags = new ArrayList<>();
-        for(AbstractSpellPart slot : recipe){
-            tags.add(slot.tag);
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public boolean isEmpty() {
+        return recipe == null || recipe.isEmpty();
+    }
+
+    public CompoundTag serialize() {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("name", name);
+        tag.put("spellColor", color.serialize());
+        tag.put("sound", sound.serialize());
+        CompoundTag recipeTag = new CompoundTag();
+        for (int i = 0; i < recipe.size(); i++) {
+            AbstractSpellPart part = recipe.get(i);
+            recipeTag.putString("part" + i, part.getRegistryName().toString());
         }
-        return tags.toString();
+        recipeTag.putInt("size", recipe.size());
+        tag.put("recipe", recipeTag);
+        return tag;
     }
 
-    public static Spell deserialize(String recipeStr){
-        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-        if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
-            return new Spell(recipe);
-        String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
-        for(String id : recipeList){
-            if (ArsNouveauAPI.getInstance().getSpell_map().containsKey(id.trim()))
-                recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
+    public static Spell fromTag(@Nullable CompoundTag tag) {
+        if (tag == null)
+            return EMPTY;
+        Spell spell = new Spell();
+        spell.name = tag.getString("name");
+        spell.color = ParticleColor.deserialize(tag.getCompound("spellColor"));
+        spell.sound = ConfiguredSpellSound.fromTag(tag.getCompound("sound"));
+        CompoundTag recipeTag = tag.getCompound("recipe");
+        int size = recipeTag.getInt("size");
+        for (int i = 0; i < size; i++) {
+            ResourceLocation registryName = new ResourceLocation(recipeTag.getString("part" + i));
+            AbstractSpellPart part = ArsNouveauAPI.getInstance().getSpellpartMap().get(registryName);
+            if (part != null)
+                spell.recipe.add(part);
         }
-        return new Spell(recipe);
+        return spell;
     }
 
-    public String getDisplayString(){
+    public String getDisplayString() {
         StringBuilder str = new StringBuilder();
-        String lastStr = "";
 
-        for(int i = 0; i < recipe.size(); i++){
+        for (int i = 0; i < recipe.size(); i++) {
             AbstractSpellPart spellPart = recipe.get(i);
             int num = 1;
-            for(int j = i + 1; j < recipe.size(); j++){
-                if(spellPart.name.equals(recipe.get(j).name))
+            for (int j = i + 1; j < recipe.size(); j++) {
+                if (spellPart.name.equals(recipe.get(j).name))
                     num++;
                 else
                     break;
             }
-            if(num > 1){
+            if (num > 1) {
                 str.append(spellPart.getLocaleName()).append(" x").append(num);
                 i += num - 1;
-            }else{
+            } else {
                 str.append(spellPart.getLocaleName());
             }
-            if(i < recipe.size() - 1){
+            if (i < recipe.size() - 1) {
                 str.append(" -> ");
             }
         }
         return str.toString();
     }
 
-    public boolean isValid(){
-        return this.recipe != null && !this.recipe.isEmpty();
+    public boolean isValid() {
+        return !this.isEmpty();
+    }
+
+    public Spell add(AbstractSpellPart spellPart, int count, int index) {
+        for (int i = 0; i < count; i++)
+            recipe.add(index, spellPart);
+        return this;
+    }
+
+    @Override
+    public Spell clone() {
+        try {
+            // TODO: Make above cloneable
+            Spell clone = (Spell) super.clone();
+            clone.recipe = new ArrayList<>(this.recipe);
+            clone.color = this.color.clone();
+            clone.sound = this.sound;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

@@ -1,157 +1,155 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafelyWithoutSound;
 
 public class EffectExchange extends AbstractEffect {
-    public EffectExchange() {
+    public static EffectExchange INSTANCE = new EffectExchange();
+
+    private EffectExchange() {
         super(GlyphLib.EffectExchangeID, "Exchange");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
-
-            resolveBlockHit(rayTraceResult, world, shooter, augments,spellContext);
-
-
-        }else if(rayTraceResult instanceof EntityRayTraceResult){
-            resolveEntityHit(rayTraceResult, world, shooter, augments, spellContext);
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Entity entity = rayTraceResult.getEntity();
+        if (shooter != null) {
+            Vec3 origLoc = shooter.position;
+            shooter.teleportTo(entity.getX(), entity.getY(), entity.getZ());
+            entity.teleportTo(origLoc.x(), origLoc.y(), origLoc.z());
         }
     }
 
-    public void resolveEntityHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        EntityRayTraceResult entityRayTraceResult = (EntityRayTraceResult) rayTraceResult;
-        Entity entity = entityRayTraceResult.getEntity();
-        if(shooter != null){
-            Vector3d origLoc = shooter.positionVec;
-            if(isNotFakePlayer(shooter)) {
-                shooter.setPositionAndUpdate(entity.getPosX(), entity.getPosY(), entity.getPosZ());
-            }
-            if(entity instanceof LivingEntity && isNotFakePlayer((LivingEntity)entity)) {
-                entity.setPositionAndUpdate(origLoc.getX(), origLoc.getY(), origLoc.getZ());
-            }
-        }
-    }
-
-    public void resolveBlockHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(rayTraceResult.getHitVec(), ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
-        BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-        BlockState origState = world.getBlockState(result.getPos());
-        PlayerEntity playerEntity = getPlayer(shooter, (ServerWorld) world);
-        List<ItemStack> list = playerEntity.inventory.mainInventory;
+    @Override
+    public void onResolveBlock(BlockHitResult result, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE));
+        BlockState origState = world.getBlockState(result.getBlockPos());
+        Player playerEntity = getPlayer(shooter, (ServerLevel) world);
+        List<ItemStack> list = playerEntity.inventory.items;
         List<IItemHandler> handlers = new ArrayList<>();
-
-        if(spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) {
+        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
+        if (spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) {
             handlers = ((IPlaceBlockResponder) spellContext.castingTile).getInventory();
         }
 
-        if(shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)
+        if (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)
             handlers = ((IPlaceBlockResponder) shooter).getInventory();
 
         Block firstBlock = null;
-        for(BlockPos pos1 : posList) {
+        for (BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
 
-            if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock() || world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR){
+            if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock() ||
+                    world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR
+                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }
-            if(isRealPlayer(shooter) && spellContext.castingTile == null) {
-                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock);
-            } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
+            if (isRealPlayer(shooter) && spellContext.castingTile == null) {
+                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, fakePlayer, spellContext, resolver);
+            } else if ((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)) {
                 boolean shouldBreak = false;
-                for(IItemHandler i : handlers){
-                    for(int slot = 0; slot < i.getSlots(); slot++){
+                for (IItemHandler i : handlers) {
+                    for (int slot = 0; slot < i.getSlots(); slot++) {
                         ItemStack stack = i.getStackInSlot(slot);
-                        if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
-                            BlockItem item = (BlockItem)stack.getItem();
-                            if(item.getBlock() == origState.getBlock())
+                        if (stack.getItem() instanceof BlockItem item) {
+                            if (item.getBlock() == origState.getBlock())
                                 continue;
-                            if(firstBlock == null){
+                            if (firstBlock == null) {
                                 firstBlock = item.getBlock();
-                            }else if(item.getBlock() != firstBlock)
+                            } else if (item.getBlock() != firstBlock)
                                 continue;
-                            if(attemptPlace(stack, world, pos1, result, shooter)) {
+                            ItemStack extracted = i.extractItem(slot, 1, false);
+                            if (attemptPlace(extracted, world, pos1, result, shooter, fakePlayer, spellContext, resolver)) {
                                 shouldBreak = true;
                                 break;
+                            } else {
+                                i.insertItem(slot, extracted, false);
                             }
                         }
                     }
-                    if(shouldBreak)
+                    if (shouldBreak)
                         break;
                 }
 
             }
         }
-
     }
 
-
-
-
-    public Block swapFromInv(List<ItemStack> inventory, BlockState origState, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter, int slots, Block firstBlock){
-        for(int i = 0; i < slots; i++){
+    public Block swapFromInv(List<ItemStack> inventory, BlockState origState, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, int slots, Block firstBlock, Player fakePlayer, SpellContext context, SpellResolver resolver) {
+        for (int i = 0; i < slots; i++) {
             ItemStack stack = inventory.get(i);
-            if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
-                BlockItem item = (BlockItem)stack.getItem();
-                if(item.getBlock() == origState.getBlock())
+            if (stack.getItem() instanceof BlockItem item) {
+                if (item.getBlock() == origState.getBlock())
                     continue;
-                if(firstBlock == null){
+                if (firstBlock == null) {
                     firstBlock = item.getBlock();
-                }else if(item.getBlock() != firstBlock)
+                } else if (item.getBlock() != firstBlock)
                     continue;
-                if(attemptPlace(stack, world, pos1, result, shooter))
+                if (attemptPlace(stack, world, new BlockPos(pos1), result, shooter, fakePlayer, context, resolver))
                     break;
             }
         }
         return firstBlock;
     }
 
-    public boolean attemptPlace(ItemStack stack, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter){
-        BlockItem item = (BlockItem)stack.getItem();
+    public boolean attemptPlace(ItemStack stack, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, Player fakePlayer, SpellContext spellContext, SpellResolver resolver) {
+        BlockItem item = (BlockItem) stack.getItem();
         ItemStack tool = LootUtil.getDefaultFakeTool();
-        tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
-        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
-        fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
-        BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getFace());
+        tool.enchant(Enchantments.SILK_TOUCH, 1);
+        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
-        Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,tool);
+        Block.dropResources(world.getBlockState(pos1), world, pos1, world.getBlockEntity(pos1), shooter, tool);
         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
-
-        if(placeState != null){
-            world.setBlockState(pos1, placeState, 2);
+        if (placeState != null) {
+            world.setBlock(pos1, placeState, 3);
+            item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
+            BlockItem.updateCustomBlockEntityTag(world,
+                    shooter instanceof Player player ? player :
+                            fakePlayer, pos1, stack);
             stack.shrink(1);
+            ShapersFocus.tryPropagateBlockSpell(
+                    new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()),
+                            result.getDirection(), pos1,
+                            false),
+                    world, shooter, spellContext, resolver);
             return true;
         }
         return false;
@@ -159,23 +157,34 @@ public class EffectExchange extends AbstractEffect {
 
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentPierce.INSTANCE,
+                AugmentAOE.INSTANCE
+        );
     }
 
     @Override
     public String getBookDescription() {
         return "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. "
-        + "When used on entities, the locations of the caster and the entity hit are swapped.";
+                + "When used on entities, the locations of the caster and the entity hit are swapped.";
     }
 
     @Override
-    public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtractID);
-    }
-
-    @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 50;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

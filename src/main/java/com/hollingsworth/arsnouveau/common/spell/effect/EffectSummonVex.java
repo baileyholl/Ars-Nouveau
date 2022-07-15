@@ -1,82 +1,85 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityAllyVex;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
 public class EffectSummonVex extends AbstractEffect {
-    public EffectSummonVex() {
+    public static EffectSummonVex INSTANCE = new EffectSummonVex();
+
+    private EffectSummonVex() {
         super(GlyphLib.EffectSummonVexID, "Summon Vex");
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(isRealPlayer(shooter) && shooter != null && shooter.getActivePotionEffect(ModPotions.SUMMONING_SICKNESS) == null){
-            summonEntities(shooter, world, augments, rayTraceResult.getEntity().getPosition());
-        }
-    }
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!canSummon(shooter))
+            return;
 
-    @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(isRealPlayer(shooter) && shooter != null && shooter.getActivePotionEffect(ModPotions.SUMMONING_SICKNESS) == null){
-            summonEntities(shooter, world, augments, rayTraceResult.getPos());
-        }
-    }
+        Vec3 vector3d = safelyGetHitPos(rayTraceResult);
+        int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
+        BlockPos pos = new BlockPos(vector3d);
 
-    public void summonEntities(LivingEntity shooter, World world, List<AbstractAugment> augments, BlockPos pos){
-        int ticks = 20 * (15 + 10 * getBuffCount(augments, AugmentExtendTime.class));
-        for(int i = 0; i < 3; ++i) {
-            BlockPos blockpos = pos.add(-2 + shooter.getRNG().nextInt(5), 2, -2 + shooter.getRNG().nextInt(5));
+        for (int i = 0; i < 3; ++i) {
+            BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
-            vexentity.moveToBlockPosAndAngles(blockpos, 0.0F, 0.0F);
-            vexentity.onInitialSpawn((IServerWorld) world, world.getDifficultyForLocation(blockpos), SpawnReason.MOB_SUMMONED, (ILivingEntityData)null, (CompoundNBT)null);
+            vexentity.moveTo(blockpos, 0.0F, 0.0F);
+            vexentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null, null);
             vexentity.setOwner(shooter);
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(ticks);
-            world.addEntity(vexentity);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, vexentity);
         }
-        shooter.addPotionEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, ticks));
+        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), ticks));
     }
 
 
     @Override
-    public int getManaCost() {
-        return 75;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.TOTEM_OF_UNDYING;
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 15, "Base duration in seconds", "duration");
+        addExtendTimeConfig(builder, 10);
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.THREE;
+    public int getDefaultManaCost() {
+        return 150;
+    }
+
+    @Override
+    public SpellTier getTier() {
+        return SpellTier.THREE;
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return getSummonAugments();
     }
 
     @Override
     public String getBookDescription() {
         return "Summons three Vex allies that will attack nearby hostile enemies. These Vex will last a short time until they begin to take damage, but time may be extended with the " +
                 "Extend Time augment.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.CONJURATION);
     }
 }

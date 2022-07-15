@@ -1,31 +1,33 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
-import javax.annotation.Nullable;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 
 public class AugmentAmplify extends AbstractAugment {
-    public AugmentAmplify() {
+    public static AugmentAmplify INSTANCE = new AugmentAmplify();
+
+
+    private AugmentAmplify() {
         super(GlyphLib.AugmentAmplifyID, "Amplify");
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 20;
     }
 
-    @Nullable
     @Override
-    public Item getCraftingReagent() {
-        return Items.DIAMOND;
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.ONE;
+    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
+        builder.addAmplification(1.0);
+        return super.applyModifiers(builder, spellPart);
     }
 
     @Override

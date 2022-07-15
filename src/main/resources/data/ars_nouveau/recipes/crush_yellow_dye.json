@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:dandelion"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 2,
+      "item": "minecraft:yellow_dye"
+    }
+  ]
+}

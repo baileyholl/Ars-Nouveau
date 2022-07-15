@@ -1,27 +1,28 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class GenericItemModel extends AnimatedGeoModel<AnimBlockItem> {
     AnimatedGeoModel model;
-    public GenericItemModel(AnimatedGeoModel model){
+
+    public GenericItemModel(AnimatedGeoModel model) {
         this.model = model;
     }
 
     @Override
-    public ResourceLocation getModelLocation(AnimBlockItem animBlockItem) {
-        return model.getModelLocation(null);
+    public ResourceLocation getModelResource(AnimBlockItem animBlockItem) {
+        return model.getModelResource(null);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AnimBlockItem animBlockItem) {
-        return model.getTextureLocation(null);
+    public ResourceLocation getTextureResource(AnimBlockItem animBlockItem) {
+        return model.getTextureResource(null);
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(AnimBlockItem animBlockItem) {
-        return model.getAnimationFileLocation(null);
+    public ResourceLocation getAnimationResource(AnimBlockItem animBlockItem) {
+        return model.getAnimationResource(null);
     }
 }

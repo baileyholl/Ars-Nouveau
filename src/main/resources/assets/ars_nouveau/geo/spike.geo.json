@@ -1,0 +1,37 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 16,
+				"texture_height": 16,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "spike",
+					"pivot": [0, 8, 0],
+					"cubes": [
+						{
+							"origin": [-1, 7, -5],
+							"size": [2, 2, 10],
+							"pivot": [0, 0, 0],
+							"rotation": [0, -90, 0],
+							"uv": {
+								"north": {"uv": [4, 4], "uv_size": [2, 2]},
+								"east": {"uv": [0, 0], "uv_size": [10, 2]},
+								"south": {"uv": [4, 6], "uv_size": [2, 2]},
+								"west": {"uv": [0, 2], "uv_size": [10, 2]},
+								"up": {"uv": [0, 4], "uv_size": [2, 10]},
+								"down": {"uv": [2, 14], "uv_size": [2, -10]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

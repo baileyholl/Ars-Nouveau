@@ -1,67 +1,81 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
-public abstract class ColoredProjectile extends ArrowEntity {
-    public static final DataParameter<Integer> RED = EntityDataManager.createKey(ColoredProjectile.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> GREEN = EntityDataManager.createKey(ColoredProjectile.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> BLUE = EntityDataManager.createKey(ColoredProjectile.class, DataSerializers.VARINT);
+import javax.annotation.Nullable;
 
-    public ColoredProjectile(EntityType<? extends ArrowEntity> type, World worldIn) {
+public abstract class ColoredProjectile extends Projectile {
+    public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
+
+    public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public ColoredProjectile(World worldIn, double x, double y, double z) {
-        super(worldIn, x, y, z);
+    public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn, double x, double y, double z) {
+        super(type, worldIn);
+        setPos(x, y, z);
     }
 
-    public ColoredProjectile(World worldIn, LivingEntity shooter) {
-        super(worldIn, shooter);
+    public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn, LivingEntity shooter) {
+        super(type, worldIn);
+        setOwner(shooter);
     }
 
-    public ParticleColor getParticleColor(){
-        return new ParticleColor(dataManager.get(RED), dataManager.get(GREEN), dataManager.get(BLUE));
+    public ParticleColor getParticleColor() {
+        return new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
-    public ParticleColor.IntWrapper getParticleColorWrapper(){
-        return new ParticleColor.IntWrapper(dataManager.get(RED), dataManager.get(GREEN), dataManager.get(BLUE));
+    public ParticleColor.IntWrapper getParticleColorWrapper() {
+        return new ParticleColor.IntWrapper(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
     }
 
-    public void setColor(ParticleColor.IntWrapper colors){
-        dataManager.set(RED, colors.r);
-        dataManager.set(GREEN, colors.g);
-        dataManager.set(BLUE, colors.b);
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        dataManager.set(RED, compound.getInt("red"));
-        dataManager.set(GREEN, compound.getInt("green"));
-        dataManager.set(BLUE, compound.getInt("blue"));
+    public void setColor(ParticleColor colors) {
+        ParticleColor.IntWrapper wrapper = colors.toWrapper();
+        entityData.set(RED, wrapper.r);
+        entityData.set(GREEN, wrapper.g);
+        entityData.set(BLUE, wrapper.b);
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putInt("red", dataManager.get(RED));
-        compound.putInt("green", dataManager.get(GREEN));
-        compound.putInt("blue", dataManager.get(BLUE));
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        entityData.set(RED, compound.getInt("red"));
+        entityData.set(GREEN, compound.getInt("green"));
+        entityData.set(BLUE, compound.getInt("blue"));
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(RED, 255);
-        this.dataManager.register(GREEN, 25);
-        this.dataManager.register(BLUE, 180);
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("red", entityData.get(RED));
+        compound.putInt("green", entityData.get(GREEN));
+        compound.putInt("blue", entityData.get(BLUE));
     }
+
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(RED, 255);
+        this.entityData.define(GREEN, 25);
+        this.entityData.define(BLUE, 180);
+    }
+
+
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
+        return ProjectileUtil.getEntityHitResult(this.level, this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+    }
+
 }

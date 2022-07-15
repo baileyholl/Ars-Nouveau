@@ -1,0 +1,55 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:enchanters_mirror"
+  },
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:logs/archwood"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:logs/archwood"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    }
+  ],
+  "reagent": [
+    {
+      "tag": "forge:storage_blocks/source"
+    }
+  ],
+  "sourceCost": 0
+}

@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:lantern",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 27,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:lantern"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:torch"
+      }
+    }
+  ],
   "output": "ars_nouveau:glyph_light"
 }

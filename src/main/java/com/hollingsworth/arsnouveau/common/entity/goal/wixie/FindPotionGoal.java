@@ -5,40 +5,43 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.EnumSet;
 
-public class FindPotionGoal extends Goal {
+public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
     boolean found;
     Potion potionNeeded;
 
-    public FindPotionGoal(EntityWixie wixie){
+    public FindPotionGoal(EntityWixie wixie) {
+        super(15);
         this.wixie = wixie;
-        this.setMutexFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     @Override
-    public void startExecuting() {
-        TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
+    public void start() {
+        super.start();
+        BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         found = false;
-        if(tileEntity instanceof WixieCauldronTile) {
+        if (tileEntity instanceof WixieCauldronTile) {
             potionNeeded = ((WixieCauldronTile) tileEntity).getNeededPotion();
             movePos = ((WixieCauldronTile) tileEntity).findNeededPotion(potionNeeded, 300);
-        }else{
+            this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
+        } else {
             found = true;
         }
 
-        if(movePos == null)
+        if (movePos == null)
             found = true;
 
 
@@ -46,62 +49,64 @@ public class FindPotionGoal extends Goal {
 
     @Override
     public void tick() {
-        if(found)
+        super.tick();
+        if (found)
             return;
 
-        if(movePos != null && BlockUtil.distanceFrom(wixie.getPosition(), movePos.up()) < 1.5D){
-            WixieCauldronTile tile = (WixieCauldronTile) wixie.getEntityWorld().getTileEntity(wixie.cauldronPos);
-            World world = wixie.getEntityWorld();
-            if(tile == null) {
+        if (movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange) {
+            WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
+            Level world = wixie.getCommandSenderWorld();
+            if (tile == null) {
                 found = true;
                 return;
             }
-            PotionJarTile jar = (PotionJarTile) world.getTileEntity(movePos);
-            if(jar == null){
+            PotionJarTile jar = (PotionJarTile) world.getBlockEntity(movePos);
+            if (jar == null) {
                 found = true;
                 return;
             }
             jar.setFill(jar.getCurrentFill() - 300);
             tile.givePotion();
-            Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getEntityId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
+            Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
             int color = jar.getColor();
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
-            int b = (color >> 0) & 0xFF;
+            int b = (color) & 0xFF;
             int a = (color >> 24) & 0xFF;
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r,g,b);
+            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r, g, b);
 
-            world.addEntity(aoeProjectile);
-            found= true;
+            world.addFreshEntity(aoeProjectile);
+            found = true;
 
         }
 
-        if(movePos != null && !found) {
-            setPath(movePos.getX(), movePos.getY()+1, movePos.getZ(), 1.2D);
+        if (movePos != null && !found) {
+            setPath(movePos.getX(), movePos.getY() + 1, movePos.getZ(), 1.2D);
         }
     }
 
     @Override
-    public boolean shouldExecute() {
-        if(wixie.cauldronPos == null)
+    public boolean canUse() {
+        if (wixie.cauldronPos == null)
             return false;
-        TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
+        BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
 
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasMana && ((WixieCauldronTile) tileEntity).needsPotion()  && !((WixieCauldronTile) tileEntity).isOff;
+                && ((WixieCauldronTile) tileEntity).hasSource && ((WixieCauldronTile) tileEntity).needsPotion() && !((WixieCauldronTile) tileEntity).isOff;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return !found;
     }
 
-    public void setPath(double x, double y, double z, double speedIn){
-        wixie.getNavigator().setPath( wixie.getNavigator().getPathToPos(x+0.5, y+0.5, z+0.5, 0), speedIn);
+    public void setPath(double x, double y, double z, double speedIn) {
+        wixie.getNavigation().moveTo(wixie.getNavigation().createPath(x + 0.5, y + 0.5, z + 0.5, 0), speedIn);
     }
 
     @Override
-    public void resetTask() {
+    public void stop() {
+        super.stop();
         potionNeeded = Potions.EMPTY;
         found = false;
     }

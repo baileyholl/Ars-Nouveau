@@ -1,0 +1,33 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:amethyst_golem_charm",
+  "name": "item.ars_nouveau.amethyst_golem_charm",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.amethyst_golem_charm"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:amethyst_golem",
+      "offset": 0.2,
+      "scale": 0.75,
+      "text": "ars_nouveau.page2.amethyst_golem_charm"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.amethyst_golem_charm",
+      "title": "ars_nouveau.summoning"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page4.amethyst_golem_charm",
+      "title": "ars_nouveau.amethyst_farming"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page5.amethyst_golem_charm",
+      "title": "ars_nouveau.amethyst_storage"
+    }
+  ]
+}

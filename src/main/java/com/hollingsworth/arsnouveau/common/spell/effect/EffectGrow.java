@@ -1,93 +1,66 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IGrowable;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BoneMealItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
-public class EffectGrow  extends AbstractEffect {
+public class EffectGrow extends AbstractEffect {
+    public static EffectGrow INSTANCE = new EffectGrow();
 
-    public EffectGrow() {
+    private EffectGrow() {
         super(GlyphLib.EffectGrowID, "Grow");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult) {
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
-                //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
-                ItemStack stack = new ItemStack(Items.BONE_MEAL);
-                if(world instanceof ServerWorld)
-                    BoneMealItem.applyBonemeal(stack, world, blockpos, FakePlayerFactory.getMinecraft((ServerWorld) world));
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        for (BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
+            ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
+            if (BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel) {
+                BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer((ServerLevel) world));
             }
         }
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        if(!(rayTraceResult instanceof BlockRayTraceResult))
-            return false;
-        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
-        return world.getBlockState(pos) instanceof IGrowable
-                && ((IGrowable) world.getBlockState(pos)).canGrow(world, pos, world.getBlockState(pos), world.isRemote);
-    }
-
-    public static boolean applyBonemeal(World worldIn, BlockPos pos) {
-        BlockState blockstate = worldIn.getBlockState(pos);
-        if (blockstate.getBlock() instanceof IGrowable) {
-            IGrowable igrowable = (IGrowable)blockstate.getBlock();
-            if (igrowable.canGrow(worldIn, pos, blockstate, worldIn.isRemote)) {
-                if (!worldIn.isRemote) {
-                    if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate) && !World.isOutsideBuildHeight(pos)) {
-                        igrowable.grow((ServerWorld)worldIn, worldIn.rand, pos, blockstate);
-                        worldIn.notifyBlockUpdate(pos, blockstate, blockstate, 3);
-                    }
-                }
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 70;
     }
 
-    @Nullable
     @Override
-    public Item getCraftingReagent() {
-        return Items.BONE_BLOCK;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
+    @Nonnull
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Causes plants to accelerate in growth, but this does not provide mana for nearby Mana Condensers.";
+        return "Causes plants to accelerate in growth as if they were bonemealed.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

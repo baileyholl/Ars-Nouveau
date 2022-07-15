@@ -1,0 +1,26 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:orange_sbed",
+  "name": "ars_nouveau.summon_bed",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.summon_bed"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:orange_sbed",
+      "recipe2": "ars_nouveau:blue_sbed"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:green_sbed",
+      "recipe2": "ars_nouveau:yellow_sbed"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:red_sbed",
+      "recipe2": "ars_nouveau:purple_sbed"
+    }
+  ]
+}

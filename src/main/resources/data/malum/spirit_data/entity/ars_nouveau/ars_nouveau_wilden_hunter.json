@@ -1,0 +1,18 @@
+{
+  "registry_name": "ars_nouveau:wilden_hunter",
+  "primary_type": "earthen",
+  "spirits": [
+    {
+      "spirit": "wicked",
+      "count": 1
+    },
+{
+      "spirit": "arcane",
+      "count": 1
+    },
+{
+      "spirit": "earthen",
+      "count": 1
+    }
+  ]
+}

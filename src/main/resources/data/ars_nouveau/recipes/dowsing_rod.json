@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "a": {
+      "item": "ars_nouveau:archwood_planks"
+    },
+    "x": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    " x ",
+    "a a"
+  ],
+  "result": {
+    "item": "ars_nouveau:dowsing_rod"
+  }
+}

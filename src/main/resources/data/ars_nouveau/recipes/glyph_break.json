@@ -1,6 +1,13 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:iron_pickaxe",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 27,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:iron_pickaxe"
+      }
+    }
+  ],
   "output": "ars_nouveau:glyph_break"
 }

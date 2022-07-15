@@ -6,7 +6,7 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[35,)" #mandatory (28 is current forge version)
+loaderVersion="[40,)" #mandatory (28 is current forge version)
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/baileyholl/Ars-Nouveau" #optional
 license="GNU GENERAL PUBLIC LICENSE"
@@ -36,7 +36,7 @@ Craft spells, create powerful baubles, and summon magical creatures!
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[35.1,)" #mandatory
+    versionRange="[40,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -45,20 +45,20 @@ Craft spells, create powerful baubles, and summon magical creatures!
 [[dependencies.ars_nouveau]]
     modId="patchouli"
     mandatory=true
-    versionRange="[1.16-42,)"
+    versionRange="[1.19-73,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="curios"
     mandatory=true
-    versionRange="[1.16.3-4.0.1.0,)"
+    versionRange="[1.19-5.0.7.1,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="geckolib3"
     mandatory=true
-    versionRange="[3.0.0-beta.8,)"
+    versionRange="[3.1,)"
     ordering="AFTER"
     side="BOTH"

@@ -1,18 +1,25 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
+  "keepNbtOfReagent": false,
+  "output": {
+    "count": 32,
+    "item": "ars_nouveau:split_arrow"
+  },
+  "pedestalItems": [
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:wilden_horn"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_split"
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
     }
   ],
   "reagent": [
@@ -20,8 +27,5 @@
       "tag": "minecraft:arrows"
     }
   ],
-  "output": {
-    "item": "ars_nouveau:split_arrow",
-    "count": 32
-  }
+  "sourceCost": 0
 }

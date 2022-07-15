@@ -1,0 +1,19 @@
+{
+  "category": "ars_nouveau:getting_started",
+  "icon": "ars_nouveau:imbuement_chamber",
+  "name": "ars_nouveau.page.obtaining_gems",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.obtaining_gems"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:getting_started/source",
+        "ars_nouveau:equipment/dowsing_rod"
+      ]
+    }
+  ],
+  "sortnum": 3
+}

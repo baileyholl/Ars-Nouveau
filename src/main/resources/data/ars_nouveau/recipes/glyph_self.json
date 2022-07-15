@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:stone_pressure_plate",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 27,
+  "inputItems": [
+    {
+      "item": {
+        "tag": "minecraft:wooden_pressure_plates"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_chestplate"
+      }
+    }
+  ],
   "output": "ars_nouveau:glyph_self"
 }

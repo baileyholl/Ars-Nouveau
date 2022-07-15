@@ -1,23 +1,17 @@
 package com.hollingsworth.arsnouveau.common.enchantment;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ManaBoost extends Enchantment {
     protected ManaBoost() {
-        super(Rarity.UNCOMMON, EnchantmentType.ARMOR, new EquipmentSlotType[]{EquipmentSlotType.CHEST, EquipmentSlotType.FEET, EquipmentSlotType.HEAD, EquipmentSlotType.LEGS});
-        setRegistryName(ArsNouveau.MODID, "mana_boost");
-    }
-    @Override
-    public int getMinEnchantability(int enchantmentLevel) {
-        return 20;
+        super(Rarity.UNCOMMON, EnchantmentCategory.ARMOR, new EquipmentSlot[]{EquipmentSlot.CHEST, EquipmentSlot.FEET, EquipmentSlot.HEAD, EquipmentSlot.LEGS});
     }
 
     @Override
-    public int getMaxEnchantability(int enchantmentLevel) {
-        return 50;
+    public int getMinCost(int enchantmentLevel) {
+        return 1 + 11 * (enchantmentLevel - 1);
     }
 
     @Override

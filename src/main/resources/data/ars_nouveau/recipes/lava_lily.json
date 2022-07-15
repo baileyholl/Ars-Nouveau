@@ -5,32 +5,32 @@
       "item": "minecraft:lily_pad"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "result": {
-    "item": "ars_nouveau:lava_lily",
-    "count": 8
+    "count": 8,
+    "item": "ars_nouveau:lava_lily"
   }
 }

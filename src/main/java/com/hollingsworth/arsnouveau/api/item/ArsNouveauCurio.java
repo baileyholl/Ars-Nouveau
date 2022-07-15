@@ -2,23 +2,24 @@ package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-public abstract class ArsNouveauCurio extends ModItem {
 
+public abstract class ArsNouveauCurio extends ModItem implements ICurioItem {
 
     public ArsNouveauCurio() {
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
+        this(new Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
     }
 
-    public ArsNouveauCurio(Item.Properties properties, String registryName){
-        super(properties, registryName);
+
+    public ArsNouveauCurio(Properties properties) {
+        super(properties);
     }
 
-    public ArsNouveauCurio(String registryName){
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup), registryName);
+    @Override
+    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
+        return true;
     }
-
-    abstract public void wearableTick(LivingEntity wearer);
 }

@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:familiars",
+  "icon": "ars_nouveau:familiar_wixie",
+  "name": "entity.ars_nouveau.familiar_wixie",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.familiar_desc.familiar_wixie"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:familiar_wixie"
+    }
+  ]
+}

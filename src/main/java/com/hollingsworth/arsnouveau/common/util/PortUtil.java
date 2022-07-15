@@ -1,17 +1,33 @@
 package com.hollingsworth.arsnouveau.common.util;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketNoSpamChatMessage;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 public class PortUtil {
-    public static void sendMessage(Entity playerEntity, ITextComponent component){
-        playerEntity.sendMessage(component, Util.DUMMY_UUID);
+    public static void sendMessage(Entity playerEntity, Component component) {
+        if (playerEntity == null)
+            return;
+        playerEntity.sendSystemMessage(component);
     }
 
-    public static void sendMessage(Entity playerEntity, String message){
-        sendMessage(playerEntity, new StringTextComponent(message));
+    public static void sendMessageNoSpam(Entity playerEntity, Component component) {
+        if (playerEntity instanceof Player) {
+            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, false), (Player) playerEntity);
+        }
     }
+
+    public static void sendMessageCenterScreen(Entity playerEntity, Component component) {
+        if (playerEntity instanceof Player) {
+            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, true), (Player) playerEntity);
+        }
+    }
+
+    @Deprecated
+    public static void sendMessage(Entity playerEntity, String message) {
+        sendMessage(playerEntity, Component.literal(message));
+    }
+
 }

@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.core.particles.ParticleType;
 
 public class GlowParticleType extends ParticleType<ColorParticleTypeData> {
     public GlowParticleType() {
@@ -10,7 +9,7 @@ public class GlowParticleType extends ParticleType<ColorParticleTypeData> {
     }
 
     @Override
-    public Codec<ColorParticleTypeData> func_230522_e_() {
+    public Codec<ColorParticleTypeData> codec() {
         return ColorParticleTypeData.CODEC;
     }
 }

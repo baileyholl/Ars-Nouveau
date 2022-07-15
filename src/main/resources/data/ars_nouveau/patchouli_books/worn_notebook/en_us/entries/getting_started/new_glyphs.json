@@ -1,0 +1,19 @@
+{
+  "category": "ars_nouveau:getting_started",
+  "icon": "ars_nouveau:blank_glyph",
+  "name": "ars_nouveau.page.new_glyphs",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.new_glyphs"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/scribes_block",
+        "ars_nouveau:getting_started/source"
+      ]
+    }
+  ],
+  "sortnum": 4
+}

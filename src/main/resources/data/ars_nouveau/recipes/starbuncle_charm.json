@@ -1,0 +1,55 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:starbuncle_charm"
+  },
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:starbuncle_shards"
+    }
+  ],
+  "sourceCost": 0
+}

@@ -2,229 +2,307 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
 import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
 import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
+import com.hollingsworth.arsnouveau.common.items.itemscrolls.AllowItemScroll;
+import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
+import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
+import com.hollingsworth.arsnouveau.common.items.summon_charms.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.Tiers;
+import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.function.Supplier;
 
-import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
+import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
-@ObjectHolder(ArsNouveau.MODID)
+@SuppressWarnings("Convert2MethodRef") //IJ can't know we need the supplier (do we actually need it tho?)
 public class ItemsRegistry {
-    @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk runicChalk;
-    @ObjectHolder(LibItemNames.NOVICE_SPELL_BOOK) public static SpellBook noviceSpellBook;
 
-    @ObjectHolder(LibItemNames.APPRENTICE_SPELL_BOOK) public static SpellBook apprenticeSpellBook;
-    @ObjectHolder(LibItemNames.ARCHMAGE_SPELL_BOOK) public static SpellBook archmageSpellBook;
-    @ObjectHolder(LibItemNames.CREATIVE_SPELL_BOOK) public static SpellBook creativeSpellBook;
+    public static FoodProperties SOURCE_BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 100), 1.0f).alwaysEat().build();
+    public static FoodProperties SOURCE_PIE_FOOD = new FoodProperties.Builder().nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20, 1), 1.0f).alwaysEat().build();
+    public static FoodProperties SOURCE_ROLL_FOOD = new FoodProperties.Builder().nutrition(8).saturationMod(0.6F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20), 1.0f).alwaysEat().build();
 
 
-    @ObjectHolder(LibItemNames.BLANK_GLYPH) public static  Item blankGlyph;
-    @ObjectHolder(LibItemNames.BUCKET_OF_MANA) public static ModItem bucketOfMana;
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
-    @ObjectHolder(LibItemNames.MAGIC_CLAY) public static ModItem magicClay;
-    @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem marvelousClay;
-    @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem mythicalClay;
+    public static final RegistryWrapper<RunicChalk> RUNIC_CHALK = register(LibItemNames.RUNIC_CHALK, () -> new RunicChalk());
 
-    @ObjectHolder(LibItemNames.ARCANE_BRICK) public static ModItem arcaneBrick;
-    @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem manaBloom;
+    public static RegistryWrapper<SpellBook> NOVICE_SPELLBOOK = register(LibItemNames.NOVICE_SPELL_BOOK, () -> new SpellBook(SpellTier.ONE));
+    public static RegistryWrapper<SpellBook> APPRENTICE_SPELLBOOK = register(LibItemNames.APPRENTICE_SPELL_BOOK, () -> new SpellBook(SpellTier.TWO));
+    public static RegistryWrapper<SpellBook> ARCHMAGE_SPELLBOOK = register(LibItemNames.ARCHMAGE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
+    public static RegistryWrapper<SpellBook> CREATIVE_SPELLBOOK = register(LibItemNames.CREATIVE_SPELL_BOOK, () -> new SpellBook(SpellTier.CREATIVE));
+    public static RegistryWrapper<Item> BLANK_GLYPH = register(LibItemNames.BLANK_GLYPH);
+    public static RegistryWrapper<ModItem> BUCKET_OF_SOURCE = register(LibItemNames.BUCKET_OF_SOURCE);
+    public static RegistryWrapper<ModItem> MAGE_BLOOM = register(LibItemNames.MAGE_BLOOM, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.magebloom")));
+    public static RegistryWrapper<ModItem> MAGE_FIBER = register(LibItemNames.MAGE_FIBER);
+    public static RegistryWrapper<ModItem> BLAZE_FIBER = register(LibItemNames.BLAZE_FIBER);
+    public static RegistryWrapper<ModItem> END_FIBER = register(LibItemNames.END_FIBER);
+    public static RegistryWrapper<ModItem> MUNDANE_BELT = register(LibItemNames.MUNDANE_BELT, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+    public static RegistryWrapper<JarOfLight> JAR_OF_LIGHT = register(LibItemNames.JAR_OF_LIGHT, () -> new JarOfLight());
+    public static RegistryWrapper<BeltOfLevitation> BELT_OF_LEVITATION = register(LibItemNames.BELT_OF_LEVITATION, () -> new BeltOfLevitation());
 
-
-    @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem manaFiber;
-    @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem blazeFiber;
-    @ObjectHolder(LibItemNames.END_FIBER) public static ModItem endFiber;
-
-    @ObjectHolder(LibItemNames.MUNDANE_BELT) public static ModItem mundaneBelt;
-    @ObjectHolder(LibItemNames.JAR_OF_LIGHT) public static JarOfLight jarOfLight;
-
-    @ObjectHolder(LibItemNames.BELT_OF_LEVITATION)public static BeltOfLevitation beltOfLevitation;
-
-    @ObjectHolder(LibItemNames.WORN_NOTEBOOK) public static WornNotebook wornNotebook = Null();
-
-    @ObjectHolder(LibItemNames.RING_OF_POTENTIAL) public  static ModItem ringOfPotential;
-
-    @ObjectHolder(LibItemNames.RING_OF_LESSER_DISCOUNT) public static DiscountRing ringOfLesserDiscount;
-
-
-    @ObjectHolder(LibItemNames.RING_OF_GREATER_DISCOUNT) public static DiscountRing ringOfGreaterDiscount;
-
-    @ObjectHolder(LibItemNames.BELT_OF_UNSTABLE_GIFTS) public static BeltOfUnstableGifts beltOfUnstableGifts;
-
-    @ObjectHolder(LibItemNames.WARP_SCROLL) public static WarpScroll warpScroll;
-
-    @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
-
-    @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
-    @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMINION_ROD;
-
-    @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
-    @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio amuletOfManaRegen;
-    @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem dullTrinket;
-    @ObjectHolder(LibItemNames.CARBUNCLE_CHARM) public static CarbuncleCharm carbuncleCharm;
-    @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
-    @ObjectHolder("debug")public static Debug debug;
-
-    @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
-
-
-    @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_SHARD)public static ModItem earthElementalShard;
-    @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
-    @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
-    @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
-    @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static ItemScroll ALLOW_ITEM_SCROLL;
-    @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static ItemScroll DENY_ITEM_SCROLL;
-    @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
-    @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
-    @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
-    @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
-    @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
-    @ObjectHolder(LibItemNames.RITUAL_BOOK)public static RitualBook RITUAL_BOOK;
-    @ObjectHolder(LibItemNames.SPELL_BOW)public static SpellBow SPELL_BOW;
-
-    @ObjectHolder(LibItemNames.AMPLIFY_ARROW)public static SpellArrow AMPLIFY_ARROW;
-    @ObjectHolder(LibItemNames.SPLIT_ARROW)public static SpellArrow SPLIT_ARROW;
-    @ObjectHolder(LibItemNames.PIERCE_ARROW)public static SpellArrow PIERCE_ARROW;
-
-    @ObjectHolder(LibItemNames.WILDEN_HORN)public static ModItem WILDEN_HORN;
-    @ObjectHolder(LibItemNames.WILDEN_SPIKE)public static ModItem WILDEN_SPIKE;
-    @ObjectHolder(LibItemNames.WILDEN_WING)public static ModItem WILDEN_WING;
-
-
-    @ObjectHolder(LibItemNames.POTION_FLASK)public static PotionFlask POTION_FLASK;
-
-    public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
-
-    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistrationHandler{
-        public static final Set<Item> ITEMS = new HashSet<>();
-
-        @SubscribeEvent
-        public static void registerItems(final RegistryEvent.Register<Item> event) {
-
-            Item[] items = {
-                    new Debug(),
-                    new WhelpCharm(),
-                    new DominionWand(),
-                    new RunicChalk(),
-                    new ModItem(LibItemNames.BLANK_GLYPH),
-                    new ModItem(LibItemNames.DULL_TRINKET),
-                    new ModItem(LibItemNames.MARVELOUS_CLAY),
-                    new ModItem(LibItemNames.MAGIC_CLAY),
-                    new ModItem(LibItemNames.MYTHICAL_CLAY),
-                    new ModItem(LibItemNames.BLAZE_FIBER),
-                    new ModItem(LibItemNames.END_FIBER),
-                    new CompostableItem(LibItemNames.MANA_BLOOM, 0.65F),
-                    new ModItem(LibItemNames.MANA_FIBER),
-                    new ModItem(LibItemNames.MUNDANE_BELT),
-                    new ModItem(LibItemNames.ARCANE_BRICK).withTooltip(new TranslationTextComponent("tooltip.arcane_brick")),
-                    new ModItem(LibItemNames.RING_OF_POTENTIAL),
-                    new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
-                    new ModItem(defaultItemProperties().maxStackSize(1), LibItemNames.BUCKET_OF_MANA),
-                    new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
-                    new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
-                    new NoviceArmor(EquipmentSlotType.CHEST).setRegistryName("novice_robes"),
-                    new NoviceArmor(EquipmentSlotType.HEAD).setRegistryName("novice_hood"),
-                    new ApprenticeArmor(EquipmentSlotType.FEET).setRegistryName("apprentice_boots"),
-                    new ApprenticeArmor(EquipmentSlotType.LEGS).setRegistryName("apprentice_leggings"),
-                    new ApprenticeArmor(EquipmentSlotType.CHEST).setRegistryName("apprentice_robes"),
-                    new ApprenticeArmor(EquipmentSlotType.HEAD).setRegistryName("apprentice_hood"),
-                    new MasterArmor(EquipmentSlotType.FEET).setRegistryName("archmage_boots"),
-                    new MasterArmor(EquipmentSlotType.LEGS).setRegistryName("archmage_leggings"),
-                    new MasterArmor(EquipmentSlotType.CHEST).setRegistryName("archmage_robes"),
-                    new MasterArmor(EquipmentSlotType.HEAD).setRegistryName("archmage_hood"),
-                    new SpellBook(ISpellTier.Tier.ONE).setRegistryName(LibItemNames.NOVICE_SPELL_BOOK),
-                    new SpellBook(ISpellTier.Tier.TWO).setRegistryName(LibItemNames.APPRENTICE_SPELL_BOOK),
-                    new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
-                    new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.CREATIVE_SPELL_BOOK),
-                    new RingOfAmplify(),
-                    new BeltOfLevitation(),
-                    new WarpScroll(),
-                    new JarOfLight(),
-                    new WornNotebook().withTooltip(new TranslationTextComponent("tooltip.worn_notebook")),
-                    new CarbuncleCharm(),
-                    new ModItem(LibItemNames.CARBUNCLE_SHARD).withTooltip(new TranslationTextComponent("tooltip.carbuncle_shard")),
-                    new WixieCharm(),
-                    new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
-                        @Override
-                        public int getManaDiscount() {
-                            return 10;
-                        }
-                    },
-                    new DiscountRing(LibItemNames.RING_OF_GREATER_DISCOUNT) {
-                        @Override
-                        public int getManaDiscount() {
-                            return 20;
-                        }
-                    },
-                    new SpellParchment(),
-                    new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_BOOST){
-                        @Override
-                        public int getMaxManaBoost() {
-                            return 50;
-                        }
-                    },
-                    new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_REGEN){
-                        @Override
-                        public int getManaRegenBonus() {
-                            return 3;
-                        }
-                    },
-                    new ModItem(LibItemNames.SYLPH_SHARD).withTooltip(new TranslationTextComponent("tooltip.sylph_shard")),
-                    new SylphCharm(),
-                    new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem")),
-                    new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
-                    new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
-                    new ModItem(LibItemNames.BLANK_PARCHMENT),
-                    new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslationTextComponent("tooltip.wixie_shard")),
-                    new Wand(),
-                    new VoidJar(),
-                    new RitualBook().setRegistryName(LibItemNames.RITUAL_BOOK),
-                    new SpellBow().setRegistryName(LibItemNames.SPELL_BOW),
-                    new FormSpellArrow(LibItemNames.PIERCE_ARROW, new AugmentPierce(), 2),
-                    new FormSpellArrow(LibItemNames.SPLIT_ARROW, new AugmentSplit(), 2),
-                    new SpellArrow(LibItemNames.AMPLIFY_ARROW, new AugmentAmplify(), 2),
-                    new ModItem(LibItemNames.WILDEN_HORN).withTooltip(new TranslationTextComponent("tooltip.wilden_horn")),
-                    new ModItem(LibItemNames.WILDEN_WING).withTooltip(new TranslationTextComponent("tooltip.wilden_wing")),
-                    new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslationTextComponent("tooltip.wilden_spike")),
-                    new PotionFlask()
-
-            };
-
-            final IForgeRegistry<Item> registry = event.getRegistry();
-            for(Glyph glyph : ArsNouveauAPI.getInstance().getGlyphMap().values()){
-                registry.register(glyph);
-                ITEMS.add(glyph);
-            }
-            for (final Item item : items) {
-                registry.register(item);
-                ITEMS.add(item);
-            }
-
+    public static RegistryWrapper<WornNotebook> WORN_NOTEBOOK = register(LibItemNames.WORN_NOTEBOOK, () -> new WornNotebook().withTooltip(Component.translatable("tooltip.worn_notebook")));
+    public static RegistryWrapper<ModItem> RING_OF_POTENTIAL = register(LibItemNames.RING_OF_POTENTIAL, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+    public static RegistryWrapper<DiscountRing> RING_OF_LESSER_DISCOUNT = register(LibItemNames.RING_OF_LESSER_DISCOUNT, () -> new DiscountRing() {
+        @Override
+        public int getManaDiscount() {
+            return 10;
         }
+    });
+
+    public static RegistryWrapper<DiscountRing> RING_OF_GREATER_DISCOUNT = register(LibItemNames.RING_OF_GREATER_DISCOUNT, () -> new DiscountRing() {
+        @Override
+        public int getManaDiscount() {
+            return 20;
+        }
+    });
+
+    public static RegistryWrapper<BeltOfUnstableGifts> BELT_OF_UNSTABLE_GIFTS = register(LibItemNames.BELT_OF_UNSTABLE_GIFTS, () -> new BeltOfUnstableGifts());
+
+    public static RegistryWrapper<WarpScroll> WARP_SCROLL = register(LibItemNames.WARP_SCROLL, () -> new WarpScroll());
+
+    public static RegistryWrapper<SpellParchment> SPELL_PARCHMENT = register(LibItemNames.SPELL_PARCHMENT, () -> new SpellParchment());
+
+    public static RegistryWrapper<BookwyrmCharm> BOOKWYRM_CHARM = register(LibItemNames.BOOKWYRM_CHARM, () -> new BookwyrmCharm());
+
+    public static RegistryWrapper<DominionWand> DOMINION_ROD = register(LibItemNames.DOMINION_WAND, () -> new DominionWand());
+
+    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_BOOST = register(LibItemNames.AMULET_OF_MANA_BOOST, () -> new AbstractManaCurio() {
+        @Override
+        public int getMaxManaBoost(ItemStack i) {
+            return 50;
+        }
+    });
+
+    public static RegistryWrapper<AbstractManaCurio> AMULET_OF_MANA_REGEN = register(LibItemNames.AMULET_OF_MANA_REGEN, () -> new AbstractManaCurio() {
+
+        @Override
+        public int getManaRegenBonus(ItemStack i) {
+            return 3;
+        }
+
+    });
+
+    public static RegistryWrapper<ModItem> DULL_TRINKET = register(LibItemNames.DULL_TRINKET, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
+
+    public static RegistryWrapper<StarbuncleCharm> STARBUNCLE_CHARM = register(LibItemNames.STARBUNCLE_CHARM, () -> new StarbuncleCharm());
+
+    public static RegistryWrapper<Debug> debug = register("debug", () -> new Debug());
+
+    public static RegistryWrapper<ModItem> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.starbuncle_shard")));
+
+    public static RegistryWrapper<StarbuncleShades> STARBUNCLE_SHADES = register(LibItemNames.STARBUNCLE_SHADES, () -> new StarbuncleShades().withTooltip(Component.translatable("tooltip.starbuncle_shades")));
+
+
+    public static RegistryWrapper<WhirlisprigCharm> WHIRLISPRIG_CHARM = register(LibItemNames.WHIRLISPRIG_CHARM, () -> new WhirlisprigCharm());
+
+    public static RegistryWrapper<ModItem> WHIRLISPRIG_SHARDS = register(LibItemNames.WHIRLISPRIG_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.whirlisprig_shard")));
+
+    public static RegistryWrapper<ModItem> SOURCE_GEM = register(LibItemNames.SOURCE_GEM, () -> new ModItem().withTooltip(Component.translatable("tooltip.source_gem")));
+
+    public static RegistryWrapper<AllowItemScroll> ALLOW_ITEM_SCROLL = register(LibItemNames.ALLOW_ITEM_SCROLL, () -> new AllowItemScroll());
+
+    public static RegistryWrapper<DenyItemScroll> DENY_ITEM_SCROLL = register(LibItemNames.DENY_ITEM_SCROLL, () -> new DenyItemScroll());
+
+    public static RegistryWrapper<MimicItemScroll> MIMIC_ITEM_SCROLL = register(LibItemNames.MIMIC_ITEM_SCROLL, () -> new MimicItemScroll());
+
+    public static RegistryWrapper<BlankParchmentItem> BLANK_PARCHMENT = register(LibItemNames.BLANK_PARCHMENT, () -> new BlankParchmentItem());
+
+    public static RegistryWrapper<Wand> WAND = register(LibItemNames.WAND, () -> new Wand());
+
+    public static RegistryWrapper<VoidJar> VOID_JAR = register(LibItemNames.VOID_JAR, () -> new VoidJar());
+
+    public static RegistryWrapper<WixieCharm> WIXIE_CHARM = register(LibItemNames.WIXIE_CHARM, () -> new WixieCharm());
+
+    public static RegistryWrapper<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.wixie_shard")));
+
+    public static RegistryWrapper<SpellBow> SPELL_BOW = register(LibItemNames.SPELL_BOW, () -> new SpellBow());
+
+    public static RegistryWrapper<SpellArrow> AMPLIFY_ARROW = register(LibItemNames.AMPLIFY_ARROW, () -> new SpellArrow(AugmentAmplify.INSTANCE, 2));
+
+    public static RegistryWrapper<FormSpellArrow> SPLIT_ARROW = register(LibItemNames.SPLIT_ARROW, () -> new FormSpellArrow(AugmentSplit.INSTANCE, 2));
+
+    public static RegistryWrapper<FormSpellArrow> PIERCE_ARROW = register(LibItemNames.PIERCE_ARROW, () -> new FormSpellArrow(AugmentPierce.INSTANCE, 2));
+
+    public static RegistryWrapper<ModItem> WILDEN_HORN = register(LibItemNames.WILDEN_HORN, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_horn")));
+
+    public static RegistryWrapper<ModItem> WILDEN_SPIKE = register(LibItemNames.WILDEN_SPIKE, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_spike")));
+
+    public static RegistryWrapper<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
+
+    public static RegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask() {
+        @Nonnull
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return effectInstance;
+        }
+    }.withTooltip(Component.translatable("tooltip.potion_flask")));
+
+    public static RegistryWrapper<PotionFlask> POTION_FLASK_AMPLIFY = register(LibItemNames.POTION_FLASK_AMPLIFY, () -> new PotionFlask() {
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 2, effectInstance.getAmplifier() + 1);
+        }
+    }.withTooltip(Component.translatable("tooltip.potion_flask_amplify")));
+
+
+    public static RegistryWrapper<PotionFlask> POTION_FLASK_EXTEND_TIME = register(LibItemNames.POTION_FLASK_EXTEND_TIME, () -> new PotionFlask() {
+        @Override
+        public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
+            return new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration() / 2, effectInstance.getAmplifier());
+        }
+    }.withTooltip(Component.translatable("tooltip.potion_flask_extend_time")));
+
+
+    public static RegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> new ExperienceGem() {
+        @Override
+        public int getValue() {
+            return 3;
+        }
+    }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")));
+
+    public static RegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> new ExperienceGem() {
+        @Override
+        public int getValue() {
+            return 12;
+        }
+    }.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem")));
+
+    public static RegistryWrapper<EnchantersSword> ENCHANTERS_SWORD = register(LibItemNames.ENCHANTERS_SWORD, () -> new EnchantersSword(Tiers.NETHERITE, 3, -2.4F));
+
+    public static RegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, () -> new EnchantersShield());
+
+    public static RegistryWrapper<CasterTome> CASTER_TOME = register(LibItemNames.CASTER_TOME, () -> new CasterTome());
+
+    public static RegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, () -> new DrygmyCharm());
+
+    public static RegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")));
+
+    public static RegistryWrapper<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
+
+    public static RegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, () -> new SummoningFocus());
+
+
+    public static RegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)).withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus")));
+
+    public static RegistryWrapper<ModItem> SOURCE_BERRY_PIE = register(LibItemNames.SOURCE_BERRY_PIE, () -> new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
+
+    public static RegistryWrapper<ModItem> SOURCE_BERRY_ROLL = register(LibItemNames.SOURCE_BERRY_ROLL, () -> new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
+
+    public static RegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1)));
+
+    public static RegistryWrapper<NoviceArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new NoviceArmor(EquipmentSlot.FEET));
+
+    public static RegistryWrapper<NoviceArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new NoviceArmor(EquipmentSlot.LEGS));
+
+    public static RegistryWrapper<NoviceArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new NoviceArmor(EquipmentSlot.CHEST));
+
+    public static RegistryWrapper<NoviceArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new NoviceArmor(EquipmentSlot.HEAD));
+
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new ApprenticeArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new ApprenticeArmor(EquipmentSlot.LEGS));
+
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new ApprenticeArmor(EquipmentSlot.CHEST));
+
+    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new ApprenticeArmor(EquipmentSlot.HEAD));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new MasterArmor(EquipmentSlot.FEET));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new MasterArmor(EquipmentSlot.LEGS));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new MasterArmor(EquipmentSlot.CHEST));
+
+    public static RegistryWrapper<MasterArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new MasterArmor(EquipmentSlot.HEAD));
+
+
+    public static RegistryWrapper<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, () -> new DowsingRod().withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod")));
+
+    public static RegistryWrapper<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<EarthEssence> EARTH_ESSENCE = register(LibItemNames.EARTH_ESSENCE, () -> new EarthEssence().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<FireEssence> FIRE_ESSENCE = register(LibItemNames.FIRE_ESSENCE, () -> new FireEssence().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<ModItem> MANIPULATION_ESSENCE = register(LibItemNames.MANIPULATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<ModItem> WATER_ESSENCE = register(LibItemNames.WATER_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+
+    public static RegistryWrapper<AmethystGolemCharm> AMETHYST_GOLEM_CHARM = register(LibItemNames.AMETHYST_GOLEM_CHARM, () -> new AmethystGolemCharm().withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm")));
+    public static RegistryWrapper<AnnotatedCodex> ANNOTATED_CODEX = register(LibItemNames.ANNOTATED_CODEX, () -> new AnnotatedCodex());
+    public static RegistryWrapper<ScryerScroll> SCRYER_SCROLL = register(LibItemNames.SCRYER_SCROLL, () -> new ScryerScroll().withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll")));
+
+
+    public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
+        return new RegistryWrapper<>(ITEMS.register(name, item));
     }
 
+    public static RegistryWrapper register(String name) {
+        return register(name, () -> new ModItem());
+    }
+
+    public static void onItemRegistry(IForgeRegistry<Item> registry) {
+        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
+            Glyph glyph = glyphEntry.getValue().get();
+            registry.register(glyphEntry.getKey(), glyph);
+            glyph.spellPart.glyphItem = glyph;
+
+        }
+
+        for (AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()) {
+            RitualTablet tablet = new RitualTablet(ritual);
+            registry.register(ritual.getRegistryName(), tablet);
+            ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getRegistryName(), tablet);
+        }
+
+        for (AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
+            FamiliarScript script = new FamiliarScript(holder);
+            ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.getRegistryName(), script);
+            registry.register(holder.getRegistryName(), script);
+        }
+
+        registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
+        registry.register(LibItemNames.SYLPH_SE, new ForgeSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
+        registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
+        registry.register(LibItemNames.WILDEN_GUARDIAN_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
+        registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
+
+    }
+
+
     public static Item.Properties defaultItemProperties() {
-        return new Item.Properties().group(ArsNouveau.itemGroup);
+        return new Item.Properties().tab(ArsNouveau.itemGroup);
     }
 }
 

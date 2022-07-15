@@ -1,33 +1,34 @@
 package com.hollingsworth.arsnouveau.common.items;
+
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Material;
 
-public class RunicChalk extends ModItem{
+public class RunicChalk extends ModItem {
     public RunicChalk() {
-        super(ItemsRegistry.defaultItemProperties().maxDamage(15),LibItemNames.RUNIC_CHALK);
+        super(ItemsRegistry.defaultItemProperties().durability(15));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        BlockPos pos = context.getPos();
-        World world = context.getWorld();
-        if(world.isRemote)
-            return super.onItemUse(context);
+    public InteractionResult useOn(UseOnContext context) {
+        BlockPos pos = context.getClickedPos();
+        Level world = context.getLevel();
+        if (world.isClientSide)
+            return super.useOn(context);
 
-        if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
-            world.setBlockState(pos.up(), BlockRegistry.RUNE_BLOCK.getDefaultState());
-            if(world.getTileEntity(pos.up()) instanceof RuneTile){
-                ((RuneTile) world.getTileEntity(pos.up())).uuid = context.getPlayer().getUniqueID();
+        if (world.getBlockState(pos.above()).getMaterial() == Material.AIR) {
+            world.setBlockAndUpdate(pos.above(), BlockRegistry.RUNE_BLOCK.defaultBlockState());
+            if (world.getBlockEntity(pos.above()) instanceof RuneTile) {
+                ((RuneTile) world.getBlockEntity(pos.above())).uuid = context.getPlayer().getUUID();
             }
-            context.getItem().damageItem(1, context.getPlayer(), (t)->{});
+            context.getItemInHand().hurtAndBreak(1, context.getPlayer(), (t) -> {
+            });
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

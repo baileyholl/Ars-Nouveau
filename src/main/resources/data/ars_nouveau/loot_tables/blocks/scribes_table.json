@@ -2,27 +2,25 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "scribes_table",
       "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
+          "conditions": [
             {
-              "function": "minecraft:copy_name",
-              "source": "block_entity"
-            },
-            {
-              "function": "minecraft:set_contents",
-              "entries": [
-                {
-                  "type": "minecraft:dynamic",
-                  "name": "minecraft:contents"
-                }
-              ]
+              "condition": "minecraft:block_state_property",
+              "block": "ars_nouveau:scribes_table",
+              "properties": {
+                "part": "head"
+              }
             }
           ],
           "name": "ars_nouveau:scribes_table"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
         }
       ]
     }

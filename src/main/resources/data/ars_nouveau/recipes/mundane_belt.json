@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "   ",
-    "xyx",
-    " x "
-  ],
   "key": {
     "x": {
       "tag": "forge:leather"
     },
     "y": {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   },
+  "pattern": [
+    "   ",
+    "xyx",
+    " x "
+  ],
   "result": {
     "item": "ars_nouveau:mundane_belt"
   }

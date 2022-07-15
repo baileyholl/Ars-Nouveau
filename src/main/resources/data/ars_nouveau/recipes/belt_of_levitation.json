@@ -1,43 +1,49 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:belt_of_levitation"
+  },
+  "pedestalItems": [
     {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
     {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
     {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
     {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
     {
-      "item": "minecraft:feather"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "item": "minecraft:feather"
+      }
+    },
     {
-      "item": "minecraft:feather"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "item": "minecraft:feather"
+      }
+    },
     {
-      "item": "minecraft:feather"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "item": "minecraft:feather"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_launch"
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
     }
   ],
   "reagent": [
@@ -45,7 +51,5 @@
       "item": "ars_nouveau:mundane_belt"
     }
   ],
-  "output": {
-    "item": "ars_nouveau:belt_of_levitation"
-  }
+  "sourceCost": 0
 }

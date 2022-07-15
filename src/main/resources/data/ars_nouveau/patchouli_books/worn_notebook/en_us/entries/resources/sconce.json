@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:sconce",
+  "name": "block.ars_nouveau.sconce",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.sconce"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:sconce"
+    }
+  ]
+}

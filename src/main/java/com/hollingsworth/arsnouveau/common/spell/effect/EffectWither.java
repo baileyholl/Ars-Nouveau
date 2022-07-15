@@ -1,53 +1,74 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class EffectWither extends AbstractEffect {
-    public EffectWither() {
+    public static EffectWither INSTANCE = new EffectWither();
+
+    private EffectWither() {
         super(GlyphLib.EffectWitherID, "Wither");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            if(!(entity instanceof LivingEntity))
-                return;
-            applyPotion((LivingEntity) entity, Effects.WITHER,augments);
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            applyConfigPotion(living, MobEffects.WITHER, spellStats);
         }
+
     }
 
     @Override
-    public int getManaCost() {
-        return 50;
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 30);
+        addExtendTimeConfig(builder, 8);
     }
 
     @Override
-    public Item getCraftingReagent() {
-        return Items.WITHER_SKELETON_SKULL;
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        super.getDefaultAugmentLimits(defaults);
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 4);
+        return defaults;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.THREE;
+    public int getDefaultManaCost() {
+        return 100;
+    }
+
+    @Override
+    public SpellTier getTier() {
+        return SpellTier.THREE;
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return getPotionAugments();
     }
 
     @Override
     public String getBookDescription() {
         return "Applies the Wither debuff.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

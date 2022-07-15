@@ -1,6 +1,6 @@
 {
-	"name": "Machines",
-	"description": "Magical Machines",
-	"icon": "ars_nouveau:glyph_press",
-	"sortnum":5
+	"name": "ars_nouveau.machines",
+	"description": "ars_nouveau.machines_desc",
+	"icon": "ars_nouveau:scribes_table",
+	"sortnum":6
 }

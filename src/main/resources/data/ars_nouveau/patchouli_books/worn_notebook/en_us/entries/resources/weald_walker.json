@@ -1,0 +1,31 @@
+{
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:ritual_awakening",
+  "name": "ars_nouveau.page.weald_walker",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.weald_walker"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:blazing_weald_walker",
+      "text": "ars_nouveau.page2.weald_walker"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:cascading_weald_walker",
+      "text": "ars_nouveau.page3.weald_walker"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:flourishing_weald_walker",
+      "text": "ars_nouveau.page4.weald_walker"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:vexing_weald_walker",
+      "text": "ars_nouveau.page5.weald_walker"
+    }
+  ]
+}

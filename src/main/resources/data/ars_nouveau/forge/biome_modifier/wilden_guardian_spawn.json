@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#forge:is_cold/overworld",
+  "spawners": {
+    "type": "ars_nouveau:wilden_guardian",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 50
+  }
+}

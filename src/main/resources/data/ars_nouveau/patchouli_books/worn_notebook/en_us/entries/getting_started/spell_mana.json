@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:getting_started",
+  "icon": "ars_nouveau:novice_spell_book",
+  "name": "ars_nouveau.page.spell_mana",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.spell_mana"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.spell_mana"
+    }
+  ],
+  "sortnum": 2
+}

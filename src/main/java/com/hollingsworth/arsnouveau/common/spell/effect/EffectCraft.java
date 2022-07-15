@@ -1,70 +1,73 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.inventory.container.WorkbenchContainer;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
 public class EffectCraft extends AbstractEffect {
-    public EffectCraft() {
+
+    public static EffectCraft INSTANCE = new EffectCraft();
+
+    private EffectCraft() {
         super(GlyphLib.EffectCraftID, "Craft");
     }
 
-    private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.crafting");
+    private static final Component CONTAINER_NAME = Component.translatable("container.crafting");
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(shooter instanceof PlayerEntity && isRealPlayer(shooter)){
-            PlayerEntity playerEntity = (PlayerEntity) shooter;
-            playerEntity.openContainer(new SimpleNamedContainerProvider((id, inventory, player) -> {
-                return new CustomWorkbench(id, inventory, IWorldPosCallable.of(player.getEntityWorld(), player.getPosition()));
-            }, CONTAINER_NAME));
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (shooter instanceof Player playerEntity && isRealPlayer(shooter)) {
+            playerEntity.openMenu(new SimpleMenuProvider((id, inventory, player) -> new CustomWorkbench(id, inventory, ContainerLevelAccess.create(player.getCommandSenderWorld(), player.blockPosition())), CONTAINER_NAME));
         }
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 50;
     }
 
-    public static class CustomWorkbench extends WorkbenchContainer{
+    public static class CustomWorkbench extends CraftingMenu {
 
-        public CustomWorkbench(int id, PlayerInventory playerInventory) {
+        public CustomWorkbench(int id, Inventory playerInventory) {
             super(id, playerInventory);
         }
 
-        public CustomWorkbench(int id, PlayerInventory playerInventory, IWorldPosCallable p_i50090_3_) {
+        public CustomWorkbench(int id, Inventory playerInventory, ContainerLevelAccess p_i50090_3_) {
             super(id, playerInventory, p_i50090_3_);
         }
 
         @Override
-        public boolean canInteractWith(PlayerEntity playerIn) {
+        public boolean stillValid(Player playerIn) {
             return true;
         }
     }
 
+    @Nonnull
     @Override
-    public Item getCraftingReagent() {
-        return Items.CRAFTING_TABLE;
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 
     @Override
     public String getBookDescription() {
         return "Opens the crafting menu.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

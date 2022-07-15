@@ -2,8 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "potion_jar",
-      "rolls": 1,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -14,38 +13,41 @@
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "amount",
-                  "target": "BlockEntityTag.amount",
-                  "op": "replace"
+                  "target": "BlockEntityTag.amount"
                 },
                 {
+                  "op": "replace",
                   "source": "Potion",
-                  "target": "BlockEntityTag.Potion",
-                  "op": "replace"
+                  "target": "BlockEntityTag.Potion"
                 },
                 {
+                  "op": "replace",
                   "source": "CustomPotionEffects",
-                  "target": "BlockEntityTag.CustomPotionEffects",
-                  "op": "replace"
+                  "target": "BlockEntityTag.CustomPotionEffects"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
-              "function": "minecraft:set_contents",
+              "type": "ars_nouveau:potion_jar",
               "entries": [
                 {
                   "type": "minecraft:dynamic",
                   "name": "minecraft:contents"
                 }
-              ]
+              ],
+              "function": "minecraft:set_contents"
             }
           ],
           "name": "ars_nouveau:potion_jar"
         }
-      ]
+      ],
+      "name": "potion_jar",
+      "rolls": 1.0
     }
   ]
 }

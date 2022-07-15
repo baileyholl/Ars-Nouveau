@@ -1,31 +1,29 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
 
 public class ModBlock extends Block {
 
-
-    public ModBlock(Properties properties, String registry) {
+    public ModBlock(Properties properties) {
         super(properties);
-        setRegistryName(registry);
     }
 
-    public ModBlock(String registryName){
-        this(defaultProperties(), registryName);
+    public ModBlock() {
+        super(defaultProperties());
     }
 
-    public static Block.Properties defaultProperties(){
-        return Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(2.0f, 6.0f);
+    public static Block.Properties defaultProperties() {
+        return Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 6.0f);
     }
 
     @Override
-    public boolean shouldDisplayFluidOverlay(BlockState state, IBlockDisplayReader world, BlockPos pos, FluidState fluidState) {
+    public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidState) {
         return true;
     }
 }

@@ -1,30 +1,38 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class SpellCaster implements ISpellCaster{
+public class SpellCaster implements ISpellCaster {
+
     private Map<Integer, Spell> spells = new HashMap<>();
-
     private int slot;
-    ItemStack stack;
+    public ItemStack stack = ItemStack.EMPTY;
+    public String flavorText = "";
 
-    public SpellCaster(ItemStack stack){
+    public SpellCaster(ItemStack stack) {
+        this(stack.getOrCreateTag());
         this.stack = stack;
     }
 
+    @Nonnull
     @Override
     public Spell getSpell() {
-
         return spells.getOrDefault(getCurrentSlot(), new Spell());
     }
 
     @Override
-    public Spell getSpell(int slot) {
-        return spells.get(slot);
+    public @Nonnull Spell getSpell(int slot) {
+        return spells.getOrDefault(slot, new Spell());
     }
 
     @Override
@@ -40,19 +48,94 @@ public class SpellCaster implements ISpellCaster{
     @Override
     public void setCurrentSlot(int slot) {
         this.slot = slot;
-        write(stack);
+        writeItem(stack);
     }
 
     @Override
     public void setSpell(Spell spell, int slot) {
         this.spells.put(slot, spell);
-        write(stack);
+        writeItem(stack);
     }
 
     @Override
     public void setSpell(Spell spell) {
-        this.spells.put(getCurrentSlot(), spell);
-        write(stack);
+        setSpell(spell, getCurrentSlot());
+    }
+
+    @Override
+    public void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot) {
+        if (spells.containsKey(slot)) {
+            spells.get(slot).setRecipe(spellRecipe);
+        } else {
+            spells.put(slot, new Spell(spellRecipe));
+        }
+        writeItem(stack);
+    }
+
+    @Override
+    public ParticleColor getColor(int slot) {
+        return this.getSpell(slot).color;
+    }
+
+    @Override
+    public void setFlavorText(String str) {
+        this.flavorText = str;
+        writeItem(stack);
+    }
+
+    @Override
+    public String getSpellName(int slot) {
+        return this.getSpell(slot).name;
+    }
+
+    @Override
+    public String getSpellName() {
+        return this.getSpellName(getCurrentSlot());
+    }
+
+    @Override
+    public void setSpellName(String name) {
+        setSpellName(name, getCurrentSlot());
+    }
+
+    @Override
+    public void setSpellName(String name, int slot) {
+        this.getSpell(slot).name = name;
+        writeItem(stack);
+    }
+
+    @Override
+    public String getFlavorText() {
+        return flavorText == null ? "" : flavorText;
+    }
+
+    @Override
+    public void setColor(ParticleColor color) {
+        setColor(color, getCurrentSlot());
+    }
+
+    @Override
+    public void setColor(ParticleColor color, int slot) {
+        this.getSpell(slot).color = color;
+        writeItem(stack);
+    }
+
+    @Nonnull
+    @Override
+    public ConfiguredSpellSound getSound(int slot) {
+        return this.getSpell(slot).sound;
+    }
+
+    @Override
+    public void setSound(ConfiguredSpellSound sound, int slot) {
+        this.getSpell(slot).sound = sound;
+        writeItem(stack);
+    }
+
+    @Nonnull
+    @Override
+    public ParticleColor getColor() {
+        return this.getSpell().color;
     }
 
     @Override
@@ -60,27 +143,57 @@ public class SpellCaster implements ISpellCaster{
         return spells;
     }
 
-    public static SpellCaster deserialize(ItemStack stack){
-        SpellCaster instance = new SpellCaster(stack);
-        CompoundNBT tag = stack.getTag() != null ? stack.getTag() : new CompoundNBT();
-        instance.slot = tag.getInt("current_slot");
-        for(int i = 0; i < instance.getMaxSlots(); i++){
-            if(tag.contains("spell_" + i)){
-                instance.getSpells().put(i, Spell.deserialize(tag.getString("spell_" + i)));
-            }
+    public CompoundTag writeTag(CompoundTag tag) {
+        tag.putInt("current_slot", getCurrentSlot());
+        tag.putString("flavor", getFlavorText());
+        CompoundTag spellTag = new CompoundTag();
+
+        for (int i = 0; i < getMaxSlots(); i++) {
+            Spell spell = getSpell(i);
+            spellTag.put("spell" + i, spell.serialize());
         }
-        return instance;
+        tag.put("spells", spellTag);
+        tag.putInt("spell_count", getSpells().size());
+        return tag;
     }
 
-    public void write(ItemStack stack){
-        CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
-        tag.putInt("current_slot", getCurrentSlot());
-        tag.putInt("max_slot", getMaxSlots());
-        int i = 0;
-        for(Integer s : getSpells().keySet()){
-            tag.putString("spell_" + i, getSpells().get(s).serialize());
-            i++;
+    public SpellCaster(CompoundTag itemTag) {
+        CompoundTag tag = itemTag.getCompound(getTagID().toString());
+
+        this.slot = tag.getInt("current_slot");
+        this.flavorText = tag.getString("flavor");
+        CompoundTag spellTag = tag.getCompound("spells");
+        for (int i = 0; i < getMaxSlots(); i++) {
+            if (spellTag.contains("spell" + i)) {
+                Spell spell = Spell.fromTag(spellTag.getCompound("spell" + i));
+                spells.put(i, spell);
+            }
         }
+    }
+
+    public void writeItem(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return;
+        }
+        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag casterTag = new CompoundTag(); // Nest our tags so we dont cause conflicts
+        writeTag(casterTag);
+        tag.put(getTagID().toString(), casterTag);
         stack.setTag(tag);
+    }
+
+    /**
+     * Writes this compound data to the provided tag, stored with the caster ID.
+     *
+     * @param tag The tag to add this serialized tag to.
+     */
+    public void serializeOnTag(CompoundTag tag) {
+        CompoundTag thisData = writeTag(new CompoundTag());
+        tag.put(getTagID().toString(), thisData);
+    }
+
+    @Override
+    public ResourceLocation getTagID() {
+        return new ResourceLocation(ArsNouveau.MODID, "caster");
     }
 }

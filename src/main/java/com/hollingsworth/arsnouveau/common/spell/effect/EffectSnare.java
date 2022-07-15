@@ -1,43 +1,49 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 public class EffectSnare extends AbstractEffect {
+    public static EffectSnare INSTANCE = new EffectSnare();
 
-    public EffectSnare() {
+    private EffectSnare() {
         super(GlyphLib.EffectSnareID, "Snare");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity livingEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            if(!(livingEntity instanceof LivingEntity))
-                return;
-            ((LivingEntity)livingEntity).addPotionEffect(new EffectInstance(Effects.SLOWNESS,  100  + 20 * getBuffCount(augments, AugmentExtendTime.class), 20));
-            livingEntity.setMotion(0,0,0);
-            livingEntity.velocityChanged = true;
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            living.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), (int) (POTION_TIME.get() * 20 + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
+            living.setDeltaMovement(0, 0, 0);
+            living.hurtMarked = true;
         }
+
     }
 
+
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return livingEntityHitSuccess(rayTraceResult);
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 8);
+        addExtendTimeConfig(builder, 1);
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE);
     }
 
     @Override
@@ -46,12 +52,13 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
-    public Item getCraftingReagent() {
-        return Items.COBWEB;
+    public int getDefaultManaCost() {
+        return 100;
     }
 
+    @Nonnull
     @Override
-    public int getManaCost() {
-        return 80;
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

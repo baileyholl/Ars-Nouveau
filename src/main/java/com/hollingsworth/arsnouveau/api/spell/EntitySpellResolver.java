@@ -1,32 +1,25 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.entity.LivingEntity;
-
-import java.util.List;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * A special Spell resolver that ignores player limits such as mana.
  */
 public class EntitySpellResolver extends SpellResolver {
 
-
-    public EntitySpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe, SpellContext context) {
-        super(cast, spell_recipe, context);
+    public EntitySpellResolver(SpellContext context) {
+        super(context);
     }
 
-    public EntitySpellResolver(AbstractSpellPart[] spellParts, SpellContext context) {
-        super(spellParts, context);
-    }
 
-    public EntitySpellResolver(List<AbstractSpellPart> spell_recipe, SpellContext context) {
-        super(spell_recipe, context);
+    public void onCastOnEntity(LivingEntity target) {
+        super.onCastOnEntity(ItemStack.EMPTY, target, InteractionHand.MAIN_HAND);
     }
 
     @Override
     boolean enoughMana(LivingEntity entity) {
         return true;
     }
-
-
-
 }

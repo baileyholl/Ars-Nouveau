@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:purple_archwood_log"
+    },
+    {
+      "tag": "ars_nouveau:wilden_drop"
+    },
+    {
+      "tag": "ars_nouveau:wilden_drop"
+    },
+    {
+      "tag": "ars_nouveau:wilden_drop"
+    },
+    {
+      "item": "minecraft:lapis_block"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:ritual_wilden_summon"
+  }
+}

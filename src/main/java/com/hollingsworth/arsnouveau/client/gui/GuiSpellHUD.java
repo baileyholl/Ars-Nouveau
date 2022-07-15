@@ -1,25 +1,25 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FocusableGui;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
 
 
-public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
+public class GuiSpellHUD extends AbstractContainerEventHandler implements GuiEventListener {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
 
     @Override
-    public List<? extends IGuiEventListener> getEventListeners() {
+    public List<? extends GuiEventListener> children() {
         return Collections.emptyList();
     }
 
@@ -33,19 +33,13 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
         return false;
     }
 
-    public void drawHUD(MatrixStack ms) {
+    public void drawHUD(PoseStack ms) {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
-        if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null){
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
             int offsetLeft = 10;
-            CompoundNBT tag = stack.getTag();
-            int mode = tag.getInt(SpellBook.BOOK_MODE_TAG);
-            String renderString = "";
-            if(mode != 0){
-            renderString = mode + " " + SpellBook.getSpellName(stack.getTag());
-            }else{
-                renderString = new TranslationTextComponent("ars_nouveau.spell_hud.crafting_mode").getString();
-            }
-            minecraft.fontRenderer.drawStringWithShadow(ms,renderString, offsetLeft, minecraft.getMainWindow().getScaledHeight() - 30 , 0xFFFFFF);
+            ISpellCaster caster = CasterUtil.getCaster(stack);
+            String renderString = caster.getCurrentSlot() + 1 + " " + caster.getSpellName();
+            minecraft.font.drawShadow(ms, renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
         }
     }
 }

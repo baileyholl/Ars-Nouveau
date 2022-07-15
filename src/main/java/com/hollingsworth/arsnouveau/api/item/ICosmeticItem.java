@@ -1,0 +1,38 @@
+package com.hollingsworth.arsnouveau.api.item;
+
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+public interface ICosmeticItem {
+
+    //bone model where the item is renderer, all animations that include the bone will be synced with the item
+    default String getBone() {
+        return "head";
+    }
+
+    //translate relative to bone pivot
+    Vec3 getTranslations();
+
+    Vec3 getScaling();
+
+    /**
+     * @param entity check if is compatible with the cosmetic item
+     */
+    default boolean canWear(LivingEntity entity) {
+        return true;
+    }
+
+    /**
+     * select the camera transform, default is GROUND. You can change this with HEAD and tweak that display setting
+     * (with slider or forge separate prospective) to make the item scale/translations not influence how
+     * the items look in inventory and when it's dropped.
+     */
+    @OnlyIn(Dist.CLIENT)
+    default ItemTransforms.TransformType getTransformType() {
+        return ItemTransforms.TransformType.GROUND;
+    }
+
+}

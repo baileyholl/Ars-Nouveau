@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "ars_nouveau:mana_fiber"
+      "item": "ars_nouveau:magebloom_fiber"
     },
     {
-      "item": "ars_nouveau:mana_fiber"
+      "item": "ars_nouveau:magebloom_fiber"
     },
     {
       "item": "minecraft:blaze_powder"
     }
   ],
   "result": {
-    "item": "ars_nouveau:blaze_fiber",
-    "count": 2
+    "count": 2,
+    "item": "ars_nouveau:blaze_fiber"
   }
 }

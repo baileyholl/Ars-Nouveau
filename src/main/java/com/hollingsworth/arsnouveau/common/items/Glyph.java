@@ -1,69 +1,97 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class Glyph extends ModItem{
+public class Glyph extends ModItem {
     public AbstractSpellPart spellPart;
-    public Glyph(String registryName, AbstractSpellPart part) {
-        super(registryName);
+
+    public Glyph(AbstractSpellPart part) {
+        super();
         this.spellPart = part;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if(worldIn.isRemote)
-            return super.onItemRightClick(worldIn, playerIn, handIn);
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        if (worldIn.isClientSide)
+            return super.use(worldIn, playerIn, handIn);
 
-        if(!Config.isSpellEnabled(this.spellPart.tag)){
-            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.spell.disabled"), Util.DUMMY_UUID);
-            return super.onItemRightClick(worldIn, playerIn, handIn);
+        if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
+            playerIn.sendSystemMessage(Component.translatable("ars_nouveau.spell.disabled"));
+            return super.use(worldIn, playerIn, handIn);
         }
-
-        playerIn.inventory.mainInventory.forEach(itemStack -> {
-            if(itemStack.getItem() instanceof SpellBook){
-                if(SpellBook.getUnlockedSpells(itemStack.getTag()).contains(spellPart)){
-                    playerIn.sendMessage(new StringTextComponent("You already know this spell!"),  Util.DUMMY_UUID);
-                    return;
-                }
-                SpellBook.unlockSpell(itemStack.getTag(), this.spellPart.getTag());
-                playerIn.getHeldItem(handIn).shrink(1);
-                playerIn.sendMessage(new StringTextComponent("Unlocked " + this.spellPart.getName()), Util.DUMMY_UUID);
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+        if (playerDataCap != null) {
+            if (playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)) {
+                playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
+                return super.use(worldIn, playerIn, handIn);
+            } else if (playerDataCap.unlockGlyph(spellPart)) {
+                CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
+                playerIn.getItemInHand(handIn).shrink(1);
+                playerIn.sendSystemMessage(Component.literal("Unlocked " + this.spellPart.getName()));
             }
-        });
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        }
+        return super.use(worldIn, playerIn, handIn);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
-        if(spellPart != null){
-            if(!Config.isSpellEnabled(this.spellPart.tag)){
-                tooltip2.add(new StringTextComponent("Disabled. Cannot be used."));
-            }
-        }
+    public Component getName(ItemStack pStack) {
+        return Component.translatable("ars_nouveau.glyph_of", this.spellPart.getLocaleName());
     }
 
-    public JsonElement asRecipe(){
-        JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:glyph_recipe");
-        jsonobject.addProperty("tier", this.spellPart.getTier().toString());
-        jsonobject.addProperty("input", this.spellPart.getCraftingReagent().getRegistryName().toString());
-        jsonobject.addProperty("output", this.getRegistryName().toString());
-        return jsonobject;
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+        if (spellPart == null)
+            return;
+
+        if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
+        } else if (spellPart != null) {
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.add(Component.translatable("ars_nouveau.schools"));
+            for (SpellSchool s : spellPart.spellSchools) {
+                tooltip2.add(s.getTextComponent());
+            }
+        }
+
+        if (Minecraft.getInstance().player == null)
+            return;
+
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+        if (playerDataCap != null) {
+            if (playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)) {
+                tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));
+            } else {
+                tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
+            }
+        }
+        tooltip2.add(Component.translatable(" "));
+        if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())) {
+            tooltip2.add(spellPart.getBookDescLang());
+        } else {
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
+        }
+
     }
 }

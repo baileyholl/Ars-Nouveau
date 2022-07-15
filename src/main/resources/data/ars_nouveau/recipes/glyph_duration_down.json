@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "ars_nouveau:glyph_extend_time",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 55,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:clock"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:glowstone_dust"
+      }
+    }
+  ],
   "output": "ars_nouveau:glyph_duration_down"
 }

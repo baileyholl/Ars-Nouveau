@@ -1,43 +1,49 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:ring_of_greater_discount"
+  },
+  "pedestalItems": [
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:rods/blaze"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
+    },
     {
-      "tag": "forge:rods/blaze"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
+    },
     {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
     {
-      "tag": "forge:gems/mana"
+      "item": {
+        "tag": "forge:gems/source"
+      }
     }
   ],
   "reagent": [
@@ -45,7 +51,5 @@
       "item": "ars_nouveau:ring_of_lesser_discount"
     }
   ],
-  "output": {
-    "item": "ars_nouveau:ring_of_greater_discount"
-  }
+  "sourceCost": 0
 }

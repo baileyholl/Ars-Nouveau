@@ -1,103 +1,93 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
-
-public class EnchantingApparatusBlock extends ModBlock{
+public class EnchantingApparatusBlock extends TickableModBlock {
 
     public EnchantingApparatusBlock() {
-        super(ModBlock.defaultProperties().notSolid(),"enchanting_apparatus");
+        this(TickableModBlock.defaultProperties().noOcclusion());
     }
 
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        super.onBlockClicked(state, worldIn, pos, player);
+    public EnchantingApparatusBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(world.isRemote || handIn != Hand.MAIN_HAND)
-            return ActionResultType.SUCCESS;
-        EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
-        if(tile.isCrafting)
-            return ActionResultType.SUCCESS;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new EnchantingApparatusTile(pos, state);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+
+        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof EnchantingApparatusTile tile))
+            return InteractionResult.SUCCESS;
+        if (tile.isCrafting)
+            return InteractionResult.SUCCESS;
 
 
-        if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
-            PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
-            return ActionResultType.SUCCESS;
+        if (!(world.getBlockState(pos.below()).getBlock() instanceof ArcaneCore)) {
+            PortUtil.sendMessage(player, Component.translatable("alert.core"));
+            return InteractionResult.SUCCESS;
         }
-        if(tile.catalystItem == null || tile.catalystItem.isEmpty()){
-            IEnchantingRecipe recipe = tile.getRecipe(player.getHeldItemMainhand());
-            if(recipe == null){
-                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.norecipe"));
-            }else if(recipe.consumesMana() && !ManaUtil.hasManaNearby(tile.getPos(), tile.getWorld(), 10, recipe.manaCost())){
-                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.nomana"));
-            }else{
-                if(tile.attemptCraft(player.getHeldItemMainhand())){
-                    tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+        if (tile.getCatalystItem() == null || tile.getCatalystItem().isEmpty()) {
+            IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
+            if (recipe == null) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
+            } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
+            } else {
+                if (tile.attemptCraft(player.getMainHandItem(), player)) {
+                    tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
                 }
             }
-        }else{
-            ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
-            world.addEntity(item);
-            tile.catalystItem = ItemStack.EMPTY;
-            if(tile.attemptCraft(player.getHeldItemMainhand())){
-                tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+        } else {
+            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getCatalystItem());
+            world.addFreshEntity(item);
+            tile.setCatalystItem(ItemStack.EMPTY);
+            if (tile.attemptCraft(player.getMainHandItem(), player)) {
+                tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
             }
         }
 
-        world.notifyBlockUpdate(pos, state, state, 2);
-        return ActionResultType.SUCCESS;
+        world.sendBlockUpdated(pos, state, state, 2);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 1.0D, 1.0D, 15, 16, 15);
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return Block.box(1D, 1.0D, 1.0D, 15, 16, 15);
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.getTileEntity(pos) instanceof EnchantingApparatusTile && ((EnchantingApparatusTile) worldIn.getTileEntity(pos)).catalystItem != null){
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((EnchantingApparatusTile) worldIn.getTileEntity(pos)).catalystItem));
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.getCatalystItem() != null) {
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getCatalystItem()));
         }
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new EnchantingApparatusTile();
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public RenderShape getRenderShape(BlockState p_149645_1_) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }

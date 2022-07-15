@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -16,7 +16,7 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
     @Override
     public void setLivingAnimations(WildenStalker entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        if(entity.isFlying())
+        if (entity.isFlying())
             return;
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -34,22 +34,22 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
 //        frontLeftArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
 //        frontRightArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
 
-        frontLeftLeg.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
-        frontRightLeg.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
+        frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
     }
 
     @Override
-    public ResourceLocation getModelLocation(WildenStalker wildenStalker) {
-        return wildenStalker.isFlying() ?  new ResourceLocation(ArsNouveau.MODID , "geo/stalker_flying.geo.json") : new ResourceLocation(ArsNouveau.MODID , "geo/stalker_standing.geo.json");
+    public ResourceLocation getModelResource(WildenStalker wildenStalker) {
+        return wildenStalker.isFlying() ? new ResourceLocation(ArsNouveau.MODID, "geo/stalker_flying.geo.json") : new ResourceLocation(ArsNouveau.MODID, "geo/stalker_standing.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WildenStalker wildenStalker) {
+    public ResourceLocation getTextureResource(WildenStalker wildenStalker) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/stalker_angry.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WildenStalker wildenStalker) {
+    public ResourceLocation getAnimationResource(WildenStalker wildenStalker) {
         return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_stalker_standing.geo.json");
     }
 

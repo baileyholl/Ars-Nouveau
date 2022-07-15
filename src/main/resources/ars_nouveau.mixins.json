@@ -1,14 +1,27 @@
 {
   "required": true,
   "package": "com.hollingsworth.arsnouveau.common.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "ars_nouveau.refmap.json",
-  "mixins": [
-    "LightningRedirectMixin",
-    "PotionRecipeMixin"
+  "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
+  "client": [
+    "camera.ClientChunkCacheMixin",
+    "camera.LevelRendererMixin",
+    "camera.MinecraftMixin",
+    "light.ClientMixin",
+    "light.EntityRendererMixin",
+    "light.LevelRendererMixin",
+    "light.LightEntityMixin"
   ],
-  "injectors": {
-    "defaultRequire": 1
-  },
+  "mixins": [
+    "PotionRecipeMixin",
+    "camera.ANServerPlayerMixin",
+    "camera.ChunkMapMixin",
+    "camera.PlayerListMixin",
+    "camera.TrackedEntityMixin",
+    "elytra.ClientElytraMixin",
+    "elytra.ElytraPlayerMixin",
+    "elytra.MixinLivingEntity"
+  ],
   "minVersion": "0.8"
 }

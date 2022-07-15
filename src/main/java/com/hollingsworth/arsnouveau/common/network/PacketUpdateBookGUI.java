@@ -2,35 +2,35 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketUpdateBookGUI {
 
-    public CompoundNBT tag;
+    public ItemStack bookStack;
+
     //Decoder
-    public PacketUpdateBookGUI(PacketBuffer buf){
-        tag = buf.readCompoundTag();
+    public PacketUpdateBookGUI(FriendlyByteBuf buf) {
+        bookStack = buf.readItem();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
-        buf.writeCompoundTag(tag);
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeItem(bookStack);
     }
 
-    public PacketUpdateBookGUI(CompoundNBT tag){
-        this.tag = tag;
+    public PacketUpdateBookGUI(ItemStack stack) {
+        this.bookStack = stack;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            if(Minecraft.getInstance().currentScreen instanceof GuiSpellBook)
-                ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().currentScreen).spell_book_tag = tag;
-        } );
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            if (ArsNouveau.proxy.getMinecraft().screen instanceof GuiSpellBook)
+                ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().screen).bookStack = bookStack;
+        });
         ctx.get().setPacketHandled(true);
     }
 

@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "yyy",
-    "yxy",
-    "yyy"
-  ],
   "key": {
     "x": {
       "item": "minecraft:paper"
     },
     "y": {
-      "item": "ars_nouveau:mana_fiber"
+      "item": "ars_nouveau:magebloom_fiber"
     }
   },
+  "pattern": [
+    "yyy",
+    "yxy",
+    "yyy"
+  ],
   "result": {
     "item": "ars_nouveau:blank_parchment"
   }

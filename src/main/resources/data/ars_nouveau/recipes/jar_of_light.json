@@ -1,43 +1,49 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:jar_of_light"
+  },
+  "pedestalItems": [
     {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
     {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
     {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
     {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
     {
-      "item": "minecraft:redstone_lamp"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "item": "minecraft:redstone_lamp"
+      }
+    },
     {
-      "item": "minecraft:redstone_lamp"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "item": "minecraft:redstone_lamp"
+      }
+    },
     {
-      "tag": "forge:glass"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
     {
-      "tag": "forge:glass"
+      "item": {
+        "tag": "forge:glass"
+      }
     }
   ],
   "reagent": [
@@ -45,7 +51,5 @@
       "item": "minecraft:glass_bottle"
     }
   ],
-  "output": {
-    "item": "ars_nouveau:jar_of_light"
-  }
+  "sourceCost": 0
 }

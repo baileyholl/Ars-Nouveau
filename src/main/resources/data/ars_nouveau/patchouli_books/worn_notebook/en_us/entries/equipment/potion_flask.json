@@ -1,0 +1,31 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:potion_flask",
+  "name": "item.ars_nouveau.potion_flask",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.potion_flask"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:potion_flask"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.potion_flask"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:potion_flask_extend_time"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.potion_flask"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:potion_flask_amplify"
+    }
+  ]
+}

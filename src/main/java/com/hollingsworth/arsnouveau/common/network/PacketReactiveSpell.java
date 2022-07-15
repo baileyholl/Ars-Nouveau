@@ -1,30 +1,32 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.common.event.ReactiveEvents;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketReactiveSpell {
 
-    public PacketReactiveSpell(){}
+    public PacketReactiveSpell() {
+    }
 
 
     //Decoder
-    public PacketReactiveSpell(PacketBuffer buf){
+    public PacketReactiveSpell(FriendlyByteBuf buf) {
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){}
+    public void toBytes(FriendlyByteBuf buf) {
+    }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            ServerPlayerEntity serverPlayerEntity = ctx.get().getSender();
-            if(serverPlayerEntity!= null){
-                ItemStack stack = serverPlayerEntity.getHeldItemMainhand();
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ServerPlayer serverPlayerEntity = ctx.get().getSender();
+            if (serverPlayerEntity != null) {
+                ItemStack stack = serverPlayerEntity.getMainHandItem();
                 ReactiveEvents.castSpell(ctx.get().getSender(), stack);
             }
         });

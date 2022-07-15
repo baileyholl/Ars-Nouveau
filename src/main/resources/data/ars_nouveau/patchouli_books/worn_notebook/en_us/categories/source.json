@@ -1,0 +1,6 @@
+{
+	"name": "ars_nouveau.category.source",
+	"description": "ars_nouveau.source_desc",
+	"icon": "ars_nouveau:volcanic_sourcelink",
+	"sortnum":5
+}

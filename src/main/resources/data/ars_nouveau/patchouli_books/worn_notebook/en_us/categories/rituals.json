@@ -1,0 +1,6 @@
+{
+	"name": "ars_nouveau.rituals",
+	"description": "ars_nouveau.rituals_desc",
+	"icon": "ars_nouveau:ritual_brazier",
+	"sortnum":10
+}

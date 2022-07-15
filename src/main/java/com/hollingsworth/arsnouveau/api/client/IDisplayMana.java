@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.api.client;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IDisplayMana {
-
-    default boolean shouldDisplay(ItemStack stack){
+    /**
+     * If the held itemstack should display the mana bar
+     */
+    default boolean shouldDisplay(ItemStack stack) {
         return true;
     }
 }

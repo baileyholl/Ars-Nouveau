@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ars_nouveau:block/gilded_sourcestone_large_bricks",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ars_nouveau:block/gilded_sourcestone_large_bricks"
+    },
+    "facing=south": {
+      "model": "ars_nouveau:block/gilded_sourcestone_large_bricks",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ars_nouveau:block/gilded_sourcestone_large_bricks",
+      "y": 270
+    }
+  }
+}

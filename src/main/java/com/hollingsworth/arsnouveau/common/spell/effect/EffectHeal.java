@@ -1,68 +1,76 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
 public class EffectHeal extends AbstractEffect {
-    public EffectHeal() {
+    public static EffectHeal INSTANCE = new EffectHeal();
+
+    private EffectHeal() {
         super(GlyphLib.EffectHealID, "Heal");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            LivingEntity entity = ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity());
-            if(entity.removed || entity.getHealth() <= 0)
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
+            if (entity.isRemoved() || entity.getHealth() <= 0)
                 return;
 
-            float maxHealth = entity.getMaxHealth();
-            float healVal = 3.0f + 3 * getBuffCount(augments, AugmentAmplify.class);
-            if(getBuffCount(augments, AugmentExtendTime.class) > 0){
-                applyPotionWithCap(entity, Effects.REGENERATION, augments, 5, 5, 5);
-            }else{
-                entity.setHealth(entity.getHealth() + healVal > maxHealth ? entity.getMaxHealth() : entity.getHealth() + healVal);
+            float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+            if (entity.isInvertedHealAndHarm()) {
+                dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
+            } else {
+                entity.heal(healVal);
             }
+
         }
-
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return livingEntityHitSuccess(rayTraceResult);
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 3.0, "Base heal amount", "base_heal");
+        addAmpConfig(builder, 3.0);
     }
 
     @Override
-    public int getManaCost() {
-        return 40;
+    public int getDefaultManaCost() {
+        return 50;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public Item getCraftingReagent() {
-        return Items.GLISTERING_MELON_SLICE;
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentFortune.INSTANCE
+        );
     }
 
     @Override
     public String getBookDescription() {
-        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5.";
+        return "Heals a small amount of health for the target. When used on Undead, the spell will deal an equal amount of magic damage.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

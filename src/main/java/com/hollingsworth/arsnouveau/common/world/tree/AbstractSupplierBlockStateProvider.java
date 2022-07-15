@@ -2,16 +2,16 @@ package com.hollingsworth.arsnouveau.common.world.tree;
 
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
-import net.minecraft.world.gen.blockstateprovider.BlockStateProviderType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Random;
 import java.util.function.Function;
 
 public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvider {
@@ -31,17 +31,17 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     }
 
     @Override
-    protected abstract BlockStateProviderType<?> getProviderType();
+    protected abstract BlockStateProviderType<?> type();
 
     @Override
-    public BlockState getBlockState(Random randomIn, BlockPos blockPosIn) {
+    public BlockState getState(RandomSource randomIn, BlockPos blockPosIn) {
         if (state == null) {
             Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block == null) {
                 System.out.println("Block couldn't be located for key: " + key);
-                state = Blocks.AIR.getDefaultState();
+                state = Blocks.AIR.defaultBlockState();
             } else {
-                state = block.getDefaultState();
+                state = block.defaultBlockState();
             }
         }
 

@@ -1,20 +1,16 @@
 {
-    "name": "Item Scroll: Allow",
-    "icon": "ars_nouveau:allow_scroll",
-    "category": "automation",
-    "pages": [
-        {
-            "type": "text",
-            "text": "Provides a list of items to automation related entities. To inscribe an item, place on the Scribes Table and use blocks and items on the table while sneaking. When given to a Carbuncle, the carbuncle will only pickup and take items on the scroll."
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:blank_parchment",
-			"recipe2":"ars_nouveau:allow_scroll"
-		},
-		{
-            "type": "relations",
-            "entries":["apparatus/carbuncle_charm", "machines/scribes_table"]        
-        }
-    ]
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:allow_scroll",
+  "name": "item.ars_nouveau.allow_scroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.allow_scroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:blank_parchment",
+      "recipe2": "ars_nouveau:allow_scroll"
+    }
+  ]
 }

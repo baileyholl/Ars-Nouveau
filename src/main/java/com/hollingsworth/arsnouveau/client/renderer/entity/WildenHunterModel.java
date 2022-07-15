@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -33,23 +33,23 @@ public class WildenHunterModel extends AnimatedGeoModel<WildenHunter> {
 //        frontLeftArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
 //        frontRightArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
 
-        frontLeftLeg.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
-        frontRightLeg.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
+        frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+        frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
 
     }
 
     @Override
-    public ResourceLocation getModelLocation(WildenHunter hunter) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/wilden_hunter.geo.json");
+    public ResourceLocation getModelResource(WildenHunter hunter) {
+        return new ResourceLocation(ArsNouveau.MODID, "geo/wilden_hunter.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WildenHunter hunter) {
+    public ResourceLocation getTextureResource(WildenHunter hunter) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/packhunter.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WildenHunter hunter) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/wilden_hunter_animations.json");
+    public ResourceLocation getAnimationResource(WildenHunter hunter) {
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_hunter_animations.json");
     }
 }

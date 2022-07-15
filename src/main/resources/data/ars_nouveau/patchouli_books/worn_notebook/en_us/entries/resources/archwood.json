@@ -1,15 +1,11 @@
 {
-    "name": "Archwood Trees",
-    "icon": "ars_nouveau:blue_archwood_sapling",
-    "category": "resources",
-    "pages": [
-        {
-            "type": "text",
-            "text": "Archwood Trees have a small chance to spawn in any biome, and come in four types. Required for crafting Casting Wands."
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:archwood_planks"
-		}
-    ]
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:blue_archwood_sapling",
+  "name": "ars_nouveau.page.archwood",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.archwood"
+    }
+  ]
 }

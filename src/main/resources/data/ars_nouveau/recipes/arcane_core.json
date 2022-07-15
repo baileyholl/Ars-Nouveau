@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:sourcestone"
+    },
+    "y": {
+      "tag": "forge:ingots/gold"
+    }
+  },
   "pattern": [
     "xxx",
     "y y",
     "xxx"
   ],
-  "key": {
-    "y": {
-      "tag": "forge:ingots/gold"
-    },
-    "x": {
-      "item": "ars_nouveau:arcane_stone"
-    }
-  },
   "result": {
     "item": "ars_nouveau:arcane_core"
   }

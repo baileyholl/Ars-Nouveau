@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:summon_focus",
+  "name": "item.ars_nouveau.summon_focus",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.summon_focus"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:summon_focus"
+    }
+  ]
+}

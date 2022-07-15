@@ -2,76 +2,94 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public class SummonHorse extends HorseEntity implements ISummon {
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
+
+public class SummonHorse extends Horse implements ISummon {
     public int ticksLeft;
-    public SummonHorse(EntityType<? extends HorseEntity> type, World worldIn) {
+    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonHorse.class, EntityDataSerializers.OPTIONAL_UUID);
+
+    public SummonHorse(EntityType<? extends Horse> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    protected boolean canMate() {
+    protected boolean canParent() {
         return false;
     }
 
     @Override
-    public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        return super.func_230254_b_(p_230254_1_, p_230254_2_);
+    public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
+        return super.mobInteract(p_230254_1_, p_230254_2_);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote){
+        if (!level.isClientSide) {
             ticksLeft--;
-            if(ticksLeft <= 0) {
-                ParticleUtil.spawnPoof((ServerWorld) world, getPosition());
-                this.remove();
-                onSummonDeath(world, null, true);
+            if (ticksLeft <= 0) {
+                ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+                this.remove(RemovalReason.DISCARDED);
+                onSummonDeath(level, null, true);
             }
         }
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        onSummonDeath(world, cause, false);
+    public void die(DamageSource cause) {
+        super.die(cause);
+        onSummonDeath(level, cause, false);
     }
 
     @Override
-    public boolean canPickUpItem(ItemStack itemstackIn) {
+    public boolean canTakeItem(ItemStack itemstackIn) {
         return false;
     }
 
     @Override
-    protected void dropInventory() { }
+    protected void dropEquipment() {
+    }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    public int getExperienceReward() {
         return 0;
     }
 
-    public Inventory getHorseInventory(){
-        return this.horseChest;
+    public SimpleContainer getHorseInventory() {
+        return this.inventory;
     }
 
     @Override
-    public void openGUI(PlayerEntity playerEntity) { }
+    public void openCustomInventoryScreen(Player playerEntity) {
+    }
 
     @Override
-    public boolean canMateWith(AnimalEntity otherAnimal) {
+    public boolean canMate(Animal otherAnimal) {
         return false;
     }
 
@@ -81,19 +99,22 @@ public class SummonHorse extends HorseEntity implements ISummon {
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack stack) {
+    public boolean isFood(ItemStack stack) {
         return false;
-    }
-    @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        this.ticksLeft = compound.getInt("left");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.ticksLeft = compound.getInt("left");
+
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
+        writeOwner(compound);
     }
 
     @Override
@@ -104,5 +125,17 @@ public class SummonHorse extends HorseEntity implements ISummon {
     @Override
     public void setTicksLeft(int ticks) {
         this.ticksLeft = ticks;
+    }
+
+
+    @Nullable
+    @Override
+    public UUID getOwnerID() {
+        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+    }
+
+    @Override
+    public void setOwnerID(UUID uuid) {
+        this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 }

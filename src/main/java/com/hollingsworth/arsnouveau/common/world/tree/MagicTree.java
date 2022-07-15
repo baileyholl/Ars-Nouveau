@@ -1,20 +1,24 @@
 package com.hollingsworth.arsnouveau.common.world.tree;
 
-import net.minecraft.block.trees.Tree;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 
-import java.util.Random;
+import java.util.function.Supplier;
 
-public class MagicTree extends Tree {
+public class MagicTree extends AbstractTreeGrower {
 
-    ConfiguredFeature<BaseTreeFeatureConfig, ?> configConfiguredFeature;
-    public MagicTree(ConfiguredFeature<BaseTreeFeatureConfig, ?> configConfiguredFeature){
+    Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature;
+
+    public MagicTree(Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature) {
         this.configConfiguredFeature = configConfiguredFeature;
     }
 
     @Override
-    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean largeHive) {
-        return configConfiguredFeature;
+    protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(RandomSource randomIn, boolean largeHive) {
+        return configConfiguredFeature.get();
     }
+
 }

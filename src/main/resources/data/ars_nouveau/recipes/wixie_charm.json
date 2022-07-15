@@ -1,23 +1,29 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:wixie_charm"
+  },
+  "pedestalItems": [
     {
-      "tag": "minecraft:saplings"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "minecraft:saplings"
+      }
+    },
     {
-      "tag": "forge:gems/emerald"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:gems/emerald"
+      }
+    },
     {
-      "item": "minecraft:crafting_table"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "minecraft:crafting_table"
+      }
+    },
     {
-      "item": "minecraft:brewing_stand"
+      "item": {
+        "item": "minecraft:brewing_stand"
+      }
     }
   ],
   "reagent": [
@@ -25,7 +31,5 @@
       "item": "ars_nouveau:wixie_shards"
     }
   ],
-  "output": {
-    "item": "ars_nouveau:wixie_charm"
-  }
+  "sourceCost": 0
 }

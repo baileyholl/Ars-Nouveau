@@ -1,31 +1,24 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
-import javax.annotation.Nullable;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 
 public class AugmentSplit extends AbstractAugment {
-    public AugmentSplit() {
+    public static AugmentSplit INSTANCE = new AugmentSplit();
+
+    private AugmentSplit() {
         super(GlyphLib.AugmentSplitID, "Split");
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 20;
     }
 
     @Override
-    public Tier getTier() {
-        return  Tier.THREE;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.STONECUTTER;
+    public SpellTier getTier() {
+        return SpellTier.THREE;
     }
 
     @Override

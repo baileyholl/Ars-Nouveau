@@ -4,180 +4,190 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
-public class EntityFollowProjectile extends ArrowEntity {
-    public static final DataParameter<BlockPos> to = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
-    public static final DataParameter<BlockPos> from = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
-    public static final DataParameter<Integer> RED = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> GREEN = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> BLUE = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
+public class EntityFollowProjectile extends ColoredProjectile {
+    public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> DESPAWN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
 
     private int age;
-//    int age;
+    //    int age;
     int maxAge = 500;
 
-    public EntityFollowProjectile(World world){
-        super(world, 0, 0,0);
+    public EntityFollowProjectile(Level world) {
+        super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world, 0, 0, 0);
     }
 
 
-    public EntityFollowProjectile(World worldIn, Vector3d from, Vector3d to) {
-        this(ModEntities.ENTITY_FOLLOW_PROJ, worldIn);
-        this.dataManager.set(EntityFollowProjectile.to, new BlockPos(to));
-        this.dataManager.set(EntityFollowProjectile.from, new BlockPos(from));
+    public void setDespawnDistance(int distance) {
+        getEntityData().set(DESPAWN, distance);
+    }
+
+    public EntityFollowProjectile(Level worldIn, Vec3 from, Vec3 to) {
+        this(ModEntities.ENTITY_FOLLOW_PROJ.get(), worldIn);
+        this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
+        this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
-        setPosition(from.x + 0.5, from.y+ 0.5, from.z+ 0.5);
-        this.dataManager.set(RED, 255);
-        this.dataManager.set(GREEN, 25);
-        this.dataManager.set(BLUE, 180);
+        setPos(from.x + 0.5, from.y + 0.5, from.z + 0.5);
+        this.entityData.set(RED, 255);
+        this.entityData.set(GREEN, 25);
+        this.entityData.set(BLUE, 180);
+
+        double distance = BlockUtil.distanceFrom(new BlockPos(from), new BlockPos(to));
+        setDespawnDistance((int) (distance + 10));
     }
 
-    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
-        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
-        this.dataManager.set(RED, r);
-        this.dataManager.set(GREEN, g);
-        this.dataManager.set(BLUE, b);
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
+        this.entityData.set(RED, Math.min(r, 255));
+        this.entityData.set(GREEN, Math.min(g, 255));
+        this.entityData.set(BLUE, Math.min(b, 255));
+
     }
 
-    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to) {
-        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to, ParticleColor.IntWrapper color) {
+        this(worldIn, from, to, color.r, color.g, color.b);
     }
 
-    public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, World world) {
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
+    }
+
+    public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
     }
 
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(to,new BlockPos(0,0,0));
-        this.dataManager.register(from,new BlockPos(0,0,0));
-        this.dataManager.register(RED, 0);
-        this.dataManager.register(GREEN, 0);
-        this.dataManager.register(BLUE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(to, new BlockPos(0, 0, 0));
+        this.entityData.define(from, new BlockPos(0, 0, 0));
+        this.entityData.define(SPAWN_TOUCH, defaultsBurst());
+        this.entityData.define(DESPAWN, 10);
+    }
+
+    public boolean defaultsBurst() {
+        return false;
     }
 
 
     @Override
     public void tick() {
-        this.age++;
-        if(age > maxAge) {
-            this.remove();
-            return;
-        }
-        Vector3d vec3d2 = this.getMotion();
-        BlockPos dest = this.dataManager.get(EntityFollowProjectile.to);
-        if(BlockUtil.distanceFrom(this.getPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.getPosition(), dest) > 10){
-            this.remove();
-            return;
-        }
-        double posX = getPosX();
-        double posY = getPosY();
-        double posZ = getPosZ();
-        double motionX = this.getMotion().x;
-        double motionY = this.getMotion().y;
-        double motionZ = this.getMotion().z;
+        super.tick();
 
-        if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0){
-            double targetX = dest.getX()+0.5;
-            double targetY = dest.getY()+0.5;
-            double targetZ = dest.getZ()+0.5;
-            Vector3d targetVector = new Vector3d(targetX-posX,targetY-posY,targetZ-posZ);
+        this.age++;
+        if (age > maxAge) {
+            this.remove(RemovalReason.DISCARDED);
+            return;
+        }
+        Vec3 vec3d2 = this.getDeltaMovement();
+        BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
+        if (BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)) {
+            if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
+                ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
+            }
+            this.remove(RemovalReason.DISCARDED);
+            return;
+        }
+        double posX = getX();
+        double posY = getY();
+        double posZ = getZ();
+        double motionX = this.getDeltaMovement().x;
+        double motionY = this.getDeltaMovement().y;
+        double motionZ = this.getDeltaMovement().z;
+
+        if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0) {
+            double targetX = dest.getX() + 0.5;
+            double targetY = dest.getY() + 0.5;
+            double targetZ = dest.getZ() + 0.5;
+            Vec3 targetVector = new Vec3(targetX - posX, targetY - posY, targetZ - posZ);
             double length = targetVector.length();
-            targetVector = targetVector.scale(0.3/length);
-            double weight  = 0;
-            if (length <= 3){
-                weight = 0.9*((3.0-length)/3.0);
+            targetVector = targetVector.scale(0.3 / length);
+            double weight = 0;
+            if (length <= 3) {
+                weight = 0.9 * ((3.0 - length) / 3.0);
             }
 
-            motionX = (0.9-weight)*motionX+(0.1+weight)*targetVector.x;
-            motionY = (0.9-weight)*motionY+(0.1+weight)*targetVector.y;
-            motionZ = (0.9-weight)*motionZ+(0.1+weight)*targetVector.z;
+            motionX = (0.9 - weight) * motionX + (0.1 + weight) * targetVector.x;
+            motionY = (0.9 - weight) * motionY + (0.1 + weight) * targetVector.y;
+            motionZ = (0.9 - weight) * motionZ + (0.1 + weight) * targetVector.z;
         }
 
         posX += motionX;
         posY += motionY;
         posZ += motionZ;
-        this.setPosition(posX, posY, posZ);
-        this.setMotion(motionX, motionY, motionZ);
+        this.setPos(posX, posY, posZ);
 
-//        if (getEntityWorld().isRemote){
-//            double deltaX = posX - prevPosX;
-//            double deltaY = posY - prevPosY;
-//            double deltaZ = posZ - prevPosZ;
-//            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
-//            for (double i = 0; i < dist; i ++){
-//                double coeff = i/dist;
-//                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
-//            }
-//        }
+        this.setDeltaMovement(motionX, motionY, motionZ);
 
-        if(world.isRemote && this.age > 1) {
-            double deltaX = getPosX() - lastTickPosX;
-            double deltaY = getPosY() - lastTickPosY;
-            double deltaZ = getPosZ() - lastTickPosZ;
-            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
-            int counter = 0;
+        if (level.isClientSide && this.age > 1) {
+            double deltaX = getX() - xOld;
+            double deltaY = getY() - yOld;
+            double deltaZ = getZ() - zOld;
+            float dist = (float) (Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8.0f);
+            for (double i = 0.0; i <= dist; i++) {
+                double coeff = (i / dist);
+                level.addParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
+                        (getX() + deltaX * coeff), (getY() + deltaY * coeff), (getZ() + deltaZ * coeff),
+                        0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
 
-            for (double i = 0; i < dist; i ++){
-                double coeff = i/dist;
-                counter += world.rand.nextInt(2);
-                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(GlowParticleData.createData(new ParticleColor(this.dataManager.get(RED),this.dataManager.get(GREEN),this.dataManager.get(BLUE))),
-                            (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
-                }
             }
 
         }
     }
 
-
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        this.dataManager.set(EntityFollowProjectile.from, NBTUtil.getBlockPos(compound, "from"));
-        this.dataManager.set(EntityFollowProjectile.to, NBTUtil.getBlockPos(compound, "to"));
+    public void setRemoved(RemovalReason reason) {
+        if (reason == RemovalReason.UNLOADED_TO_CHUNK)
+            reason = RemovalReason.DISCARDED;
+        super.setRemoved(reason);
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        if(from != null)
-            NBTUtil.storeBlockPos(compound, "from",  this.dataManager.get(EntityFollowProjectile.from));
-        if(to != null)
-            NBTUtil.storeBlockPos(compound, "to",  this.dataManager.get(EntityFollowProjectile.to));
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.entityData.set(EntityFollowProjectile.from, NBTUtil.getBlockPos(compound, "from"));
+        this.entityData.set(EntityFollowProjectile.to, NBTUtil.getBlockPos(compound, "to"));
     }
+
     @Override
-    public void baseTick() {
-        super.baseTick();
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        if (from != null)
+            NBTUtil.storeBlockPos(compound, "from", this.entityData.get(EntityFollowProjectile.from));
+        if (to != null)
+            NBTUtil.storeBlockPos(compound, "to", this.entityData.get(EntityFollowProjectile.to));
     }
+
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityFollowProjectile(FMLPlayMessages.SpawnEntity packet, World world){
-        super(ModEntities.ENTITY_FOLLOW_PROJ, world);
+    public EntityFollowProjectile(PlayMessages.SpawnEntity packet, Level world) {
+        super(ModEntities.ENTITY_FOLLOW_PROJ.get(), world);
     }
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FOLLOW_PROJ;
+        return ModEntities.ENTITY_FOLLOW_PROJ.get();
     }
+
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 }

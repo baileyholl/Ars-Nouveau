@@ -1,116 +1,124 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.AxisAlignedBB;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.Path;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
 public class FindItem extends Goal {
-    private EntityCarbuncle entityCarbuncle;
-
-    Entity pathingEntity;
+    private Starbuncle starbuncle;
     boolean itemStuck;
-    AxisAlignedBB aab;
     int timeFinding;
-    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
-    };
-
-    private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET;
-    });
+    int stuckTicks;
+    List<ItemEntity> destList = new ArrayList<>();
+    ItemEntity dest;
+    public StarbyTransportBehavior behavior;
+    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.canStoreStack(itemEntity.getItem());
 
     @Override
-    public void resetTask() {
-        super.resetTask();
+    public void stop() {
+        super.stop();
         itemStuck = false;
         timeFinding = 0;
-    }
-
-    public FindItem(EntityCarbuncle entityCarbuncle) {
-        this.entityCarbuncle = entityCarbuncle;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
-        this.aab = entityCarbuncle.getBoundingBox().grow(8.0D, 6, 8.0D);
-    }
-
-
-    public Predicate<ItemEntity> getFinderItems() {
-        return entityCarbuncle.isTamed() ? TRUSTED_TARGET_SELECTOR : NONTAMED_TARGET_SELECTOR;
-    }
-
-    public List<ItemEntity> nearbyItems(){
-       return entityCarbuncle.world.getLoadedEntitiesWithinAABB(ItemEntity.class, aab, getFinderItems());
-    }
-
-
-
-    @Override
-    public boolean shouldContinueExecuting() {
-        return timeFinding <= 20 * 30 && !itemStuck && !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed || ((ItemEntity)pathingEntity).getItem().isEmpty()) && entityCarbuncle.getHeldStack().isEmpty();
+        destList = new ArrayList<>();
+        dest = null;
+        stuckTicks = 0;
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
     }
 
     @Override
-    public boolean shouldExecute() {
-        return !entityCarbuncle.isStuck && entityCarbuncle.getHeldStack().isEmpty() && !nearbyItems().isEmpty();
-    }
-
-    @Override
-    public void startExecuting() {
-        super.startExecuting();
+    public void start() {
+        super.start();
         timeFinding = 0;
         itemStuck = false;
-        ItemStack itemstack = entityCarbuncle.getHeldStack();
+        stuckTicks = 0;
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.HUNTING_ITEM;
+    }
+
+    public FindItem(Starbuncle starbuncle, StarbyTransportBehavior transportBehavior) {
+        this.starbuncle = starbuncle;
+        this.behavior = transportBehavior;
+        this.setFlags(EnumSet.of(Flag.MOVE));
+    }
+
+    public List<ItemEntity> nearbyItems() {
+        return starbuncle.level.getEntitiesOfClass(ItemEntity.class, starbuncle.getAABB(), TRUSTED_TARGET_SELECTOR);
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        if (behavior.isPickupDisabled())
+            return false;
+        return timeFinding <= 20 * 15 && !itemStuck && starbuncle.getHeldStack().isEmpty();
+    }
+
+    @Override
+    public boolean canUse() {
+        if (behavior.isPickupDisabled() || !starbuncle.getHeldStack().isEmpty())
+            return false;
+        ItemStack itemstack = starbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
-        if (itemstack.isEmpty() && !list.isEmpty() && !itemStuck) {
-            for(ItemEntity entity : list){
-                if(!entityCarbuncle.isValidItem(entity.getItem()))
+        itemStuck = false;
+        destList = new ArrayList<>();
+        if (itemstack.isEmpty() && !list.isEmpty()) {
+            for (ItemEntity entity : list) {
+                if (!behavior.canStoreStack(entity.getItem()))
                     continue;
-                Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
-                if(path != null && path.reachesTarget()) {
-
-                    this.pathingEntity = entity;
-                    pathToTarget(pathingEntity, 1.2f);
-
-                    entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
-                    break;
-                }
+                destList.add(entity);
             }
         }
-
-        if(pathingEntity == null)
-            itemStuck = true;
-
+        if (destList.isEmpty()) {
+            return false;
+        }
+        Collections.shuffle(destList);
+        for (ItemEntity e : destList) {
+            Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(e.position()), 1, 9);
+            if (path != null && path.canReach()) {
+                this.dest = e;
+                break;
+            }
+        }
+        if (dest == null) {
+            starbuncle.setBackOff(30 + starbuncle.level.random.nextInt(30));
+        }
+        return dest != null && !nearbyItems().isEmpty();
     }
 
     @Override
     public void tick() {
         super.tick();
-        timeFinding += 1;
-        if(pathingEntity == null || pathingEntity.removed)
-            return;
-
-        ItemStack itemstack = entityCarbuncle.getHeldStack();
-        if (itemstack.isEmpty()) {
-            pathToTarget(pathingEntity, 1.2f);
-            entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
-        }
-    }
-    public void pathToTarget(Entity entity, double speed){
-        Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
-        if(path != null && path.reachesTarget()) {
-            entityCarbuncle.getNavigator().setPath(path, speed);
-          //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));
-        }
-        if(path != null && !path.reachesTarget()) {
+        if (dest == null || dest.getItem().isEmpty() || dest.isRemoved()) {
             itemStuck = true;
+            return;
         }
+        timeFinding++;
+        starbuncle.minecraftPathNav.stop();
+        Path path = starbuncle.minecraftPathNav.createPath(new BlockPos(dest.position()), 1, 9);
+        if (path == null || !path.canReach()) {
+            stuckTicks++;
+            if (stuckTicks > 20 * 5) { // Give up after 5 seconds of being unpathable, in case we fall or jump into the air
+                itemStuck = true;
+            }
+            return;
+        }
+        ItemStack itemstack = starbuncle.getHeldStack();
+        if (!itemstack.isEmpty()) {
+            itemStuck = true;
+            return;
+        }
+        starbuncle.getNavigation().moveTo(dest, 1.4d);
+    }
+
+    @Override
+    public boolean isInterruptable() {
+        return false;
     }
 }

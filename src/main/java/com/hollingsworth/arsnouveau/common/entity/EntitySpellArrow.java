@@ -2,93 +2,121 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.block.BlockState;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
-public class EntitySpellArrow extends ArrowEntity {
+public class EntitySpellArrow extends Arrow {
     public SpellResolver spellResolver;
     public int pierceLeft;
     BlockPos lastPosHit;
     Entity lastEntityHit;
+    public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
 
-    public EntitySpellArrow(EntityType<? extends ArrowEntity> type, World worldIn) {
+    public EntitySpellArrow(EntityType<? extends Arrow> type, Level worldIn) {
         super(type, worldIn);
+        setDefaultColors();
     }
 
-    public EntitySpellArrow(World worldIn, double x, double y, double z) {
+    public EntitySpellArrow(Level worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
+        setDefaultColors();
     }
 
-    public EntitySpellArrow(World worldIn, LivingEntity shooter) {
+    public EntitySpellArrow(Level worldIn, LivingEntity shooter) {
         super(worldIn, shooter);
+        setDefaultColors();
+    }
+
+    public void setDefaultColors() {
+        setColors(ParticleColor.defaultParticleColor());
+    }
+
+    public void setColors(ParticleColor color) {
+        ParticleColor.IntWrapper wrapper = color.toWrapper();
+        this.entityData.set(RED, wrapper.r);
+        this.entityData.set(GREEN, wrapper.g);
+        this.entityData.set(BLUE, wrapper.b);
     }
 
     @Override
     public void tick() {
-        boolean isNoClip = this.getNoClip();
-        Vector3d vector3d = this.getMotion();
-        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
-            float f = MathHelper.sqrt(horizontalMag(vector3d));
-            this.rotationYaw = (float) (MathHelper.atan2(vector3d.x, vector3d.z) * (double) (180F / (float) Math.PI));
-            this.rotationPitch = (float) (MathHelper.atan2(vector3d.y, (double) f) * (double) (180F / (float) Math.PI));
-            this.prevRotationYaw = this.rotationYaw;
-            this.prevRotationPitch = this.rotationPitch;
+        boolean isNoClip = this.isNoPhysics();
+        Vec3 vector3d = this.getDeltaMovement();
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
+            float f = Mth.sqrt((float) vector3d.horizontalDistanceSqr());
+            this.yRot = (float) (Mth.atan2(vector3d.x, vector3d.z) * (double) (180F / (float) Math.PI));
+            this.xRot = (float) (Mth.atan2(vector3d.y, f) * (double) (180F / (float) Math.PI));
+            this.yRotO = this.yRot;
+            this.xRotO = this.xRot;
         }
 
-        BlockPos blockpos = this.getPosition();
-        BlockState blockstate = this.world.getBlockState(blockpos);
+        BlockPos blockpos = this.blockPosition();
+        BlockState blockstate = this.level.getBlockState(blockpos);
 
 
-        if (this.arrowShake > 0) {
-            --this.arrowShake;
+        if (this.shakeTime > 0) {
+            --this.shakeTime;
         }
 
-        if (this.isWet()) {
-            this.extinguish();
+        if (this.isInWaterOrRain()) {
+            this.clearFire();
         }
 
 
-        this.timeInGround = 0;
-        Vector3d vector3d2 = this.getPositionVec();
-        Vector3d vector3d3 = vector3d2.add(vector3d);
-        RayTraceResult raytraceresult = this.world.rayTraceBlocks(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
-            vector3d3 = raytraceresult.getHitVec();
+        this.inGroundTime = 0;
+        Vec3 vector3d2 = this.position();
+        Vec3 vector3d3 = vector3d2.add(vector3d);
+        HitResult raytraceresult = this.level.clip(new ClipContext(vector3d2, vector3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        if (raytraceresult.getType() != HitResult.Type.MISS) {
+            vector3d3 = raytraceresult.getLocation();
         }
 
-        while (!this.removed) {
-            EntityRayTraceResult entityraytraceresult = this.rayTraceEntities(vector3d2, vector3d3);
+        while (!this.isRemoved()) {
+            EntityHitResult entityraytraceresult = this.findHitEntity(vector3d2, vector3d3);
             if (entityraytraceresult != null) {
                 raytraceresult = entityraytraceresult;
             }
 
-            if (raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.ENTITY) {
-                Entity entity = ((EntityRayTraceResult) raytraceresult).getEntity();
-                Entity entity1 = this.func_234616_v_();
-                if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity) entity1).canAttackPlayer((PlayerEntity) entity)) {
+            if (raytraceresult instanceof EntityHitResult entityHitResult) {
+                Entity entity = entityHitResult.getEntity();
+                Entity entity1 = this.getOwner();
+                if (entity.noPhysics) {
+                    raytraceresult = null;
+                    entityraytraceresult = null;
+                } else if (entity instanceof Player player1 && entity1 instanceof Player player2 && !player2.canHarmPlayer(player1)) {
                     raytraceresult = null;
                     entityraytraceresult = null;
                 }
             }
 
-            if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS && !isNoClip && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
-                this.onImpact(raytraceresult);
-                this.isAirBorne = true;
+            if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !isNoClip && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                this.onHit(raytraceresult);
+                this.hasImpulse = true;
             }
 
             if (entityraytraceresult == null || this.getPierceLevel() <= 0) {
@@ -98,75 +126,75 @@ public class EntitySpellArrow extends ArrowEntity {
             raytraceresult = null;
         }
 
-        vector3d = this.getMotion();
+        vector3d = this.getDeltaMovement();
         double d3 = vector3d.x;
         double d4 = vector3d.y;
         double d0 = vector3d.z;
-        if (this.getIsCritical()) {
+        if (this.isCritArrow()) {
             for (int i = 0; i < 4; ++i) {
-                this.world.addParticle(ParticleTypes.CRIT, this.getPosX() + d3 * (double) i / 4.0D, this.getPosY() + d4 * (double) i / 4.0D, this.getPosZ() + d0 * (double) i / 4.0D, -d3, -d4 + 0.2D, -d0);
+                this.level.addParticle(ParticleTypes.CRIT, this.getX() + d3 * (double) i / 4.0D, this.getY() + d4 * (double) i / 4.0D, this.getZ() + d0 * (double) i / 4.0D, -d3, -d4 + 0.2D, -d0);
             }
         }
 
-        double d5 = this.getPosX() + d3;
-        double d1 = this.getPosY() + d4;
-        double d2 = this.getPosZ() + d0;
-        float f1 = MathHelper.sqrt(horizontalMag(vector3d));
+        double d5 = this.getX() + d3;
+        double d1 = this.getY() + d4;
+        double d2 = this.getZ() + d0;
+        float f1 = Mth.sqrt((float) vector3d.horizontalDistanceSqr());
         if (isNoClip) {
-            this.rotationYaw = (float) (MathHelper.atan2(-d3, -d0) * (double) (180F / (float) Math.PI));
+            this.yRot = (float) (Mth.atan2(-d3, -d0) * (double) (180F / (float) Math.PI));
         } else {
-            this.rotationYaw = (float) (MathHelper.atan2(d3, d0) * (double) (180F / (float) Math.PI));
+            this.yRot = (float) (Mth.atan2(d3, d0) * (double) (180F / (float) Math.PI));
         }
 
-        this.rotationPitch = (float) (MathHelper.atan2(d4, (double) f1) * (double) (180F / (float) Math.PI));
-        this.rotationPitch = func_234614_e_(this.prevRotationPitch, this.rotationPitch);
-        this.rotationYaw = func_234614_e_(this.prevRotationYaw, this.rotationYaw);
+        this.xRot = (float) (Mth.atan2(d4, f1) * (double) (180F / (float) Math.PI));
+        this.xRot = lerpRotation(this.xRotO, this.xRot);
+        this.yRot = lerpRotation(this.yRotO, this.yRot);
         float f2 = 0.99F;
         float f3 = 0.05F;
         if (this.isInWater()) {
             for (int j = 0; j < 4; ++j) {
                 float f4 = 0.25F;
-                this.world.addParticle(ParticleTypes.BUBBLE, d5 - d3 * 0.25D, d1 - d4 * 0.25D, d2 - d0 * 0.25D, d3, d4, d0);
+                this.level.addParticle(ParticleTypes.BUBBLE, d5 - d3 * 0.25D, d1 - d4 * 0.25D, d2 - d0 * 0.25D, d3, d4, d0);
             }
 
-            f2 = this.getWaterDrag();
+            f2 = this.getWaterInertia();
         }
 
-        this.setMotion(vector3d.scale((double) f2));
-        if (!this.hasNoGravity() && !isNoClip) {
-            Vector3d vector3d4 = this.getMotion();
-            this.setMotion(vector3d4.x, vector3d4.y - (double) 0.05F, vector3d4.z);
+        this.setDeltaMovement(vector3d.scale(f2));
+        if (!this.isNoGravity() && !isNoClip) {
+            Vec3 vector3d4 = this.getDeltaMovement();
+            this.setDeltaMovement(vector3d4.x, vector3d4.y - (double) 0.05F, vector3d4.z);
         }
 
-        this.setPosition(d5, d1, d2);
-        this.doBlockCollisions();
+        this.setPos(d5, d1, d2);
+        this.checkInsideBlocks();
 
-        if (world.isRemote && ticksExisted > 1) {
-            for (int i = 0; i < 10; i++) {
-                double deltaX = getPosX() - lastTickPosX;
-                double deltaY = getPosY() - lastTickPosY;
-                double deltaZ = getPosZ() - lastTickPosZ;
-                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
-                int counter = 0;
+        if (level.isClientSide && tickCount > 1) {
 
-                for (double j = 0; j < dist; j++) {
-                    double coeff = j / dist;
-                    counter += world.rand.nextInt(3);
-                    if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                        world.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
-                    }
+            double deltaX = getX() - xOld;
+            double deltaY = getY() - yOld;
+            double deltaZ = getZ() - zOld;
+            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
+            int counter = 0;
+
+            for (double j = 0; j < dist; j++) {
+                double coeff = j / dist;
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
+                    level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }
         }
+
     }
 
     protected void attemptRemoval() {
-        if (world.isRemote)
+        if (level.isClientSide)
             return;
         this.pierceLeft--;
         if (this.pierceLeft < 0) {
-            this.world.setEntityState(this, (byte) 3);
-            this.remove();
+            this.level.broadcastEntityEvent(this, (byte) 3);
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -176,112 +204,113 @@ public class EntitySpellArrow extends ArrowEntity {
         return (byte) 12;
     }
 
-    protected void onEntityHit(EntityRayTraceResult p_213868_1_) {
-        super.onEntityHit(p_213868_1_);
+    protected void onHitEntity(EntityHitResult p_213868_1_) {
+        super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
-        float f = (float) this.getMotion().length();
-        int i = MathHelper.ceil(MathHelper.clamp((double) f * this.getDamage(), 0.0D, 2.147483647E9D));
+        float f = (float) this.getDeltaMovement().length();
+        int i = Mth.ceil(Mth.clamp((double) f * this.getBaseDamage(), 0.0D, 2.147483647E9D));
 
-        if (this.getIsCritical()) {
-            long j = (long) this.rand.nextInt(i / 2 + 2);
+        if (this.isCritArrow()) {
+            long j = this.random.nextInt(i / 2 + 2);
             i = (int) Math.min(j + (long) i, 2147483647L);
         }
 
-        Entity entity1 = this.func_234616_v_();
+        Entity entity1 = this.getOwner();
         DamageSource damagesource;
         if (entity1 == null) {
-            damagesource = DamageSource.causeArrowDamage(this, this);
+            damagesource = DamageSource.arrow(this, this);
         } else {
-            damagesource = DamageSource.causeArrowDamage(this, entity1);
+            damagesource = DamageSource.arrow(this, entity1);
             if (entity1 instanceof LivingEntity) {
-                ((LivingEntity) entity1).setLastAttackedEntity(entity);
+                ((LivingEntity) entity1).setLastHurtMob(entity);
             }
         }
 
         boolean flag = entity.getType() == EntityType.ENDERMAN;
-        int k = entity.getFireTimer();
-        if (this.isBurning() && !flag) {
-            entity.setFire(5);
+        int k = entity.getRemainingFireTicks();
+        if (this.isOnFire() && !flag) {
+            entity.setSecondsOnFire(5);
         }
 
-        if (entity.attackEntityFrom(damagesource, (float) i)) {
+        if (entity.hurt(damagesource, (float) i)) {
             if (flag) {
                 return;
             }
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity) entity;
-                if (!this.world.isRemote && this.getPierceLevel() <= 0) {
-                    livingentity.setArrowCountInEntity(livingentity.getArrowCountInEntity() + 1);
+            if (entity instanceof LivingEntity livingentity) {
+                if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
+                    livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
 
-                if (this.knockbackStrength > 0) {
-                    Vector3d vector3d = this.getMotion().mul(1.0D, 0.0D, 1.0D).normalize().scale((double) this.knockbackStrength * 0.6D);
-                    if (vector3d.lengthSquared() > 0.0D) {
-                        livingentity.addVelocity(vector3d.x, 0.1D, vector3d.z);
+                if (this.knockback > 0) {
+                    Vec3 vector3d = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double) this.knockback * 0.6D);
+                    if (vector3d.lengthSqr() > 0.0D) {
+                        livingentity.push(vector3d.x, 0.1D, vector3d.z);
                     }
                 }
 
-                if (!this.world.isRemote && entity1 instanceof LivingEntity) {
-                    EnchantmentHelper.applyThornEnchantments(livingentity, entity1);
-                    EnchantmentHelper.applyArthropodEnchantments((LivingEntity) entity1, livingentity);
+                if (!this.level.isClientSide && entity1 instanceof LivingEntity) {
+                    EnchantmentHelper.doPostHurtEffects(livingentity, entity1);
+                    EnchantmentHelper.doPostDamageEffects((LivingEntity) entity1, livingentity);
                 }
 
-                this.arrowHit(livingentity);
+                this.doPostHurtEffects(livingentity);
             }
         } else {
-            entity.forceFireTicks(k);
+            entity.setRemainingFireTicks(k);
 
         }
 
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(RED, 0);
+        this.entityData.define(GREEN, 0);
+        this.entityData.define(BLUE, 0);
+    }
+
+    @Override
+    protected void onHit(HitResult result) {
         if (this.spellResolver != null)
-            this.spellResolver.onResolveEffect(world, (LivingEntity) this.func_234616_v_(), result);
-        RayTraceResult.Type raytraceresult$type = result.getType();
-        LivingEntity shooter = func_234616_v_() instanceof LivingEntity ? (LivingEntity) func_234616_v_() : null;
-        if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
+            this.spellResolver.onResolveEffect(level, result);
+        HitResult.Type raytraceresult$type = result.getType();
+        if (raytraceresult$type == HitResult.Type.ENTITY) {
             if (spellResolver != null) {
-                spellResolver.onResolveEffect(world, shooter, result);
+                spellResolver.onResolveEffect(level, result);
             }
-            this.onEntityHit((EntityRayTraceResult) result);
+            this.onHitEntity((EntityHitResult) result);
             attemptRemoval();
-            lastEntityHit = ((EntityRayTraceResult) result).getEntity();
-        } else if (raytraceresult$type == RayTraceResult.Type.BLOCK && !((BlockRayTraceResult) result).getPos().equals(lastPosHit)) {
+            lastEntityHit = ((EntityHitResult) result).getEntity();
+        } else if (raytraceresult$type == HitResult.Type.BLOCK && !((BlockHitResult) result).getBlockPos().equals(lastPosHit)) {
             if (spellResolver != null) {
-                spellResolver.onResolveEffect(world, shooter, result);
+                spellResolver.onResolveEffect(level, result);
             }
-            this.func_230299_a_((BlockRayTraceResult) result);
-            lastPosHit = ((BlockRayTraceResult) result).getPos();
+            this.onHitBlock((BlockHitResult) result);
+            lastPosHit = ((BlockHitResult) result).getBlockPos();
             attemptRemoval();
         }
 
     }
 
-    @Override
-    public boolean getNoClip() {
-        return super.getNoClip();
-    }
-
-    protected void func_230299_a_(BlockRayTraceResult p_230299_1_) {
-        BlockState blockstate = this.world.getBlockState(p_230299_1_.getPos());
-        blockstate.onProjectileCollision(this.world, blockstate, p_230299_1_, this);
-        this.playSound(this.getHitGroundSound(), 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+    protected void onHitBlock(BlockHitResult p_230299_1_) {
+        BlockState blockstate = this.level.getBlockState(p_230299_1_.getBlockPos());
+        blockstate.onProjectileHit(this.level, blockstate, p_230299_1_, this);
+        this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
     }
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_SPELL_ARROW;
+        return ModEntities.ENTITY_SPELL_ARROW.get();
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntitySpellArrow(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(ModEntities.ENTITY_SPELL_ARROW, world);
+    public EntitySpellArrow(PlayMessages.SpawnEntity packet, Level world) {
+        super(ModEntities.ENTITY_SPELL_ARROW.get(), world);
     }
 }

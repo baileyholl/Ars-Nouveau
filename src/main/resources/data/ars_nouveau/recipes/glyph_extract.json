@@ -1,6 +1,13 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:emerald_block",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 55,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:emerald"
+      }
+    }
+  ],
   "output": "ars_nouveau:glyph_extract"
 }

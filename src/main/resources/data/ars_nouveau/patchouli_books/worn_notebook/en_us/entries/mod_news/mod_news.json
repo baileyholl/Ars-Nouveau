@@ -1,0 +1,13 @@
+{
+  "category": "ars_nouveau:mod_news",
+  "icon": "ars_nouveau:spell_parchment",
+  "name": "ars_nouveau.page.mod_news",
+  "pages": [
+    {
+      "type": "patchouli:link",
+      "link_text": "ars_nouveau.discord_text",
+      "text": "ars_nouveau.community",
+      "url": "https://discord.gg/y7TMXZu"
+    }
+  ]
+}

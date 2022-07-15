@@ -1,118 +1,120 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
 public class EffectBlink extends AbstractEffect {
+    public static EffectBlink INSTANCE = new EffectBlink();
 
-    public EffectBlink() {
+    private EffectBlink() {
         super(GlyphLib.EffectBlinkID, "Blink");
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        Vector3d vec = safelyGetHitPos(rayTraceResult);
-        double distance = 8.0f + 3.0f *getAmplificationBonus(augments);
-
-        if(spellContext.castingTile instanceof IInventoryResponder){
-            ItemStack scroll = ((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(ItemsRegistry.warpScroll));
-            if(!scroll.isEmpty()){
-                BlockPos pos = WarpScroll.getPos(scroll);
-                if(pos != null){
-                    warpEntity(rayTraceResult.getEntity(), pos);
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Vec3 vec = safelyGetHitPos(rayTraceResult);
+        double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
+        if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
+            ItemStack scroll = iInventoryResponder.getItem((i) -> i.sameItem(ItemsRegistry.WARP_SCROLL.asItem().getDefaultInstance()));
+            if (!scroll.isEmpty()) {
+                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(scroll);
+                if (data.isValid() && data.canTeleportWithDim(world)) {
+                    warpEntity(rayTraceResult.getEntity(), data.getPos());
                     return;
                 }
             }
         }
 
-        if((rayTraceResult).getEntity().equals(shooter)) {
+        if ((rayTraceResult).getEntity().equals(shooter)) {
             blinkForward(world, shooter, distance);
             return;
         }
 
-
-
-        if(isRealPlayer(shooter) && spellContext.castingTile == null && shooter != null) {
-            if(shooter.getHeldItemOffhand().getItem() instanceof WarpScroll){
-                BlockPos warpPos = WarpScroll.getPos(shooter.getHeldItemOffhand());
-                if(warpPos != null && !warpPos.equals(BlockPos.ZERO)){
-                    warpEntity(rayTraceResult.getEntity(), warpPos);
+        if (isRealPlayer(shooter) && spellContext.castingTile == null && shooter != null) {
+            if (shooter.getOffhandItem().getItem() instanceof WarpScroll) {
+                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(shooter.getOffhandItem());
+                if (data.isValid() && data.canTeleportWithDim(world)) {
+                    warpEntity(rayTraceResult.getEntity(), data.getPos());
                 }
-
-            }else
-                shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
-
-
-        }else if(spellContext.getType() == SpellContext.CasterType.RUNE && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            blinkForward(world, (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), distance);
+            } else {
+                shooter.teleportTo(vec.x(), vec.y(), vec.z());
+            }
+        } else if (spellContext.getType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
+            blinkForward(world, living, distance);
         }
     }
 
-    public static void warpEntity(Entity entity, BlockPos warpPos){
-        if(entity == null)
+    public static void warpEntity(Entity entity, BlockPos warpPos) {
+        if (entity == null)
             return;
-        World world = entity.world;
-        ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, entity.getPosX(),  entity.getPosY() + 1,  entity.getPosZ(),
-                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+        Level world = entity.level;
+        ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
+                4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
-        entity.setPositionAndUpdate(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5);
-
-        entity.world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
-        ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX() +0.5,  warpPos.getY() + 1.0,  warpPos.getZ() +0.5,
-                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+        entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
+        Networking.sendToNearby(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
+        entity.level.playSound(null, entity.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
+        ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.blockPosition().getX() + 0.5, entity.blockPosition().getY() + 1.0, entity.blockPosition().getZ() + 0.5,
+                4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        Vector3d vec = rayTraceResult.getHitVec();
-        if(isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getPos().offset((rayTraceResult).getFace()))){
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Vec3 vec = rayTraceResult.getLocation();
+        if (isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
             warpEntity(shooter, new BlockPos(vec));
         }
     }
 
-    public static void blinkForward(World world, LivingEntity shooter, double distance){
-        Vector3d lookVec = new Vector3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
-        Vector3d vec = shooter.getPositionVec().add(lookVec.scale(distance));
+    public static void blinkForward(Level world, Entity shooter, double distance) {
+        Vec3 lookVec = new Vec3(shooter.getLookAngle().x(), 0, shooter.getLookAngle().z());
+        Vec3 vec = shooter.position().add(lookVec.scale(distance));
 
         BlockPos pos = new BlockPos(vec);
-        if (!isValidTeleport(world, pos)){
-            pos = getForward(world, pos, shooter, distance) == null ? getForward(world, pos.up(2), shooter, distance) : getForward(world, pos, shooter, distance);
+        if (!isValidTeleport(world, pos)) {
+            pos = getForward(world, pos, shooter, distance) == null ? getForward(world, pos.above(2), shooter, distance) : getForward(world, pos, shooter, distance);
         }
-        if(pos == null)
+        if (pos == null)
             return;
         warpEntity(shooter, pos);
     }
 
-    public static BlockPos getForward(World world, BlockPos pos,LivingEntity shooter, double distance){
-        Vector3d lookVec = new Vector3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
-        Vector3d oldVec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(lookVec.scale(distance));
-        Vector3d vec;
-        BlockPos sendPos = null;
-        for(double i = distance; i >= 0; i--){
+    public static BlockPos getForward(Level world, BlockPos pos, Entity shooter, double distance) {
+        Vec3 lookVec = new Vec3(shooter.getLookAngle().x(), 0, shooter.getLookAngle().z());
+        Vec3 oldVec = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(lookVec.scale(distance));
+        Vec3 vec;
+        BlockPos sendPos;
+        for (double i = distance; i >= 0; i--) {
             vec = oldVec.add(lookVec.scale(i));
             sendPos = new BlockPos(vec);
 
-            if(i <= 0){
+            if (i <= 0) {
                 return null;
             }
-            if (isValidTeleport(world, sendPos)){
+            if (isValidTeleport(world, sendPos)) {
                 return sendPos;
             }
 
@@ -121,35 +123,43 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public boolean dampenIsAllowed() {
-        return true;
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 8, "Base teleport distance", "distance");
+        addAmpConfig(builder, 3.0);
     }
 
     /**
      * Checks is a player can be placed at a given position without suffocating.
      */
-    public static boolean isValidTeleport(World world, BlockPos pos){
-        return !world.getBlockState(pos).isSolid() &&  !world.getBlockState(pos.up()).isSolid() && !world.getBlockState(pos.up(2)).isSolid();
+    public static boolean isValidTeleport(Level world, BlockPos pos) {
+        return !world.getBlockState(pos).canOcclude() && !world.getBlockState(pos.above()).canOcclude() && !world.getBlockState(pos.above(2)).canOcclude();
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 50;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.THREE;
+    public SpellTier getTier() {
+        return SpellTier.THREE;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public Item getCraftingReagent() {
-        return Items.ENDER_PEARL;
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward. Spell Turrets and Runes can warp entities using Warp Scrolls from adjacent inventories.";
+        return "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward. Spell Turrets and Runes can warp entities using Warp Scrolls from adjacent inventories without consuming the scroll.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

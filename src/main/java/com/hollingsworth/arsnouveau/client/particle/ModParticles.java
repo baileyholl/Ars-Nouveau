@@ -1,40 +1,31 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModParticles {
-    @ObjectHolder(ArsNouveau.MODID + ":" + GlowParticleData.NAME) public static ParticleType<ColorParticleTypeData> GLOW_TYPE;
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME) public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleSparkleData.NAME) public static ParticleType<ColoredDynamicTypeData> SPARKLE_TYPE;
 
-    @SubscribeEvent
-    public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
-        System.out.println("Rendering particles");
-        IForgeRegistry<ParticleType<?>> r = event.getRegistry();
-        r.register( new GlowParticleType().setRegistryName(GlowParticleData.NAME));
-        r.register( new LineParticleType().setRegistryName(ParticleLineData.NAME));
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
 
-        r.register( new GlowParticleType().setRegistryName(ParticleSparkleData.NAME));
+    public static final RegistryObject<ParticleType<ColorParticleTypeData>> GLOW_TYPE = PARTICLES.register(GlowParticleData.NAME, () -> new GlowParticleType());
+    public static final RegistryObject<ParticleType<ColoredDynamicTypeData>> LINE_TYPE = PARTICLES.register(ParticleLineData.NAME, () -> new LineParticleType());
+    public static final RegistryObject<ParticleType<ColoredDynamicTypeData>> SPARKLE_TYPE = PARTICLES.register(ParticleSparkleData.NAME, () -> new SparkleParticleType());
 
-    }
-
-    @SuppressWarnings("resource")
     @SubscribeEvent
     public static void registerFactories(ParticleFactoryRegisterEvent evt) {
-        System.out.println("Rendering factories");
-        Minecraft.getInstance().particles.registerFactory(GLOW_TYPE, GlowParticleData::new);
-        Minecraft.getInstance().particles.registerFactory(LINE_TYPE, ParticleLineData::new);
-        Minecraft.getInstance().particles.registerFactory(SPARKLE_TYPE, ParticleSparkleData::new);
+        Minecraft.getInstance().particleEngine.register(GLOW_TYPE.get(), GlowParticleData::new);
+        Minecraft.getInstance().particleEngine.register(LINE_TYPE.get(), ParticleLineData::new);
+        Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE.get(), ParticleSparkleData::new);
 
     }
 

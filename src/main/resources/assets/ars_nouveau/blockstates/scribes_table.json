@@ -1,27 +1,7 @@
 {
-	"variants": {
-		"facing=north": {
-			"model": "ars_nouveau:block/scribes_table"
-		},
-		"facing=south": {
-			"model": "ars_nouveau:block/scribes_table",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "ars_nouveau:block/scribes_table",
-			"y": 270
-		},
-		"facing=east": {
-			"model": "ars_nouveau:block/scribes_table",
-			"y": 90
-		},
-		"facing=up": {
-			"model": "ars_nouveau:block/scribes_table",
-			"x": -90
-		},
-		"facing=down": {
-			"model": "ars_nouveau:block/scribes_table",
-			"x": 90
-		}
-	}
+  "variants": {
+    "": {
+      "model": "ars_nouveau:block/scribes_table"
+    }
+  }
 }

@@ -1,0 +1,32 @@
+{
+  "values": [
+    "ars_nouveau:scribes_table",
+    "ars_nouveau:blue_archwood_log",
+    "ars_nouveau:blue_archwood_wood",
+    "ars_nouveau:red_archwood_log",
+    "ars_nouveau:red_archwood_wood",
+    "ars_nouveau:purple_archwood_log",
+    "ars_nouveau:purple_archwood_wood",
+    "ars_nouveau:green_archwood_log",
+    "ars_nouveau:green_archwood_wood",
+    "ars_nouveau:archwood_planks",
+    "ars_nouveau:archwood_button",
+    "ars_nouveau:archwood_stairs",
+    "ars_nouveau:archwood_slab",
+    "ars_nouveau:archwood_fence_gate",
+    "ars_nouveau:archwood_trapdoor",
+    "ars_nouveau:archwood_pressure_plate",
+    "ars_nouveau:archwood_fence",
+    "ars_nouveau:archwood_door",
+    "ars_nouveau:stripped_blue_archwood_log",
+    "ars_nouveau:stripped_blue_archwood_wood",
+    "ars_nouveau:stripped_green_archwood_log",
+    "ars_nouveau:stripped_green_archwood_wood",
+    "ars_nouveau:stripped_red_archwood_log",
+    "ars_nouveau:stripped_red_archwood_wood",
+    "ars_nouveau:stripped_purple_archwood_log",
+    "ars_nouveau:stripped_purple_archwood_wood",
+    "ars_nouveau:bookwyrm_lectern",
+    "ars_nouveau:archwood_chest"
+  ]
+}

@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -12,17 +12,18 @@ import java.util.stream.Stream;
 public class PotionIngredient extends Ingredient {
     private final ItemStack stack;
 
-    public PotionIngredient(ItemStack stack){
-        super(Stream.of(new SingleItemList(stack)));
+    public PotionIngredient(ItemStack stack) {
+        super(Stream.of(new ItemValue(stack)));
         this.stack = stack;
     }
-    public static PotionIngredient fromPotion(Potion potion){
+
+    public static PotionIngredient fromPotion(Potion potion) {
         ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtils.addPotionToItemStack(stack, potion);
+        PotionUtils.setPotion(stack, potion);
         return new PotionIngredient(stack);
     }
 
-    public ItemStack getStack(){
+    public ItemStack getStack() {
         return stack;
     }
 
@@ -31,7 +32,7 @@ public class PotionIngredient extends Ingredient {
         if (input == null) {
             return false;
         } else {
-            return this.stack.getItem() == input.getItem() && PotionUtils.getPotionFromItem(input).equals(PotionUtils.getPotionFromItem(stack)) && PotionUtils.getFullEffectsFromItem(input).equals(PotionUtils.getFullEffectsFromItem(stack));
+            return this.stack.getItem() == input.getItem() && PotionUtils.getPotion(input).equals(PotionUtils.getPotion(stack)) && PotionUtils.getCustomEffects(input).equals(PotionUtils.getCustomEffects(stack));
         }
     }
 

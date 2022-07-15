@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "age=0": { "model": "ars_nouveau:block/magebloom/magebloom1" },
+        "age=1": { "model": "ars_nouveau:block/magebloom/magebloom2" },
+        "age=2": { "model": "ars_nouveau:block/magebloom/magebloom2" },
+        "age=3": { "model": "ars_nouveau:block/magebloom/magebloom2" },
+        "age=4": { "model": "ars_nouveau:block/magebloom/magebloom3" },
+        "age=5": { "model": "ars_nouveau:block/magebloom/magebloom3" },
+        "age=6": { "model": "ars_nouveau:block/magebloom/magebloom3" },
+        "age=7": { "model": "ars_nouveau:block/magebloom/magebloom4" }
+    }
+}

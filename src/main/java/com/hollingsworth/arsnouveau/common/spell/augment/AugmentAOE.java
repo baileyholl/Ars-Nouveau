@@ -1,31 +1,33 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
-import javax.annotation.Nullable;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 
 public class AugmentAOE extends AbstractAugment {
-    public AugmentAOE() {
+    public static AugmentAOE INSTANCE = new AugmentAOE();
+
+    private AugmentAOE() {
         super(GlyphLib.AugmentAOEID, "AOE");
     }
 
+
     @Override
-    public int getManaCost() {
+    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
+        builder.addAOE(1.0);
+        return super.applyModifiers(builder, spellPart);
+    }
+
+    @Override
+    public int getDefaultManaCost() {
         return 35;
     }
 
-    @Nullable
     @Override
-    public Item getCraftingReagent() {
-        return Items.FIREWORK_STAR;
-    }
-
-    @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
     @Override

@@ -1,51 +1,86 @@
 package com.hollingsworth.arsnouveau.api.event;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * For queuing deferred or over-time tasks. Tick refers to the World Tick event, called on the server side only.
+ * For queuing deferred or over-time tasks. Tick refers to the Server or Client Tick event.
  */
+@SuppressWarnings("ForLoopReplaceableByForEach")
+@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventQueue {
     List<ITimedEvent> events;
 
-    public void tick(){
-        if(events == null || events.isEmpty()) {
+    public void tick(boolean serverSide) {
+        if (events == null || events.isEmpty()) {
             return;
         }
 
         List<ITimedEvent> stale = new ArrayList<>();
-        ITimedEvent event;
-        for(int i = 0; i < events.size(); i++){
-            event = events.get(i);
-            if(event.isExpired()){
+        // Enhanced-for or iterator will cause a concurrent modification.
+        for (int i = 0; i < events.size(); i++) {
+            ITimedEvent event = events.get(i);
+            if (event.isExpired()) {
                 stale.add(event);
-            }else{
-                event.tick();
+            } else {
+                event.tick(serverSide);
             }
         }
         this.events.removeAll(stale);
     }
 
-    public void addEvent(ITimedEvent event){
-        if(events == null)
+    public void addEvent(ITimedEvent event) {
+        if (events == null)
             events = new ArrayList<>();
         events.add(event);
     }
 
-    public static EventQueue getInstance(){
-        if(eventQueue == null)
-            eventQueue = new EventQueue();
-        return eventQueue;
+    public static EventQueue getServerInstance() {
+        if (serverQueue == null)
+            serverQueue = new EventQueue();
+        return serverQueue;
     }
 
+    public static EventQueue getClientQueue() {
+        if (clientQueue == null)
+            clientQueue = new EventQueue();
+        return clientQueue;
+    }
+
+
     // Tear down on world unload
-    public void clear(){
+    public void clear() {
         this.events = null;
     }
 
-    private static EventQueue eventQueue;
-    private EventQueue(){
+    // Split these because our integrated servers are CURSED and both tick.
+    private static EventQueue serverQueue;
+    private static EventQueue clientQueue;
+
+    private EventQueue() {
         events = new ArrayList<>();
+    }
+
+    @SubscribeEvent
+    public static void serverTick(TickEvent.ServerTickEvent e) {
+
+        if (e.phase != TickEvent.Phase.END)
+            return;
+
+        EventQueue.getServerInstance().tick(true);
+    }
+
+    @SubscribeEvent
+    public static void clientTickEvent(TickEvent.ClientTickEvent e) {
+
+        if (e.phase != TickEvent.Phase.END)
+            return;
+
+        EventQueue.getClientQueue().tick(false);
     }
 }

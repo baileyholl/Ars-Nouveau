@@ -1,25 +1,28 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.crafting.ModCrafting;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PotionFlaskRecipe extends ShapelessRecipe {
     public PotionFlaskRecipe(ResourceLocation idIn, String groupIn, ItemStack recipeOutputIn, NonNullList<Ingredient> recipeItemsIn) {
@@ -28,52 +31,71 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
 
     @Override
-    public ItemStack getCraftingResult(final CraftingInventory inv) {
-        final ItemStack output = super.getCraftingResult(inv); // Get the default output
+    public ItemStack assemble(final CraftingContainer inv) {
+        final ItemStack output = super.assemble(inv); // Get the default output
         int newCount = 0;
         Potion flaskPotion = Potions.EMPTY;
-        if(output.isEmpty())
+        List<MobEffectInstance> effectsList = new ArrayList<>();
+        List<MobEffectInstance> flaskEffects = new ArrayList<>();
+        if (output.isEmpty())
             return ItemStack.EMPTY;
 
-
-        for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
-            final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
+        ItemStack flaskPotionStack = ItemStack.EMPTY;
+        for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
+            final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionFlask) {
-                CompoundNBT tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundNBT();
-                newCount = tag.getInt("count") + 1;
-                flaskPotion = PotionUtils.getPotionFromItem(ingredient);
-            }
-        }
-        for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
-            final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
-            if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionItem) {
-                Potion stackPotion = PotionUtils.getPotionFromItem(ingredient);
-                if(flaskPotion == Potions.EMPTY){
-                    flaskPotion = stackPotion;
-                }
-                if(!flaskPotion.equals(stackPotion))
+                if (((PotionFlask) ingredient.getItem()).isMax(ingredient))
                     return ItemStack.EMPTY;
 
+                CompoundTag tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundTag();
+
+                newCount = tag.getInt("count") + 1;
+                flaskPotion = PotionUtils.getPotion(ingredient);
+                flaskPotionStack = ingredient;
+                flaskEffects = PotionUtils.getCustomEffects(ingredient.getTag());
+            }
+        }
+        for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
+            final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
+            if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionItem) {
+                Potion stackPotion = PotionUtils.getPotion(ingredient);
+                effectsList = PotionUtils.getCustomEffects(ingredient.getTag());
+                if (flaskPotion != Potions.EMPTY && !PotionUtils.getCustomEffects(ingredient.getTag()).equals(PotionUtils.getCustomEffects(flaskPotionStack.getTag())))
+                    return ItemStack.EMPTY;
+                if (flaskPotion == Potions.EMPTY) {
+                    flaskPotion = stackPotion;
+                }
+                if (!flaskPotion.equals(stackPotion))
+                    return ItemStack.EMPTY;
             }
         }
 
-        if(!output.hasTag()){
-            output.setTag(new CompoundNBT());
+        if (!output.hasTag()) {
+            output.setTag(new CompoundTag());
             output.getTag().putInt("count", newCount);
-            PotionUtils.addPotionToItemStack(output, flaskPotion);
+            PotionUtils.setPotion(output, flaskPotion);
+//            for(EffectInstance e : flaskPotion.getEffects()){
+//                //effectsList.remove(e);
+//                System.out.println(e.getPotion().getRegistryName().toString());
+//            }
+//            for(EffectInstance e : effectsList){
+//                //effectsList.remove(e);
+//                System.out.println(e.getPotion().getRegistryName().toString());
+//            }
+            PotionUtils.setCustomEffects(output, effectsList);
         }
         return output; // Return the modified output
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
-        for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack item = inv.getStackInSlot(i);
+        for (int i = 0; i < nonnulllist.size(); ++i) {
+            ItemStack item = inv.getItem(i);
             if (item.hasContainerItem()) {
                 nonnulllist.set(i, item.getContainerItem());
-            }else if(item.getItem() instanceof PotionItem){
+            } else if (item.getItem() instanceof PotionItem) {
                 nonnulllist.set(i, new ItemStack(Items.GLASS_BOTTLE));
             }
         }
@@ -82,45 +104,45 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModCrafting.Recipes.POTION_FLASK_RECIPE;
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.POTION_FLASK_RECIPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PotionFlaskRecipe> {
+    public static class Serializer implements RecipeSerializer<PotionFlaskRecipe> {
         @Override
-        public PotionFlaskRecipe read(final ResourceLocation recipeID, final JsonObject json) {
-            final String group = JSONUtils.getString(json, "group", "");
+        public PotionFlaskRecipe fromJson(final ResourceLocation recipeID, final JsonObject json) {
+            final String group = GsonHelper.getAsString(json, "group", "");
             final NonNullList<Ingredient> ingredients = RecipeUtil.parseShapeless(json);
-            final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
+            final ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
 
             return new PotionFlaskRecipe(recipeID, group, result, ingredients);
         }
 
         @Override
-        public PotionFlaskRecipe read(final ResourceLocation recipeID, final PacketBuffer buffer) {
-            final String group = buffer.readString(Short.MAX_VALUE);
+        public PotionFlaskRecipe fromNetwork(final ResourceLocation recipeID, final FriendlyByteBuf buffer) {
+            final String group = buffer.readUtf(Short.MAX_VALUE);
             final int numIngredients = buffer.readVarInt();
             final NonNullList<Ingredient> ingredients = NonNullList.withSize(numIngredients, Ingredient.EMPTY);
 
             for (int j = 0; j < ingredients.size(); ++j) {
-                ingredients.set(j, Ingredient.read(buffer));
+                ingredients.set(j, Ingredient.fromNetwork(buffer));
             }
 
-            final ItemStack result = buffer.readItemStack();
+            final ItemStack result = buffer.readItem();
 
             return new PotionFlaskRecipe(recipeID, group, result, ingredients);
         }
 
         @Override
-        public void write(final PacketBuffer buffer, final PotionFlaskRecipe recipe) {
-            buffer.writeString(recipe.getGroup());
+        public void toNetwork(final FriendlyByteBuf buffer, final PotionFlaskRecipe recipe) {
+            buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 
             for (final Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.write(buffer);
+                ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItemStack(recipe.getRecipeOutput());
+            buffer.writeItem(recipe.getResultItem());
         }
     }
 }

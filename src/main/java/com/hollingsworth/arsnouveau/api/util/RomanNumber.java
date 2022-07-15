@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.api.util;
+
 import java.util.TreeMap;
+
 // https://stackoverflow.com/questions/12967896/converting-integers-to-roman-numerals-java
 public class RomanNumber {
 
-    private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>();
+    private final static TreeMap<Integer, String> map = new TreeMap<>();
 
     static {
         map.put(1000, "M");
@@ -21,12 +23,12 @@ public class RomanNumber {
         map.put(1, "I");
     }
 
-    public final static String toRoman(int number) {
-        int l =  map.floorKey(number);
-        if ( number == l ) {
+    public static String toRoman(int number) {
+        int l = map.floorKey(number);
+        if (number == l) {
             return map.get(number);
         }
-        return map.get(l) + toRoman(number-l);
+        return map.get(l) + toRoman(number - l);
     }
 
 }

@@ -1,101 +1,140 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
+import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemScroll extends ModItem implements IScribeable {
-    public ItemScroll(String reg) {
-        super(reg);
-    }
-    public ItemScroll(Properties properties, String reg) {
-        super(properties, reg);
+public abstract class ItemScroll extends ModItem implements IScribeable {
+
+    public ItemScroll() {
+        super();
     }
 
+    public ItemScroll(Properties properties) {
+        super(properties);
+    }
+
+    public abstract SortPref getSortPref(ItemStack stackToStore, ItemStack scrollStack, IItemHandler inventory);
+
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if(!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        if(pUsedHand == InteractionHand.MAIN_HAND && !pLevel.isClientSide){
+            ItemStack thisStack = pPlayer.getItemInHand(pUsedHand);
+            ItemStack otherStack = pPlayer.getItemInHand(InteractionHand.OFF_HAND);
+            if(!otherStack.isEmpty()){
+                onScribe(pLevel, pPlayer.blockPosition(), pPlayer, InteractionHand.OFF_HAND , thisStack);
+                return InteractionResultHolder.success(thisStack);
+            }
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
+    }
+
+    public enum SortPref {
+        INVALID,
+        LOW,
+        HIGH,
+        HIGHEST
     }
 
     public static String ITEM_PREFIX = "item_";
 
-    public List<ItemStack> getItems(ItemStack stack){
-        CompoundNBT tag = stack.getTag();
-        List<ItemStack> stacks = new ArrayList<>();
-        if(tag == null)
-            return stacks;
-
-        for(String s : tag.keySet()){
-            if(s.contains(ITEM_PREFIX)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
-            }
-        }
-        return stacks;
-    }
-
-    public boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
-        CompoundNBT itemTag = new CompoundNBT();
-        itemToAdd.write(itemTag);
-        tag.put(getItemKey(itemToAdd), itemTag);
-        return true;
-    }
-
-    public boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
-        tag.remove(getItemKey(itemToRemove));
-        return true;
-    }
-
-    public static boolean containsItem(ItemStack stack, CompoundNBT tag){
-        return tag != null && tag.contains(getItemKey(stack));
-    }
-
-    public static String getItemKey(ItemStack stack){
-        return ITEM_PREFIX + stack.getItem().getRegistryName().toString();
+    @Override
+    public boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack) {
+        ItemStack stackToWrite = player.getItemInHand(handIn);
+        ItemScrollData scrollData = new ItemScrollData(thisStack);
+        return scrollData.writeWithFeedback(player, stackToWrite);
     }
 
     @Override
-    public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
-        ItemScroll itemScroll = (ItemScroll) thisStack.getItem();
-        ItemStack stackToWrite = player.getHeldItem(handIn);
-        CompoundNBT tag = thisStack.getTag();
-        if(stackToWrite == ItemStack.EMPTY || tag == null)
-            return false;
-
-        if(itemScroll.containsItem(stackToWrite, tag)) {
-            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_removed"));
-            return removeItem(stackToWrite, tag);
-        }
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_added"));
-        return itemScroll.addItem(stackToWrite, tag);
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
-        CompoundNBT tag = stack.getTag();
-        if(tag == null)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+        if(!stack.hasTag())
             return;
-        List<ItemStack> stacks = new ArrayList<>();
-        for(String s : tag.keySet()){
-            if(s.contains(ITEM_PREFIX)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
+        ItemScrollData scrollData = new ItemScrollData(stack);
+        for (ItemStack s : scrollData.items) {
+            tooltip2.add(s.getHoverName());
+        }
+    }
+
+    public static class ItemScrollData extends ItemstackData {
+        private List<ItemStack> items = new ArrayList<>();
+
+        public ItemScrollData(ItemStack stack) {
+            super(stack);
+            CompoundTag tag = getItemTag(stack);
+            if (tag == null || tag.isEmpty())
+                return;
+            for (String s : tag.getAllKeys()) {
+                if (s.contains(ITEM_PREFIX)) {
+                    items.add(ItemStack.of(tag.getCompound(s)));
+                }
             }
         }
-        for(ItemStack s : stacks){
-            tooltip2.add(s.getDisplayName());
+
+        public boolean writeWithFeedback(Player player, ItemStack stackToWrite) {
+            if (stackToWrite.isEmpty())
+                return false;
+            if (containsStack(stackToWrite)) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_removed"));
+                return remove(stackToWrite);
+            }
+            if(add(stackToWrite)) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribe.item_added"));
+                return true;
+            }
+            return false;
+        }
+
+        public boolean containsStack(ItemStack stack){
+            return items.stream().anyMatch(s -> s.sameItem(stack));
+        }
+
+        public boolean remove(ItemStack stack){
+            boolean didRemove = items.removeIf(s -> s.sameItem(stack));
+            writeItem();
+            return didRemove;
+        }
+
+        public boolean add(ItemStack stack){
+            boolean added = items.add(stack.copy());
+            writeItem();
+            return added;
+        }
+
+        public List<ItemStack> getItems(){
+            return items;
+        }
+
+        public String getItemKey(ItemStack stack) {
+            return ITEM_PREFIX + RegistryHelper.getRegistryName(stack.getItem()).toString();
+        }
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            for (ItemStack s : items) {
+                CompoundTag itemTag = new CompoundTag();
+                s.save(itemTag);
+                tag.put(getItemKey(s), itemTag);
+            }
+        }
+
+        @Override
+        public String getTagString() {
+            return "an_scrollData";
         }
     }
 }

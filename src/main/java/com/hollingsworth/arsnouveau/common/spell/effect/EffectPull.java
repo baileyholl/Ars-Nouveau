@@ -1,65 +1,97 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectPull extends AbstractEffect {
+    public static EffectPull INSTANCE = new EffectPull();
 
-    public EffectPull() {
+    private EffectPull() {
         super(GlyphLib.EffectPullID, "Pull");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            Vector3d vec3d = new Vector3d(shooter.getPosX() - target.getPosX(), shooter.getPosY() - target.getPosY(), shooter.getPosZ() - target.getPosZ());
-            double d1 = 7;
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (shooter == null)
+            return;
+        Entity target = rayTraceResult.getEntity();
+        Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
+        double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
+        target.setDeltaMovement(vec3d.normalize().scale(d2));
+        target.hurtMarked = true;
+    }
 
-            double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);
-            //target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
-            target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 )));
-            target.velocityChanged = true;
-            //target.move(MoverType.PLAYER, target.getMotion());
+    @Override
+    public void onResolveBlock(BlockHitResult blockHitResult, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, blockHitResult.getBlockPos(), blockHitResult, spellStats);
+        for (BlockPos p : posList) {
+            if (!canBlockBeHarvested(spellStats, world, p)) {
+                continue;
+            }
+            EnchantedFallingBlock fallingblockentity = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
+            if (fallingblockentity != null) {
+                setMotion(fallingblockentity, blockHitResult, spellStats);
+                ShapersFocus.tryPropagateEntitySpell(fallingblockentity, world, shooter, spellContext, resolver);
+            }
         }
     }
 
-    @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof EntityRayTraceResult;
+
+    public void setMotion(Entity entity, BlockHitResult blockHitResult, SpellStats spellStats) {
+        double scalar = 0.5 + ParticleUtil.inRange(-0.05, 0.05) + spellStats.getAmpMultiplier() * .3;
+        Vec3i directionVec = blockHitResult.getDirection().getNormal();
+        Vec3 deltaVec = new Vec3(directionVec.getX() * scalar, directionVec.getY() * scalar + 0.1, directionVec.getZ() * scalar);
+        entity.setDeltaMovement(deltaVec);
     }
 
     @Override
-    public boolean dampenIsAllowed() {
-        return true;
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 1.0, "Base movement velocity", "base_value");
+        addAmpConfig(builder, 0.5);
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 15;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public Item getCraftingReagent() {
-        return Items.FISHING_ROD;
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Pulls the target closer to the caster";
+        return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_AIR);
     }
 }

@@ -1,27 +1,24 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import net.minecraft.entity.LivingEntity;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-
-import java.util.List;
 
 @Cancelable
 public class SpellCastEvent extends LivingEvent {
 
     public Spell spell;
-    @Deprecated
-    public SpellCastEvent(LivingEntity entity, List<AbstractSpellPart> spell){
-        super(entity);
-        this.spell = new Spell(spell);
-    }
+    public SpellContext context;
 
-    public SpellCastEvent(LivingEntity entity, Spell spell){
-        super(entity);
+    public SpellCastEvent(Spell spell, SpellContext context) {
+        super(context.getUnwrappedCaster());
         this.spell = spell;
+        this.context = context;
     }
 
-
+    public Level getWorld() {
+        return this.getEntityLiving().level;
+    }
 }

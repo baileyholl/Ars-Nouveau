@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:runic_chalk",
+  "name": "item.ars_nouveau.runic_chalk",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.runic_chalk"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:runic_chalk"
+    }
+  ]
+}

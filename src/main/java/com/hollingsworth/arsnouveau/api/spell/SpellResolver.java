@@ -1,194 +1,200 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
 public class SpellResolver {
     public AbstractCastMethod castType;
     public Spell spell;
-    public final SpellContext spellContext;
+    public SpellContext spellContext;
     public boolean silent;
+    private final ISpellValidator spellValidator;
 
-    public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell, SpellContext context){
-        this.castType = cast;
-        this.spell = new Spell(spell);
-        this.spellContext = context;
-        if(castType != null)
-            this.castType.resolver = this;
+    public @Nullable HitResult hitResult = null;
+
+    public SpellResolver(SpellContext spellContext) {
+        this.spell = spellContext.getSpell();
+        this.castType = spellContext.getSpell().getCastMethod();
+        this.spellContext = spellContext;
+        this.spellValidator = ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
-
-    public SpellResolver(SpellContext spellContext){
-        this(spellContext.getSpell().recipe, spellContext);
-    }
-
-    public SpellResolver(AbstractSpellPart[] spellParts, SpellContext context){
-        this(new ArrayList<>(Arrays.asList(spellParts)), context);
-    }
-
-    public SpellResolver withSilent(boolean isSilent){
+    public SpellResolver withSilent(boolean isSilent) {
         this.silent = isSilent;
         return this;
     }
 
-    public SpellResolver(List<AbstractSpellPart> spell, SpellContext context) {
-        this(null, spell, context);
-        AbstractCastMethod method = null;
-        if(spell != null && !spell.isEmpty() && spell.get(0) instanceof AbstractCastMethod)
-            method = (AbstractCastMethod) spell.get(0);
+    public boolean canCast(LivingEntity entity) {
+        // Validate the spell
+        List<SpellValidationError> validationErrors = spellValidator.validate(spell.recipe);
 
-        this.castType = method;
-        if(this.castType != null)
-            this.castType.resolver = this;
-
-}
-    public SpellResolver(List<AbstractSpellPart> spell, boolean silent, SpellContext context){
-        this(spell, context);
-        this.silent = silent;
-
-    }
-
-    public boolean canCast(LivingEntity entity){
-        int numMethods = 0;
-        if(spell == null || !spell.isValid() || castType == null) {
-            if(!silent)
-                entity.sendMessage(new StringTextComponent("Invalid Spell."), Util.DUMMY_UUID);
+        if (validationErrors.isEmpty()) {
+            // Validation successful. We can check the player's mana now.
+            return enoughMana(entity);
+        } else {
+            // Validation failed, explain why if applicable
+            if (!silent && !entity.getCommandSenderWorld().isClientSide) {
+                // Sending only the first error to avoid spam
+                PortUtil.sendMessageNoSpam(entity, validationErrors.get(0).makeTextComponentExisting());
+            }
             return false;
         }
-        for(AbstractSpellPart spellPart : spell.recipe){
-            if(spellPart instanceof AbstractCastMethod)
-                numMethods++;
-        }
-        if(numMethods > 1 && !silent) {
-            PortUtil.sendMessage(entity,new TranslationTextComponent("ars_nouveau.alert.duplicate_method"));
+    }
 
+    boolean enoughMana(LivingEntity entity) {
+        int totalCost = getResolveCost();
+        IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
+        if (manaCap == null)
             return false;
+        boolean canCast = totalCost <= manaCap.getCurrentMana() || (entity instanceof Player player && player.isCreative());
+        if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent)
+            PortUtil.sendMessageNoSpam(entity, Component.translatable("ars_nouveau.spell.no_mana"));
+        return canCast;
+    }
+
+    public boolean postEvent() {
+        return SpellUtil.postEvent(new SpellCastEvent(spell, spellContext));
+    }
+
+    private SpellStats getCastStats() {
+        LivingEntity caster = spellContext.getUnwrappedCaster();
+        return new SpellStats.Builder()
+                .setAugments(spell.getAugments(0, caster))
+                .addItemsFromEntity(caster)
+                .build(castType, this.hitResult, caster.level, caster, spellContext);
+    }
+
+    public boolean onCast(ItemStack stack, Level level) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+            this.hitResult = null;
+            CastResolveType resolveType = castType.onCast(stack, spellContext.getUnwrappedCaster(), level, getCastStats(), spellContext, this);
+            if (resolveType == CastResolveType.SUCCESS) {
+                expendMana();
+            }
+            return resolveType.wasSuccess;
         }
-        return enoughMana(entity);
+        return false;
     }
 
-    boolean enoughMana(LivingEntity entity){
-        int totalCost = getCastingCost(spell, entity);
-        AtomicBoolean canCast = new AtomicBoolean(false);
-        ManaCapability.getMana(entity).ifPresent(mana -> {
-            canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
-            if(!canCast.get() && !entity.getEntityWorld().isRemote && !silent)
-                PortUtil.sendMessage(entity,new TranslationTextComponent("ars_nouveau.spell.no_mana"));
-        });
-        return canCast.get();
+    public boolean onCastOnBlock(BlockHitResult blockRayTraceResult) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+            this.hitResult = blockRayTraceResult;
+            CastResolveType resolveType = castType.onCastOnBlock(blockRayTraceResult, spellContext.getUnwrappedCaster(), getCastStats(), spellContext, this);
+            if (resolveType == CastResolveType.SUCCESS) {
+                expendMana();
+            }
+            return resolveType.wasSuccess;
+        }
+        return false;
     }
 
-    public boolean postEvent(LivingEntity entity){
-        return SpellUtil.postEvent(new SpellCastEvent(entity, spell));
+    // Gives context for InteractionHand
+    public boolean onCastOnBlock(UseOnContext context) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+            this.hitResult = context.hitResult;
+            CastResolveType resolveType = castType.onCastOnBlock(context, getCastStats(), spellContext, this);
+            if (resolveType == CastResolveType.SUCCESS) {
+                expendMana();
+            }
+            return resolveType.wasSuccess;
+        }
+        return false;
     }
 
-    public void onCast(ItemStack stack, LivingEntity livingEntity, World world){
-        if(canCast(livingEntity) && !postEvent(livingEntity))
-            castType.onCast(stack, livingEntity, world, spell.getAugments( 0, livingEntity), spellContext);
+    public boolean onCastOnEntity(ItemStack stack, Entity target, InteractionHand hand) {
+        if (canCast(spellContext.getUnwrappedCaster()) && !postEvent()) {
+            this.hitResult = new EntityHitResult(target);
+            CastResolveType resolveType = castType.onCastOnEntity(stack, spellContext.getUnwrappedCaster(), target, hand, getCastStats(), spellContext, this);
+            if (resolveType == CastResolveType.SUCCESS) {
+                expendMana();
+            }
+            return resolveType.wasSuccess;
+        }
+        return false;
     }
 
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
-        if(canCast(caster) && !postEvent(caster))
-            castType.onCastOnBlock(blockRayTraceResult, caster, spell.getAugments( 0, caster), spellContext);
+    public void onResolveEffect(Level world, HitResult result) {
+        this.hitResult = result;
+        this.resolveAllEffects(world);
     }
 
-    public void onCastOnBlock(ItemUseContext context){
-        if(canCast(context.getPlayer()) && !postEvent(context.getPlayer()))
-            castType.onCastOnBlock(context, spell.getAugments( 0, context.getPlayer()), spellContext);
-    }
+    protected void resolveAllEffects(Level world) {
+        spellContext.resetCastCounter();
+        LivingEntity shooter = spellContext.getUnwrappedCaster();
+        SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
+        MinecraftForge.EVENT_BUS.post(spellResolveEvent);
+        if (spellResolveEvent.isCanceled())
+            return;
 
-    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand){
-        if(canCast(playerIn) && !postEvent(playerIn))
-            castType.onCastOnEntity(stack, playerIn, target, hand, spell.getAugments(0, playerIn), spellContext);
-    }
-
-    public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
-        SpellResolver.resolveEffects(world, shooter, result, spell, spellContext);
-    }
-
-    public static void resolveEffects(World world, LivingEntity shooter, RayTraceResult result, Spell spell, SpellContext spellContext){
-        spellContext.resetSpells();
-        shooter = getUnwrappedCaster(world, shooter, spellContext);
-        for(int i = 0; i < spell.recipe.size(); i++){
-            if(spellContext.isCanceled())
+        while (spellContext.hasNextPart()) {
+            AbstractSpellPart part = spellContext.nextPart();
+            if (part == null)
                 break;
-            AbstractSpellPart part = spellContext.nextSpell();
-            if(part instanceof AbstractEffect){
-                ((AbstractEffect) part).onResolve(result, world, shooter, spell.getAugments(i, shooter), spellContext);
+            if (part instanceof AbstractAugment)
+                continue;
+            SpellStats.Builder builder = new SpellStats.Builder();
+            List<AbstractAugment> augments = spell.getAugments(spellContext.getCurrentIndex() - 1, shooter);
+            SpellStats stats = builder
+                    .setAugments(augments)
+                    .addItemsFromEntity(shooter)
+                    .build(part, this.hitResult, world, shooter, spellContext);
+            if (part instanceof AbstractEffect effect) {
+                EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+                if (MinecraftForge.EVENT_BUS.post(preEvent))
+                    continue;
+                effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
+                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
             }
         }
+        MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, this));
     }
 
-    // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.
-    public static LivingEntity getUnwrappedCaster(World world, LivingEntity shooter, SpellContext spellContext){
-        if(shooter == null && spellContext.castingTile != null) {
-            shooter = FakePlayerFactory.getMinecraft((ServerWorld) world);
-            BlockPos pos = spellContext.castingTile.getPos();
-            shooter.setPosition(pos.getX(), pos.getY(), pos.getZ());
-        }
-        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
-        return shooter;
+    public void expendMana() {
+        int totalCost = getResolveCost();
+        CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).ifPresent(mana -> mana.removeMana(totalCost));
     }
 
-    public boolean wouldAllEffectsDoWork(RayTraceResult result, World world, LivingEntity entity, List<AbstractAugment> augments){
-        for(AbstractSpellPart spellPart : spell.recipe){
-            if(spellPart instanceof AbstractEffect){
-                if(!((AbstractEffect) spellPart).wouldSucceed(result, world, entity, augments)){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments){
-        return castType.wouldCastSuccessfully(stack, caster, world, augments);
-    }
-
-    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments){
-        return castType.wouldCastOnBlockSuccessfully(context, augments);
-    }
-
-    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
-        return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  spell.getAugments(0, caster));
-    }
-
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments){
-        return castType.wouldCastOnEntitySuccessfully(stack, caster, target, hand, augments);
-    }
-
-
-    public void expendMana(LivingEntity entity){
-        int totalCost = getCastingCost(spell, entity);
-        ManaCapability.getMana(entity).ifPresent(mana -> mana.removeMana(totalCost));
-    }
-
-    public int getCastingCost(Spell spell, LivingEntity e){
-        int cost = spell.getCastingCost() - getPlayerDiscounts(e);
+    public int getResolveCost() {
+        int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster());
         return Math.max(cost, 0);
+    }
+
+    /**
+     * Addons can override this to return their custom spell resolver if you change the way logic resolves.
+     */
+    public SpellResolver getNewResolver(SpellContext context) {
+        return new SpellResolver(context);
+    }
+
+    /**
+     * Check if the caster has a focus when modifying glyph behavior.
+     * Addons can override this to check other types of casters like turrets or entities.
+     */
+    public boolean hasFocus(ItemStack stack) {
+        return CuriosUtil.hasItem(spellContext.getUnwrappedCaster(), stack);
     }
 }

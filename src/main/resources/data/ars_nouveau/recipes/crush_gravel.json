@@ -1,0 +1,18 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "tag": "forge:gravel"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "minecraft:sand"
+    },
+    {
+      "chance": 0.02,
+      "count": 1,
+      "item": "minecraft:flint"
+    }
+  ]
+}

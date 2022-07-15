@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "item": "minecraft:calcite"
+    },
+    "y": {
+      "item": "ars_nouveau:manipulation_essence"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "result": {
+    "count": 8,
+    "item": "minecraft:deepslate"
+  }
+}

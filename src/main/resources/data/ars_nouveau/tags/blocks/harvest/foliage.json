@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "#minecraft:leaves",
     "minecraft:brown_mushroom_block",
@@ -8,9 +7,11 @@
     "minecraft:warped_wart_block",
     "minecraft:shroomlight",
     "minecraft:vine",
-    "minecraft:weeping_vines",
+    "minecraft:cave_vines",
     "minecraft:twisting_vines",
-	"minecraft:pumpkin",
-	"minecraft:melon"
+    "minecraft:pumpkin",
+    "minecraft:melon",
+    "minecraft:weeping_vines",
+    "minecraft:mangrove_roots"
   ]
 }

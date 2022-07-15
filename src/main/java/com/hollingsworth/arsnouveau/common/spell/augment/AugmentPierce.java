@@ -1,31 +1,24 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.Item;
-
-import javax.annotation.Nullable;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 
 public class AugmentPierce extends AbstractAugment {
-    public AugmentPierce() {
+    public static AugmentPierce INSTANCE = new AugmentPierce();
+
+    private AugmentPierce() {
         super(GlyphLib.AugmentPierceID, "Pierce");
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 40;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_SPIKE;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
     @Override

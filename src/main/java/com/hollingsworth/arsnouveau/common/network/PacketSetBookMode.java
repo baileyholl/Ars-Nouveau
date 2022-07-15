@@ -2,35 +2,36 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketSetBookMode {
 
-    public CompoundNBT tag;
+    public CompoundTag tag;
+
     //Decoder
-    public PacketSetBookMode(PacketBuffer buf){
-        tag = buf.readCompoundTag();
+    public PacketSetBookMode(FriendlyByteBuf buf) {
+        tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
-        buf.writeCompoundTag(tag);
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeNbt(tag);
     }
 
-    public PacketSetBookMode(CompoundNBT tag){
+    public PacketSetBookMode(CompoundTag tag) {
         this.tag = tag;
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            ctx.get().enqueueWork(()-> {
-                ServerPlayerEntity sender = ctx.get().getSender();
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ctx.get().enqueueWork(() -> {
+                ServerPlayer sender = ctx.get().getSender();
                 if (sender == null) return;
 
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
@@ -38,7 +39,7 @@ public class PacketSetBookMode {
                     stack.setTag(tag);
                 }
             });
-        } );
+        });
         ctx.get().setPacketHandled(true);
     }
 }

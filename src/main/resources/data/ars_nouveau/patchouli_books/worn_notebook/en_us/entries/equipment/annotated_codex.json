@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:annotated_codex",
+  "name": "item.ars_nouveau.annotated_codex",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.annotated_codex"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:annotated_codex"
+    }
+  ]
+}

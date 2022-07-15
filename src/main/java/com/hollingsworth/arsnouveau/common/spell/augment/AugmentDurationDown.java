@@ -1,30 +1,33 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import net.minecraft.item.Item;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 
 public class AugmentDurationDown extends AbstractAugment {
+    public static AugmentDurationDown INSTANCE = new AugmentDurationDown();
 
-    public AugmentDurationDown() {
+    private AugmentDurationDown() {
         super(GlyphLib.AugmentDurationDown, "Duration Down");
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
 
     @Override
-    public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime());
-    }
-
-    @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 15;
+    }
+
+    @Override
+    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
+        builder.addDurationModifier(-1.0d);
+        return super.applyModifiers(builder, spellPart);
     }
 
     @Override

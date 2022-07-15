@@ -1,6 +1,23 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:shears",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "exp": 27,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:shears"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_sword"
+      }
+    }
+  ],
   "output": "ars_nouveau:glyph_cut"
 }

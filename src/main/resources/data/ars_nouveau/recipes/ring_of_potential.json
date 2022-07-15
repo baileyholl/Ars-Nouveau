@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "xxx",
-    "xyx",
-    "xxx"
-  ],
   "key": {
     "x": {
       "tag": "forge:nuggets/iron"
     },
     "y": {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
   "result": {
     "item": "ars_nouveau:ring_of_potential"
   }

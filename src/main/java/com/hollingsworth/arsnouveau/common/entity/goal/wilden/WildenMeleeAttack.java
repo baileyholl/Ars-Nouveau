@@ -2,38 +2,40 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wilden;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
 import java.util.function.Supplier;
 
 public class WildenMeleeAttack extends MeleeAttackGoal {
     public int animArg;
     Supplier<Boolean> shouldExecute;
-    public WildenMeleeAttack(CreatureEntity creature, double speedIn, boolean useLongMemory, int animArg, Supplier<Boolean> shouldExecute) {
+
+    public WildenMeleeAttack(PathfinderMob creature, double speedIn, boolean useLongMemory, int animArg, Supplier<Boolean> shouldExecute) {
         super(creature, speedIn, useLongMemory);
         this.animArg = animArg;
         this.shouldExecute = shouldExecute;
     }
 
+
     @Override
-    public boolean shouldExecute() {
-        return this.shouldExecute.get() && super.shouldExecute();
+    public boolean canUse() {
+        return this.mob.getTarget() != null && this.shouldExecute.get() && super.canUse();
     }
 
     @Override
     protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
         double d0 = this.getAttackReachSqr(enemy);
-        if(distToEnemySqr - 5 <= d0)
-            Networking.sendToNearby(attacker.world, attacker, new PacketAnimEntity(attacker.getEntityId(), animArg));
+        if (distToEnemySqr - 5 <= d0)
+            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), animArg));
 
-        if (distToEnemySqr <= d0 && this.func_234041_j_() <= 0) {
-            Networking.sendToNearby(attacker.world, attacker, new PacketAnimEntity(attacker.getEntityId(), animArg));
-            this.func_234039_g_();
-            this.attacker.swingArm(Hand.MAIN_HAND);
-            this.attacker.attackEntityAsMob(enemy);
+        if (distToEnemySqr <= d0 && this.getTicksUntilNextAttack() <= 0) {
+            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), animArg));
+            this.resetAttackCooldown();
+            this.mob.swing(InteractionHand.MAIN_HAND);
+            this.mob.doHurtTarget(enemy);
         }
     }
 }

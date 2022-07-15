@@ -1,53 +1,64 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
 public class EffectSummonWolves extends AbstractEffect {
+    public static EffectSummonWolves INSTANCE = new EffectSummonWolves();
 
-    public EffectSummonWolves() {
+    private EffectSummonWolves() {
         super(GlyphLib.EffectSummonWolvesID, "Summon Wolves");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
-        if(!canSummon(shooter))
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!canSummon(shooter))
             return;
-        Vector3d hit = rayTraceResult.getHitVec();
-        int ticks = 60 * 20 * (1 + getDurationModifier(augments));
-        for(int i = 0; i < 2; i++){
-            SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
+        Vec3 hit = rayTraceResult.getLocation();
+        int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
+        for (int i = 0; i < 2; i++) {
+            SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
             wolf.ticksLeft = ticks;
-            wolf.setPosition(hit.getX(), hit.getY(), hit.getZ());
-            wolf.setAttackTarget(shooter.getLastAttackedEntity());
-            wolf.setAggroed(true);
-            wolf.setTamed(true);
-            wolf.setTamedBy((PlayerEntity) shooter);
-            summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, wolf);
+            wolf.setPos(hit.x(), hit.y(), hit.z());
+            wolf.setTarget(shooter.getLastHurtMob());
+            wolf.setAggressive(true);
+            wolf.setTame(true);
+            wolf.tame((Player) shooter);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, wolf);
         }
         applySummoningSickness(shooter, ticks);
     }
 
     @Override
-    public int getManaCost() {
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 60, "Base duration in seconds", "duration");
+        addExtendTimeConfig(builder, 60);
+    }
+
+    @Override
+    public int getDefaultManaCost() {
         return 100;
     }
 
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        // SummonEvent captures augments, but no uses of that field were found
+        return getSummonAugments();
+    }
 
     @Override
     public String getBookDescription() {
@@ -55,13 +66,13 @@ public class EffectSummonWolves extends AbstractEffect {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.ONE;
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_HORN;
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.CONJURATION);
     }
 }

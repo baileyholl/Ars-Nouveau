@@ -1,136 +1,176 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.setup.Config;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
+public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
 
-    public abstract int getManaCost();
-    public String tag;
+    private final ResourceLocation registryName;
     public String name;
-    /*Tag for NBT data and SpellManager#spellList*/
-    public String getTag(){
-        return this.tag;
+    public Glyph glyphItem;
+
+    /*ID for NBT data and SpellManager#spellList*/
+    public ResourceLocation getRegistryName() {
+        return this.registryName;
     }
 
-    public String getIcon(){return this.tag + ".png";}
+    /**
+     * The list of schools that apply to this spell.
+     * Addons should add and access this list directly.
+     */
+    public List<SpellSchool> spellSchools = new CopyOnWriteArrayList<>();
+    /**
+     * The list of augments that apply to a form or effect.
+     * Addons should add and access this set directly.
+     */
+    public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
-    protected AbstractSpellPart(String tag, String name){
-        this.tag = tag;
+    public AbstractSpellPart(String registryName, String name) {
+        this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
+    }
+
+    public AbstractSpellPart(ResourceLocation registryName, String name) {
+        this.registryName = registryName;
         this.name = name;
-    }
-
-    public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
-        int cost = getConfigCost();
-        for(AbstractAugment a: augmentTypes){
-            if(a instanceof AugmentDampen && !dampenIsAllowed()){
-                continue;
-            }
-            cost += a.getConfigCost();
+        for (SpellSchool spellSchool : getSchools()) {
+            spellSchool.addSpellPart(this);
+            spellSchools.add(spellSchool);
         }
-        return Math.max(cost, 0);
+        compatibleAugments.addAll(getCompatibleAugments());
     }
 
-    public int getConfigCost(){
-        return Config.getSpellCost(this.tag);
+    public abstract int getDefaultManaCost();
+
+    public int getCastingCost() {
+        return COST == null ? getDefaultManaCost() : COST.get();
     }
 
-    @Nullable
-    public Item getCraftingReagent(){
-        return null;
+    public String getName() {
+        return this.name;
     }
 
-    // Check for mana reduction exploit
-    public boolean dampenIsAllowed(){
-        return false;
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
-    public String getName(){return this.name;}
-
-    public ISpellTier.Tier getTier() {
-        return ISpellTier.Tier.ONE;
+    /**
+     * Cache the glyph item here because of registry freezing.
+     */
+    public Glyph getGlyph() {
+        if (glyphItem == null) {
+            glyphItem = new Glyph(this);
+        }
+        return this.glyphItem;
     }
 
-    public static int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
-        return (int) augments.stream().filter(spellClass::isInstance).count();
+    /**
+     * Returns the set of augments that this spell part can be enhanced by.
+     * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
+     *
+     * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
+     * This should not be accessed directly, but can be overridden.
+     */
+    protected abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
+
+    /**
+     * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}
+     */
+    protected Set<AbstractAugment> augmentSetOf(AbstractAugment... augments) {
+        return setOf(augments);
     }
 
-    public boolean hasBuff(List<AbstractAugment> augments, Class spellClass){
-        return getBuffCount(augments, spellClass) > 0;
+    /**
+     * A helper for mods to add schools.
+     * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
+     */
+    protected @Nonnull Set<SpellSchool> getSchools() {
+        return setOf();
     }
 
-    public int getAmplificationBonus(List<AbstractAugment> augmentTypes){
-        return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
+    protected <T> Set<T> setOf(T... list) {
+        return Set.of(list);
     }
 
     @Override
     public int compareTo(AbstractSpellPart o) {
-        return this.getTier().ordinal() - o.getTier().ordinal();
+        return this.getTier().value - o.getTier().value;
+    }
+
+    public Component getBookDescLang() {
+        return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
+    }
+
+    public @Nullable ForgeConfigSpec CONFIG;
+    public @Nullable ForgeConfigSpec.IntValue COST;
+    public @Nullable ForgeConfigSpec.BooleanValue ENABLED;
+    public @Nullable ForgeConfigSpec.BooleanValue STARTER_SPELL;
+    public @Nullable ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
+
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        builder.comment("General settings").push("general");
+        ENABLED = builder.comment("Is Enabled?").define("enabled", true);
+        COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
+        STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
+        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
     }
 
     /**
-     * Converts to a patchouli documentation page
+     * Returns the number of times that this glyph may be modified by the given augment.
      */
-    public JsonElement serialize() {
-        JsonObject jsonobject = new JsonObject();
-
-        jsonobject.addProperty("name", this.getName());
-        jsonobject.addProperty("icon", ArsNouveau.MODID + ":" + getItemID());
-        jsonobject.addProperty("category", "spells_"+(getTier().ordinal() + 1));
-        jsonobject.addProperty("sortnum", this instanceof AbstractCastMethod ? 1 : this instanceof AbstractEffect ? 2 : 3);
-        JsonArray jsonArray = new JsonArray();
-        JsonObject descPage = new JsonObject();
-        descPage.addProperty("type", "text");
-        descPage.addProperty("text","ars_nouveau.glyph_desc." + tag);
-
-        JsonObject infoPage = new JsonObject();
-        infoPage.addProperty("type", "glyph_recipe");
-        infoPage.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + this.tag);
-        infoPage.addProperty("tier",this.getTier().name());
-
-        String manaCost = this.getManaCost() < 20 ? "Low" : "Medium";
-        manaCost = this.getManaCost() > 50 ? "High" : manaCost;
-        infoPage.addProperty("mana_cost", manaCost);
-        if(this.getCraftingReagent() != null){
-            String clayType;
-            if(this.getTier() == Tier.ONE){
-                clayType = ItemsRegistry.magicClay.getRegistryName().toString();
-            }else if(this.getTier() == Tier.TWO){
-                clayType = ItemsRegistry.marvelousClay.getRegistryName().toString();
-            }else{
-                clayType = ItemsRegistry.mythicalClay.getRegistryName().toString();
-            }
-            infoPage.addProperty("clay_type", clayType);
-            infoPage.addProperty("reagent", this.getCraftingReagent().getRegistryName().toString());
+    public int getAugmentLimit(ResourceLocation augmentTag) {
+        if (augmentLimits == null) {
+            return Integer.MAX_VALUE;
+        } else {
+            return augmentLimits.getAugmentLimit(augmentTag);
         }
-
-
-        jsonArray.add(descPage);
-        jsonArray.add(infoPage);
-        jsonobject.add("pages", jsonArray);
-        return jsonobject;
     }
 
-    public String getItemID(){
-        return "glyph_" + this.getTag();
+    // Augment limits only apply to cast forms and effects, but not augments.
+    public SpellPartConfigUtil.AugmentLimits augmentLimits;
+
+    /**
+     * Registers the glyph_limits configuration entry for augmentation limits.
+     */
+    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
 
-    public String getBookDescription(){
+    /**
+     * Override this method to provide defaults for the augmentation limits configuration.
+     */
+    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        return defaults;
+    }
+
+    // Default value for the starter spell config
+    public boolean defaultedStarterGlyph() {
+        return false;
+    }
+
+    /**
+     * Used for datagen lang ONLY.
+     */
+    public String getBookDescription() {
         return "";
     }
 
-    public String getLocaleName(){
-        return new TranslationTextComponent("ars_nouveau.glyph_name." + tag).getString();
+    public String getLocalizationKey() {
+        return registryName.getNamespace() + ".glyph_name." + registryName.getPath();
+    }
+
+    public String getLocaleName() {
+        return Component.translatable(getLocalizationKey()).getString();
     }
 }

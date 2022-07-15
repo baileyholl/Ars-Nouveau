@@ -1,46 +1,58 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class PotionJar extends ModBlock{
-    public PotionJar(Properties properties, String registry) {
-        super(properties, registry);
-    }
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-    public PotionJar(String registry){
-        super(registry);
+public class PotionJar extends TickableModBlock implements SimpleWaterloggedBlock {
+    public PotionJar(Properties properties) {
+        super(properties);
+        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        PotionJarTile tile = (PotionJarTile) worldIn.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getCurrentFill() <= 0) return 0;
         int step = (tile.getMaxFill() - 1) / 14;
         return (tile.getCurrentFill() - 1) / step + 1;
@@ -48,77 +60,109 @@ public class PotionJar extends ModBlock{
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.isRemote)
-            return ActionResultType.SUCCESS;
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn.isClientSide)
+            return InteractionResult.SUCCESS;
 
-        PotionJarTile tile = (PotionJarTile) worldIn.getTileEntity(pos);
-        if(tile == null)
-            return ActionResultType.SUCCESS;
-        ItemStack stack = player.getHeldItem(handIn);
-        Potion potion = PotionUtils.getPotionFromItem(stack);
+        PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
+        if (tile == null)
+            return InteractionResult.SUCCESS;
+        ItemStack stack = player.getItemInHand(handIn);
+        Potion potion = PotionUtils.getPotion(stack);
 
-        if(stack.getItem() == Items.POTION && potion != Potions.EMPTY ) {
-            if (tile.amount == 0) {
+        if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
+            if (tile.getAmount() == 0) {
 
-                tile.setPotion(PotionUtils.getPotionFromItem(player.getHeldItem(handIn)));
+                tile.setPotion(stack);
                 tile.addAmount(100);
-                if(!player.isCreative()) {
-                    player.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                if (!player.isCreative()) {
+                    player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
 
-            }else if(tile.isMixEqual(stack) && tile.getCurrentFill() < tile.getMaxFill()){
+            } else if (tile.isMixEqual(stack) && tile.getCurrentFill() < tile.getMaxFill()) {
 
                 tile.addAmount(100);
-                if(!player.isCreative()) {
-                    player.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                if (!player.isCreative()) {
+                    player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
 
             }
-            worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+            worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
         }
 
-        if(stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100){
+        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.addPotionToItemStack(potionStack, tile.getPotion());
-            player.addItemStackToInventory(potionStack);
-            player.getHeldItem(handIn).shrink(1);
+            PotionUtils.setPotion(potionStack, tile.getPotion());
+            PotionUtils.setCustomEffects(potionStack, tile.getCustomEffects());
+            player.addItem(potionStack);
+            player.getItemInHand(handIn).shrink(1);
             tile.addAmount(-100);
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
+    }
+
+
+    @Override
+    public RenderShape getRenderShape(BlockState p_149645_1_) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
+        builder.add(SourceJar.fill);
+        builder.add(WATERLOGGED);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PotionJarTile(pos, state);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new PotionJarTile();
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-
-        if(stack.getTag() == null)
+        if (stack.getTag() == null)
             return;
         int mana = stack.getTag().getCompound("BlockEntityTag").getInt("amount");
-        tooltip.add( new StringTextComponent((mana*100) / 10000 + "% full"));
+        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
         ItemStack stack1 = new ItemStack(Items.POTION);
         stack1.setTag(stack.getTag().getCompound("BlockEntityTag"));
         PotionUtils.addPotionTooltip(stack1, tooltip, 1.0F);
     }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
+    }
+
+    @Nonnull
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+        }
+        return stateIn;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return shape;
+    }
+
+    VoxelShape shape = Stream.of(
+            Block.box(2, 0, 2, 14, 2, 14),
+            Block.box(3, 2, 3, 13, 9, 13),
+            Block.box(5, 9, 5, 11, 14, 11),
+            Block.box(6, 13, 6, 10, 16, 10)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
 }

@@ -1,0 +1,18 @@
+{
+  "registry_name": "ars_nouveau:wilden_guardian",
+  "primary_type": "aqueous",
+  "spirits": [
+    {
+      "spirit": "wicked",
+      "count": 1
+    },
+{
+      "spirit": "arcane",
+      "count": 1
+    },
+{
+      "spirit": "aqueous",
+      "count": 1
+    }
+  ]
+}

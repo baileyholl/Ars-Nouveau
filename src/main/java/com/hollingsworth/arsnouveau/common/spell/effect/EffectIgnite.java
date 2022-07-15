@@ -1,78 +1,94 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
-public class EffectIgnite  extends AbstractEffect {
+public class EffectIgnite extends AbstractEffect {
+    public static EffectIgnite INSTANCE = new EffectIgnite();
 
-    public EffectIgnite() {
+    private EffectIgnite() {
         super(GlyphLib.EffectIgniteID, "Ignite");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            int duration = 3 + 2*getBuffCount(augments, AugmentExtendTime.class);
-            ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
-        }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR){
-            Direction face = ((BlockRayTraceResult) rayTraceResult).getFace();
-            for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        int duration = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
+        rayTraceResult.getEntity().setSecondsOnFire(duration);
+    }
 
-                BlockPos blockpos1 = pos.offset(face);
-                if (AbstractFireBlock.canLightBlock(world, blockpos1, face)) {
-                    BlockState blockstate1 = AbstractFireBlock.getFireForPlacement(world, blockpos1);
-                    world.setBlockState(blockpos1, blockstate1, 11);
+    @Override
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (spellStats.hasBuff(AugmentSensitive.INSTANCE))
+            return;
+        BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
+        if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState)) {
+            AbstractCandleBlock.setLit(world, hitState, rayTraceResult.getBlockPos(), true);
+            return;
+        }
+
+        if (world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial().isReplaceable()) {
+            Direction face = (rayTraceResult).getDirection();
+            for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
+                BlockPos blockpos1 = pos.relative(face);
+                if (BaseFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockpos1)) {
+                    BlockState blockstate1 = BaseFireBlock.getState(world, blockpos1);
+                    world.setBlock(blockpos1, blockstate1, 3);
+                    world.updateNeighborsAt(blockpos1, blockstate1.getBlock());
                 }
-//                if(world.getBlockState(pos.up()).getMaterial() == Material.AIR)
-//                    world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
             }
         }
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return livingEntityHitSuccess(rayTraceResult) || rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR;
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addExtendTimeConfig(builder, 2);
+        addPotionConfig(builder, 3);
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 15;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.ONE;
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public Item getCraftingReagent() {
-        return Items.FLINT_AND_STEEL;
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Sets blocks and mobs on fire for a short time";
+        return "Sets blocks and mobs on fire for a short time. Sensitive will stop this spell from igniting blocks.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_FIRE);
     }
 }
