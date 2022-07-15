@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.mana.ManaAttributes;
+import com.hollingsworth.arsnouveau.api.armor.PerkAttributes;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -44,8 +44,8 @@ public class ManaUtil {
 
         int max = Config.INIT_MAX_MANA.get();
 
-        if (e.getAttribute(ManaAttributes.MAX_MANA.get()) != null)
-            max += e.getAttributeValue(ManaAttributes.MAX_MANA.get());
+        if (e.getAttribute(PerkAttributes.CAP_BONUS.get()) != null)
+            max += e.getAttributeValue(PerkAttributes.CAP_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
             max += (Config.MANA_BOOST_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()));
@@ -68,8 +68,8 @@ public class ManaUtil {
         if(mana == null) return 0;
         double regen = Config.INIT_MANA_REGEN.get();
 
-        if (e.getAttribute(ManaAttributes.MANA_REGEN.get()) != null)
-            regen += e.getAttributeValue(ManaAttributes.MANA_REGEN.get());
+        if (e.getAttribute(PerkAttributes.REGEN_BONUS.get()) != null)
+            regen += e.getAttributeValue(PerkAttributes.REGEN_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
             regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get());
