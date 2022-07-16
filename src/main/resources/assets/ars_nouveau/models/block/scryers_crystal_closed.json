@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout",
 	"parent": "block/cube_all",
 	"textures": {
 		"1": "ars_nouveau:blocks/scry_crystal_occupied",
@@ -7,8 +8,16 @@
 	},
 	"elements": [
 		{
-			"from": [5, 5, 15],
-			"to": [11, 11, 16],
+			"from": [
+				5,
+				5,
+				15
+			],
+			"to": [
+				11,
+				11,
+				16
+			],
 			"faces": {
 				"north": {"uv": [0, 0, 6, 6], "texture": "#1"},
 				"east": {"uv": [6, 0, 7, 6], "texture": "#1"},

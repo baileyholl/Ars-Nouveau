@@ -1,16 +1,33 @@
 {
-"parent": "block/cube_all",
-	"credit": "Made with Blockbench",
-	"textures": {
-		"4": "ars_nouveau:blocks/volcanic/lily_stone",
-		"particle": "ars_nouveau:blocks/volcanic/lily_stone"
-	},
-	"elements": [
-		{
-			"from": [3, 0, 1],
-			"to": [4, 0.5, 2],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
-			"faces": {
+  "parent": "block/cube_all",
+  "credit": "Made with Blockbench",
+  "render_type": "cutout",
+  "textures": {
+    "4": "ars_nouveau:blocks/volcanic/lily_stone",
+    "particle": "ars_nouveau:blocks/volcanic/lily_stone"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        1
+      ],
+      "to": [
+        4,
+        0.5,
+        2
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          8,
+          0,
+          8
+        ]
+      },
+      "faces": {
 				"north": {"uv": [8, 11, 9, 12], "texture": "#4"},
 				"east": {"uv": [9, 11, 10, 12], "texture": "#4"},
 				"south": {"uv": [10, 11, 11, 12], "texture": "#4"},

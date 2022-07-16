@@ -1,8 +1,12 @@
 {
-	"credit": "Made with Blockbench",
-	"texture_size": [64, 64],
-	"parent": "block/cube_all",
-	"textures": {
-		"particle": "ars_nouveau:blocks/arcane_pedestal"
-	}
+  "credit": "Made with Blockbench",
+  "texture_size": [
+    64,
+    64
+  ],
+  "render_type": "cutout",
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ars_nouveau:blocks/arcane_pedestal"
+  }
 }

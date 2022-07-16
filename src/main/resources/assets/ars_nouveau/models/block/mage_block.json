@@ -1,6 +1,7 @@
 {
-    "parent": "minecraft:block/cube_all",
-    "textures": {
-        "all": "ars_nouveau:blocks/mage_block"
-    }
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "ars_nouveau:blocks/mage_block"
+  },
+  "render_type": "cutout"
 }

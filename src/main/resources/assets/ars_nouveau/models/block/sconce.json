@@ -1,17 +1,37 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "block/cube_all",	
-	"texture_size": [32, 32],
-	"textures": {
-		"particle": "ars_nouveau:blocks/sconce",
-		"4": "ars_nouveau:blocks/sconce"
-	},
-	"elements": [
-		{
-			"from": [5, 8, 10],
-			"to": [11, 13, 16],
-			"faces": {
-				"north": {"uv": [3, 0, 6, 2.5], "texture": "#4"},
+  "credit": "Made with Blockbench",
+  "parent": "block/cube_all",
+  "texture_size": [
+    32,
+    32
+  ],
+  "render_type": "cutout",
+  "textures": {
+    "particle": "ars_nouveau:blocks/sconce",
+    "4": "ars_nouveau:blocks/sconce"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        8,
+        10
+      ],
+      "to": [
+        11,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3,
+            0,
+            6,
+            2.5
+          ],
+          "texture": "#4"
+        },
 				"east": {"uv": [3, 2.5, 6, 5], "texture": "#4"},
 				"south": {"uv": [3, 0, 6, 2.5], "texture": "#4"},
 				"west": {"uv": [6, 2.5, 3, 5], "texture": "#4"},
