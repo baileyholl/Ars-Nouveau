@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModParticles {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);

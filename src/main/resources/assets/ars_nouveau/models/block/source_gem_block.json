@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cube_all",
   "textures": {
     "all": "ars_nouveau:blocks/source_gem_block"
-  }
+  },
+  "render_type": "translucent"
 }

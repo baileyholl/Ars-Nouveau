@@ -2,5 +2,6 @@
   "parent": "block/cube_all",
   "textures": {
     "all": "ars_nouveau:blocks/ritual"
-  }
+  },
+  "render_type": "cutout"
 }

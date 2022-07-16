@@ -1,5 +1,6 @@
 {
-	"textures": {
+  "render_type": "cutout",
+  "textures": {
     "particle": "ars_nouveau:blocks/whirlisprig_blossom"
   }
 }

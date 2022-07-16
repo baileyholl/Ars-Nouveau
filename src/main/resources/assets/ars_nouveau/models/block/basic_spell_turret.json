@@ -1,5 +1,6 @@
 {
-	"textures": {
+  "textures": {
     "particle": "ars_nouveau:blocks/basic_spell_turret"
-  }
+  },
+  "render_type": "cutout"
 }

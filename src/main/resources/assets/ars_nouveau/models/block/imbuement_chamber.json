@@ -2,5 +2,6 @@
   "parent": "block/cube_all",
   "textures": {
     "all": "ars_nouveau:blocks/imbuement_chamber"
-  }
+  },
+  "render_type": "cutout"
 }

@@ -1,16 +1,33 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "block/cube_all",
-	"textures": {
-		"4": "ars_nouveau:blocks/potion_jar",
-		"particle": "ars_nouveau:blocks/potion_jar"
-	},
-	"elements": [
-		{
-			"from": [6, 13, 6],
-			"to": [10, 16, 10],
-			"faces": {
-				"north": {"uv": [1, 8, 2, 8.75], "texture": "#4"},
+  "credit": "Made with Blockbench",
+  "parent": "block/cube_all",
+  "render_type": "cutout",
+  "textures": {
+    "4": "ars_nouveau:blocks/potion_jar",
+    "particle": "ars_nouveau:blocks/potion_jar"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        13,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            8,
+            2,
+            8.75
+          ],
+          "texture": "#4"
+        },
 				"east": {"uv": [8, 1, 9, 1.75], "texture": "#4"},
 				"south": {"uv": [8, 1.75, 9, 2.5], "texture": "#4"},
 				"west": {"uv": [2, 8, 3, 8.75], "texture": "#4"},
