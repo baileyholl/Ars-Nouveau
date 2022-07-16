@@ -38,7 +38,6 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
         if (state == null) {
             Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block == null) {
-                System.out.println("Block couldn't be located for key: " + key);
                 state = Blocks.AIR.defaultBlockState();
             } else {
                 state = block.defaultBlockState();

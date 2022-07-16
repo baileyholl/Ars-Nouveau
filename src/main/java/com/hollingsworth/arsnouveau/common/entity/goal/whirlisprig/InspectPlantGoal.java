@@ -19,6 +19,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class InspectPlantGoal extends DistanceRestrictedGoal {
     Whirlisprig entity;
     BlockPos pos;

@@ -55,7 +55,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.world.SaplingGrowTreeEvent;
+import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -69,6 +69,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+
+import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantTextureProvider {
     AnimationFactory manager = new AnimationFactory(this);

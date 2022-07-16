@@ -4,6 +4,8 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class AnimModItem extends ModItem implements IAnimatable {
 
     public AnimModItem(Properties properties) {

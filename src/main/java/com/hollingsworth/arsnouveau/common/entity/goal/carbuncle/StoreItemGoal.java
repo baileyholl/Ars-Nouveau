@@ -17,6 +17,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class StoreItemGoal extends ExtendedRangeGoal {
 
     private final Starbuncle starbuncle;

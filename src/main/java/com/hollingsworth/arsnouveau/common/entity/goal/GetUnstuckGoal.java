@@ -11,6 +11,8 @@ import java.util.EnumSet;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class GetUnstuckGoal extends CheckStuckGoal {
 
     int numUnstucks;

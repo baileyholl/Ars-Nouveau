@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class DowsingRod extends ModItem {
     public DowsingRod(Properties properties) {
         super(properties);

@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -100,7 +100,7 @@ public class FamiliarEvents {
     }
 
     @SubscribeEvent
-    public static void potionEvent(PotionEvent.PotionAddedEvent event) {
+    public static void potionEvent(MobEffectEvent.Added event) {
         for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarWixie))) {
             if (entity instanceof FamiliarWixie) {
                 ((FamiliarWixie) entity).potionEvent(event);

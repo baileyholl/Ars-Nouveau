@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
@@ -38,11 +38,11 @@ public class ArchwoodChest extends ChestBlock {
         }
 
         @Override
-        public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        public void initializeClient(Consumer<IClientItemExtensions> consumer) {
             super.initializeClient(consumer);
-            consumer.accept(new IItemRenderProperties() {
+            consumer.accept(new IClientItemExtensions() {
                 @Override
-                public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                     Minecraft mc = Minecraft.getInstance();
 
                     return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {

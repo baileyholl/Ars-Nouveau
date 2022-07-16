@@ -10,6 +10,8 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
+import net.minecraft.core.particles.ParticleOptions.Deserializer;
+
 public class ColoredDynamicTypeData implements ParticleOptions {
 
     private ParticleType<ColoredDynamicTypeData> type;

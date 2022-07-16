@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -22,7 +22,7 @@ public class ModParticles {
     public static final RegistryObject<ParticleType<ColoredDynamicTypeData>> SPARKLE_TYPE = PARTICLES.register(ParticleSparkleData.NAME, () -> new SparkleParticleType());
 
     @SubscribeEvent
-    public static void registerFactories(ParticleFactoryRegisterEvent evt) {
+    public static void registerFactories(RegisterParticleProvidersEvent evt) {
         Minecraft.getInstance().particleEngine.register(GLOW_TYPE.get(), GlowParticleData::new);
         Minecraft.getInstance().particleEngine.register(LINE_TYPE.get(), ParticleLineData::new);
         Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE.get(), ParticleSparkleData::new);

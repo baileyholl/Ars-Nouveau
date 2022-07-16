@@ -11,20 +11,19 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
+@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class PlayerEvent {
 
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
-        Player entity = event.getPlayer();
-        if (!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
+        Player entity = event.getEntity();
+        if (!event.getLevel().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getLevel().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
             return;
         if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);
@@ -43,8 +42,8 @@ public class PlayerEvent {
 
     @SubscribeEvent
     public static void onItem(final PlayerInteractEvent.RightClickItem event) {
-        Player entity = event.getPlayer();
-        if (!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
+        Player entity = event.getEntity();
+        if (!event.getLevel().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
             return;
         if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);

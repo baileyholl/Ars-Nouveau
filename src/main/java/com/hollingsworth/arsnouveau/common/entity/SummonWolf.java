@@ -19,6 +19,8 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class SummonWolf extends Wolf implements ISummon {
     public int ticksLeft;
     public boolean isWildenSummon;

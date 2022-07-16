@@ -29,6 +29,8 @@ import java.util.stream.Stream;
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedBlock {
 
     public WhirlisprigFlower(Properties properties) {

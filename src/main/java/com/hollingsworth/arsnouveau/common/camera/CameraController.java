@@ -15,17 +15,12 @@ import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
 public class CameraController {
-    public static boolean jumpBarElementEnabledPreviously;
-    public static boolean experienceBarElementEnabledPreviously;
-    public static boolean potionIconsElementEnabledPreviously;
     public static CameraType previousCameraType;
     public static boolean resetOverlaysAfterDismount = false;
     private static ClientChunkCache.Storage cameraStorage;
@@ -88,11 +83,6 @@ public class CameraController {
                 if (yRotChange != 0.0D || xRotChange != 0.0D)
                     player.connection.send(new ServerboundMovePlayerPacket.Rot(player.getYRot(), player.getXRot(), player.isOnGround()));
             }
-        } else if (resetOverlaysAfterDismount) {
-            resetOverlaysAfterDismount = false;
-//			OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, false);
-//			OverlayRegistry.enableOverlay(ClientHandler.hotbarBindOverlay, true);
-            CameraController.restoreOverlayStates();
         }
     }
 
@@ -187,22 +177,5 @@ public class CameraController {
             cameraStorage.viewCenterX = cameraPos.x();
             cameraStorage.viewCenterZ = cameraPos.z();
         }
-    }
-
-    public static void saveOverlayStates() {
-        jumpBarElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.JUMP_BAR_ELEMENT).isEnabled();
-        experienceBarElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT).isEnabled();
-        potionIconsElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.POTION_ICONS_ELEMENT).isEnabled();
-    }
-
-    public static void restoreOverlayStates() {
-        if (jumpBarElementEnabledPreviously)
-            OverlayRegistry.enableOverlay(ForgeIngameGui.JUMP_BAR_ELEMENT, true);
-
-        if (experienceBarElementEnabledPreviously)
-            OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, true);
-
-        if (potionIconsElementEnabledPreviously)
-            OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, true);
     }
 }

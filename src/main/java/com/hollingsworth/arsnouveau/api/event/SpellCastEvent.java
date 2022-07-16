@@ -19,6 +19,6 @@ public class SpellCastEvent extends LivingEvent {
     }
 
     public Level getWorld() {
-        return this.getEntityLiving().level;
+        return this.getEntity().level;
     }
 }

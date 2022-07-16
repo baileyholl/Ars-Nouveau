@@ -19,6 +19,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class MageBloomCrop extends CropBlock {
     public static final IntegerProperty AGE_0_4 = IntegerProperty.create("age", 0, 4);
 

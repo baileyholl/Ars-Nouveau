@@ -46,6 +46,8 @@ import java.util.HashMap;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BasicSpellTurret extends TickableModBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;

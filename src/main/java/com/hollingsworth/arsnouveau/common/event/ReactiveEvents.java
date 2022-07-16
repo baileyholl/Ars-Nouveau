@@ -20,7 +20,7 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void livingHitEvent(LivingHurtEvent e) {
-        LivingEntity entity = e.getEntityLiving();
+        LivingEntity entity = e.getEntity();
         if (entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
             return;
 
@@ -39,7 +39,7 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e) {
-        Player entity = e.getPlayer();
+        Player entity = e.getEntity();
 
         if (entity.getCommandSenderWorld().isClientSide)
             return;
@@ -49,11 +49,11 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void playerAttackEntity(AttackEntityEvent e) {
-        LivingEntity entity = e.getEntityLiving();
+        LivingEntity entity = e.getEntity();
 
         if (entity == null || entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
             return;
-        ItemStack s = e.getEntityLiving().getMainHandItem();
+        ItemStack s = e.getEntity().getMainHandItem();
         castSpell((Player) entity, s);
     }
 

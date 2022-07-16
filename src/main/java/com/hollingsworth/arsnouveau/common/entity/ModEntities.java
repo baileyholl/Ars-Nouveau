@@ -34,7 +34,7 @@ import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ModEntities {
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
 
     static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.Builder<T> builder) {
         return ENTITIES.register(name, () -> builder.build(MODID + ":" + name));
