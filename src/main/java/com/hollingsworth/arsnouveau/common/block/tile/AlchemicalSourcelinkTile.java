@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -57,7 +58,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
         for(BlockPos p : BlockPos.withinManhattan(worldPosition.below(1), 1, 1,1)){
             if(level.getBlockEntity(p) instanceof PotionJarTile) {
                 PotionJarTile tile = (PotionJarTile) level.getBlockEntity(p);
-                if (tile.getCurrentFill() >= 100) {
+                if (tile.getCurrentFill() >= 100 && tile.getPotion() != Potions.EMPTY && tile.getPotion() != Potions.WATER) {
                     return p;
                 }
             }

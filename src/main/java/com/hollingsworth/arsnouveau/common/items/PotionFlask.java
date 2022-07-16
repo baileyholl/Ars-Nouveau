@@ -48,12 +48,14 @@ public abstract class PotionFlask extends ModItem {
         if(context.getLevel().isClientSide)
             return super.useOn(context);
         ItemStack thisStack = context.getItemInHand();
+        if(!thisStack.hasTag())
+            thisStack.setTag(new CompoundNBT());
         Potion potion = PotionUtils.getPotion(thisStack);
         PlayerEntity playerEntity = context.getPlayer();
         if(!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile))
             return super.useOn(context);
         PotionJarTile jarTile = (PotionJarTile) context.getLevel().getBlockEntity(context.getClickedPos());
-        int count = thisStack.getTag().getInt("count");
+        int count = thisStack.getOrCreateTag().getInt("count");
         if(jarTile == null)
             return ActionResultType.PASS;
         if(playerEntity.isShiftKeyDown() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getCurrentFill() >= 0){
@@ -62,7 +64,7 @@ public abstract class PotionFlask extends ModItem {
                     jarTile.setPotion(potion, PotionUtils.getMobEffects(thisStack));
                 }
                 jarTile.addAmount(100);
-                thisStack.getTag().putInt("count", count - 1);
+                thisStack.getOrCreateTag().putInt("count", count - 1);
                 setCount(thisStack, count -1);
             }
         }
@@ -82,7 +84,6 @@ public abstract class PotionFlask extends ModItem {
     }
 
     public boolean isMax(ItemStack stack){
-
         return stack.getOrCreateTag().getInt("count") >= getMaxCapacity();
     }
 
@@ -91,10 +92,10 @@ public abstract class PotionFlask extends ModItem {
     }
 
     public void setCount(ItemStack stack, int count){
-        stack.getTag().putInt("count", count);
+        stack.getOrCreateTag().putInt("count", count);
         if(count <= 0) {
             PotionUtils.setPotion(stack, Potions.EMPTY);
-            stack.getTag().remove("CustomPotionEffects");
+            stack.getOrCreateTag().remove("CustomPotionEffects");
         }
     }
 
@@ -114,10 +115,10 @@ public abstract class PotionFlask extends ModItem {
                     entityLiving.addEffect(new EffectInstance(effectinstance));
                 }
             }
-            if(stack.hasTag()){
-                int count = stack.getTag().getInt("count") - 1;
-                setCount(stack, count);
-            }
+
+            int count = stack.getOrCreateTag().getInt("count") - 1;
+            setCount(stack, count);
+
         }
         return stack;
     }
@@ -152,14 +153,14 @@ public abstract class PotionFlask extends ModItem {
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
-        return stack.hasTag() && stack.getTag().getInt("count") > 0 ? DrinkHelper.useDrink(worldIn, playerIn, handIn) : ActionResult.pass(playerIn.getItemInHand(handIn));
+        return stack.getOrCreateTag().getInt("count") > 0 ? DrinkHelper.useDrink(worldIn, playerIn, handIn) : ActionResult.pass(playerIn.getItemInHand(handIn));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if(stack.hasTag()){
-            tooltip.add(new TranslationTextComponent("ars_nouveau.flask.charges", stack.getTag().getInt("count")));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.flask.charges", stack.getOrCreateTag().getInt("count")));
             PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
         }
     }
