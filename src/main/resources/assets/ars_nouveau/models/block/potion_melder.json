@@ -6,6 +6,7 @@
 		"3": "ars_nouveau:blocks/potion_melder",
 		"particle": "ars_nouveau:blocks/potion_melder"
 	},
+	"render_type": "cutout",
 		"elements": [
 		{
 			"from": [1, 5, 1],

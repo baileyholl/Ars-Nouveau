@@ -1,7 +1,11 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout",
 	"parent": "block/cube_all",
-	"texture_size": [64, 64],
+	"texture_size": [
+		64,
+		64
+	],
 	"textures": {
 		"0": "ars_nouveau:blocks/mana_still",
 		"2": "ars_nouveau:blocks/source_jar",
@@ -9,7 +13,11 @@
 	},
 	"elements": [
 		{
-			"from": [3, 14, 3],
+			"from": [
+				3,
+				14,
+				3
+			],
 			"to": [13, 16, 13],
 			"faces": {
 				"north": {"uv": [7.5, 8, 10, 8.5], "texture": "#2"},
