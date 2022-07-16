@@ -160,12 +160,6 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
-
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MENDOSTEEN_POD, RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASTION_POD, RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BOMBEGRANTE_POD, RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FROSTAYA_POD, RenderType.cutoutMipped());
-
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;

@@ -4,6 +4,7 @@
 		"1": "ars_nouveau:blocks/archfruit/flourishing_archfruit_pod_0",
 		"particle": "ars_nouveau:blocks/archfruit/flourishing_archfruit_pod_0"
 	},
+	  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [6, 7, 11],

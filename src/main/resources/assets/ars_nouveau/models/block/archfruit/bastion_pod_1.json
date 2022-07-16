@@ -5,6 +5,7 @@
 		"2": "ars_nouveau:blocks/archfruit/vexing_archfruit_pod_1",
 		"particle": "ars_nouveau:blocks/archfruit/vexing_archfruit_pod_1"
 	},
+	  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [5, 5, 9],
