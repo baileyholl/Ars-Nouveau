@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProvider, IWandable {
+public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWandable {
 
     private int amount;
     private Potion potion = Potions.EMPTY;
@@ -41,29 +40,6 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
         super(BlockRegistry.POTION_JAR_TYPE, pos, state);
     }
 
-
-    @Override
-    public void tick() {
-        if (level.isClientSide) {
-            return;
-        }
-        BlockState state = level.getBlockState(worldPosition);
-        int fillState = 0;
-        if (this.getCurrentFill() > 0 && this.getCurrentFill() < 1000)
-            fillState = 1;
-        else if (this.getCurrentFill() != 0) {
-            fillState = (this.getCurrentFill() / 1000) + 1;
-        }
-
-        if (level.getGameTime() % 20 == 0) {
-            if (this.getAmount() <= 0 && this.potion != Potions.EMPTY && !this.isLocked) {
-                this.potion = Potions.EMPTY;
-                this.customEffects = new ArrayList<>();
-                updateBlock();
-            }
-        }
-        level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState), 3);
-    }
 
     public boolean canAcceptNewPotion() {
         return this.amount <= 0 && !this.isLocked || (this.potion == Potions.EMPTY && !this.isLocked);
@@ -85,10 +61,23 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
         this.potion = potion == null ? Potions.EMPTY : potion;
         customEffects = new ArrayList<>();
         for (MobEffectInstance e : effectInstances) {
-            if (!potion.getEffects().contains(e))
+            if (!this.potion.getEffects().contains(e))
                 customEffects.add(e);
         }
         updateBlock();
+    }
+
+    @Override
+    public boolean updateBlock() {
+        BlockState state = level.getBlockState(worldPosition);
+        int fillState = 0;
+        if (this.getAmount() > 0 && this.getAmount() < 1000)
+            fillState = 1;
+        else if (this.getAmount() != 0) {
+            fillState = (this.getAmount() / 1000) + 1;
+        }
+        level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState), 3);
+        return super.updateBlock();
     }
 
     public void setPotion(ItemStack stack) {
@@ -107,14 +96,6 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
         return potion == null ? 16253176 : PotionUtils.getColor(getFullEffects());
     }
 
-    public int getCurrentFill() {
-        return getAmount();
-    }
-
-    public void setFill(int fill) {
-        setAmount(fill);
-    }
-
     public void addAmount(Potion potion, int fill) {
         setPotion(potion);
         addAmount(fill);
@@ -125,6 +106,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
         setAmount(Math.min(getMaxFill(), getAmount() + fill));
         if (getAmount() <= 0 && !this.isLocked)
             this.potion = Potions.EMPTY;
+
         updateBlock();
     }
 
@@ -137,18 +119,9 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
             PotionUtils.setCustomEffects(potionStack, customEffects);
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getCurrentFill() * 100) / this.getMaxFill()));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getAmount() * 100) / this.getMaxFill()));
         if (isLocked)
             tooltip.add(Component.translatable("ars_nouveau.locked"));
-    }
-
-    public void appendEffect(List<MobEffectInstance> effects) {
-        this.customEffects.addAll(effects);
-    }
-
-    public void setCustomEffects(List<MobEffectInstance> effects) {
-        this.customEffects.clear();
-        this.customEffects.addAll(effects);
     }
 
     public List<MobEffectInstance> getFullEffects() {
@@ -227,6 +200,10 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
 
     public void setAmount(int amount) {
         this.amount = amount;
+        if (this.getAmount() <= 0 && !this.isLocked) {
+            this.potion = Potions.EMPTY;
+            this.customEffects = new ArrayList<>();
+        }
         updateBlock();
     }
 }

@@ -18,6 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -39,9 +40,7 @@ import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class PotionJar extends TickableModBlock implements SimpleWaterloggedBlock {
+public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, EntityBlock {
     public PotionJar(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -55,9 +54,9 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
-        if (tile == null || tile.getCurrentFill() <= 0) return 0;
+        if (tile == null || tile.getAmount() <= 0) return 0;
         int step = (tile.getMaxFill() - 1) / 14;
-        return (tile.getCurrentFill() - 1) / step + 1;
+        return (tile.getAmount() - 1) / step + 1;
     }
 
 
@@ -82,19 +81,18 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
                     stack.shrink(1);
                 }
 
-            } else if (tile.isMixEqual(stack) && tile.getCurrentFill() < tile.getMaxFill()) {
+            } else if (tile.isMixEqual(stack) && tile.getAmount() < tile.getMaxFill()) {
 
                 tile.addAmount(100);
                 if (!player.isCreative()) {
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
-
             }
-            worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+            return InteractionResult.SUCCESS;
         }
 
-        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100) {
+        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, tile.getPotion());
             PotionUtils.setCustomEffects(potionStack, tile.getCustomEffects());

@@ -138,14 +138,14 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             if (combJar.getAmount() == 0) {
                 combJar.setPotion(jar1Potion, combined);
                 mergePotions(combJar, tile1, tile2);
-            } else if (combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) {
+            } else if (combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getAmount() >= 100) {
                 mergePotions(combJar, tile1, tile2);
             }
         }
     }
 
     public boolean canDestinationAccept(PotionJarTile combJar,  List<MobEffectInstance> combined) {
-        return (combJar.isMixEqual(combined) && (combJar.getMaxFill() - combJar.getCurrentFill() >= 100)) || combJar.getAmount() == 0;
+        return (combJar.isMixEqual(combined) && (combJar.getMaxFill() - combJar.getAmount() >= 100)) || combJar.getAmount() == 0;
     }
 
     public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2){
@@ -168,7 +168,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             return false;
         for(BlockPos p : fromJars){
             BlockEntity te = level.getBlockEntity(p);
-            if(!level.isLoaded(p) || !(te instanceof PotionJarTile jar) || jar.getCurrentFill() < 300){
+            if(!level.isLoaded(p) || !(te instanceof PotionJarTile jar) || jar.getAmount() < 300){
                 return false;
             }
         }

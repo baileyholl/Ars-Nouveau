@@ -16,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
@@ -67,7 +65,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
                 found = true;
                 return;
             }
-            jar.setFill(jar.getCurrentFill() - 300);
+            jar.setAmount(jar.getAmount() - 300);
             tile.givePotion();
             Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
             int color = jar.getColor();

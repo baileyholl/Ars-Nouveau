@@ -262,7 +262,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3, 4).forEach(bPos -> {
             if (!foundOptimal.get() && level.getBlockEntity(bPos) instanceof PotionJarTile tile) {
                 if (tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)) {
-                    if (tile.getMaxFill() - tile.getCurrentFill() >= 300) {
+                    if (tile.getMaxFill() - tile.getAmount() >= 300) {
                         if (tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
                             foundOptimal.set(true);
                             foundPod.set(bPos.immutable());
@@ -281,7 +281,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3, 4).forEach(bPos -> {
             if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile tile) {
-                if (tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)) {
+                if (tile.getAmount() >= amount && tile.isMixEqual(passedPot)) {
                     foundPod.set(bPos.immutable());
                 }
             }

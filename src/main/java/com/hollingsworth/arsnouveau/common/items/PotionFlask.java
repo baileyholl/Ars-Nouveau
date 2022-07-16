@@ -47,7 +47,7 @@ public abstract class PotionFlask extends ModItem {
         int count = thisStack.getTag().getInt("count");
         if (jarTile == null)
             return InteractionResult.PASS;
-        if (playerEntity.isShiftKeyDown() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getCurrentFill() >= 0) {
+        if (playerEntity.isShiftKeyDown() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0) {
             if (jarTile.getPotion() == Potions.EMPTY || jarTile.isMixEqual(thisStack)) {
                 if (jarTile.getPotion() == Potions.EMPTY) {
                     jarTile.setPotion(potion, PotionUtils.getMobEffects(thisStack));
