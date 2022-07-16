@@ -159,7 +159,6 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
         return new RadialMenu<>((int slot) -> {
             BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
-            System.out.println(slot);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),

@@ -41,7 +41,6 @@ public class PacketUpdateSpellColors {
                 if (stack.getItem() instanceof SpellBook) {
                     ISpellCaster caster = CasterUtil.getCaster(stack);
                     caster.setColor(color, castSlot);
-                    System.out.println(color);
                     caster.setCurrentSlot(castSlot);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> ctx.get().getSender()),
