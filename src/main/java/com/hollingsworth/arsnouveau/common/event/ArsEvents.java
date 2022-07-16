@@ -17,7 +17,7 @@ public class ArsEvents {
 
     @SubscribeEvent
     public static void regenCalc(ManaRegenCalcEvent e) {
-        if (e.getEntityLiving() != null && e.getEntityLiving().hasEffect(ModPotions.HEX_EFFECT.get())) {
+        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.HEX_EFFECT.get())) {
             e.setRegen(e.getRegen() / 2.0);
         }
     }

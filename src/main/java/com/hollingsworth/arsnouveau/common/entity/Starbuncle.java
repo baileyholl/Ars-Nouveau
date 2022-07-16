@@ -72,7 +72,6 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider {
 
-
     public enum StarbuncleGoalState {
         FORAGING,
         HUNTING_ITEM,

@@ -14,6 +14,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ModItem extends Item {
     public List<Component> tooltip = new ArrayList<>();
     public Rarity rarity;

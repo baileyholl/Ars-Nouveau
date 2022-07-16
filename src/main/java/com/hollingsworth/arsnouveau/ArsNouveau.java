@@ -29,7 +29,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import static com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator.GLM;
+
 
 @Mod(ArsNouveau.MODID)
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -66,7 +66,7 @@ public class ArsNouveau {
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
-        GLM.register(modEventBus);
+//        GLM.register(modEventBus);
     }
 
     public void setup(final FMLCommonSetupEvent event) {

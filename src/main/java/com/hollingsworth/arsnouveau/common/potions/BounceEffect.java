@@ -20,7 +20,7 @@ public class BounceEffect extends MobEffect {
     // Adapted from Tinkers https://github.com/SlimeKnights/TinkersConstruct/blob/7df8a5dd62a3b731e59250c49300faadc24501d0/src/main/java/slimeknights/tconstruct/gadgets/GadgetEvents.java
     @SubscribeEvent
     public static void onFall(LivingFallEvent event) {
-        LivingEntity entity = event.getEntityLiving();
+        LivingEntity entity = event.getEntity();
         if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT.get())) {
             return;
         }

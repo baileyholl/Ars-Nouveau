@@ -19,7 +19,7 @@ public class RegistryHelper {
     }
 
     public static ResourceLocation getRegistryName(EntityType<?> i) {
-        return ForgeRegistries.ENTITIES.getKey(i);
+        return ForgeRegistries.ENTITY_TYPES.getKey(i);
     }
 
     public static ResourceLocation getRegistryName(Enchantment e) {

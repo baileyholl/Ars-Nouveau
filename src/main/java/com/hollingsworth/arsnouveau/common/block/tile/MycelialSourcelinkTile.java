@@ -39,7 +39,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                 if (i.getItem().getItem().isEdible()) {
                     int source = getSourceValue(i.getItem());
                     this.addSource(source);
-                    ItemStack containerItem = i.getItem().getContainerItem();
+                    ItemStack containerItem = i.getItem().getCraftingRemainingItem();
                     i.getItem().shrink(1);
                     if (!containerItem.isEmpty()) {
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
@@ -52,7 +52,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                 int sourceValue = getSourceValue(i.getItem(0));
                 if (sourceValue > 0) {
                     this.addSource(sourceValue);
-                    ItemStack containerItem = i.getItem(0).getContainerItem();
+                    ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
                     Networking.sendToNearby(level, getBlockPos(),

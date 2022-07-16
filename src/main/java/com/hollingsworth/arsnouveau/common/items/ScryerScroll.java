@@ -15,6 +15,8 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ScryerScroll extends ModItem {
     public ScryerScroll(Properties properties) {
         super(properties);

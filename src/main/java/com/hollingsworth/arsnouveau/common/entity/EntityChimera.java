@@ -68,6 +68,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.ArrayList;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityChimera extends Monster implements IAnimatable, IAnimationListener {
     private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true).setPlayBossMusic(true);
     public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);

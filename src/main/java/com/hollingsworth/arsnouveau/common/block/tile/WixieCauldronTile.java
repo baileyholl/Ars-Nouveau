@@ -457,7 +457,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems, Recipe recipe) {
             CraftingContainer inventory = new CraftingContainer(new AbstractContainerMenu(null, -1) {
-                //TODO check this
                 @Override
                 public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
                     return ItemStack.EMPTY;

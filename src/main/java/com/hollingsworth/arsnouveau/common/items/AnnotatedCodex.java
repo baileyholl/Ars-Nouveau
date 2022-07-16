@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class AnnotatedCodex extends ModItem {
 
     public AnnotatedCodex(Properties properties) {

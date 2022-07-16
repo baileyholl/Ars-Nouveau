@@ -16,6 +16,8 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class TakeItemGoal extends ExtendedRangeGoal {
     Starbuncle starbuncle;
     BlockPos takePos;

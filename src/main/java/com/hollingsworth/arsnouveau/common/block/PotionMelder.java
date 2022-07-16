@@ -21,6 +21,8 @@ import javax.annotation.Nonnull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class PotionMelder extends TickableModBlock implements SimpleWaterloggedBlock {
     public PotionMelder(Properties properties) {
         super(properties);

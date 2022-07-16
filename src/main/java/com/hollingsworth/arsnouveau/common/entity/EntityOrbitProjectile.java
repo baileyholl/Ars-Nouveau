@@ -20,6 +20,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityOrbitProjectile extends EntityProjectileSpell {
     public Entity wardedEntity;
     public int ticksLeft;

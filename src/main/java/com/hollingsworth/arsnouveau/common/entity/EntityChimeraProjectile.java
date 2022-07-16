@@ -23,6 +23,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Collection;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityChimeraProjectile extends AbstractArrow implements IAnimatable {
     int groundMax;
 
