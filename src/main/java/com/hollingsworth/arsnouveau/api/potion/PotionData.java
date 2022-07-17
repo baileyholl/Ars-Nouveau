@@ -95,7 +95,7 @@ public class PotionData {
             return new PotionData(potion, customEffects, amount);
         Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(this.fullEffects());
-        set.addAll(this.fullEffects());
+        set.addAll(other.fullEffects());
         return new PotionData(potion, new ArrayList<>(set), amount);
     }
 
