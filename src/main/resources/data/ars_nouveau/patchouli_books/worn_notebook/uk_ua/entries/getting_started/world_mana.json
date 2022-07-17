@@ -1,0 +1,16 @@
+{
+    "name": "Джерело",
+    "icon": "ars_nouveau:mana_jar",
+	"sortnum":5,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Джерело — це особливий ресурс, який потрібно збирати за допомогою пристроїв у світі. Джерело використовується для живлення таких пристроїв, як Гліфовий прес і Апаратус. Щоб почати збирати Джерело, вам знадобиться Банка джерела і один зі Збирачів джерела"       
+        },
+		{
+            "type": "relations",
+            "entries":["source/mana_jar","source/volcanic_accumulator","source/mana_condenser"]        
+        }
+    ]
+}
