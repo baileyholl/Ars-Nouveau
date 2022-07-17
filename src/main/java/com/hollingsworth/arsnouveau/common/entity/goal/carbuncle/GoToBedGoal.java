@@ -64,6 +64,7 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        bedPos = starbuncle.data.bedPos;
         if (starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || !behavior.canGoToBed()) {
             return false;
         }

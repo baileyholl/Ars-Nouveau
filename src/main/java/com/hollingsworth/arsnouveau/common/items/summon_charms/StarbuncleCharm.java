@@ -42,7 +42,5 @@ public class StarbuncleCharm extends AbstractSummonCharm {
         if (data.name != null) {
             tooltip2.add(data.name);
         }
-        tooltip2.add(Component.translatable("ars_nouveau.starbuncle.storing", data.TO_LIST.size()));
-        tooltip2.add(Component.translatable("ars_nouveau.starbuncle.taking", data.FROM_LIST.size()));
     }
 }
