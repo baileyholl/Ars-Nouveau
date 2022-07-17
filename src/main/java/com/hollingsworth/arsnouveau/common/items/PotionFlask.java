@@ -1,23 +1,22 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
@@ -35,71 +34,51 @@ public abstract class PotionFlask extends ModItem {
         super(props);
     }
 
-
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().isClientSide)
+        if (context.getLevel().isClientSide ||
+                !(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile jarTile))
             return super.useOn(context);
         ItemStack thisStack = context.getItemInHand();
-        Potion potion = PotionUtils.getPotion(thisStack);
+        FlaskData data = new FlaskData(thisStack);
         Player playerEntity = context.getPlayer();
-        if (!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile jarTile))
-            return super.useOn(context);
-        int count = thisStack.getOrCreateTag().getInt("count");
-        if (jarTile == null)
-            return InteractionResult.PASS;
-        if (playerEntity.isShiftKeyDown() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0) {
 
-            if (jarTile.getPotion() == Potions.EMPTY || jarTile.isMixEqual(thisStack)) {
-                if (jarTile.getPotion() == Potions.EMPTY) {
-                    jarTile.setPotion(potion, PotionUtils.getMobEffects(thisStack));
-                }
-                jarTile.addAmount(100);
-                thisStack.getTag().putInt("count", count - 1);
-                setCount(thisStack, count - 1);
-            }
+        if (playerEntity.isShiftKeyDown() && data.getCount() > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(data.getPotion())) {
+            jarTile.add(data.getPotion(), 100);
+            data.setCount(data.getCount() - 1);
         }
 
-        if (context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile && !playerEntity.isShiftKeyDown() && !isMax(thisStack)) {
-
-            if (jarTile.getPotion() != Potions.EMPTY && (jarTile.isMixEqual(thisStack) || potion == Potions.EMPTY) && jarTile.getAmount() >= 100) {
-                if (potion == Potions.EMPTY) {
-                    PotionUtils.setPotion(thisStack, jarTile.getPotion());
-                    PotionUtils.setCustomEffects(thisStack, jarTile.getCustomEffects());
-                }
-                setCount(thisStack, 1 + count);
-                jarTile.addAmount(-100);
+        if (!playerEntity.isShiftKeyDown() && !isMax(thisStack) && jarTile.getAmount() >= 100) {
+            if (data.potionData.areSameEffects(jarTile.getData())) {
+                data.setCount(data.getCount() + 1);
+                jarTile.remove(100);
+            }else if (data.getCount() == 0){
+                data.potionData = jarTile.getData();
+                data.setCount(1);
             }
         }
         return super.useOn(context);
     }
 
     public boolean isMax(ItemStack stack) {
-
-        return stack.getOrCreateTag().getInt("count") >= getMaxCapacity();
+        FlaskData data = new FlaskData(stack);
+        return data.getCount() >= getMaxCapacity();
     }
 
     public int getMaxCapacity() {
         return 8;
     }
 
-    public void setCount(ItemStack stack, int count) {
-        stack.getOrCreateTag().putInt("count", count);
-        if (count <= 0) {
-            PotionUtils.setPotion(stack, Potions.EMPTY);
-            stack.getTag().remove("CustomPotionEffects");
-        }
-    }
-
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
-        Player playerentity = entityLiving instanceof Player ? (Player) entityLiving : null;
-        if (playerentity instanceof ServerPlayer) {
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer) playerentity, stack);
+        Player playerentity = entityLiving instanceof Player player ? player : null;
+        if (playerentity instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
         }
 
         if (!worldIn.isClientSide) {
-            for (MobEffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
+            FlaskData data = new FlaskData(stack);
+            for (MobEffectInstance effectinstance : data.getPotion().fullEffects()) {
                 effectinstance = getEffectInstance(effectinstance);
                 if (effectinstance.getEffect().isInstantenous()) {
                     effectinstance.getEffect().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
@@ -107,10 +86,7 @@ public abstract class PotionFlask extends ModItem {
                     entityLiving.addEffect(new MobEffectInstance(effectinstance));
                 }
             }
-            if (stack.hasTag()) {
-                int count = stack.getTag().getInt("count") - 1;
-                setCount(stack, count);
-            }
+            data.setCount(data.getCount() - 1);
         }
         return stack;
     }
@@ -118,10 +94,6 @@ public abstract class PotionFlask extends ModItem {
     //Get the modified EffectInstance from the parent class.
     public abstract @Nonnull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
 
-    @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-    }
 
     /**
      * How long it takes to use or consume an item
@@ -139,40 +111,61 @@ public abstract class PotionFlask extends ModItem {
 
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        return stack.getOrCreateTag().getInt("count") > 0 ? ItemUtils.startUsingInstantly(worldIn, playerIn, handIn) : InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
+        FlaskData data = new FlaskData(stack);
+        return data.getCount() > 0 ? ItemUtils.startUsingInstantly(worldIn, playerIn, handIn) : InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(Component.translatable("ars_nouveau.flask.charges", stack.getOrCreateTag().getInt("count")));
-        PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
+        FlaskData data = new FlaskData(stack);
+        tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.getCount()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+        data.potionData.appendHoverText(tooltip);
     }
 
     public static class FlaskData extends ItemstackData {
-
-        public Potion potion;
-        public List<MobEffectInstance> customEffects;
-        public int count;
+        private PotionData potionData;
+        private int count;
 
         public FlaskData(ItemStack stack) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
             if(tag == null)
                 return;
-            this.potion = potion;
-            this.customEffects = customEffects;
-            this.count = count;
+            potionData = PotionData.fromTag(tag.getCompound("PotionData"));
+            this.count = tag.getInt("count");
+        }
+
+        public void setCount(int count) {
+            this.count = Math.max(count, 0);
+            if(count <= 0){
+                potionData = new PotionData();
+            }
+            writeItem();
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setPotion(PotionData potion) {
+            potionData = potion;
+            writeItem();
+        }
+
+        public PotionData getPotion() {
+            return potionData;
         }
 
         @Override
         public void writeToNBT(CompoundTag tag) {
-
+            tag.put("PotionData", potionData.toTag());
+            tag.putInt("count", count);
         }
 
         @Override
         public String getTagString() {
-            return null;
+            return "an_potion_flask";
         }
     }
 }

@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -181,16 +182,13 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void initColors(final RegisterColorHandlersEvent.Item event) {
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
                 ItemsRegistry.POTION_FLASK);
 
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
                 ItemsRegistry.POTION_FLASK_EXTEND_TIME);
 
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
                 ItemsRegistry.POTION_FLASK_AMPLIFY);
 
         event.getItemColors().register((stack, color) -> color > 0 ? -1 :
@@ -207,5 +205,10 @@ public class ClientHandler {
                         ? melderTile.getColor()
                         : -1, BlockRegistry.POTION_MELDER);
 
+    }
+
+    public static int colorFromFlask(ItemStack stack) {
+        PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
+        return data.getPotion().potion == Potions.EMPTY ? -1 : PotionUtils.getColor(data.getPotion().asPotionStack());
     }
 }

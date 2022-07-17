@@ -9,9 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -68,13 +66,18 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         return (!this.isLocked && this.getAmount() <= 0) || (otherData.amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
     }
 
-    public void add(PotionData other){
+    public void add(PotionData other, int amount){
         if(this.getAmount() == 0){
             this.data = other;
+            this.data.amount = amount;
         }else{
-            this.data.amount = Math.max(this.getAmount() + other.amount, this.getMaxFill());
+            this.data.amount = Math.min(this.getAmount() + amount, this.getMaxFill());
         }
         updateBlock();
+    }
+
+    public void add(PotionData other){
+        add(other, other.amount);
     }
 
     public void remove(int amount){
@@ -87,11 +90,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if (this.data.potion != Potions.EMPTY) {
-            ItemStack potionStack = data.asPotionStack();
-            tooltip.add(potionStack.getHoverName());
-            PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
-        }
+        data.appendHoverText(tooltip);
         tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getAmount() * 100) / this.getMaxFill()));
         if (isLocked)
             tooltip.add(Component.translatable("ars_nouveau.locked"));

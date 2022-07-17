@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.potion;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PotionData {
     public Potion potion;
@@ -20,6 +22,7 @@ public class PotionData {
     public PotionData(Potion potion, List<MobEffectInstance> customEffects, int amount) {
         this.potion = potion;
         this.customEffects = customEffects;
+        this.customEffects = customEffects.stream().filter(e -> !potion.getEffects().contains(e)).collect(Collectors.toList());
         this.amount = amount;
     }
 
@@ -37,6 +40,8 @@ public class PotionData {
 
     public ItemStack asPotionStack(){
         ItemStack potionStack = new ItemStack(Items.POTION);
+        if(this.potion == Potions.EMPTY)
+            return potionStack;
         PotionUtils.setPotion(potionStack, this.potion);
         PotionUtils.setCustomEffects(potionStack, customEffects);
         return potionStack;
@@ -92,6 +97,14 @@ public class PotionData {
         set.addAll(this.fullEffects());
         set.addAll(this.fullEffects());
         return new PotionData(potion, new ArrayList<>(set), amount);
+    }
+
+    public void appendHoverText(List<Component> tooltip) {
+        if(potion == Potions.EMPTY)
+            return;
+        ItemStack potionStack = asPotionStack();
+        tooltip.add(potionStack.getHoverName());
+        PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
     }
 
     @Override
