@@ -390,7 +390,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         }
 
         if (!hasSource) {
-            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana").withStyle(ChatFormatting.GOLD));
         }
         if (this.craftManager != null && !this.craftManager.neededItems.isEmpty())
             tooltip.add(Component.literal(
@@ -403,7 +403,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
         }
         if (this.needsPotionStorage)
-            tooltip.add(Component.translatable("ars_nouveau.wixie.needs_storage"));
+            tooltip.add(Component.translatable("ars_nouveau.wixie.needs_storage").withStyle(ChatFormatting.GOLD));
 
     }
 
