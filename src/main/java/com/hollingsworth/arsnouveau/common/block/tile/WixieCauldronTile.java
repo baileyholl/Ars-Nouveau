@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.recipe.RecipeWrapper;
 import com.hollingsworth.arsnouveau.api.recipe.ShapedHelper;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
@@ -16,6 +17,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,6 +42,7 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 
 import javax.annotation.Nullable;
@@ -147,12 +150,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             if (level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
                 needsPotionStorage = false;
                 jar.add(new PotionData(craftManager.potionOut, 300));
-                int color = jar.getColor();
-                int r = (color >> 16) & 0xFF;
-                int g = (color >> 8) & 0xFF;
-                int b = (color) & 0xFF;
-                EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, worldPosition, jarPos, r, g, b);
-                level.addFreshEntity(aoeProjectile);
+                ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
+                EntityFlyingItem flying = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
+                        new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
+                        Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+                        .withNoTouch();
+                level.addFreshEntity(flying);
                 this.hasSource = false;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
                 craftManager = new CraftingProgress();
@@ -382,7 +385,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         } else if (this.craftManager != null && this.craftManager.isPotionCrafting()) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.potionOut);
-            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName()));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName().getString()));
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
 
@@ -392,12 +395,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if (this.craftManager != null && !this.craftManager.neededItems.isEmpty())
             tooltip.add(Component.literal(
                     Component.translatable("ars_nouveau.wixie.needs").getString() +
-                            Component.translatable(this.craftManager.neededItems.get(0).getDescriptionId()).getString()));
+                            Component.translatable(this.craftManager.neededItems.get(0).getDescriptionId()).getString()).withStyle(ChatFormatting.GOLD));
 
         if (this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.getPotionNeeded());
-            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()));
+            tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
         }
         if (this.needsPotionStorage)
             tooltip.add(Component.translatable("ars_nouveau.wixie.needs_storage"));
