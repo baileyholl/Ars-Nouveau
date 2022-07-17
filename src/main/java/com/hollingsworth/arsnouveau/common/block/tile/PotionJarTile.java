@@ -2,35 +2,26 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWandable {
 
-    private int amount;
-    private Potion potion = Potions.EMPTY;
     public boolean isLocked;
-    private List<MobEffectInstance> customEffects = new ArrayList<>();
+    private PotionData data = new PotionData();
 
     public PotionJarTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -38,11 +29,6 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     public PotionJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.POTION_JAR_TYPE, pos, state);
-    }
-
-
-    public boolean canAcceptNewPotion() {
-        return this.amount <= 0 && !this.isLocked || (this.potion == Potions.EMPTY && !this.isLocked);
     }
 
     @Override
@@ -53,16 +39,6 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         } else {
             this.isLocked = false;
             playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.unlocked"));
-        }
-        updateBlock();
-    }
-
-    public void setPotion(Potion potion, List<MobEffectInstance> effectInstances) {
-        this.potion = potion == null ? Potions.EMPTY : potion;
-        customEffects = new ArrayList<>();
-        for (MobEffectInstance e : effectInstances) {
-            if (!this.potion.getEffects().contains(e))
-                customEffects.add(e);
         }
         updateBlock();
     }
@@ -80,43 +56,40 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         return super.updateBlock();
     }
 
-    public void setPotion(ItemStack stack) {
-        setPotion(PotionUtils.getPotion(stack), PotionUtils.getMobEffects(stack));
-    }
-
-    private void setPotion(Potion potion) {
-        this.potion = potion == null ? Potions.EMPTY : potion;
-    }
-
-    public @Nonnull Potion getPotion() {
-        return potion == null ? Potions.EMPTY : potion;
+    public @Nonnull PotionData getData() {
+        return data;
     }
 
     public int getColor() {
-        return potion == null ? 16253176 : PotionUtils.getColor(getFullEffects());
+        return this.data.potion == null ? 16253176 : PotionUtils.getColor(this.data.fullEffects());
     }
 
-    public void addAmount(Potion potion, int fill) {
-        setPotion(potion);
-        addAmount(fill);
-        setChanged();
+    public boolean canAccept(PotionData otherData){
+        return (!this.isLocked && this.getAmount() <= 0) || (otherData.amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
     }
 
-    public void addAmount(int fill) {
-        setAmount(Math.min(getMaxFill(), getAmount() + fill));
-        if (getAmount() <= 0 && !this.isLocked)
-            this.potion = Potions.EMPTY;
+    public void add(PotionData other){
+        if(this.getAmount() == 0){
+            this.data = other;
+        }else{
+            this.data.amount = Math.max(this.getAmount() + other.amount, this.getMaxFill());
+        }
+        updateBlock();
+    }
 
+    public void remove(int amount){
+        this.data.amount = Math.max(this.data.amount - amount, 0);
+        if(this.data.amount == 0 && !isLocked){
+            this.data = new PotionData();
+        }
         updateBlock();
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if (this.potion != null && this.potion != Potions.EMPTY) {
-            ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, potion);
+        if (this.data.potion != Potions.EMPTY) {
+            ItemStack potionStack = data.asPotionStack();
             tooltip.add(potionStack.getHoverName());
-            PotionUtils.setCustomEffects(potionStack, customEffects);
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
         tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getAmount() * 100) / this.getMaxFill()));
@@ -124,70 +97,18 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
             tooltip.add(Component.translatable("ars_nouveau.locked"));
     }
 
-    public List<MobEffectInstance> getFullEffects() {
-        List<MobEffectInstance> thisEffects = getCustomEffects();
-        thisEffects.addAll(potion.getEffects());
-        return thisEffects;
-    }
-
-    public List<MobEffectInstance> getCustomEffects() {
-        return new ArrayList<>(customEffects);
-    }
-
-    //If the effect list of jars or flasks are equal
-    public boolean isMixEqual(List<MobEffectInstance> effects) {
-
-        List<MobEffectInstance> thisEffects = new ArrayList<>(customEffects);
-        thisEffects.addAll(potion.getEffects());
-        effects = new ArrayList<>(effects);
-        if (thisEffects.size() != effects.size())
-            return false;
-        effects.sort(Comparator.comparing(MobEffectInstance::toString));
-        thisEffects.sort(Comparator.comparing(MobEffectInstance::toString));
-        return thisEffects.equals(effects);
-    }
-
-    //If the effect list of jars or flasks are equal
-    public boolean isMixEqual(Potion potion) {
-        if (potion.getEffects().isEmpty() && this.potion.getEffects().isEmpty()) {
-            return potion == this.potion;
-        }
-        return isMixEqual(potion.getEffects());
-    }
-
-    public boolean isMixEqual(ItemStack stack) {
-        // Checking for same effect sets is not sufficient for potions that have no effects, like water and awkward.
-        if (PotionUtils.getMobEffects(stack).isEmpty() && potion.getEffects().isEmpty()) {
-            return PotionUtils.getPotion(stack) == potion;
-        }
-        return isMixEqual(PotionUtils.getMobEffects(stack));
-    }
-
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.amount = tag.getInt("amount");
-        this.potion = PotionUtils.getPotion(tag);
-        this.customEffects = new ArrayList<>();
-        this.customEffects.addAll(PotionUtils.getCustomEffects(tag));
+        if(tag.contains("potionData"))
+            this.data = PotionData.fromTag(tag.getCompound("potionData"));
         this.isLocked = tag.getBoolean("locked");
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
-        ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
         tag.putInt("amount", this.getAmount());
-        tag.putString("Potion", resourcelocation.toString());
-        tag.putBoolean("locked", isLocked);
-        if (!customEffects.isEmpty()) {
-            ListTag listnbt = new ListTag();
-
-            for (MobEffectInstance effectinstance : customEffects) {
-                listnbt.add(effectinstance.save(new CompoundTag()));
-            }
-
-            tag.put("CustomPotionEffects", listnbt);
-        }
+        tag.put("potionData", this.data.toTag());
     }
 
     public int getMaxFill() {
@@ -195,14 +116,17 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public int getAmount() {
-        return amount;
+        return data.amount;
+    }
+
+    public boolean canTakeAmount(int amount){
+        return this.getAmount() + amount <= this.getMaxFill();
     }
 
     public void setAmount(int amount) {
-        this.amount = amount;
+        this.data.amount = amount;
         if (this.getAmount() <= 0 && !this.isLocked) {
-            this.potion = Potions.EMPTY;
-            this.customEffects = new ArrayList<>();
+            this.data = new PotionData();
         }
         updateBlock();
     }

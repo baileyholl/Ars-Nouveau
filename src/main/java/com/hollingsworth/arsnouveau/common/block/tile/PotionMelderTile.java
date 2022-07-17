@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -18,12 +19,9 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -37,9 +35,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickable, IWandable, ITooltipProvider {
     int timeMixing;
@@ -87,9 +83,8 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
 
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
-
-        List<MobEffectInstance> combined = getCombinedResult(tile1, tile2);
-        if (!canDestinationAccept(combJar, combined)) {
+        PotionData data = tile1.getData().mergeEffects(tile2.getData());
+        if (!combJar.canAccept(data)) {
             isMixing = false;
             timeMixing = 0;
             return;
@@ -102,19 +97,19 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
 
         if (level.isClientSide) {
             //Burning jar
-            if (timeMixing >= 120 && combJar.getPotion() != Potions.EMPTY) {
+            if (timeMixing >= 120) {
                 for (int i = 0; i < 3; i++) {
                     double d0 = worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.25, 0.25);
                     double d1 = worldPosition.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
                     double d2 = worldPosition.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
                     level.addParticle(GlowParticleData.createData(
-                                    ParticleColor.fromInt(combJar.getColor())),
+                                    ParticleColor.fromInt(PotionUtils.getColor(data.fullEffects()))),
                             d0, d1, d2,
                             0,
                             0.01f,
                             0);
                 }
-                lastMixedColor = PotionUtils.getColor(combined);
+                lastMixedColor = PotionUtils.getColor(data.fullEffects());
             }
             if (timeMixing >= 160)
                 timeMixing = 0;
@@ -134,27 +129,18 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         }
         if (!level.isClientSide && timeMixing >= maxMergeTicks) {
             timeMixing = 0;
-            Potion jar1Potion = tile1.getPotion();
-            if (combJar.getAmount() == 0) {
-                combJar.setPotion(jar1Potion, combined);
-                mergePotions(combJar, tile1, tile2);
-            } else if (combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getAmount() >= 100) {
-                mergePotions(combJar, tile1, tile2);
-            }
+            mergePotions(combJar, tile1, tile2, data);
         }
     }
 
-    public boolean canDestinationAccept(PotionJarTile combJar,  List<MobEffectInstance> combined) {
-        return (combJar.isMixEqual(combined) && (combJar.getMaxFill() - combJar.getAmount() >= 100)) || combJar.getAmount() == 0;
-    }
-
-    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2){
-        combJar.addAmount(100);
-        take1.addAmount(-300);
-        take2.addAmount(-300);
+    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionData data){
+        data.amount = 100;
+        combJar.add(data);
+        take1.remove(300);
+        take2.remove(300);
         hasSource = false;
         ParticleColor color2 = ParticleColor.fromInt(combJar.getColor());
-        EntityFlyingItem item2 = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ()+ 0.5),
+        EntityFlyingItem item2 = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
                 new Vec3(combJar.getX() + 0.5, combJar.getY(), combJar.getZ() + 0.5),
                 Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                 .withNoTouch();
@@ -175,11 +161,8 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         return true;
     }
 
-    public List<MobEffectInstance> getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
-        Set<MobEffectInstance> set = new HashSet<>();
-        set.addAll(jar1.getFullEffects());
-        set.addAll(jar2.getFullEffects());
-        return new ArrayList<>(set);
+    public PotionData getCombinedResult(PotionJarTile jar1, PotionJarTile jar2) {
+        return jar1.getData().mergeEffects(jar2.getData());
     }
 
     @Override
@@ -296,8 +279,8 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             if(tile1.getAmount() < 300 || tile2.getAmount() < 300) {
                 return;
             }
-            List<MobEffectInstance> combined = getCombinedResult(tile1, tile2);
-            if(!canDestinationAccept(combJar, combined)){
+            PotionData data = getCombinedResult(tile1, tile2);
+            if(!combJar.canAccept(data)){
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
         }

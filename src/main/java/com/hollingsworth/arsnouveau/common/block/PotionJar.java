@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,18 +73,8 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         Potion potion = PotionUtils.getPotion(stack);
 
         if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
-            if (tile.getAmount() == 0) {
-
-                tile.setPotion(stack);
-                tile.addAmount(100);
-                if (!player.isCreative()) {
-                    player.addItem(new ItemStack(Items.GLASS_BOTTLE));
-                    stack.shrink(1);
-                }
-
-            } else if (tile.isMixEqual(stack) && tile.getAmount() < tile.getMaxFill()) {
-
-                tile.addAmount(100);
+            if (tile.canAccept(new PotionData(stack, 100))) {
+                tile.add(new PotionData(stack, 100));
                 if (!player.isCreative()) {
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
@@ -94,11 +85,11 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
 
         if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, tile.getPotion());
-            PotionUtils.setCustomEffects(potionStack, tile.getCustomEffects());
+            PotionUtils.setPotion(potionStack, tile.getData().potion);
+            PotionUtils.setCustomEffects(potionStack, tile.getData().customEffects);
             player.addItem(potionStack);
             player.getItemInHand(handIn).shrink(1);
-            tile.addAmount(-100);
+            tile.remove(100);
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
