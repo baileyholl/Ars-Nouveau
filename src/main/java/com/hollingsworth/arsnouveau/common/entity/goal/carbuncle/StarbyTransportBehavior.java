@@ -223,8 +223,7 @@ public class StarbyTransportBehavior extends StarbyBehavior {
 
     @Override
     public boolean canGoToBed() {
-        return getValidTakePos() != null ||
-                (!starbuncle.getHeldStack().isEmpty() && getValidStorePos(starbuncle.getHeldStack()) != null);
+        return getValidTakePos() == null && (starbuncle.getHeldStack().isEmpty() || getValidStorePos(starbuncle.getHeldStack()) == null);
     }
 
     @Override
