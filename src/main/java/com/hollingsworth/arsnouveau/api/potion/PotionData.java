@@ -17,25 +17,23 @@ import java.util.stream.Collectors;
 public class PotionData {
     public Potion potion;
     public List<MobEffectInstance> customEffects;
-    public int amount;
 
-    public PotionData(Potion potion, List<MobEffectInstance> customEffects, int amount) {
+    public PotionData(Potion potion, List<MobEffectInstance> customEffects) {
         this.potion = potion;
         this.customEffects = customEffects;
         this.customEffects = customEffects.stream().filter(e -> !potion.getEffects().contains(e)).collect(Collectors.toList());
-        this.amount = amount;
     }
 
     public PotionData(){
-        this(Potions.EMPTY, new ArrayList<>(), 0);
+        this(Potions.EMPTY, new ArrayList<>());
     }
 
-    public PotionData(ItemStack stack, int amount){
-        this(PotionUtils.getPotion(stack), PotionUtils.getMobEffects(stack), amount);
+    public PotionData(ItemStack stack){
+        this(PotionUtils.getPotion(stack), PotionUtils.getMobEffects(stack));
     }
 
-    public PotionData(Potion potion, int amount){
-        this(potion, new ArrayList<>(), amount);
+    public PotionData(Potion potion){
+        this(potion, new ArrayList<>());
     }
 
     public ItemStack asPotionStack(){
@@ -49,7 +47,6 @@ public class PotionData {
 
     public static PotionData fromTag(CompoundTag tag){
         PotionData instance = new PotionData();
-        instance.amount = tag.getInt("amount");
         instance.potion = PotionUtils.getPotion(tag);
         instance.customEffects.addAll(PotionUtils.getCustomEffects(tag));
         return instance;
@@ -57,7 +54,6 @@ public class PotionData {
 
     public CompoundTag toTag(){
         CompoundTag tag = new CompoundTag();
-        tag.putInt("amount", amount);
         tag.putString("Potion", Registry.POTION.getKey(potion).toString());
         if (!customEffects.isEmpty()) {
             ListTag listnbt = new ListTag();
@@ -92,11 +88,11 @@ public class PotionData {
 
     public PotionData mergeEffects(PotionData other){
         if(areSameEffects(other))
-            return new PotionData(potion, customEffects, amount);
+            return new PotionData(potion, customEffects);
         Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(this.fullEffects());
         set.addAll(other.fullEffects());
-        return new PotionData(potion, new ArrayList<>(set), amount);
+        return new PotionData(potion, new ArrayList<>(set));
     }
 
     public void appendHoverText(List<Component> tooltip) {
@@ -109,6 +105,6 @@ public class PotionData {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof PotionData other && areSameEffects(other) && amount == other.amount;
+        return obj instanceof PotionData other && areSameEffects(other);
     }
 }

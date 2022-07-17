@@ -20,6 +20,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     public boolean isLocked;
     private PotionData data = new PotionData();
+    int currentFill;
 
     public PotionJarTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -62,27 +63,23 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         return this.data.potion == null ? 16253176 : PotionUtils.getColor(this.data.fullEffects());
     }
 
-    public boolean canAccept(PotionData otherData){
-        return (!this.isLocked && this.getAmount() <= 0) || (otherData.amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
+    public boolean canAccept(PotionData otherData, int amount){
+        return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
     }
 
     public void add(PotionData other, int amount){
         if(this.getAmount() == 0){
             this.data = other;
-            this.data.amount = amount;
+            currentFill += amount;
         }else{
-            this.data.amount = Math.min(this.getAmount() + amount, this.getMaxFill());
+            currentFill = Math.min(this.getAmount() + amount, this.getMaxFill());
         }
         updateBlock();
     }
 
-    public void add(PotionData other){
-        add(other, other.amount);
-    }
-
     public void remove(int amount){
-        this.data.amount = Math.max(this.data.amount - amount, 0);
-        if(this.data.amount == 0 && !isLocked){
+        currentFill = Math.max(currentFill - amount, 0);
+        if(currentFill == 0 && !isLocked){
             this.data = new PotionData();
         }
         updateBlock();
@@ -102,12 +99,15 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         if(tag.contains("potionData"))
             this.data = PotionData.fromTag(tag.getCompound("potionData"));
         this.isLocked = tag.getBoolean("locked");
+        this.currentFill = tag.getInt("currentFill");
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
-        tag.putInt("amount", this.getAmount());
+        super.saveAdditional(tag);
         tag.put("potionData", this.data.toTag());
+        tag.putBoolean("locked", this.isLocked);
+        tag.putInt("currentFill", this.currentFill);
     }
 
     public int getMaxFill() {
@@ -115,19 +115,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public int getAmount() {
-        return data.amount;
-    }
-
-    public boolean canTakeAmount(int amount){
-        return this.getAmount() + amount <= this.getMaxFill();
-    }
-
-    public void setAmount(int amount) {
-        this.data.amount = amount;
-        if (this.getAmount() <= 0 && !this.isLocked) {
-            this.data = new PotionData();
-        }
-        updateBlock();
+        return currentFill;
     }
 }
 

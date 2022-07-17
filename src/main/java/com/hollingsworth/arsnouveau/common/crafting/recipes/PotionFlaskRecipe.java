@@ -44,7 +44,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         if(flaskPotionStack.isEmpty() || potionStack.isEmpty())
             return ItemStack.EMPTY;
         PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(flaskPotionStack);
-        PotionData potionData = new PotionData(potionStack, 100);
+        PotionData potionData = new PotionData(potionStack);
         if(flaskData.getCount() <= 0){
             flaskData.setPotion(potionData);
             flaskData.setCount(1);

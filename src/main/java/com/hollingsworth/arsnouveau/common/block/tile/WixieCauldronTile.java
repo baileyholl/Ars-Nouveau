@@ -149,7 +149,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
             if (level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
                 needsPotionStorage = false;
-                jar.add(new PotionData(craftManager.potionOut, 300));
+                jar.add(new PotionData(craftManager.potionOut),300);
                 ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
                 EntityFlyingItem flying = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
                         new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
@@ -252,7 +252,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     public @Nullable BlockPos findPotionStorage(Potion passedPot) {
         for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
-            if (level.getBlockEntity(bPos) instanceof PotionJarTile tile && tile.canAccept(new PotionData(passedPot, 300))) {
+            if (level.getBlockEntity(bPos) instanceof PotionJarTile tile && tile.canAccept(new PotionData(passedPot), 300)) {
                 return bPos.immutable();
             }
         }
@@ -263,7 +263,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
             if (level.getBlockEntity(bPos) instanceof PotionJarTile tile &&
                     tile.getAmount() >= amount &&
-                    tile.getData().areSameEffects(new PotionData(passedPot, 0))) {
+                    tile.getData().areSameEffects(new PotionData(passedPot))) {
                 return bPos.immutable();
             }
         }

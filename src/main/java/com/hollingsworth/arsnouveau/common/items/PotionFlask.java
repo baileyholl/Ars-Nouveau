@@ -43,7 +43,7 @@ public abstract class PotionFlask extends ModItem {
         FlaskData data = new FlaskData(thisStack);
         Player playerEntity = context.getPlayer();
 
-        if (playerEntity.isShiftKeyDown() && data.getCount() > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(data.getPotion())) {
+        if (playerEntity.isShiftKeyDown() && data.getCount() > 0 && jarTile.getMaxFill() - jarTile.getAmount() >= 0 && jarTile.canAccept(data.getPotion(), 100)) {
             jarTile.add(data.getPotion(), 100);
             data.setCount(data.getCount() - 1);
         }

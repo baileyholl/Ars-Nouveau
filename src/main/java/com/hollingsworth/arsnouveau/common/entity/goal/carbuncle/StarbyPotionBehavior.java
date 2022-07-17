@@ -14,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class StarbyPotionBehavior extends StarbyListBehavior {
+    public static final ResourceLocation POTION_ID = new ResourceLocation(ArsNouveau.MODID, "starby_potion");
+
     public @Nullable PotionData heldPotion = null;
 
     public StarbyPotionBehavior(Starbuncle entity, CompoundTag tag) {
@@ -57,7 +59,6 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
         if(heldPotion == null)
             return false;
         return false;
-//        return tile.getPotion() == Potions.EMPTY || (tile.isMixEqual(heldPotion.instance) && tile.getAmount() < tile.getMaxFill());
     }
 
     @Override
@@ -67,7 +68,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
 
     @Override
     protected ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "starby_potion");
+        return POTION_ID;
     }
 
 

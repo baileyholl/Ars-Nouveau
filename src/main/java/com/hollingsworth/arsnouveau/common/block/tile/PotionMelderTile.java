@@ -84,7 +84,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
         PotionData data = tile1.getData().mergeEffects(tile2.getData());
-        if (!combJar.canAccept(data)) {
+        if (!combJar.canAccept(data, 100)) {
             isMixing = false;
             timeMixing = 0;
             return;
@@ -134,8 +134,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     }
 
     public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionData data){
-        data.amount = 100;
-        combJar.add(data);
+        combJar.add(data, 100);
         take1.remove(300);
         take2.remove(300);
         hasSource = false;
@@ -280,7 +279,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
                 return;
             }
             PotionData data = getCombinedResult(tile1, tile2);
-            if(!combJar.canAccept(data)){
+            if(!combJar.canAccept(data, 100)){
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
         }
