@@ -490,6 +490,19 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        super.onSyncedDataUpdated(pKey);
+        if(pKey == BEHAVIOR_TAG){
+            this.dynamicBehavior = BehaviorRegistry.create(this, this.entityData.get(BEHAVIOR_TAG));
+        }
+    }
+
+    @Override
+    public SynchedEntityData getEntityData() {
+        return super.getEntityData();
+    }
+
+    @Override
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
         this.data.name = pName;

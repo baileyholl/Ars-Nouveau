@@ -1028,5 +1028,10 @@
 	"arsnouveau.debug.log_created": "Log file created: %s",
 	"ars_nouveau.page.archwood_forest": "Archwood Forest",
 	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome.",
-	"ars_nouveau.melder.too_far": "Jars must be within 3 blocks."
+	"ars_nouveau.melder.too_far": "Jars must be within 3 blocks.",
+	"ars_nouveau.starbuncle.storing_potions": "Storing potions at %s locations",
+	"ars_nouveau.starbuncle.taking_potions": "Taking potions from %s locations",
+	"ars_nouveau.starbuncle.potion_to": "Starbuncle will send potions to this jar.",
+	"ars_nouveau.starbuncle.potion_from": "Starbuncle will take potions from this jar.",
+	"ars_nouveau.dominion_wand.cleared": "Dominion wand cleared."
 }

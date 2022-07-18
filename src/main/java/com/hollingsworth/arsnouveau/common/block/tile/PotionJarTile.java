@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -64,6 +65,8 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public boolean canAccept(PotionData otherData, int amount){
+        if(otherData == null || otherData.potion == Potions.EMPTY)
+            return false;
         return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
     }
 

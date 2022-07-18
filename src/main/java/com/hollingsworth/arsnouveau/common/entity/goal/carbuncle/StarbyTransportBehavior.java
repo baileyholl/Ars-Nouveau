@@ -245,15 +245,16 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
-        StarbyTransportBehavior behavior = (StarbyTransportBehavior) BehaviorRegistry.create(starbuncle, starbuncle.getEntityData().get(Starbuncle.BEHAVIOR_TAG));
-        if(behavior != null){
-            tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", behavior.TO_LIST.size()));
-            tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", behavior.FROM_LIST.size()));
-            if(behavior.itemScroll != null && !behavior.itemScroll.isEmpty()) {
-                tooltip.add(Component.translatable("ars_nouveau.filtering_with", behavior.itemScroll.getHoverName().getString()));
+        try {
+            StarbyTransportBehavior behavior = (StarbyTransportBehavior) BehaviorRegistry.create(starbuncle, starbuncle.getEntityData().get(Starbuncle.BEHAVIOR_TAG));
+            if (behavior != null) {
+                tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", behavior.TO_LIST.size()));
+                tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", behavior.FROM_LIST.size()));
+                if (behavior.itemScroll != null && !behavior.itemScroll.isEmpty()) {
+                    tooltip.add(Component.translatable("ars_nouveau.filtering_with", behavior.itemScroll.getHoverName().getString()));
+                }
             }
-        }
-
+        }catch (Exception e){}
     }
 
     @Override

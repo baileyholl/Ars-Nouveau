@@ -82,6 +82,10 @@ public class PotionData {
         return thisEffects.equals(effects);
     }
 
+    public boolean isEmpty(){
+        return potion == Potions.EMPTY;
+    }
+
     public boolean areSameEffects(PotionData other){
         return areSameEffects(other.fullEffects());
     }
