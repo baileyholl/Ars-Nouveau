@@ -93,6 +93,17 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     }
 
+    @Override
+    protected void dropAllDeathLoot(DamageSource pDamageSource) {}
+
+    @Override
+    protected boolean shouldDropLoot() {return false;}
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {}
+
+    @Override
+    protected void dropEquipment() {}
 
     @Override
     protected void registerGoals() {
