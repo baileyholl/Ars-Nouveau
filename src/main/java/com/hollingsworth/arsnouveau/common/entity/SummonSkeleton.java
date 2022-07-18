@@ -272,6 +272,11 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
     }
 
+    @Override
+    protected boolean shouldDropLoot() {
+        return false;
+    }
+
     class CopyOwnerTargetGoal extends TargetGoal {
 
         public CopyOwnerTargetGoal(PathfinderMob creature) {
