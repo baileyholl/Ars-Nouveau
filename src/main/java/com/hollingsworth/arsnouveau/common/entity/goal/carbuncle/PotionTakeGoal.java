@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior>{
@@ -33,6 +35,7 @@ public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior>{
                     return true;
                 behavior.setHeldPotion(jarTile.getData());
                 int takeAmount = Math.min(jarTile.getAmount(), Math.min(maxRoom, 300));
+                starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
                 jarTile.remove(takeAmount);
                 behavior.setAmount(takeAmount);
             }

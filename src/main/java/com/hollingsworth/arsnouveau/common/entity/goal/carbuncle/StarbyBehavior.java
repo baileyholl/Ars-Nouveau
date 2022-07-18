@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class StarbyBehavior extends ChangeableBehavior {
@@ -48,7 +51,11 @@ public class StarbyBehavior extends ChangeableBehavior {
     }
 
     public void syncTag(){
-        starbuncle.getEntityData().set(Starbuncle.BEHAVIOR_TAG, this.toTag(new CompoundTag()));
+        Networking.sendToNearby(starbuncle.level, starbuncle, new PacketSyncTag(this.toTag(new CompoundTag()), starbuncle.getId()));
     }
 
+    @Override
+    public ItemStack getStackForRender() {
+        return starbuncle.getHeldStack();
+    }
 }

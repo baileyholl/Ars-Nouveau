@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior>{
@@ -29,6 +31,7 @@ public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior>{
             int diff = Math.min(room, behavior.getAmount());
             jarTile.add(behavior.getHeldPotion(), diff);
             behavior.setHeldPotion(new PotionData());
+            starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.5f, 1.3f);
             behavior.setAmount(behavior.getAmount() - diff);
         }
         return true;

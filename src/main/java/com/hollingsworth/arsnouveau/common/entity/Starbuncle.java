@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.UntamedFindItem
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
+import com.hollingsworth.arsnouveau.common.network.ITagSyncable;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -67,7 +68,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
+
 
     public enum StarbuncleGoalState {
         FORAGING,
@@ -562,6 +564,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void addGoalDebug(Goal goal, DebugEvent debugEvent){
         debugEvent.id = goal.getClass().getSimpleName() + "_" + debugEvent.id;
         addDebugEvent(debugEvent);
+    }
+
+    @Override
+    public void onTagSync(CompoundTag tag) {
+        if(level.isClientSide) {
+            this.dynamicBehavior = BehaviorRegistry.create(this, tag);
+        }
     }
 
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {

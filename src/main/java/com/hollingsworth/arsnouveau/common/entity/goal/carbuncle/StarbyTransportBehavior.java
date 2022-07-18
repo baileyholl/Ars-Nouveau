@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -245,16 +244,11 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
-        try {
-            StarbyTransportBehavior behavior = (StarbyTransportBehavior) BehaviorRegistry.create(starbuncle, starbuncle.getEntityData().get(Starbuncle.BEHAVIOR_TAG));
-            if (behavior != null) {
-                tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", behavior.TO_LIST.size()));
-                tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", behavior.FROM_LIST.size()));
-                if (behavior.itemScroll != null && !behavior.itemScroll.isEmpty()) {
-                    tooltip.add(Component.translatable("ars_nouveau.filtering_with", behavior.itemScroll.getHoverName().getString()));
-                }
-            }
-        }catch (Exception e){}
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
+        if (itemScroll != null && !itemScroll.isEmpty()) {
+            tooltip.add(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
+        }
     }
 
     @Override

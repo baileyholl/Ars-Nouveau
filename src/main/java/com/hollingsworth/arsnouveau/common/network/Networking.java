@@ -190,7 +190,11 @@ public class Networking {
                 PacketSyncLitEntities::toBytes,
                 PacketSyncLitEntities::new,
                 PacketSyncLitEntities::handle);
-        
+        INSTANCE.registerMessage(nextID(),
+                PacketSyncTag.class,
+                PacketSyncTag::encode,
+                PacketSyncTag::decode,
+                PacketSyncTag.Handler::handle);
 
     }
 

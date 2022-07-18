@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
-import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
@@ -13,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -105,13 +105,8 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
-        try {
-            StarbyPotionBehavior behavior = (StarbyPotionBehavior) BehaviorRegistry.create(starbuncle, starbuncle.getEntityData().get(Starbuncle.BEHAVIOR_TAG));
-            if (behavior != null) {
-                tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_potions", behavior.TO_LIST.size()));
-                tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_potions", behavior.FROM_LIST.size()));
-            }
-        }catch (Exception e){}
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_potions", TO_LIST.size()));
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_potions", FROM_LIST.size()));
     }
 
     @Override
@@ -121,6 +116,14 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
         }
         tag.putInt("amount", amount);
         return super.toTag(tag);
+    }
+
+    @Override
+    public ItemStack getStackForRender() {
+        if(heldPotion != null && !heldPotion.isEmpty()){
+            return heldPotion.asPotionStack();
+        }
+        return super.getStackForRender();
     }
 
     @Override
