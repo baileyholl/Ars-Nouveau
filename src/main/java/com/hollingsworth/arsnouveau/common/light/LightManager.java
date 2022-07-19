@@ -87,6 +87,10 @@ public class LightManager {
         return LIGHT_REGISTRY;
     }
 
+    public static boolean containsEntity(EntityType<? extends Entity> type){
+        return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(type.getRegistryName());
+    }
+
     /**
      * Adds the light source to the tracked light sources.
      *
