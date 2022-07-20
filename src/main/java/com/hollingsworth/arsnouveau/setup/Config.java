@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.setup;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -9,9 +11,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = ArsNouveau.MODID)
 public class Config {
     public static final String CATEGORY_GENERAL = "general";
 
@@ -72,6 +76,11 @@ public class Config {
     public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
+    // Convert to ResourceLocations so we dont need to create so many objects over strings
+    public static Map<ResourceLocation, Integer> ENTITY_LIGHT_MAP = new HashMap<>();
+    public static Map<ResourceLocation, Integer> ITEM_LIGHTMAP = new HashMap<>();
 
     public static boolean isGlyphEnabled(ResourceLocation tag) {
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
@@ -94,6 +103,10 @@ public class Config {
         DYNAMIC_LIGHTS_ENABLED = CLIENT_BUILDER.comment("If dynamic lights are enabled").define("lightsEnabled", false);
         TOUCH_LIGHT_LUMINANCE = CLIENT_BUILDER.comment("How bright the touch light is").defineInRange("touchLightLuminance", 8, 0, 15);
         TOUCH_LIGHT_DURATION = CLIENT_BUILDER.comment("How long the touch light lasts in ticks").defineInRange("touchLightDuration", 8, 0, 40);
+        ENTITY_LIGHT_CONFIG = CLIENT_BUILDER.comment("Light level an entity should emit when dynamic lights are on", "Example entry: minecraft:blaze=15")
+                .defineList("entity_lights",ConfigUtil.writeConfig(getDefaultEntityLight()), ConfigUtil::validateMap);
+        ITEM_LIGHT_CONFIG = CLIENT_BUILDER.comment("Light level an item should emit when held when dynamic lights are on", "Example entry: minecraft:stick=15")
+                .defineList("item_lights", ConfigUtil.writeConfig(getDefaultItemLight()), ConfigUtil::validateMap);
         TOOLTIP_X_OFFSET = CLIENT_BUILDER.comment("X offset for the tooltip").defineInRange("xTooltip", 20, Integer.MIN_VALUE, Integer.MAX_VALUE);
         TOOLTIP_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the tooltip").defineInRange("yTooltip", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -140,6 +153,9 @@ public class Config {
         SERVER_BUILDER.comment("Items").push("item");
         CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
+
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.push("lights");
         SERVER_CONFIG = SERVER_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
@@ -150,9 +166,57 @@ public class Config {
 
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent.Loading configEvent) {
+        if(configEvent.getConfig().getSpec() == CLIENT_CONFIG){
+            resetLightMaps();
+        }
     }
 
     @SubscribeEvent
     public static void onReload(final ModConfigEvent.Reloading configEvent) {
+        if(configEvent.getConfig().getSpec() == CLIENT_CONFIG){
+           resetLightMaps();
+        }
+    }
+
+    public static void resetLightMaps(){
+        ENTITY_LIGHT_MAP = new HashMap<>();
+        ITEM_LIGHTMAP = new HashMap<>();
+        // Copy values from ENTITY_LIGHT_CONFIG to ENTITY_LIGHT_MAP
+        for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()){
+            ENTITY_LIGHT_MAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+        }
+        // Copy values from ITEM_LIGHT_CONFIG to ITEM_LIGHT_MAP
+        for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()){
+            ITEM_LIGHTMAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+        }
+    }
+
+
+    public static Map<String, Integer> getDefaultEntityLight(){
+        Map<String, Integer> map = new HashMap<>();
+        map.put(an(LibEntityNames.SPELL_PROJ), 15);
+        map.put(an(LibEntityNames.ORBIT_PROJECTILE), 15);
+        map.put(an(LibEntityNames.LINGER), 15);
+        map.put(an(LibEntityNames.FLYING_ITEM), 10);
+        map.put(an(LibEntityNames.FOLLOW_PROJ), 10);
+        map.put("minecraft:blaze", 10);
+        map.put("minecraft:spectral_arrow", 8);
+        map.put("minecraft:magma_cube", 8);
+        return map;
+    }
+
+    public static Map<String, Integer> getDefaultItemLight(){
+        Map<String, Integer> map = new HashMap<>();
+        map.put("minecraft:glowstone", 15);
+        map.put("minecraft:torch", 14);
+        map.put("minecraft:glowstone_dust", 8);
+        map.put("minecraft:redstone_torch", 10);
+        map.put("minecraft:soul_torch", 10);
+        map.put("minecraft:blaze_rod", 10);
+        return map;
+    }
+
+    public static String an(String s){
+        return new ResourceLocation(ArsNouveau.MODID, s).toString();
     }
 }
