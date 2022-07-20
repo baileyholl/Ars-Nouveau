@@ -22,7 +22,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(new ResourceLocation("forge:logs/archwood"));
     public static TagKey<Item> MAGIC_FOOD = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food"));
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
-
+    public static TagKey<Item> SHARD_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/shard"));
     public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_126530_, p_126531_, modId, existingFileHelper);
     }
@@ -30,6 +30,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags() {
 
+        this.tag(SHARD_TAG).add(Items.AMETHYST_SHARD);
 
         this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE,

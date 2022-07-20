@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -41,7 +41,7 @@ public class PickupAmethystGoal extends Goal {
             return;
         }
 
-        if(targetEntity == null || targetEntity.isRemoved() || targetEntity.getItem().getItem() != Items.AMETHYST_SHARD){
+        if (targetEntity == null || targetEntity.isRemoved() || !targetEntity.getItem().is(ItemTagProvider.SHARD_TAG)) {
             isDone = true;
             return;
         }
@@ -57,7 +57,7 @@ public class PickupAmethystGoal extends Goal {
     public void collectStacks(){
 
         for(ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class,new AABB(golem.getHome()).inflate(10))){
-            if(i.getItem().getItem() != Items.AMETHYST_SHARD)
+            if (!i.getItem().is(ItemTagProvider.SHARD_TAG))
                 continue;
             int maxTake = golem.getHeldStack().getMaxStackSize() - golem.getHeldStack().getCount();
             if(golem.getHeldStack().isEmpty()){
@@ -86,7 +86,7 @@ public class PickupAmethystGoal extends Goal {
         this.isDone = false;
         this.usingTicks = 80;
         for(ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))){
-            if(entity.getItem().getItem() == Items.AMETHYST_SHARD){
+            if (entity.getItem().is(ItemTagProvider.SHARD_TAG)) {
                 golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
                 targetEntity = entity;
                 break;

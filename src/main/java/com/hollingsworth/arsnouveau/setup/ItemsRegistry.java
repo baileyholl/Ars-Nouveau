@@ -175,7 +175,7 @@ public class ItemsRegistry {
                     new SpellBook(SpellTier.ONE).setRegistryName(LibItemNames.NOVICE_SPELL_BOOK),
                     new SpellBook(SpellTier.TWO).setRegistryName(LibItemNames.APPRENTICE_SPELL_BOOK),
                     new SpellBook(SpellTier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
-                    new SpellBook(SpellTier.THREE).setRegistryName(LibItemNames.CREATIVE_SPELL_BOOK),
+                    new SpellBook(SpellTier.CREATIVE).setRegistryName(LibItemNames.CREATIVE_SPELL_BOOK),
                     new BeltOfLevitation(),
                     new WarpScroll(),
                     new JarOfLight(),
