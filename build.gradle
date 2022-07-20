@@ -156,17 +156,14 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
 
-//    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
-    runtimeOnly fg.deobf("curse.maven:omega-597007:3852351")
-    runtimeOnly fg.deobf("curse.maven:elemental-561470:3885259")
-    runtimeOnly fg.deobf("curse.maven:hexcast-569849:3850254")
-
 //    runtimeOnly fg.deobf("curse.maven:security-64760:3696873") // Securitycraft
     compileOnly fg.deobf("curse.maven:security-64760:3696873")
 
     //runtimeOnly fg.deobf("curse.maven:malum-484064:3788643")
     //runtimeOnly fg.deobf("curse.maven:orthus-616457:3768197")
-
+    //runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
+    //runtimeOnly fg.deobf("curse.maven:omega-597007:3852351") //Omega
+    //runtimeOnly fg.deobf("curse.maven:elemental-561470:3885259") //Elemental
 
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
