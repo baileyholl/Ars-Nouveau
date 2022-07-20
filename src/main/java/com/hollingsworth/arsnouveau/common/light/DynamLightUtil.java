@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.function.Function;
 
@@ -20,6 +21,10 @@ public class DynamLightUtil {
 
     private static int getLuminance(Entity entity){
         int level = 0;
+        if(entity.isOnFire())
+            return 15;
+        if(Config.ENTITY_LIGHT_MAP.containsKey(entity.getType().getRegistryName()))
+            return Config.ENTITY_LIGHT_MAP.get(entity.getType().getRegistryName());
         if(LightManager.getLightRegistry().containsKey(entity.getType())){
             for(Function<Entity, Integer> function : LightManager.getLightRegistry().get(entity.getType())){
                 int val = function.apply(entity);
@@ -30,7 +35,7 @@ public class DynamLightUtil {
     }
 
     public static boolean couldGiveLight(Entity entity){
-        return LightManager.getLightRegistry().containsKey(entity.getType()) || (entity instanceof Player player && getPlayerLight(player) > 0);
+        return LightManager.getLightRegistry().containsKey(entity.getType()) || Config.ENTITY_LIGHT_MAP.containsKey(entity.getType().getRegistryName()) || (entity instanceof Player player && getPlayerLight(player) > 0);
     }
 
     public static int getPlayerLight(Player player){
@@ -50,6 +55,10 @@ public class DynamLightUtil {
         }
 
         return Math.min(15, light);
+    }
+
+    public static int fromItemLike(ItemLike itemLike){
+        return Config.ITEM_LIGHTMAP.getOrDefault(itemLike.asItem().getRegistryName(), 0);
     }
 
 }

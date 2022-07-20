@@ -206,14 +206,20 @@ public class Config {
         map.put(an(LibEntityNames.LINGER), 15);
         map.put(an(LibEntityNames.FLYING_ITEM), 10);
         map.put(an(LibEntityNames.FOLLOW_PROJ), 10);
-        map.put("minecraft:blaze", 15);
-
+        map.put("minecraft:blaze", 10);
+        map.put("minecraft:spectral_arrow", 8);
+        map.put("minecraft:magma_cube", 8);
         return map;
     }
 
     public static Map<String, Integer> getDefaultItemLight(){
         Map<String, Integer> map = new HashMap<>();
         map.put("minecraft:glowstone", 15);
+        map.put("minecraft:torch", 14);
+        map.put("minecraft:glowstone_dust", 8);
+        map.put("minecraft:redstone_torch", 10);
+        map.put("minecraft:soul_torch", 10);
+        map.put("minecraft:blaze_rod", 10);
         return map;
     }
 

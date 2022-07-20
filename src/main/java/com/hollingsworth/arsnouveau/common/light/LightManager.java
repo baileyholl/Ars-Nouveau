@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -13,6 +12,11 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.GlowSquid;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
@@ -40,27 +44,19 @@ public class LightManager {
     public static void init(){
 
         register(EntityType.PLAYER, (p ->{
-            if(p instanceof Player player){
-                NonNullList<ItemStack> list =  player.inventory.items;
-                for(int i = 0; i < 9; i++){
-                    ItemStack jar = list.get(i);
-                    if(jar.getItem() == ItemsRegistry.JAR_OF_LIGHT){
-                        return 15;
-                    }
+            NonNullList<ItemStack> list = ((Player)p).inventory.items;
+            for(int i = 0; i < 9; i++){
+                ItemStack jar = list.get(i);
+                if(jar.getItem() == ItemsRegistry.JAR_OF_LIGHT){
+                    return 15;
                 }
             }
 
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
         register(ModEntities.FALLING_BLOCK, (p) ->{
-            EnchantedFallingBlock enchantedFallingBlock = (EnchantedFallingBlock) p;
-            return p.isOnFire() ? 15 : enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
+            return p.isOnFire() ? 15 : ((FallingBlockEntity)p).getBlockState().getLightEmission(p.level, p.blockPosition());
         });
-        register(ModEntities.ENTITY_FLYING_ITEM, (p -> 10));
-        register(ModEntities.ENTITY_FOLLOW_PROJ, (p -> 10));
-        register(ModEntities.SPELL_PROJ, (p -> 15));
-        register(ModEntities.ORBIT_SPELL, (p -> 15));
-        register(ModEntities.LINGER_SPELL, (p -> 15));
         register(ModEntities.STARBUNCLE_TYPE, (p ->{
             if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){
                 return 10;
@@ -74,6 +70,19 @@ public class LightManager {
             }
             return 0;
         }));
+        register(EntityType.ENDERMAN, (p ->{
+            if(!(p instanceof EnderMan enderMan))
+                return 0;
+            if (enderMan.getCarriedBlock() != null) {
+                return DynamLightUtil.fromItemLike(enderMan.getCarriedBlock().getBlock());
+            }
+            return 0;
+        }));
+
+        register(EntityType.ITEM, (p) -> DynamLightUtil.fromItemLike((((ItemEntity)p).getItem().getItem())));
+        register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((((ItemFrame)p).getItem().getItem())));
+        register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((((ItemFrame) p).getItem().getItem()))));
+        register(EntityType.GLOW_SQUID, (p) ->  (int) Mth.clampedLerp(0.f, 12.f, 1.f - ((GlowSquid)p).getDarkTicksRemaining() / 10.f));
     }
 
     public static void register(EntityType<? extends Entity> type, Function<Entity, Integer> luminanceFunction){
@@ -82,6 +91,7 @@ public class LightManager {
         }
         LIGHT_REGISTRY.get(type).add(luminanceFunction);
     }
+
 
     public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry(){
         return LIGHT_REGISTRY;
@@ -217,10 +227,11 @@ public class LightManager {
     public static void updateAll(LevelRenderer renderer) {
         long now = System.currentTimeMillis();
 
+
         lastUpdate = now;
         lastUpdateCount = 0;
 
-       lightSourcesLock.readLock().lock();
+        lightSourcesLock.readLock().lock();
         for (var lightSource : dynamicLightSources) {
             if (lightSource.lambdynlights$updateDynamicLight(renderer)) {
                 lastUpdateCount++;
@@ -317,7 +328,7 @@ public class LightManager {
             // 15 (max range for blocks) would be too much and a bit cheaty.
             if (distanceSquared <= MAX_RADIUS_SQUARED) {
                 double multiplier = 1.0 - Math.sqrt(distanceSquared) / MAX_RADIUS;
-                double lightLevel = multiplier * (double) luminance;
+                double lightLevel = multiplier * luminance;
                 if (lightLevel > currentLightLevel) {
                     return lightLevel;
                 }
