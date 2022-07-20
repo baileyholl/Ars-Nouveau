@@ -116,7 +116,17 @@ public interface ISpellCaster {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
-        SpellResolver resolver = getSpellResolver(new SpellContext(spell, playerIn).withColors(getColor()), worldIn, playerIn, handIn);
+        // Some cursed code because we don't get context on what slot we are casting from. :(
+        // Find the slot this spell belongs to
+        int slot = -1;
+        for(int i = 1; i <= getMaxSlots(); i++){
+            if(getSpell(i) == spell){
+                slot = i;
+                break;
+            }
+        }
+
+        SpellResolver resolver = getSpellResolver(new SpellContext(spell, playerIn).withColors(slot == -1 ? getColor() : getColor(slot)), worldIn, playerIn, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
         HitResult result = SpellUtil.rayTrace(playerIn, 5, 0, isSensitive);
         if(result instanceof BlockHitResult blockHit){
