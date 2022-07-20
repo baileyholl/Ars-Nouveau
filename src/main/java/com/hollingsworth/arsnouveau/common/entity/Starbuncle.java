@@ -21,6 +21,8 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvanc
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
 import com.hollingsworth.arsnouveau.common.network.ITagSyncable;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -105,7 +107,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-        addGoalsAfterConstructor();
+        reloadGoals();
         this.moveControl = new MovementHandler(this);
     }
 
@@ -115,7 +117,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-        addGoalsAfterConstructor();
+        reloadGoals();
     }
 
     @Override
@@ -143,6 +145,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void setBehavior(ChangeableBehavior behavior) {
         this.dynamicBehavior = behavior;
         getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+        reloadGoals();
+        Networking.sendToNearby(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), this.getId()));
     }
 
     @Override
@@ -302,7 +306,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor() {
+    protected void reloadGoals() {
         if (this.level.isClientSide())
             return;
         this.goalSelector.availableGoals.clear();
@@ -451,7 +455,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
         if (!setBehaviors) {
             this.goalSelector.availableGoals = new LinkedHashSet<>();
-            this.addGoalsAfterConstructor();
+            this.reloadGoals();
             setBehaviors = true;
             restoreFromTag();
         }
@@ -483,11 +487,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         if(data.behaviorTag != null){
             this.dynamicBehavior = BehaviorRegistry.create(this, data.behaviorTag);
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
-            this.addGoalsAfterConstructor();
+            this.reloadGoals();
         }else if(this.isTamed()){
             this.dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
-            this.addGoalsAfterConstructor();
+            this.reloadGoals();
         }
     }
 

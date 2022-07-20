@@ -70,7 +70,6 @@ public class DominionWand extends ModItem {
         DominionData data = new DominionData(stack);
         data.setStoredPos(null);
         data.setStoredEntityID(-1);
-        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.dominion_wand.cleared"));
     }
 
 

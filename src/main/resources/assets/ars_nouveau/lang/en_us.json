@@ -1033,5 +1033,6 @@
 	"ars_nouveau.starbuncle.taking_potions": "Taking potions from %s locations",
 	"ars_nouveau.starbuncle.potion_to": "Starbuncle will send potions to this jar.",
 	"ars_nouveau.starbuncle.potion_from": "Starbuncle will take potions from this jar.",
-	"ars_nouveau.dominion_wand.cleared": "Dominion wand cleared."
+	"ars_nouveau.dominion_wand.cleared": "Dominion wand cleared.",
+	"ars_nouveau.starbuncle.potion_behavior_set": "Starbuncle will now transport potions!"
 }
