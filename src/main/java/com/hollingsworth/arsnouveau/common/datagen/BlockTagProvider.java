@@ -16,8 +16,8 @@ import java.nio.file.Path;
 
 public class BlockTagProvider extends BlockTagsProvider {
 
-    public static TagKey<Block> IGNORE_TILE =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
-    public static TagKey<Block> SUMMON_BED =  BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+    public static TagKey<Block> IGNORE_TILE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+    public static TagKey<Block> SUMMON_BED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
     public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
     public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
@@ -25,6 +25,10 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
     public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
+    public static TagKey<Block> FELLABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
+
+    public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
+    public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
@@ -32,7 +36,9 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
-       // super.addTags();
+        this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
+        this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
+
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 BlockRegistry.ARCANE_STONE,
                 BlockRegistry.RELAY,
@@ -171,8 +177,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.CACTUS);
 
 
-        this.tag(BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable")))
-                .addTags(HARVEST_FOLIAGE, HARVEST_STEMS);
+        this.tag(FELLABLE).addTags(HARVEST_FOLIAGE, HARVEST_STEMS);
 
         TagKey<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
         TagKey<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));

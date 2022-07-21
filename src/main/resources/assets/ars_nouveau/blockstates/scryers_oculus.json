@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "ars_nouveau:block/scryers_eye" }
+    "": {
+      "model": "ars_nouveau:block/scryers_oculus"
+    }
   }
 }

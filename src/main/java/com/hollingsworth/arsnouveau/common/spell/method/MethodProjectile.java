@@ -40,12 +40,12 @@ public class MethodProjectile extends AbstractCastMethod {
         projectiles.add(projectileSpell);
         int numSplits = stats.getBuffCount(AugmentSplit.INSTANCE);
 
+        float sizeRatio = shooter.getEyeHeight() / Player.DEFAULT_EYE_HEIGHT;
         for(int i =1; i < numSplits + 1; i++){
             Direction offset =shooter.getDirection().getClockWise();
             if(i%2==0) offset = offset.getOpposite();
              // Alternate sides
-            BlockPos projPos = shooter.blockPosition().relative(offset, i);
-            projPos = projPos.offset(0, 1.5, 0);
+            BlockPos projPos = shooter.blockPosition().relative(offset, i).offset(0, 1.5 * sizeRatio, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);

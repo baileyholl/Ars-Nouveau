@@ -133,7 +133,7 @@ public class ClientHandler {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
 //
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCE_JAR, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCE_JAR, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());
@@ -148,7 +148,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCEBERRY_BUSH, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_SOURCE_JAR, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_SOURCE_JAR, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());

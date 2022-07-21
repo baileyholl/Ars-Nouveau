@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
@@ -182,12 +183,11 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         for(BlockPos b : BlockPos.betweenClosed(pos.below(3).south(5).east(5), pos.above(10).north(5).west(5))){
             if(level.getBlockState(b).isAir())
                 continue;
-            if(level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK){
+            if (level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK) {
                 amethystBlocks.add(b.immutable());
             }
-            if(level.getBlockState(b).getBlock() == Blocks.BUDDING_AMETHYST){
+            if (level.getBlockState(b).is(BlockTagProvider.BUDDING_BLOCKS)) {
                 buddingBlocks.add(b.immutable());
-
             }
         }
     }
