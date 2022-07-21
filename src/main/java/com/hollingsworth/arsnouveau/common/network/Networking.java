@@ -195,6 +195,11 @@ public class Networking {
                 PacketSyncTag::encode,
                 PacketSyncTag::decode,
                 PacketSyncTag.Handler::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketQuickCast.class,
+                PacketQuickCast::toBytes,
+                PacketQuickCast::new,
+                PacketQuickCast::handle);
 
     }
 

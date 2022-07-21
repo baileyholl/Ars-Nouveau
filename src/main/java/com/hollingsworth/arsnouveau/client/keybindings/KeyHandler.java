@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.keybindings;
 
-
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ISpellHotkeyListener;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
@@ -8,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
+import com.hollingsworth.arsnouveau.common.network.PacketQuickCast;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -63,6 +63,10 @@ public class KeyHandler {
             if (MINECRAFT.screen == null) {
                 hotkeyListener.onOpenBookMenuKeyPressed(stack, player);
             }
+        }
+        int slot = ModKeyBindings.usedQuickSlot(key);
+        if(slot != -1){
+            Networking.INSTANCE.sendToServer(new PacketQuickCast(slot));
         }
     }
 
