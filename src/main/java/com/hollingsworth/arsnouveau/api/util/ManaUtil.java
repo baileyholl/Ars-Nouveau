@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
+import com.hollingsworth.arsnouveau.api.mana.ManaAttributes;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
@@ -71,6 +72,8 @@ public class ManaUtil {
         MaxManaCalcEvent event = new MaxManaCalcEvent(e, max);
         MinecraftForge.EVENT_BUS.post(event);
         max = event.getMax();
+
+        max += e.getAttributeValue(ManaAttributes.MAX_MANA.get());
         return max;
     }
 
@@ -104,6 +107,8 @@ public class ManaUtil {
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();
+
+        regen += e.getAttributeValue(ManaAttributes.MANA_REGEN.get());
         return regen;
     }
 }
