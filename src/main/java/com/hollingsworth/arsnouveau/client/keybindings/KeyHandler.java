@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
+import com.hollingsworth.arsnouveau.common.network.PacketQuickCast;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -66,6 +67,10 @@ public class KeyHandler {
             if(MINECRAFT.screen == null){
                 hotkeyListener.onOpenBookMenuKeyPressed(stack, player);
             }
+        }
+        int slot = ModKeyBindings.usedQuickSlot(key);
+        if(slot != -1){
+            Networking.INSTANCE.sendToServer(new PacketQuickCast(slot));
         }
     }
     @SubscribeEvent
