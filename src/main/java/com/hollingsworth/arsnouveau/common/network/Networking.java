@@ -190,8 +190,11 @@ public class Networking {
                 PacketSyncLitEntities::toBytes,
                 PacketSyncLitEntities::new,
                 PacketSyncLitEntities::handle);
-        
-
+        INSTANCE.registerMessage(nextID(),
+                PacketQuickCast.class,
+                PacketQuickCast::toBytes,
+                PacketQuickCast::new,
+                PacketQuickCast::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

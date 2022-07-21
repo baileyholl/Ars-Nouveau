@@ -1014,5 +1014,15 @@
 	"block.ars_nouveau.smooth_gilded_sourcestone_small_bricks": "Smooth Gilded Sourcestone: Small Bricks",
 	"tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table.",
 	"ars_nouveau.page.archwood_forest": "Archwood Forest",
-	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome."
+	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold. Additionally, magical creatures such as Starbuncles, Whirlisprigs, Archwood Treants, and Drygmys have a much higher chance of spawning. Terrablender is required to be installed to generate this biome.",
+	"key.ars_nouveau.qc1": "Quick Cast Slot 01",
+	"key.ars_nouveau.qc2": "Quick Cast Slot 02",
+	"key.ars_nouveau.qc3": "Quick Cast Slot 03",
+	"key.ars_nouveau.qc4": "Quick Cast Slot 04",
+	"key.ars_nouveau.qc5": "Quick Cast Slot 05",
+	"key.ars_nouveau.qc6": "Quick Cast Slot 06",
+	"key.ars_nouveau.qc7": "Quick Cast Slot 07",
+	"key.ars_nouveau.qc8": "Quick Cast Slot 08",
+	"key.ars_nouveau.qc9": "Quick Cast Slot 09",
+	"key.ars_nouveau.qc10": "Quick Cast Slot 10"
 }
