@@ -1,6 +1,6 @@
-package com.hollingsworth.arsnouveau.common.block.tile;
+package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.TickableModBlock;
+import com.hollingsworth.arsnouveau.common.block.tile.PotionDiffuserTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;

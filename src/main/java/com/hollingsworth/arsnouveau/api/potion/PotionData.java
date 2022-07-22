@@ -5,6 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
@@ -71,6 +73,16 @@ public class PotionData {
         List<MobEffectInstance> thisEffects = new ArrayList<>(customEffects);
         thisEffects.addAll(potion.getEffects());
         return thisEffects;
+    }
+
+    public void applyEffects(Entity source, Entity inDirectSource, LivingEntity target){
+        for (MobEffectInstance effectinstance : fullEffects()) {
+            if (effectinstance.getEffect().isInstantenous()) {
+                effectinstance.getEffect().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
+            } else {
+                target.addEffect(new MobEffectInstance(effectinstance));
+            }
+        }
     }
 
     public boolean areSameEffects(List<MobEffectInstance> effects){

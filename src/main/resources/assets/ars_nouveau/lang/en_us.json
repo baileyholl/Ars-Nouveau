@@ -1100,5 +1100,9 @@
 	"tooltip.ars_nouveau.alchemists_crown": "",
 	"item.ars_nouveau.wixie_hat": "Wixie Hat",
 	"tooltip.ars_nouveau.wixie_hat": "Give to a Starbuncle to make them transport potions.",
-	"ars_nouveau.starbuncle.default_behavior": "Starbuncle will now transport items!"
+	"ars_nouveau.starbuncle.default_behavior": "Starbuncle will now transport items!",
+	"ars_nouveau.potion_diffuser.set_pos": "Diffuser will spread this potion to nearby entities.",
+	"ars_nouveau.potion_diffuser.bind_to_jar": "You must bind the diffuser to a Potion Jar to use it.",
+	"ars_nouveau.potion_diffuser.no_pos": "Bind a Potion Jar to the diffuser using the Dominion Wand.",
+	"ars_nouveau.potion_diffuser.off": "Diffuser is off."
 }
