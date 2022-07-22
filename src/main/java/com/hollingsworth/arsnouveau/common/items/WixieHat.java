@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyPotionBehavior;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -25,10 +27,12 @@ public class WixieHat extends AnimModItem implements ICosmeticItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if(pInteractionTarget instanceof Starbuncle starbuncle){
+        if (pInteractionTarget instanceof Starbuncle starbuncle) {
             starbuncle.setBehavior(new StarbyPotionBehavior(starbuncle, new CompoundTag()));
             PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.potion_behavior_set"));
-            starbuncle.setCosmeticItem(pStack.split(1));
+        }
+        if (pInteractionTarget instanceof IDecoratable toWix && canWear(pInteractionTarget)) {
+            toWix.setCosmeticItem(pStack.split(1));
             return InteractionResult.SUCCESS;
         }
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
@@ -65,7 +69,7 @@ public class WixieHat extends AnimModItem implements ICosmeticItem {
 
     @Override
     public boolean canWear(LivingEntity entity) {
-        return entity instanceof Starbuncle;
+        return entity instanceof Starbuncle || entity instanceof FamiliarStarbuncle;
     }
 
     @Override
