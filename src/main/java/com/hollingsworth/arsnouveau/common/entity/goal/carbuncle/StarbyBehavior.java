@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -51,7 +49,7 @@ public class StarbyBehavior extends ChangeableBehavior {
     }
 
     public void syncTag(){
-        Networking.sendToNearby(starbuncle.level, starbuncle, new PacketSyncTag(this.toTag(new CompoundTag()), starbuncle.getId()));
+        starbuncle.syncBehavior();
     }
 
     @Override

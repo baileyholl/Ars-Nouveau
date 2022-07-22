@@ -1099,5 +1099,6 @@
 	"effect.ars_nouveau.shielding": "Shielding",
 	"tooltip.ars_nouveau.alchemists_crown": "",
 	"item.ars_nouveau.wixie_hat": "Wixie Hat",
-	"tooltip.ars_nouveau.wixie_hat": "Give to a Starbuncle to make them transport potions."
+	"tooltip.ars_nouveau.wixie_hat": "Give to a Starbuncle to make them transport potions.",
+	"ars_nouveau.starbuncle.default_behavior": "Starbuncle will now transport items!"
 }

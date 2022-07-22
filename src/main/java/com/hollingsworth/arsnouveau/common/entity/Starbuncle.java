@@ -146,7 +146,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.dynamicBehavior = behavior;
         getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
         reloadGoals();
-        Networking.sendToNearby(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), this.getId()));
+        syncBehavior();
     }
 
     @Override
@@ -268,7 +268,20 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.dynamicBehavior.onWanded(playerEntity);
         data.pathBlock = null;
         data.bedPos = null;
+        if(!getCosmeticItem().isEmpty()){
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getCosmeticItem().split(1)));
+            if(!(dynamicBehavior instanceof StarbyTransportBehavior)){
+                dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
+                PortUtil.sendMessage(playerEntity, "ars_nouveau.starbuncle.default_behavior");
+                syncBehavior();
+            }
+            this.setCosmeticItem(ItemStack.EMPTY);
+        }
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.cleared"));
+    }
+
+    public void syncBehavior(){
+        Networking.sendToNearby(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), getId()));
     }
 
     @Override
@@ -339,16 +352,17 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
-            stack.setTag(data.toTag(this, new CompoundTag()));
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            if (this.getHeldStack() != null)
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
-            if (!this.getCosmeticItem().isEmpty()) {
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getCosmeticItem().copy()));
-            }
+            dropData();
         }
         super.die(source);
+    }
+
+    public void dropData(){
+        ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
+        stack.setTag(data.toTag(this, new CompoundTag()));
+        level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+        if (this.getHeldStack() != null)
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
     }
 
     public AABB getAABB() {
@@ -429,13 +443,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack charm = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
-            charm.setTag(data.toTag(this, new CompoundTag()));
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), charm.copy()));
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getHeldStack()));
-            if (!this.getCosmeticItem().isEmpty()) {
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getCosmeticItem().copy()));
-            }
+            dropData();
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
@@ -516,7 +524,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        dynamicBehavior.getTooltip(tooltip);
+        if(dynamicBehavior != null)
+            dynamicBehavior.getTooltip(tooltip);
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
@@ -593,6 +602,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 bedPos = null;
             if(tag.contains("behavior"))
                 behaviorTag = tag.getCompound("behavior");
+            if(tag.contains("cosmetic")){
+                cosmetic = ItemStack.of(tag.getCompound("cosmetic"));
+            }
         }
 
         @Override
@@ -602,6 +614,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 tag.putString("path", getRegistryName(pathBlock).toString());
             if (bedPos != null)
                 NBTUtil.storeBlockPos(tag, "bed_", bedPos);
+            if(!starbuncle.getCosmeticItem().isEmpty()){
+                tag.put("cosmetic", starbuncle.getCosmeticItem().serializeNBT());
+            }
             tag.put("behavior", starbuncle.dynamicBehavior.toTag(new CompoundTag()));
             return tag;
         }
