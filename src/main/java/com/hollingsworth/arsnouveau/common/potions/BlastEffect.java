@@ -13,7 +13,7 @@ public class BlastEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        pLivingEntity.level.explode(null, pLivingEntity.getX(), pLivingEntity.getY() + 1, pLivingEntity.getZ(), 2.0f, false, Explosion.BlockInteraction.NONE);
+        pLivingEntity.level.explode(null, pLivingEntity.getX(), pLivingEntity.getY() + 1, pLivingEntity.getZ(), 2.0f + pAmplifier, false, Explosion.BlockInteraction.NONE);
     }
 
     @Override
