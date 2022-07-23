@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -142,6 +143,12 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent e) {
+        if(e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT.get()) && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC || e.getSource() instanceof EntityDamageSource)) {
+            if(e.getAmount() > 0.5){
+                e.setAmount((float) Math.max(0.5, e.getAmount() - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT.get()).getAmplifier()));
+            }
+        }
+
         if (e.getEntity() != null && e.getSource() == DamageSource.LIGHTNING_BOLT && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT.get())) {
             float damage = e.getAmount() + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT.get()).getAmplifier();
             e.setAmount(Math.max(0, damage));
@@ -160,19 +167,20 @@ public class EventHandler {
         if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get())) {
             e.setAmount(e.getAmount() / 2.0f);
         }
+
+        if(entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT.get())){
+            e.setAmount(1.0f + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
+        }
     }
 
     @SubscribeEvent
     public static void dispelEvent(DispelEvent event) {
-        if (event.rayTraceResult instanceof EntityHitResult && ((EntityHitResult) event.rayTraceResult).getEntity() instanceof LivingEntity entity) {
-            if (entity instanceof Witch) {
-                if (entity.getHealth() <= entity.getMaxHealth() / 2) {
-                    entity.remove(Entity.RemovalReason.KILLED);
-                    ParticleUtil.spawnPoof((ServerLevel) event.world, entity.blockPosition());
-                    event.world.addFreshEntity(new ItemEntity(event.world, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));
-                }
+        if (event.rayTraceResult instanceof EntityHitResult hit && hit.getEntity() instanceof Witch entity) {
+            if (entity.getHealth() <= entity.getMaxHealth() / 2) {
+                entity.remove(Entity.RemovalReason.KILLED);
+                ParticleUtil.spawnPoof((ServerLevel) event.world, entity.blockPosition());
+                event.world.addFreshEntity(new ItemEntity(event.world, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));
             }
-
         }
 
     }
