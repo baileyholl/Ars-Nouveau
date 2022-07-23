@@ -80,7 +80,7 @@ public class PotionData {
             if (effectinstance.getEffect().isInstantenous()) {
                 effectinstance.getEffect().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
             } else {
-                target.addEffect(new MobEffectInstance(effectinstance));
+                target.addEffect(new MobEffectInstance(effectinstance), source);
             }
         }
     }

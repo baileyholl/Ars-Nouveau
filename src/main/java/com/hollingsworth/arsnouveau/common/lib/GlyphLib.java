@@ -81,6 +81,7 @@ public class GlyphLib {
     public static final String AugmentSensitiveID = prependGlyph("sensitive");
     public static final String EffectLingerID = prependGlyph("linger");
     public static final String EffectSenseMagicID = prependGlyph("sense_magic");
+    public static final String EffectInfuseID = prependGlyph("infuse");
 
     public static String prependGlyph(String glyph) {
         return "glyph_" + glyph;

@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class ItemstackData extends AbstractData {
-    ItemStack stack;
+    public ItemStack stack;
 
     public ItemstackData(ItemStack stack) {
         super(stack.getOrCreateTag());

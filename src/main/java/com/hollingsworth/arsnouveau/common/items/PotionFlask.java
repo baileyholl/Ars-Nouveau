@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -27,7 +28,7 @@ import java.util.List;
 public abstract class PotionFlask extends ModItem {
 
     public PotionFlask() {
-        this(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1).durability(8));
     }
 
     public PotionFlask(Item.Properties props) {
@@ -54,7 +55,8 @@ public abstract class PotionFlask extends ModItem {
                 jarTile.remove(100);
             }else if (data.getCount() == 0){
                 data.potionData = jarTile.getData();
-                data.setCount(1);
+                data.setCount(data.getCount() + 1);
+                jarTile.remove(100);
             }
         }
         return super.useOn(context);
@@ -95,6 +97,22 @@ public abstract class PotionFlask extends ModItem {
     public abstract @Nonnull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
 
 
+    @Override
+    public int getDamage(ItemStack stack) {
+        PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
+        return (getMaxDamage(stack) - data.getCount());
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return getMaxCapacity();
+    }
+
+    @Override
+    public boolean canBeDepleted() {
+        return super.canBeDepleted();
+    }
+
     /**
      * How long it takes to use or consume an item
      */
@@ -130,10 +148,24 @@ public abstract class PotionFlask extends ModItem {
         public FlaskData(ItemStack stack) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
+            potionData = new PotionData();
             if(tag == null)
                 return;
             potionData = PotionData.fromTag(tag.getCompound("PotionData"));
             this.count = tag.getInt("count");
+        }
+
+        public void apply(@Nullable Entity directApplier, @Nullable Entity indirectApplier, LivingEntity target){
+            if(!(stack.getItem() instanceof PotionFlask potionFlask))
+                return;
+            for (MobEffectInstance effectinstance : getPotion().fullEffects()) {
+                effectinstance = potionFlask.getEffectInstance(effectinstance);
+                if (effectinstance.getEffect().isInstantenous()) {
+                    effectinstance.getEffect().applyInstantenousEffect(directApplier, indirectApplier, target, effectinstance.getAmplifier(), 1.0D);
+                } else {
+                    target.addEffect(new MobEffectInstance(effectinstance), directApplier);
+                }
+            }
         }
 
         public void setCount(int count) {

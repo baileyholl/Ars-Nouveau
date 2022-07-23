@@ -64,11 +64,11 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide)
-            return InteractionResult.SUCCESS;
+            return super.use(state, worldIn, pos, player, handIn, hit);
 
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null)
-            return InteractionResult.SUCCESS;
+            return super.use(state, worldIn, pos, player, handIn, hit);
         ItemStack stack = player.getItemInHand(handIn);
         Potion potion = PotionUtils.getPotion(stack);
 
@@ -80,7 +80,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
                     stack.shrink(1);
                 }
             }
-            return InteractionResult.SUCCESS;
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
 
         if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
