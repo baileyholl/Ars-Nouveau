@@ -27,7 +27,6 @@ public class GravityEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
-        super.applyEffectTick(livingEntity, p_76394_2_);
         if (!livingEntity.isOnGround()) {
             boolean isTooHigh = true;
             Level world = livingEntity.level;

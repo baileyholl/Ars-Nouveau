@@ -21,7 +21,6 @@ public class FlightEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int p_76394_2_) {
-        super.applyEffectTick(entity, p_76394_2_);
         if (entity instanceof Player player) {
             player.abilities.mayfly = (player.isCreative() || entity.isSpectator()) || entity.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() > 2;
         }
