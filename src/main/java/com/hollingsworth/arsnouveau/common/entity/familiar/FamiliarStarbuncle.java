@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -85,13 +84,4 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         return ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get();
     }
 
-    @Override
-    public Starbuncle.StarbuncleData getPersistentFamiliarData() {
-        return (Starbuncle.StarbuncleData) this.persistentData;
-    }
-
-    @Override
-    public Starbuncle.StarbuncleData deserializePersistentData(CompoundTag tag) {
-        return new Starbuncle.StarbuncleData(tag);
-    }
 }
