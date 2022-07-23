@@ -50,6 +50,14 @@ public class ItemsRegistry {
     public static FoodProperties SOURCE_PIE_FOOD = new FoodProperties.Builder().nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20, 1), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_ROLL_FOOD = new FoodProperties.Builder().nutrition(8).saturationMod(0.6F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 60 * 20), 1.0f).alwaysEat().build();
 
+    public static FoodProperties MENDOSTEEN_FOOD = new FoodProperties.Builder().nutrition(4).saturationMod(0.6F).effect(() ->
+            new MobEffectInstance(ModPotions.RECOVERY_EFFECT.get(), 60 * 20), 1.0f).alwaysEat().build();
+    public static FoodProperties BLASTING_FOOD = new FoodProperties.Builder().nutrition(4).saturationMod(0.6F)
+            .effect(() -> new MobEffectInstance(ModPotions.BLAST_EFFECT.get(), 10 * 20), 1.0f).alwaysEat().build();
+    public static FoodProperties BASTION_FOOD = new FoodProperties.Builder().nutrition(4).saturationMod(0.6F)
+            .effect(() -> new MobEffectInstance(ModPotions.DEFENCE_EFFECT.get(), 60 * 20), 1.0f).alwaysEat().build();
+    public static FoodProperties FROSTAYA_FOOD = new FoodProperties.Builder().nutrition(4).saturationMod(0.6F)
+            .effect(() -> new MobEffectInstance(ModPotions.FREEZING_EFFECT.get(), 30 * 20), 1.0f).alwaysEat().build();
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 

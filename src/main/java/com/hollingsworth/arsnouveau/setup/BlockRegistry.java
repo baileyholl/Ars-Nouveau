@@ -692,10 +692,10 @@ public class BlockRegistry {
         }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
 
         registry.register(LibBlockNames.POTION_DIFFUSER, getDefaultBlockItem(BlockRegistry.POTION_DIFFUSER));
-        registry.register(LibBlockNames.MENDOSTEEN_POD, new ItemNameBlockItem(BlockRegistry.MENDOSTEEN_POD, defaultItemProperties()));
-        registry.register(LibBlockNames.BASTION_POD, new ItemNameBlockItem(BlockRegistry.BASTION_POD, defaultItemProperties()));
-        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties()));
-        registry.register(LibBlockNames.FROSTAYA_POD, new ItemNameBlockItem(BlockRegistry.FROSTAYA_POD, defaultItemProperties()));
+        registry.register(LibBlockNames.MENDOSTEEN_POD, new ItemNameBlockItem(BlockRegistry.MENDOSTEEN_POD, defaultItemProperties().food(ItemsRegistry.MENDOSTEEN_FOOD)));
+        registry.register(LibBlockNames.BASTION_POD, new ItemNameBlockItem(BlockRegistry.BASTION_POD, defaultItemProperties().food(ItemsRegistry.BASTION_FOOD)));
+        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
+        registry.register(LibBlockNames.FROSTAYA_POD, new ItemNameBlockItem(BlockRegistry.FROSTAYA_POD, defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
