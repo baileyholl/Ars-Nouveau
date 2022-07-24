@@ -28,8 +28,11 @@ public class RenderUtils {
     }
 
     public static void drawItemAsIcon(Item providedItem, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
+        drawItemAsIcon(new ItemStack(providedItem), poseStack, positionX, positionY, size, renderTransparent);
+    }
+
+    public static void drawItemAsIcon(ItemStack itemStack, PoseStack poseStack, int positionX, int positionY, int size, boolean renderTransparent) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        ItemStack itemStack = providedItem.getDefaultInstance();
         //Code stolen from ItemRenderer.renderGuiItem and changed to suit scaled items instead of fixing size to 16
         BakedModel itemBakedModel = itemRenderer.getModel(itemStack, null, null, 0);
 

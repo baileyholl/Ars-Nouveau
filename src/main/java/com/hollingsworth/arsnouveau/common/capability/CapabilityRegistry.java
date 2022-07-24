@@ -139,7 +139,9 @@ public class CapabilityRegistry {
         public static void syncPlayerCap(Player player) {
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
             CompoundTag tag = cap.serializeNBT();
-            Networking.sendToPlayer(new PacketSyncPlayerCap(tag), player);
+            if(player instanceof ServerPlayer serverPlayer){
+                Networking.sendToPlayer(new PacketSyncPlayerCap(tag), serverPlayer);
+            }
         }
     }
 }

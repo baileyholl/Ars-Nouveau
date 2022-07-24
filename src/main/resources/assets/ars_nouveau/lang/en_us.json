@@ -1104,5 +1104,7 @@
 	"ars_nouveau.potion_diffuser.set_pos": "Diffuser will spread this potion to nearby entities.",
 	"ars_nouveau.potion_diffuser.bind_to_jar": "You must bind the diffuser to a Potion Jar to use it.",
 	"ars_nouveau.potion_diffuser.no_pos": "Bind a Potion Jar to the diffuser using the Dominion Wand.",
-	"ars_nouveau.potion_diffuser.off": "Diffuser is off."
+	"ars_nouveau.potion_diffuser.off": "Diffuser is off.",
+	"key.ars_nouveau.head_curio_hotkey": "Head Curio Menu",
+	"ars_nouveau.alchemists_crown.no_flasks": "No flasks or potions equipped."
 }

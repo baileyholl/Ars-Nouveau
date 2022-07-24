@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,7 @@ public class FlightEffect extends MobEffect {
             boolean canFly = player.isCreative() || player.isSpectator();
             player.abilities.mayfly = canFly;
             player.abilities.flying = canFly;
-            Networking.sendToPlayer(new PacketUpdateFlight(canFly, canFly), player);
+            Networking.sendToPlayer(new PacketUpdateFlight(canFly, canFly), (ServerPlayer) player);
         }
     }
 }

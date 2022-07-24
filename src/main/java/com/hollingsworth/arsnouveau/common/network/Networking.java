@@ -6,11 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
@@ -200,7 +197,11 @@ public class Networking {
                 PacketQuickCast::toBytes,
                 PacketQuickCast::new,
                 PacketQuickCast::handle);
-
+        INSTANCE.registerMessage(nextID(),
+                PacketConsumePotion.class,
+                PacketConsumePotion::toBytes,
+                PacketConsumePotion::new,
+                PacketConsumePotion::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
@@ -215,10 +216,7 @@ public class Networking {
         sendToNearby(world, e.blockPosition(), toSend);
     }
 
-    public static void sendToPlayer(Object msg, Player player) {
-        if (EffectiveSide.get() == LogicalSide.SERVER) {
-            ServerPlayer serverPlayer = (ServerPlayer) player;
-            INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), msg);
-        }
+    public static void sendToPlayer(Object msg, ServerPlayer player) {
+        INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
     }
 }

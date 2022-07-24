@@ -911,6 +911,8 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.SLIME_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .build());
+
+        addRecipe(builder().withResult(ItemsRegistry.ALCHEMISTS_CROWN).withReagent(Items.GOLDEN_HELMET).withPedestalItem(3, Items.GLASS_BOTTLE).build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe) {
