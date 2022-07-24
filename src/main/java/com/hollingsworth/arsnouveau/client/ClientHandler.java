@@ -57,7 +57,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.PHANTOM_TILE, MageBlockRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
@@ -73,7 +73,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());
