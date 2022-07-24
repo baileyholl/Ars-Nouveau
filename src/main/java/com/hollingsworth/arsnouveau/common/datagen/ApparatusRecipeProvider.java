@@ -913,6 +913,9 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder().withResult(ItemsRegistry.ALCHEMISTS_CROWN).withReagent(Items.GOLDEN_HELMET).withPedestalItem(3, Items.GLASS_BOTTLE).build());
+        addRecipe(builder().withResult(BlockRegistry.POTION_DIFFUSER).withReagent(Blocks.CAMPFIRE)
+                .withPedestalItem(3, Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(3, BlockRegistry.ARCHWOOD_PLANK).build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe) {

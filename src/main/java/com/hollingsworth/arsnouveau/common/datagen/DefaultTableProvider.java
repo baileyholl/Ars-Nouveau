@@ -130,6 +130,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ORANGE_SBED);
             registerDropSelf(BlockRegistry.SCRYERS_CRYSTAL);
             registerDropSelf(BlockRegistry.SCRYERS_OCULUS);
+            registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
                 registerDropSelf(BlockRegistry.getBlock(s));
             }

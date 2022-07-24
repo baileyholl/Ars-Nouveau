@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    "y": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "result": {
+    "item": "ars_nouveau:wixie_hat"
+  }
+}
