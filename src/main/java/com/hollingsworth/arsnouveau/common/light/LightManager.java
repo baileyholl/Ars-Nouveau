@@ -10,12 +10,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.GlowSquid;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
@@ -59,9 +59,18 @@ public class LightManager {
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
 
-        register(ModEntities.FALLING_BLOCK.get(), (p) -> {
-            EnchantedFallingBlock enchantedFallingBlock = (EnchantedFallingBlock) p;
-            return p.isOnFire() ? 15 : enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
+        register(EntityType.FALLING_BLOCK, (p) ->{
+            if(p instanceof FallingBlockEntity fallingBlockEntity){
+                return fallingBlockEntity.getBlockState().getLightEmission(p.level, p.blockPosition());
+            }
+            return 0;
+        });
+
+        register(ModEntities.ENCHANTED_FALLING_BLOCK.get(), (p) ->{
+            if(p instanceof EnchantedFallingBlock enchantedFallingBlock){
+                return  enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
+            }
+            return 0;
         });
         register(ModEntities.ENTITY_FLYING_ITEM.get(), (p -> 10));
         register(ModEntities.ENTITY_FOLLOW_PROJ.get(), (p -> 10));
