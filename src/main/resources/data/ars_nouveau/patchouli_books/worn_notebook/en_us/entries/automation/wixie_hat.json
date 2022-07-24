@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:wixie_hat",
+  "name": "item.ars_nouveau.wixie_hat",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.wixie_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:wixie_hat"
+    }
+  ]
+}

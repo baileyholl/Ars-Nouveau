@@ -5,33 +5,11 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page1.potion_melder"
+      "text": "ars_nouveau.page.potion_melder"
     },
     {
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:potion_melder"
-    },
-    {
-      "type": "patchouli:multiblock",
-      "multiblock": {
-        "mapping": {
-          "0": "ars_nouveau:potion_melder",
-          "C": "ars_nouveau:potion_jar"
-        },
-        "pattern": [
-          [
-            "   "
-          ],
-          [
-            "C0C"
-          ],
-          [
-            " C "
-          ]
-        ]
-      },
-      "name": "block.ars_nouveau.potion_melder",
-      "text": "ars_nouveau.page2.potion_melder"
     }
   ]
 }

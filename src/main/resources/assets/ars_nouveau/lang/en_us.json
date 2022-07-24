@@ -779,8 +779,7 @@
 	"ars_nouveau.page.relay_splitter": "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.",
 	"ars_nouveau.page1.enchanting_apparatus": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
 	"ars_nouveau.page1.imbuement_chamber": "Imbues certain items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.",
-	"ars_nouveau.page1.potion_melder": "Converts three doses of a potion from two adjacent Potion Jars, and outputs a single dose of mixed potion into a Potion Jar beneath it. The Potion Melder requires source per mix.",
-	"ars_nouveau.page2.potion_melder": "Outputs mixed potions below in a 3:1 ratio.",
+	"ars_nouveau.page.potion_melder": "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.",
 	"ars_nouveau.page.warp_portal": "Warp Portals",
 	"ars_nouveau.page1.warp_portal": "Warp portals, like warp scrolls, provide a one-way teleport to any location, provided it is in the same dimension. To construct a Warp Portal, build a frame from Sourcestone or its variants in the shape of a rectangle and provide a full Source Jar nearby. Then, throw a warp scroll with a written location into the frame. Given there is enough source nearby, the portal will be created.",
 	"ars_nouveau.page2.warp_portal": "Portals can be built horizontal or vertical, from 1x1 to 21x21 in size. Warping does not cost any source after creation.",
@@ -1108,5 +1107,13 @@
 	"ars_nouveau.potion_diffuser.no_pos": "Bind a Potion Jar to the diffuser using the Dominion Wand.",
 	"ars_nouveau.potion_diffuser.off": "Diffuser is off.",
 	"key.ars_nouveau.head_curio_hotkey": "Head Curio Menu",
-	"ars_nouveau.alchemists_crown.no_flasks": "No flasks or potions equipped."
+	"ars_nouveau.alchemists_crown.no_flasks": "No flasks or potions equipped.",
+	"ars_nouveau.page.alchemists_crown": "Allows the wearer to consume potions and flasks instantly from their inventory.",
+	"ars_nouveau.tooltip.alchemists_crown": "Press %s to open the potion radial menu.",
+	"ars_nouveau.page.wixie_hat": "Allows starbuncles to transport potions. Once wearing a Wixie Hat, use the Dominion Wand to connect them between Potion Jars.",
+	"ars_nouveau.page.potion_diffuser": "Consumes a potion and applies it to nearby entities, greatly extending the use of the potion. To use, bind a Potion Jar to the diffuser using the Dominion Wand. Every 10 minutes the diffuser will consume a single potion and apply it every few seconds.",
+	"ars_nouveau.page.bombegrante": "A fruit that packs an explosive punch. Can be brewed into a Potion of Blasting, causing the target to explode when the duration ends.",
+	"ars_nouveau.page.mendosteen": "A fruit that can be brewed into a Potion of Recovery, increases the amount of healing received from all sources.",
+	"ars_nouveau.page.frostaya": "A fruit that can be brewed into a Potion of Freezing, freezing the target over time.",
+	"ars_nouveau.page.bastion_fruit": "A fruit that can be brewed into a Potion of Defence, reducing the amount of damage taken."
 }
