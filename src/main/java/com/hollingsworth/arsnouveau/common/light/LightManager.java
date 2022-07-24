@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -54,8 +55,18 @@ public class LightManager {
 
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
-        register(ModEntities.FALLING_BLOCK, (p) ->{
-            return p.isOnFire() ? 15 : ((FallingBlockEntity)p).getBlockState().getLightEmission(p.level, p.blockPosition());
+        register(EntityType.FALLING_BLOCK, (p) ->{
+            if(p instanceof FallingBlockEntity fallingBlockEntity){
+                return fallingBlockEntity.getBlockState().getLightEmission(p.level, p.blockPosition());
+            }
+            return 0;
+        });
+
+        register(ModEntities.ENCHANTED_FALLING_BLOCK, (p) ->{
+            if(p instanceof EnchantedFallingBlock enchantedFallingBlock){
+                return  enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
+            }
+            return 0;
         });
         register(ModEntities.STARBUNCLE_TYPE, (p ->{
             if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){

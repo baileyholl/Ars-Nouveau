@@ -220,6 +220,13 @@ public class Config {
         map.put("minecraft:redstone_torch", 10);
         map.put("minecraft:soul_torch", 10);
         map.put("minecraft:blaze_rod", 10);
+        map.put("minecraft:glow_berries", 8);
+        map.put("minecraft:lava_bucket", 15);
+        map.put("minecraft:lantern", 14);
+        map.put("minecraft:soul_lantern", 12);
+        map.put("minecraft:shroomlight", 10);
+        map.put("minecraft:glow_ink_sac", 10);
+        map.put("minecraft:nether_star", 14);
         return map;
     }
 

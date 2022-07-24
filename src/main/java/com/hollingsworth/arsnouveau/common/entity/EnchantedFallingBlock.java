@@ -72,7 +72,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     }
 
     public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState) {
-        this(ModEntities.FALLING_BLOCK, world);
+        this(ModEntities.ENCHANTED_FALLING_BLOCK, world);
         this.blockState = blockState;
         this.blocksBuilding = true;
         this.setPos(v, y, v1);
@@ -115,7 +115,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.FALLING_BLOCK;
+        return ModEntities.ENCHANTED_FALLING_BLOCK;
     }
 
     @Override

@@ -100,7 +100,7 @@ public class ModEntities {
     public static EntityType<WealdWalker> ENTITY_VEXING_WEALD = null;
     public static EntityType<AmethystGolem> AMETHYST_GOLEM = null;
     public static EntityType<ScryerCamera> SCRYER_CAMERA = null;
-    public static EntityType<EnchantedFallingBlock> FALLING_BLOCK = null;
+    public static EntityType<EnchantedFallingBlock> ENCHANTED_FALLING_BLOCK = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -249,7 +249,7 @@ public class ModEntities {
                     .sized(1.0f, 1.0f).setTrackingRange(10));
             SCRYER_CAMERA = build(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
                     .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
-            FALLING_BLOCK = build(
+            ENCHANTED_FALLING_BLOCK = build(
                     "enchanted_falling_block",
                     EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
                             .setShouldReceiveVelocityUpdates(true)
@@ -292,7 +292,7 @@ public class ModEntities {
                     AMETHYST_GOLEM,
                     SUMMON_SKELETON,
                     SCRYER_CAMERA,
-                    FALLING_BLOCK
+                    ENCHANTED_FALLING_BLOCK
             );
 
 
