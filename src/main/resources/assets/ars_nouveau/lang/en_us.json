@@ -305,7 +305,7 @@
 	"ars_nouveau.glyph_desc.cold_snap": "Snares and causes a burst of damage to an entity that is afflicted by Slowness or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE.",
 	"ars_nouveau.glyph_desc.conjure_water": "Places water at a location or extinguishes entities on fire.",
 	"ars_nouveau.glyph_desc.craft": "Opens the crafting menu.",
-	"ars_nouveau.glyph_desc.crush": "Turns stone into gravel, and gravel into sand. Will also harm entities and deals bonus damage to entities that are swimming.",
+	"ars_nouveau.glyph_desc.crush": "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming. Use runes or sensitive to target items.",
 	"ars_nouveau.glyph_desc.cut": "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. For simulating breaking with shears, see Break and Sensitive. Costs nothing.",
 	"ars_nouveau.glyph_desc.dampen": "Decreases the power of most spells. Decreases the mana cost slighty, but never below 0.",
 	"ars_nouveau.glyph_desc.delay": "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment, or decreased with Duration Down.",
