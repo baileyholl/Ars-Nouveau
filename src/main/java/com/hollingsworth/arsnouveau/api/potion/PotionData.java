@@ -24,6 +24,7 @@ public class PotionData {
         this.potion = potion;
         this.customEffects = customEffects;
         this.customEffects = customEffects.stream().filter(e -> !potion.getEffects().contains(e)).collect(Collectors.toList());
+
     }
 
     public PotionData(){
@@ -95,7 +96,7 @@ public class PotionData {
     }
 
     public boolean isEmpty(){
-        return potion == Potions.EMPTY;
+        return potion == Potions.EMPTY || potion == Potions.WATER || potion == Potions.MUNDANE;
     }
 
     public boolean areSameEffects(PotionData other){

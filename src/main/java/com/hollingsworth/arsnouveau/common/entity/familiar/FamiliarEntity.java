@@ -124,10 +124,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public PlayState walkPredicate(AnimationEvent event) {
         return PlayState.CONTINUE;
     }
+    public AnimationController controller;
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "walkController", 1, this::walkPredicate));
+        controller = new AnimationController<>(this, "walkController", 1, this::walkPredicate);
+        data.addAnimationController(controller);
     }
 
 
