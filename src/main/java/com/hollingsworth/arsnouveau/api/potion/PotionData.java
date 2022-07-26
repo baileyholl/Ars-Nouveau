@@ -96,7 +96,7 @@ public class PotionData {
     }
 
     public boolean isEmpty(){
-        return potion == Potions.EMPTY || potion == Potions.WATER || potion == Potions.MUNDANE;
+        return potion == Potions.EMPTY || potion == Potions.WATER || potion == Potions.MUNDANE || fullEffects().isEmpty();
     }
 
     public boolean areSameEffects(PotionData other){
