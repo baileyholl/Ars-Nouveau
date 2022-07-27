@@ -41,11 +41,24 @@ public class KeyHandler {
 
     public static void checkCasterKeys(int key){
         Player player = MINECRAFT.player;
+        ItemStack radialStack = StackUtil.getHeldRadial(player);
+        if(radialStack.getItem() instanceof IRadialProvider radialProvider && key == ((IRadialProvider) radialStack.getItem()).forKey()) {
+            if (MINECRAFT.screen == null) {
+                radialProvider.onRadialKeyPressed(radialStack, player);
+                return;
+            }else if(MINECRAFT.screen instanceof GuiRadialMenu){
+                MINECRAFT.player.closeContainer();
+                return;
+            }
+        }
+
         InteractionHand hand = StackUtil.getHeldCasterTool(player);
         if(hand == null)
             return;
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.isEmpty() || !(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener))
+        if(stack.isEmpty())
+            return;
+        if (!(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener))
             return;
 
         if (key == ModKeyBindings.NEXT_SLOT.getKey().getValue()) {
@@ -58,12 +71,6 @@ public class KeyHandler {
             return;
         }
 
-        if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
-            if (MINECRAFT.screen == null) {
-                hotkeyListener.onRadialKeyPressed(stack, player);
-                return;
-            }
-        }
 
         if (key == ModKeyBindings.OPEN_BOOK.getKey().getValue()) {
             if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spell_name.isFocused()) {

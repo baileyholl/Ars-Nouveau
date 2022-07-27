@@ -3,7 +3,7 @@
 	"key.ars_nouveau.previous_slot": "(Spell Book) Previous Slot",
 	"key.ars_nouveau.next_slot": "(Spell Book) Next Slot",
 	"key.ars_nouveau.open_book": "(Spell Book) Open Book",
-	"key.ars_nouveau.selection_hud": "(Spell Book) Toggle Selection HUD",
+	"key.ars_nouveau.selection_hud": "Toggle Selection HUD",
 
 	"itemGroup.ars_nouveau":"Ars Nouveau",
 	"item.ars_nouveau.novice_spell_book":"Novice Spell Book",

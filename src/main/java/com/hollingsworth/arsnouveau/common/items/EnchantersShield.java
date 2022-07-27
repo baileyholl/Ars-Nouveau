@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.client.renderer.item.ShieldRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.item.FixedGeoItemRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.item.ShieldModel;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.InteractionHand;
@@ -32,7 +33,6 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
-        super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
         if (world.isClientSide() || world.getGameTime() % 200 != 0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
             return;
 
@@ -60,12 +60,6 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
         return factory;
     }
 
-//    @Override
-//    public boolean isShield(ItemStack stack, @Nullable LivingEntity entity) {
-//        return true;
-//    }
-//
-
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
@@ -75,7 +69,7 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new ShieldRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new FixedGeoItemRenderer<EnchantersShield>(new ShieldModel());
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {

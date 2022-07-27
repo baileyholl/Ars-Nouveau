@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
+import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetLauncher;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -56,7 +57,7 @@ public abstract class PotionLauncher extends ModItem implements IRadialProvider 
     @OnlyIn(Dist.CLIENT)
     @Override
     public int forKey() {
-        return 0;
+        return ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -121,6 +122,11 @@ public abstract class PotionLauncher extends ModItem implements IRadialProvider 
 
         public PotionLauncherData(ItemStack stack) {
             super(stack);
+            CompoundTag tag = getItemTag(stack);
+            if(tag == null)
+                return;
+            lastDataForRender = PotionData.fromTag(tag.getCompound("lastDataForRender"));
+            lastSlot = tag.getInt("lastSlot");
         }
 
         public PotionData getPotionDataFromSlot(Player player){
@@ -164,7 +170,8 @@ public abstract class PotionLauncher extends ModItem implements IRadialProvider 
 
         @Override
         public void writeToNBT(CompoundTag tag) {
-
+            tag.putInt("lastSlot", lastSlot);
+            tag.put("lastDataForRender", lastDataForRender.toTag());
         }
 
         @Override
