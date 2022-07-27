@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
+import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class PotionFlask extends ModItem {
+public abstract class PotionFlask extends ModItem implements IPotionProvider {
 
     public PotionFlask() {
         this(ItemsRegistry.defaultItemProperties().stacksTo(1).durability(8));
@@ -74,9 +73,6 @@ public abstract class PotionFlask extends ModItem {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
         Player playerentity = entityLiving instanceof Player player ? player : null;
-        if (playerentity instanceof ServerPlayer serverPlayer) {
-            CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
-        }
 
         if (!worldIn.isClientSide) {
             FlaskData data = new FlaskData(stack);
@@ -141,6 +137,12 @@ public abstract class PotionFlask extends ModItem {
         data.potionData.appendHoverText(tooltip);
     }
 
+    @Override
+    public PotionData getPotionData(ItemStack stack) {
+        FlaskData data = new FlaskData(stack);
+        return new EnchantedPotionData(data.potionData, data.stack.getItem());
+    }
+
     public static class FlaskData extends ItemstackData {
         private PotionData potionData;
         private int count;
@@ -153,19 +155,6 @@ public abstract class PotionFlask extends ModItem {
                 return;
             potionData = PotionData.fromTag(tag.getCompound("PotionData"));
             this.count = tag.getInt("count");
-        }
-
-        public void apply(@Nullable Entity directApplier, @Nullable Entity indirectApplier, LivingEntity target){
-            if(!(stack.getItem() instanceof PotionFlask potionFlask))
-                return;
-            for (MobEffectInstance effectinstance : getPotion().fullEffects()) {
-                effectinstance = potionFlask.getEffectInstance(effectinstance);
-                if (effectinstance.getEffect().isInstantenous()) {
-                    effectinstance.getEffect().applyInstantenousEffect(directApplier, indirectApplier, target, effectinstance.getAmplifier(), 1.0D);
-                } else {
-                    target.addEffect(new MobEffectInstance(effectinstance), directApplier);
-                }
-            }
         }
 
         public void setCount(int count) {
@@ -186,7 +175,7 @@ public abstract class PotionFlask extends ModItem {
         }
 
         public PotionData getPotion() {
-            return potionData;
+            return this.getCount() <= 0 ? new PotionData() : potionData;
         }
 
         @Override
@@ -198,6 +187,36 @@ public abstract class PotionFlask extends ModItem {
         @Override
         public String getTagString() {
             return "an_potion_flask";
+        }
+    }
+
+    public static class EnchantedPotionData extends PotionData{
+        public Item flaskPotion;
+
+        public EnchantedPotionData(ItemStack stack) {
+            super(stack);
+            flaskPotion = stack.getItem();
+        }
+
+        public EnchantedPotionData(PotionData potionData, Item item) {
+            super(potionData);
+            flaskPotion = item;
+        }
+
+        @Override
+        public void applyEffects(Entity source, Entity inDirectSource, LivingEntity target) {
+            if(!(flaskPotion instanceof PotionFlask potionFlask)) {
+                super.applyEffects(source, inDirectSource, target);
+                return;
+            }
+            for (MobEffectInstance effectinstance : fullEffects()) {
+                effectinstance = potionFlask.getEffectInstance(effectinstance);
+                if (effectinstance.getEffect().isInstantenous()) {
+                    effectinstance.getEffect().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
+                } else {
+                    target.addEffect(new MobEffectInstance(effectinstance), source);
+                }
+            }
         }
     }
 }

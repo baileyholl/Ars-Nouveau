@@ -67,11 +67,11 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public int getColor() {
-        return this.data.potion == null ? 16253176 : PotionUtils.getColor(this.data.fullEffects());
+        return this.data.getPotion() == null ? 16253176 : PotionUtils.getColor(this.data.fullEffects());
     }
 
     public boolean canAccept(PotionData otherData, int amount){
-        if(otherData == null || otherData.potion == Potions.EMPTY)
+        if(otherData == null || otherData.getPotion() == Potions.EMPTY)
             return false;
         return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && otherData.areSameEffects(this.data));
     }

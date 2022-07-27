@@ -16,15 +16,13 @@ import net.minecraft.world.item.alchemy.Potions;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PotionData {
-    public Potion potion;
-    public List<MobEffectInstance> customEffects;
+public class PotionData implements Cloneable{
+    private Potion potion;
+    private List<MobEffectInstance> customEffects;
 
     public PotionData(Potion potion, List<MobEffectInstance> customEffects) {
         this.potion = potion;
-        this.customEffects = customEffects;
-        this.customEffects = customEffects.stream().filter(e -> !potion.getEffects().contains(e)).collect(Collectors.toList());
-
+        setCustomEffects(customEffects);
     }
 
     public PotionData(){
@@ -32,36 +30,47 @@ public class PotionData {
     }
 
     public PotionData(ItemStack stack){
-        this(PotionUtils.getPotion(stack), PotionUtils.getMobEffects(stack));
+        if(stack.getItem() instanceof IPotionProvider provider){
+            PotionData data = provider.getPotionData(stack).clone();
+            this.potion = data.getPotion();
+            this.customEffects = data.getCustomEffects();
+        }else{
+            this.potion = PotionUtils.getPotion(stack);
+            setCustomEffects(PotionUtils.getCustomEffects(stack));
+        }
     }
 
     public PotionData(Potion potion){
         this(potion, new ArrayList<>());
     }
 
+    public PotionData(PotionData data){
+        this(data.getPotion(), new ArrayList<>(data.getCustomEffects()));
+    }
+
     public ItemStack asPotionStack(){
         ItemStack potionStack = new ItemStack(Items.POTION);
-        if(this.potion == Potions.EMPTY)
+        if(this.getPotion() == Potions.EMPTY)
             return potionStack;
-        PotionUtils.setPotion(potionStack, this.potion);
-        PotionUtils.setCustomEffects(potionStack, customEffects);
+        PotionUtils.setPotion(potionStack, this.getPotion());
+        PotionUtils.setCustomEffects(potionStack, getCustomEffects());
         return potionStack;
     }
 
     public static PotionData fromTag(CompoundTag tag){
         PotionData instance = new PotionData();
-        instance.potion = PotionUtils.getPotion(tag);
-        instance.customEffects.addAll(PotionUtils.getCustomEffects(tag));
+        instance.setPotion(PotionUtils.getPotion(tag));
+        instance.getCustomEffects().addAll(PotionUtils.getCustomEffects(tag));
         return instance;
     }
 
     public CompoundTag toTag(){
         CompoundTag tag = new CompoundTag();
-        tag.putString("Potion", Registry.POTION.getKey(potion).toString());
-        if (!customEffects.isEmpty()) {
+        tag.putString("Potion", Registry.POTION.getKey(getPotion()).toString());
+        if (!getCustomEffects().isEmpty()) {
             ListTag listnbt = new ListTag();
 
-            for (MobEffectInstance effectinstance : customEffects) {
+            for (MobEffectInstance effectinstance : getCustomEffects()) {
                 listnbt.add(effectinstance.save(new CompoundTag()));
             }
 
@@ -71,8 +80,8 @@ public class PotionData {
     }
 
     public List<MobEffectInstance> fullEffects(){
-        List<MobEffectInstance> thisEffects = new ArrayList<>(customEffects);
-        thisEffects.addAll(potion.getEffects());
+        List<MobEffectInstance> thisEffects = new ArrayList<>(getCustomEffects());
+        thisEffects.addAll(getPotion().getEffects());
         return thisEffects;
     }
 
@@ -96,7 +105,7 @@ public class PotionData {
     }
 
     public boolean isEmpty(){
-        return potion == Potions.EMPTY || potion == Potions.WATER || potion == Potions.MUNDANE || fullEffects().isEmpty();
+        return getPotion() == Potions.EMPTY || getPotion() == Potions.WATER || getPotion() == Potions.MUNDANE || fullEffects().isEmpty();
     }
 
     public boolean areSameEffects(PotionData other){
@@ -105,15 +114,15 @@ public class PotionData {
 
     public PotionData mergeEffects(PotionData other){
         if(areSameEffects(other))
-            return new PotionData(potion, customEffects);
+            return new PotionData(getPotion(), getCustomEffects());
         Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(this.fullEffects());
         set.addAll(other.fullEffects());
-        return new PotionData(potion, new ArrayList<>(set));
+        return new PotionData(getPotion(), new ArrayList<>(set));
     }
 
     public void appendHoverText(List<Component> tooltip) {
-        if(potion == Potions.EMPTY)
+        if(getPotion() == Potions.EMPTY)
             return;
         ItemStack potionStack = asPotionStack();
         tooltip.add(potionStack.getHoverName());
@@ -123,5 +132,33 @@ public class PotionData {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PotionData other && areSameEffects(other);
+    }
+
+    @Override
+    public PotionData clone() {
+        try {
+            PotionData clone = (PotionData) super.clone();
+            clone.setPotion(getPotion());
+            clone.setCustomEffects(new ArrayList<>(getCustomEffects()));
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public Potion getPotion() {
+        return potion;
+    }
+
+    public void setPotion(Potion potion) {
+        this.potion = potion;
+    }
+
+    public List<MobEffectInstance> getCustomEffects() {
+        return customEffects;
+    }
+
+    public void setCustomEffects(List<MobEffectInstance> customEffects) {
+        this.customEffects = customEffects.stream().filter(e -> !potion.getEffects().contains(e)).collect(Collectors.toList());
     }
 }

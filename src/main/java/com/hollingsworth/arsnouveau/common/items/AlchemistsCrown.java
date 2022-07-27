@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,6 +26,9 @@ import java.util.List;
 
 public class AlchemistsCrown extends ModItem implements IRadialProvider {
 
+    public AlchemistsCrown(Properties properties) {
+        super(properties);
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
@@ -47,17 +49,10 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
             if(slots.size() >= 9)
                 break;
             ItemStack item = player.inventory.getItem(i);
-            if(item.getItem() instanceof PotionFlask){
-                PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(item);
-                if(flaskData.getCount() <= 0 || flaskData.getPotion().isEmpty())
-                    continue;
-                slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new SlotData(i, item)));
-            }else if(item.getItem() instanceof PotionItem){
-                PotionData data = new PotionData(item);
-                if(data.isEmpty())
-                    continue;
-                slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new SlotData(i, item)));
-            }
+            PotionData potionData = new PotionData(item);
+            if(potionData.isEmpty())
+                continue;
+            slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new AlchemistsCrown.SlotData(i, item)));
         }
         if(slots.isEmpty()) {
             PortUtil.sendMessage(Minecraft.getInstance().player, Component.translatable("ars_nouveau.alchemists_crown.no_flasks"));
@@ -68,5 +63,12 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.stack, posestack, positionx, posy, size, transparent), 3)));
     }
 
-    public record SlotData(int slot, ItemStack stack){}
+    public record SlotData(int slot, ItemStack stack){
+        public int getSlot() {
+            return slot;
+        }
+        public ItemStack getStack() {
+            return stack;
+        }
+    }
 }

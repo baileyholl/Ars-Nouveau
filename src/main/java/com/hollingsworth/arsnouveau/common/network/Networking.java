@@ -202,6 +202,12 @@ public class Networking {
                 PacketConsumePotion::toBytes,
                 PacketConsumePotion::new,
                 PacketConsumePotion::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketSetLauncher.class,
+                PacketSetLauncher::toBytes,
+                PacketSetLauncher::new,
+                PacketSetLauncher::handle);
+
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

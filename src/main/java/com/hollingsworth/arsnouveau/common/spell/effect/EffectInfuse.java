@@ -36,12 +36,10 @@ public class EffectInfuse extends AbstractEffect {
             });
             if (!flask.isEmpty()) {
                 PotionFlask.FlaskData data = new PotionFlask.FlaskData(flask);
-                data.apply(shooter, shooter, livingEntity);
+                data.getPotion().applyEffects(shooter, shooter, livingEntity);
                 data.setCount(data.getCount() - 1);
             } else {
-                ItemStack potion = getItemFromCaster(shooter, spellContext, (i) -> {
-                    return i.getItem() instanceof PotionItem;
-                });
+                ItemStack potion = getItemFromCaster(shooter, spellContext, (i) -> i.getItem() instanceof PotionItem);
                 if (!potion.isEmpty()) {
                     PotionData potionData = new PotionData(potion);
                     potionData.applyEffects(shooter, shooter, livingEntity);

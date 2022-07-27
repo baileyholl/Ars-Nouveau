@@ -209,6 +209,6 @@ public class ClientHandler {
 
     public static int colorFromFlask(ItemStack stack) {
         PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
-        return data.getPotion().potion == Potions.EMPTY ? -1 : PotionUtils.getColor(data.getPotion().asPotionStack());
+        return data.getPotion().getPotion() == Potions.EMPTY ? -1 : PotionUtils.getColor(data.getPotion().asPotionStack());
     }
 }

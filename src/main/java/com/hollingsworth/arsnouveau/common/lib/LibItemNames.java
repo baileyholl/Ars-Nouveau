@@ -125,4 +125,7 @@ public class LibItemNames {
     public static final String MENDOSTEEN = "mendosteen";
     public static final String BASTION_FRUIT = "bastion_fruit";
     public static final String WIXIE_HAT = "wixie_hat";
+
+    public static final String SPLASH_LAUNCHER = "splash_launcher";
+    public static final String LINGERING_LAUNCHER = "lingering_launcher";
 }

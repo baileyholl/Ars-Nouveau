@@ -53,6 +53,7 @@ public class ModKeyBindings {
         event.register(OPEN_RADIAL_HUD);
         event.register(NEXT_SLOT);
         event.register(PREVIOUS_SLOT);
+        event.register(HEAD_CURIO_HOTKEY);
         event.register(QC_1);
         event.register(QC_2);
         event.register(QC_3);
