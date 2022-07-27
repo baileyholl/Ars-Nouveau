@@ -53,7 +53,7 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
                 data.setCount(data.getCount() + 1);
                 jarTile.remove(100);
             }else if (data.getCount() == 0){
-                data.potionData = jarTile.getData();
+                data.setPotion(jarTile.getData());
                 data.setCount(data.getCount() + 1);
                 jarTile.remove(100);
             }
@@ -144,23 +144,23 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
     }
 
     public static class FlaskData extends ItemstackData {
-        private PotionData potionData;
+        private EnchantedPotionData potionData;
         private int count;
 
         public FlaskData(ItemStack stack) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
-            potionData = new PotionData();
+            potionData = new EnchantedPotionData();
             if(tag == null)
                 return;
-            potionData = PotionData.fromTag(tag.getCompound("PotionData"));
+            potionData = new EnchantedPotionData(PotionData.fromTag(tag.getCompound("PotionData")), stack.getItem());
             this.count = tag.getInt("count");
         }
 
         public void setCount(int count) {
             this.count = Math.max(count, 0);
             if(count <= 0){
-                potionData = new PotionData();
+                potionData = new EnchantedPotionData();
             }
             writeItem();
         }
@@ -170,12 +170,12 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
         }
 
         public void setPotion(PotionData potion) {
-            potionData = potion;
+            potionData = new EnchantedPotionData(potion, stack.getItem());
             writeItem();
         }
 
         public PotionData getPotion() {
-            return this.getCount() <= 0 ? new PotionData() : potionData;
+            return this.getCount() <= 0 ? new PotionData() : new EnchantedPotionData(potionData, stack.getItem());
         }
 
         @Override
@@ -196,6 +196,10 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
         public EnchantedPotionData(ItemStack stack) {
             super(stack);
             flaskPotion = stack.getItem();
+        }
+
+        public EnchantedPotionData(){
+            super();
         }
 
         public EnchantedPotionData(PotionData potionData, Item item) {
