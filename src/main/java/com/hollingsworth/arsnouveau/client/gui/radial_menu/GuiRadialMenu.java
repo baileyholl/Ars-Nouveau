@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -47,15 +46,6 @@ public class GuiRadialMenu<T> extends Screen {
 
     public GuiRadialMenu() {
         super(Component.literal(""));
-    }
-
-    @SubscribeEvent
-    public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
-            if (event.getType() == RenderGameOverlayEvent.ElementType.LAYER) {
-                event.setCanceled(true);
-            }
-        }
     }
 
     @SubscribeEvent

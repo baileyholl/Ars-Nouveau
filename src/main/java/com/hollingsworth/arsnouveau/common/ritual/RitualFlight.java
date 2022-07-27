@@ -104,15 +104,15 @@ public class RitualFlight extends AbstractRitual {
 
         @SubscribeEvent
         public static void refreshFlight(FlightRefreshEvent e) {
-            if (!e.getEntityLiving().level.isClientSide) {
-                BlockPos validPos = canPlayerStillFly(e.getEntityLiving());
-                boolean wasFlying = e.getPlayer().abilities.flying;
+            if (!e.getEntity().level.isClientSide) {
+                BlockPos validPos = canPlayerStillFly(e.getEntity());
+                boolean wasFlying = e.getEntity().abilities.flying;
                 if (validPos != null && wasFlying) {
-                    e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 60 * 20));
-                    e.getPlayer().abilities.mayfly = true;
-                    e.getPlayer().abilities.flying = wasFlying;
-                    Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
-                    BlockEntity tile = e.getPlayer().level.getBlockEntity(validPos);
+                    e.getEntity().addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 60 * 20));
+                    e.getEntity().abilities.mayfly = true;
+                    e.getEntity().abilities.flying = wasFlying;
+                    Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getEntity());
+                    BlockEntity tile = e.getEntity().level.getBlockEntity(validPos);
                     if (tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight) {
                         ((RitualBrazierTile) tile).ritual.setNeedsSource(true);
                     }

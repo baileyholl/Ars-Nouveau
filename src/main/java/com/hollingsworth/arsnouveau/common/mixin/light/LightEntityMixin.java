@@ -86,7 +86,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
         if (level.isClientSide && !LightManager.shouldUpdateDynamicLight()) {
             lambdynlights$luminance = 0;
         }
-        if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight() && LightManager.getLightRegistry().containsKey(getType())) {
+        if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight()) {
             if (this.isRemoved()) {
                 this.setDynamicLightEnabled(false);
             } else {
@@ -139,13 +139,13 @@ public abstract class LightEntityMixin implements LambDynamicLight {
 
     @Override
     public boolean shouldUpdateDynamicLight() {
-        return LightManager.shouldUpdateDynamicLight() && LightManager.getLightRegistry().containsKey(getType());
+        return LightManager.shouldUpdateDynamicLight() && DynamLightUtil.couldGiveLight((Entity) (Object) this);
     }
 
     @Override
     public void dynamicLightTick() {
         lambdynlights$luminance = 0;
-        int luminance = DynamLightUtil.getLuminance((Entity) (Object) this);
+        int luminance = DynamLightUtil.lightForEntity((Entity) (Object) this);
         if (luminance > this.lambdynlights$luminance)
             this.lambdynlights$luminance = luminance;
     }

@@ -7,6 +7,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class BlankParchmentItem extends ModItem {
     public BlankParchmentItem(Properties properties) {
         super(properties);

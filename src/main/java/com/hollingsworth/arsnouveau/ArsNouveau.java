@@ -29,7 +29,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import static com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator.GLM;
+
 
 @Mod(ArsNouveau.MODID)
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -47,7 +47,9 @@ public class ArsNouveau {
         }
     };
 
-    public ArsNouveau() {
+    public ArsNouveau(){
+        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
+
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
 
@@ -55,7 +57,6 @@ public class ArsNouveau {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
-        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(ModSetup::registerEvents);
@@ -66,7 +67,7 @@ public class ArsNouveau {
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
-        GLM.register(modEventBus);
+//        GLM.register(modEventBus);
     }
 
     public void setup(final FMLCommonSetupEvent event) {

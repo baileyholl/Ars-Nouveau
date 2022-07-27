@@ -34,7 +34,7 @@ import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class ModEntities {
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
 
     static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.Builder<T> builder) {
         return ENTITIES.register(name, () -> builder.build(MODID + ":" + name));
@@ -202,7 +202,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<ScryerCamera>> SCRYER_CAMERA = registerEntity(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
             .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
 
-    public static final RegistryObject<EntityType<EnchantedFallingBlock>> FALLING_BLOCK = registerEntity(
+    public static final RegistryObject<EntityType<EnchantedFallingBlock>> ENCHANTED_FALLING_BLOCK = registerEntity(
             "enchanted_falling_block", (
                     EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
                             .setShouldReceiveVelocityUpdates(true)

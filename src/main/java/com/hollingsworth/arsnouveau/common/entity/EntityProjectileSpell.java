@@ -34,6 +34,8 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityProjectileSpell extends ColoredProjectile {
 
     public int age;

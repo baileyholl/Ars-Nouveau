@@ -24,7 +24,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '3.0.9'
+version = '3.1.1'
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -147,7 +147,7 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:23.0.0'
 
-    implementation fg.deobf("vazkii.patchouli:Patchouli:1.19-73")
+    implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
@@ -158,19 +158,19 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
 
-    implementation /*compileOnly*/ fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.0.117")
+    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.0.117")
 
 //    implementation fg.deobf("curse.maven:exp-64760:3577168")
 //    runtimeOnly fg.deobf("curse.maven:tmg-560595:3721969") // TMG
 
-    /*implementation*/compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
+    /*implementation*///compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
 //    implementation fg.deobf("curse.maven:byg-247560:3848133") // BYG
 //    implementation fg.deobf("curse.maven:bop-220318:3852435") // BOP
 
-    implementation fg.deobf("curse.maven:exp-541676:3832812") // Cyanide
+    implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-
+    //runtimeOnly fg.deobf("curse.maven:ruby-574856:3864138") // Rubidium
 
 }
 

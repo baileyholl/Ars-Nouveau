@@ -118,7 +118,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     public void clearItems() {
         for (BlockPos blockPos : pedestalList()) {
             if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.stack != null) {
-                tile.stack = tile.stack.getContainerItem();
+                tile.stack = tile.stack.getCraftingRemainingItem();
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);
                 tile.setChanged();

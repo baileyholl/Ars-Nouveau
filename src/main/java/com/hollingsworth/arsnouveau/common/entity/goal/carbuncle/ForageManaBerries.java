@@ -19,6 +19,8 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.SourceBerryBush.AGE;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class ForageManaBerries extends Goal {
     private final Starbuncle entity;
     private final Level world;

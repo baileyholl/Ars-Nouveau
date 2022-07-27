@@ -90,7 +90,7 @@ public class CapabilityRegistry {
         public static void playerClone(PlayerEvent.Clone event) {
             Player oldPlayer = event.getOriginal();
             oldPlayer.revive();
-            getMana(oldPlayer).ifPresent(oldMaxMana -> getMana(event.getPlayer()).ifPresent(newMaxMana -> {
+            getMana(oldPlayer).ifPresent(oldMaxMana -> getMana(event.getEntity()).ifPresent(newMaxMana -> {
                 newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
                 newMaxMana.setMana(oldMaxMana.getCurrentMana());
                 newMaxMana.setBookTier(oldMaxMana.getBookTier());
@@ -98,10 +98,10 @@ public class CapabilityRegistry {
             }));
 
             getPlayerDataCap(oldPlayer).ifPresent(oldPlayerCap -> {
-                IPlayerCap playerDataCap = getPlayerDataCap(event.getPlayer()).orElse(new ANPlayerDataCap());
+                IPlayerCap playerDataCap = getPlayerDataCap(event.getEntity()).orElse(new ANPlayerDataCap());
                 CompoundTag tag = oldPlayerCap.serializeNBT();
                 playerDataCap.deserializeNBT(tag);
-                syncPlayerCap(event.getPlayer());
+                syncPlayerCap(event.getEntity());
             });
             event.getOriginal().invalidateCaps();
         }
@@ -109,30 +109,30 @@ public class CapabilityRegistry {
 
         @SubscribeEvent
         public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer) {
-                syncPlayerCap(event.getPlayer());
+            if (event.getEntity() instanceof ServerPlayer) {
+                syncPlayerCap(event.getEntity());
             }
         }
 
         @SubscribeEvent
         public static void respawnEvent(PlayerEvent.PlayerRespawnEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer) {
-                syncPlayerCap(event.getPlayer());
+            if (event.getEntity() instanceof ServerPlayer) {
+                syncPlayerCap(event.getEntity());
             }
         }
 
 
         @SubscribeEvent
         public static void onPlayerStartTrackingEvent(PlayerEvent.StartTracking event) {
-            if (event.getTarget() instanceof Player && event.getPlayer() instanceof ServerPlayer) {
-                syncPlayerCap(event.getPlayer());
+            if (event.getTarget() instanceof Player && event.getEntity() instanceof ServerPlayer) {
+                syncPlayerCap(event.getEntity());
             }
         }
 
         @SubscribeEvent
         public static void onPlayerDimChangedEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer) {
-                syncPlayerCap(event.getPlayer());
+            if (event.getEntity() instanceof ServerPlayer) {
+                syncPlayerCap(event.getEntity());
             }
         }
 

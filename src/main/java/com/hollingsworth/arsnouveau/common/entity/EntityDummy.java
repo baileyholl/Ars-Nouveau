@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class EntityDummy extends PathfinderMob implements ISummon {
     private PlayerInfo playerInfo;
     public int ticksLeft;

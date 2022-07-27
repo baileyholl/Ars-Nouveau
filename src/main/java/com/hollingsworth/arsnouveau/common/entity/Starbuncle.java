@@ -63,7 +63,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -304,7 +303,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     protected void addGoalsAfterConstructor() {
         if (this.level.isClientSide())
             return;
-
+        this.goalSelector.availableGoals.clear();
         for (WrappedGoal goal : getGoals()) {
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
@@ -483,6 +482,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.dynamicBehavior = BehaviorRegistry.create(this, data.behaviorTag);
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
             this.addGoalsAfterConstructor();
+        }else if(this.isTamed()){
+            this.dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
+            this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+            this.addGoalsAfterConstructor();
         }
     }
 
@@ -539,10 +542,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
-        @Nonnull
-        public List<BlockPos> TO_LIST = new ArrayList<>();
-        @Nonnull
-        public List<BlockPos> FROM_LIST = new ArrayList<>();
         public Block pathBlock;
         public BlockPos bedPos;
         public CompoundTag behaviorTag;

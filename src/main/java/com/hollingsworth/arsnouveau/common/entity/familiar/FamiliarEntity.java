@@ -43,6 +43,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable, IDecoratable {
 
     public double manaReserveModifier = 0.15;

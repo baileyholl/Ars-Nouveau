@@ -22,7 +22,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -58,11 +58,11 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         return super.mobInteract(player, hand);
     }
 
-    public void potionEvent(PotionEvent.PotionAddedEvent event) {
+    public void potionEvent(MobEffectEvent.Added event) {
         if (!isAlive())
             return;
         if (event.getEntity() != null && !event.getEntity().level.isClientSide && event.getEntity().equals(getOwner())) {
-            event.getPotionEffect().duration += event.getPotionEffect().duration * .2;
+            event.getEffectInstance().duration += event.getEffectInstance().duration * .2;
         }
     }
 

@@ -58,7 +58,7 @@ public class GravityEffect extends MobEffect {
 
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent e) {
-        if (e.getSource().equals(DamageSource.FALL) && e.getEntityLiving().hasEffect(ModPotions.GRAVITY_EFFECT.get())) {
+        if (e.getSource().equals(DamageSource.FALL) && e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT.get())) {
             e.setAmount(e.getAmount() * 2.0f);
         }
     }

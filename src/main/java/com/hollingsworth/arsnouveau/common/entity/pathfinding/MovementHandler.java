@@ -19,6 +19,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Custom movement handler for minecolonies citizens (avoid jumping so much).
  * Note that the "speed" variable of the super is a speedFactor to our attributes base speed.
  */
+
+/**
+ * Custom movement handler for minecolonies citizens (avoid jumping so much).
+ * Note that the "speed" variable of the super is a speedFactor to our attributes base speed.
+ */
 public class MovementHandler extends MoveControl {
 
     /**
@@ -46,8 +51,8 @@ public class MovementHandler extends MoveControl {
             totalMovement = speed / totalMovement;
             forward = forward * totalMovement;
             strafe = strafe * totalMovement;
-            final float sinRotation = Mth.sin(this.mob.yRot * ((float) Math.PI / 180F));
-            final float cosRotation = Mth.cos(this.mob.yRot * ((float) Math.PI / 180F));
+            final float sinRotation = Mth.sin(this.mob.getYRot() * ((float) Math.PI / 180F));
+            final float cosRotation = Mth.cos(this.mob.getYRot() * ((float) Math.PI / 180F));
             final float rot1 = forward * cosRotation - strafe * sinRotation;
             final float rot2 = strafe * cosRotation + forward * sinRotation;
             final PathNavigation pathnavigator = this.mob.getNavigation();
@@ -78,13 +83,13 @@ public class MovementHandler extends MoveControl {
             }
 
             final float range = (float) (Mth.atan2(zDif, xDif) * (double) (180F / (float) Math.PI)) - 90.0F;
-            this.mob.yRot = this.rotlerp(this.mob.yRot, range, 90.0F);
+            this.mob.setYRot(this.rotlerp(this.mob.getYRot(), range, 90.0F));
             this.mob.setSpeed((float) (this.speedModifier * speedAtr.getValue()));
             final BlockPos blockpos = new BlockPos(this.mob.position());
             final BlockState blockstate = this.mob.level.getBlockState(blockpos);
             final Block block = blockstate.getBlock();
             final VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
-            if ((yDif > 0.6 && xDif * xDif + zDif * zDif < (double) Math.max(1.0F, this.mob.getBbWidth()))
+            if ((yDif > this.mob.getStepHeight() && xDif * xDif + zDif * zDif < (double) Math.max(1.0F, this.mob.getBbWidth()))
                     || (!voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double) blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(
                     BlockTags.FENCES) && !blockstate.is(BlockTags.FENCE_GATES))
                     && !block.isLadder(blockstate, this.mob.level, blockpos, this.mob)) {

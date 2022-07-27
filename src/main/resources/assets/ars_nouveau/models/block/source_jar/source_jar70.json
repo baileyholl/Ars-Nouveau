@@ -1,6 +1,10 @@
 {
 	"credit": "Made with Blockbench",
-	"texture_size": [64, 64],
+	"render_type": "cutout",
+	"texture_size": [
+		64,
+		64
+	],
 	"textures": {
 		"0": "ars_nouveau:blocks/mana_still",
 		"2": "ars_nouveau:blocks/source_jar",
@@ -8,8 +12,16 @@
 	},
 	"elements": [
 		{
-			"from": [3, 14, 3],
-			"to": [13, 16, 13],
+			"from": [
+				3,
+				14,
+				3
+			],
+			"to": [
+				13,
+				16,
+				13
+			],
 			"faces": {
 				"north": {"uv": [7.5, 8, 10, 8.5], "texture": "#2"},
 				"east": {"uv": [8, 7.5, 10.5, 8], "texture": "#2"},

@@ -5,6 +5,8 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class AnimBlockItem extends ModBlockItem implements IAnimatable {
     AnimationFactory manager = new AnimationFactory(this);
 

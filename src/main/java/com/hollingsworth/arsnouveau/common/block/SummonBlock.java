@@ -11,6 +11,8 @@ import javax.annotation.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public abstract class SummonBlock extends TickableModBlock {
 
     public SummonBlock(Properties properties) {

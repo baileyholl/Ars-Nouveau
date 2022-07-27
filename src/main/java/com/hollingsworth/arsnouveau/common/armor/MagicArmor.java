@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.UUID;
 
+
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IPerkHolder {
 
     public MagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {

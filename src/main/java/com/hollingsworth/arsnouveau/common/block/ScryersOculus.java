@@ -31,6 +31,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class ScryersOculus extends TickableModBlock {
 
     public ScryersOculus() {

@@ -1,7 +1,8 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "block/crop",
-	"textures": {
-		"crop" :"ars_nouveau:blocks/manabloom/stage1"
-	}
+  "credit": "Made with Blockbench",
+  "parent": "block/crop",
+  "textures": {
+    "crop": "ars_nouveau:blocks/manabloom/stage1"
+  },
+  "render_type": "cutout"
 }

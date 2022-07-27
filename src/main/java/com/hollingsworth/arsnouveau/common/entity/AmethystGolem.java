@@ -55,6 +55,8 @@ import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);

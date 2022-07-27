@@ -19,6 +19,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public abstract class ItemScroll extends ModItem implements IScribeable {
 
     public ItemScroll() {

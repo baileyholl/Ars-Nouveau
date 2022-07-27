@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
@@ -262,10 +264,10 @@ public abstract class AbstractPathJob implements Callable<Path> {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(Mth.floor(entity.getX()),
                 Mth.floor(entity.getY()),
                 Mth.floor(entity.getZ()));
-        BlockState bs = entity.level.getBlockState(pos);
-
+        final Level level = entity.level;
+        BlockState bs = level.getBlockState(pos);
         // 1 Up when we're standing within this collision shape
-        final VoxelShape collisionShape = bs.getCollisionShape(entity.level, pos);
+        final VoxelShape collisionShape = bs.getCollisionShape(level, pos);
         if (bs.getMaterial().blocksMotion() && collisionShape.max(Direction.Axis.Y) > 0) {
             final double relPosX = Math.abs(entity.getX() % 1);
             final double relPosZ = Math.abs(entity.getZ() % 1);
@@ -275,17 +277,18 @@ public abstract class AbstractPathJob implements Callable<Path> {
                         && relPosZ >= box.minZ && relPosZ <= box.maxZ
                         && box.maxY > 0) {
                     pos.set(pos.getX(), pos.getY() + 1, pos.getZ());
-                    bs = entity.level.getBlockState(pos);
+                    bs = level.getBlockState(pos);
                     break;
                 }
             }
         }
 
-        BlockState down = entity.level.getBlockState(pos.below());
-        while (!bs.getMaterial().blocksMotion() && !down.getMaterial().blocksMotion() && !down.getBlock().isLadder(down, entity.getCommandSenderWorld(), pos.below(), entity) && bs.getFluidState().isEmpty()) {
+        BlockState down = level.getBlockState(pos.below());
+        while (!bs.getMaterial().blocksMotion() && !down.getMaterial().blocksMotion() && !down.getBlock().isLadder(down, level, pos.below(), entity) && down.getFluidState()
+                .isEmpty()) {
             pos.move(Direction.DOWN, 1);
             bs = down;
-            down = entity.level.getBlockState(pos.below());
+            down = level.getBlockState(pos.below());
 
             if (pos.getY() < entity.getCommandSenderWorld().getMinBuildHeight()) {
                 return entity.blockPosition();
@@ -297,7 +300,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         if (entity.isInWater()) {
             while (!bs.getFluidState().isEmpty()) {
                 pos.set(pos.getX(), pos.getY() + 1, pos.getZ());
-                bs = entity.level.getBlockState(pos);
+                bs = level.getBlockState(pos);
             }
         } else if (b instanceof FenceBlock || b instanceof WallBlock || bs.getMaterial().isSolid()) {
             //Push away from fence
@@ -572,6 +575,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
     }
 
     private void walkCurrentNode(final ModNode currentNode) {
+
         BlockPos dPos = BLOCKPOS_IDENTITY;
         if (currentNode.parent != null) {
             dPos = currentNode.pos.subtract(currentNode.parent.pos);
@@ -594,7 +598,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         }
 
         // Walk downwards node if passable
-        if (isPassable(currentNode.pos.below(), false, currentNode.parent)) {
+        if (isPassable(currentNode.pos.below(), false, currentNode.parent) && (!currentNode.isSwimming() && isLiquid(world.getBlockState(currentNode.pos.below())))) {
             walk(currentNode, BLOCKPOS_DOWN);
         }
 
@@ -637,14 +641,18 @@ public abstract class AbstractPathJob implements Callable<Path> {
     private ModNode getAndSetupStartNode() {
         final ModNode startNode = new ModNode(start,
                 computeHeuristic(start));
+
         if (isLadder(start)) {
             startNode.setLadder();
         } else if (isLiquid(world.getBlockState(start.below()))) {
             startNode.setSwimming();
         }
+
         startNode.setOnRails(pathingOptions.canUseRails() && world.getBlockState(start).getBlock() instanceof BaseRailBlock);
+
         nodesOpen.offer(startNode);
         nodesVisited.put(computeNodeKey(start), startNode);
+
         ++totalNodesAdded;
         return startNode;
     }
@@ -899,7 +907,8 @@ public abstract class AbstractPathJob implements Callable<Path> {
     private ModNode createNode(
             final ModNode parent, final BlockPos pos, final int nodeKey,
             final boolean isSwimming, final double heuristic, final double cost, final double score) {
-        ModNode node = new ModNode(parent, pos, cost, heuristic, score);
+        final ModNode node;
+        node = new ModNode(parent, pos, cost, heuristic, score);
         nodesVisited.put(nodeKey, node);
         if (debugDrawEnabled) {
             debugNodesNotVisited.add(node);
@@ -907,7 +916,9 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
         if (isLadder(pos)) {
             node.setLadder();
-        } else if (isSwimming) {
+        }
+
+        if (isSwimming) {
             node.setSwimming();
         }
 
@@ -942,6 +953,9 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @return y height of first open, viable block above ground, or -1 if blocked or too far a drop.
      */
     protected int getGroundHeight(final ModNode parent, final BlockPos pos) {
+        if (isLiquid(world.getBlockState(pos.above()))) {
+            return -100;
+        }
         //  Check (y+1) first, as it's always needed, either for the upper body (level),
         //  lower body (headroom drop) or lower body (jump up)
         if (checkHeadBlock(parent, pos)) {
@@ -950,7 +964,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
         //  Now check the block we want to move to
         final BlockState target = world.getBlockState(pos);
-        if (!isPassable(target, pos, parent)) {
+        if (!isPassable(target, pos, parent, false)) {
             return handleTargetNotPassable(parent, pos, target);
         }
 
@@ -984,7 +998,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
     private int checkDrop(final ModNode parent, final BlockPos pos, final boolean isSwimming) {
         final boolean canDrop = parent != null && !parent.isLadder();
         //  Nothing to stand on
-        if (!canDrop || isSwimming || ((parent.pos.getX() != pos.getX() || parent.pos.getZ() != pos.getZ()) && isPassable(parent.pos.below(), false, parent)
+        if (!canDrop || ((parent.pos.getX() != pos.getX() || parent.pos.getZ() != pos.getZ()) && isPassable(parent.pos.below(), false, parent)
                 && SurfaceType.getSurfaceType(world, world.getBlockState(parent.pos.below()), parent.pos.below()) == SurfaceType.DROPABLE)) {
             return -100;
         }
@@ -1008,7 +1022,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
             return pos.getY();
         }
 
-        if (pathingOptions.canSwim() && below.getMaterial() == Material.WATER) {
+        if (pathingOptions.canSwim() && SurfaceType.isWater(world, pos.below())) {
             //  This is water, and we are allowed to swim
             return pos.getY();
         }
@@ -1078,7 +1092,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         if (bb.max(Direction.Axis.Y) < 1) {
             localPos = pos.above();
         }
-        //  System.out.println(pos.above());
+        // Bailey : We modify this because the minecolonies navigator does not have tiny mobs, and this will not let our tiny mob walk through a 1 block hole
         boolean isSmall = pathingOptions.canFitInOneCube();
         if (isSmall ? !isPassable(pos, true, parent) : !isPassable(pos.above(), true, parent)) {
             final VoxelShape bb1 = world.getBlockState(pos.below()).getCollisionShape(world, pos.below());
@@ -1132,58 +1146,105 @@ public abstract class AbstractPathJob implements Callable<Path> {
     /**
      * Is the space passable.
      *
-     * @param block the block we are checking.
+     * @param block  the block we are checking.
+     * @param parent the parent node.
+     * @param head   the head position.
      * @return true if the block does not block movement.
      */
-    protected boolean isPassable(final BlockState block, final BlockPos pos, final ModNode parent) {
+    protected boolean isPassable(final BlockState block, final BlockPos pos, final ModNode parent, final boolean head) {
+        if (!canLeaveBlock(pos, parent, head)) {
+            return false;
+        }
+
         if (block.getMaterial() != Material.AIR) {
-            if (block.getMaterial().blocksMotion() && !canPassShape(block.getCollisionShape(world, pos))) {
+            final VoxelShape shape = block.getCollisionShape(world, pos);
+            if (block.getMaterial().blocksMotion() && !(shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)) {
                 if (block.getBlock() instanceof TrapDoorBlock) {
-                    final BlockPos parentPos = parent == null ? start : parent.pos;
+                    BlockPos parentPos = parent == null ? start : parent.pos;
+                    if (head) {
+                        parentPos = parentPos.above();
+                    }
                     final BlockPos dir = pos.subtract(parentPos);
                     if (dir.getY() != 0 && dir.getX() == 0 && dir.getZ() == 0) {
                         return true;
                     }
 
+                    final Direction direction = getXZFacing(parentPos, pos);
                     final Direction facing = block.getValue(TrapDoorBlock.FACING);
-                    if (dir.getX() != 0) {
-                        return facing == Direction.NORTH || facing == Direction.SOUTH;
+
+                    // We can enter a space of a trapdoor if it's facing the same direction
+                    if (direction == facing.getOpposite()) {
+                        return true;
                     }
-                    return facing == Direction.EAST || facing == Direction.WEST;
+
+                    // We cannot enter a space of a trapdoor if its facing the opposite direction.
+                    if (direction == facing) {
+                        return false;
+                    }
+
+                    return true;
                 } else {
                     return pathingOptions.canEnterDoors() && (block.getBlock() instanceof DoorBlock || block.getBlock() instanceof FenceGateBlock)
                             || block.getBlock() instanceof PressurePlateBlock
                             || block.getBlock() instanceof SignBlock
                             || block.getBlock() instanceof AbstractBannerBlock;
                 }
-            } else if (block.getBlock() instanceof FireBlock || block.getBlock() instanceof SweetBerryBushBlock) {
+            } else if (block.getBlock() instanceof FireBlock || block.getBlock() instanceof SweetBerryBushBlock || block.getBlock() instanceof PowderSnowBlock) {
                 return false;
             } else {
-                final VoxelShape shape = block.getCollisionShape(world, pos);
-                return isLadder(block.getBlock(), pos) ||
-                        ((shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)
-                                && !isLiquid((block))
-                                && (block.getBlock() != Blocks.SNOW || block.getValue(SnowLayerBlock.LAYERS) == 1)
-                                && block.getBlock() != Blocks.SWEET_BERRY_BUSH);
+                if (isLadder(block.getBlock(), pos)) {
+                    return true;
+                }
+
+                if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1 && !isLiquid((block)) && (block.getBlock() != Blocks.SNOW || block.getValue(SnowLayerBlock.LAYERS) == 1)) {
+                    final BlockPathTypes pathType = block.getBlockPathType(world, pos, (Mob) entity.get());
+                    if (pathType == null || pathType.getDanger() == null) {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
         return true;
     }
 
-    public boolean canPassShape(VoxelShape shape) {
-        return shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1;
+    /**
+     * Check if we can leave the block at this pos.
+     *
+     * @param pos    the pos to go to.
+     * @param parent the parent pos (to check if we can leave)
+     * @return true if so.
+     */
+    private boolean canLeaveBlock(final BlockPos pos, final ModNode parent, final boolean head) {
+        BlockPos parentPos = parent == null ? start : parent.pos;
+        if (head) {
+            parentPos = parentPos.above();
+        }
+        final BlockState parentBlock = world.getBlockState(parentPos);
+        if (parentBlock.getBlock() instanceof TrapDoorBlock) {
+            final BlockPos dir = pos.subtract(parentPos);
+            if (dir.getX() != 0 || dir.getZ() != 0) {
+                // Check if we can leave the current block, there might be a trapdoor or panel blocking us.
+                final Direction direction = getXZFacing(parentPos, pos);
+                final Direction facing = parentBlock.getValue(TrapDoorBlock.FACING);
+                if (direction == facing.getOpposite()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     protected boolean isPassable(final BlockPos pos, final boolean head, final ModNode parent) {
         final BlockState state = world.getBlockState(pos);
         final VoxelShape shape = state.getCollisionShape(world, pos);
-        if (canPassShape(shape)) {
+        if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1) {
             return !head
                     || !(state.getBlock() instanceof WoolCarpetBlock)
                     || isLadder(state.getBlock(), pos);
         }
-        return isPassable(state, pos, parent);
+        return isPassable(state, pos, parent, head);
     }
 
     /**

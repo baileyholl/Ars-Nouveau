@@ -8,6 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
+import com.hollingsworth.arsnouveau.common.items.ItemScroll.SortPref;
+import net.minecraft.world.item.Item.Properties;
+
 public class MimicItemScroll extends ItemScroll {
 
     public MimicItemScroll() {

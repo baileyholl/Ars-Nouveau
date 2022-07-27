@@ -13,9 +13,15 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.GlowSquid;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,9 +58,19 @@ public class LightManager {
 
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
-        register(ModEntities.FALLING_BLOCK.get(), (p) -> {
-            EnchantedFallingBlock enchantedFallingBlock = (EnchantedFallingBlock) p;
-            return p.isOnFire() ? 15 : enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
+
+        register(EntityType.FALLING_BLOCK, (p) ->{
+            if(p instanceof FallingBlockEntity fallingBlockEntity){
+                return fallingBlockEntity.getBlockState().getLightEmission(p.level, p.blockPosition());
+            }
+            return 0;
+        });
+
+        register(ModEntities.ENCHANTED_FALLING_BLOCK.get(), (p) ->{
+            if(p instanceof EnchantedFallingBlock enchantedFallingBlock){
+                return  enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
+            }
+            return 0;
         });
         register(ModEntities.ENTITY_FLYING_ITEM.get(), (p -> 10));
         register(ModEntities.ENTITY_FOLLOW_PROJ.get(), (p -> 10));
@@ -74,6 +90,19 @@ public class LightManager {
             }
             return 0;
         }));
+        register(EntityType.ENDERMAN, (p ->{
+            if(!(p instanceof EnderMan enderMan))
+                return 0;
+            if (enderMan.getCarriedBlock() != null) {
+                return DynamLightUtil.fromItemLike(enderMan.getCarriedBlock().getBlock());
+            }
+            return 0;
+        }));
+
+        register(EntityType.ITEM, (p) -> DynamLightUtil.fromItemLike((((ItemEntity)p).getItem().getItem())));
+        register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((((ItemFrame)p).getItem().getItem())));
+        register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((((ItemFrame) p).getItem().getItem()))));
+        register(EntityType.GLOW_SQUID, (p) ->  (int) Mth.clampedLerp(0.f, 12.f, 1.f - ((GlowSquid)p).getDarkTicksRemaining() / 10.f));
     }
 
     public static void register(EntityType<? extends Entity> type, Function<Entity, Integer> luminanceFunction) {
@@ -83,8 +112,13 @@ public class LightManager {
         LIGHT_REGISTRY.get(type).add(luminanceFunction);
     }
 
-    public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry() {
+
+    public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry(){
         return LIGHT_REGISTRY;
+    }
+
+    public static boolean containsEntity(EntityType<? extends Entity> type){
+        return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(type));
     }
 
     /**
@@ -215,6 +249,7 @@ public class LightManager {
     public static void updateAll(LevelRenderer renderer) {
         long now = System.currentTimeMillis();
 
+
         lastUpdate = now;
         lastUpdateCount = 0;
 
@@ -318,7 +353,7 @@ public class LightManager {
             // 15 (max range for blocks) would be too much and a bit cheaty.
             if (distanceSquared <= MAX_RADIUS_SQUARED) {
                 double multiplier = 1.0 - Math.sqrt(distanceSquared) / MAX_RADIUS;
-                double lightLevel = multiplier * (double) luminance;
+                double lightLevel = multiplier * luminance;
                 if (lightLevel > currentLightLevel) {
                     return lightLevel;
                 }

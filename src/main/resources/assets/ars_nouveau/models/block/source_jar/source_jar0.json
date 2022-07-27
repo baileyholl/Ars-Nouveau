@@ -1,16 +1,28 @@
 {
-	"credit": "Made with Blockbench",
-	"texture_size": [64, 64],
-	"parent": "block/cube_all",
-	"textures": {
-		"2": "ars_nouveau:blocks/source_jar",
-		"particle": "ars_nouveau:blocks/mana_still"
-	},
-	"elements": [
-		{
-			"from": [3, 14, 3],
-			"to": [13, 16, 13],
-			"faces": {
+  "credit": "Made with Blockbench",
+  "texture_size": [
+    64,
+    64
+  ],
+  "render_type": "cutout",
+  "parent": "block/cube_all",
+  "textures": {
+    "2": "ars_nouveau:blocks/source_jar",
+    "particle": "ars_nouveau:blocks/mana_still"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        14,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
 				"north": {"uv": [7.5, 8, 10, 8.5], "texture": "#2"},
 				"east": {"uv": [8, 7.5, 10.5, 8], "texture": "#2"},
 				"south": {"uv": [0, 8.5, 2.5, 9], "texture": "#2"},

@@ -9,6 +9,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
+import net.minecraft.world.item.crafting.Ingredient.ItemValue;
+
 public class PotionIngredient extends Ingredient {
     private final ItemStack stack;
 

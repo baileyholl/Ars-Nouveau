@@ -121,6 +121,7 @@ public interface ISpellCaster {
             PortUtil.sendMessageNoSpam(playerIn, invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
+
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, playerIn), worldIn, playerIn, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
         HitResult result = SpellUtil.rayTrace(playerIn, 5, 0, isSensitive);

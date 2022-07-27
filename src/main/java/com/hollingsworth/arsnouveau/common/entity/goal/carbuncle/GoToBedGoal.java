@@ -29,7 +29,7 @@ public class GoToBedGoal extends Goal {
         unreachable = false;
         starbuncle.getNavigation().stop();
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.RESTING;
-        bedPos = starbuncle.data.bedPos;
+        this.bedPos = starbuncle.data.bedPos;
     }
 
     @Override
@@ -55,6 +55,7 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        bedPos = starbuncle.data.bedPos;
         if (starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || !behavior.canGoToBed()) {
             return false;
         }

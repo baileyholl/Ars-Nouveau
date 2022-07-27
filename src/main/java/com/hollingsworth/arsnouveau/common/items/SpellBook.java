@@ -34,7 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -131,13 +131,13 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
-        consumer.accept(new IItemRenderProperties() {
+        consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new SpellBookRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });
@@ -159,7 +159,6 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
         return new RadialMenu<>((int slot) -> {
             BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
-            System.out.println(slot);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),

@@ -1,16 +1,36 @@
 {
-	"credit": "Made with Blockbench",
-	"texture_size": [64, 64],
-	"textures": {
-		"2": "ars_nouveau:blocks/mana_still",
-		"3": "ars_nouveau:blocks/wixie_cauldron",
-		"particle": "ars_nouveau:blocks/wixie_cauldron"
-	},
-	"elements": [
-		{
-			"from": [2, 4, 2],
-			"to": [14, 6, 14],
-			"rotation": {"angle": 0, "axis": "y", "origin": [15, 12, 9]},
+  "credit": "Made with Blockbench",
+  "texture_size": [
+    64,
+    64
+  ],
+  "render_type": "cutout",
+  "textures": {
+    "2": "ars_nouveau:blocks/mana_still",
+    "3": "ars_nouveau:blocks/wixie_cauldron",
+    "particle": "ars_nouveau:blocks/wixie_cauldron"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        2
+      ],
+      "to": [
+        14,
+        6,
+        14
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          15,
+          12,
+          9
+        ]
+      },
 			"faces": {
 				"north": {"uv": [6.25, 1, 9.25, 1.5], "texture": "#3"},
 				"east": {"uv": [6.25, 1.5, 9.25, 2], "texture": "#3"},

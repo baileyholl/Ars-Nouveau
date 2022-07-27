@@ -16,6 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.EnumSet;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;

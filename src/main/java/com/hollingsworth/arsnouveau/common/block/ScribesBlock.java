@@ -174,12 +174,12 @@ public class ScribesBlock extends TickableModBlock {
 
     @SubscribeEvent
     public void rightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (!(event.getWorld().getBlockEntity(event.getPos()) instanceof ScribesTile))
+        if (!(event.getLevel().getBlockEntity(event.getPos()) instanceof ScribesTile))
             return;
-        Level world = event.getWorld();
+        Level world = event.getLevel();
         BlockPos pos = event.getPos();
         if (world.getBlockState(pos).getBlock() instanceof ScribesBlock) {
-            BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getPlayer(), event.getHand(), null);
+            BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
             event.setCanceled(true);
         }
     }

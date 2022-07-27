@@ -7,8 +7,8 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.SaplingGrowTreeEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -28,21 +28,21 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
         int mana = 20;
 
-        if (event.getWorld().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_PLANTS)) {
+        if (event.getLevel().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_PLANTS)) {
             mana += 25;
         }
-        if (event.getWorld() instanceof Level)
-            SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if (event.getLevel() instanceof Level)
+            SourcelinkEventQueue.addManaEvent((Level) event.getLevel(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @SubscribeEvent
     public static void treeGrow(SaplingGrowTreeEvent event) {
         int mana = 50;
-        if (event.getWorld().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_SAPLINGS)) {
+        if (event.getLevel().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_SAPLINGS)) {
             mana += 50;
         }
-        if (event.getWorld() instanceof Level)
-            SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if (event.getLevel() instanceof Level)
+            SourcelinkEventQueue.addManaEvent((Level) event.getLevel(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @Override

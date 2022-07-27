@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.logging.LogUtils;
@@ -71,7 +72,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     }
 
     public EnchantedFallingBlock(Level world, double v, double y, double v1, BlockState blockState) {
-        this(ModEntities.FALLING_BLOCK.get(), world);
+        this(ModEntities.ENCHANTED_FALLING_BLOCK.get(), world);
         this.blockState = blockState;
         this.blocksBuilding = true;
         this.setPos(v, y, v1);
@@ -87,7 +88,11 @@ public class EnchantedFallingBlock extends ColoredProjectile {
     }
 
     public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, LivingEntity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
-        if (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile)) {
+        if((level.getBlockEntity(pos) != null &&
+                !(level.getBlockEntity(pos) instanceof MageBlockTile))){
+            return null;
+        }
+        if(!BlockUtil.canBlockBeHarvested(spellStats, level, pos) || !BlockUtil.destroyRespectsClaim(owner, level, pos)) {
             return null;
         }
         BlockState blockState = level.getBlockState(pos);
@@ -110,7 +115,7 @@ public class EnchantedFallingBlock extends ColoredProjectile {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.FALLING_BLOCK.get();
+        return ModEntities.ENCHANTED_FALLING_BLOCK.get();
     }
 
     @Override

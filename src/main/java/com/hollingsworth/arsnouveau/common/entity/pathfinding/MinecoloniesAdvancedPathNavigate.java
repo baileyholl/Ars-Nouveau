@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveAwayFromLocation;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToLocation;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToPathable;
 import com.hollingsworth.arsnouveau.common.util.Log;
@@ -21,7 +22,9 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -96,6 +99,21 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
         return destination;
     }
 
+
+    @Nullable
+    public PathResult moveAwayFromXYZ(final BlockPos avoid, final double range, final double speedFactor, final boolean safeDestination)
+    {
+        final BlockPos start = AbstractPathJob.prepareStart(ourEntity);
+
+        return setPathJob(new PathJobMoveAwayFromLocation(ourEntity.level,
+                start,
+                avoid,
+                (int) range,
+                (int) ourEntity.getAttribute(Attributes.FOLLOW_RANGE).getValue(),
+                ourEntity), null, speedFactor);
+    }
+
+
     public PathResult setPathJob(
             final AbstractPathJob job,
             final BlockPos dest,
@@ -129,7 +147,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     @Override
     public void tick() {
         if (desiredPosTimeout > 0) {
-            if (desiredPosTimeout-- <= 0) {
+            if (--desiredPosTimeout <= 0) {
                 desiredPos = null;
             }
         }
@@ -151,9 +169,11 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
         this.ourEntity.setYya(0);
         if (handleLadders(oldIndex)) {
             followThePath();
+            stuckHandler.checkStuck(this);
             return;
         }
         if (handleRails()) {
+            stuckHandler.checkStuck(this);
             return;
         }
 
@@ -179,7 +199,13 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
             if (!this.isDone()) {
                 Vec3 vector3d2 = this.path.getNextEntityPos(this.mob);
                 BlockPos blockpos = new BlockPos(vector3d2);
-                this.mob.getMoveControl().setWantedPosition(vector3d2.x, this.level.getBlockState(blockpos.below()).isAir() ? vector3d2.y : getSmartGroundY(this.level, blockpos), vector3d2.z, this.speedModifier);
+                if (level.isLoaded(blockpos)) {
+                    this.mob.getMoveControl()
+                            .setWantedPosition(vector3d2.x,
+                                    this.level.getBlockState(blockpos.below()).isAir() ? vector3d2.y : getSmartGroundY(this.level, blockpos),
+                                    vector3d2.z,
+                                    this.speedModifier);
+                }
             }
         }
         // End of super.tick.
@@ -264,37 +290,6 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     protected boolean canUpdatePath() {
-        //  activate and handle propperly if you want rail pathing.
-        // Auto dismount when trying to path.
-        /*if (ourEntity.vehicle != null)
-        {
-             final PathPointExtended pEx = (PathPointExtended) this.getPath().getNode(this.getPath().getNextNodeIndex());
-            if (pEx.isRailsExit())
-            {
-                final Entity entity = ourEntity.vehicle;
-                ourEntity.stopRiding();
-                entity.remove();
-            }
-            else if (!pEx.isOnRails())
-            {
-                if (ourEntity.vehicle instanceof MinecoloniesMinecart)
-                {
-                    final Entity entity = ourEntity.vehicle;
-                    ourEntity.stopRiding();
-                    entity.remove();
-                }
-                else
-                {
-                    ourEntity.stopRiding();
-                }
-            }
-            else if ((Math.abs(pEx.x - mob.getX()) > 7 || Math.abs(pEx.z - mob.getZ()) > 7) && ourEntity.vehicle != null)
-            {
-                final Entity entity = ourEntity.vehicle;
-                ourEntity.stopRiding();
-                entity.remove();
-            }
-        }*/
         return true;
     }
 
@@ -310,9 +305,9 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     }
 
     @Override
-    protected boolean canMoveDirectly(Vec3 p_186133_, Vec3 p_186134_) {
+    protected boolean canMoveDirectly(Vec3 start, Vec3 end) {
         //  special path blocks go into the false as !specialPathBlocks
-        return false; //super.canMoveDirectly(p_186133_, p_186134_);
+        return getPathingOptions().getIsRoad().apply(level.getBlockState(new BlockPos(start.x, start.y - 1, start.z))) && super.canMoveDirectly(start, end);
     }
 
     public double getSpeedFactor() {
@@ -400,7 +395,9 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     private boolean processCompletedCalculationResult() {
         moveTo(pathResult.getPath(), getSpeedFactor());
-        pathResult.setStatus(PathFindingStatus.IN_PROGRESS_FOLLOWING);
+        if (pathResult != null) {
+            pathResult.setStatus(PathFindingStatus.IN_PROGRESS_FOLLOWING);
+        }
         return false;
     }
 
@@ -490,81 +487,6 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
      * @return if go to next point.
      */
     private boolean handlePathOnRails(final PathPointExtended pEx, final PathPointExtended pExNext) {
-        /*if (pEx.isRailsEntry())  if you want custom rail handling activate and add minecart.
-        {
-            final BlockPos blockPos = new BlockPos(pEx.x, pEx.y, pEx.z);
-            if (!spawnedPos.equals(blockPos))
-            {
-                final BlockState blockstate = level.getBlockState(blockPos);
-                RailShape railshape = blockstate.getBlock() instanceof AbstractRailBlock
-                                        ? ((AbstractRailBlock) blockstate.getBlock()).getRailDirection(blockstate, level, blockPos, null)
-                                        : RailShape.NORTH_SOUTH;
-                double yOffset = 0.0D;
-                if (railshape.isAscending())
-                {
-                    yOffset = 0.5D;
-                }
-
-                if (mob.vehicle instanceof MinecoloniesMinecart)
-                {
-                    ((MinecoloniesMinecart) mob.vehicle).setHurtDir(1);
-                }
-                else
-                {
-                    MinecoloniesMinecart minecart = (MinecoloniesMinecart) ModEntities.MINECART.create(level);
-                    final double x = pEx.x + 0.5D;
-                    final double y = pEx.y + 0.625D + yOffset;
-                    final double z = pEx.z + 0.5D;
-                    minecart.setPos(x, y, z);
-                    minecart.setDeltaMovement(Vector3d.ZERO);
-                    minecart.xo = x;
-                    minecart.yo = y;
-                    minecart.zo = z;
-
-
-                    level.addFreshEntity(minecart);
-                    minecart.setHurtDir(1);
-                    mob.startRiding(minecart, true);
-                }
-                spawnedPos = blockPos;
-            }
-        }
-        else*/
-        {
-            spawnedPos = BlockPos.ZERO;
-        }
-
-        /*if (mob.vehicle instanceof MinecoloniesMinecart && pExNext != null)
-        {
-            final BlockPos blockPos = new BlockPos(pEx.x, pEx.y, pEx.z);
-            final BlockPos blockPosNext = new BlockPos(pExNext.x, pExNext.y, pExNext.z);
-            final Vector3d motion = mob.vehicle.getDeltaMovement();
-            double forward;
-            switch (getXZFacing(blockPos, blockPosNext).getOpposite())
-            {
-                case EAST:
-                    forward = Math.min(Math.max(motion.x() - 1 * 0.01D, -1), 0);
-                    mob.vehicle.setDeltaMovement(motion.add(forward == -1 ? -1 : -0.01D, 0.0D, 0.0D));
-                    break;
-                case WEST:
-                    forward = Math.max(Math.min(motion.x() + 0.01D, 1), 0);
-                    mob.vehicle.setDeltaMovement(motion.add(forward == 1 ? 1 : 0.01D, 0.0D, 0.0D));
-                    break;
-                case NORTH:
-                    forward = Math.max(Math.min(motion.z() + 0.01D, 1), 0);
-                    mob.vehicle.setDeltaMovement(motion.add(0.0D, 0.0D, forward == 1 ? 1 : 0.01D));
-                    break;
-                case SOUTH:
-                    forward = Math.min(Math.max(motion.z() - 1 * 0.01D, -1), 0);
-                    mob.vehicle.setDeltaMovement(motion.add(0.0D, 0.0D, forward == -1 ? -1 : -0.01D));
-                    break;
-
-                case DOWN:
-                case UP:
-                    // unreachable
-                    break;
-            }
-        }*/
         return false;
     }
 
@@ -662,29 +584,31 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
         this.maxDistanceToWaypoint = 0.5F;
         boolean wentAhead = false;
+//        boolean isTracking = AbstractPathJob.trackingMap.containsValue(ourEntity.getUUID());
 
-
+        final HashSet<BlockPos> reached = new HashSet<>();
         // Look at multiple points, incase we're too fast
         for (int i = this.path.getNextNodeIndex(); i < Math.min(this.path.getNodeCount(), this.path.getNextNodeIndex() + 4); i++) {
             Vec3 next = this.path.getEntityPosAtNode(this.mob, i);
             if (Math.abs(this.mob.getX() - next.x) < (double) this.maxDistanceToWaypoint - Math.abs(this.mob.getY() - (next.y)) * 0.1
                     && Math.abs(this.mob.getZ() - next.z) < (double) this.maxDistanceToWaypoint - Math.abs(this.mob.getY() - (next.y)) * 0.1 &&
-                    Math.abs(this.mob.getY() - next.y) < 1.0D) {
+                    Math.abs(this.mob.getY() - next.y) <= 1.0D) {
                 this.path.advance();
                 wentAhead = true;
-                // Mark reached nodes for debug path drawing
-                if (AbstractPathJob.lastDebugNodesPath != null) {
-                    final Node point = path.getNode(i);
-                    final BlockPos pos = new BlockPos(point.x, point.y, point.z);
-                    for (final ModNode node : AbstractPathJob.lastDebugNodesPath) {
-                        if (!node.isReachedByWorker() && node.pos.equals(pos)) {
-                            node.setReachedByWorker(true);
-                            break;
-                        }
-                    }
-                }
+//
+//                if (isTracking)
+//                {
+//                    final Node point = path.getNode(i);
+//                    reached.add(new BlockPos(point.x, point.y, point.z));
+//                }
             }
         }
+
+//        if (isTracking)
+//        {
+//            AbstractPathJob.synchToClient(reached, ourEntity);
+//            reached.clear();
+//        }
 
         if (path.isDone()) {
             onPathFinish();
@@ -709,21 +633,20 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
                 final Vec3 tempoPos = this.path.getEntityPosAtNode(this.mob, currentIndex);
                 if (mob.position().distanceTo(tempoPos) <= 1.0) {
                     this.path.setNextNodeIndex(currentIndex);
-                } else {
-                    // Mark nodes as unreached for debug path drawing
-                    if (AbstractPathJob.lastDebugNodesPath != null) {
-                        final BlockPos pos = new BlockPos(tempoPos.x, tempoPos.y, tempoPos.z);
-                        for (final ModNode node : AbstractPathJob.lastDebugNodesPath) {
-                            if (node.isReachedByWorker() && node.pos.equals(pos)) {
-                                node.setReachedByWorker(false);
-                                break;
-                            }
-                        }
-                    }
                 }
+//                else if (isTracking)
+//                {
+//                    reached.add(new BlockPos(tempoPos.x, tempoPos.y, tempoPos.z));
+//                }
                 currentIndex--;
             }
         }
+
+//        if (isTracking)
+//        {
+//            AbstractPathJob.synchToClient(reached, ourEntity);
+//            reached.clear();
+//        }
     }
 
     /**

@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Copy of LightningBoltEntity
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class LightningEntity extends LightningBolt {
     private int lightningState;
     public long boltVertex;

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -163,6 +164,13 @@ public class BlockUtil {
         return stack;
     }
 
+    public static boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
+        return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && SpellUtil.isCorrectHarvestLevel(getBaseHarvestLevel(stats), world.getBlockState(pos));
+    }
+
+    public static int getBaseHarvestLevel(SpellStats stats){
+        return (int) (3 + stats.getAmpMultiplier());
+    }
 
     public static List<BlockPos> getLine(int x0, int y0, int x1, int y1, float wd) {
         List<BlockPos> vects = new ArrayList<>();
