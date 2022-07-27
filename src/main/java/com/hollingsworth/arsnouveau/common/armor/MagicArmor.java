@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.armor.PerkAttributes;
-import com.hollingsworth.arsnouveau.common.armor.perks.IPerkHolder;
-import com.hollingsworth.arsnouveau.common.armor.perks.TickablePerk;
+import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
+import com.hollingsworth.arsnouveau.api.perk.StackPerkProvider;
+import com.hollingsworth.arsnouveau.api.perk.TickablePerk;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IPerkHolder {
+public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     public MagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
         super(materialIn, slot, builder);
@@ -41,10 +41,10 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IP
                 stack.setDamageValue(stack.getDamageValue() - 1);
             }
         });
-        this.getPerks(stack).getPerks().forEach((k,v)->{
-            if(k instanceof TickablePerk)
-            {
-                ((TickablePerk) k).tick(stack, world, player, v);
+        StackPerkProvider perkProvider = new StackPerkProvider(stack);
+        perkProvider.getPerkSet().getPerkMap().forEach((k, v)->{
+            if(k instanceof TickablePerk tickablePerk) {
+                tickablePerk.tick(stack, world, player, v);
             }
         });
     }
@@ -63,9 +63,7 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IP
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag)
-    {
-        IPerkHolder.appendPerkTooltip(tooltip, stack, getPerks(stack));
-    }
+    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
 
+    }
 }

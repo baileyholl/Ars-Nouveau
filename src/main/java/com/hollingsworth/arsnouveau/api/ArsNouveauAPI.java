@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -76,6 +77,8 @@ public class ArsNouveauAPI {
     private Set<RecipeType<? extends IEnchantingRecipe>> enchantingRecipeTypes = ConcurrentHashMap.newKeySet();
 
     private ConcurrentHashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new ConcurrentHashMap<>();
+
+    private ConcurrentHashMap<ResourceLocation, IPerk> perkMap = new ConcurrentHashMap<>();
 
     /**
      * Validator to use when crafting a spell in the spell book.
@@ -167,6 +170,10 @@ public class ArsNouveauAPI {
 
     public Set<RecipeType<? extends IEnchantingRecipe>> getEnchantingRecipeTypes() {
         return enchantingRecipeTypes;
+    }
+
+    public Map<ResourceLocation, IPerk> getPerkMap() {
+        return perkMap;
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
