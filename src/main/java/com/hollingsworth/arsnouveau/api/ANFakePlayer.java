@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.mojang.authlib.GameProfile;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
@@ -13,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
 import net.minecraftforge.common.util.FakePlayer;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.OptionalInt;
@@ -66,7 +66,7 @@ public class ANFakePlayer extends FakePlayer {
         }
 
         @Override
-        public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) {
+        public void send(Packet<?> p_243227_, @Nullable PacketSendListener p_243273_) {
         }
     }
 }
