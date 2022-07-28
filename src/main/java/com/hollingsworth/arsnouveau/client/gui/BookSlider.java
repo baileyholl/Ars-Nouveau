@@ -27,6 +27,16 @@ public class BookSlider extends SliderButton {
         this.blit(pPoseStack, this.x + (int)(this.value * (double)(this.width - 8)), this.y, 0,0, 8,20 , 8, 20);
     }
 
+    public void setInitVal(double val){
+        double d0 = this.value;
+        this.value = Mth.clamp(val, 0.0D, 1.0D);
+        if (d0 != this.value) {
+            this.applyValue();
+        }
+
+        this.updateMessage();
+    }
+
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -39,8 +49,6 @@ public class BookSlider extends SliderButton {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         this.blit(pPoseStack, this.x, this.y, 0,0, 100,20 , this.width, this.height);
-//        this.blit(pPoseStack, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
-//        this.blit(pPoseStack, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
         this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
         int j = 10526880;
 

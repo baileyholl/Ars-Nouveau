@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.book.slider.ANProgressOption;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -9,7 +10,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.SliderButton;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -32,9 +32,9 @@ public class GuiColorScreen extends BaseBook {
         this.slot = slot;
     }
 
-    SliderButton redW;
-    SliderButton greenW;
-    SliderButton blueW;
+    BookSlider redW;
+    BookSlider greenW;
+    BookSlider blueW;
     @Override
     public void init() {
         super.init();
@@ -91,9 +91,9 @@ public class GuiColorScreen extends BaseBook {
         red = r;
         green = g;
         blue = b;
-        redW.setValue((r)/255.0);
-        greenW.setValue((g)/255.0);
-        blueW.setValue((b)/255.0);
+        redW.setInitVal((r)/255.0);
+        greenW.setInitVal((g)/255.0);
+        blueW.setInitVal((b)/255.0);
 
     }
 
