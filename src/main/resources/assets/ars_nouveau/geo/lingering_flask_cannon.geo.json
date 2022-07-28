@@ -1,0 +1,193 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.lingering_flask_cannon_v02",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "tank",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{
+							"origin": [-3, 3, 0],
+							"size": [6, 6, 6],
+							"uv": {
+								"north": {"uv": [0, 7], "uv_size": [6, 6]},
+								"east": {"uv": [6, 7], "uv_size": [6, 6]},
+								"south": {"uv": [12, 0], "uv_size": [6, 6]},
+								"west": {"uv": [12, 6], "uv_size": [6, 6]},
+								"up": {"uv": [12, 12], "uv_size": [6, 6]},
+								"down": {"uv": [0, 19], "uv_size": [6, -6]}
+							}
+						},
+						{
+							"origin": [0, 5, -7],
+							"size": [0, 4, 7],
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [0, 4]},
+								"east": {"uv": [24, 28], "uv_size": [7, 4]},
+								"south": {"uv": [0, 0], "uv_size": [0, 4]},
+								"west": {"uv": [0, 30], "uv_size": [7, 4]},
+								"up": {"uv": [0, 0], "uv_size": [0, 7]},
+								"down": {"uv": [0, 7], "uv_size": [0, -7]}
+							}
+						},
+						{
+							"origin": [-3, 4, -7],
+							"size": [6, 0, 7],
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [6, 0]},
+								"east": {"uv": [0, 0], "uv_size": [7, 0]},
+								"south": {"uv": [0, 0], "uv_size": [6, 0]},
+								"west": {"uv": [0, 0], "uv_size": [7, 0]},
+								"up": {"uv": [0, 0], "uv_size": [6, 7]},
+								"down": {"uv": [6, 7], "uv_size": [6, -7]}
+							}
+						}
+					]
+				},
+				{
+					"name": "potion_levels",
+					"pivot": [-8, 8, 8]
+				},
+				{
+					"name": "full",
+					"parent": "potion_levels",
+					"pivot": [7, 0, 0],
+					"cubes": [
+						{
+							"origin": [-3, 3, 0],
+							"size": [6, 6, 6],
+							"inflate": -0.01,
+							"uv": {
+								"north": {"uv": [6, 13], "uv_size": [6, 6]},
+								"east": {"uv": [18, 0], "uv_size": [6, 6]},
+								"south": {"uv": [18, 6], "uv_size": [6, 6]},
+								"west": {"uv": [12, 18], "uv_size": [6, 6]},
+								"up": {"uv": [18, 12], "uv_size": [6, 6]},
+								"down": {"uv": [18, 24], "uv_size": [6, -6]}
+							}
+						}
+					]
+				},
+				{
+					"name": "75",
+					"parent": "potion_levels",
+					"pivot": [7, 0, 0],
+					"cubes": [
+						{
+							"origin": [-3, 3, 0],
+							"size": [6, 5, 6],
+							"inflate": -0.01,
+							"uv": {
+								"north": {"uv": [18, 24], "uv_size": [6, 5]},
+								"east": {"uv": [24, 18], "uv_size": [6, 5]},
+								"south": {"uv": [24, 23], "uv_size": [6, 5]},
+								"west": {"uv": [0, 25], "uv_size": [6, 5]},
+								"up": {"uv": [0, 19], "uv_size": [6, 6]},
+								"down": {"uv": [6, 25], "uv_size": [6, -6]}
+							}
+						}
+					]
+				},
+				{
+					"name": "50",
+					"parent": "potion_levels",
+					"pivot": [7, 0, 0],
+					"cubes": [
+						{
+							"origin": [-3, 3, 0],
+							"size": [6, 4, 6],
+							"inflate": -0.01,
+							"uv": {
+								"north": {"uv": [6, 25], "uv_size": [6, 4]},
+								"east": {"uv": [18, 29], "uv_size": [6, 4]},
+								"south": {"uv": [30, 0], "uv_size": [6, 4]},
+								"west": {"uv": [30, 4], "uv_size": [6, 4]},
+								"up": {"uv": [24, 0], "uv_size": [6, 6]},
+								"down": {"uv": [24, 12], "uv_size": [6, -6]}
+							}
+						}
+					]
+				},
+				{
+					"name": "25",
+					"parent": "potion_levels",
+					"pivot": [7, 0, 0],
+					"cubes": [
+						{
+							"origin": [-3, 3, 0],
+							"size": [6, 3, 6],
+							"inflate": -0.01,
+							"uv": {
+								"north": {"uv": [7, 30], "uv_size": [6, 3]},
+								"east": {"uv": [30, 8], "uv_size": [6, 3]},
+								"south": {"uv": [30, 11], "uv_size": [6, 3]},
+								"west": {"uv": [30, 14], "uv_size": [6, 3]},
+								"up": {"uv": [12, 24], "uv_size": [6, 6]},
+								"down": {"uv": [24, 18], "uv_size": [6, -6]}
+							}
+						}
+					]
+				},
+				{
+					"name": "1",
+					"parent": "potion_levels",
+					"pivot": [7, 0, 0],
+					"cubes": [
+						{
+							"origin": [-3, 3, 0],
+							"size": [6, 2, 6],
+							"inflate": -0.01,
+							"uv": {
+								"north": {"uv": [7, 30], "uv_size": [6, 3]},
+								"east": {"uv": [30, 8], "uv_size": [6, 3]},
+								"south": {"uv": [30, 11], "uv_size": [6, 3]},
+								"west": {"uv": [30, 14], "uv_size": [6, 3]},
+								"up": {"uv": [12, 24], "uv_size": [6, 6]},
+								"down": {"uv": [24, 18], "uv_size": [6, -6]}
+							}
+						}
+					]
+				},
+				{
+					"name": "bone",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{
+							"origin": [-1, 3, -7],
+							"size": [2, 2, 7],
+							"uv": {
+								"north": {"uv": [31, 31], "uv_size": [2, 2]},
+								"east": {"uv": [30, 17], "uv_size": [7, 2]},
+								"south": {"uv": [24, 32], "uv_size": [2, 2]},
+								"west": {"uv": [30, 19], "uv_size": [7, 2]},
+								"up": {"uv": [13, 30], "uv_size": [2, 7]},
+								"down": {"uv": [15, 37], "uv_size": [2, -7]}
+							}
+						},
+						{
+							"origin": [-1, 1, -5],
+							"size": [2, 2, 3],
+							"uv": {
+								"north": {"uv": [32, 25], "uv_size": [2, 2]},
+								"east": {"uv": [30, 21], "uv_size": [3, 2]},
+								"south": {"uv": [26, 32], "uv_size": [2, 2]},
+								"west": {"uv": [30, 23], "uv_size": [3, 2]},
+								"up": {"uv": [30, 25], "uv_size": [2, 3]},
+								"down": {"uv": [31, 31], "uv_size": [2, -3]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

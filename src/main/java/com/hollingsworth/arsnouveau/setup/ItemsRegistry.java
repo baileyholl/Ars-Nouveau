@@ -271,8 +271,8 @@ public class ItemsRegistry {
     public static RegistryWrapper<ModItem> WIXIE_HAT = register(LibItemNames.WIXIE_HAT, () -> new WixieHat().withTooltip("tooltip.ars_nouveau.wixie_hat"));
     public static RegistryWrapper<ModItem> ALCHEMISTS_CROWN = register(LibItemNames.ALCHEMISTS_CROWN, () -> new AlchemistsCrown(defaultItemProperties().stacksTo(1)));
 
-    public static RegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new PotionLauncher.SplashLauncher(defaultItemProperties().stacksTo(1)));
-    public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new PotionLauncher.LingeringLauncher(defaultItemProperties().stacksTo(1)));
+    public static RegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
+    public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
 
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {

@@ -1116,5 +1116,8 @@
 	"ars_nouveau.page.mendosteen": "A fruit that can be brewed into a Potion of Recovery, increases the amount of healing received from all sources.",
 	"ars_nouveau.page.frostaya": "A fruit that can be brewed into a Potion of Freezing, freezing the target over time.",
 	"ars_nouveau.page.bastion_fruit": "A fruit that can be brewed into a Potion of Defence, reducing the amount of damage taken.",
-	"ars_nouveau.wixie_familiar.applied": "Wixie applies %s"
+	"ars_nouveau.wixie_familiar.applied": "Wixie applies %s",
+	"ars_nouveau.flask_cannon.no_potion": "No potions in inventory.",
+	"item.ars_nouveau.lingering_flask_cannon": "Lingering Flask Cannon",
+	"item.ars_nouveau.splash_flask_cannon": "Splash Flask Cannon"
 }
