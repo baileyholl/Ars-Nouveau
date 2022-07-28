@@ -43,15 +43,15 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
         if(bone == null)
             return;
 
-        if(bone.getName().equals("full")){
+        if(bone.getName().equalsIgnoreCase("full")){
             bone.setHidden(flask.amountLeft < 8);
-        }else if(bone.getName().equals("75")){
+        }else if(bone.getName().equalsIgnoreCase("75")){
             bone.setHidden(!(flask.amountLeft == 7 || flask.amountLeft == 6));
-        }else if(bone.getName().equals("50")){
+        }else if(bone.getName().equalsIgnoreCase("50")){
             bone.setHidden(!(flask.amountLeft == 5 || flask.amountLeft == 4));
-        }else if(bone.getName().equals("25")){
+        }else if(bone.getName().equalsIgnoreCase("25")){
             bone.setHidden(!(flask.amountLeft == 3 || flask.amountLeft == 2));
-        }else if(bone.getName().equals("1")){
+        }else if(bone.getName().equalsIgnoreCase("1")){
             bone.setHidden(flask.amountLeft != 1);
         }
 

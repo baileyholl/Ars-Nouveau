@@ -8,8 +8,8 @@ import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
-import com.hollingsworth.arsnouveau.client.renderer.item.FlaskCannonModel;
 import com.hollingsworth.arsnouveau.client.renderer.item.FlaskCannonRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetLauncher;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -168,17 +168,6 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
         return factory;
     }
 
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-        consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new FlaskCannonModel());
-
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer;
-            }
-        });
-    }
 
     @Override
     public void registerControllers(AnimationData data) {}
@@ -198,6 +187,18 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
             PotionUtils.setCustomEffects(splashStack, potionData.getCustomEffects());
             return splashStack;
         }
+
+        @Override
+        public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+            super.initializeClient(consumer);
+            consumer.accept(new IClientItemExtensions() {
+                private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new GenericModel<>("splash_flask_cannon", "items").withEmptyAnim());
+
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    return renderer;
+                }
+            });
+        }
     }
 
     public static class LingeringLauncher extends FlaskCannon {
@@ -214,6 +215,18 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
             PotionUtils.setPotion(splashStack, potionData.getPotion());
             PotionUtils.setCustomEffects(splashStack, potionData.getCustomEffects());
             return splashStack;
+        }
+
+        @Override
+        public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+            super.initializeClient(consumer);
+            consumer.accept(new IClientItemExtensions() {
+                private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new GenericModel<>("lingering_flask_cannon", "items").withEmptyAnim());
+
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    return renderer;
+                }
+            });
         }
     }
 
