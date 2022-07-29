@@ -1,35 +1,42 @@
 package com.hollingsworth.arsnouveau.common.world.tree;
 
 import com.google.common.collect.Lists;
+import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
+import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class MagicTrunkPlacer extends TrunkPlacer {
     boolean isWorldGen;
-
+    ResourceLocation podID;
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b) {
         super(baseHeight, height_rand_a, height_rand_b);
     }
 
-    public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b, boolean isWorldGen) {
+    public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b, boolean isWorldGen, String podName) {
         this(baseHeight, height_rand_a, height_rand_b);
         this.isWorldGen = isWorldGen;
+        this.podID = new ResourceLocation(podName);
     }
 
     @Override
@@ -41,8 +48,10 @@ public class MagicTrunkPlacer extends TrunkPlacer {
             builder.group(Codec.intRange(0, 32).fieldOf("base_height").forGetter(placer -> placer.baseHeight),
                             Codec.intRange(0, 24).fieldOf("height_rand_a").forGetter(placer -> placer.heightRandA),
                             Codec.intRange(0, 24).fieldOf("height_rand_b").forGetter(placer -> placer.heightRandB),
-                            Codec.BOOL.fieldOf("isWorldGen").forGetter(placer -> placer.isWorldGen))
+                            Codec.BOOL.fieldOf("isWorldGen").forGetter(placer -> placer.isWorldGen),
+                            Codec.STRING.fieldOf("podID").forGetter(placer -> placer.podID.toString()))
                     .apply(builder, MagicTrunkPlacer::new));
+
 
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
@@ -59,11 +68,11 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
         int numBranches = 0;
         int lastBranch = 0;
-        boolean northB = rand.nextFloat() >= 0.5;
-        boolean southB = rand.nextFloat() >= 0.5;
-        boolean eastB = rand.nextFloat() >= 0.5;
-        boolean westB = rand.nextFloat() >= 0.5;
-
+        double branchChance = 0.5;
+        boolean northB = rand.nextFloat() >= branchChance;
+        boolean southB = rand.nextFloat() >= branchChance;
+        boolean eastB = rand.nextFloat() >= branchChance;
+        boolean westB = rand.nextFloat() >= branchChance;
         for (int i = 0; i < foliageHeight; ++i) {
             int j2 = y + i;
             BlockPos blockpos1 = new BlockPos(x, j2, z);
@@ -118,7 +127,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
                 }
 
             }
-
+            // Leaf tops
             if (i == foliageHeight - 2) {
                 float leafChance = .1f;
 
@@ -189,10 +198,35 @@ public class MagicTrunkPlacer extends TrunkPlacer {
 
 
             }
+
+            // pod decoration
+            if(isWorldGen && i >= 2 && i < foliageHeight - 2){
+                addPod(world,blockpos1,rand,consumer, new Direction[]{Direction.NORTH, Direction.WEST} );
+                addPod(world,blockpos1.east(),rand,consumer, new Direction[]{Direction.NORTH, Direction.EAST} );
+                addPod(world,blockpos1.south(),rand,consumer, new Direction[]{Direction.SOUTH, Direction.WEST} );
+                addPod(world,blockpos1.south().east(),rand,consumer, new Direction[]{Direction.SOUTH, Direction.EAST} );
+            }
         }
 
         list.add(new FoliagePlacer.FoliageAttachment(new BlockPos(x, yOffset, z), 0, true));
         return list;
+    }
+
+    public void addPod(LevelSimulatedReader world, BlockPos pos, RandomSource random, BiConsumer<BlockPos, BlockState> consumer, Direction[] validDirs){
+        if(random.nextDouble() <= 0.07) {
+            Direction d = validDirs[random.nextInt(validDirs.length)];
+            int age = random.nextIntBetweenInclusive(0, 2);
+            if(world.isStateAtPosition(pos.relative(d), BlockBehaviour.BlockStateBase::isAir)) {
+                setBlock(world, pos.relative(d).immutable(), getPodState()
+                        .setValue(HorizontalDirectionalBlock.FACING, d.getOpposite())
+                        .setValue(SconceBlock.LIGHT_LEVEL, 6 + age)
+                        .setValue(ArchfruitPod.AGE, age), consumer);
+            }
+        }
+    }
+
+    public BlockState getPodState(){
+        return ForgeRegistries.BLOCKS.getValue(podID).defaultBlockState();
     }
 
     public void addBranch(LevelSimulatedReader world, BlockPos pos, int height, Direction d, RandomSource random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {

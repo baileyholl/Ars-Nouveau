@@ -605,6 +605,19 @@ public class RecipeDatagen extends RecipeProvider {
             }
 
             shapelessBuilder(getRitualItem(RitualLib.HARVEST)).requires(BlockRegistry.FLOURISHING_LOG).requires(ItemsRegistry.EARTH_ESSENCE).requires(Items.IRON_HOE).save(consumer);
+            shapedBuilder(ItemsRegistry.WIXIE_HAT)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', ItemsRegistry.MAGE_FIBER)
+                    .define('y', Tags.Items.INGOTS_GOLD).save(consumer);
+            shapedBuilder(BlockRegistry.POTION_DIFFUSER)
+                    .pattern(" x ")
+                    .pattern("zyz")
+                    .pattern("xxx")
+                    .define('x', BlockRegistry.ARCHWOOD_PLANK)
+                    .define('y', Tags.Items.RODS_BLAZE)
+                    .define('z', Tags.Items.INGOTS_GOLD).save(consumer);
         }
     }
 

@@ -17,6 +17,10 @@ public class LibPotions {
 
     public static final String FAMILIAR_SICKNESS = "familiar_sickness";
     public static final String SUMMONING_SICKNESS = "summoning_sickness";
+    public static final String RECOVERY = "recovery";
+    public static final String BLAST = "blasting";
+    public static final String FREEZING = "freezing";
+    public static final String DEFENCE = "shielding";
 
     public static String potion(String base) {
         return base + "_potion";

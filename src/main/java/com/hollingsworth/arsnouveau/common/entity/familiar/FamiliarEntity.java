@@ -43,8 +43,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import net.minecraft.world.entity.Entity.RemovalReason;
-
 public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable, IDecoratable {
 
     public double manaReserveModifier = 0.15;
@@ -126,10 +124,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public PlayState walkPredicate(AnimationEvent event) {
         return PlayState.CONTINUE;
     }
+    public AnimationController controller;
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "walkController", 1, this::walkPredicate));
+        controller = new AnimationController<>(this, "walkController", 1, this::walkPredicate);
+        data.addAnimationController(controller);
     }
 
 
@@ -181,12 +181,17 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         return this.entityData.get(COSMETIC);
     }
 
-    public void setCosmeticItem(ItemStack stack) {
-        if (!this.entityData.get(COSMETIC).isEmpty())
+    //use this for tag reload
+    public void setCosmeticItem(ItemStack stack, boolean shouldDrop) {
+        if (!this.entityData.get(COSMETIC).isEmpty() && shouldDrop)
             this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), this.entityData.get(COSMETIC)));
         this.entityData.set(COSMETIC, stack);
         this.persistentData.cosmetic = stack;
         syncTag();
+    }
+
+    public void setCosmeticItem(ItemStack stack) {
+        setCosmeticItem(stack, true);
     }
 
     @Override
@@ -315,7 +320,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             setColor(persistentData.color);
         }
         if (persistentData.cosmetic != null) {
-            setCosmeticItem(persistentData.cosmetic);
+            setCosmeticItem(persistentData.cosmetic, false);
         }
     }
 }

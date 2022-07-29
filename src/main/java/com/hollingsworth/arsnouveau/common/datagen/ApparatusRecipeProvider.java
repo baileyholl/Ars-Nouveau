@@ -911,6 +911,22 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.SLIME_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .build());
+
+        addRecipe(builder().withResult(ItemsRegistry.ALCHEMISTS_CROWN).withReagent(Items.GOLDEN_HELMET).withPedestalItem(3, Items.GLASS_BOTTLE).build());
+        addRecipe(builder().withResult(BlockRegistry.POTION_DIFFUSER).withReagent(Blocks.CAMPFIRE)
+                .withPedestalItem(3, Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(3, BlockRegistry.ARCHWOOD_PLANK).build());
+
+        addRecipe(builder().withResult(ItemsRegistry.SPLASH_LAUNCHER)
+                .withReagent(Items.DISPENSER)
+                .withPedestalItem(2, Tags.Items.INGOTS_GOLD)
+                .withPedestalItem(2, Tags.Items.RODS_BLAZE)
+                .withPedestalItem(4, Tags.Items.GUNPOWDER).build());
+        addRecipe(builder().withResult(ItemsRegistry.LINGERING_LAUNCHER)
+                .withReagent(ItemsRegistry.SPLASH_LAUNCHER)
+                .withPedestalItem(Items.DRAGON_BREATH)
+                .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
+                .build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe) {

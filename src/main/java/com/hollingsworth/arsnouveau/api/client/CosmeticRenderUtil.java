@@ -23,10 +23,10 @@ public class CosmeticRenderUtil {
         RenderUtils.moveToPivot(bone, matrix);
         RenderUtils.rotate(bone, matrix);
         RenderUtils.translate(bone, matrix);
-        Vec3 t = cosmetic.getTranslations();
-        Vec3 s = cosmetic.getScaling();
-        matrix.translate(t.x, t.y, t.z);
-        matrix.scale((float) s.x, (float) s.y, (float) s.z);
+        Vec3 translations = cosmetic.getTranslations();
+        Vec3 scaling = cosmetic.getScaling();
+        matrix.translate(translations.x, translations.y, translations.z);
+        matrix.scale((float) scaling.x, (float) scaling.y, (float) scaling.z);
         Minecraft.getInstance().getItemRenderer().renderStatic(stack, cosmetic.getTransformType(), packedLightIn, OverlayTexture.NO_OVERLAY, matrix, buffer, (int) entity.getOnPos().asLong());
 
         matrix.popPose();

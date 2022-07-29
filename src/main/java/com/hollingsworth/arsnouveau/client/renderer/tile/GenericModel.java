@@ -25,6 +25,11 @@ public class GenericModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
         this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/" + textPathRoot + "/" + name + ".png");
     }
 
+    public GenericModel withEmptyAnim(){
+        this.animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/empty.json");
+        return this;
+    }
+
     @Override
     public ResourceLocation getModelResource(T iAnimatable) {
         return modelLocation;

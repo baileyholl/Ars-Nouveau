@@ -112,6 +112,7 @@ public class APIRegistry {
         registerSpell(EffectEvaporate.INSTANCE);
         registerSpell(EffectLinger.INSTANCE);
         registerSpell(EffectSenseMagic.INSTANCE);
+        registerSpell(EffectInfuse.INSTANCE);
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
         api.registerScryer(SingleBlockScryer.INSTANCE);
         api.registerScryer(CompoundScryer.INSTANCE);

@@ -1,11 +1,18 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class SpotlightPage extends AbstractPage {
 
     public SpotlightPage(String itemString) {
         object.addProperty("item", itemString);
+    }
+
+    public SpotlightPage(ItemLike itemLike) {
+        this(getRegistryName(itemLike.asItem()).toString());
     }
 
     public SpotlightPage withTitle(String title) {

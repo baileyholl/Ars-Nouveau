@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -81,6 +83,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
+
+    public ApparatusRecipeBuilder withPedestalItem(int count, TagKey<Item> ingred) {
+        return this.withPedestalItem(count, Ingredient.of(ingred));
+    }
+
     public ApparatusRecipeBuilder keepNbtOfReagent(boolean keepEnchantmentsOfReagent) {
         this.recipe.keepNbtOfReagent = keepEnchantmentsOfReagent;
         return this;
@@ -94,6 +101,10 @@ public class ApparatusRecipeBuilder {
     public EnchantingApparatusRecipe build() {
         if (recipe.id.getPath().equals("empty"))
             recipe.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(recipe.result.getItem()).getPath());
+        if(recipe.result.isEmpty()){
+            throw new IllegalStateException("Enchanting Apparatus Recipe has no result");
+        }
+
         return recipe;
     }
 

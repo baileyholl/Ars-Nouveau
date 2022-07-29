@@ -31,7 +31,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
 //        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
     }
 
-    Starbuncle carbuncle;
+    Starbuncle starbuncle;
     MultiBufferSource buffer;
     ResourceLocation text;
 
@@ -42,7 +42,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
 
     @Override
     public void renderEarly(Starbuncle animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        this.carbuncle = animatable;
+        this.starbuncle = animatable;
         this.buffer = renderTypeBuffer;
         this.text = this.getTextureLocation(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
@@ -60,14 +60,17 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             RenderUtils.moveToPivot(bone, stack);
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
-            ItemStack itemstack = carbuncle.getHeldStack();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) carbuncle.getOnPos().asLong());
+            ItemStack itemstack = starbuncle.getHeldStack();
+            if(starbuncle.dynamicBehavior != null){
+                itemstack = starbuncle.dynamicBehavior.getStackForRender();
+            }
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
         //can be generalized as in Starbuncle familiar
         if (bone.getName().equals("head")) {
-            CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, this.carbuncle, packedLightIn);
+            CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, this.starbuncle, packedLightIn);
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);

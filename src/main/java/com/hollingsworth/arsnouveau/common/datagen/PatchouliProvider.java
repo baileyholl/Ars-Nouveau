@@ -232,8 +232,13 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("wixie_charm", 5))), getPath(AUTOMATION, "wixie_charm"));
 
         addPage(new PatchouliBuilder(RESOURCES, "archwood")
-                .withIcon(BlockRegistry.CASCADING_SAPLING)
-                .withLocalizedText(), getPath(RESOURCES, "archwood"));
+                .withIcon(BlockRegistry.BOMBEGRANTE_POD)
+                .withLocalizedText()
+                .withPage(new SpotlightPage(BlockRegistry.BOMBEGRANTE_POD).withText("ars_nouveau.page.bombegrante").linkRecipe(true))
+                        .withPage(new SpotlightPage(BlockRegistry.MENDOSTEEN_POD).withText("ars_nouveau.page.mendosteen").linkRecipe(true))
+                        .withPage(new SpotlightPage(BlockRegistry.FROSTAYA_POD).withText("ars_nouveau.page.frostaya").linkRecipe(true))
+                        .withPage(new SpotlightPage(BlockRegistry.BASTION_POD).withText("ars_nouveau.page.bastion_fruit").linkRecipe(true))
+                , getPath(RESOURCES, "archwood"));
 
         addPage(new PatchouliBuilder(RESOURCES, "archwood_forest")
                 .withIcon(BlockRegistry.BLAZING_SAPLING)
@@ -329,17 +334,8 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
 
         addBasicItem(BlockRegistry.POTION_JAR, MACHINES, new CraftingPage(BlockRegistry.POTION_JAR));
-
-        addPage(new PatchouliBuilder(MACHINES, BlockRegistry.POTION_MELDER)
-                .withLocalizedText()
-                .withPage(new ApparatusPage(BlockRegistry.POTION_MELDER))
-                .withPage(new MultiblockPage(BlockRegistry.POTION_MELDER.getDescriptionId(), new String[][]{
-                        new String[]{"   "},
-                        new String[]{"C0C"},
-                        new String[]{" C "}
-                }).withMapping("C", "ars_nouveau:potion_jar").withMapping("0", "ars_nouveau:potion_melder")
-                        .withText(getLangPath("potion_melder", 2))), getPath(MACHINES, "potion_melder"));
-
+        addBasicItem(BlockRegistry.POTION_MELDER, MACHINES, new ApparatusPage(BlockRegistry.POTION_MELDER));
+        addBasicItem(BlockRegistry.POTION_DIFFUSER, MACHINES, new ApparatusPage(BlockRegistry.POTION_DIFFUSER));
         addBasicItem(BlockRegistry.RITUAL_BLOCK, MACHINES, new CraftingPage(BlockRegistry.RITUAL_BLOCK));
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.SCRIBES_BLOCK)
                 .withPage(new TextPage(getLangPath("scribes_table", 1)).withTitle("ars_nouveau.glyph_crafting"))
@@ -424,6 +420,7 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
         addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
         addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
+        addBasicItem(ItemsRegistry.WIXIE_HAT, AUTOMATION, new CraftingPage(ItemsRegistry.WIXIE_HAT));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "support_mod")
                         .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
@@ -438,7 +435,12 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("shapers_focus", 2)).withTitle("ars_nouveau.shapers_focus.blocks"))
                 .withPage(new TextPage(getLangPath("shapers_focus", 3)).withTitle("ars_nouveau.shapers_focus.entities"))
                 .withPage(new TextPage(getLangPath("shapers_focus", 4)).withTitle("ars_nouveau.shapers_focus.examples")), getPath(EQUIPMENT, "shapers_focus"));
-
+        addBasicItem(ItemsRegistry.ALCHEMISTS_CROWN, EQUIPMENT, new ApparatusPage(ItemsRegistry.ALCHEMISTS_CROWN));
+        addPage(new PatchouliBuilder(EQUIPMENT,  "flask_cannons")
+                .withLocalizedText()
+                .withIcon(ItemsRegistry.SPLASH_LAUNCHER)
+                .withPage(new ApparatusPage(ItemsRegistry.SPLASH_LAUNCHER))
+                .withPage(new ApparatusPage(ItemsRegistry.LINGERING_LAUNCHER)), getPath(EQUIPMENT, "flask_launcher"));
     }
 
     public String getLangPath(String name, int count) {

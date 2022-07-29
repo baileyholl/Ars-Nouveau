@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -21,18 +22,14 @@ public class ClientForgeHandler {
 
     @SubscribeEvent
     public static void renderSpellHUD(final RenderGuiOverlayEvent.Post event) {
-//        if (event.getType() != RenderGuiOverlayEvent.ElementType.ALL) return;
         spellHUD.drawHUD(event.getPoseStack());
         manaHUD.drawHUD(event.getPoseStack(), event.getPartialTick());
     }
 
     @SubscribeEvent
     public static void overlayEvent(RenderGuiOverlayEvent.Pre event) {
-        if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
-            // TODO: check disable overlay
-//            if (event.getOverlay().overlay() == RenderGuiOverlayEvent.ElementType.LAYER) {
-//                event.setCanceled(true);
-//            }
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu && event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
+            event.setCanceled(true);
         }
     }
 

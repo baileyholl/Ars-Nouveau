@@ -18,7 +18,6 @@ public class MagicFindEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        super.applyEffectTick(pLivingEntity, pAmplifier);
         Level level = pLivingEntity.level;
         if (level.isClientSide || level.getGameTime() % 60 != 0)
             return;

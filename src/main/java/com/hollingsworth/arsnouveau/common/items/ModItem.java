@@ -33,6 +33,11 @@ public class ModItem extends Item {
         return this;
     }
 
+    public ModItem withTooltip(String tip) {
+        tooltip.add(Component.translatable(tip));
+        return this;
+    }
+
     public ModItem withRarity(Rarity rarity) {
         this.rarity = rarity;
         return this;

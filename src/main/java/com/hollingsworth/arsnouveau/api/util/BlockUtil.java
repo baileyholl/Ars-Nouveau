@@ -60,6 +60,12 @@ public class BlockUtil {
         return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2) + Math.pow(start.getZ() - end.getZ(), 2));
     }
 
+    public static double distanceFromCenter(BlockPos start, BlockPos end) {
+        if (start == null || end == null)
+            return 0;
+        return distanceFrom(new Vec3(start.getX() + 0.5, start.getY(), start.getZ() + 0.5), new Vec3(end.getX() + 0.5, end.getY(), end.getZ() + 0.5));
+    }
+
     public static double distanceFrom(Vec3 start, BlockPos end) {
         if (start == null || end == null)
             return 0;

@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.util;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketNoSpamChatMessage;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 
 public class PortUtil {
     public static void sendMessage(Entity playerEntity, Component component) {
@@ -14,14 +14,14 @@ public class PortUtil {
     }
 
     public static void sendMessageNoSpam(Entity playerEntity, Component component) {
-        if (playerEntity instanceof Player) {
-            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, false), (Player) playerEntity);
+        if (playerEntity instanceof ServerPlayer serverPlayer) {
+            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, false), serverPlayer);
         }
     }
 
     public static void sendMessageCenterScreen(Entity playerEntity, Component component) {
-        if (playerEntity instanceof Player) {
-            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, true), (Player) playerEntity);
+        if (playerEntity instanceof ServerPlayer serverPlayer) {
+            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, true), serverPlayer);
         }
     }
 
