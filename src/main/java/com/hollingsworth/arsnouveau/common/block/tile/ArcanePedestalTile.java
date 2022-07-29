@@ -121,5 +121,6 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
 
     public void setStack(ItemStack stack) {
         this.stack = stack;
+        updateBlock();
     }
 }
