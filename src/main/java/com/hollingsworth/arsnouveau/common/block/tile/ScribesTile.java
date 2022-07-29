@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -174,7 +175,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     public void setRecipe(GlyphRecipe recipe, Player player){
         if(ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()){
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.not_enough_exp"));
+            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.not_enough_exp").withStyle(ChatFormatting.GOLD));
             return;
         }else if(!player.isCreative()){
             player.giveExperiencePoints(-recipe.exp);
@@ -185,6 +186,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         tile.refundConsumed();
         tile.recipe = recipe;
         tile.recipeID = recipe.getId();
+        PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.scribes_table.started_crafting").withStyle(ChatFormatting.GOLD));
         tile.updateBlock();
     }
 
@@ -396,6 +398,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
         if(recipe != null){
             tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
+            tooltip.add(new TranslatableComponent("ars_nouveau.scribes_table.throw_items").withStyle(ChatFormatting.GOLD));
         }
     }
 
@@ -405,5 +408,6 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     public void setStack(ItemStack stack) {
         this.stack = stack;
+        updateBlock();
     }
 }

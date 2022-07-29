@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -10,10 +11,13 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +42,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable {
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable, ITooltipProvider {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -73,6 +77,14 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                     level.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge + level.random.nextInt(20)) ,
                             particlePos.x(), particlePos.y(), particlePos.z(),
                             getX() + 0.5  , getY() +0.5 , getZ()+ 0.5);
+                }
+            }
+            if(!stack.isEmpty() && recipe == null){
+                for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE)){
+                    if(recipe.matches(this, level)){
+                        this.recipe = recipe;
+                        break;
+                    }
                 }
             }
             return;
@@ -281,5 +293,15 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             }
         }
         return pedestalItems;
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+        if(recipe != null && !recipe.output.isEmpty() && stack != null && !stack.isEmpty()) {
+            tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
+            if(recipe.source > 0) {
+                tooltip.add(new TranslatableComponent("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.source)).withStyle(ChatFormatting.GOLD));
+            }
+        }
     }
 }

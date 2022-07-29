@@ -1091,5 +1091,9 @@
 	"key.ars_nouveau.qc7": "Quick Cast Slot 07",
 	"key.ars_nouveau.qc8": "Quick Cast Slot 08",
 	"key.ars_nouveau.qc9": "Quick Cast Slot 09",
-	"key.ars_nouveau.qc10": "Quick Cast Slot 10"
+	"key.ars_nouveau.qc10": "Quick Cast Slot 10",
+	"ars_nouveau.imbuement.crafting_started": "Crafting %s. Add source nearby to increase craft speed.",
+	"ars_nouveau.crafting_progress": "Crafting Progress: %s",
+	"ars_nouveau.scribes_table.throw_items": "Toss remaining items onto the table.",
+	"ars_nouveau.scribes_table.started_crafting": "Toss items as they appear above to complete crafting."
 }

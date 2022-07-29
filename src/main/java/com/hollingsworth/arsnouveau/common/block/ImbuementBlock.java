@@ -47,10 +47,11 @@ public class ImbuementBlock extends TickableModBlock {
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe == null){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.imbuement.norecipe"));
+                PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.imbuement.norecipe"));
                 tile.stack = ItemStack.EMPTY;
             }else{
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.imbuement.crafting_started", recipe.output.getHoverName()));
                 tile.update();
             }
         }else{
@@ -63,6 +64,7 @@ public class ImbuementBlock extends TickableModBlock {
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe != null){
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
             }else{
                 tile.stack = ItemStack.EMPTY;
             }
