@@ -24,7 +24,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.7.1'
+version = '2.7.2'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -153,7 +153,8 @@ dependencies {
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
     implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.13')
 
-//    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
+    implementation fg.deobf("curse.maven:exp-556861:3865719")// functional storage
+    implementation fg.deobf("curse.maven:exp-287342:3819942") // titanium
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
 
 //    runtimeOnly fg.deobf("curse.maven:security-64760:3696873") // Securitycraft

@@ -50,7 +50,7 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
 
     @Override
     public ItemStack onPlaceBlock() {
-        return BlockUtil.getItemAdjacent(level, worldPosition, (stack) -> stack.getItem() instanceof BlockItem);
+        return BlockUtil.getItemAdjacent(level, worldPosition, (stack) -> stack.getItem() instanceof BlockItem, 1);
     }
 
     @Override

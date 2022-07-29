@@ -152,15 +152,14 @@ public class BlockUtil {
         return stack;
     }
 
-    public static ItemStack getItemAdjacent(Level world, BlockPos pos, Predicate<ItemStack> matchPredicate){
-        ItemStack stack = ItemStack.EMPTY;
+    public static ItemStack getItemAdjacent(Level world, BlockPos pos, Predicate<ItemStack> matchPredicate, int amount){
         for(IItemHandler inv : BlockUtil.getAdjacentInventories(world, pos)){
             for(int i = 0; i < inv.getSlots(); ++i) {
                 if(matchPredicate.test(inv.getStackInSlot(i)))
-                    return inv.getStackInSlot(i);
+                    return inv.extractItem(i, amount, false);
             }
         }
-        return stack;
+        return ItemStack.EMPTY;
     }
 
     public static boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){

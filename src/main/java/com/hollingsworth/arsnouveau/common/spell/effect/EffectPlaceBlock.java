@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
@@ -52,24 +53,31 @@ public class EffectPlaceBlock extends AbstractEffect {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
-                if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
+                if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem)) {
+                    BlockUtil.insertItemAdjacent(world, spellContext.castingTile.getBlockPos(), stack);
                     return;
-
+                }
                 BlockItem item = (BlockItem) stack.getItem();
                 fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
                 if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                    BlockUtil.insertItemAdjacent(world, spellContext.castingTile.getBlockPos(), stack);
                     continue;
                 }
                 // Special offset for touch
                 boolean isTouch = spellContext.getSpell().recipe.get(0) instanceof MethodTouch;
                 BlockState blockTargetted = isTouch ? world.getBlockState(hitPos.relative(result.getDirection().getOpposite())) : world.getBlockState(hitPos.relative(result.getDirection()));
-                if(blockTargetted.getMaterial() != Material.AIR)
+                if(blockTargetted.getMaterial() != Material.AIR) {
+                    BlockUtil.insertItemAdjacent(world, spellContext.castingTile.getBlockPos(), stack);
                     continue;
+                }
                 // Special offset because we are placing a block against the face we are looking at (in the case of touch)
                 Direction direction = isTouch ? result.getDirection().getOpposite() : result.getDirection();
                 BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)),
                         hitPos.relative(direction), direction);
                 item.place(context);
+                if(!stack.isEmpty()){
+                    BlockUtil.insertItemAdjacent(world, spellContext.castingTile.getBlockPos(), stack);
+                }
                 BlockPos affectedPos = context.getClickedPos();
                 ShapersFocus.tryPropagateBlockSpell(
                         new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),

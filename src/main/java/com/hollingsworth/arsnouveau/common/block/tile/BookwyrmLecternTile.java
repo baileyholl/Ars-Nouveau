@@ -170,7 +170,7 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     }
 
     public ItemStack getItem(Item item){
-        return BlockUtil.getItemAdjacent(level, worldPosition, stack -> stack.getItem() == item);
+        return BlockUtil.getItemAdjacent(level, worldPosition, stack -> stack.getItem() == item, 1);
     }
 
     @Override
