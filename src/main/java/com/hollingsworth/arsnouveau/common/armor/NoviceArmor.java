@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -12,11 +13,11 @@ public class NoviceArmor extends MagicArmor{
 
     @Override
     public int getMaxManaBoost(ItemStack i) {
-        return 25;
+        return Config.NOVIVE_ARMOR_MANA_BOOST.get();
     }
 
     @Override
     public int getManaRegenBonus(ItemStack i) {
-        return 2;
+        return Config.NOVICE_ARMOR_MANA_REGEN_BONUS.get();
     }
 }

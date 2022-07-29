@@ -200,14 +200,14 @@ public class ItemsRegistry {
                     new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_BOOST){
                         @Override
                         public int getMaxManaBoost(ItemStack i) {
-                            return 50;
+                            return Config.AMULET_OF_MANA_BOOST_MANA_BOOST.get();
                         }
                     },
                     new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_REGEN){
 
                         @Override
                         public int getManaRegenBonus(ItemStack i) {
-                            return 3;
+                            return Config.AMULET_OF_MANA_REGEN_REGEN_BONUS.get();
                         }
 
                     },

@@ -73,6 +73,21 @@ public class Config {
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
     public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
 
+    public static ForgeConfigSpec.IntValue NOVIVE_ARMOR_MANA_BOOST;
+    public static ForgeConfigSpec.IntValue NOVICE_ARMOR_MANA_REGEN_BONUS;
+
+    public static ForgeConfigSpec.IntValue APPRENTICE_ARMOR_MANA_BOOST;
+    public static ForgeConfigSpec.IntValue APPRENTICE_ARMOR_MANA_REGEN_BONUS;
+
+    public static ForgeConfigSpec.IntValue MASTER_ARMOR_MANA_BOOST;
+    public static ForgeConfigSpec.IntValue MASTER_ARMOR_MANA_REGEN_BONUS;
+
+    public static ForgeConfigSpec.IntValue DISCOUNT_RING_MANA_BOOST;
+    public static ForgeConfigSpec.IntValue DISCOUNT_RING_MANA_REGEN_BONUS;
+
+    public static ForgeConfigSpec.IntValue AMULET_OF_MANA_REGEN_REGEN_BONUS;
+    public static ForgeConfigSpec.IntValue AMULET_OF_MANA_BOOST_MANA_BOOST;
+
     public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
     public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
     public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
@@ -149,7 +164,22 @@ public class Config {
         MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
         GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
         MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
+        NOVIVE_ARMOR_MANA_BOOST = SERVER_BUILDER.defineInRange("noviceArmorManaBoost", 25, 0, Integer.MAX_VALUE);
+        NOVICE_ARMOR_MANA_REGEN_BONUS = SERVER_BUILDER.defineInRange("noviceArmorManaRegenBonus", 2, 0, Integer.MAX_VALUE);
+
+        APPRENTICE_ARMOR_MANA_BOOST = SERVER_BUILDER.defineInRange("apprenticeArmorManaBoost", 40, 0, Integer.MAX_VALUE);
+        APPRENTICE_ARMOR_MANA_REGEN_BONUS = SERVER_BUILDER.defineInRange("apprenticeArmorManaRegenBonus", 4, 0, Integer.MAX_VALUE);
+
+        MASTER_ARMOR_MANA_BOOST = SERVER_BUILDER.defineInRange("masterArmorManaBoost", 80, 0, Integer.MAX_VALUE);
+        MASTER_ARMOR_MANA_REGEN_BONUS = SERVER_BUILDER.defineInRange("masterArmorManaRegenBonus", 6, 0, Integer.MAX_VALUE);
+
+        DISCOUNT_RING_MANA_BOOST = SERVER_BUILDER.defineInRange("discountRingManaBoost", 10, 0, Integer.MAX_VALUE);
+        DISCOUNT_RING_MANA_REGEN_BONUS = SERVER_BUILDER.defineInRange("discountRingManaRegenBonus", 1, 0, Integer.MAX_VALUE);
+
+        AMULET_OF_MANA_BOOST_MANA_BOOST = SERVER_BUILDER.defineInRange("amuletOfManaBoostBoostAmount", 50, 0, Integer.MAX_VALUE);
+        AMULET_OF_MANA_REGEN_REGEN_BONUS = SERVER_BUILDER.defineInRange("amuletOfManaRegenRegenBonus", 3, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
+
         SERVER_BUILDER.push("Spells");
         ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceCapOnCast", true);
