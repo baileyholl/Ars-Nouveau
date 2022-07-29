@@ -9,11 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +30,7 @@ public class EffectWindshear extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!rayTraceResult.getEntity().isOnGround()) {
             int numBlocks = 0;
             BlockPos pos = rayTraceResult.getEntity().blockPosition();
@@ -36,7 +38,7 @@ public class EffectWindshear extends AbstractEffect {
                 pos = pos.below();
                 numBlocks++;
             }
-            dealDamage(world, shooter, (float) (DAMAGE.get() + numBlocks), spellStats, rayTraceResult.getEntity(), DamageSource.FALL);
+            dealDamage(world, shooter, (float) (DAMAGE.get() + numBlocks), spellStats, rayTraceResult.getEntity(), new EntityDamageSource("fall", getPlayer(shooter, (ServerLevel) world)).bypassArmor().setIsFall()); //converted DamageSource FALL into playerAttack
             Vec3 vec = rayTraceResult.getEntity().position;
             for (int i = 0; i < 10; i++) {
                 ((ServerLevel) world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y + 0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2), 30,

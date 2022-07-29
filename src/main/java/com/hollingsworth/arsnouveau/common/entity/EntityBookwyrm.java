@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -52,7 +53,7 @@ import java.util.List;
 
 import net.minecraft.world.entity.Entity.RemovalReason;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantTextureProvider {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantColorProvider {
 
     public static final EntityDataAccessor<String> SPELL_STRING = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
@@ -277,9 +278,19 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
-        String color = getEntityData().get(EntityBookwyrm.COLOR).toLowerCase();
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
+    }
+
+    @Override
+    public String getColor() {
+        return getEntityData().get(EntityBookwyrm.COLOR);
+    }
+
+    @Override
+    public void setColor(String color) {
+        getEntityData().set(EntityBookwyrm.COLOR, color);
     }
 }
