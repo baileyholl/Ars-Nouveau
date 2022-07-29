@@ -17,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -80,7 +79,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                 }
             }
             if(!stack.isEmpty() && recipe == null){
-                for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE)){
+                for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())){
                     if(recipe.matches(this, level)){
                         this.recipe = recipe;
                         break;
@@ -300,9 +299,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(recipe != null && !recipe.output.isEmpty() && stack != null && !stack.isEmpty()) {
-            tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
+            tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
             if(recipe.source > 0) {
-                tooltip.add(new TranslatableComponent("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.source)).withStyle(ChatFormatting.GOLD));
+                tooltip.add(Component.translatable("ars_nouveau.crafting_progress", Math.min(100, (getSource() * 100) / recipe.source)).withStyle(ChatFormatting.GOLD));
             }
         }
     }
