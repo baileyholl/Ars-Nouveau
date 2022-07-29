@@ -118,4 +118,14 @@ public class LibItemNames {
     public static final String ANNOTATED_CODEX = "annotated_codex";
     public static final String SCRYER_SCROLL = "scryer_scroll";
     public static final String SHAPERS_FOCUS = "shapers_focus";
+
+    public static final String ALCHEMISTS_CROWN = "alchemists_crown";
+    public static final String FROSTAYA = "frostaya";
+    public static final String BOMBEGRANTE = "bombegrante";
+    public static final String MENDOSTEEN = "mendosteen";
+    public static final String BASTION_FRUIT = "bastion_fruit";
+    public static final String WIXIE_HAT = "wixie_hat";
+
+    public static final String SPLASH_LAUNCHER = "splash_flask_cannon";
+    public static final String LINGERING_LAUNCHER = "lingering_flask_cannon";
 }

@@ -10,13 +10,12 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public abstract class SourceBlock extends TickableModBlock {
+public abstract class SourceBlock extends ModBlock implements EntityBlock {
 
     public SourceBlock(Properties properties, String registry) {
         super(properties);

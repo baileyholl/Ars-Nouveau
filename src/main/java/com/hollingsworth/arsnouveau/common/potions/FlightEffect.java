@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +22,6 @@ public class FlightEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int p_76394_2_) {
-        super.applyEffectTick(entity, p_76394_2_);
         if (entity instanceof Player player) {
             player.abilities.mayfly = (player.isCreative() || entity.isSpectator()) || entity.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() > 2;
         }
@@ -35,7 +35,7 @@ public class FlightEffect extends MobEffect {
             boolean canFly = player.isCreative() || player.isSpectator();
             player.abilities.mayfly = canFly;
             player.abilities.flying = canFly;
-            Networking.sendToPlayer(new PacketUpdateFlight(canFly, canFly), player);
+            Networking.sendToPlayer(new PacketUpdateFlight(canFly, canFly), (ServerPlayer) player);
         }
     }
 }

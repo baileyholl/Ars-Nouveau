@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -52,5 +53,9 @@ public abstract class ChangeableBehavior implements IWandable {
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         return InteractionResult.PASS;
+    }
+
+    public ItemStack getStackForRender(){
+        return ItemStack.EMPTY;
     }
 }

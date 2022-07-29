@@ -52,7 +52,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
             BlockState state = world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos());
             world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
             world.sendBlockUpdated(((BlockHitResult) rayTraceResult).getBlockPos(), state,
-                    state.setValue(SconceBlock.LIGHT_LEVEL, 15), 3);
+                    state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
         }
     }
 

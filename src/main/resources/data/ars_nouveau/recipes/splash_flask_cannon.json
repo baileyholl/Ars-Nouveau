@@ -1,0 +1,55 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:splash_flask_cannon"
+  },
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gunpowder"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gunpowder"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gunpowder"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gunpowder"
+      }
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:dispenser"
+    }
+  ],
+  "sourceCost": 0
+}

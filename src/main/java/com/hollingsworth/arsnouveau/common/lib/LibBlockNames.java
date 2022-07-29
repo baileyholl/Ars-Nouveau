@@ -131,6 +131,12 @@ public class LibBlockNames {
     public static final String SCRYERS_OCULUS = "scryers_oculus";
     public static final String SCRYERS_CRYSTAL = "scryers_crystal";
 
+    public static final String FROSTAYA_POD = "frostaya_pod";
+    public static final String BOMBEGRANATE_POD = "bombegranate_pod";
+    public static final String MENDOSTEEN_POD = "mendosteen_pod";
+    public static final String BASTION_POD = "bastion_pod";
+    public static final String POTION_DIFFUSER = "potion_diffuser";
+
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
             SMOOTH_SOURCESTONE_BASKET, SMOOTH_SOURCESTONE_MOSAIC, SMOOTH_SOURCESTONE_ALTERNATING, SMOOTH_SOURCESTONE_LARGE_BRICKS, SMOOTH_SOURCESTONE, SMOOTH_SOURCESTONE_SMALL_BRICKS,

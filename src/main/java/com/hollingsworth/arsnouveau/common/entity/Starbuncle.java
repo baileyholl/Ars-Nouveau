@@ -10,12 +10,19 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
+import com.hollingsworth.arsnouveau.common.entity.debug.EntityDebugger;
+import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
+import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.AvoidEntityGoalMC;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.UntamedFindItem;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
+import com.hollingsworth.arsnouveau.common.network.ITagSyncable;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -36,10 +43,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -62,13 +66,12 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
 import javax.annotation.Nullable;
 import java.util.*;
-
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
+
 
     public enum StarbuncleGoalState {
         FORAGING,
@@ -78,7 +81,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         RESTING,
         NONE
     }
-
+    public EntityDebugger debugger = new EntityDebugger(this);
     public StarbuncleGoalState goalState;
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
@@ -104,7 +107,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-        addGoalsAfterConstructor();
+        reloadGoals();
         this.moveControl = new MovementHandler(this);
     }
 
@@ -114,7 +117,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-        addGoalsAfterConstructor();
+        reloadGoals();
     }
 
     @Override
@@ -142,6 +145,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void setBehavior(ChangeableBehavior behavior) {
         this.dynamicBehavior = behavior;
         getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+        reloadGoals();
+        syncBehavior();
     }
 
     @Override
@@ -233,6 +238,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             System.out.println(this);
             return;
         }
+
         if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }
@@ -262,7 +268,20 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.dynamicBehavior.onWanded(playerEntity);
         data.pathBlock = null;
         data.bedPos = null;
+        if(!getCosmeticItem().isEmpty()){
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getCosmeticItem().split(1)));
+            if(!(dynamicBehavior instanceof StarbyTransportBehavior)){
+                dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
+                PortUtil.sendMessage(playerEntity, "ars_nouveau.starbuncle.default_behavior");
+                syncBehavior();
+            }
+            this.setCosmeticItem(ItemStack.EMPTY);
+        }
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.cleared"));
+    }
+
+    public void syncBehavior(){
+        Networking.sendToNearby(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), getId()));
     }
 
     @Override
@@ -300,7 +319,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor() {
+    protected void reloadGoals() {
         if (this.level.isClientSide())
             return;
         this.goalSelector.availableGoals.clear();
@@ -333,16 +352,17 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
-            stack.setTag(data.toTag(this, new CompoundTag()));
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            if (this.getHeldStack() != null)
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
-            if (!this.getCosmeticItem().isEmpty()) {
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getCosmeticItem().copy()));
-            }
+            dropData();
         }
         super.die(source);
+    }
+
+    public void dropData(){
+        ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
+        stack.setTag(data.toTag(this, new CompoundTag()));
+        level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+        if (this.getHeldStack() != null)
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
     }
 
     public AABB getAABB() {
@@ -399,7 +419,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public void setHeldStack(ItemStack stack) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack == null ? ItemStack.EMPTY : stack);
     }
 
     public ItemStack getHeldStack() {
@@ -423,13 +443,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack charm = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
-            charm.setTag(data.toTag(this, new CompoundTag()));
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), charm.copy()));
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getHeldStack()));
-            if (!this.getCosmeticItem().isEmpty()) {
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getCosmeticItem().copy()));
-            }
+            dropData();
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
@@ -449,7 +463,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
         if (!setBehaviors) {
             this.goalSelector.availableGoals = new LinkedHashSet<>();
-            this.addGoalsAfterConstructor();
+            this.reloadGoals();
             setBehaviors = true;
             restoreFromTag();
         }
@@ -481,12 +495,25 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         if(data.behaviorTag != null){
             this.dynamicBehavior = BehaviorRegistry.create(this, data.behaviorTag);
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
-            this.addGoalsAfterConstructor();
+            this.reloadGoals();
         }else if(this.isTamed()){
             this.dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
-            this.addGoalsAfterConstructor();
+            this.reloadGoals();
         }
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        super.onSyncedDataUpdated(pKey);
+        if(pKey == BEHAVIOR_TAG){
+            this.dynamicBehavior = BehaviorRegistry.create(this, this.entityData.get(BEHAVIOR_TAG));
+        }
+    }
+
+    @Override
+    public SynchedEntityData getEntityData() {
+        return super.getEntityData();
     }
 
     @Override
@@ -497,7 +524,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        dynamicBehavior.getTooltip(tooltip);
+        if(dynamicBehavior != null)
+            dynamicBehavior.getTooltip(tooltip);
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
@@ -541,6 +569,23 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         YELLOW
     }
 
+    @Override
+    public IDebugger getDebugger() {
+        return debugger;
+    }
+
+    public void addGoalDebug(Goal goal, DebugEvent debugEvent){
+        debugEvent.id = goal.getClass().getSimpleName() + "_" + debugEvent.id;
+        addDebugEvent(debugEvent);
+    }
+
+    @Override
+    public void onTagSync(CompoundTag tag) {
+        if(level.isClientSide) {
+            this.dynamicBehavior = BehaviorRegistry.create(this, tag);
+        }
+    }
+
     public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
         public Block pathBlock;
         public BlockPos bedPos;
@@ -557,6 +602,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 bedPos = null;
             if(tag.contains("behavior"))
                 behaviorTag = tag.getCompound("behavior");
+            if(tag.contains("cosmetic")){
+                cosmetic = ItemStack.of(tag.getCompound("cosmetic"));
+            }
         }
 
         @Override
@@ -566,6 +614,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 tag.putString("path", getRegistryName(pathBlock).toString());
             if (bedPos != null)
                 NBTUtil.storeBlockPos(tag, "bed_", bedPos);
+            if(!starbuncle.getCosmeticItem().isEmpty()){
+                tag.put("cosmetic", starbuncle.getCosmeticItem().serializeNBT());
+            }
             tag.put("behavior", starbuncle.dynamicBehavior.toTag(new CompoundTag()));
             return tag;
         }

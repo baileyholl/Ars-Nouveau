@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
+import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
+import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -41,6 +43,17 @@ public class StarbuncleCharm extends AbstractSummonCharm {
         Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(stack.getOrCreateTag());
         if (data.name != null) {
             tooltip2.add(data.name);
+        }
+        if(data.behaviorTag != null && worldIn != null){
+            // danger zone
+            try{
+                ChangeableBehavior behavior = BehaviorRegistry.create(new Starbuncle(worldIn, true), data.behaviorTag);
+                if(behavior != null){
+                    behavior.getTooltip(tooltip2);
+                }
+            }catch (Exception e){
+                // :-)
+            }
         }
     }
 }

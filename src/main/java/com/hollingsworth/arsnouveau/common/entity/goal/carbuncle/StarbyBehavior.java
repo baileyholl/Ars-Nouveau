@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class StarbyBehavior extends ChangeableBehavior {
@@ -45,5 +46,14 @@ public class StarbyBehavior extends ChangeableBehavior {
     @Override
     protected ResourceLocation getRegistryName() {
         return new ResourceLocation(ArsNouveau.MODID, "starby");
+    }
+
+    public void syncTag(){
+        starbuncle.syncBehavior();
+    }
+
+    @Override
+    public ItemStack getStackForRender() {
+        return starbuncle.getHeldStack();
     }
 }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarCarbyRenderer;
@@ -11,7 +12,10 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamil
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.items.PotionFlask;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -41,6 +45,7 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.client.ClientForgeHandler.localize;
@@ -156,7 +161,6 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
-
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
@@ -178,21 +182,33 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void initColors(final RegisterColorHandlersEvent.Item event) {
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
                 ItemsRegistry.POTION_FLASK);
 
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
                 ItemsRegistry.POTION_FLASK_EXTEND_TIME);
 
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
                 ItemsRegistry.POTION_FLASK_AMPLIFY);
 
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        new ParticleColor(200, 0, 200).getColor(),
+                ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
+
         event.getBlockColors().register((state, reader, pos, tIndex) ->
-                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
-                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
+                        ? jarTile.getColor()
                         : -1, BlockRegistry.POTION_JAR);
+
+        event.getBlockColors().register((state, reader, pos, tIndex) ->
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
+                        ? melderTile.getColor()
+                        : -1, BlockRegistry.POTION_MELDER);
+
+    }
+
+    public static int colorFromFlask(ItemStack stack) {
+        PotionFlask.FlaskData data = new PotionFlask.FlaskData(stack);
+        return data.getPotion().getPotion() == Potions.EMPTY ? -1 : PotionUtils.getColor(data.getPotion().asPotionStack());
     }
 }

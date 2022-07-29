@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -28,15 +26,10 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-public class StarbyTransportBehavior extends StarbyBehavior {
+public class StarbyTransportBehavior extends StarbyListBehavior {
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(ArsNouveau.MODID, "starby_transport");
-
-    public List<BlockPos> FROM_LIST = new ArrayList<>();
-
-    public List<BlockPos> TO_LIST = new ArrayList<>();
 
     public ItemStack itemScroll;
 
@@ -44,28 +37,13 @@ public class StarbyTransportBehavior extends StarbyBehavior {
         super(entity, tag);
         if(!entity.isTamed())
             return;
-        int counter = 0;
 
-        while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
-            BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
-            if (!this.FROM_LIST.contains(pos))
-                this.FROM_LIST.add(pos);
-            counter++;
-        }
-
-        counter = 0;
-        while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
-            BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
-            if (!this.TO_LIST.contains(pos))
-                this.TO_LIST.add(pos);
-            counter++;
-        }
         if(tag.contains("itemScroll"))
             this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
         goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
         goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new StoreItemGoal(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new TakeItemGoal(starbuncle, this)));
+        goals.add(new WrappedGoal(3, new NewStoreItemGoal(starbuncle, this)));
+        goals.add(new WrappedGoal(3, new NewTakeItemGoal(starbuncle, this)));
     }
 
     @Override
@@ -252,37 +230,11 @@ public class StarbyTransportBehavior extends StarbyBehavior {
     @Override
     public void onWanded(Player playerEntity) {
         super.onWanded(playerEntity);
-        FROM_LIST = new ArrayList<>();
-        TO_LIST = new ArrayList<>();
-    }
-
-    public void addFromPos(BlockPos fromPos) {
-        if (!FROM_LIST.contains(fromPos)) {
-            FROM_LIST.add(fromPos.immutable());
-            syncTag();
-        }
-    }
-
-    public void addToPos(BlockPos toPos) {
-        if (!TO_LIST.contains(toPos)) {
-            TO_LIST.add(toPos.immutable());
-            syncTag();
-        }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        int counter = 0;
-        for (BlockPos p : FROM_LIST) {
-            NBTUtil.storeBlockPos(tag, "from_" + counter, p);
-            counter++;
-        }
-        counter = 0;
-        for (BlockPos p : TO_LIST) {
-            NBTUtil.storeBlockPos(tag, "to_" + counter, p);
-            counter++;
-        }
         if(itemScroll != null) {
             tag.put("itemScroll", itemScroll.serializeNBT());
         }
@@ -292,19 +244,11 @@ public class StarbyTransportBehavior extends StarbyBehavior {
     @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
-        StarbyTransportBehavior behavior = (StarbyTransportBehavior) BehaviorRegistry.create(starbuncle, starbuncle.getEntityData().get(Starbuncle.BEHAVIOR_TAG));
-        if(behavior != null){
-            tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", behavior.TO_LIST.size()));
-            tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", behavior.FROM_LIST.size()));
-            if(behavior.itemScroll != null && !behavior.itemScroll.isEmpty()) {
-                tooltip.add(Component.translatable("ars_nouveau.filtering_with", behavior.itemScroll.getHoverName().getString()));
-            }
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing", TO_LIST.size()));
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking", FROM_LIST.size()));
+        if (itemScroll != null && !itemScroll.isEmpty()) {
+            tooltip.add(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }
-
-    }
-
-    public void syncTag(){
-        starbuncle.getEntityData().set(Starbuncle.BEHAVIOR_TAG, this.toTag(new CompoundTag()));
     }
 
     @Override

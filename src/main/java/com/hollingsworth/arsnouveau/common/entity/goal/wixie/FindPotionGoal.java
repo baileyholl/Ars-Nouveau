@@ -16,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
@@ -35,9 +33,9 @@ public class FindPotionGoal extends ExtendedRangeGoal {
         super.start();
         BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         found = false;
-        if (tileEntity instanceof WixieCauldronTile) {
-            potionNeeded = ((WixieCauldronTile) tileEntity).getNeededPotion();
-            movePos = ((WixieCauldronTile) tileEntity).findNeededPotion(potionNeeded, 300);
+        if (tileEntity instanceof WixieCauldronTile cauldronTile) {
+            potionNeeded = cauldronTile.getNeededPotion();
+            movePos = cauldronTile.findNeededPotion(potionNeeded, 300, wixie.level, wixie.cauldronPos);
             this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
         } else {
             found = true;
@@ -67,14 +65,13 @@ public class FindPotionGoal extends ExtendedRangeGoal {
                 found = true;
                 return;
             }
-            jar.setFill(jar.getCurrentFill() - 300);
+            jar.remove(300);
             tile.givePotion();
             Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
             int color = jar.getColor();
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
             int b = (color) & 0xFF;
-            int a = (color >> 24) & 0xFF;
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r, g, b);
 
             world.addFreshEntity(aoeProjectile);

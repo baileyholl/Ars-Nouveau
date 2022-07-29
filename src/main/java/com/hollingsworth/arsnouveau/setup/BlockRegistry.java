@@ -22,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -316,6 +317,24 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<ScryerCrystalTile> SCRYER_CRYSTAL_TILE;
 
+    @ObjectHolder(value = prepend + LibBlockNames.MENDOSTEEN_POD, registryName = BlockRegistryKey)
+    public static ArchfruitPod MENDOSTEEN_POD;
+
+    @ObjectHolder(value = prepend + LibBlockNames.BASTION_POD, registryName = BlockRegistryKey)
+    public static ArchfruitPod BASTION_POD;
+
+    @ObjectHolder(value = prepend + LibBlockNames.FROSTAYA_POD, registryName = BlockRegistryKey)
+    public static ArchfruitPod FROSTAYA_POD;
+
+    @ObjectHolder(value = prepend + LibBlockNames.BOMBEGRANATE_POD, registryName = BlockRegistryKey)
+    public static ArchfruitPod BOMBEGRANTE_POD;
+
+    @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockRegistryKey)
+    public static PotionDiffuserBlock POTION_DIFFUSER;
+
+    @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<PotionDiffuserTile> POTION_DIFFUSER_TILE;
+
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
@@ -417,6 +436,11 @@ public class BlockRegistry {
         registry.register(LibBlockNames.YELLOW_SBED, new SummonBed());
         registry.register(LibBlockNames.PURPLE_SBED, new SummonBed());
 
+        registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG));
+        registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG));
+        registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG));
+        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG));
+        registry.register(LibBlockNames.POTION_DIFFUSER, new PotionDiffuserBlock());
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
                 registry.register(s, new DirectionalModBlock());
@@ -471,7 +495,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.RELAY_COLLECTOR, BlockEntityType.Builder.of(RelayCollectorTile::new, BlockRegistry.RELAY_COLLECTOR).build(null));
         registry.register(LibBlockNames.SCRYERS_OCULUS, BlockEntityType.Builder.of(ScryersOculusTile::new, BlockRegistry.SCRYERS_OCULUS).build(null));
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null));
-
+        registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -598,12 +622,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SOURCE_GEM_BLOCK, getDefaultBlockItem(BlockRegistry.SOURCE_GEM_BLOCK));
 
         registry.register(LibBlockNames.POTION_JAR_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_JAR));
-        registry.register(LibBlockNames.POTION_MELDER_BLOCK, new RendererBlockItem(BlockRegistry.POTION_MELDER, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return PotionMelderRenderer::getISTER;
-            }
-        });
+        registry.register(LibBlockNames.POTION_MELDER_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_MELDER));
 
          registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
         registry.register(LibBlockNames.DRYGMY_STONE, getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK));
@@ -672,7 +691,13 @@ public class BlockRegistry {
             }
         }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
 
-       for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        registry.register(LibBlockNames.POTION_DIFFUSER, getDefaultBlockItem(BlockRegistry.POTION_DIFFUSER));
+        registry.register(LibBlockNames.MENDOSTEEN_POD, new ItemNameBlockItem(BlockRegistry.MENDOSTEEN_POD, defaultItemProperties().food(ItemsRegistry.MENDOSTEEN_FOOD)));
+        registry.register(LibBlockNames.BASTION_POD, new ItemNameBlockItem(BlockRegistry.BASTION_POD, defaultItemProperties().food(ItemsRegistry.BASTION_FOOD)));
+        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
+        registry.register(LibBlockNames.FROSTAYA_POD, new ItemNameBlockItem(BlockRegistry.FROSTAYA_POD, defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
+
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
        }
 

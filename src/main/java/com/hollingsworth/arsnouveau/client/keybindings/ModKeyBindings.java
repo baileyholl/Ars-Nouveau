@@ -23,7 +23,9 @@ public class ModKeyBindings {
     public static final KeyMapping PREVIOUS_SLOT = new KeyMapping("key.ars_nouveau.previous_slot",
             GLFW.GLFW_KEY_Z,
             CATEGORY);
-
+    public static final KeyMapping HEAD_CURIO_HOTKEY = new KeyMapping("key.ars_nouveau.head_curio_hotkey",
+            GLFW.GLFW_KEY_G,
+            CATEGORY);
 
     public static final KeyMapping QC_1 = new KeyMapping("key.ars_nouveau.qc1", -1, CATEGORY);
     public static final KeyMapping QC_2 = new KeyMapping("key.ars_nouveau.qc2", -1, CATEGORY);
@@ -51,6 +53,7 @@ public class ModKeyBindings {
         event.register(OPEN_RADIAL_HUD);
         event.register(NEXT_SLOT);
         event.register(PREVIOUS_SLOT);
+        event.register(HEAD_CURIO_HOTKEY);
         event.register(QC_1);
         event.register(QC_2);
         event.register(QC_3);

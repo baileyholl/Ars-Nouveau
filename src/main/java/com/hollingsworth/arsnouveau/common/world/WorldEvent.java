@@ -40,39 +40,39 @@ public class WorldEvent {
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> CASCADING_TREE = FeatureUtils.register("ars_nouveau:cascade_feature",
             Feature.TREE,
-            buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false));
+            buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.FROSTAYA_POD)));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> BLAZING_TREE = FeatureUtils.register("ars_nouveau:blazing_feature",
             Feature.TREE, (
-                    buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false)));
+                    buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BOMBEGRANATE_POD))));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> FLOURISHING_TREE = FeatureUtils.register("ars_nouveau:flourishing_feature",
             Feature.TREE,
-            buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false));
+            buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.MENDOSTEEN_POD)));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> VEXING_TREE = FeatureUtils.register("ars_nouveau:vexing_feature",
             Feature.TREE, (
-                    buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false)));
+                    buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BASTION_POD))));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_CASCADE_TREE = FeatureUtils.register("ars_nouveau:natural_cascade_feature",
             Feature.TREE,
-            buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, true));
+            buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, true,new ResourceLocation(ArsNouveau.MODID, LibBlockNames.FROSTAYA_POD) ));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_BLAZING_TREE = FeatureUtils.register("ars_nouveau:natural_blazing_feature",
             Feature.TREE,
-            buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true));
+            buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BOMBEGRANATE_POD)));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_FLOURISHING_TREE = FeatureUtils.register("ars_nouveau:natural_flourishing_feature",
             Feature.TREE,
-            buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true));
+            buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.MENDOSTEEN_POD)));
 
     public static Holder<ConfiguredFeature<TreeConfiguration, ?>> NATURAL_VEXING_TREE = FeatureUtils.register("ars_nouveau:natural_vexing_feature",
             Feature.TREE,
-            buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true));
+            buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BASTION_POD)));
 
-    public static TreeConfiguration buildTree(String leaves, String log, boolean natural) {
+    public static TreeConfiguration buildTree(String leaves, String log, boolean natural, ResourceLocation podRegistryName) {
         return new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(log),
-                new MagicTrunkPlacer(9, 1, 0, natural),
+                new MagicTrunkPlacer(9, 1, 0, natural, podRegistryName.toString()),
                 new SupplierBlockStateProvider(leaves),
                 new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
                 new TwoLayersFeatureSize(2, 0, 2)).build();

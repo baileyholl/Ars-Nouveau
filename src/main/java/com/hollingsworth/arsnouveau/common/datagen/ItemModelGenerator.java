@@ -1,15 +1,20 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
+
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -66,10 +71,35 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.YELLOW_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.YELLOW_SBED));
         getBuilder(LibBlockNames.ORANGE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ORANGE_SBED));
         getBuilder(LibBlockNames.PURPLE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.PURPLE_SBED));
-
+        blockAsItem(LibBlockNames.MENDOSTEEN_POD);
+        blockAsItem(LibBlockNames.BASTION_POD);
+        blockAsItem(LibBlockNames.FROSTAYA_POD);
+        blockAsItem(LibBlockNames.BOMBEGRANATE_POD);
+        itemUnchecked(ItemsRegistry.ALCHEMISTS_CROWN);
+        stateUnchecked(LibBlockNames.POTION_DIFFUSER);
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
         }
+    }
+
+    public void blockAsItem(String s){
+        getBuilder("ars_nouveau:" + s).parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", itemTexture(s));
+    }
+
+    public void blockAsItem(RegistryWrapper<? extends Block> block){
+        getBuilder(block.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", itemTexture(block.get()));
+    }
+
+    public void itemUnchecked(RegistryWrapper<? extends Item> item){
+        getBuilder(item.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", itemTexture(item.get()));
+
+    }
+
+    public void stateUnchecked(String name){
+        getBuilder(name).parent(BlockStatesDatagen.getUncheckedModel(name));
     }
 
 
@@ -82,7 +112,20 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         return Preconditions.checkNotNull(getRegistryName(item), "Item %s has a null registry name", item);
     }
 
+    private ResourceLocation registryName(final Block item) {
+        return Preconditions.checkNotNull(getRegistryName(item), "Item %s has a null registry name", item);
+    }
+
+    private ResourceLocation itemTexture(String item) {
+        return new ResourceLocation(ArsNouveau.MODID, "items" + "/" + item);
+    }
+
     private ResourceLocation itemTexture(final Item item) {
+        final ResourceLocation name = registryName(item);
+        return new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath());
+    }
+
+    private ResourceLocation itemTexture(final Block item) {
         final ResourceLocation name = registryName(item);
         return new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath());
     }

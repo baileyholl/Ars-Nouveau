@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -39,9 +41,7 @@ import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class PotionJar extends TickableModBlock implements SimpleWaterloggedBlock {
+public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, EntityBlock {
     public PotionJar(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -55,52 +55,41 @@ public class PotionJar extends TickableModBlock implements SimpleWaterloggedBloc
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
-        if (tile == null || tile.getCurrentFill() <= 0) return 0;
+        if (tile == null || tile.getAmount() <= 0) return 0;
         int step = (tile.getMaxFill() - 1) / 14;
-        return (tile.getCurrentFill() - 1) / step + 1;
+        return (tile.getAmount() - 1) / step + 1;
     }
 
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide)
-            return InteractionResult.SUCCESS;
+            return super.use(state, worldIn, pos, player, handIn, hit);
 
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null)
-            return InteractionResult.SUCCESS;
+            return super.use(state, worldIn, pos, player, handIn, hit);
         ItemStack stack = player.getItemInHand(handIn);
         Potion potion = PotionUtils.getPotion(stack);
 
         if (stack.getItem() == Items.POTION && potion != Potions.EMPTY) {
-            if (tile.getAmount() == 0) {
-
-                tile.setPotion(stack);
-                tile.addAmount(100);
+            if (tile.canAccept(new PotionData(stack),100)) {
+                tile.add(new PotionData(stack), 100);
                 if (!player.isCreative()) {
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
-
-            } else if (tile.isMixEqual(stack) && tile.getCurrentFill() < tile.getMaxFill()) {
-
-                tile.addAmount(100);
-                if (!player.isCreative()) {
-                    player.addItem(new ItemStack(Items.GLASS_BOTTLE));
-                    stack.shrink(1);
-                }
-
             }
-            worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
 
-        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100) {
+        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, tile.getPotion());
-            PotionUtils.setCustomEffects(potionStack, tile.getCustomEffects());
+            PotionUtils.setPotion(potionStack, tile.getData().getPotion());
+            PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
             player.addItem(potionStack);
             player.getItemInHand(handIn).shrink(1);
-            tile.addAmount(-100);
+            tile.remove(100);
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }

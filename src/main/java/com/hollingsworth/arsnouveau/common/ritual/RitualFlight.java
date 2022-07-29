@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -111,7 +112,7 @@ public class RitualFlight extends AbstractRitual {
                     e.getEntity().addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 60 * 20));
                     e.getEntity().abilities.mayfly = true;
                     e.getEntity().abilities.flying = wasFlying;
-                    Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getEntity());
+                    Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), (ServerPlayer) e.getEntity());
                     BlockEntity tile = e.getEntity().level.getBlockEntity(validPos);
                     if (tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight) {
                         ((RitualBrazierTile) tile).ritual.setNeedsSource(true);
