@@ -243,7 +243,7 @@
 	"ars_nouveau.familiar_desc.familiar_drygmy": "A Drygmy familiar will increase the damage of Earth spells by 2, and has a chance to increase the amount of looting when slaying enemies. Obtained by performing the Ritual of Binding near a Drygmy.",
 	"ars_nouveau.familiar_desc.familiar_starbuncle": "A Starbuncle familiar that will grant you Speed 2. Additionally, using a Golden Nugget on the starbuncle will consume it and grant the owner a short duration of Scrying for Gold Ore. Obtained by performing the Ritual of Binding near a Starbuncle.",
 	"ars_nouveau.familiar_desc.familiar_whirlisprig": "Whirlisprigs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food. Obtained by performing the Ritual of Binding near a Whirlisprig.",
-	"ars_nouveau.familiar_desc.familiar_wixie": "Wixies will increases the duration of potions that you consume. Additionally, the Wixie will apply harmful potions to enemies during combat. Obtained by performing the Ritual of Binding near a Wixie.",
+	"ars_nouveau.familiar_desc.familiar_wixie": "Wixies will increase the duration of potions that you apply, and wixies will accept basic potion reagents in exchange for applying the tier 1 potion result. Additionally, the Wixie will apply harmful potions to enemies during combat. Obtained by performing the Ritual of Binding near a Wixie.",
 	"ars_nouveau.familiar_name.familiar_bookwyrm": "Bookwyrm",
 	"ars_nouveau.familiar_name.familiar_drygmy": "Drygmy",
 	"ars_nouveau.familiar_name.familiar_starbuncle": "Starbuncle",
@@ -1119,5 +1119,7 @@
 	"ars_nouveau.wixie_familiar.applied": "Wixie applies %s",
 	"ars_nouveau.flask_cannon.no_potion": "No potions in inventory.",
 	"item.ars_nouveau.lingering_flask_cannon": "Lingering Flask Cannon",
-	"item.ars_nouveau.splash_flask_cannon": "Splash Flask Cannon"
+	"item.ars_nouveau.splash_flask_cannon": "Splash Flask Cannon",
+	"ars_nouveau.page.flask_cannons": "Flask Cannons",
+	"ars_nouveau.page1.flask_cannons": "Flask Cannons can consume potions from bottles and flasks from the players inventory and convert the potion into a Splash or Lingering potion. To select the potion to be thrown, use the Radial Menu to select your flask or potion and use the launcher."
 }

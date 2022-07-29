@@ -1,0 +1,19 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:splash_flask_cannon",
+  "name": "ars_nouveau.page.flask_cannons",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.flask_cannons"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:splash_flask_cannon"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:lingering_flask_cannon"
+    }
+  ]
+}

@@ -436,7 +436,11 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("shapers_focus", 3)).withTitle("ars_nouveau.shapers_focus.entities"))
                 .withPage(new TextPage(getLangPath("shapers_focus", 4)).withTitle("ars_nouveau.shapers_focus.examples")), getPath(EQUIPMENT, "shapers_focus"));
         addBasicItem(ItemsRegistry.ALCHEMISTS_CROWN, EQUIPMENT, new ApparatusPage(ItemsRegistry.ALCHEMISTS_CROWN));
-
+        addPage(new PatchouliBuilder(EQUIPMENT,  "flask_cannons")
+                .withLocalizedText()
+                .withIcon(ItemsRegistry.SPLASH_LAUNCHER)
+                .withPage(new ApparatusPage(ItemsRegistry.SPLASH_LAUNCHER))
+                .withPage(new ApparatusPage(ItemsRegistry.LINGERING_LAUNCHER)), getPath(EQUIPMENT, "flask_launcher"));
     }
 
     public String getLangPath(String name, int count) {

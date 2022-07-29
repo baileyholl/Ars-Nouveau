@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -87,7 +88,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     public void potionEvent(MobEffectEvent.Added event) {
         if (!isAlive())
             return;
-        if (event.getEntity() != null && !event.getEntity().level.isClientSide && event.getEntity().equals(getOwner())) {
+        Entity target = event.getEntity();
+        Entity applier = event.getEffectSource();
+        if(target.level.isClientSide)
+            return;
+        boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().isBeneficial();
+        boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
+        if(isBeneficialOwner || isApplierOwner){
             event.getEffectInstance().duration += event.getEffectInstance().duration * .2;
         }
     }
