@@ -25,7 +25,7 @@ public class ArcanePedestalTile extends AnimatedTile implements Container, IAnim
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public float frames;
     public ItemEntity entity;
-    public ItemStack stack = ItemStack.EMPTY;
+    private ItemStack stack = ItemStack.EMPTY;
 
     public ArcanePedestalTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_PEDESTAL_TILE, pos, state);
@@ -34,15 +34,15 @@ public class ArcanePedestalTile extends AnimatedTile implements Container, IAnim
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        stack = compound.contains("itemStack") ? ItemStack.of((CompoundTag) compound.get("itemStack")) : ItemStack.EMPTY;
+        this.stack = compound.contains("itemStack") ? ItemStack.of((CompoundTag) compound.get("itemStack")) : ItemStack.EMPTY;
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (stack != null) {
+        if (getStack() != null) {
             CompoundTag reagentTag = new CompoundTag();
-            stack.save(reagentTag);
+            getStack().save(reagentTag);
             tag.put("itemStack", reagentTag);
         }
     }
@@ -59,35 +59,35 @@ public class ArcanePedestalTile extends AnimatedTile implements Container, IAnim
 
     @Override
     public boolean isEmpty() {
-        return stack == null || stack.isEmpty();
+        return getStack() == null || getStack().isEmpty();
     }
 
     @Override
     public ItemStack getItem(int slot) {
-        return stack == null ? ItemStack.EMPTY : stack;
+        return getStack() == null ? ItemStack.EMPTY : getStack();
     }
 
     @Override
     public ItemStack removeItem(int index, int count) {
         ItemStack toReturn = getItem(0).copy().split(count);
-        stack.shrink(1);
+        getStack().shrink(1);
         updateBlock();
         return toReturn;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
-        return stack;
+        return getStack();
     }
 
     @Override
     public boolean canPlaceItem(int index, ItemStack s) {
-        return stack == null || stack.isEmpty();
+        return getStack() == null || getStack().isEmpty();
     }
 
     @Override
     public void setItem(int index, ItemStack s) {
-        stack = s;
+        setStack(s);
         updateBlock();
     }
 
@@ -99,7 +99,7 @@ public class ArcanePedestalTile extends AnimatedTile implements Container, IAnim
 
     @Override
     public void clearContent() {
-        this.stack = ItemStack.EMPTY;
+        this.setStack(ItemStack.EMPTY);
     }
 
 
@@ -121,10 +121,20 @@ public class ArcanePedestalTile extends AnimatedTile implements Container, IAnim
     @Override
     public void registerControllers(AnimationData data) {}
 
+
     AnimationFactory factory = new AnimationFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    public void setStack(ItemStack stack) {
+        this.stack = stack;
+        updateBlock();
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 }

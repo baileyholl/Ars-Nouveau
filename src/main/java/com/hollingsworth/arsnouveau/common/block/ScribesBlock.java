@@ -88,17 +88,17 @@ public class ScribesBlock extends TickableModBlock {
                 return InteractionResult.SUCCESS;
             }
 
-            if (!tile.stack.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+            if (!tile.getStack().isEmpty() && player.getItemInHand(handIn).isEmpty()) {
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                 world.addFreshEntity(item);
-                tile.stack = ItemStack.EMPTY;
+                tile.setStack(ItemStack.EMPTY);
             } else if (!player.getInventory().getSelected().isEmpty()) {
-                if (!tile.stack.isEmpty()) {
-                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                if (!tile.getStack().isEmpty()) {
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                     world.addFreshEntity(item);
                 }
 
-                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
 
             }
             BlockState updateState = world.getBlockState(tile.getBlockPos());
@@ -106,7 +106,7 @@ public class ScribesBlock extends TickableModBlock {
 //            world.updateNeighborsAt(tile.getBlockPos(), state.getBlock());
         }
         if (player.isShiftKeyDown()) {
-            ItemStack stack = tile.stack;
+            ItemStack stack = tile.getStack();
 
             if (stack == null || stack.isEmpty())
                 return InteractionResult.SUCCESS;
@@ -123,8 +123,8 @@ public class ScribesBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if (worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.stack != null) {
-            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.stack));
+        if (worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.getStack() != null) {
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
             tile.refundConsumed();
         }
     }
@@ -151,8 +151,8 @@ public class ScribesBlock extends TickableModBlock {
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         if (!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ScribesTile tile && ((ScribesTile) entity).stack != null) {
-                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).stack));
+            if (entity instanceof ScribesTile tile && ((ScribesTile) entity).getStack() != null) {
+                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).getStack()));
                 tile.refundConsumed();
             }
         }

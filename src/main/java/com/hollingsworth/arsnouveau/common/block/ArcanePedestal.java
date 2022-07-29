@@ -44,18 +44,18 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
         if (handIn != InteractionHand.MAIN_HAND)
             return InteractionResult.PASS;
         if (!world.isClientSide && world.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
-            if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
+            if (tile.getStack() != null && player.getItemInHand(handIn).isEmpty()) {
                 if (world.getBlockState(pos.above()).getMaterial() != Material.AIR)
                     return InteractionResult.SUCCESS;
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                 world.addFreshEntity(item);
-                tile.stack = ItemStack.EMPTY;
+                tile.setStack(ItemStack.EMPTY);
             } else if (!player.getInventory().getSelected().isEmpty()) {
-                if (tile.stack != null) {
-                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                if (tile.getStack() != null) {
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                     world.addFreshEntity(item);
                 }
-                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }
@@ -65,8 +65,8 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if (worldIn.getBlockEntity(pos) instanceof ArcanePedestalTile tile && tile.stack != null) {
-            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.stack));
+        if (worldIn.getBlockEntity(pos) instanceof ArcanePedestalTile tile && tile.getStack() != null) {
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
         }
     }
 

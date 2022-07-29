@@ -50,6 +50,7 @@ public class ImbuementBlock extends TickableModBlock {
                 tile.stack = ItemStack.EMPTY;
             } else {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.imbuement.crafting_started", recipe.output.getHoverName()));
                 tile.updateBlock();
             }
         } else {
@@ -63,6 +64,7 @@ public class ImbuementBlock extends TickableModBlock {
             if (recipe != null) {
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
             } else {
+                PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
                 tile.stack = ItemStack.EMPTY;
             }
             tile.draining = false;

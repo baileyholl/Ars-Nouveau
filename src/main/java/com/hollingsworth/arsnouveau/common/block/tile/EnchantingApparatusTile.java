@@ -73,7 +73,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
                         pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
 
                 for (BlockPos p : pedestalList()) {
-                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.stack != null && !pedestalTile.stack.isEmpty())
+                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.getStack() != null && !pedestalTile.getStack().isEmpty())
                         getLevel().addParticle(
                                 GlowParticleData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
                                 p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + 1.5 + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
@@ -117,8 +117,8 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     public void clearItems() {
         for (BlockPos blockPos : pedestalList()) {
-            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.stack != null) {
-                tile.stack = tile.stack.getCraftingRemainingItem();
+            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.getStack() != null) {
+                tile.setStack(tile.getStack().getCraftingRemainingItem());
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);
                 tile.setChanged();
@@ -141,8 +141,8 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     public List<ItemStack> getPedestalItems() {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         for (BlockPos blockPos : pedestalList()) {
-            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.stack != null && !tile.stack.isEmpty()) {
-                pedestalItems.add(tile.stack);
+            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.getStack() != null && !tile.getStack().isEmpty()) {
+                pedestalItems.add(tile.getStack());
             }
         }
         return pedestalItems;

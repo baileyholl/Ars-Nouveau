@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -48,7 +49,7 @@ import java.util.List;
 
 public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    public ItemStack stack = ItemStack.EMPTY;
+    private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
     public List<ItemStack> consumedStacks = new ArrayList<>();
     public GlyphRecipe recipe;
@@ -173,7 +174,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     public void setRecipe(GlyphRecipe recipe, Player player) {
         if (ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()) {
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.not_enough_exp"));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.not_enough_exp").withStyle(ChatFormatting.GOLD));
             return;
         } else if (!player.isCreative()) {
             player.giveExperiencePoints(-recipe.exp);
@@ -184,6 +185,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         tile.refundConsumed();
         tile.recipe = recipe;
         tile.recipeID = recipe.getId();
+        PortUtil.sendMessage(player, Component.translatable("ars_nouveau.scribes_table.started_crafting").withStyle(ChatFormatting.GOLD));
         tile.updateBlock();
     }
 
@@ -391,8 +393,18 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             tile.getTooltip(tooltip);
             return;
         }
-        if (recipe != null) {
+        if(recipe != null){
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
+            tooltip.add(Component.translatable("ars_nouveau.scribes_table.throw_items").withStyle(ChatFormatting.GOLD));
         }
+    }
+
+    public ItemStack getStack() {
+        return stack;
+    }
+
+    public void setStack(ItemStack stack) {
+        this.stack = stack;
+        updateBlock();
     }
 }
