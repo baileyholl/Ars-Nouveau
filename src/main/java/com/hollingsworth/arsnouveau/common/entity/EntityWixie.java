@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -52,7 +53,7 @@ import java.util.List;
 
 import net.minecraft.world.entity.Entity.RemovalReason;
 
-public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantTextureProvider {
+public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantColorProvider {
     AnimationFactory manager = new AnimationFactory(this);
 
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.BOOLEAN);
@@ -264,11 +265,22 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
-        String color = getEntityData().get(EntityWixie.COLOR).toLowerCase();
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
     }
+
+    @Override
+    public String getColor() {
+        return this.getEntityData().get(COLOR);
+    }
+
+    @Override
+    public void setColor(String color) {
+        this.getEntityData().set(COLOR,color);
+    }
+
 
     public enum Animations {
         CAST,
