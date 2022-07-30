@@ -26,11 +26,11 @@ public class ArcanePedestalRenderer extends GeoBlockRenderer<ArcanePedestalTile>
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
 
-        if (tileEntityIn.stack == null || tileEntityIn.stack.isEmpty())
+        if (tileEntityIn.getStack() == null || tileEntityIn.getStack().isEmpty())
             return;
 
-        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
-            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.stack);
+        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.getStack())) {
+            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.getStack());
         }
 
         ItemEntity entityItem = tileEntityIn.entity;

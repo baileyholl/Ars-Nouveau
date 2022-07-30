@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -23,14 +24,14 @@ public class EffectHarm extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!(rayTraceResult.getEntity() instanceof ItemEntity)) {
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
             int time = (int) spellStats.getDurationMultiplier();
-            if (time > 0) {
+            if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
                 applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
-                dealDamage(world, shooter, (float) damage, spellStats, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
+                dealDamage(world, shooter, (float) damage, spellStats, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
             }
         }
     }

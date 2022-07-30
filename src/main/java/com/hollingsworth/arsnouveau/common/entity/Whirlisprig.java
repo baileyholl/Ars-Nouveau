@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
@@ -57,6 +57,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -70,7 +71,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantTextureProvider {
+public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider {
     AnimationFactory manager = new AnimationFactory(this);
 
 
@@ -126,6 +127,10 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     public String getColor() {
         return this.entityData.get(COLOR);
+    }
+
+    public void setColor(String color) {
+        this.entityData.set(COLOR, color);
     }
 
     public static String getColorFromStack(ItemStack stack) {
@@ -374,7 +379,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    protected PathNavigation createNavigation(Level world) {
+    protected @NotNull PathNavigation createNavigation(Level world) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);

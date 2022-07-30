@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
@@ -61,7 +62,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable, IVariantTextureProvider {
+public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -345,9 +346,19 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
 
     @Override
     public ResourceLocation getTexture(LivingEntity entity) {
-        String color = getEntityData().get(COLOR).toLowerCase();
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "brown";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
+    }
+
+    @Override
+    public String getColor() {
+        return getEntityData().get(COLOR);
+    }
+
+    @Override
+    public void setColor(String color) {
+        getEntityData().set(COLOR, color);
     }
 }

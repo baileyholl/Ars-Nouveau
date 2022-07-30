@@ -45,13 +45,13 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
                 return;
             if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != BedPart.HEAD)
                 return;
-            if (tile.stack == null) {
+            if (tile.getStack() == null) {
                 return;
             }
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
             double z = tile.getBlockPos().getZ();
-            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem() : ItemsRegistry.BLANK_GLYPH.get() : tile.stack.getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn, ticks + partialTicks);
+            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem() : ItemsRegistry.BLANK_GLYPH.get() : tile.getStack().getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn, ticks + partialTicks);
         } catch (Throwable t) {
             t.printStackTrace();
             // Mercy for HORRIBLE RENDER CHANGING MODS
