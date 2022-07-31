@@ -94,10 +94,5 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
             if(color != null)
                 tag.putString("color", color);
         }
-
-        @Override
-        public String getTagString() {
-            return "an_armor_data";
-        }
     }
 }
