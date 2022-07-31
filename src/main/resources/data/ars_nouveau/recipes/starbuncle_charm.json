@@ -7,42 +7,22 @@
   "pedestalItems": [
     {
       "item": {
-        "tag": "forge:nuggets/gold"
+        "tag": "forge:ingots/gold"
       }
     },
     {
       "item": {
-        "tag": "forge:nuggets/gold"
+        "tag": "forge:ingots/gold"
       }
     },
     {
       "item": {
-        "tag": "forge:nuggets/gold"
+        "tag": "forge:ingots/gold"
       }
     },
     {
       "item": {
-        "tag": "forge:nuggets/gold"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:nuggets/gold"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:gems/source"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:gems/source"
-      }
-    },
-    {
-      "item": {
-        "tag": "forge:gems/source"
+        "tag": "forge:ingots/gold"
       }
     }
   ],

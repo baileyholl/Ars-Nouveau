@@ -524,6 +524,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        if(!isTamed())
+            return;
+
         if(dynamicBehavior != null)
             dynamicBehavior.getTooltip(tooltip);
         if (pathBlockDesc() != null && !pathBlockDesc().isEmpty()) {

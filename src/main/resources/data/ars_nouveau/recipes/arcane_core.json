@@ -6,11 +6,14 @@
     },
     "y": {
       "tag": "forge:ingots/gold"
+    },
+    "z": {
+      "tag": "forge:gems/source"
     }
   },
   "pattern": [
     "xxx",
-    "y y",
+    "yzy",
     "xxx"
   ],
   "result": {

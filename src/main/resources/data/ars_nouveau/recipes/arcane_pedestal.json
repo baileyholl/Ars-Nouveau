@@ -3,12 +3,18 @@
   "key": {
     "x": {
       "item": "ars_nouveau:sourcestone"
+    },
+    "y": {
+      "tag": "forge:nuggets/gold"
+    },
+    "z": {
+      "tag": "forge:gems/source"
     }
   },
   "pattern": [
-    "xxx",
-    " x ",
-    "xxx"
+    "xzx",
+    "yxy",
+    "yxy"
   ],
   "result": {
     "item": "ars_nouveau:arcane_pedestal"

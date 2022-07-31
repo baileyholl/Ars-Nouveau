@@ -114,8 +114,7 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder()
                 .withResult(ItemsRegistry.STARBUNCLE_CHARM)
                 .withReagent(ItemsRegistry.STARBUNCLE_SHARD)
-                .withPedestalItem(5, Ingredient.of(Tags.Items.NUGGETS_GOLD))
-                .withPedestalItem(3, RecipeDatagen.SOURCE_GEM)
+                .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .build());
 
         addRecipe(builder()

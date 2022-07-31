@@ -70,16 +70,17 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("yyy").define('x', Tags.Items.GLASS).define('y', BlockRegistry.ARCHWOOD_SLABS).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_PEDESTAL).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("xxx")
-                    .pattern(" x ")
-                    .pattern("xxx").define('x', SOURCESTONE).save(consumer);
+                    .pattern("xzx")
+                    .pattern("yxy")
+                    .pattern("yxy").define('x', SOURCESTONE).define('y', Tags.Items.NUGGETS_GOLD).define('z', SOURCE_GEM).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ENCHANTING_APP_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("xyx")
-                    .pattern("x x")
-                    .pattern("zzz").define('x', Tags.Items.INGOTS_IRON)
-                    .define('y', Tags.Items.GEMS_DIAMOND)
-                    .define('z', SOURCESTONE).save(consumer);
+                    .pattern("nsn")
+                    .pattern("gdg")
+                    .pattern("nsn").define('n', Tags.Items.NUGGETS_GOLD)
+                    .define('s', SOURCESTONE)
+                    .define('d', Tags.Items.GEMS_DIAMOND)
+                    .define('g', Tags.Items.INGOTS_GOLD).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.MUNDANE_BELT).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("   ")
@@ -96,9 +97,9 @@ public class RecipeDatagen extends RecipeProvider {
 
             ShapedRecipeBuilder.shaped(BlockRegistry.SCRIBES_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
-                    .pattern("yzy")
-                    .pattern("y y").define('x', Ingredient.of(BlockRegistry.ARCHWOOD_SLABS))
-                    .define('y', Items.STICK)
+                    .pattern("y y")
+                    .pattern("z z").define('x', Ingredient.of(BlockRegistry.ARCHWOOD_SLABS))
+                    .define('y', Tags.Items.NUGGETS_GOLD)
                     .define('z', ARCHWOOD_LOG).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.DULL_TRINKET).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -108,8 +109,8 @@ public class RecipeDatagen extends RecipeProvider {
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_CORE_BLOCK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
-                    .pattern("y y")
-                    .pattern("xxx").define('y', Tags.Items.INGOTS_GOLD).define('x', SOURCESTONE).save(consumer);
+                    .pattern("yzy")
+                    .pattern("xxx").define('y', Tags.Items.INGOTS_GOLD).define('x', SOURCESTONE).define('z', SOURCE_GEM).save(consumer);
 
 
             ShapedRecipeBuilder.shaped(SOURCESTONE, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))

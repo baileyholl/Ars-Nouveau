@@ -38,15 +38,17 @@ public class ArchfruitPod extends HorizontalDirectionalBlock implements Bonemeal
     protected static final VoxelShape[] EAST_AABB = new VoxelShape[]{Block.box(11.0D, 7.0D, 6.0D, 15.0D, 11.0D, 10.0D),
             Block.box(9.0D, 5.0D, 5.0D, 15.0D, 11.0D, 11.0D),
             Block.box(7.0D, 3.0D, 4.0D, 15.0D, 11.0D, 12.0D)};
-    protected static final VoxelShape[] WEST_AABB = new VoxelShape[]{Block.box(1.0D, 7.0D, 6.0D, 5.0D, 11.0D, 10.0D),
-            Block.box(1.0D, 5.0D, 5.0D, 7.0D, 11.0D, 11.0D),
-            Block.box(1.0D, 3.0D, 4.0D, 9.0D, 110D, 12.0D)};
     protected static final VoxelShape[] NORTH_AABB = new VoxelShape[]{Block.box(6.0D, 7.0D, 1.0D, 10.0D, 11.0D, 5.0D),
             Block.box(5.0D, 5.0D, 1.0D, 11.0D, 11.0D, 7.0D),
             Block.box(4.0D, 3.0D, 1.0D, 12.0D, 11.0D, 9.0D)};
     protected static final VoxelShape[] SOUTH_AABB = new VoxelShape[]{Block.box(6.0D, 7.0D, 11.0D, 10.0D, 11.0D, 15.0D),
             Block.box(5.0D, 5.0D, 9.0D, 11.0D, 11.0D, 15.0D),
             Block.box(4.0D, 3.0D, 7.0D, 12.0D, 11.0D, 15.0D)};
+
+    protected static final VoxelShape[] WEST_AABB = new VoxelShape[]{Block.box(1.0D, 7.0D, 6.0D, 5.0D, 11.0D, 10.0D),
+            Block.box(1.0D, 5.0D, 5.0D, 7.0D, 11.0D, 11.0D),
+            Block.box(1.0D, 3.0D, 4.0D, 9.0D, 11.0D, 12.0D)};
+
 
     public ArchfruitPod(Supplier<Block> surviveBlock) {
        this(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)));
@@ -94,7 +96,6 @@ public class ArchfruitPod extends HorizontalDirectionalBlock implements Bonemeal
                 return WEST_AABB[i];
             case EAST:
                 return EAST_AABB[i];
-            case NORTH:
             default:
                 return NORTH_AABB[i];
         }
