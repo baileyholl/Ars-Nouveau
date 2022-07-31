@@ -1,20 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "x": {
-      "tag": "forge:ingots/iron"
-    },
-    "y": {
+    "d": {
       "tag": "forge:gems/diamond"
     },
-    "z": {
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "n": {
+      "tag": "forge:nuggets/gold"
+    },
+    "s": {
       "item": "ars_nouveau:sourcestone"
     }
   },
   "pattern": [
-    "xyx",
-    "x x",
-    "zzz"
+    "nsn",
+    "gdg",
+    "nsn"
   ],
   "result": {
     "item": "ars_nouveau:enchanting_apparatus"
