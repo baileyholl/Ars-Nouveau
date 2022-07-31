@@ -4,9 +4,10 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
-public class ApprenticeArmor extends MagicArmor {
-    public ApprenticeArmor(EquipmentSlot slot) {
-        super(Materials.apprentice, slot, ItemsRegistry.defaultItemProperties());
+public class MediumArmor extends AnimatedMagicArmor {
+
+    public MediumArmor(EquipmentSlot slot) {
+        super(Materials.MEDIUM, slot, ItemsRegistry.defaultItemProperties());
     }
 
     @Override

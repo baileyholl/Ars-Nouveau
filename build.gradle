@@ -168,7 +168,7 @@ dependencies {
     /*implementation*///compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
 //    implementation fg.deobf("curse.maven:byg-247560:3848133") // BYG
 //    implementation fg.deobf("curse.maven:bop-220318:3852435") // BOP
-
+    implementation fg.deobf("curse.maven:ars_elemental-561470:3906641") // ars elemental
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"

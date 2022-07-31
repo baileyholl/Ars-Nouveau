@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.StackPerkProvider;
 import com.hollingsworth.arsnouveau.api.perk.TickablePerk;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -22,7 +23,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.UUID;
-
 
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
@@ -65,5 +65,39 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
 
+    }
+
+    public static class ArmorData extends StackPerkProvider{
+
+        private String color;
+
+        public ArmorData(ItemStack stack) {
+            super(stack);
+            CompoundTag tag = getItemTag(stack);
+            if(tag == null)
+                return;
+            color = tag.getString("color");
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+            writeItem();
+        }
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            super.writeToNBT(tag);
+            if(color != null)
+                tag.putString("color", color);
+        }
+
+        @Override
+        public String getTagString() {
+            return "an_armor_data";
+        }
     }
 }

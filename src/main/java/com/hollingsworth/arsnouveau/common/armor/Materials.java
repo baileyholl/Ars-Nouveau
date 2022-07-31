@@ -16,16 +16,16 @@ import java.util.function.Supplier;
 // https://github.com/TheKiritoPlayer20/SuperTools/blob/SuperTools_1.14/src/main/java/me/KG20/supertools/Armor/BasisArmorMaterial.java
 public class Materials {
 
-    public final static ModdedArmorMaterial novice = new ModdedArmorMaterial(ArsNouveau.MODID + ":novice", 25, new int[]{1, 4, 5, 2},
+    public final static ModdedArmorMaterial LIGHT = new ModdedArmorMaterial(ArsNouveau.MODID + ":novice", 25, new int[]{1, 4, 5, 2},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.WHITE_WOOL));
 
-    public final static ModdedArmorMaterial apprentice = new ModdedArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},
+    public final static ModdedArmorMaterial MEDIUM = new ModdedArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.SCUTE));
 
-    public final static ModdedArmorMaterial master = new ModdedArmorMaterial(ArsNouveau.MODID + ":master", 33, new int[]{3, 6, 8, 3},
+    public final static ModdedArmorMaterial HEAVY = new ModdedArmorMaterial(ArsNouveau.MODID + ":master", 33, new int[]{3, 6, 8, 3},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 2.5f, () -> Ingredient.of(Items.SCUTE));
 
-
+    @Deprecated(forRemoval = true)
     public static class ModdedArmorMaterial implements ArmorMaterial {
 
         private static final int[] Max_Damage_Array = new int[]{13, 15, 16, 11};

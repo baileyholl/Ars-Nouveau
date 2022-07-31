@@ -9,8 +9,12 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBook
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarCarbyRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarWhirlisprigRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamiliarRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
+import com.hollingsworth.arsnouveau.common.armor.HeavyArmor;
+import com.hollingsworth.arsnouveau.common.armor.LightArmor;
+import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
@@ -47,6 +51,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import static com.hollingsworth.arsnouveau.client.ClientForgeHandler.localize;
 
@@ -161,6 +166,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
+
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
@@ -177,6 +183,14 @@ public class ClientHandler {
                 }
             });
         });
+    }
+
+    @SubscribeEvent
+    public static void registerLayers(EntityRenderersEvent.AddLayers addLayers){
+        GeoArmorRenderer.registerArmorRenderer(LightArmor.class, () -> new ArmorRenderer(new GenericModel<>("light_armor", "items/light_armor").withEmptyAnim()));
+        GeoArmorRenderer.registerArmorRenderer(MediumArmor.class,() ->  new ArmorRenderer(new GenericModel<>("medium_armor","items/medium_armor").withEmptyAnim()));
+        GeoArmorRenderer.registerArmorRenderer(HeavyArmor.class, () -> new ArmorRenderer(new GenericModel<>("heavy_armor","items/heavy_armor").withEmptyAnim()));
+
     }
 
 
