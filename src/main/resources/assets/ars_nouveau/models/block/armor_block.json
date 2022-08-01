@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ars_nouveau:blocks/armor_block"
+  },
+  "render_type": "cutout"
+}
