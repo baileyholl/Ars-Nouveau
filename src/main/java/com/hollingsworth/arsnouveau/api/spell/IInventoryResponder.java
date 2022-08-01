@@ -12,6 +12,7 @@ import java.util.function.Predicate;
  * An interface used by effects to manipulate inventory blocks.
  * Common implementations include entities or tiles that cast spells and have inventories bound to them in some way.
  */
+@Deprecated
 public interface IInventoryResponder {
 
     /**
