@@ -156,7 +156,7 @@ public class GuiSpellBook extends BaseBook {
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
-        }).withTooltip(this, Component.translatable("ars_nouveau.gui.discord")));
+        }).withTooltip(this, new TranslatableComponent("ars_nouveau.gui.discord")));
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
