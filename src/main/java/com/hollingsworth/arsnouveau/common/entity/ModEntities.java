@@ -210,8 +210,6 @@ public class ModEntities {
                     .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_SYLPH = build(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
                     .sized(0.5f, 0.5f).setTrackingRange(10));
-            ENTITY_FAMILIAR_JABBERWOG = build(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
-                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_WIXIE = build(LibEntityNames.FAMILIAR_WIXIE, EntityType.Builder.of(FamiliarWixie::new, MobCategory.CREATURE)
                     .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_CASCADING_WEALD = build(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
@@ -280,7 +278,6 @@ public class ModEntities {
                     ENTITY_CHIMERA_SPIKE,
                     ENTITY_FAMILIAR_STARBUNCLE,
                     ENTITY_FAMILIAR_BOOKWYRM,
-                    ENTITY_FAMILIAR_JABBERWOG,
                     ENTITY_FAMILIAR_WIXIE,
                     ENTITY_FAMILIAR_SYLPH,
                     ENTITY_FAMILIAR_DRYGMY,
@@ -337,7 +334,6 @@ public class ModEntities {
             event.put(WILDEN_BOSS, EntityChimera.getModdedAttributes().build());
             event.put(ENTITY_FAMILIAR_STARBUNCLE, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_BOOKWYRM, FamiliarEntity.attributes().build());
-            event.put(ENTITY_FAMILIAR_JABBERWOG, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_WIXIE, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_SYLPH, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_DRYGMY, FamiliarEntity.attributes().build());
