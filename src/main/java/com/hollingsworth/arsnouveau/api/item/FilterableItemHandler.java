@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Represents an ItemHandler and its list of filters.
+ */
 public class FilterableItemHandler {
     private IItemHandler handler;
     private List<Function<ItemStack, ItemScroll.SortPref>> filters;
@@ -21,7 +24,15 @@ public class FilterableItemHandler {
         this.filters = filters;
     }
 
-    public ItemScroll.SortPref getInsertionPreference(ItemStack stack){
+    public boolean canInsert(ItemStack stack){
+        return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
+    }
+
+    public boolean canExtract(int slot){
+        return getHighestPreference(handler.getStackInSlot(slot)) != ItemScroll.SortPref.INVALID;
+    }
+
+    public ItemScroll.SortPref getInsertionPref(ItemStack stack){
         return getHighestPreference(stack);
     }
 
