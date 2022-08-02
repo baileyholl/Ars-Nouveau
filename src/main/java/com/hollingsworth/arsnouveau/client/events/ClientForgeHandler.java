@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client;
+package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;

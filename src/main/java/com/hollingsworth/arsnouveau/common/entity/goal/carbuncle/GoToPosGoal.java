@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -19,7 +20,7 @@ public abstract class GoToPosGoal<T extends StarbyBehavior> extends ExtendedRang
     BlockPos targetPos;
 
     public GoToPosGoal(Starbuncle starbuncle, T behavior, Supplier<Boolean> canUse, Supplier<Boolean> canContinue) {
-        super(25);
+        super(30);
         this.starbuncle = starbuncle;
         this.behavior = behavior;
         this.canUse = canUse;
@@ -63,7 +64,7 @@ public abstract class GoToPosGoal<T extends StarbyBehavior> extends ExtendedRang
             return;
         }
 
-        if(BlockUtil.distanceFrom(starbuncle.position(), targetPos) <= 2D + this.extendedRange && isDestinationStillValid(targetPos)){
+        if(BlockUtil.distanceFrom(starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D + this.extendedRange && isDestinationStillValid(targetPos)){
             isDone = onDestinationReached();
             return;
         }
