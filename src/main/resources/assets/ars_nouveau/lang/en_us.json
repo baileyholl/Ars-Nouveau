@@ -1095,5 +1095,6 @@
 	"ars_nouveau.imbuement.crafting_started": "Crafting %s. Add source nearby to increase craft speed.",
 	"ars_nouveau.crafting_progress": "Crafting Progress: %s",
 	"ars_nouveau.scribes_table.throw_items": "Toss remaining items onto the table.",
-	"ars_nouveau.scribes_table.started_crafting": "Toss items as they appear above to complete crafting."
+	"ars_nouveau.scribes_table.started_crafting": "Toss items as they appear above to complete crafting.",
+	"ars_nouveau.gui.discord": "Join the Discord for spells, updates, and support!"
 }
