@@ -2,12 +2,15 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
+import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
+import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
@@ -113,10 +116,12 @@ public class APIRegistry {
         registerSpell(EffectLinger.INSTANCE);
         registerSpell(EffectSenseMagic.INSTANCE);
         registerSpell(EffectInfuse.INSTANCE);
-        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        api.registerScryer(SingleBlockScryer.INSTANCE);
-        api.registerScryer(CompoundScryer.INSTANCE);
-        api.registerScryer(TagScryer.INSTANCE);
+
+        registerScryer(SingleBlockScryer.INSTANCE);
+        registerScryer(CompoundScryer.INSTANCE);
+        registerScryer(TagScryer.INSTANCE);
+
+        registerPerk(StarbunclePerk.INSTANCE);
     }
 
     public static void postInit() {
@@ -133,6 +138,14 @@ public class APIRegistry {
 
     public static void registerSpell(AbstractSpellPart spellPart) {
         ArsNouveauAPI.getInstance().registerSpell(spellPart);
+    }
+
+    public static void registerPerk(IPerk perk){
+        ArsNouveauAPI.getInstance().registerPerk(perk);
+    }
+
+    public static void registerScryer(IScryer scryer){
+        ArsNouveauAPI.getInstance().registerScryer(scryer);
     }
 
     public static void registerRitual(AbstractRitual ritual) {

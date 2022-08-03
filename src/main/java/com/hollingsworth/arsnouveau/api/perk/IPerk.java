@@ -3,17 +3,17 @@ package com.hollingsworth.arsnouveau.api.perk;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
-import javax.print.attribute.Attribute;
 
 /**
  * Represents the actions or benefits a perk may provide.
  */
 public interface IPerk {
 
-    default Multimap<Attribute, AttributeModifier> getModifiers(ItemStack stack){
+    default Multimap<Attribute, AttributeModifier> getModifiers(ItemStack stack, int count){
         return new ImmutableMultimap.Builder<Attribute, AttributeModifier>().build();
     }
 
@@ -27,5 +27,5 @@ public interface IPerk {
      */
     int getCountCap();
 
-    ResourceLocation getID();
+    ResourceLocation getRegistryName();
 }

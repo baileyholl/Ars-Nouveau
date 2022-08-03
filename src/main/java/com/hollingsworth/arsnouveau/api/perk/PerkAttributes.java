@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.armor;
+package com.hollingsworth.arsnouveau.api.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.world.entity.EntityType;
@@ -26,6 +26,7 @@ public class PerkAttributes {
     public static final RegistryObject<Attribute> SPELL_DAMAGE_BONUS = registerAttribute("spell_damage",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10.0D).setSyncable(true));
     public static final RegistryObject<Attribute> WHIRLIESPRIG = registerAttribute("saturation",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 3.0D).setSyncable(true));
     public static final RegistryObject<Attribute> WIXIE = registerAttribute("wixie",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
+
     public static final RegistryObject<Attribute> DEPTHS = registerAttribute("breathing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 3.0D).setSyncable(true));
     public static final RegistryObject<Attribute> REPAIRING = registerAttribute("repairing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> GLIDING = registerAttribute("gliding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D));

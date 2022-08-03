@@ -237,6 +237,11 @@ public class ArsNouveauAPI {
         return true;
     }
 
+    public boolean registerPerk(IPerk perk){
+        perkMap.put(perk.getRegistryName(), perk);
+        return true;
+    }
+
     public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry() {
         return this.spellSoundsRegistry;
     }

@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.items.curios;
 import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.armor.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;

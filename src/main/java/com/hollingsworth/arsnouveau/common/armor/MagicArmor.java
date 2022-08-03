@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.hollingsworth.arsnouveau.api.armor.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.StackPerkProvider;
 import com.hollingsworth.arsnouveau.api.perk.TickablePerk;
