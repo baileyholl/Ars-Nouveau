@@ -17,7 +17,8 @@ import java.util.Map;
 public class PerkSet {
 
     private final Map<IPerk, Integer> perks;
-
+    // Get a callback when a perk is added or removed.
+    public Runnable onMutated;
 
     public PerkSet() {
         this.perks = new HashMap<>();
@@ -65,16 +66,20 @@ public class PerkSet {
         } else {
             perks.put(perk, count);
         }
+        setChanged();
         return perks.get(perk);
     }
 
     public Integer setPerk(IPerk perk, int count){
         perks.put(perk, count);
+        setChanged();
         return perks.get(perk);
     }
 
     public Integer removePerk(IPerk perk){
-        return perks.remove(perk);
+        Integer count = perks.remove(perk);
+        setChanged();
+        return count;
     }
 
     public boolean isPerkCapped(IPerk perk){
@@ -83,5 +88,14 @@ public class PerkSet {
 
     public boolean hasPerk(IPerk perk){
         return perks.containsKey(perk);
+    }
+
+    public boolean isEmpty(){
+        return perks.isEmpty();
+    }
+
+    public void setChanged(){
+        if(onMutated != null)
+            onMutated.run();
     }
 }

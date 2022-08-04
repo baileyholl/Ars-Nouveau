@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArmorTile;
-import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -44,27 +41,13 @@ public class ArmorBlock extends TickableModBlock{
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return InteractionResult.SUCCESS;
         }
-        if (tile.getArmorStack().isEmpty()) {
-            IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
-            if (recipe == null) {
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
-            } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())) {
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
-            } else {
-                if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                    tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
-                }
-            }
-        } else {
-            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getArmorStack());
-            world.addFreshEntity(item);
-            tile.setArmorStack(ItemStack.EMPTY);
-            if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
-            }
-        }
+        if (tile.getStack().isEmpty()) {
 
-        world.sendBlockUpdated(pos, state, state, 2);
+        } else {
+            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack().copy());
+            world.addFreshEntity(item);
+            tile.setStack(ItemStack.EMPTY);
+        }
         return InteractionResult.SUCCESS;
     }
 

@@ -2,12 +2,17 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.perk.StackPerkProvider;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,8 +20,10 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable, Container {
 
@@ -32,10 +39,48 @@ public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable,
 
     }
 
+    public void addPerks(Player player, ItemStack stack){
+        IPerkProvider<ItemStack> holder = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
+
+        if(holder != null){
+            return;
+        }
+        IPerkHolder<ItemStack> perkHolder = holder.getPerkHolder(stack);
+
+        if(!perkHolder.isEmpty()){
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.must_be_empty"));
+            return;
+        }
+        List<BlockPos> pedestals = BlockPos.withinManhattanStream(getBlockPos(), 4, 4, 3).filter(p -> {
+            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
+                return pedestalTile.getStack().getItem() instanceof PerkItem;
+            }
+            return false;
+        }).collect(Collectors.toList());
+        int perkLevels = 0;
+        for(BlockPos p : pedestals){
+            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
+                PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
+                perkLevels += perkItem.perk.getSlotCost();
+            }
+        }
+        if(perkLevels > perkHolder.getMaxSlots()){
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_enough_slots", perkLevels, perkHolder.getMaxSlots()));
+            return;
+        }
+
+
+    }
+
     public void removePerks(ItemStack stack){
-        StackPerkProvider stackPerkProvider = new StackPerkProvider(stack);
+        IPerkProvider<ItemStack> holder = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
+
+        if(holder != null){
+            return;
+        }
+        IPerkHolder<ItemStack> perkHolder = holder.getPerkHolder(stack);
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        for(Map.Entry<IPerk, Integer> perk : stackPerkProvider.getPerkSet().getPerkMap().entrySet()){
+        for(Map.Entry<IPerk, Integer> perk : perkHolder.getPerkSet().getPerkMap().entrySet()){
             for(int i = 0; i < perk.getValue(); i++) {
                 ItemStack perkStack = new ItemStack(api.getPerkItemMap().get(perk.getKey().getRegistryName()));
                 Optional<BlockPos> pedestalPos = BlockPos.findClosestMatch(getBlockPos(), 4, 4, (p) -> level.getBlockEntity(p) instanceof ArcanePedestalTile tile && tile.getStack().isEmpty());

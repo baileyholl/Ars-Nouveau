@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -19,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidat
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -82,6 +84,8 @@ public class ArsNouveauAPI {
     private ConcurrentHashMap<ResourceLocation, IPerk> perkMap = new ConcurrentHashMap<>();
 
     private ConcurrentHashMap<ResourceLocation, PerkItem> perkItemMap = new ConcurrentHashMap<>();
+
+    private ConcurrentHashMap<Item, IPerkProvider<ItemStack>> itemPerkProviderMap = new ConcurrentHashMap<>();
     /**
      * Validator to use when crafting a spell in the spell book.
      */
@@ -182,6 +186,10 @@ public class ArsNouveauAPI {
         return perkItemMap;
     }
 
+    public Map<Item, IPerkProvider<ItemStack>> getItemPerkProviderMap() {
+        return itemPerkProviderMap;
+    }
+
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
@@ -246,6 +254,15 @@ public class ArsNouveauAPI {
     public boolean registerPerk(IPerk perk){
         perkMap.put(perk.getRegistryName(), perk);
         return true;
+    }
+
+    public boolean registerPerkProvider(Item item, IPerkProvider<ItemStack> provider){
+        itemPerkProviderMap.put(item, provider);
+        return true;
+    }
+
+    public @Nullable IPerkProvider<ItemStack> getPerkProvider(Item item){
+        return itemPerkProviderMap.get(item);
     }
 
     public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry() {

@@ -67,7 +67,7 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
 
     @Override
     public String getColor(ItemStack object) {
-        ArmorData data = new ArmorData(object);
+        ArmorPerkHolder data = new ArmorPerkHolder(object);
         return data.getColor() == null || data.getColor().isEmpty() ? "purple" : data.getColor();
     }
 }

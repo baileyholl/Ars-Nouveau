@@ -258,13 +258,4 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
             e.printStackTrace();
         }
     }
-
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    public void setStack(ItemStack stack) {
-        this.stack = stack;
-        setChanged();
-    }
 }

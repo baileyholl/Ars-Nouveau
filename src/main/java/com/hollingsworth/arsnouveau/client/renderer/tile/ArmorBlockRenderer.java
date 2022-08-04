@@ -29,19 +29,19 @@ public class ArmorBlockRenderer extends GeoBlockRenderer<ArmorTile> {
 
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (bone.getName().equals("frame_all") && tile.getArmorStack() != null) {
+        if (bone.getName().equals("frame_all") && tile.getStack() != null) {
 
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
             double z = tile.getBlockPos().getZ();
-            if (tile.entity == null || !ItemStack.matches(tile.entity.getItem(), tile.getArmorStack())) {
-                tile.entity = new ItemEntity(tile.getLevel(), x, y, z, tile.getArmorStack());
+            if (tile.renderEntity == null || !ItemStack.matches(tile.renderEntity.getItem(), tile.getStack())) {
+                tile.renderEntity = new ItemEntity(tile.getLevel(), x, y, z, tile.getStack());
             }
             stack.pushPose();
             RenderUtils.translate(bone, stack);
             stack.translate(0, +0.4, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
-            ItemStack itemstack = tile.entity.getItem();
+            ItemStack itemstack = tile.renderEntity.getItem();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) tile.getBlockPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));

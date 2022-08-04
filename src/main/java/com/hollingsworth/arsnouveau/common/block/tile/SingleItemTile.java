@@ -63,6 +63,11 @@ public class SingleItemTile extends ModdedTile implements Container{
     }
 
     @Override
+    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
+        return stack.isEmpty();
+    }
+
+    @Override
     public boolean stillValid(Player pPlayer) {
         return false;
     }
@@ -75,6 +80,15 @@ public class SingleItemTile extends ModdedTile implements Container{
     @Override
     public void clearContent() {
         this.stack = ItemStack.EMPTY;
+        updateBlock();
+    }
+
+    public ItemStack getStack(){
+        return this.stack;
+    }
+
+    public void setStack(ItemStack otherStack){
+        this.stack = otherStack;
         updateBlock();
     }
 

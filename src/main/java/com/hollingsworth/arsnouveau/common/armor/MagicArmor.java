@@ -2,10 +2,8 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.perk.*;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.perk.StackPerkProvider;
-import com.hollingsworth.arsnouveau.api.perk.TickablePerk;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -41,7 +39,7 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
                 stack.setDamageValue(stack.getDamageValue() - 1);
             }
         });
-        StackPerkProvider perkProvider = new StackPerkProvider(stack);
+        ArmorPerkHolder perkProvider = new ArmorPerkHolder(stack);
         perkProvider.getPerkSet().getPerkMap().forEach((k, v)->{
             if(k instanceof TickablePerk tickablePerk) {
                 tickablePerk.tick(stack, world, player, v);
@@ -67,16 +65,18 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     }
 
-    public static class ArmorData extends StackPerkProvider{
+    public static class ArmorPerkHolder extends StackPerkHolder {
 
         private String color;
+        private int tier;
 
-        public ArmorData(ItemStack stack) {
+        public ArmorPerkHolder(ItemStack stack) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
             if(tag == null)
                 return;
             color = tag.getString("color");
+            tier = tag.getInt("tier");
         }
 
         public String getColor() {
@@ -93,6 +93,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
             super.writeToNBT(tag);
             if(color != null)
                 tag.putString("color", color);
+            tag.putInt("tier", tier);
+        }
+
+        @Override
+        public int getMaxSlots() {
+            return 4;
         }
     }
 }

@@ -1,21 +1,12 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-
 /**
- * Represents an object or thing that stores a set of perks.
+ * Returns a perk holder serialized from T
+ * You should not implement this interface directly. Use a non-generic child interface.
  */
-public interface IPerkProvider {
+@FunctionalInterface
+public interface IPerkProvider<T> {
 
-    @Nonnull PerkSet getPerkSet();
+    IPerkHolder<T> getPerkHolder(T obj);
 
-    default void appendPerkTooltip(List<Component> tooltip){
-        if(getPerkSet().getPerkMap().isEmpty())
-            return;
-        tooltip.add(Component.translatable("tooltip.ars_nouveau.armor.perks", getPerkSet().getPerkMap().size()).withStyle(ChatFormatting.LIGHT_PURPLE));
-    }
 }

@@ -8,16 +8,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Serializes a set of perks from an itemstack.
  */
-public class StackPerkProvider extends ItemstackData implements IPerkProvider{
+public abstract class StackPerkHolder extends ItemstackData implements IPerkHolder<ItemStack> {
     protected PerkSet perkSet = new PerkSet();
 
-    public StackPerkProvider(ItemStack stack) {
+    public StackPerkHolder(ItemStack stack) {
         super(stack);
         CompoundTag tag = getItemTag(stack);
-        if(tag == null)
-            return;
-        CompoundTag perkTag = tag.getCompound("perkSet");
-        perkSet = new PerkSet(perkTag);
+        if(tag != null) {
+            CompoundTag perkTag = tag.getCompound("perkSet");
+            perkSet = new PerkSet(perkTag);
+        }
+        perkSet.onMutated = this::writeItem;
     }
 
     @Override
