@@ -42,7 +42,7 @@ public class ArmorBlock extends TickableModBlock{
             return InteractionResult.SUCCESS;
         }
         if (tile.getStack().isEmpty()) {
-
+            tile.addPerks(player, player.getItemInHand(handIn));
         } else {
             ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack().copy());
             world.addFreshEntity(item);

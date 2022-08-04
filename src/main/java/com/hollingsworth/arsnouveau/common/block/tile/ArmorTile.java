@@ -20,10 +20,10 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable, Container {
 
@@ -42,7 +42,7 @@ public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable,
     public void addPerks(Player player, ItemStack stack){
         IPerkProvider<ItemStack> holder = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
 
-        if(holder != null){
+        if(holder == null){
             return;
         }
         IPerkHolder<ItemStack> perkHolder = holder.getPerkHolder(stack);
@@ -51,12 +51,13 @@ public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable,
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.must_be_empty"));
             return;
         }
-        List<BlockPos> pedestals = BlockPos.withinManhattanStream(getBlockPos(), 4, 4, 3).filter(p -> {
+        List<BlockPos> pedestals = new ArrayList<>();
+        for(BlockPos p : BlockPos.withinManhattan(getBlockPos(), 4, 4, 3)){
             if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
-                return pedestalTile.getStack().getItem() instanceof PerkItem;
+                if(pedestalTile.getStack().getItem() instanceof PerkItem)
+                    pedestals.add(p.immutable());
             }
-            return false;
-        }).collect(Collectors.toList());
+        }
         int perkLevels = 0;
         for(BlockPos p : pedestals){
             if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
@@ -68,14 +69,19 @@ public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable,
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_enough_slots", perkLevels, perkHolder.getMaxSlots()));
             return;
         }
-
-
+        for(BlockPos pos : pedestals){
+            if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile){
+                PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
+                perkHolder.getPerkSet().addPerk(perkItem.perk, 1);
+                pedestalTile.setStack(ItemStack.EMPTY);
+            }
+        }
     }
 
     public void removePerks(ItemStack stack){
         IPerkProvider<ItemStack> holder = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
 
-        if(holder != null){
+        if(holder == null){
             return;
         }
         IPerkHolder<ItemStack> perkHolder = holder.getPerkHolder(stack);

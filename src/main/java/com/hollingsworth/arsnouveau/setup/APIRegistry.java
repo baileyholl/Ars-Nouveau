@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -130,6 +131,25 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
+
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_BOOTS, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_HOOD, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_ROBES, MagicArmor.ArmorPerkHolder::new);
+
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_HOOD, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_BOOTS, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_ROBES, MagicArmor.ArmorPerkHolder::new);
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_BOOTS, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.NOVICE_ROBES, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.NOVICE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.NOVICE_HOOD, MagicArmor.ArmorPerkHolder::new);
+    }
+
+    public static void deferredRegistration(){
+
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

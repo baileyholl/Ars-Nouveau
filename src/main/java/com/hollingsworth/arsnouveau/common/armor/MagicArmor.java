@@ -2,8 +2,9 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.hollingsworth.arsnouveau.api.perk.*;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
+import com.hollingsworth.arsnouveau.api.perk.*;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
@@ -55,6 +57,14 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
             UUID uuid = ARMOR_MODIFIER_UUID_PER_SLOT[slot.getIndex()];
             attributes.put(PerkAttributes.CAP_BONUS.get(), new AttributeModifier(uuid, "max_mana_armor", this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION));
             attributes.put(PerkAttributes.REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", this.getManaRegenBonus(stack), AttributeModifier.Operation.ADDITION));
+            IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
+            if(perkProvider != null){
+                IPerkHolder<ItemStack> perkHolder = perkProvider.getPerkHolder(stack);
+                PerkSet perkSet = perkHolder.getPerkSet();
+                for(Map.Entry<IPerk, Integer> entry : perkSet.getPerkMap().entrySet()){
+                    attributes.putAll(entry.getKey().getModifiers(this.slot, stack, entry.getValue()));
+                }
+            }
         }
         return attributes.build();
     }
@@ -62,7 +72,10 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
-
+        IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
+        if (perkProvider != null) {
+            perkProvider.getPerkHolder(stack).appendPerkTooltip(tooltip, stack);
+        }
     }
 
     public static class ArmorPerkHolder extends StackPerkHolder {

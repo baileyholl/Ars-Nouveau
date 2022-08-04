@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.brewing.BrewingRecipe;
@@ -256,8 +257,8 @@ public class ArsNouveauAPI {
         return true;
     }
 
-    public boolean registerPerkProvider(Item item, IPerkProvider<ItemStack> provider){
-        itemPerkProviderMap.put(item, provider);
+    public boolean registerPerkProvider(ItemLike item, IPerkProvider<ItemStack> provider){
+        itemPerkProviderMap.put(item.asItem(), provider);
         return true;
     }
 

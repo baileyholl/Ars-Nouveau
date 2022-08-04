@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -21,7 +22,7 @@ public class StarbunclePerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(ItemStack stack, int count) {
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
         modifiers.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(PERK_UUID, "StarbunclePerk", 0.2 * count, AttributeModifier.Operation.MULTIPLY_TOTAL));
         return modifiers.build();

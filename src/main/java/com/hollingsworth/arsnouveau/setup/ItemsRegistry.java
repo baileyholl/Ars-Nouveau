@@ -6,9 +6,9 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
 import com.hollingsworth.arsnouveau.common.armor.HeavyArmor;
 import com.hollingsworth.arsnouveau.common.armor.LightArmor;
+import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
@@ -29,7 +29,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -285,28 +288,28 @@ public class ItemsRegistry {
     }
 
     public static void onItemRegistry(IForgeRegistry<Item> registry) {
-        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : api.getGlyphItemMap().entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
             registry.register(glyphEntry.getKey(), glyph);
             glyph.spellPart.glyphItem = glyph;
-
         }
 
-        for (AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()) {
+        for (AbstractRitual ritual : api.getRitualMap().values()) {
             RitualTablet tablet = new RitualTablet(ritual);
             registry.register(ritual.getRegistryName(), tablet);
-            ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getRegistryName(), tablet);
+            api.getRitualItemMap().put(ritual.getRegistryName(), tablet);
         }
 
-        for (AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
+        for (AbstractFamiliarHolder holder : api.getFamiliarHolderMap().values()) {
             FamiliarScript script = new FamiliarScript(holder);
-            ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.getRegistryName(), script);
+            api.getFamiliarScriptMap().put(holder.getRegistryName(), script);
             registry.register(holder.getRegistryName(), script);
         }
 
-        for(IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
+        for(IPerk perk : api.getPerkMap().values()) {
             PerkItem perkItem = new PerkItem(perk);
-            ArsNouveauAPI.getInstance().getPerkItemMap().put(perk.getRegistryName(), perkItem);
+            api.getPerkItemMap().put(perk.getRegistryName(), perkItem);
             registry.register(perk.getRegistryName(), perkItem);
         }
 
@@ -315,7 +318,6 @@ public class ItemsRegistry {
         registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
         registry.register(LibItemNames.WILDEN_GUARDIAN_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
         registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
-
     }
 
 
