@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable, ITickable, ITooltipProvider {
+public class RuneTile extends ModdedTile implements IPickupResponder, IAnimatable, ITickable, ITooltipProvider {
     public Spell spell = Spell.EMPTY;
     public boolean isTemporary;
     public boolean disabled;

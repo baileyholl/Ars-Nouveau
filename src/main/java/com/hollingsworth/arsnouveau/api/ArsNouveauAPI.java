@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
@@ -80,6 +81,7 @@ public class ArsNouveauAPI {
 
     private ConcurrentHashMap<ResourceLocation, IPerk> perkMap = new ConcurrentHashMap<>();
 
+    private ConcurrentHashMap<ResourceLocation, PerkItem> perkItemMap = new ConcurrentHashMap<>();
     /**
      * Validator to use when crafting a spell in the spell book.
      */
@@ -174,6 +176,10 @@ public class ArsNouveauAPI {
 
     public Map<ResourceLocation, IPerk> getPerkMap() {
         return perkMap;
+    }
+
+    public Map<ResourceLocation, PerkItem> getPerkItemMap() {
+        return perkItemMap;
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {

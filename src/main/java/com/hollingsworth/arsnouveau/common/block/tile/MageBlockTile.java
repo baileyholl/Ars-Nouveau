@@ -12,7 +12,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class MageBlockTile extends AnimatedTile implements ITickable, IAnimatable {
+public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable {
 
     int age;
     public boolean isPermanent;

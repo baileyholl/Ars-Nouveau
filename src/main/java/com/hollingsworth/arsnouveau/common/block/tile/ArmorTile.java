@@ -1,8 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.StackPerkProvider;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -11,9 +15,14 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class ArmorTile extends ModdedTile implements IAnimatable, ITickable {
-    public ItemEntity entity;
-    public ItemStack armorStack = ItemStack.EMPTY;
+import java.util.Map;
+import java.util.Optional;
+
+public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable, Container {
+
+
+    public boolean isCrafting;
+
     public ArmorTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
@@ -23,13 +32,31 @@ public class ArmorTile extends ModdedTile implements IAnimatable, ITickable {
 
     }
 
-    @Override
-    public void registerControllers(AnimationData data) {
+    public void removePerks(ItemStack stack){
+        StackPerkProvider stackPerkProvider = new StackPerkProvider(stack);
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        for(Map.Entry<IPerk, Integer> perk : stackPerkProvider.getPerkSet().getPerkMap().entrySet()){
+            for(int i = 0; i < perk.getValue(); i++) {
+                ItemStack perkStack = new ItemStack(api.getPerkItemMap().get(perk.getKey().getRegistryName()));
+                Optional<BlockPos> pedestalPos = BlockPos.findClosestMatch(getBlockPos(), 4, 4, (p) -> level.getBlockEntity(p) instanceof ArcanePedestalTile tile && tile.getStack().isEmpty());
+                if (pedestalPos.isEmpty()) {
+                    BlockPos pos = getBlockPos();
+                    ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, perkStack);
+                    level.addFreshEntity(itemEntity);
+                    continue;
+                }
+                pedestalPos.ifPresent(pos -> {
+                    ArcanePedestalTile tile = (ArcanePedestalTile) level.getBlockEntity(pos);
+                    tile.setStack(perkStack.split(1));
+                });
+            }
+        }
 
     }
 
-    public ItemStack getArmorStack(){
-        return armorStack;
+    @Override
+    public void registerControllers(AnimationData data) {
+
     }
 
     public AnimationFactory factory = new AnimationFactory(this);
@@ -37,5 +64,40 @@ public class ArmorTile extends ModdedTile implements IAnimatable, ITickable {
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    public ItemStack getItem(int index) {
+        if (isCrafting)
+            return ItemStack.EMPTY;
+        return super.getItem(index);
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack newStack) {
+        if (isCrafting || newStack.isEmpty())
+            return false;
+        return this.stack.isEmpty();
+    }
+
+    @Override
+    public ItemStack removeItem(int index, int count) {
+        if (isCrafting)
+            return ItemStack.EMPTY;
+        return super.removeItem(index, count);
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int index) {
+        if (isCrafting)
+            return ItemStack.EMPTY;
+        return super.removeItemNoUpdate(index);
+    }
+
+    @Override
+    public void setItem(int index, ItemStack stack) {
+        if (isCrafting)
+            return;
+        super.setItem(index, stack);
     }
 }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
@@ -301,6 +302,12 @@ public class ItemsRegistry {
             FamiliarScript script = new FamiliarScript(holder);
             ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.getRegistryName(), script);
             registry.register(holder.getRegistryName(), script);
+        }
+
+        for(IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
+            PerkItem perkItem = new PerkItem(perk);
+            ArsNouveauAPI.getInstance().getPerkItemMap().put(perk.getRegistryName(), perkItem);
+            registry.register(perk.getRegistryName(), perkItem);
         }
 
         registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
