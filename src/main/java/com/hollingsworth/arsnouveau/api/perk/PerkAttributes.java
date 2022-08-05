@@ -21,17 +21,20 @@ public class PerkAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES,ArsNouveau.MODID);
 
     public static final RegistryObject<Attribute> WARDING = registerAttribute("warding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> REGEN_BONUS = registerAttribute("mana_regen",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 2000.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> CAP_BONUS = registerAttribute("max_mana",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> MANA_REGEN_BONUS = registerAttribute("mana_regen",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 2000.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> MAX_MANA_BONUS = registerAttribute("max_mana",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true));
     public static final RegistryObject<Attribute> SPELL_DAMAGE_BONUS = registerAttribute("spell_damage",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10.0D).setSyncable(true));
     public static final RegistryObject<Attribute> WHIRLIESPRIG = registerAttribute("saturation",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 3.0D).setSyncable(true));
     public static final RegistryObject<Attribute> WIXIE = registerAttribute("wixie",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-
+    public static final RegistryObject<Attribute> DRYGMY = registerAttribute("drygmy",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> PROTECTION = registerAttribute("protection",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> JUMP_HEIGHT = registerAttribute("jump_height",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> DEPTHS = registerAttribute("breathing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 3.0D).setSyncable(true));
     public static final RegistryObject<Attribute> REPAIRING = registerAttribute("repairing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> GLIDING = registerAttribute("gliding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D));
     public static final RegistryObject<Attribute> FIRE_RES = registerAttribute("fire_res",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> FEATHER = registerAttribute("feather",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> TOUGHNESS = registerAttribute("toughness",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
 
     public static RegistryObject<Attribute> registerAttribute(String name, Function<String, Attribute> attribute) {
         RegistryObject<Attribute> registryObject = ATTRIBUTES.register(name, () -> attribute.apply(name));

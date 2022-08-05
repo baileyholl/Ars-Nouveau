@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.familiars.*;
-import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
+import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
@@ -123,6 +123,20 @@ public class APIRegistry {
         registerScryer(TagScryer.INSTANCE);
 
         registerPerk(StarbunclePerk.INSTANCE);
+        registerPerk(DepthsPerk.INSTANCE);
+        registerPerk(FeatherPerk.INSTANCE);
+        registerPerk(FireResistPerk.INSTANCE);
+        registerPerk(GlidingPerk.INSTANCE);
+        registerPerk(JumpHeightPerk.INSTANCE);
+        registerPerk(LootingPerk.INSTANCE);
+        registerPerk(MagicCapacityPerk.INSTANCE);
+        registerPerk(MagicResistPerk.INSTANCE);
+        registerPerk(PhysicalResistPerk.INSTANCE);
+        registerPerk(PotionDurationPerk.INSTANCE);
+        registerPerk(RepairingPerk.INSTANCE);
+        registerPerk(SaturationPerk.INSTANCE);
+        registerPerk(ToughnessPerk.INSTANCE);
+        registerPerk(SpellDamagePerk.INSTANCE);
     }
 
     public static void postInit() {

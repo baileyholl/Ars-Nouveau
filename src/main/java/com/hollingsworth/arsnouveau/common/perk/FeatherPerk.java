@@ -1,0 +1,33 @@
+package com.hollingsworth.arsnouveau.common.perk;
+
+import com.google.common.collect.Multimap;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.perk.Perk;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.UUID;
+
+public class FeatherPerk extends Perk {
+
+    public static final FeatherPerk INSTANCE = new FeatherPerk(new ResourceLocation(ArsNouveau.MODID, "feather_perk"));
+    public static final UUID PERK_UUID = UUID.fromString("3923ee66-756d-4b1d-b216-bb9338b0315b");
+
+    public FeatherPerk(ResourceLocation key) {
+        super(key);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
+        return attributeBuilder().put(PerkAttributes.FEATHER.get(), new AttributeModifier(PERK_UUID, "Feather", 0.2 * count, AttributeModifier.Operation.ADDITION)).build();
+    }
+
+    @Override
+    public int getCountCap() {
+        return 3;
+    }
+}

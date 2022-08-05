@@ -55,8 +55,8 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
         attributes.putAll(super.getDefaultAttributeModifiers(pEquipmentSlot));
         if (this.slot == pEquipmentSlot) {
             UUID uuid = ARMOR_MODIFIER_UUID_PER_SLOT[slot.getIndex()];
-            attributes.put(PerkAttributes.CAP_BONUS.get(), new AttributeModifier(uuid, "max_mana_armor", this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION));
-            attributes.put(PerkAttributes.REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", this.getManaRegenBonus(stack), AttributeModifier.Operation.ADDITION));
+            attributes.put(PerkAttributes.MAX_MANA_BONUS.get(), new AttributeModifier(uuid, "max_mana_armor", this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION));
+            attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", this.getManaRegenBonus(stack), AttributeModifier.Operation.ADDITION));
             IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
             if(perkProvider != null){
                 IPerkHolder<ItemStack> perkHolder = perkProvider.getPerkHolder(stack);

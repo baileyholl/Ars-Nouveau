@@ -44,8 +44,8 @@ public class ManaUtil {
 
         int max = Config.INIT_MAX_MANA.get();
 
-        if (e.getAttribute(PerkAttributes.CAP_BONUS.get()) != null)
-            max += e.getAttributeValue(PerkAttributes.CAP_BONUS.get());
+        if (e.getAttribute(PerkAttributes.MAX_MANA_BONUS.get()) != null)
+            max += e.getAttributeValue(PerkAttributes.MAX_MANA_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
             max += (Config.MANA_BOOST_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()));
@@ -68,8 +68,8 @@ public class ManaUtil {
         if(mana == null) return 0;
         double regen = Config.INIT_MANA_REGEN.get();
 
-        if (e.getAttribute(PerkAttributes.REGEN_BONUS.get()) != null)
-            regen += e.getAttributeValue(PerkAttributes.REGEN_BONUS.get());
+        if (e.getAttribute(PerkAttributes.MANA_REGEN_BONUS.get()) != null)
+            regen += e.getAttributeValue(PerkAttributes.MANA_REGEN_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
             regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get());

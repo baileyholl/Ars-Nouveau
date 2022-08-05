@@ -18,6 +18,10 @@ public interface IPerk {
         return new ImmutableMultimap.Builder<Attribute, AttributeModifier>().build();
     }
 
+    default ImmutableMultimap.Builder<Attribute, AttributeModifier> attributeBuilder(){
+        return new ImmutableMultimap.Builder<>();
+    }
+
     // TODO: Expand on this, maybe logic for cost during crafting only? Something contextual to when it is applied.
     default int getSlotCost(){
         return 1;
