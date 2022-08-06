@@ -14,9 +14,14 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -104,10 +109,34 @@ public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable,
         }
 
     }
-
+    AnimationController craftController;
+    AnimationController idleController;
+    AnimationController spinController;
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimationData animationData) {
+        idleController = new AnimationController(this, "controller", 0, this::idlePredicate);
+        animationData.addAnimationController(idleController);
+        spinController = new AnimationController(this, "spinController", 0, this::spinPredicate);
+        animationData.addAnimationController(spinController);
+        craftController = new AnimationController(this, "craft_controller", 0, this::craftPredicate);
+        animationData.addAnimationController(craftController);
+        animationData.setResetSpeedInTicks(0.0);
+    }
 
+    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("float", true));
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends BlockEntity & IAnimatable> PlayState spinPredicate(AnimationEvent<E> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("spin", true));
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends BlockEntity & IAnimatable> PlayState craftPredicate(AnimationEvent<E> event) {
+        if (!this.isCrafting)
+            return PlayState.STOP;
+        return PlayState.CONTINUE;
     }
 
     public AnimationFactory factory = new AnimationFactory(this);

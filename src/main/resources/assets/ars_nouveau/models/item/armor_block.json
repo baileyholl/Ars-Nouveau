@@ -2,8 +2,8 @@
   "credit": "Made with Blockbench",
   "parent": "builtin/entity",
   "texture_size": [
-    64,
-    64
+    32,
+    32
   ],
   "display": {
     "thirdperson_righthand": {
@@ -67,7 +67,7 @@
     "ground": {
       "translation": [
         0,
-        3,
+        -0.25,
         0
       ],
       "scale": [
@@ -84,7 +84,7 @@
       ],
       "translation": [
         0,
-        -3.75,
+        -4.5,
         0
       ],
       "scale": [
@@ -96,7 +96,7 @@
     "head": {
       "translation": [
         0,
-        6.5,
+        5.75,
         0
       ],
       "scale": [
@@ -108,8 +108,8 @@
     "fixed": {
       "translation": [
         0,
-        -3.75,
-        0
+        -4,
+        -0.25
       ],
       "scale": [
         0.5,
