@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,33 +10,35 @@ import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
 
+/**
+ * DispelEvent is fired when a spell is attempting to dispel an entity or block.
+ * Entities and tiles can also extend IDispellable to allow for custom dispel behavior.
+ */
 public class DispelEvent extends Event {
     public HitResult rayTraceResult;
     public Level world;
     public LivingEntity shooter;
     public SpellStats augments;
     public SpellContext context;
-    public IDispellable dispellable;
 
-    public DispelEvent(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext, IDispellable dispellable) {
+    public DispelEvent(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext) {
         this.rayTraceResult = rayTraceResult;
         this.world = world;
         this.shooter = shooter;
         this.augments = augments;
         this.context = spellContext;
-        this.dispellable = dispellable;
     }
 
     @Cancelable
     public static class Pre extends DispelEvent {
-        public Pre(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext, IDispellable dispellable) {
-            super(rayTraceResult, world, shooter, augments, spellContext, dispellable);
+        public Pre(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext) {
+            super(rayTraceResult, world, shooter, augments, spellContext);
         }
     }
 
     public static class Post extends DispelEvent {
-        public Post(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext, IDispellable dispellable) {
-            super(rayTraceResult, world, shooter, augments, spellContext, dispellable);
+        public Post(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext) {
+            super(rayTraceResult, world, shooter, augments, spellContext);
         }
     }
 }
