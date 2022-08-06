@@ -141,5 +141,10 @@ public class ItemTagProvider extends ItemTagsProvider {
                 BlockRegistry.ORANGE_SBED.asItem(),
                 BlockRegistry.PURPLE_SBED.asItem());
 
+        this.tag(ItemTags.LECTERN_BOOKS).add(ItemsRegistry.WORN_NOTEBOOK.asItem(),
+                ItemsRegistry.NOVICE_SPELLBOOK.asItem(),
+                ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
+                ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
+                ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
     }
 }
