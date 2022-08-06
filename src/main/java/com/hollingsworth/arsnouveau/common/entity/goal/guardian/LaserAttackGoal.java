@@ -60,6 +60,8 @@ public class LaserAttackGoal extends Goal {
      */
     public void tick() {
         LivingEntity livingentity = this.guardian.getTarget();
+        if(livingentity == null)
+            return;
         this.guardian.getNavigation().stop();
         this.guardian.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
         if (!this.guardian.hasLineOfSight(livingentity)) {
