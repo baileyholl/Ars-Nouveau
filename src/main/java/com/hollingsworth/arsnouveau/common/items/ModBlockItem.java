@@ -14,8 +14,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ModBlockItem extends BlockItem {
     public List<Component> tooltip = new ArrayList<>();
     public Rarity rarity;
@@ -44,6 +42,7 @@ public class ModBlockItem extends BlockItem {
      */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
         if (tooltip != null && !tooltip.isEmpty()) {
             tooltip2.addAll(tooltip);
         }

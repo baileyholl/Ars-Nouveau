@@ -16,18 +16,18 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "amount",
-                  "target": "BlockEntityTag.amount"
+                  "source": "potionData",
+                  "target": "BlockEntityTag.potionData"
                 },
                 {
                   "op": "replace",
-                  "source": "Potion",
-                  "target": "BlockEntityTag.Potion"
+                  "source": "currentFill",
+                  "target": "BlockEntityTag.currentFill"
                 },
                 {
                   "op": "replace",
-                  "source": "CustomPotionEffects",
-                  "target": "BlockEntityTag.CustomPotionEffects"
+                  "source": "locked",
+                  "target": "BlockEntityTag.locked"
                 }
               ],
               "source": "block_entity"
