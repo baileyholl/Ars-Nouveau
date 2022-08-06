@@ -79,12 +79,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                 }
             }
             if(!stack.isEmpty() && recipe == null){
-                for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())){
-                    if(recipe.matches(this, level)){
-                        this.recipe = recipe;
-                        break;
-                    }
-                }
+                this.recipe = getRecipeNow();
             }
             return;
         }
@@ -101,12 +96,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         // Restore the recipe on world restart
         if (recipe == null) {
-            for (ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())) {
-                if (recipe.matches(this, level)) {
-                    this.recipe = recipe;
-                    this.craftTicks = 100;
-                    break;
-                }
+            var foundRecipe = getRecipeNow();
+            if(foundRecipe != null){
+                this.recipe = foundRecipe;
+                this.craftTicks = 100;
             }
         }
 
@@ -198,8 +191,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (stack.isEmpty() || !this.stack.isEmpty())
             return false;
         this.stack = stack.copy();
-        ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
-                .filter(f -> f.matches(this, level)).findFirst().orElse(null);
+        ImbuementRecipe recipe = getRecipeNow();
         this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
@@ -296,8 +288,14 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         return pedestalItems;
     }
 
+    public @Nullable ImbuementRecipe getRecipeNow(){
+        return level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
+                .filter(f -> f.matches(this, level)).findFirst().orElse(null);
+    }
+
     @Override
     public void getTooltip(List<Component> tooltip) {
+        var recipe = getRecipeNow();
         if(recipe != null && !recipe.output.isEmpty() && stack != null && !stack.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
             if(recipe.source > 0) {

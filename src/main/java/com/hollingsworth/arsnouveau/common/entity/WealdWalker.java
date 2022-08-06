@@ -57,7 +57,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public int smashCooldown;
     public int castCooldown;
-    public Spell spell = Spell.EMPTY;
+    public Spell spell = new Spell();
     public ParticleColor color = ParticleColor.defaultParticleColor();
 
     public WealdWalker(EntityType<? extends AgeableMob> type, Level world) {

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#ars_nouveau:berry_spawn",
+  "features": "#ars_nouveau:source_berries",
+  "step": "vegetal_decoration"
+}

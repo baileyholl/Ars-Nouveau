@@ -2,9 +2,13 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +64,6 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         return (tile.getAmount() - 1) / step + 1;
     }
 
-
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide)
@@ -94,7 +97,6 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
-
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
         return RenderShape.MODEL;
@@ -114,14 +116,15 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-
         if (stack.getTag() == null)
             return;
-        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("amount");
+        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
         tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
-        ItemStack stack1 = new ItemStack(Items.POTION);
-        stack1.setTag(stack.getTag().getCompound("BlockEntityTag"));
-        PotionUtils.addPotionTooltip(stack1, tooltip, 1.0F);
+        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
+        if(blockTag.contains("potionData")){
+            PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
+            data.appendHoverText(tooltip);
+        }
     }
 
     @Override
@@ -133,7 +136,16 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        context.getLevel().scheduleTick(context.getClickedPos(), BlockRegistry.POTION_JAR, 1);
         return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+    }
+
+    @Override
+    public void tick(BlockState p_222945_, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
+        super.tick(p_222945_, level, pos, p_222948_);
+        if(level.getBlockEntity(pos) instanceof PotionJarTile jarTile){
+            jarTile.updateBlock();
+        }
     }
 
     @Override
@@ -155,5 +167,4 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
             Block.box(5, 9, 5, 11, 14, 11),
             Block.box(6, 13, 6, 10, 16, 10)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-
 }

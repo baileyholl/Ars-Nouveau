@@ -23,6 +23,8 @@ public class BiomeTagProvider extends BiomeTagsProvider {
     public static TagKey<Biome> NO_MOB_SPAWN = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "no_mob_spawn"));
 
 
+    public static TagKey<Biome> BERRY_SPAWN = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "berry_spawn"));
+
     public BiomeTagProvider(DataGenerator p_211094_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_211094_, modId, existingFileHelper);
     }
@@ -34,6 +36,9 @@ public class BiomeTagProvider extends BiomeTagsProvider {
         this.tag(SUMMON_SPAWN_TAG).addTags(IS_OVERWORLD);
         this.tag(ARCHWOOD_BIOME_TAG).add(ModBiomes.ARCHWOOD_FOREST);
         this.tag(NO_MOB_SPAWN).addTags(Tags.Biomes.IS_MUSHROOM).add(Biomes.DEEP_DARK);
+
+        addTagToTags(IS_TAIGA, BERRY_SPAWN);
+        this.tag(BERRY_SPAWN).add(ModBiomes.ARCHWOOD_FOREST);
 
     }
 

@@ -35,23 +35,26 @@ public class EffectDispel extends AbstractEffect {
                 if (e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
                     entity.removeEffect(e.getEffect());
             }
-            if (entity instanceof IDispellable iDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.isRemoved()) {
-                if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext, iDispellable)))
-                    return;
-                iDispellable.onDispel(shooter);
-                MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext, iDispellable));
+            if(!entity.isAlive() || entity.getHealth() <= 0 || entity.isRemoved()){
+                return;
             }
+            if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+                return;
+            if (entity instanceof IDispellable iDispellable) {
+                iDispellable.onDispel(shooter);
+            }
+            MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
         }
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
+            return;
         if (world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
-            if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext, dispellable)))
-                return;
             dispellable.onDispel(shooter);
-            MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext, dispellable));
         }
+        MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
     }
 
     @Override

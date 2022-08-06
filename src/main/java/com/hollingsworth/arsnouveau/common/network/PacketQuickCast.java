@@ -31,7 +31,7 @@ public class PacketQuickCast {
         ctx.get().enqueueWork(()->{
             ServerPlayer player = ctx.get().getSender();
             if(player != null){
-                InteractionHand hand = StackUtil.getHeldCasterTool(player);
+                InteractionHand hand = StackUtil.getQuickCaster(player);
                 if(hand == null)
                     return;
                 ItemStack stack = player.getItemInHand(hand);

@@ -35,8 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 public class RuneTile extends ModdedTile implements IPickupResponder, IAnimatable, ITickable, ITooltipProvider {
-    public Spell spell = Spell.EMPTY;
+    public Spell spell = new Spell();
     public boolean isTemporary;
     public boolean disabled;
     public boolean isCharged;

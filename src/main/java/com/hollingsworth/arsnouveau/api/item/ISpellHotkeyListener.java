@@ -26,6 +26,11 @@ public interface ISpellHotkeyListener extends IRadialProvider {
         ISpellCaster iSpellCaster = CasterUtil.getCaster(stack);
         iSpellCaster.castSpell(player.level, player, hand, null, iSpellCaster.getSpell(slot));
     }
+    //TODO: 1.20 Remove this and have onQuickCast return a boolean
+    @Deprecated(forRemoval = true)
+    default boolean canQuickCast(){
+        return false;
+    }
 
     @OnlyIn(Dist.CLIENT)
     default void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
