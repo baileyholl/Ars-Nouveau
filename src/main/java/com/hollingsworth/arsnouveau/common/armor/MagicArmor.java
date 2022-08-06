@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.*;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -76,6 +77,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
         if (perkProvider != null) {
             perkProvider.getPerkHolder(stack).appendPerkTooltip(tooltip, stack);
         }
+    }
+
+    @Override
+    public boolean isFoil(ItemStack pStack) {
+        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(pStack);
+        return super.isFoil(pStack) || (holder != null && !holder.isEmpty());
     }
 
     public static class ArmorPerkHolder extends StackPerkHolder {

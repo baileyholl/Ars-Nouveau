@@ -60,6 +60,11 @@ public class PerkSet {
         return perks;
     }
 
+    public void clearPerks(){
+        perks.clear();
+        setChanged();
+    }
+
     public Integer addPerk(IPerk perk, int count){
         if(perks.containsKey(perk)){
             perks.put(perk, perks.get(perk) + count);
@@ -72,8 +77,22 @@ public class PerkSet {
 
     public Integer setPerk(IPerk perk, int count){
         perks.put(perk, count);
+        if(perks.getOrDefault(perk, 0) <= 0){
+            perks.remove(perk);
+        }
         setChanged();
         return perks.get(perk);
+    }
+
+    public Integer shrinkPerk(IPerk perk){
+        if(perks.containsKey(perk)){
+            perks.put(perk, perks.get(perk) - 1);
+            if(perks.getOrDefault(perk, 0) <= 0){
+                perks.remove(perk);
+            }
+            setChanged();
+        }
+        return perks.getOrDefault(perk, 0);
     }
 
     public Integer removePerk(IPerk perk){

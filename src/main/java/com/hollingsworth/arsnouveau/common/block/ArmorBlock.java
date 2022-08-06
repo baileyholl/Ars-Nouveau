@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArmorTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
@@ -41,8 +43,18 @@ public class ArmorBlock extends TickableModBlock{
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return InteractionResult.SUCCESS;
         }
+        ItemStack thisStack = player.getItemInHand(handIn);
         if (tile.getStack().isEmpty()) {
-            tile.addPerks(player, player.getItemInHand(handIn));
+            IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(thisStack);
+            if(perkHolder == null) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.invalid_item"));
+                return InteractionResult.SUCCESS;
+            }
+            if(perkHolder.isEmpty()){
+                tile.addPerks(player, thisStack);
+            }else{
+                tile.removePerks(player, thisStack);
+            }
         } else {
             ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack().copy());
             world.addFreshEntity(item);
