@@ -40,6 +40,8 @@ public class KeyHandler {
     }
 
     public static void checkCasterKeys(int key){
+        if(key == -1)
+            return;
         Player player = MINECRAFT.player;
         ItemStack radialStack = StackUtil.getHeldRadial(player);
         if(radialStack.getItem() instanceof IRadialProvider radialProvider && key == ((IRadialProvider) radialStack.getItem()).forKey()) {
