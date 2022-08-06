@@ -37,7 +37,6 @@ public class BiomeModifiersProvider {
         HolderSet.Named<Biome> OVERWORLD_TAG = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTags.IS_OVERWORLD);
         HolderSet.Named<Biome> NO_SPAWN_HOSTILE = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTagProvider.NO_MOB_SPAWN);
         HolderSet.Named<Biome> COLD = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), Tags.Biomes.IS_COLD_OVERWORLD);
-
         HolderSet.Named<EntityType<?>> HOSTILE = new HolderSet.Named<>(ops.registry(Registry.ENTITY_TYPE_REGISTRY).orElseThrow(), EntityTags.HOSTILE_MOBS);
 
         modifierMap.put(STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
@@ -71,6 +70,11 @@ public class BiomeModifiersProvider {
         modifierMap.put(ARCHWOOD_MIX_RARE, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(OVERWORLD_TAG, TREESET,
                 GenerationStep.Decoration.VEGETAL_DECORATION));
 
+        HolderSet<PlacedFeature> BERRY_SET = new HolderSet.Named<>(ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow(), PlacedFeatureTagProvider.SOURCE_BERRIES);
+        modifierMap.put(BERRY_COMMON, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(COLD, BERRY_SET,
+                GenerationStep.Decoration.VEGETAL_DECORATION));
+
+
         event.getGenerator().addProvider(event.includeServer(), JsonCodecProvider.forDatapackRegistry(event.getGenerator(), event.getExistingFileHelper(), MODID,
                 ops, ForgeRegistries.Keys.BIOME_MODIFIERS, modifierMap));
     }
@@ -86,6 +90,7 @@ public class BiomeModifiersProvider {
     static final ResourceLocation ARCHWOOD_MIX_COMMON = prefix("common_archwood_mix");
 
     static final ResourceLocation ARCHWOOD_MIX_RARE = prefix("rare_archwood_mix");
+    static final ResourceLocation BERRY_COMMON = prefix("common_source_berry");
 
     @NotNull
     private static ResourceLocation prefix(String path) {

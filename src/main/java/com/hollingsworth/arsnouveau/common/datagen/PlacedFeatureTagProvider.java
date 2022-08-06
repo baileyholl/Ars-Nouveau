@@ -12,6 +12,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class PlacedFeatureTagProvider extends TagsProvider<PlacedFeature> {
     public static TagKey<PlacedFeature> ARCHWOOD_TREES = TagKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "archwood_trees"));
+    public static TagKey<PlacedFeature> SOURCE_BERRIES = TagKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "source_berries"));
 
     public PlacedFeatureTagProvider(DataGenerator p_211094_, String modId, @org.jetbrains.annotations.Nullable net.minecraftforge.common.data.ExistingFileHelper existingFileHelper) {
         super(p_211094_, BuiltinRegistries.PLACED_FEATURE, modId, existingFileHelper);
@@ -19,5 +20,6 @@ public class PlacedFeatureTagProvider extends TagsProvider<PlacedFeature> {
 
     protected void addTags() {
         this.tag(ARCHWOOD_TREES).add(WorldEvent.PLACED_MIXED.get());
+        this.tag(SOURCE_BERRIES).add(WorldEvent.BERRY_BUSH_PATCH_CONFIG.get());
     }
 }
