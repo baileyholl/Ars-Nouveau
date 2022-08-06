@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spell implements Cloneable {
+    @Deprecated(forRemoval = true)
     public static final Spell EMPTY = new Spell();
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
@@ -60,6 +61,11 @@ public class Spell implements Cloneable {
         return this;
     }
 
+    public Spell withColor(@Nonnull ParticleColor color) {
+        this.color = color;
+        return this;
+    }
+
     public int getSpellSize() {
         return recipe.size();
     }
@@ -68,7 +74,6 @@ public class Spell implements Cloneable {
         if (this.recipe == null || this.recipe.isEmpty())
             return null;
         return this.recipe.get(0) instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.get(0) : null;
-
     }
 
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster) {
@@ -168,7 +173,7 @@ public class Spell implements Cloneable {
 
     public static Spell fromTag(@Nullable CompoundTag tag) {
         if (tag == null)
-            return EMPTY;
+            return new Spell();
         Spell spell = new Spell();
         spell.name = tag.getString("name");
         spell.color = ParticleColor.deserialize(tag.getCompound("spellColor"));

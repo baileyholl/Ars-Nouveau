@@ -136,13 +136,13 @@ public class SpellContext implements Cloneable {
     }
 
     public @Nonnull Spell getSpell() {
-        return spell == null ? Spell.EMPTY : spell;
+        return spell == null ? new Spell() : spell;
     }
 
     public @Nonnull Spell getRemainingSpell() {
         if (getCurrentIndex() >= getSpell().recipe.size())
-            return Spell.EMPTY;
-        return new Spell(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
+            return getSpell().clone().setRecipe(new ArrayList<>());
+        return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
     }
 
     @Override
