@@ -188,6 +188,11 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
         return radialMenuSlots;
     }
 
+    @Override
+    public boolean canQuickCast() {
+        return true;
+    }
+
     public static class BookCaster extends SpellCaster {
 
         public BookCaster(ItemStack stack) {
