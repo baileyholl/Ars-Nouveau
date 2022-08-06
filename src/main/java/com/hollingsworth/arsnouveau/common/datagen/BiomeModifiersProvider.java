@@ -37,6 +37,7 @@ public class BiomeModifiersProvider {
         HolderSet.Named<Biome> OVERWORLD_TAG = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTags.IS_OVERWORLD);
         HolderSet.Named<Biome> NO_SPAWN_HOSTILE = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTagProvider.NO_MOB_SPAWN);
         HolderSet.Named<Biome> COLD = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), Tags.Biomes.IS_COLD_OVERWORLD);
+        HolderSet.Named<Biome> BERRY_BIOMES = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTagProvider.BERRY_SPAWN);
         HolderSet.Named<EntityType<?>> HOSTILE = new HolderSet.Named<>(ops.registry(Registry.ENTITY_TYPE_REGISTRY).orElseThrow(), EntityTags.HOSTILE_MOBS);
 
         modifierMap.put(STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
@@ -71,7 +72,7 @@ public class BiomeModifiersProvider {
                 GenerationStep.Decoration.VEGETAL_DECORATION));
 
         HolderSet<PlacedFeature> BERRY_SET = new HolderSet.Named<>(ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow(), PlacedFeatureTagProvider.SOURCE_BERRIES);
-        modifierMap.put(BERRY_COMMON, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(COLD, BERRY_SET,
+        modifierMap.put(BERRY_COMMON, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(BERRY_BIOMES, BERRY_SET,
                 GenerationStep.Decoration.VEGETAL_DECORATION));
 
 
