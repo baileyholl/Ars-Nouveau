@@ -29,7 +29,7 @@ public class ArmorBlockRenderer extends GeoBlockRenderer<ArmorTile> {
 
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (bone.getName().equals("frame_all") && tile.getStack() != null) {
+        if (bone.getName().equals("ring_mid") && tile.getStack() != null) {
 
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
