@@ -20,32 +20,36 @@ public class PerkAttributes {
     public static final HashMap<RegistryObject<Attribute>, UUID> UUIDS = new HashMap<>();
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES,ArsNouveau.MODID);
 
-    public static final RegistryObject<Attribute> WARDING = registerAttribute("warding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> MANA_REGEN_BONUS = registerAttribute("mana_regen",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 2000.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> MAX_MANA_BONUS = registerAttribute("max_mana",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> SPELL_DAMAGE_BONUS = registerAttribute("spell_damage",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> WHIRLIESPRIG = registerAttribute("saturation",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 3.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> WIXIE = registerAttribute("wixie",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> DRYGMY = registerAttribute("drygmy",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> PROTECTION = registerAttribute("protection",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> JUMP_HEIGHT = registerAttribute("jump_height",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> DEPTHS = registerAttribute("breathing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 3.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> REPAIRING = registerAttribute("repairing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> GLIDING = registerAttribute("gliding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D));
-    public static final RegistryObject<Attribute> FIRE_RES = registerAttribute("fire_res",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> FEATHER = registerAttribute("feather",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> TOUGHNESS = registerAttribute("toughness",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> WARDING = registerAttribute("ars_nouveau.perk.warding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "07625fbb-f186-46c3-8b5f-989b747f29f8");
+    public static final RegistryObject<Attribute> MANA_REGEN_BONUS = registerAttribute("ars_nouveau.perk.mana_regen",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 2000.0D).setSyncable(true), "0c877091-ee4f-4eda-9868-4194d9a18833");
+    public static final RegistryObject<Attribute> MAX_MANA_BONUS = registerAttribute("ars_nouveau.perk.percent_max_mana",(id) -> new RangedAttribute(id, 1.0d, 0.0D, 10000.0D).setSyncable(true), "69a84402-96fd-4388-955e-57dc643c5ef0");
 
-    public static RegistryObject<Attribute> registerAttribute(String name, Function<String, Attribute> attribute) {
+    public static final RegistryObject<Attribute> FLAT_MANA_BONUS = registerAttribute("ars_nouveau.perk.flat_max_mana",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true), "22980b24-83e5-4683-a215-8997c4011389");
+
+    public static final RegistryObject<Attribute> SPELL_DAMAGE_BONUS = registerAttribute("ars_nouveau.perk.spell_damage",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10.0D).setSyncable(true), "50b50137-9c92-4e64-b350-6044e9e609de");
+    public static final RegistryObject<Attribute> WHIRLIESPRIG = registerAttribute("ars_nouveau.perk.saturation",(id) -> new RangedAttribute(id, 1.0, 0.0D, 10000.0D).setSyncable(true), "152810f7-0d01-484e-a512-73fe70af3db7");
+    public static final RegistryObject<Attribute> WIXIE = registerAttribute("ars_nouveau.perk.wixie",(id) -> new RangedAttribute(id, 1.0D, 0.0D, 1024.0D).setSyncable(true), "bae5d566-c9f6-4abf-9fe0-6ac140a34db1");
+    public static final RegistryObject<Attribute> DRYGMY = registerAttribute("ars_nouveau.perk.drygmy",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb97ec0a-e1d7-4303-9983-cd9fa8324b78");
+    public static final RegistryObject<Attribute> JUMP_HEIGHT = registerAttribute("ars_nouveau.perk.jump_height",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "f0ae4626-eafa-4715-a8f1-9d9a3d1d758b");
+    public static final RegistryObject<Attribute> DEPTHS = registerAttribute("ars_nouveau.perk.depths",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "303d0cae-ebaf-4587-9d5a-4ffc46b365a1");
+    public static final RegistryObject<Attribute> REPAIRING = registerAttribute("ars_nouveau.perk.repairing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "2688e470-43dc-4047-9e2a-6413e9315fdb");
+    public static final RegistryObject<Attribute> GLIDING = registerAttribute("ars_nouveau.perk.gliding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D), "309150b6-5005-46ac-9938-124bf0db7ddc");
+    public static final RegistryObject<Attribute> FEATHER = registerAttribute("ars_nouveau.perk.feather",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "ee3a4090-c5f5-4a26-a9c2-69837237b35f");
+    public static final RegistryObject<Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");
+
+    public static RegistryObject<Attribute> registerAttribute(String name, Function<String, Attribute> attribute, String uuid) {
+        return registerAttribute(name, attribute, UUID.fromString(uuid));
+    }
+
+    public static RegistryObject<Attribute> registerAttribute(String name, Function<String, Attribute> attribute, UUID uuid) {
         RegistryObject<Attribute> registryObject = ATTRIBUTES.register(name, () -> attribute.apply(name));
-        UUIDS.put(registryObject, UUID.randomUUID());
+        UUIDS.put(registryObject, uuid);
         return registryObject;
     }
 
     @SubscribeEvent
     public static void modifyEntityAttributes(EntityAttributeModificationEvent event) {
         event.getTypes().stream().filter(e -> e == EntityType.PLAYER).forEach(e -> {
-            //i'm not typing this so many times I'm lazy just foreach this amiright what could go wrong
             ATTRIBUTES.getEntries().forEach((v)->{
                 event.add(e, v.get());
             });

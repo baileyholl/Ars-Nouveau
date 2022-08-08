@@ -125,13 +125,11 @@ public class APIRegistry {
         registerPerk(StarbunclePerk.INSTANCE);
         registerPerk(DepthsPerk.INSTANCE);
         registerPerk(FeatherPerk.INSTANCE);
-        registerPerk(FireResistPerk.INSTANCE);
         registerPerk(GlidingPerk.INSTANCE);
         registerPerk(JumpHeightPerk.INSTANCE);
         registerPerk(LootingPerk.INSTANCE);
         registerPerk(MagicCapacityPerk.INSTANCE);
         registerPerk(MagicResistPerk.INSTANCE);
-        registerPerk(PhysicalResistPerk.INSTANCE);
         registerPerk(PotionDurationPerk.INSTANCE);
         registerPerk(RepairingPerk.INSTANCE);
         registerPerk(SaturationPerk.INSTANCE);

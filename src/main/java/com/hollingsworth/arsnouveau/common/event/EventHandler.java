@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.event;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
@@ -27,16 +29,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHealEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -143,8 +143,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent e) {
-        if(e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT.get()) && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC || e.getSource() instanceof EntityDamageSource)) {
-            if(e.getAmount() > 0.5){
+        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT.get()) && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC || e.getSource() instanceof EntityDamageSource)) {
+            if (e.getAmount() > 0.5) {
                 e.setAmount((float) Math.max(0.5, e.getAmount() - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT.get()).getAmplifier()));
             }
         }
@@ -157,8 +157,24 @@ public class EventHandler {
         if (entity != null && entity.hasEffect(ModPotions.HEX_EFFECT.get()) &&
                 (entity.hasEffect(MobEffects.POISON) || entity.hasEffect(MobEffects.WITHER) || entity.isOnFire() || entity.hasEffect(ModPotions.SHOCKED_EFFECT.get()))) {
             e.setAmount(e.getAmount() + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT.get()).getAmplifier());
-
         }
+        if (entity == null)
+            return;
+        double warding = PerkUtil.perkValue(entity, PerkAttributes.WARDING.get());
+        double feather = PerkUtil.perkValue(entity, PerkAttributes.FEATHER.get());
+        if (e.getSource().isMagic()) {
+            e.setAmount((float) (e.getAmount() - warding));
+        }
+
+        if (e.getSource().isFall()) {
+            e.setAmount((float) (e.getAmount() - (e.getAmount() * feather)));
+        }
+    }
+
+    @SubscribeEvent
+    public static void fallEvent(LivingFallEvent fallEvent) {
+        double jumpBonus = PerkUtil.perkValue(fallEvent.getEntity(), PerkAttributes.JUMP_HEIGHT.get());
+        fallEvent.setDistance((float) (fallEvent.getDistance() - (jumpBonus / 0.1)));
     }
 
     @SubscribeEvent
@@ -168,8 +184,18 @@ public class EventHandler {
             e.setAmount(e.getAmount() / 2.0f);
         }
 
-        if(entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT.get())){
+        if (entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT.get())) {
             e.setAmount(1.0f + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
+        }
+    }
+
+    @SubscribeEvent
+    public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
+        if (!event.getEntity().level.isClientSide && event.getItem().getItem().getFoodProperties() != null && event.getItem().getItem().isEdible()) {
+            if (event.getEntity() instanceof Player player) {
+                FoodData stats = player.getFoodData();
+                stats.saturationLevel *= PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG.get());
+            }
         }
     }
 

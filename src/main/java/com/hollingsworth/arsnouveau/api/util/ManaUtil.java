@@ -44,8 +44,7 @@ public class ManaUtil {
 
         int max = Config.INIT_MAX_MANA.get();
 
-        if (e.getAttribute(PerkAttributes.MAX_MANA_BONUS.get()) != null)
-            max += e.getAttributeValue(PerkAttributes.MAX_MANA_BONUS.get());
+        max += PerkUtil.perkValue(e, PerkAttributes.FLAT_MANA_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
             max += (Config.MANA_BOOST_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()));
@@ -56,6 +55,7 @@ public class ManaUtil {
         max += numGlyphs * Config.GLYPH_MAX_BONUS.get();
         max += tier * Config.TIER_MAX_BONUS.get();
 
+        max *= PerkUtil.perkValue(e, PerkAttributes.MAX_MANA_BONUS.get());
         MaxManaCalcEvent event = new MaxManaCalcEvent(e, max);
         MinecraftForge.EVENT_BUS.post(event);
         max = event.getMax();
