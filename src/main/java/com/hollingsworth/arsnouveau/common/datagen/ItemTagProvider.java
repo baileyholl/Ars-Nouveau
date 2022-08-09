@@ -106,6 +106,7 @@ public class ItemTagProvider extends ItemTagsProvider {
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(Tags.Items.SEEDS)
                 .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());
+        this.tag(Tags.Items.CROPS).add(ItemsRegistry.MAGE_BLOOM.asItem());
         this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
         this.tag(SOURCE_GEM_BLOCK_TAG)
                 .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());

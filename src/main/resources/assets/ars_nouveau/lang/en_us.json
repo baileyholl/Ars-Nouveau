@@ -1205,5 +1205,7 @@
 	"ars_nouveau.totem_perk.active": "Thread of Undying is now active.",
 	"ars_nouveau.sound.default_family": "Default",
 	"ars_nouveau.sound.tempestry_family": "Tempestry Family",
-	"ars_nouveau.sound.gaia_family": "Gaia Family"
+	"ars_nouveau.sound.gaia_family": "Gaia Family",
+	"entity.minecraft.villager.ars_nouveau.disguised_starbuncle": "Disguised Starbuncle"
+
 }
