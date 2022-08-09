@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.elytra;
 
 
-import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +21,6 @@ public class ClientElytraMixin {
             )
     )
     public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || stack.canElytraFly(entity);
+        return EffectGlide.canGlide(entity) || stack.canElytraFly(entity);
     }
 }

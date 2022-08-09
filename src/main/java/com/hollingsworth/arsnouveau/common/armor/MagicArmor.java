@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.*;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -32,15 +32,9 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     @Override
     public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if (world.isClientSide() || world.getGameTime() % 200 != 0 || stack.getDamageValue() == 0)
+        if (world.isClientSide())
             return;
-
-        CapabilityRegistry.getMana(player).ifPresent(mana -> {
-            if (mana.getCurrentMana() > 20) {
-                mana.removeMana(20);
-                stack.setDamageValue(stack.getDamageValue() - 1);
-            }
-        });
+        RepairingPerk.attemptRepair(stack, player);
         ArmorPerkHolder perkProvider = new ArmorPerkHolder(stack);
         perkProvider.getPerkSet().getPerkMap().forEach((k, v)->{
             if(k instanceof TickablePerk tickablePerk) {

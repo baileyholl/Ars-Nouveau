@@ -4,8 +4,11 @@ import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -29,5 +32,19 @@ public class RepairingPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    public static void attemptRepair(ItemStack stack, LivingEntity entity){
+        if(entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
+            return;
+        double repairLevel = PerkUtil.valueOrZero(entity, PerkAttributes.REPAIRING.get());
+        if(repairLevel <= 0)
+            return;
+        CapabilityRegistry.getMana(entity).ifPresent(mana -> {
+            if (mana.getCurrentMana() > 20) {
+                mana.removeMana(20);
+                stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int)repairLevel));
+            }
+        });
     }
 }

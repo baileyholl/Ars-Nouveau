@@ -33,7 +33,7 @@ public class PerkAttributes {
     public static final RegistryObject<Attribute> JUMP_HEIGHT = registerAttribute("ars_nouveau.perk.jump_height",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "f0ae4626-eafa-4715-a8f1-9d9a3d1d758b");
     public static final RegistryObject<Attribute> DEPTHS = registerAttribute("ars_nouveau.perk.depths",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "303d0cae-ebaf-4587-9d5a-4ffc46b365a1");
     public static final RegistryObject<Attribute> REPAIRING = registerAttribute("ars_nouveau.perk.repairing",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "2688e470-43dc-4047-9e2a-6413e9315fdb");
-    public static final RegistryObject<Attribute> GLIDING = registerAttribute("ars_nouveau.perk.gliding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D), "309150b6-5005-46ac-9938-124bf0db7ddc");
+    public static final RegistryObject<Attribute> GLIDING = registerAttribute("ars_nouveau.perk.gliding",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "309150b6-5005-46ac-9938-124bf0db7ddc");
     public static final RegistryObject<Attribute> FEATHER = registerAttribute("ars_nouveau.perk.feather",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "ee3a4090-c5f5-4a26-a9c2-69837237b35f");
     public static final RegistryObject<Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");
 

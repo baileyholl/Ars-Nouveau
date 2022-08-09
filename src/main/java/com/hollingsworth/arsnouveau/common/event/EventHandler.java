@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -121,7 +122,7 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(TickEvent.PlayerTickEvent event) {
-        if (ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT.get())) {
+        if (ArsNouveau.caelusLoaded && EffectGlide.canGlide(event.player)) {
             CaelusHandler.setFlying(event.player);
         }
 
@@ -160,8 +161,8 @@ public class EventHandler {
         }
         if (entity == null)
             return;
-        double warding = PerkUtil.perkValue(entity, PerkAttributes.WARDING.get());
-        double feather = PerkUtil.perkValue(entity, PerkAttributes.FEATHER.get());
+        double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING.get());
+        double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER.get());
         if (e.getSource().isMagic()) {
             e.setAmount((float) (e.getAmount() - warding));
         }
@@ -173,7 +174,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void fallEvent(LivingFallEvent fallEvent) {
-        double jumpBonus = PerkUtil.perkValue(fallEvent.getEntity(), PerkAttributes.JUMP_HEIGHT.get());
+        double jumpBonus = PerkUtil.valueOrZero(fallEvent.getEntity(), PerkAttributes.JUMP_HEIGHT.get());
         fallEvent.setDistance((float) (fallEvent.getDistance() - (jumpBonus / 0.1)));
     }
 
@@ -218,6 +219,32 @@ public class EventHandler {
         PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
     }
+
+    @SubscribeEvent
+    public static void onLootingEvent(LootingLevelEvent event) {
+        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof Player living) {
+            event.setLootingLevel(event.getLootingLevel() + (int) Math.round(PerkUtil.valueOrZero(living, PerkAttributes.DRYGMY.get())));
+        }
+    }
+
+    @SubscribeEvent
+    public static void potionEvent(MobEffectEvent.Added event) {
+        LivingEntity target = event.getEntity();
+        Entity applier = event.getEffectSource();
+        if(target.level.isClientSide)
+            return;
+        double bonus = 0.0;
+        if(event.getEffectInstance().getEffect().isBeneficial()){
+            bonus = PerkUtil.valueOrZero(target, PerkAttributes.WIXIE.get());
+        }else if(applier instanceof LivingEntity living){
+            bonus = PerkUtil.valueOrZero(living, PerkAttributes.WIXIE.get());
+        }
+
+        if(bonus > 0.0){
+            event.getEffectInstance().duration *= bonus;
+        }
+    }
+
 
     private EventHandler() {
     }

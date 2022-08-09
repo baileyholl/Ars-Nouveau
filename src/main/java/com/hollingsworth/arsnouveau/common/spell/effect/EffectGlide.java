@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -54,7 +55,6 @@ public class EffectGlide extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        // ModPotions.GLIDE_EFFECT does not respond to amplification
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
@@ -62,5 +62,9 @@ public class EffectGlide extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);
+    }
+
+    public static boolean canGlide(LivingEntity entity) {
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || entity.getAttributeValue(PerkAttributes.GLIDING.get()) > 0.0;
     }
 }

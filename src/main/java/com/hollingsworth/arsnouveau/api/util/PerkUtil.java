@@ -22,4 +22,8 @@ public class PerkUtil {
         return instance == null ? attribute.getDefaultValue() : instance.getValue();
     }
 
+    public static double valueOrZero(LivingEntity entity, Attribute attribute){
+        return entity.getAttribute(attribute) == null ? 0 : entity.getAttributeValue(attribute);
+    }
+
 }

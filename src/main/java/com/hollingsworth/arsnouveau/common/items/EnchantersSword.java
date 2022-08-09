@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.SwordRenderer;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -45,15 +45,8 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
         super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
-        if (world.isClientSide() || world.getGameTime() % 200 != 0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
-            return;
-
-        CapabilityRegistry.getMana((LivingEntity) entity).ifPresent(mana -> {
-            if (mana.getCurrentMana() > 20) {
-                mana.removeMana(20);
-                stack.setDamageValue(stack.getDamageValue() - 1);
-            }
-        });
+        if(entity instanceof Player player)
+            RepairingPerk.attemptRepair(stack, player);
     }
 
     @Override
