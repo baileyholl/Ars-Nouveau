@@ -37,7 +37,7 @@ public class GuiRadialMenu extends Screen {
     private static final float PRECISION = 5.0f;
 
     private boolean closing;
-    private double startAnimation;
+    private float startAnimation;
     private CompoundNBT tag;
     private int selectedItem;
 
@@ -47,7 +47,7 @@ public class GuiRadialMenu extends Screen {
         this.tag = book_tag;
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
-        this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
+        this.startAnimation = getMinecraft().level.getGameTime() + getMinecraft().getFrameTime();
         this.selectedItem = -1;
     }
 
@@ -90,17 +90,19 @@ public class GuiRadialMenu extends Screen {
     @Override
     public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
         super.render(ms,mouseX, mouseY, partialTicks);
-        final float OPEN_ANIMATION_LENGTH = 2.5f;
-        long worldTime = Minecraft.getInstance().level.getGameTime();
-        float animationTime = (float) (worldTime + partialTicks - startAnimation);
+        final float OPEN_ANIMATION_LENGTH = 0.5f;
+        float worldTime = (minecraft.level.getGameTime() + partialTicks);
+        float animationTime = (worldTime - startAnimation)/20f;
         float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
 
 
         float animProgress = MathHelper.clamp(openAnimation, 0, 1);
+        //This will make it so the animation is Cubic ease out (fast beginning, smooth ending)
+        animProgress = (float) (1 - Math.pow(1 - animProgress, 3));
         float radiusIn = Math.max(0.1f, 45 * animProgress);
         float radiusOut = radiusIn * 2;
         float itemRadius = (radiusIn + radiusOut) * 0.5f;
-        float animTop = (1 - animProgress) * height / 2.0f;
+        //float animTop = (1 - animProgress) * height / 2.0f;
         int x = width / 2;
         int y = height / 2;
 
@@ -119,7 +121,7 @@ public class GuiRadialMenu extends Screen {
         RenderSystem.disableTexture();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        RenderSystem.translated(0, animTop, 0);
+        //RenderSystem.translated(0, animTop, 0);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
