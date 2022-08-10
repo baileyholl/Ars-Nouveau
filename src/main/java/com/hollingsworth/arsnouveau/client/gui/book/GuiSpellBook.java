@@ -100,17 +100,27 @@ public class GuiSpellBook extends BaseBook {
         int selected_slot_ind = SpellBook.getMode(spell_book_tag);
         if(selected_slot_ind == 0) selected_slot_ind = 1;
 
-        //Crafting slots
-        for (int i = 0; i < numLinks; i++) {
-            String icon = null;
-            String spell_id = "";
-            int offset = i >= 5 ? 14 : 0;
-            CraftingButton cell = new CraftingButton(this,bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
-            //GlyphButton glyphButton = new GlyphButton(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, )
-            addButton(cell);
-            craftingCells.add(cell);
+        //Crafting slots for the spell
+        if (craftingCells.isEmpty()) {
+            for (int i = 0; i < numLinks; i++) {
+                String icon = null;
+                String spell_id = "";
+                int offset = i >= 5 ? 14 : 0;
+                CraftingButton cell = new CraftingButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
+                //GlyphButton glyphButton = new GlyphButton(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, )
+                addButton(cell);
+                craftingCells.add(cell);
+            }
+            updateCraftingSlots(selected_slot_ind);
         }
-        updateCraftingSlots(selected_slot_ind);
+        else {
+            for (int a = 0; a < craftingCells.size(); a++){
+                addButton(craftingCells.get(a));
+                int offset = a >= 5 ? 14 : 0;
+                craftingCells.get(a).x = (bookLeft + 19 + 24 * a + offset);
+                craftingCells.get(a).y = (bookTop + FULL_HEIGHT - 47);
+            }
+        }
 
 //        addCastMethodParts();
 //        addAugmentParts();
