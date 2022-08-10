@@ -61,7 +61,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void pickUpItem(ItemEntity itemEntity) {
         super.pickUpItem(itemEntity);
-        if(!canStoreStack(itemEntity.getItem()))
+        if(getValidStorePos(itemEntity.getItem()) == null)
             return;
         starbuncle.setHeldStack(itemEntity.getItem());
         itemEntity.remove(Entity.RemovalReason.DISCARDED);
@@ -83,6 +83,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             return null;
         BlockPos returnPos = null;
         ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
+
         for (BlockPos b : TO_LIST) {
             ItemScroll.SortPref pref = isValidStorePos(b, stack);
             // Pick our highest priority
@@ -122,7 +123,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (iItemHandler == null)
             return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
-            if (!iItemHandler.getStackInSlot(j).isEmpty() && canStoreStack(iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null) {
+            ItemStack stack = iItemHandler.getStackInSlot(j);
+            if (!stack.isEmpty() && getValidStorePos(stack) != null) {
                 return true;
             }
         }
@@ -133,7 +135,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
      * Returns the maximum stack size an inventory can accept for a particular stack. Does all needed validity checks.
      */
     public int getMaxTake(ItemStack stack) {
-        if (!canStoreStack(stack)) {
+        if (getValidStorePos(stack) == null) {
             return -1;
         }
         BlockPos validStorePos = getValidStorePos(stack);
@@ -156,20 +158,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         }
         return -1;
     }
-
-    public boolean canStoreStack(ItemStack stack) {
-        BlockPos storePos = getValidStorePos(stack);
-        if (storePos == null) {
-            return false;
-        }
-        if(itemScroll != null && itemScroll.getItem() instanceof ItemScroll scrollItem && scrollItem.getSortPref(stack, itemScroll,
-                level.getBlockEntity(storePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null)) == ItemScroll.SortPref.INVALID) {
-            return false;
-        }
-
-        return true;
-    }
-
+    
     private ItemScroll.SortPref canDepositItem(BlockEntity tile, ItemStack stack) {
         ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
         if (tile == null || stack == null || stack.isEmpty())
@@ -195,6 +184,10 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             } else if (i.getItem().getItem() == stack.getItem()) {
                 pref = ItemScroll.SortPref.HIGHEST;
             }
+        }
+        if(itemScroll != null && itemScroll.getItem() instanceof ItemScroll scrollItem && scrollItem.getSortPref(stack, itemScroll,
+                handler) == ItemScroll.SortPref.INVALID) {
+            return ItemScroll.SortPref.INVALID;
         }
         return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : ItemScroll.SortPref.INVALID;
     }
