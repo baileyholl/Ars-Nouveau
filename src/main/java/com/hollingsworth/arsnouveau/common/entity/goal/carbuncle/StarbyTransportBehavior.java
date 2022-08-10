@@ -229,6 +229,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
     @Override
     public void onWanded(Player playerEntity) {
+        this.itemScroll = ItemStack.EMPTY;
         super.onWanded(playerEntity);
     }
 
