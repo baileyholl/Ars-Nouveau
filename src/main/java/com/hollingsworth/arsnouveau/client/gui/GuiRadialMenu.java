@@ -37,7 +37,8 @@ public class GuiRadialMenu extends Screen {
     private static final float PRECISION = 5.0f;
 
     private boolean closing;
-    private float startAnimation;
+    private float totalTime;
+    private float prevTick;
     private CompoundNBT tag;
     private int selectedItem;
 
@@ -47,7 +48,6 @@ public class GuiRadialMenu extends Screen {
         this.tag = book_tag;
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
-        this.startAnimation = getMinecraft().level.getGameTime() + getMinecraft().getFrameTime();
         this.selectedItem = -1;
     }
 
@@ -91,9 +91,10 @@ public class GuiRadialMenu extends Screen {
     public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
         super.render(ms,mouseX, mouseY, partialTicks);
         final float OPEN_ANIMATION_LENGTH = 0.5f;
-        float worldTime = (minecraft.level.getGameTime() + partialTicks);
-        float animationTime = (worldTime - startAnimation)/20f;
-        float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
+        float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
+        float currTick = minecraft.getFrameTime();
+        totalTime += (prevTick >= currTick ? (currTick + 1 - prevTick) : currTick - prevTick)/20f;
+        prevTick = currTick;
 
 
         float animProgress = MathHelper.clamp(openAnimation, 0, 1);
