@@ -37,8 +37,10 @@ public class GuiRadialMenu extends Screen {
     private static final float PRECISION = 5.0f;
 
     private boolean closing;
+    final float OPEN_ANIMATION_LENGTH = 0.5f;
     private float totalTime;
     private float prevTick;
+    private float extraTick;
     private CompoundNBT tag;
     private int selectedItem;
 
@@ -86,14 +88,20 @@ public class GuiRadialMenu extends Screen {
         }
     }
 
+    @Override
+    public void tick() {
+        if (totalTime != OPEN_ANIMATION_LENGTH){
+            extraTick++;
+        }
+    }
 
     @Override
     public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
         super.render(ms,mouseX, mouseY, partialTicks);
-        final float OPEN_ANIMATION_LENGTH = 0.5f;
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
         float currTick = minecraft.getFrameTime();
-        totalTime += (prevTick >= currTick ? (currTick + 1 - prevTick) : currTick - prevTick)/20f;
+        totalTime += (currTick + extraTick - prevTick)/20f;
+        extraTick = 0;
         prevTick = currTick;
 
 
