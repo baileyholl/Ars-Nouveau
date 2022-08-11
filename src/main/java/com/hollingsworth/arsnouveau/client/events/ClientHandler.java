@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.armor.HeavyArmor;
 import com.hollingsworth.arsnouveau.common.armor.LightArmor;
+import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
@@ -34,6 +35,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -209,6 +211,38 @@ public class ClientHandler {
                         new ParticleColor(200, 0, 200).getColor(),
                 ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
 
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_ROBES);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_BOOTS);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_HOOD);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_LEGGINGS);
+
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_ROBES);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_BOOTS);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_HOOD);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_LEGGINGS);
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
                         ? jarTile.getColor()
@@ -219,6 +253,11 @@ public class ClientHandler {
                         ? melderTile.getColor()
                         : -1, BlockRegistry.POTION_MELDER);
 
+    }
+
+    public static int colorFromArmor(ItemStack stack){
+        MagicArmor.ArmorPerkHolder holder = new MagicArmor.ArmorPerkHolder(stack);
+        return DyeColor.byName(holder.getColor(), DyeColor.RED).getTextColor();
     }
 
     public static int colorFromFlask(ItemStack stack) {

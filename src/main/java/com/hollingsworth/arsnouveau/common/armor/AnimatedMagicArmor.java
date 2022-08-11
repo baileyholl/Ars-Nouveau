@@ -44,7 +44,7 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack,
                                                                    EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                return (HumanoidModel<?>) GeoArmorRenderer.getRenderer(AnimatedMagicArmor.this.getClass(), livingEntity)
+                return GeoArmorRenderer.getRenderer(AnimatedMagicArmor.this.getClass(), livingEntity)
                         .applyEntityStats(original).applySlot(equipmentSlot)
                         .setCurrentItem(livingEntity, itemStack, equipmentSlot);
             }
@@ -64,6 +64,7 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
     public void setColor(String color) {
 
     }
+
 
     @Override
     public String getColor(ItemStack object) {

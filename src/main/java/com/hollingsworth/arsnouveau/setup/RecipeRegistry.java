@@ -29,6 +29,7 @@ public class RecipeRegistry {
     public static final String REACTIVE_RECIPE_ID = "reactive_enchantment";
     public static final String SPELL_WRITE_RECIPE_ID = "spell_write";
     public static final String GLYPH_RECIPE_ID = "glyph";
+    public static final String DYE_RECIPE_ID = "dye";
     public static final RegistryObject<RecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new ModRecipeType());
     public static final RegistryObject<RecipeSerializer<EnchantingApparatusRecipe>> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new EnchantingApparatusRecipe.Serializer());
 
@@ -49,8 +50,8 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeSerializer<PotionFlaskRecipe>> POTION_FLASK_RECIPE = RECIPE_SERIALIZERS.register("potion_flask", () -> new PotionFlaskRecipe.Serializer());
 
 
-    public static final RegistryObject<RecipeType<DyeRecipe>> DYE_TYPE = RECIPE_TYPES.register("dye", () -> new ModRecipeType());
-    public static final RegistryObject<RecipeSerializer<DyeRecipe>> DYE_RECIPE = RECIPE_SERIALIZERS.register("dye", () -> new DyeRecipe.Serializer());
+    public static final RegistryObject<RecipeType<DyeRecipe>> DYE_TYPE = RECIPE_TYPES.register(DYE_RECIPE_ID, () -> new ModRecipeType());
+    public static final RegistryObject<RecipeSerializer<DyeRecipe>> DYE_RECIPE = RECIPE_SERIALIZERS.register(DYE_RECIPE_ID, () -> new DyeRecipe.Serializer());
 
 
     public static final RegistryObject<RecipeType<ReactiveEnchantmentRecipe>> REACTIVE_TYPE = RECIPE_TYPES.register(REACTIVE_RECIPE_ID, () -> new ModRecipeType());

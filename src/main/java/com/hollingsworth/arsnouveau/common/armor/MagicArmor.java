@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.*;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -13,10 +14,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.Map;
 
-public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
+public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IDyeable {
 
     public MagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
         super(materialIn, slot, builder);
@@ -78,6 +76,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
         return super.isFoil(pStack) || (holder != null && !holder.isEmpty());
     }
 
+    @Override
+    public void onDye(ItemStack stack, DyeColor dyeColor) {
+        ArmorPerkHolder perkHolder = new ArmorPerkHolder(stack);
+        perkHolder.setColor(dyeColor.getName());
+    }
+
     public static class ArmorPerkHolder extends StackPerkHolder {
 
         private String color;
@@ -93,7 +97,7 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
         }
 
         public String getColor() {
-            return color;
+            return color == null ? DyeColor.PURPLE.getName() : color;
         }
 
         public void setColor(String color) {

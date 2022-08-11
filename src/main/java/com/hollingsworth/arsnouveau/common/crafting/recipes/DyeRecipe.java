@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -9,11 +10,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
+
+import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class DyeRecipe extends ShapelessRecipe {
 
@@ -29,7 +34,7 @@ public class DyeRecipe extends ShapelessRecipe {
         if (!output.isEmpty()) {
             for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
                 final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
-                if (!ingredient.isEmpty() && ingredient.getItem() instanceof SpellBook) {
+                if (!ingredient.isEmpty() && ingredient.getItem() instanceof IDyeable) {
                     output.setTag(ingredient.getOrCreateTag().copy());
                 }
             }
@@ -37,9 +42,9 @@ public class DyeRecipe extends ShapelessRecipe {
                 final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
                 DyeColor color = DyeColor.getColor(ingredient);
                 if (!ingredient.isEmpty() && color != null) {
-
-                    output.getTag().putInt("color", color.getId());
-
+                    if(output.getItem() instanceof IDyeable dyeable){
+                        dyeable.onDye(output, color);
+                    }
                 }
             }
         }
@@ -51,6 +56,26 @@ public class DyeRecipe extends ShapelessRecipe {
     public RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.DYE_RECIPE.get();
     }
+
+    public static JsonElement asRecipe(Item item) {
+        JsonObject jsonobject = new JsonObject();
+        jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.DYE_RECIPE_ID);
+        JsonArray ingredients = new JsonArray();
+        JsonObject dyeObject = new JsonObject();
+        dyeObject.addProperty("tag", Tags.Items.DYES.location().toString());
+        ingredients.add(dyeObject);
+
+        JsonObject input = new JsonObject();
+        input.addProperty("item", getRegistryName(item).toString());
+        ingredients.add(input);
+
+        jsonobject.add("ingredients", ingredients);
+        JsonObject itemObject = new JsonObject();
+        itemObject.addProperty("item", getRegistryName(item).toString());
+        jsonobject.add("result", itemObject);
+        return jsonobject;
+    }
+
 
     public static class Serializer implements RecipeSerializer<DyeRecipe> {
         @Override

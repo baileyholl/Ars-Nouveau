@@ -1,0 +1,14 @@
+{
+  "type": "ars_nouveau:dye",
+  "ingredients": [
+    {
+      "tag": "forge:dyes"
+    },
+    {
+      "item": "ars_nouveau:archmage_robes"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:archmage_robes"
+  }
+}
