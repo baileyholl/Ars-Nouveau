@@ -243,6 +243,23 @@ public class ClientHandler {
         event.getItemColors().register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
                 ItemsRegistry.APPRENTICE_LEGGINGS);
+
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_ROBES);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_BOOTS);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_HOOD);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_LEGGINGS);
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
                         ? jarTile.getColor()
@@ -257,7 +274,7 @@ public class ClientHandler {
 
     public static int colorFromArmor(ItemStack stack){
         MagicArmor.ArmorPerkHolder holder = new MagicArmor.ArmorPerkHolder(stack);
-        return DyeColor.byName(holder.getColor(), DyeColor.RED).getTextColor();
+        return DyeColor.byName(holder.getColor(), DyeColor.PURPLE).getTextColor();
     }
 
     public static int colorFromFlask(ItemStack stack) {
