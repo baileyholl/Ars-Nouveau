@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class MagicResistPerk extends Perk {
 
-    public static final MagicResistPerk INSTANCE = new MagicResistPerk(new ResourceLocation(ArsNouveau.MODID, "magic_resist_perk"));
+    public static final MagicResistPerk INSTANCE = new MagicResistPerk(new ResourceLocation(ArsNouveau.MODID, "thread_warding"));
     public static final UUID PERK_UUID = UUID.fromString("fc967b66-a432-44e1-93ec-e8ed583b47b3");
 
     public MagicResistPerk(ResourceLocation key) {
@@ -29,5 +29,15 @@ public class MagicResistPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Warding";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Reduces the amount of magic damage taken by a flat amount each level.";
     }
 }

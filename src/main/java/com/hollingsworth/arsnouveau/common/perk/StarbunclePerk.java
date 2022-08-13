@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class StarbunclePerk extends Perk {
 
-    public static final StarbunclePerk INSTANCE = new StarbunclePerk(new ResourceLocation(ArsNouveau.MODID, "starbuncle_perk"));
+    public static final StarbunclePerk INSTANCE = new StarbunclePerk(new ResourceLocation(ArsNouveau.MODID, "thread_starbuncle"));
     public static final UUID PERK_UUID = UUID.fromString("46937d0b-123c-4786-95b5-748afd50f398");
     protected StarbunclePerk(ResourceLocation key) {
         super(key);
@@ -31,5 +31,15 @@ public class StarbunclePerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Starbuncle";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Increases the speed of the player by 20% each level.";
     }
 }

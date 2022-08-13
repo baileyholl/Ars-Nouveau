@@ -34,7 +34,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable, Container, IAnimationListener {
+public class AlterationTile extends SingleItemTile implements IAnimatable, ITickable, Container, IAnimationListener {
 
 
     public boolean isCrafting;
@@ -43,11 +43,11 @@ public class ArmorTile extends SingleItemTile implements IAnimatable, ITickable,
     boolean playCrunch;
     List<BlockPos> destinationList = new ArrayList<>();
 
-    public ArmorTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public AlterationTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
-    public ArmorTile(BlockPos pos, BlockState state) {
+    public AlterationTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARMOR_TILE, pos, state);
     }
 

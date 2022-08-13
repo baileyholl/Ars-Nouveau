@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class LootingPerk extends Perk {
 
-    public static final LootingPerk INSTANCE = new LootingPerk(new ResourceLocation(ArsNouveau.MODID, "looting_perk"));
+    public static final LootingPerk INSTANCE = new LootingPerk(new ResourceLocation(ArsNouveau.MODID, "thread_drygmy"));
     public static final UUID PERK_UUID = UUID.fromString("ff9459e5-ec2c-44c8-ac3b-19c78c76b4bb");
 
 
@@ -30,5 +30,15 @@ public class LootingPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Drygmy";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Grants an additional stack of looting.";
     }
 }

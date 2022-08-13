@@ -335,10 +335,10 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<PotionDiffuserTile> POTION_DIFFUSER_TILE;
 
-    @ObjectHolder(value = prepend + LibBlockNames.ARMOR_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ArmorTile> ARMOR_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ARMOR_BLOCK, registryName = BlockRegistryKey)
-    public static ArmorBlock ARMOR_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_APPARATUS, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<AlterationTile> ARMOR_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_APPARATUS, registryName = BlockRegistryKey)
+    public static AlterationApparatus ALTERATION_APPARATUS;
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
@@ -453,7 +453,7 @@ public class BlockRegistry {
                 registry.register(s, new ModBlock());
             }
         }
-        registry.register(LibBlockNames.ARMOR_BLOCK, new ArmorBlock());
+        registry.register(LibBlockNames.ALTERATION_APPARATUS, new AlterationApparatus());
 
     }
 
@@ -502,7 +502,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCRYERS_OCULUS, BlockEntityType.Builder.of(ScryersOculusTile::new, BlockRegistry.SCRYERS_OCULUS).build(null));
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null));
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
-        registry.register(LibBlockNames.ARMOR_BLOCK, BlockEntityType.Builder.of(ArmorTile::new, BlockRegistry.ARMOR_BLOCK).build(null));
+        registry.register(LibBlockNames.ALTERATION_APPARATUS, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_APPARATUS).build(null));
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -707,10 +707,10 @@ public class BlockRegistry {
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
        }
-        registry.register(LibBlockNames.ARMOR_BLOCK, new RendererBlockItem(BlockRegistry.ARMOR_BLOCK, defaultItemProperties()) {
+        registry.register(LibBlockNames.ALTERATION_APPARATUS, new RendererBlockItem(BlockRegistry.ALTERATION_APPARATUS, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("armor_block");
+                return GenericRenderer.getISTER("alteration_apparatus");
             }
         });
 

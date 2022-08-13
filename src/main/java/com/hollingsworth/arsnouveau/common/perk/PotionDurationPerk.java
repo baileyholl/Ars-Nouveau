@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class PotionDurationPerk extends Perk {
 
-    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(new ResourceLocation(ArsNouveau.MODID, "potion_duration_perk"));
+    public static final PotionDurationPerk INSTANCE = new PotionDurationPerk(new ResourceLocation(ArsNouveau.MODID, "thread_wixie"));
     public static final UUID PERK_UUID = UUID.fromString("f4c0926e-82a7-44d6-bd6b-a0321a65de2f");
 
     public PotionDurationPerk(ResourceLocation key) {
@@ -29,5 +29,15 @@ public class PotionDurationPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Wixie";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Increases the duration of potions by 15% each level.";
     }
 }

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
-import com.hollingsworth.arsnouveau.common.block.tile.ArmorTile;
+import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -17,14 +17,14 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
-public class ArmorBlockRenderer extends GeoBlockRenderer<ArmorTile> {
+public class AlterationApparatusRenderer extends GeoBlockRenderer<AlterationTile> {
 
-    public ArmorBlockRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
-        super(p_i226006_1_, new GenericModel<>("armor_block"));
+    public AlterationApparatusRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
+        super(p_i226006_1_, new GenericModel<>("alteration_apparatus"));
     }
 
     MultiBufferSource buffer;
-    ArmorTile tile;
+    AlterationTile tile;
     ResourceLocation text;
 
     @Override
@@ -50,7 +50,7 @@ public class ArmorBlockRenderer extends GeoBlockRenderer<ArmorTile> {
     }
 
     @Override
-    public void renderEarly(ArmorTile animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
+    public void renderEarly(AlterationTile animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.tile = animatable;
         this.buffer = renderTypeBuffer;
         this.text = this.getTextureLocation(animatable);
@@ -61,7 +61,7 @@ public class ArmorBlockRenderer extends GeoBlockRenderer<ArmorTile> {
     public void render(BlockEntity tile, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int lightIn, int overlayIn) {
         try {
             super.render(tile, v, matrixStack, iRenderTypeBuffer, lightIn, overlayIn);
-            ArmorTile tileEntityIn = (ArmorTile) tile;
+            AlterationTile tileEntityIn = (AlterationTile) tile;
             this.tile = tileEntityIn;
         }catch (Exception e){
             e.printStackTrace();

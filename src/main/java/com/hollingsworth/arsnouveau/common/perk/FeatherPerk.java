@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class FeatherPerk extends Perk {
 
-    public static final FeatherPerk INSTANCE = new FeatherPerk(new ResourceLocation(ArsNouveau.MODID, "feather_perk"));
+    public static final FeatherPerk INSTANCE = new FeatherPerk(new ResourceLocation(ArsNouveau.MODID, "thread_feather"));
     public static final UUID PERK_UUID = UUID.fromString("3923ee66-756d-4b1d-b216-bb9338b0315b");
 
     public FeatherPerk(ResourceLocation key) {
@@ -29,5 +29,15 @@ public class FeatherPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Feather";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Decreases the amount of fall damage taken by a percentage. Stacks with Feather Enchantments.";
     }
 }

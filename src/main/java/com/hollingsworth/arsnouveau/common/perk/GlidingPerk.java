@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class GlidingPerk extends Perk {
 
-    public static final GlidingPerk INSTANCE = new GlidingPerk(new ResourceLocation(ArsNouveau.MODID, "gliding_perk"));
+    public static final GlidingPerk INSTANCE = new GlidingPerk(new ResourceLocation(ArsNouveau.MODID, "thread_gliding"));
     public static final UUID PERK_UUID = UUID.fromString("556fd264-22f2-4454-85b1-19070179f09a");
 
     public GlidingPerk(ResourceLocation key) {
@@ -29,5 +29,15 @@ public class GlidingPerk extends Perk {
     @Override
     public int getCountCap() {
         return 1;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Gliding";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Allows you to glide as if you are wearing an elytra.";
     }
 }

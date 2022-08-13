@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class SaturationPerk extends Perk {
 
-    public static final SaturationPerk INSTANCE = new SaturationPerk(new ResourceLocation(ArsNouveau.MODID, "saturation_perk"));
+    public static final SaturationPerk INSTANCE = new SaturationPerk(new ResourceLocation(ArsNouveau.MODID, "thread_whirlisprig"));
     public static final UUID PERK_UUID = UUID.fromString("fe329876-34b0-4349-a60a-6215ca44bd4e");
 
     public SaturationPerk(ResourceLocation key) {
@@ -36,5 +36,15 @@ public class SaturationPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Whirlisprig";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Increases the saturation of consumed food by 30% each level.";
     }
 }

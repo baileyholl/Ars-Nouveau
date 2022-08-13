@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.ArmorTile;
+import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -18,14 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class ArmorBlock extends TickableModBlock{
+public class AlterationApparatus extends TickableModBlock{
 
 
-    public ArmorBlock() {
+    public AlterationApparatus() {
         this(defaultProperties().noOcclusion());
     }
 
-    public ArmorBlock(Properties properties) {
+    public AlterationApparatus(Properties properties) {
         super(properties);
     }
 
@@ -33,7 +33,7 @@ public class ArmorBlock extends TickableModBlock{
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
-        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ArmorTile tile))
+        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof AlterationTile tile))
             return InteractionResult.SUCCESS;
         if (tile.isCrafting)
             return InteractionResult.SUCCESS;
@@ -66,7 +66,7 @@ public class ArmorBlock extends TickableModBlock{
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ArmorTile(pPos, pState);
+        return new AlterationTile(pPos, pState);
     }
 
     @Override

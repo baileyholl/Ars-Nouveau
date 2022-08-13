@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -33,4 +34,16 @@ public interface IPerk {
     int getCountCap();
 
     ResourceLocation getRegistryName();
+
+    default String getName() {
+        return Component.translatable(getRegistryName().getNamespace() + ".thread_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
+    }
+
+    default String getLangName(){
+        return "";
+    }
+
+    default String getLangDescription(){
+        return "";
+    }
 }

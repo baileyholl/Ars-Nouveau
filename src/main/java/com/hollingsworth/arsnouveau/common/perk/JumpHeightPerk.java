@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class JumpHeightPerk extends Perk {
 
-    public static final JumpHeightPerk INSTANCE = new JumpHeightPerk(new ResourceLocation(ArsNouveau.MODID, "jump_height_perk"));
+    public static final JumpHeightPerk INSTANCE = new JumpHeightPerk(new ResourceLocation(ArsNouveau.MODID, "thread_heights"));
     public static final UUID PERK_UUID = UUID.fromString("e5f68a8c-589f-4dde-978d-b4c507a4485b");
 
     public JumpHeightPerk(ResourceLocation key) {
@@ -29,5 +29,15 @@ public class JumpHeightPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Heights";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Allows you to jump higher and increases how far you may fall before taking damage.";
     }
 }

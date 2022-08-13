@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class MagicCapacityPerk extends Perk {
 
-    public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(new ResourceLocation(ArsNouveau.MODID, "magic_capacity_perk"));
+    public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(new ResourceLocation(ArsNouveau.MODID, "thread_magic_capacity"));
     public static final UUID PERK_UUID = UUID.fromString("42ebba5f-7843-4da9-9ad4-e9ca37120602");
 
     public MagicCapacityPerk(ResourceLocation key) {
@@ -30,5 +30,15 @@ public class MagicCapacityPerk extends Perk {
     @Override
     public int getCountCap() {
         return 3;
+    }
+
+    @Override
+    public String getLangName() {
+        return "Magic Capacity";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Increases the users maximum mana by 10% per level.";
     }
 }
