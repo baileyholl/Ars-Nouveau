@@ -8,6 +8,7 @@ buildscript {
             url "https://repo.spongepowered.org/repository/maven-public/"
         }
         maven { url = 'https://maven.parchmentmc.org' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
@@ -142,11 +143,13 @@ repositories {
     }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
+    jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
+
 dependencies {
 
     minecraft "net.minecraftforge:forge:${mc_version}.1-${forge_version}"
-
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
@@ -173,7 +176,10 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
     //runtimeOnly fg.deobf("curse.maven:ruby-574856:3864138") // Rubidium
-
+    implementation 'systems.manifold:manifold-rt:2022.1.19'
+    implementation 'systems.manifold:manifold-collections:2022.1.19'
+    implementation 'systems.manifold:manifold-ext:2022.1.19'
+    implementation 'systems.manifold:manifold-strings:2022.1.19'
 }
 
 
