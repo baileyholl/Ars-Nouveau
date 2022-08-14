@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.Recipe;
@@ -30,6 +27,7 @@ public class RecipeRegistry {
     public static final String SPELL_WRITE_RECIPE_ID = "spell_write";
     public static final String GLYPH_RECIPE_ID = "glyph";
     public static final String DYE_RECIPE_ID = "dye";
+    public static final String ARMOR_RECIPE_ID = "armor_upgrade";
     public static final RegistryObject<RecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new ModRecipeType());
     public static final RegistryObject<RecipeSerializer<EnchantingApparatusRecipe>> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new EnchantingApparatusRecipe.Serializer());
 
@@ -63,6 +61,9 @@ public class RecipeRegistry {
 
     public static final RegistryObject<RecipeType<GlyphRecipe>> GLYPH_TYPE = RECIPE_TYPES.register(GLYPH_RECIPE_ID, () -> new ModRecipeType());
     public static final RegistryObject<RecipeSerializer<GlyphRecipe>> GLYPH_SERIALIZER = RECIPE_SERIALIZERS.register(GLYPH_RECIPE_ID, () -> new GlyphRecipe.Serializer());
+
+    public static final RegistryObject<RecipeType<ArmorUpgradeRecipe>> ARMOR_UPGRADE_TYPE = RECIPE_TYPES.register(ARMOR_RECIPE_ID, () -> new ModRecipeType());
+    public static final RegistryObject<RecipeSerializer<ArmorUpgradeRecipe>> ARMOR_SERIALIZER = RECIPE_SERIALIZERS.register(ARMOR_RECIPE_ID, () -> new ArmorUpgradeRecipe.Serializer());
 
     private static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {
         @Override

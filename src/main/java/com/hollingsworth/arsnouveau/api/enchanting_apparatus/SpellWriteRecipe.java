@@ -27,6 +27,7 @@ import java.util.List;
 import static com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe.getParchment;
 
 public class SpellWriteRecipe extends EnchantingApparatusRecipe {
+
     public SpellWriteRecipe(ResourceLocation id, List<Ingredient> pedestalItems, int cost) {
         this.pedestalItems = pedestalItems;
         this.id = id;

@@ -5,9 +5,9 @@ import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.*;
-import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -64,16 +64,14 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
         IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
         if (perkProvider != null) {
             perkProvider.getPerkHolder(stack).appendPerkTooltip(tooltip, stack);
+            if(perkProvider.getPerkHolder(stack) instanceof ArmorPerkHolder armorPerkHolder){
+                tooltip.add(Component.translatable("ars_nouveau.tier", armorPerkHolder.getTier() + 1).withStyle(ChatFormatting.GOLD));
+            }
         }
-    }
-
-    @Override
-    public boolean isFoil(ItemStack pStack) {
-        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(pStack);
-        return super.isFoil(pStack) || (holder != null && !holder.isEmpty());
     }
 
     @Override
@@ -105,6 +103,15 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
             writeItem();
         }
 
+        public int getTier(){
+            return this.tier;
+        }
+
+        public void setTier(int tier){
+            this.tier = tier;
+            writeItem();
+        }
+
         @Override
         public void writeToNBT(CompoundTag tag) {
             super.writeToNBT(tag);
@@ -115,7 +122,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
 
         @Override
         public int getMaxSlots() {
-            return 4;
+            if(tier == 0){
+                return 2;
+            }else if(tier == 1){
+                return 3;
+            }
+            return 4 + (tier - 2);
         }
     }
 }

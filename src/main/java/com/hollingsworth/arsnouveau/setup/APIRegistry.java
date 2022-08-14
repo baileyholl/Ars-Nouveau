@@ -143,7 +143,7 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
-
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
         api.registerPerkProvider(ItemsRegistry.ARCHMAGE_BOOTS, MagicArmor.ArmorPerkHolder::new);
         api.registerPerkProvider(ItemsRegistry.ARCHMAGE_HOOD, MagicArmor.ArmorPerkHolder::new);
         api.registerPerkProvider(ItemsRegistry.ARCHMAGE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);

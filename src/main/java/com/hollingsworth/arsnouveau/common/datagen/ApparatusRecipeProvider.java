@@ -2,10 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -48,10 +45,8 @@ public class ApparatusRecipeProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
         for (IEnchantingRecipe g : recipes) {
             if (g instanceof EnchantingApparatusRecipe recipe) {
-                //who put this thing here? System.out.println(g);
                 Path path = getRecipePath(output, recipe.getId().getPath());
                 DataProvider.saveStable(cache, recipe.asRecipe(), path);
-
             }
         }
 
@@ -926,6 +921,9 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.DRAGON_BREATH)
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .build());
+
+        addRecipe(new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.RODS_BLAZE), Ingredient.of(Tags.Items.RODS_BLAZE)), 2500, 1));
+        addRecipe(new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Items.CHORUS_FRUIT)), 5000, 2));
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe) {
