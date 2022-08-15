@@ -46,7 +46,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
-    mappings channel: 'parchment', version: '1.18.2-2022.07.03-1.19.1'
+    mappings channel: 'parchment', version: '2022.08.14-1.19.2'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
@@ -145,7 +145,7 @@ repositories {
 }
 dependencies {
 
-    minecraft "net.minecraftforge:forge:${mc_version}.1-${forge_version}"
+    minecraft "net.minecraftforge:forge:1.19.2-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
 
