@@ -122,6 +122,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     }
 
     @Nullable
+    @OnlyIn(Dist.CLIENT)
     protected PlayerInfo getPlayerInfo() {
         if (this.playerInfo == null) {
             this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerID());
