@@ -1096,5 +1096,13 @@
 	"ars_nouveau.crafting_progress": "Crafting Progress: %s",
 	"ars_nouveau.scribes_table.throw_items": "Toss remaining items onto the table.",
 	"ars_nouveau.scribes_table.started_crafting": "Toss items as they appear above to complete crafting.",
-	"ars_nouveau.gui.discord": "Join the Discord for spells, updates, and support!"
+	"ars_nouveau.gui.discord": "Join the Discord for spells, updates, and support!",
+	"entity.ars_nouveau.an_lightning": "Lightning",
+	"entity.ars_nouveau.flying_item": "Flying Item",
+	"entity.ars_nouveau.follow_proj": "Projectile",
+	"entity.ars_nouveau.linger": "Linger",
+	"entity.ars_nouveau.orbit": "Orbit",
+	"entity.ars_nouveau.scryer_camera": "Scryer Camera",
+	"entity.ars_nouveau.spell_arrow": "Spell Arrow",
+	"entity.ars_nouveau.spell_proj": "Spell Projectile"
 }
