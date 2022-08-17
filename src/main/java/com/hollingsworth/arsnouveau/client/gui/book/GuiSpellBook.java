@@ -23,12 +23,15 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ChangePageButton;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -163,6 +166,13 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(this, new TranslationTextComponent("ars_nouveau.gui.color")));
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/summon_circle_bookmark.png",this::onFamiliarClick)
                 .withTooltip(this, new TranslationTextComponent("ars_nouveau.gui.familiar")));
+        addButton(new GuiImageButton(bookLeft - 15, bookTop + 94, 0, 0, 23, 20, 23,20, "textures/gui/discord_tab.png",(b) -> {
+            try {
+                Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }).withTooltip(this, new TranslationTextComponent("ars_nouveau.gui.discord")));
         this.nextButton = addButton(new ChangePageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addButton(new ChangePageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
