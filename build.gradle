@@ -16,14 +16,19 @@ buildscript {
     }
 
 }
-
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-
+configurations {
+    shade // <- Create a 'shade' configuration
+    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
+}
 version = '2.7.4'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -139,10 +144,13 @@ repositories {
     }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.68'
     implementation 'org.jetbrains:annotations:23.0.0'
+    shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.12")
 
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
     implementation fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
@@ -207,9 +215,32 @@ task sourcesJar(type: Jar) {
     archiveVersion.set("${project.version}")
     archiveClassifier.set('sources')
 }
+
+shadowJar {
+    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
+
+//    // Skip unnecessary assets and duplicated java files GeckoLib comes with
+//    exclude 'software/bernie/example/**'
+//    exclude 'assets/geckolib3/**'
+//    exclude '**/*.java'
+//    relocate 'software.bernie.shadowed', 'software.bernie.modid.shadowed' // <- Move the shadowed geckolib shadowed packages. This prevents classpath conflicts in runtime
+//    relocate 'software.bernie.geckolib', 'software.bernie.modid.geckolib' // <- Move the shadowed geckolib package. This prevents classpath conflicts in runtime
+
+    classifier ''
+    relocate 'com.llamalad7', 'shadowed.llamalad7'
+
+    finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+}
+
+
 artifacts {
     archives sourcesJar
 }
+
+reobf { // <- Add the output of shadowJar to reobfuscation, so shadowed content is reobfuscated
+    shadowJar {}
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
