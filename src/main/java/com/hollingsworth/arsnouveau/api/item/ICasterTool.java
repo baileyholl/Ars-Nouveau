@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * An interface for caster items that provides default behavior for scribing, displaying mana, and tooltips
  */
+// TODO 1.20: Split ISpellHotkeyListener out
 public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyListener, ISpellCasterProvider {
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {

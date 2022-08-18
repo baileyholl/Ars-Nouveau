@@ -34,9 +34,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import net.minecraft.world.entity.Entity.RemovalReason;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class EntityDummy extends PathfinderMob implements ISummon {
+    @OnlyIn(Dist.CLIENT)
     private PlayerInfo playerInfo;
+
     public int ticksLeft;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityDummy.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -118,6 +122,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     }
 
     @Nullable
+    @OnlyIn(Dist.CLIENT)
     protected PlayerInfo getPlayerInfo() {
         if (this.playerInfo == null) {
             this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerID());

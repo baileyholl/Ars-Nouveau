@@ -25,9 +25,12 @@ public class GuiRadialMenu<T> extends Screen {
     private static final int MAX_SLOTS = 20;
 
     private boolean closing;
-    private double startAnimation;
     private RadialMenu<T> radialMenu;
     private List<RadialMenuSlot<T>> radialMenuSlots;
+    final float OPEN_ANIMATION_LENGTH = 0.40f;
+    private float totalTime;
+    private float prevTick;
+    private float extraTick;
     /**
      * Zero-Based index
      */
@@ -40,7 +43,6 @@ public class GuiRadialMenu<T> extends Screen {
         this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
-        this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
         this.selectedItem = -1;
     }
 
@@ -70,24 +72,32 @@ public class GuiRadialMenu<T> extends Screen {
         }
     }
 
+    @Override
+    public void tick() {
+        if (totalTime != OPEN_ANIMATION_LENGTH){
+            extraTick++;
+        }
+    }
 
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
-        final float OPEN_ANIMATION_LENGTH = 2.5f;
-        long worldTime = Minecraft.getInstance().level.getGameTime();
-        float animationTime = (float) (worldTime + partialTicks - startAnimation);
-        float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
+
+        float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
+        float currTick = minecraft.getFrameTime();
+        totalTime += (currTick + extraTick - prevTick)/20f;
+        extraTick = 0;
+        prevTick = currTick;
 
 
         float animProgress = Mth.clamp(openAnimation, 0, 1);
+        animProgress = (float) (1 - Math.pow(1 - animProgress, 3));
         float radiusIn = Math.max(0.1f, 45 * animProgress);
         float radiusOut = radiusIn * 2;
         float itemRadius = (radiusIn + radiusOut) * 0.5f;
-        float animTop = (1 - animProgress) * height / 2.0f;
+
         int centerOfScreenX = width / 2;
         int centerOfScreenY = height / 2;
-
         int numberOfSlices = Math.min(MAX_SLOTS, radialMenuSlots.size());
 
         double mousePositionInDegreesInRelationToCenterOfScreen = Math.toDegrees(Math.atan2(mouseY - centerOfScreenY, mouseX - centerOfScreenX));
@@ -104,7 +114,6 @@ public class GuiRadialMenu<T> extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        ms.translate(0, animTop, 0);
 
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();

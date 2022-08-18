@@ -14,7 +14,6 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Set;
 
 public class EffectRune extends AbstractEffect {
@@ -30,9 +29,7 @@ public class EffectRune extends AbstractEffect {
         BlockPos pos = rayTraceResult.getBlockPos();
         pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
         spellContext.setCanceled(true);
-        if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
-            return;
-        Spell newSpell = new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
+        Spell newSpell = spellContext.getRemainingSpell();
         if (world.getBlockState(pos).getMaterial().isReplaceable()) {
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {

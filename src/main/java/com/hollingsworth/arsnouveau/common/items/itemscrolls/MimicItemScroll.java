@@ -8,9 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
-import com.hollingsworth.arsnouveau.common.items.ItemScroll.SortPref;
-import net.minecraft.world.item.Item.Properties;
-
 public class MimicItemScroll extends ItemScroll {
 
     public MimicItemScroll() {
@@ -29,8 +26,12 @@ public class MimicItemScroll extends ItemScroll {
     @Override
     public SortPref getSortPref(ItemStack stackToStore, ItemStack scrollStack, IItemHandler inventory) {
         for (int i = 0; i < inventory.getSlots(); i++) {
-            if (inventory.getStackInSlot(i).sameItemStackIgnoreDurability(stackToStore))
+            ItemStack inventoryStack = inventory.getStackInSlot(i);
+            if(inventoryStack.isEmpty())
+                continue;
+            if (inventory.getStackInSlot(i).sameItemStackIgnoreDurability(stackToStore)) {
                 return SortPref.HIGHEST;
+            }
         }
         return SortPref.INVALID;
     }

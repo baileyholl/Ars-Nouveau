@@ -35,9 +35,9 @@ public class LootTableProvider extends BaseLootTableProvider {
                 .add(LootItem.lootTableItem(BlockRegistry.POTION_JAR)
                         .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
                         .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                .copy("amount", "BlockEntityTag.amount", CopyNbtFunction.MergeStrategy.REPLACE)
-                                .copy("Potion", "BlockEntityTag.Potion", CopyNbtFunction.MergeStrategy.REPLACE)
-                                .copy("CustomPotionEffects", "BlockEntityTag.CustomPotionEffects", CopyNbtFunction.MergeStrategy.REPLACE))
+                                .copy("potionData", "BlockEntityTag.potionData", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("currentFill", "BlockEntityTag.currentFill", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("locked", "BlockEntityTag.locked", CopyNbtFunction.MergeStrategy.REPLACE))
                         .apply(SetContainerContents.setContents(BlockRegistry.POTION_JAR_TYPE)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );

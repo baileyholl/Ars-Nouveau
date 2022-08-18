@@ -105,6 +105,21 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
     }
 
     @Override
+    public boolean isDamaged(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        return true;
+    }
+
+    @Override
+    public float getXpRepairRatio(ItemStack stack) {
+        return 0.0f;
+    }
+
+    @Override
     public boolean canBeDepleted() {
         return super.canBeDepleted();
     }

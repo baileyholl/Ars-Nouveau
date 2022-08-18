@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -135,6 +136,9 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     @Nullable
     @Override
     public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
+        if(entity instanceof Starbuncle){
+            return null;
+        }
         return BlockPathTypes.DAMAGE_OTHER;
     }
 }

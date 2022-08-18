@@ -14,8 +14,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class FindItem extends Goal {
     private Starbuncle starbuncle;
     boolean itemStuck;
@@ -24,7 +22,7 @@ public class FindItem extends Goal {
     List<ItemEntity> destList = new ArrayList<>();
     ItemEntity dest;
     public StarbyTransportBehavior behavior;
-    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.canStoreStack(itemEntity.getItem());
+    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && behavior.getValidStorePos(itemEntity.getItem()) != null;
 
     @Override
     public void stop() {
@@ -77,7 +75,7 @@ public class FindItem extends Goal {
         destList = new ArrayList<>();
         if (itemstack.isEmpty() && !list.isEmpty()) {
             for (ItemEntity entity : list) {
-                if (!behavior.canStoreStack(entity.getItem()))
+                if (behavior.getValidStorePos(entity.getItem()) == null)
                     continue;
                 destList.add(entity);
             }

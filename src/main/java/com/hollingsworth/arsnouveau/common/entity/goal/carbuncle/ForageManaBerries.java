@@ -20,8 +20,6 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.SourceBerryBush.AGE;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class ForageManaBerries extends Goal {
     private final Starbuncle entity;
     private final Level world;
@@ -52,7 +50,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if (behavior.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || !behavior.canStoreStack(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
+        if (behavior.isPickupDisabled() || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.05 || behavior.getValidStorePos(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)) == null)
             return false;
         this.pos = getNearbyManaBerry();
         if(pos == null){

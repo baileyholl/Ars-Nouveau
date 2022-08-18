@@ -4,6 +4,10 @@
   "name": "ars_nouveau.page.decorative",
   "pages": [
     {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:sourcestone"
+    },
+    {
       "type": "patchouli:text",
       "text": "ars_nouveau.page1.decorative"
     }

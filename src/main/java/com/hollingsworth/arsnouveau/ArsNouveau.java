@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.client.ClientHandler;
-import com.hollingsworth.arsnouveau.client.TextureEvent;
+import com.hollingsworth.arsnouveau.client.events.ClientHandler;
+import com.hollingsworth.arsnouveau.client.events.TextureEvent;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;

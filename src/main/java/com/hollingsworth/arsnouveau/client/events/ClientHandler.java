@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client;
+package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
@@ -48,7 +48,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import static com.hollingsworth.arsnouveau.client.ClientForgeHandler.localize;
+import static com.hollingsworth.arsnouveau.client.events.ClientForgeHandler.localize;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @OnlyIn(Dist.CLIENT)

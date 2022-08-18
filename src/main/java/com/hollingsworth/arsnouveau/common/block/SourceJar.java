@@ -2,12 +2,12 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,8 +36,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
 
@@ -90,6 +87,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        context.getLevel().scheduleTick(context.getClickedPos(), BlockRegistry.SOURCE_JAR, 1);
         return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
@@ -99,6 +97,14 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
+    }
+
+    @Override
+    public void tick(BlockState p_222945_, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
+        super.tick(p_222945_, level, pos, p_222948_);
+        if(level.getBlockEntity(pos) instanceof SourceJarTile jarTile){
+            jarTile.updateBlock();
+        }
     }
 
     @Override
@@ -115,14 +121,8 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        return super.use(state, worldIn, pos, player, handIn, hit);
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-
         if (stack.getTag() == null)
             return;
         int mana = stack.getTag().getCompound("BlockEntityTag").getInt("source");
