@@ -6,11 +6,14 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior>{
     public PotionStoreGoal(Starbuncle starbuncle, StarbyPotionBehavior behavior) {
-        super(starbuncle, behavior, () -> !behavior.getHeldPotion().isEmpty());
+        super(starbuncle, behavior, () -> {
+            return behavior.getHeldPotion().getPotion() != Potions.EMPTY;
+        });
     }
 
     @Nullable
