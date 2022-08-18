@@ -1050,7 +1050,7 @@
 	"block.ars_nouveau.scryers_oculus": "Scryer's Oculus",
 	"block.ars_nouveau.scryers_crystal": "Scry Crystal",
 	"item.ars_nouveau.scryer_scroll": "Scryer's Scroll",
-	"ars_nouveau.scryers_oculus.no_pos": "No position set on scroll.",
+	"ars_nouveau.scryers_eye.no_pos": "No position set on scroll.",
 	"ars_nouveau.scryers_oculus.no_scrolls": "No scrolls found nearby. Place a linked Scryer's Scroll on a nearby pedestal.",
 	"ars_nouveau.scryer_scroll.bound": "Bound to %s.",
 	"tooltip.ars_nouveau.scryer_scroll": "Use on a Scryer's Crystal to bind the location to this scroll.",
@@ -1096,5 +1096,13 @@
 	"ars_nouveau.crafting_progress": "Crafting Progress: %s",
 	"ars_nouveau.scribes_table.throw_items": "Toss remaining items onto the table.",
 	"ars_nouveau.scribes_table.started_crafting": "Toss items as they appear above to complete crafting.",
-	"ars_nouveau.gui.discord": "Join the Discord for spells, updates, and support!"
+	"ars_nouveau.gui.discord": "Join the Discord for spells, updates, and support!",
+	"entity.ars_nouveau.an_lightning": "Lightning",
+	"entity.ars_nouveau.flying_item": "Flying Item",
+	"entity.ars_nouveau.follow_proj": "Projectile",
+	"entity.ars_nouveau.linger": "Linger",
+	"entity.ars_nouveau.orbit": "Orbit",
+	"entity.ars_nouveau.scryer_camera": "Scryer Camera",
+	"entity.ars_nouveau.spell_arrow": "Spell Arrow",
+	"entity.ars_nouveau.spell_proj": "Spell Projectile"
 }
