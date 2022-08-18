@@ -247,6 +247,7 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(RESOURCES, "decorative")
                 .withIcon(SOURCESTONE)
+                .withPage(new CraftingPage(SOURCESTONE))
                 .withLocalizedText(), getPath(RESOURCES, "decorative"));
 
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.LAVA_LILY)
