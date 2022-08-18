@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.setup;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
@@ -16,6 +18,11 @@ import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class APIRegistry {
 
@@ -144,20 +151,74 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
-        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_BOOTS, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_HOOD, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_ROBES, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_BOOTS, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+        )));
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_HOOD, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+        )));
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_LEGGINGS, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        )));
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_ROBES, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                List.of(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        )));
 
-        api.registerPerkProvider(ItemsRegistry.APPRENTICE_HOOD, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.APPRENTICE_BOOTS, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.APPRENTICE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.APPRENTICE_ROBES, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_HOOD, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        )));
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_BOOTS, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
+        )));
 
-        api.registerPerkProvider(ItemsRegistry.NOVICE_BOOTS, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.NOVICE_ROBES, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.NOVICE_LEGGINGS, MagicArmor.ArmorPerkHolder::new);
-        api.registerPerkProvider(ItemsRegistry.NOVICE_HOOD, MagicArmor.ArmorPerkHolder::new);
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_LEGGINGS, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_ROBES, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_BOOTS, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_ROBES, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.TWO),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_LEGGINGS, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.TWO),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_HOOD, stack -> new MagicArmor.ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
     }
 
     public static void deferredRegistration(){

@@ -2,6 +2,9 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -68,7 +71,10 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
 
     @Override
     public String getColor(ItemStack object) {
-        ArmorPerkHolder data = new ArmorPerkHolder(object);
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(object);
+        if(!(perkHolder instanceof ArmorPerkHolder data)){
+            return "purple";
+        }
         return data.getColor() == null || data.getColor().isEmpty() ? "purple" : data.getColor();
     }
 }

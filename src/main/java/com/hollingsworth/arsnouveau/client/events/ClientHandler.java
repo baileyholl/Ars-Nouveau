@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
@@ -273,8 +275,10 @@ public class ClientHandler {
     }
 
     public static int colorFromArmor(ItemStack stack){
-        MagicArmor.ArmorPerkHolder holder = new MagicArmor.ArmorPerkHolder(stack);
-        return DyeColor.byName(holder.getColor(), DyeColor.PURPLE).getTextColor();
+        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
+        if(!(holder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder))
+            return DyeColor.PURPLE.getTextColor();
+        return DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor();
     }
 
     public static int colorFromFlask(ItemStack stack) {

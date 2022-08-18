@@ -22,9 +22,9 @@ public class StarbunclePerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifiers = new ImmutableMultimap.Builder<>();
-        modifiers.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(PERK_UUID, "StarbunclePerk", 0.2 * count, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        modifiers.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(PERK_UUID, "StarbunclePerk", 0.2 * slotValue, AttributeModifier.Operation.MULTIPLY_TOTAL));
         return modifiers.build();
     }
 

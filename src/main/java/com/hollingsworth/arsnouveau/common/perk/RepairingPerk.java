@@ -25,8 +25,8 @@ public class RepairingPerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
-        return attributeBuilder().put(PerkAttributes.REPAIRING.get(), new AttributeModifier(PERK_UUID, "Repairing", 1 * count, AttributeModifier.Operation.ADDITION)).build();
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
+        return attributeBuilder().put(PerkAttributes.REPAIRING.get(), new AttributeModifier(PERK_UUID, "Repairing", 1 * slotValue, AttributeModifier.Operation.ADDITION)).build();
     }
 
     @Override

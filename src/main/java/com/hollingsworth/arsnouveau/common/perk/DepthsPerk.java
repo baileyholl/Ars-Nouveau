@@ -22,8 +22,8 @@ public class DepthsPerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
-        return attributeBuilder().put(PerkAttributes.DEPTHS.get(), new AttributeModifier(PERK_UUID, "Depths", 0.2 * count, AttributeModifier.Operation.ADDITION)).build();
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
+        return attributeBuilder().put(PerkAttributes.DEPTHS.get(), new AttributeModifier(PERK_UUID, "Depths", 0.2 * slotValue, AttributeModifier.Operation.ADDITION)).build();
     }
 
     @Override

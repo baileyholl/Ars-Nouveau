@@ -22,13 +22,13 @@ public class SaturationPerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
         double val = 0.0;
-        if(count == 1)
+        if(slotValue == 1)
             val = 0.3;
-        if(count == 2)
+        if(slotValue == 2)
             val = 0.6;
-        if(count >= 3)
+        if(slotValue >= 3)
             val = 1.0;
         return attributeBuilder().put(PerkAttributes.WHIRLIESPRIG.get(), new AttributeModifier(PERK_UUID, "SaturationPerk", val, AttributeModifier.Operation.MULTIPLY_TOTAL)).build();
     }

@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public interface IPerk {
 
-    default Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count){
+    default Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue){
         return new ImmutableMultimap.Builder<Attribute, AttributeModifier>().build();
     }
 
@@ -23,9 +23,13 @@ public interface IPerk {
         return new ImmutableMultimap.Builder<>();
     }
 
-    // TODO: Expand on this, maybe logic for cost during crafting only? Something contextual to when it is applied.
-    default int getSlotCost(){
-        return 1;
+
+    default PerkSlot minimumSlot(){
+        return PerkSlot.ONE;
+    }
+
+    default boolean validForSlot(PerkSlot slot){
+        return this.minimumSlot().value <= slot.value;
     }
 
     /**

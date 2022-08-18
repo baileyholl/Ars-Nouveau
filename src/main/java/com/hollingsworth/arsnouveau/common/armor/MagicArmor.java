@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.perk.*;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import net.minecraft.ChatFormatting;
@@ -33,10 +34,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         if (world.isClientSide())
             return;
         RepairingPerk.attemptRepair(stack, player);
-        ArmorPerkHolder perkProvider = new ArmorPerkHolder(stack);
-        perkProvider.getPerkSet().getPerkMap().forEach((k, v)->{
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
+        if(perkHolder == null)
+            return;
+        perkHolder.getPerkSet().getPerkMap().forEach((k, v)->{
             if(k instanceof TickablePerk tickablePerk) {
-                tickablePerk.tick(stack, world, player, v);
+                tickablePerk.tick(stack, world, player, v.value);
             }
         });
     }
@@ -53,8 +56,8 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
             if(perkProvider != null){
                 IPerkHolder<ItemStack> perkHolder = perkProvider.getPerkHolder(stack);
                 PerkSet perkSet = perkHolder.getPerkSet();
-                for(Map.Entry<IPerk, Integer> entry : perkSet.getPerkMap().entrySet()){
-                    attributes.putAll(entry.getKey().getModifiers(this.slot, stack, entry.getValue()));
+                for(Map.Entry<IPerk, PerkSlot> entry : perkSet.getPerkMap().entrySet()){
+                    attributes.putAll(entry.getKey().getModifiers(this.slot, stack, entry.getValue().value));
                 }
             }
         }
@@ -76,18 +79,22 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
 
     @Override
     public void onDye(ItemStack stack, DyeColor dyeColor) {
-        ArmorPerkHolder perkHolder = new ArmorPerkHolder(stack);
-        perkHolder.setColor(dyeColor.getName());
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
+        if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
+            armorPerkHolder.setColor(dyeColor.getName());
+        }
     }
 
     public static class ArmorPerkHolder extends StackPerkHolder {
 
         private String color;
         private int tier;
+        List<List<PerkSlot>> slotsForTier;
 
-        public ArmorPerkHolder(ItemStack stack) {
+        public ArmorPerkHolder(ItemStack stack, List<List<PerkSlot>> slotsForTier) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
+            this.slotsForTier = slotsForTier;
             if(tag == null)
                 return;
             color = tag.getString("color");
@@ -121,13 +128,8 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         }
 
         @Override
-        public int getMaxSlots() {
-            if(tier == 0){
-                return 2;
-            }else if(tier == 1){
-                return 3;
-            }
-            return 4 + (tier - 2);
+        public List<PerkSlot> getSlotsForTier() {
+            return slotsForTier.get(tier);
         }
     }
 }

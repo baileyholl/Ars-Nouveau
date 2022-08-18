@@ -22,8 +22,8 @@ public class PotionDurationPerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
-        return attributeBuilder().put(PerkAttributes.WIXIE.get(), new AttributeModifier(PERK_UUID, "PotionDurationPerk", 0.15 * count, AttributeModifier.Operation.MULTIPLY_BASE)).build();
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
+        return attributeBuilder().put(PerkAttributes.WIXIE.get(), new AttributeModifier(PERK_UUID, "PotionDurationPerk", 0.15 * slotValue, AttributeModifier.Operation.MULTIPLY_BASE)).build();
     }
 
     @Override

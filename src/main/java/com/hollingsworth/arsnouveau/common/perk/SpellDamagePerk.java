@@ -22,8 +22,8 @@ public class SpellDamagePerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
-        return attributeBuilder().put(PerkAttributes.SPELL_DAMAGE_BONUS.get(), new AttributeModifier(PERK_UUID, "SpellDamagePerk", 2 * count, AttributeModifier.Operation.ADDITION)).build();
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
+        return attributeBuilder().put(PerkAttributes.SPELL_DAMAGE_BONUS.get(), new AttributeModifier(PERK_UUID, "SpellDamagePerk", 2 * slotValue, AttributeModifier.Operation.ADDITION)).build();
     }
 
     @Override

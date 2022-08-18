@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.hollingsworth.arsnouveau.common.util.SerializationUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public class PerkSet {
 
-    private final Map<IPerk, Integer> perks;
+    private final Map<IPerk, PerkSlot> perks;
     // Get a callback when a perk is added or removed.
     public Runnable onMutated;
 
@@ -32,7 +33,7 @@ public class PerkSet {
         for(int i = 0; i < listTag.size(); i++){
             CompoundTag perkTag = listTag.getCompound(i);
             ResourceLocation perkId = new ResourceLocation(perkTag.getString("perkId"));
-            addPerk(ArsNouveauAPI.getInstance().getPerkMap().getOrDefault(perkId, StarbunclePerk.INSTANCE), perkTag.getInt("level"));
+            setPerk(ArsNouveauAPI.getInstance().getPerkMap().getOrDefault(perkId, StarbunclePerk.INSTANCE), PerkSlot.PERK_SLOTS.getOrDefault(new ResourceLocation(perkTag.getString("slotId")), PerkSlot.ONE));
         }
     }
 
@@ -42,21 +43,14 @@ public class PerkSet {
         perks.forEach((perk, level) -> {
             CompoundTag perkTag = new CompoundTag();
             perkTag.putString("perkId", perk.getRegistryName().toString());
-            perkTag.putInt("level", level);
+            perkTag.putString("slotId", level.id.toString());
             listTag.add(perkTag);
         });
         tag.put("perks", listTag);
         return tag;
     }
 
-    /**
-     * Returns the applicable count of a perk, ignoring wasted perks
-     */
-    public int countForPerk(IPerk perk){
-        return Math.min(perks.getOrDefault(perk, 0), perk.getCountCap());
-    }
-
-    public Map<IPerk, Integer> getPerkMap() {
+    public Map<IPerk, PerkSlot> getPerkMap() {
         return perks;
     }
 
@@ -65,44 +59,14 @@ public class PerkSet {
         setChanged();
     }
 
-    public Integer addPerk(IPerk perk, int count){
-        if(perks.containsKey(perk)){
-            perks.put(perk, perks.get(perk) + count);
-        } else {
-            perks.put(perk, count);
-        }
+    public void setPerk(IPerk perk,  PerkSlot perkSlot){
+        perks.put(perk, perkSlot);
         setChanged();
-        return perks.get(perk);
     }
 
-    public Integer setPerk(IPerk perk, int count){
-        perks.put(perk, count);
-        if(perks.getOrDefault(perk, 0) <= 0){
-            perks.remove(perk);
-        }
+    public void removePerk(IPerk perk){
+        perks.remove(perk);
         setChanged();
-        return perks.get(perk);
-    }
-
-    public Integer shrinkPerk(IPerk perk){
-        if(perks.containsKey(perk)){
-            perks.put(perk, perks.get(perk) - 1);
-            if(perks.getOrDefault(perk, 0) <= 0){
-                perks.remove(perk);
-            }
-            setChanged();
-        }
-        return perks.getOrDefault(perk, 0);
-    }
-
-    public Integer removePerk(IPerk perk){
-        Integer count = perks.remove(perk);
-        setChanged();
-        return count;
-    }
-
-    public boolean isPerkCapped(IPerk perk){
-        return perks.getOrDefault(perk, 0) >= perk.getCountCap();
     }
 
     public boolean hasPerk(IPerk perk){

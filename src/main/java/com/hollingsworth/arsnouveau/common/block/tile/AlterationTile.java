@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
-import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
+import com.hollingsworth.arsnouveau.api.perk.*;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -85,7 +83,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
         if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile){
             Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
             PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
-            perkHolder.getPerkSet().addPerk(perkItem.perk, 1);
+            perkHolder.getPerkSet().setPerk(perkItem.perk, PerkSlot.ONE);
             pedestalTile.setStack(ItemStack.EMPTY);
             if(level instanceof ServerLevel serverLevel) {
                 ParticleUtil.spawnPoof(serverLevel, pos);
@@ -96,7 +94,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
 
     private void removeOnePerk(IPerkHolder<ItemStack> perkHolder){
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        Set<Map.Entry<IPerk, Integer>> perks = perkHolder.getPerkSet().getPerkMap().entrySet();
+        Set<Map.Entry<IPerk, PerkSlot>> perks = perkHolder.getPerkSet().getPerkMap().entrySet();
         if(perks.isEmpty())
             return;
         IPerk perk = perks.stream().collect(Collectors.toList()).get(0).getKey();
@@ -106,7 +104,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
             BlockPos pos = getBlockPos();
             ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, perkStack);
             level.addFreshEntity(itemEntity);
-            perkHolder.getPerkSet().shrinkPerk(perk);
+            perkHolder.getPerkSet().removePerk(perk);
             if(level instanceof ServerLevel level){
                 ParticleUtil.spawnPoof(level, pos);
             }
@@ -116,7 +114,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
         pedestalPos.ifPresent(pos -> {
             ArcanePedestalTile tile = (ArcanePedestalTile) level.getBlockEntity(pos);
             tile.setStack(perkStack.split(1));
-            perkHolder.getPerkSet().shrinkPerk(perk);
+            perkHolder.getPerkSet().removePerk(perk);
             Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
             if(level instanceof ServerLevel level){
                 ParticleUtil.spawnPoof(level, pos);
@@ -144,17 +142,17 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
                     pedestals.add(p.immutable());
             }
         }
-        int perkLevels = 0;
-        for(BlockPos p : pedestals){
-            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
-                PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
-                perkLevels += perkItem.perk.getSlotCost();
-            }
-        }
-        if(perkLevels > perkHolder.getMaxSlots()){
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_enough_slots", perkLevels, perkHolder.getMaxSlots()));
-            return;
-        }
+//        int perkLevels = 0;
+//        for(BlockPos p : pedestals){
+//            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
+//                PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
+//                perkLevels += perkItem.perk.getSlotCost();
+//            }
+//        }
+//        if(perkLevels > perkHolder.getSlotsForTier()){
+//            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_enough_slots", perkLevels, perkHolder.getSlotsForTier()));
+//            return;
+//        }
         isCrafting = true;
         destinationList = pedestals;
         isAddPerk = true;
@@ -167,8 +165,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
         if(holder == null){
             return;
         }
-        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        Set<Map.Entry<IPerk, Integer>> perks = holder.getPerkSet().getPerkMap().entrySet();
+        Set<Map.Entry<IPerk, PerkSlot>> perks = holder.getPerkSet().getPerkMap().entrySet();
         if(perks.isEmpty()){
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.no_perks"));
             return;

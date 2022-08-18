@@ -22,8 +22,8 @@ public class ToughnessPerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
-        return attributeBuilder().put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(PERK_UUID, "Toughness", 1 * count, AttributeModifier.Operation.ADDITION)).build();
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
+        return attributeBuilder().put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(PERK_UUID, "Toughness", 1 * slotValue, AttributeModifier.Operation.ADDITION)).build();
     }
 
     @Override

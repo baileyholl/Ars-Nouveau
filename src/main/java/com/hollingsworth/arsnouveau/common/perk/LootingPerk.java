@@ -23,8 +23,8 @@ public class LootingPerk extends Perk {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int count) {
-        return attributeBuilder().put(PerkAttributes.DRYGMY.get(), new AttributeModifier(PERK_UUID, "LootingPerk", count, AttributeModifier.Operation.ADDITION)).build();
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
+        return attributeBuilder().put(PerkAttributes.DRYGMY.get(), new AttributeModifier(PERK_UUID, "LootingPerk", slotValue, AttributeModifier.Operation.ADDITION)).build();
     }
 
     @Override
