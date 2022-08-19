@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/ServerPlayerMixin.java
+ * <a href="https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/ServerPlayerMixin.java">...</a>
  * Makes sure the server does not move the player viewing a camera to the camera's position
  */
 @Mixin(value = ServerPlayer.class, priority = 1000)
