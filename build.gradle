@@ -203,15 +203,12 @@ dependencies {
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
 
-    implementation 'systems.manifold:manifold-rt:2022.1.19'
-    implementation 'systems.manifold:manifold-collections:2022.1.19'
     implementation 'systems.manifold:manifold-ext:2022.1.19'
-    implementation 'systems.manifold:manifold-strings:2022.1.19'
 
-    library 'systems.manifold:manifold-rt:2022.1.19'
-    library 'systems.manifold:manifold-collections:2022.1.19'
+
+
     library 'systems.manifold:manifold-ext:2022.1.19'
-    library 'systems.manifold:manifold-strings:2022.1.19'
+
     annotationProcessor group: 'systems.manifold', name: 'manifold', version: '2022.1.19'
 
 
@@ -304,6 +301,17 @@ tasks.withType(GenerateModuleMetadata) {
 mixin {
     add sourceSets.main, "ars_nouveau.refmap.json"
 }
+compileJava {
+    doFirst() {
+        // If you DO NOT define a module-info.java file:
+        options.compilerArgs += ['-Xplugin:Manifold']
+
+        // if you DO define a module-info.java file:
+        //options.compilerArgs += ['-Xplugin:Manifold', '--module-path', classpath.asPath]
+        //classpath = files()
+    }
+}
+
 
 // Prevent Mixin annotation processor from getting into IDEA's annotation processor settings
 // Copied from Botania
@@ -314,3 +322,16 @@ if (System.getProperty("idea.sync.active") == "true") {
         }
     }
 }
+
+//if (JavaVersion.current() != JavaVersion.VERSION_1_8 &&
+//        sourceSets.main.allJava.files.any {it.name == "module-info.java"}) {
+//    tasks.withType(JavaCompile) {
+//        // if you DO define a module-info.java file:
+//        options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
+//    }
+//} else {
+//    tasks.withType(JavaCompile) {
+//        // If you DO NOT define a module-info.java file:
+//        options.compilerArgs += ['-Xplugin:Manifold']
+//    }
+//}

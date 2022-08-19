@@ -201,6 +201,7 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool {
 
         public BookCaster(CompoundTag tag) {
             super(tag);
+            BlockPos pos = tag.getBlockPos("hi");
         }
 
         @Override
