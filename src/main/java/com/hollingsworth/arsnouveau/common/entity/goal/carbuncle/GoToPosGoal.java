@@ -17,7 +17,7 @@ public abstract class GoToPosGoal<T extends StarbyBehavior> extends ExtendedRang
     Supplier<Boolean> canUse;
     Supplier<Boolean> canContinue;
     public boolean isDone;
-    BlockPos targetPos;
+    public BlockPos targetPos;
 
     public GoToPosGoal(Starbuncle starbuncle, T behavior, Supplier<Boolean> canUse, Supplier<Boolean> canContinue) {
         super(30);

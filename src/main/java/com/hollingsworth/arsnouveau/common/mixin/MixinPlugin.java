@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.mixin;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -12,7 +13,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void onLoad(String mixinPackage) {
-        try {
+        MixinExtrasBootstrap.init();
+        try{
+
             Class.forName("org.vivecraft.tweaker.VivecraftTransformer");
             viveCraftLoaded = true;
         } catch (Throwable t) {

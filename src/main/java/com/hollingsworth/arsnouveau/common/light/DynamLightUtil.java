@@ -23,22 +23,16 @@ public class DynamLightUtil {
 
 
     private static int getLuminance(Entity entity){
-        int level = 0;
-        if(entity.isOnFire())
+        if(entity.isOnFire()) {
             return 15;
+        }
         if(Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)))
             return Config.ENTITY_LIGHT_MAP.get(keyFor(entity));
-        if(LightManager.getLightRegistry().containsKey(entity.getType())){
-            for(Function<Entity, Integer> function : LightManager.getLightRegistry().get(entity.getType())){
-                int val = function.apply(entity);
-                level = Math.max(val, level);
-            }
-        }
-        return Math.min(15, level);
+        return Math.min(15, LightManager.getValue(entity));
     }
 
     public static boolean couldGiveLight(Entity entity){
-        return LightManager.getLightRegistry().containsKey(entity.getType()) || Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)) || (entity instanceof Player player && getPlayerLight(player) > 0);
+        return LightManager.getLightRegistry().containsKey(entity.getType()) || Config.ENTITY_LIGHT_MAP.containsKey(keyFor(entity)) || (entity instanceof Player player && getPlayerLight(player) > 0) || entity.isOnFire();
     }
 
     public static int getPlayerLight(Player player){
@@ -51,6 +45,9 @@ public class DynamLightUtil {
         int light = 0;
         if(entity instanceof Player player){
             light = getPlayerLight(player);
+        }
+        if(entity.isOnFire()){
+            return 15;
         }
         if(light < 15 && LightManager.containsEntity(entity.getType())) {
             int entityLuminance = getLuminance(entity);

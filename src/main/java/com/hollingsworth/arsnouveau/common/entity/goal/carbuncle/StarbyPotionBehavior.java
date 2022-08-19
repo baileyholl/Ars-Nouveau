@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -120,7 +121,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
 
     @Override
     public ItemStack getStackForRender() {
-        if(heldPotion != null && !heldPotion.isEmpty()){
+        if(heldPotion != null && heldPotion.getPotion() != Potions.EMPTY){
             return heldPotion.asPotionStack();
         }
         return super.getStackForRender();

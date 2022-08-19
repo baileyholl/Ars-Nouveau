@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -51,8 +51,8 @@ public class EffectConjureWater extends AbstractEffect {
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
             BlockState hitState = world.getBlockState(pos1);
-            if (hitState.getBlock() instanceof SimpleWaterloggedBlock waterloggedBlock && waterloggedBlock.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
-                waterloggedBlock.placeLiquid(world, pos1, hitState, Fluids.WATER.getSource(true));
+            if (hitState.getBlock() instanceof LiquidBlockContainer liquidBlockContainer && liquidBlockContainer.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
+                liquidBlockContainer.placeLiquid(world, pos1, hitState, Fluids.WATER.getSource(true));
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                         new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false
                 ), world, shooter, spellContext, resolver);
