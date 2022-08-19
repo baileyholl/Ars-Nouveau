@@ -17,6 +17,9 @@ buildscript {
 
 }
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -28,6 +31,11 @@ apply plugin: 'maven-publish'
 version = '3.2.9'
 
 
+configurations {
+    shade // <- Create a 'shade' configuration
+    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
+}
+
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -35,7 +43,17 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.19.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+configurations {
+    library
+}
 
+// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
+// If you have any module issues, check these files to make sure there are no duplicate dependencies
+minecraft.runs.all {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
 
 minecraft {
 
@@ -142,12 +160,16 @@ repositories {
     }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 dependencies {
 
     minecraft "net.minecraftforge:forge:1.19.2-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
+    shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
+    library fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.12")
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
@@ -156,6 +178,7 @@ dependencies {
     // at runtime, use the full JEI
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+
 
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
@@ -208,9 +231,32 @@ task sourcesJar(type: Jar) {
     archiveVersion.set("${project.version}")
     archiveClassifier.set('sources')
 }
+
+shadowJar {
+    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
+
+//    // Skip unnecessary assets and duplicated java files GeckoLib comes with
+//    exclude 'software/bernie/example/**'
+//    exclude 'assets/geckolib3/**'
+//    exclude '**/*.java'
+//    relocate 'software.bernie.shadowed', 'software.bernie.modid.shadowed' // <- Move the shadowed geckolib shadowed packages. This prevents classpath conflicts in runtime
+//    relocate 'software.bernie.geckolib', 'software.bernie.modid.geckolib' // <- Move the shadowed geckolib package. This prevents classpath conflicts in runtime
+
+    classifier ''
+    relocate 'com.llamalad7', 'shadowed.llamalad7'
+
+    finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+}
+
+
 artifacts {
     archives sourcesJar
 }
+
+reobf { // <- Add the output of shadowJar to reobfuscation, so shadowed content is reobfuscated
+    shadowJar {}
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
