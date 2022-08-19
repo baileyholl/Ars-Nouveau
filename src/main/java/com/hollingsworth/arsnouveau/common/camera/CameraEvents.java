@@ -76,7 +76,6 @@ public class CameraEvents {
             OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, false);
             OverlayRegistry.enableOverlay(ForgeIngameGui.JUMP_BAR_ELEMENT, true);
             OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, true);
-            OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, true);
         }
 
     }

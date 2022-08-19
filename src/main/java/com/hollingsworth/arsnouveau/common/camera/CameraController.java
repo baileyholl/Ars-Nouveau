@@ -92,8 +92,6 @@ public class CameraController {
 		}
 		else if (resetOverlaysAfterDismount) {
 			resetOverlaysAfterDismount = false;
-//			OverlayRegistry.enableOverlay(ClientHandler.cameraOverlay, false);
-//			OverlayRegistry.enableOverlay(ClientHandler.hotbarBindOverlay, true);
 			CameraController.restoreOverlayStates();
 		}
 	}
@@ -163,17 +161,6 @@ public class CameraController {
 		cam.zoomAmount = Math.min(cam.zoomAmount + 0.1F, 1.4F);
 	}
 
-//	public static void emitRedstone(ScryerCamera cam) {
-//		if (cam.redstoneCooldown == 0) {
-//			cam.toggleRedstonePower();
-//			cam.redstoneCooldown = 30;
-//		}
-//	}
-//
-//	public static void giveNightVision(ScryerCamera cam) {
-//		if (cam.toggleNightVisionCooldown == 0)
-//			cam.toggleNightVision();
-//	}
 
 	public static ClientChunkCache.Storage getCameraStorage() {
 		return cameraStorage;
@@ -196,7 +183,6 @@ public class CameraController {
 	public static void saveOverlayStates() {
 		jumpBarElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.JUMP_BAR_ELEMENT).isEnabled();
 		experienceBarElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT).isEnabled();
-		potionIconsElementEnabledPreviously = OverlayRegistry.getEntry(ForgeIngameGui.POTION_ICONS_ELEMENT).isEnabled();
 	}
 
 	public static void restoreOverlayStates() {
@@ -206,7 +192,5 @@ public class CameraController {
 		if (experienceBarElementEnabledPreviously)
 			OverlayRegistry.enableOverlay(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, true);
 
-		if (potionIconsElementEnabledPreviously)
-			OverlayRegistry.enableOverlay(ForgeIngameGui.POTION_ICONS_ELEMENT, true);
 	}
 }
