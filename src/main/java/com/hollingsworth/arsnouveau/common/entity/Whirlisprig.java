@@ -219,14 +219,16 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     public Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
-        MinecraftForge.EVENT_BUS.register(this);
+        if(!level.isClientSide)
+            MinecraftForge.EVENT_BUS.register(this);
         this.moveControl = new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
     public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
         super(ModEntities.WHIRLISPRIG_TYPE.get(), world);
-        MinecraftForge.EVENT_BUS.register(this);
+        if(!level.isClientSide)
+            MinecraftForge.EVENT_BUS.register(this);
         this.moveControl = new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         this.flowerPos = pos;
