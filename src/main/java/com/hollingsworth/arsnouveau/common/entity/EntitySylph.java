@@ -215,14 +215,16 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
     protected EntitySylph(EntityType<? extends AbstractFlyingCreature> type, World worldIn) {
         super(type, worldIn);
-        MinecraftForge.EVENT_BUS.register(this);
+        if(!this.level.isClientSide)
+            MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMovementController(this, 10, true);
         addGoalsAfterConstructor();
     }
 
     public EntitySylph(World world, boolean isTamed, BlockPos pos) {
         super(ModEntities.ENTITY_SYLPH_TYPE, world);
-        MinecraftForge.EVENT_BUS.register(this);
+        if(!this.level.isClientSide)
+            MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMovementController(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         this.crystalPos = pos;
