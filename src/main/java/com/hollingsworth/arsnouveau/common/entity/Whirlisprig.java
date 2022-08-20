@@ -88,6 +88,25 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     public int timeSinceGen;
     private boolean setBehaviors;
 
+    public Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
+        super(type, worldIn);
+        if(!level.isClientSide)
+            MinecraftForge.EVENT_BUS.register(this);
+        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        addGoalsAfterConstructor();
+    }
+
+    public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
+        super(ModEntities.WHIRLISPRIG_TYPE, world);
+        if(!level.isClientSide)
+            MinecraftForge.EVENT_BUS.register(this);
+        this.moveControl =  new FlyingMoveControl(this, 10, true);
+        this.entityData.set(TAMED, isTamed);
+        this.flowerPos = pos;
+        addGoalsAfterConstructor();
+    }
+
+
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
         if(event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
@@ -213,22 +232,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
             PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.excited"));
         }
         return InteractionResult.SUCCESS;
-    }
-
-    public Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
-        super(type, worldIn);
-        MinecraftForge.EVENT_BUS.register(this);
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
-        addGoalsAfterConstructor();
-    }
-
-    public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
-        super(ModEntities.WHIRLISPRIG_TYPE, world);
-        MinecraftForge.EVENT_BUS.register(this);
-        this.moveControl =  new FlyingMoveControl(this, 10, true);
-        this.entityData.set(TAMED, isTamed);
-        this.flowerPos = pos;
-        addGoalsAfterConstructor();
     }
 
     @Override
