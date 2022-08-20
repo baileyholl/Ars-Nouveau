@@ -30,7 +30,7 @@ configurations {
     shade // <- Create a 'shade' configuration
     implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
 }
-version = '2.7.4'
+version = '2.7.5'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
