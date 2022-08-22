@@ -1,4 +1,71 @@
 {
-  "parent": "ars_nouveau:block/potion_jar/potion_jar_0"
+  "parent": "ars_nouveau:block/potion_jar/potion_jar_0",
+  "overrides": [
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.01
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar_sliver"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.10
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar10"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.20
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar20"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.30
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar30"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.40
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar40"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.50
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar50"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.60
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar60"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.70
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar80"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.80
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar80"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 0.90
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar90"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:amount": 1.00
+      },
+      "model": "ars_nouveau:block/potion_jar/potion_jar100"
+    }
+  ]
 }
-

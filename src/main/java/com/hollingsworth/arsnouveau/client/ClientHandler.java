@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -185,6 +186,14 @@ public class ClientHandler {
                         default -> 1.0f;
                     };
                 }
+            });
+            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "amount"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("amount") / 10000.0F) : 0.0F;
+            });
+            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F; 
             });
         });
 

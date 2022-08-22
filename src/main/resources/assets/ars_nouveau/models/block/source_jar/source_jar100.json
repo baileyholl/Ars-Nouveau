@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/cube_all",
+	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "ars_nouveau:blocks/mana_still",
