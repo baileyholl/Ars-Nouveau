@@ -221,6 +221,18 @@ public class ClientHandler {
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
                         ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
                         : -1, BlockRegistry.POTION_JAR);
+
+        event.getItemColors().register((stack, color) -> {
+            if (color > 0) {
+                return -1;
+            }
+            CompoundTag tag = stack.getTag();
+            tag = tag != null ? tag.getCompound("BlockEntityTag") : null;
+            if (tag != null && PotionUtils.getPotion(tag) != Potions.EMPTY) {
+                return PotionUtils.getColor(PotionUtils.getAllEffects(tag));
+            }
+            return -1;
+        }, BlockRegistry.POTION_JAR);
     }
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
