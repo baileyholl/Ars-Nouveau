@@ -519,7 +519,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK));
             ComposterBlock.COMPOSTABLES.put(BlockRegistry.MAGE_BLOOM_CROP.asItem(), 0.3f);
 
-            registry.register(getDefaultBlockItem(BlockRegistry.POTION_JAR, LibBlockNames.POTION_JAR_BLOCK));
+            registry.register(new BlockItem(BlockRegistry.POTION_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.POTION_JAR_BLOCK));
             registry.register(new RendererBlockItem(BlockRegistry.POTION_MELDER, ItemsRegistry.defaultItemProperties()) {
                 @Override
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
