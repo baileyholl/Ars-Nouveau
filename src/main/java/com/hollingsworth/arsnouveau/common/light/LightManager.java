@@ -41,36 +41,27 @@ public class LightManager {
 
     public static List<Integer> jarHoldingEntityList = new ArrayList<>();
     public static int lastUpdateCount = 0;
-    private static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> LIGHT_REGISTRY = new HashMap<>();
+    private static Map<EntityType<?>, List<Function<?, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
     public static void init() {
 
         register(EntityType.PLAYER, (p -> {
-            if (p instanceof Player player) {
-                NonNullList<ItemStack> list = player.inventory.items;
-                for (int i = 0; i < 9; i++) {
-                    ItemStack jar = list.get(i);
-                    if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()) {
-                        return 15;
-                    }
+            NonNullList<ItemStack> list = p.inventory.items;
+            for (int i = 0; i < 9; i++) {
+                ItemStack jar = list.get(i);
+                if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()) {
+                    return 15;
                 }
             }
-
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
 
         register(EntityType.FALLING_BLOCK, (p) ->{
-            if(p instanceof FallingBlockEntity fallingBlockEntity){
-                return fallingBlockEntity.getBlockState().getLightEmission(p.level, p.blockPosition());
-            }
-            return 0;
+            return p.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
 
-        register(ModEntities.ENCHANTED_FALLING_BLOCK.get(), (p) ->{
-            if(p instanceof EnchantedFallingBlock enchantedFallingBlock){
-                return  enchantedFallingBlock.getBlockState().getLightEmission(p.level, p.blockPosition());
-            }
-            return 0;
+        register(ModEntities.ENCHANTED_FALLING_BLOCK.get(), p ->{
+            return  p.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
         register(ModEntities.ENTITY_FLYING_ITEM.get(), (p -> 10));
         register(ModEntities.ENTITY_FOLLOW_PROJ.get(), (p -> 10));
@@ -90,9 +81,8 @@ public class LightManager {
             }
             return 0;
         }));
-        register(EntityType.ENDERMAN, (p ->{
-            if(!(p instanceof EnderMan enderMan))
-                return 0;
+        register(EntityType.ENDERMAN, (enderMan ->{
+
             if (enderMan.getCarriedBlock() != null) {
                 return DynamLightUtil.fromItemLike(enderMan.getCarriedBlock().getBlock());
             }
@@ -105,7 +95,7 @@ public class LightManager {
         register(EntityType.GLOW_SQUID, (p) ->  (int) Mth.clampedLerp(0.f, 12.f, 1.f - ((GlowSquid)p).getDarkTicksRemaining() / 10.f));
     }
 
-    public static void register(EntityType<? extends Entity> type, Function<Entity, Integer> luminanceFunction) {
+    public static < T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {
         if (!LIGHT_REGISTRY.containsKey(type)) {
             LIGHT_REGISTRY.put(type, new ArrayList<>());
         }
@@ -113,8 +103,25 @@ public class LightManager {
     }
 
 
-    public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry(){
+    public static <T extends Entity> Map<EntityType<?>, List<Function<?, Integer>>> getLightRegistry(){
         return LIGHT_REGISTRY;
+    }
+
+    public static <T extends Entity> int getValue(T entity)
+    {
+        int val = 0;
+        if(!LIGHT_REGISTRY.containsKey(entity.getType()))
+            return val;
+        EntityType<?> type = entity.getType();
+        for(Function<?, Integer> function : LIGHT_REGISTRY.get(type))
+        {
+            var fun = (Function<T,Integer>)function;
+            Integer value = fun.apply(entity);
+            if(value > val){
+                val = value;
+            }
+        }
+        return val;
     }
 
     public static boolean containsEntity(EntityType<? extends Entity> type){
