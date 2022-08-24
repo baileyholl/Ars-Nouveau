@@ -6,10 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.Config;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -81,7 +81,7 @@ public class Glyph extends ModItem{
             }
         }
         tooltip2.add(new TranslatableComponent(" "));
-        if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())){
+        if(Screen.hasShiftDown()){
             tooltip2.add(spellPart.getBookDescLang());
         }else{
             tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.hold_shift"));
