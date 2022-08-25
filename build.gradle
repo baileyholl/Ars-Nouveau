@@ -32,6 +32,7 @@ version = '3.2.9'
 
 
 configurations {
+    library
     shade // <- Create a 'shade' configuration
     implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
 }
@@ -43,9 +44,6 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.19.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-configurations {
-    library
-}
 
 // Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
 // If you have any module issues, check these files to make sure there are no duplicate dependencies
@@ -246,6 +244,7 @@ shadowJar {
     relocate 'com.llamalad7', 'shadowed.llamalad7'
 
     finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+    mergeServiceFiles()
 }
 
 
