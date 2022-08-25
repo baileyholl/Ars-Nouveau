@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -186,6 +187,14 @@ public class ClientHandler {
                     };
                 }
             });
+            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "amount"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("amount") / 10000.0F) : 0.0F;
+            });
+            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F; 
+            });
         });
 
         cameraOverlay = OverlayRegistry.registerOverlayTop("ars_nouveau:camera_overlay", ClientHandler::cameraOverlay);
@@ -212,6 +221,18 @@ public class ClientHandler {
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
                         ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
                         : -1, BlockRegistry.POTION_JAR);
+
+        event.getItemColors().register((stack, color) -> {
+            if (color > 0) {
+                return -1;
+            }
+            CompoundTag tag = stack.getTag();
+            tag = tag != null ? tag.getCompound("BlockEntityTag") : null;
+            if (tag != null && PotionUtils.getPotion(tag) != Potions.EMPTY) {
+                return PotionUtils.getColor(PotionUtils.getAllEffects(tag));
+            }
+            return -1;
+        }, BlockRegistry.POTION_JAR);
     }
 
     public static void cameraOverlay(ForgeIngameGui gui, PoseStack pose, float partialTicks, int width, int height) {
