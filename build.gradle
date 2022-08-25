@@ -27,10 +27,11 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 configurations {
+    library
     shade // <- Create a 'shade' configuration
     implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
 }
-version = '2.7.5'
+version = '2.7.6'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -38,9 +39,6 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.18.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-configurations {
-    library
-}
 
 // Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
 // If you have any module issues, check these files to make sure there are no duplicate dependencies
@@ -238,10 +236,10 @@ shadowJar {
 //    relocate 'software.bernie.shadowed', 'software.bernie.modid.shadowed' // <- Move the shadowed geckolib shadowed packages. This prevents classpath conflicts in runtime
 //    relocate 'software.bernie.geckolib', 'software.bernie.modid.geckolib' // <- Move the shadowed geckolib package. This prevents classpath conflicts in runtime
 
-    classifier ''
     relocate 'com.llamalad7', 'shadowed.llamalad7'
-
+    classifier ''
     finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+    mergeServiceFiles()
 }
 
 
