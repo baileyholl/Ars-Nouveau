@@ -181,25 +181,17 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
     AnimationController fastSpinController;
     @Override
     public void registerControllers(AnimationData animationData) {
-        idleController = new AnimationController(this, "controller", 0, this::idlePredicate);
-        spinController = new AnimationController(this, "spinController", 10, this::spinPredicate);
-        craftController = new AnimationController(this, "craft_controller", 0, this::craftPredicate);
-        fastSpinController = new AnimationController(this, "fastSpinController", 10, this::fastSpinPredicate);
-        animationData.addAnimationController(idleController);
-        animationData.addAnimationController(spinController);
-        animationData.addAnimationController(craftController);
-        animationData.addAnimationController(fastSpinController);
-        animationData.setResetSpeedInTicks(0.0);
+
     }
 
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("float", true));
+
         return PlayState.CONTINUE;
     }
 
     private <E extends BlockEntity & IAnimatable> PlayState spinPredicate(AnimationEvent<E> event) {
         if(!isCrafting){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("spin", true));
+
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -207,7 +199,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
 
     private <E extends BlockEntity & IAnimatable> PlayState fastSpinPredicate(AnimationEvent<E> event) {
         if(isCrafting){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("spin_fast", true));
+
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -215,8 +207,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
 
     private <E extends BlockEntity & IAnimatable> PlayState craftPredicate(AnimationEvent<E> event) {
         if (playCrunch) {
-            event.getController().clearAnimationCache();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("cap_crunch", false));
+
             playCrunch = false;
         }
         return PlayState.CONTINUE;

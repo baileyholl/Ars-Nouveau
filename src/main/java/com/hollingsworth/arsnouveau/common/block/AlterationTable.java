@@ -12,23 +12,16 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class AlterationApparatus extends TickableModBlock{
+public class AlterationTable extends TableBlock{
 
-
-    public AlterationApparatus() {
-        this(defaultProperties().noOcclusion());
+    public AlterationTable() {
+        super();
     }
-
-    public AlterationApparatus(Properties properties) {
-        super(properties);
-    }
-
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -69,8 +62,4 @@ public class AlterationApparatus extends TickableModBlock{
         return new AlterationTile(pPos, pState);
     }
 
-    @Override
-    public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
 }
