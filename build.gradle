@@ -39,7 +39,7 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.18.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
+java.withSourcesJar()
 // Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
 // If you have any module issues, check these files to make sure there are no duplicate dependencies
 minecraft.runs.all {
@@ -210,36 +210,13 @@ jar {
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    archiveBaseName.set(project.archivesBaseName)
-    archiveVersion.set("${project.version}")
-    archiveClassifier.set('sources')
-}
-
 shadowJar {
     configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
-
-//    // Skip unnecessary assets and duplicated java files GeckoLib comes with
-//    exclude 'software/bernie/example/**'
-//    exclude 'assets/geckolib3/**'
-//    exclude '**/*.java'
-//    relocate 'software.bernie.shadowed', 'software.bernie.modid.shadowed' // <- Move the shadowed geckolib shadowed packages. This prevents classpath conflicts in runtime
-//    relocate 'software.bernie.geckolib', 'software.bernie.modid.geckolib' // <- Move the shadowed geckolib package. This prevents classpath conflicts in runtime
-
     relocate 'com.llamalad7', 'shadowed.llamalad7'
     classifier ''
     finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
     mergeServiceFiles()
+    from components.java
 }
 
 
@@ -257,8 +234,16 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            artifact reobfArtifact
-            artifact sourcesJar
+            from components.java
+            pom.withXml {
+
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
         }
     }
     repositories {
