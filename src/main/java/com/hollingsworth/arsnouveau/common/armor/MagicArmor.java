@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,16 +90,22 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
 
         private String color;
         private int tier;
-        List<List<PerkSlot>> slotsForTier;
+        private List<List<PerkSlot>> slotsForTier;
+        private List<ItemStack> perkStacks;
 
         public ArmorPerkHolder(ItemStack stack, List<List<PerkSlot>> slotsForTier) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
             this.slotsForTier = slotsForTier;
+            this.perkStacks = new ArrayList<>();
             if(tag == null)
                 return;
             color = tag.getString("color");
             tier = tag.getInt("tier");
+            var count = tag.getInt("count");
+            for(int i = 0; i < count; i++){
+                perkStacks.add(ItemStack.of(tag.getCompound("perk" + i)));
+            }
         }
 
         public String getColor() {
@@ -119,12 +126,25 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
             writeItem();
         }
 
+        public void setPerkStacks(List<ItemStack> perkStacks){
+            this.perkStacks = perkStacks;
+            writeItem();
+        }
+
+        public List<ItemStack> getPerkStacks(){
+            return perkStacks;
+        }
+
         @Override
         public void writeToNBT(CompoundTag tag) {
             super.writeToNBT(tag);
             if(color != null)
                 tag.putString("color", color);
             tag.putInt("tier", tier);
+            tag.putInt("count", perkStacks.size());
+            for(int i = 0; i < perkStacks.size(); i++){
+                tag.put("perk" + i, perkStacks.get(i).save(new CompoundTag()));
+            }
         }
 
         @Override

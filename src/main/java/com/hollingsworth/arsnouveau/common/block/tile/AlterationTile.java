@@ -1,45 +1,36 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.perk.*;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
+import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.items.PerkItem;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.phys.AABB;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AlterationTile extends SingleItemTile implements IAnimatable, ITickable, Container, IAnimationListener {
+public class AlterationTile extends ModdedTile implements IAnimatable, ITickable {
 
-
-    public boolean isCrafting;
-    int ticksCrafting;
-    boolean isAddPerk;
-    boolean playCrunch;
-    List<BlockPos> destinationList = new ArrayList<>();
+    public ItemStack armorStack = ItemStack.EMPTY;
+    public ItemEntity renderEntity;
+    public List<ItemStack> perkList = new ArrayList<>();
 
     public AlterationTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -50,168 +41,7 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
     }
 
     @Override
-    public void tick() {
-        if(!isCrafting || level.isClientSide){
-            return;
-        }
-        ticksCrafting++;
-        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
-        if(holder == null || (isAddPerk && isAddingDone()) || (!isAddPerk && isRemovingDone(holder))){
-            isCrafting = false;
-            updateBlock();
-            return;
-        }
-        if(ticksCrafting % 20 == 0){
-            if(isAddPerk){
-                addOnePerk(holder);
-            }else{
-                removeOnePerk(holder);
-            }
-        }
-    }
-
-    private boolean isAddingDone(){
-        return destinationList.isEmpty();
-    }
-
-    private boolean isRemovingDone(IPerkHolder<ItemStack> holder){
-        return holder.isEmpty();
-    }
-
-    private void addOnePerk(IPerkHolder<ItemStack> perkHolder){
-        BlockPos pos = destinationList.get(0);
-        if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile){
-            Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
-            PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
-            perkHolder.getPerkSet().setPerk(perkItem.perk, PerkSlot.ONE);
-            pedestalTile.setStack(ItemStack.EMPTY);
-            if(level instanceof ServerLevel serverLevel) {
-                ParticleUtil.spawnPoof(serverLevel, pos);
-            }
-        }
-        destinationList.remove(0);
-    }
-
-    private void removeOnePerk(IPerkHolder<ItemStack> perkHolder){
-        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        Set<Map.Entry<IPerk, PerkSlot>> perks = perkHolder.getPerkSet().getPerkMap().entrySet();
-        if(perks.isEmpty())
-            return;
-        IPerk perk = perks.stream().collect(Collectors.toList()).get(0).getKey();
-        ItemStack perkStack = new ItemStack(api.getPerkItemMap().get(perk.getRegistryName()));
-        Optional<BlockPos> pedestalPos = BlockPos.findClosestMatch(getBlockPos(), 4, 4, (p) -> level.getBlockEntity(p) instanceof ArcanePedestalTile tile && tile.getStack().isEmpty());
-        if (pedestalPos.isEmpty()) {
-            BlockPos pos = getBlockPos();
-            ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, perkStack);
-            level.addFreshEntity(itemEntity);
-            perkHolder.getPerkSet().removePerk(perk);
-            if(level instanceof ServerLevel level){
-                ParticleUtil.spawnPoof(level, pos);
-            }
-            Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
-            return;
-        }
-        pedestalPos.ifPresent(pos -> {
-            ArcanePedestalTile tile = (ArcanePedestalTile) level.getBlockEntity(pos);
-            tile.setStack(perkStack.split(1));
-            perkHolder.getPerkSet().removePerk(perk);
-            Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
-            if(level instanceof ServerLevel level){
-                ParticleUtil.spawnPoof(level, pos);
-            }
-        });
-
-    }
-
-    public void addPerks(Player player, ItemStack stack){
-        IPerkProvider<ItemStack> holder = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
-
-        if(holder == null){
-            return;
-        }
-        IPerkHolder<ItemStack> perkHolder = holder.getPerkHolder(stack);
-
-        if(!perkHolder.isEmpty()){
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.must_be_empty"));
-            return;
-        }
-        List<BlockPos> pedestals = new ArrayList<>();
-        for(BlockPos p : BlockPos.withinManhattan(getBlockPos(), 4, 4, 3)){
-            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
-                if(pedestalTile.getStack().getItem() instanceof PerkItem)
-                    pedestals.add(p.immutable());
-            }
-        }
-//        int perkLevels = 0;
-//        for(BlockPos p : pedestals){
-//            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile){
-//                PerkItem perkItem = (PerkItem)pedestalTile.getStack().getItem();
-//                perkLevels += perkItem.perk.getSlotCost();
-//            }
-//        }
-//        if(perkLevels > perkHolder.getSlotsForTier()){
-//            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_enough_slots", perkLevels, perkHolder.getSlotsForTier()));
-//            return;
-//        }
-        isCrafting = true;
-        destinationList = pedestals;
-        isAddPerk = true;
-        setStack(stack.split(1));
-        updateBlock();
-    }
-
-    public void removePerks(Player player, ItemStack stack){
-        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
-        if(holder == null){
-            return;
-        }
-        Set<Map.Entry<IPerk, PerkSlot>> perks = holder.getPerkSet().getPerkMap().entrySet();
-        if(perks.isEmpty()){
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.no_perks"));
-            return;
-        }
-        setStack(stack.split(1));
-        isCrafting = true;
-        isAddPerk = false;
-        updateBlock();
-    }
-    AnimationController craftController;
-    AnimationController idleController;
-    AnimationController spinController;
-    AnimationController fastSpinController;
-    @Override
-    public void registerControllers(AnimationData animationData) {
-
-    }
-
-    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-
-        return PlayState.CONTINUE;
-    }
-
-    private <E extends BlockEntity & IAnimatable> PlayState spinPredicate(AnimationEvent<E> event) {
-        if(!isCrafting){
-
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private <E extends BlockEntity & IAnimatable> PlayState fastSpinPredicate(AnimationEvent<E> event) {
-        if(isCrafting){
-
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private <E extends BlockEntity & IAnimatable> PlayState craftPredicate(AnimationEvent<E> event) {
-        if (playCrunch) {
-
-            playCrunch = false;
-        }
-        return PlayState.CONTINUE;
-    }
+    public void registerControllers(AnimationData animationData) {}
 
     public AnimationFactory factory = new AnimationFactory(this);
 
@@ -220,57 +50,98 @@ public class AlterationTile extends SingleItemTile implements IAnimatable, ITick
         return factory;
     }
 
-    @Override
-    public ItemStack getItem(int index) {
-        if (isCrafting)
-            return ItemStack.EMPTY;
-        return super.getItem(index);
+    public @Nullable AlterationTile getLogicTile() {
+        AlterationTile tile = this;
+        if (!isMasterTile()) {
+            BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(AlterationTable.getConnectedDirection(getBlockState())));
+            tile = tileEntity instanceof AlterationTile alterationTile ? alterationTile : null;
+        }
+        return tile;
     }
 
-    @Override
-    public boolean canPlaceItem(int slot, ItemStack newStack) {
-        if (isCrafting || newStack.isEmpty())
-            return false;
-        return this.stack.isEmpty();
+    public boolean isMasterTile() {
+        return getBlockState().getValue(AlterationTable.PART) == BedPart.HEAD;
     }
 
-    @Override
-    public ItemStack removeItem(int index, int count) {
-        if (isCrafting)
-            return ItemStack.EMPTY;
-        return super.removeItem(index, count);
+    public void setArmorStack(ItemStack stack, Player player){
+        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
+        if(holder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder){
+            this.perkList = new ArrayList<>(armorPerkHolder.getPerkStacks());
+            armorPerkHolder.setPerkStacks(new ArrayList<>());
+            this.armorStack = stack.copy();
+            stack.shrink(1);
+            updateBlock();
+        }
     }
 
-    @Override
-    public ItemStack removeItemNoUpdate(int index) {
-        if (isCrafting)
-            return ItemStack.EMPTY;
-        return super.removeItemNoUpdate(index);
+    public void removePerk(Player player) {
+        if(!perkList.isEmpty()){
+            ItemStack stack = perkList.get(0);
+            if(!player.addItem(stack.copy())){
+                level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), stack.copy()));
+            }
+            perkList.remove(0);
+        }
     }
 
-    @Override
-    public void setItem(int index, ItemStack stack) {
-        if (isCrafting)
+    public void removeArmorStack(Player player){
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(armorStack);
+        if(perkHolder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder){
+            armorPerkHolder.setPerkStacks(new ArrayList<>(this.perkList));
+        }
+        if(!player.addItem(armorStack.copy())){
+            level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), armorStack.copy()));
+        }
+        this.armorStack = ItemStack.EMPTY;
+        updateBlock();
+    }
+
+    public void addPerkStack(ItemStack stack, Player player){
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(armorStack);
+        if(!(perkHolder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder)){
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.set_armor"));
             return;
-        super.setItem(index, stack);
-    }
-
-    @Override
-    public void startAnimation(int arg) {
-        this.playCrunch = true;
+        }
+        if(this.perkList.size() > armorPerkHolder.getSlotsForTier().size()){
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.max_perks"));
+            return;
+        }
+        this.perkList.add(stack.copy());
+        player.getMainHandItem().shrink(1);
+        updateBlock();
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putBoolean("isCrafting", isCrafting);
-        tag.putInt("ticksCrafting", ticksCrafting);
+        CompoundTag armorTag = new CompoundTag();
+        armorStack.save(armorTag);
+        tag.put("armorStack", armorTag);
+        tag.putInt("numPerks", perkList.size());
+        int count = 0;
+        for(ItemStack i : perkList){
+            CompoundTag perkTag = new CompoundTag();
+            i.save(perkTag);
+            tag.put("perk" + count, perkTag);
+            count++;
+        }
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        isCrafting = compound.getBoolean("isCrafting");
-        ticksCrafting = compound.getInt("ticksCrafting");
+        this.armorStack = ItemStack.of(compound.getCompound("armorStack"));
+        int count = compound.getInt("numPerks");
+        for(int i = 0; i < count; i++){
+            CompoundTag perkTag = compound.getCompound("perk" + i);
+            ItemStack perk = ItemStack.of(perkTag);
+            perkList.add(perk);
+        }
     }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return super.getRenderBoundingBox().inflate(2);
+    }
+
 }

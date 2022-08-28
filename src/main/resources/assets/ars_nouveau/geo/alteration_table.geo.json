@@ -453,8 +453,7 @@
 				},
 				{
 					"name": "platform",
-					"pivot": [16, 16, 0],
-					"rotation": [0, 15, 0],
+					"pivot": [16, 18, 0],
 					"cubes": [
 						{
 							"origin": [10, 16, -6],
