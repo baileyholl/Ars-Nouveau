@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.events;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -34,6 +35,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -186,6 +188,14 @@ public class ClientHandler {
                     };
                 }
             });
+            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "amount"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("currentFill") / 10000.0F) : 0.0F;
+            });
+            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F; 
+            });
         });
     }
 
@@ -267,10 +277,24 @@ public class ClientHandler {
                         ? jarTile.getColor()
                         : -1, BlockRegistry.POTION_JAR);
 
+
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
                         ? melderTile.getColor()
                         : -1, BlockRegistry.POTION_MELDER);
+
+
+        event.getItemColors().register((stack, color) -> {
+            if (color > 0 || !stack.hasTag()) {
+                return -1;
+            }
+            CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
+            if(blockTag.contains("potionData")){
+                PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
+                return PotionUtils.getColor(data.fullEffects());
+            }
+            return -1;
+        }, BlockRegistry.POTION_JAR);
 
     }
 

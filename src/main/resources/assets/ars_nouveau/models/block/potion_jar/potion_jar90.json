@@ -1,6 +1,7 @@
 {
   "credit": "Made with Blockbench",
   "render_type": "cutout",
+	"parent": "block/cube_all",
   "textures": {
     "3": "ars_nouveau:blocks/potion_still",
     "4": "ars_nouveau:blocks/potion_jar",

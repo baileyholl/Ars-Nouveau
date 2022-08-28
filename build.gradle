@@ -28,10 +28,11 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '3.2.9'
+version = '3.2.10'
 
 
 configurations {
+    library
     shade // <- Create a 'shade' configuration
     implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
 }
@@ -43,9 +44,7 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.19.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-configurations {
-    library
-}
+java.withSourcesJar()
 
 // Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
 // If you have any module issues, check these files to make sure there are no duplicate dependencies
@@ -220,17 +219,6 @@ jar {
 // we define a custom artifact that is sourced from the reobfJar output task
 // and then declare that to be published
 // Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    archiveBaseName.set(project.archivesBaseName)
-    archiveVersion.set("${project.version}")
-    archiveClassifier.set('sources')
-}
 
 shadowJar {
     configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
@@ -246,6 +234,7 @@ shadowJar {
     relocate 'com.llamalad7', 'shadowed.llamalad7'
 
     finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+    mergeServiceFiles()
 }
 
 
@@ -263,8 +252,17 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            artifact reobfArtifact
-            artifact sourcesJar
+            from components.java
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
         }
     }
     repositories {
