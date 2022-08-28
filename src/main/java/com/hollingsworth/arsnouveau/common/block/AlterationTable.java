@@ -42,6 +42,9 @@ public class AlterationTable extends TableBlock{
                 return InteractionResult.SUCCESS;
             }
         }else{
+            tile = tile.getLogicTile();
+            if(tile == null)
+                return InteractionResult.SUCCESS;
             if(stack.isEmpty()){
                 tile.removePerk(player);
                 return InteractionResult.SUCCESS;

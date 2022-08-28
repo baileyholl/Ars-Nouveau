@@ -710,7 +710,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_APPARATUS, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return AltertionTableRenderer::getISTER;
+                return AlterationTableRenderer::getISTER;
             }
         });
 

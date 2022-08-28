@@ -82,6 +82,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             }
             perkList.remove(0);
         }
+        updateBlock();
     }
 
     public void removeArmorStack(Player player){
@@ -102,12 +103,11 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.set_armor"));
             return;
         }
-        if(this.perkList.size() > armorPerkHolder.getSlotsForTier().size()){
+        if(this.perkList.size() >= 3 || this.perkList.size() >= armorPerkHolder.getSlotsForTier().size()){
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.max_perks"));
             return;
         }
-        this.perkList.add(stack.copy());
-        player.getMainHandItem().shrink(1);
+        this.perkList.add(stack.split(1));
         updateBlock();
     }
 
@@ -132,6 +132,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
         super.load(compound);
         this.armorStack = ItemStack.of(compound.getCompound("armorStack"));
         int count = compound.getInt("numPerks");
+        perkList = new ArrayList<>();
         for(int i = 0; i < count; i++){
             CompoundTag perkTag = compound.getCompound("perk" + i);
             ItemStack perk = ItemStack.of(perkTag);

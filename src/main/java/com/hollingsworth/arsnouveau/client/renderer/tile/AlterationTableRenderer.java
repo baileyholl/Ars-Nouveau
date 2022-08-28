@@ -30,18 +30,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraftforge.client.ForgeHooksClient;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib3.util.RenderUtils;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class AltertionTableRenderer extends GeoBlockRenderer<AlterationTile> {
+public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     private static final Map<String, ResourceLocation> ARMOR_LOCATION_CACHE = Maps.newHashMap();
 
     public final ArmorStandArmorModel innerModel;
     public final ArmorStandArmorModel outerModel;
 
-    public AltertionTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
+    public AlterationTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(p_i226006_1_, new GenericModel<>("alteration_table").withEmptyAnim());
         innerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR));
         outerModel =  new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
@@ -56,7 +58,7 @@ public class AltertionTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 return;
 
             this.renderArmorStack(tile, matrixStack, ticks, iRenderTypeBuffer, bufferIn, packedLightIn, packedOverlayIn, partialTicks);
-
+            this.renderPerks(tile, matrixStack, ticks, iRenderTypeBuffer, bufferIn, packedLightIn, packedOverlayIn, partialTicks);
         } catch (Throwable t) {
             t.printStackTrace();
             // Mercy for HORRIBLE RENDER CHANGING MODS
@@ -71,13 +73,44 @@ public class AltertionTableRenderer extends GeoBlockRenderer<AlterationTile> {
         if(tile.armorStack.getItem() instanceof ArmorItem armorItem) {
             double yOffset = Math.pow(Math.cos((ClientInfo.ticksInGame + ticks)  /20f)/4, 2);
             matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
-            matrixStack.translate(1, -1.65 + yOffset + rotForSlot(armorItem.getSlot()), 0);
+            matrixStack.translate(1.05, -1.65 + yOffset + rotForSlot(armorItem.getSlot()), 0);
             matrixStack.scale(0.5f, 0.5f, 0.5f);
             this.renderArmorPiece(tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
         }else {
             Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemTransforms.TransformType.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         }
         matrixStack.popPose();
+    }
+
+    public void renderPerks(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks){
+        if(tile.perkList.isEmpty()){
+            return;
+        }
+        for(int i = 0; i < Math.min(3, tile.perkList.size()); i++){
+            ItemStack perkStack = tile.perkList.get(i);
+            if(perkStack.isEmpty()){
+                continue;
+            }
+            matrixStack.pushPose();
+            matrixStack.translate(-0.25, 0.74 - (0.175 * i),-0.3 - (0.175 * i));
+            GeoBone bone = (GeoBone) getGeoModelProvider().getBone("display");
+            if (bone.getRotationZ() != 0.0F) {
+                matrixStack.mulPose(Vector3f.ZP.rotation(-bone.getRotationZ()));
+            }
+
+            if (bone.getRotationY() != 0.0F) {
+                matrixStack.mulPose(Vector3f.YP.rotation(-bone.getRotationY()));
+            }
+
+            if (bone.getRotationX() != 0.0F) {
+                matrixStack.mulPose(Vector3f.XP.rotation(-bone.getRotationX()));
+            }
+            GeoBone locBone = (GeoBone) getGeoModelProvider().getBone("top_" + (i + 1));
+            RenderUtils.moveToPivot(locBone, matrixStack);
+            matrixStack.scale(0.18f, 0.18f, 0.18f);
+            Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemTransforms.TransformType.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+            matrixStack.popPose();
+        }
     }
 
     public float rotForSlot(EquipmentSlot slot){
