@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.google.common.collect.Maps;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
+import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -31,10 +34,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraftforge.client.ForgeHooksClient;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
+import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
@@ -226,6 +231,43 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             // why must people change the rendering order of tesrs
         }
     }
+
+    @Override
+    public void render(GeoModel model, AlterationTile animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        renderSlate(model, animatable, partialTicks, matrixStackIn, renderTypeBuffer, packedLightIn);
+        super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    }
+
+    public void renderSlate(GeoModel model, AlterationTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn){
+        String[] rowNames = new String[]{"top", "mid", "bot"};
+        if(tile.armorStack.isEmpty()){
+            for(String s : rowNames){
+                setSlateRow(model, s, 0);
+            }
+            return;
+        }
+        if(!(PerkUtil.getPerkHolder(tile.armorStack) instanceof MagicArmor.ArmorPerkHolder armorPerkHolder)){
+          return;
+        }
+        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier();
+        for(int i = 0; i < Math.min(perks.size(), rowNames.length); i++){
+            PerkSlot perkSlot = perks.get(i);
+            setSlateRow(model, rowNames[i], perkSlot.value);
+        }
+        List<String> remainingRows = List.of(rowNames);
+        remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(model, s, 0));
+    }
+
+    public void setSlateRow(GeoModel model, String loc, int tier){
+        for(int i = 0; i < 4; i++){
+            if(tier != i){
+                model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(true));
+            }else{
+                model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(false));
+            }
+        }
+    }
+
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(new GenericModel<>("alteration_table").withEmptyAnim());
