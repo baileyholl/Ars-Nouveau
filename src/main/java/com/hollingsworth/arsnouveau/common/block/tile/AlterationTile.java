@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,6 +27,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AlterationTile extends ModdedTile implements IAnimatable, ITickable {
 
@@ -66,8 +69,8 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
     public void setArmorStack(ItemStack stack, Player player){
         IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
         if(holder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder){
-            this.perkList = new ArrayList<>(armorPerkHolder.getPerkStacks());
-            armorPerkHolder.setPerkStacks(new ArrayList<>());
+            this.perkList = new ArrayList<>(PerkUtil.getPerksAsItems(stack).stream().map(Item::getDefaultInstance).toList());
+            armorPerkHolder.setPerks(new ArrayList<>());
             this.armorStack = stack.copy();
             stack.shrink(1);
             updateBlock();
@@ -88,12 +91,18 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
     public void removeArmorStack(Player player){
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(armorStack);
         if(perkHolder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder){
-            armorPerkHolder.setPerkStacks(new ArrayList<>(this.perkList));
+            armorPerkHolder.setPerks(perkList.stream().map(i ->{
+                if(i.getItem() instanceof PerkItem perkItem){
+                    return perkItem.perk;
+                }
+                return null;
+            }).filter(Objects::nonNull).toList());
         }
         if(!player.addItem(armorStack.copy())){
             level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), armorStack.copy()));
         }
         this.armorStack = ItemStack.EMPTY;
+        this.perkList = new ArrayList<>();
         updateBlock();
     }
 

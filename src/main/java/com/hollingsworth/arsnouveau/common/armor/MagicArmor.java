@@ -20,9 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IDyeable {
 
@@ -38,11 +36,11 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
         if(perkHolder == null)
             return;
-        perkHolder.getPerkSet().getPerkMap().forEach((k, v)->{
-            if(k instanceof TickablePerk tickablePerk) {
-                tickablePerk.tick(stack, world, player, v.value);
+        for(PerkInstance instance : perkHolder.getPerkInstances()) {
+            if(instance.getPerk() instanceof TickablePerk tickablePerk){
+                tickablePerk.tick(stack, world, player, instance.getSlot().value);
             }
-        });
+        }
     }
 
     @Override
@@ -50,15 +48,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         ImmutableMultimap.Builder<Attribute, AttributeModifier> attributes = new ImmutableMultimap.Builder<>();
         attributes.putAll(super.getDefaultAttributeModifiers(pEquipmentSlot));
         if (this.slot == pEquipmentSlot) {
-//            UUID uuid = ARMOR_MODIFIER_UUID_PER_SLOT[slot.getIndex()];
-//            attributes.put(PerkAttributes.MAX_MANA_BONUS.get(), new AttributeModifier(uuid, "max_mana_armor", this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION));
-//            attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", this.getManaRegenBonus(stack), AttributeModifier.Operation.ADDITION));
             IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
             if(perkProvider != null){
                 IPerkHolder<ItemStack> perkHolder = perkProvider.getPerkHolder(stack);
-                PerkSet perkSet = perkHolder.getPerkSet();
-                for(Map.Entry<IPerk, PerkSlot> entry : perkSet.getPerkMap().entrySet()){
-                    attributes.putAll(entry.getKey().getModifiers(this.slot, stack, entry.getValue().value));
+                for(PerkInstance perkInstance : perkHolder.getPerkInstances()){
+                    IPerk perk = perkInstance.getPerk();
+                    attributes.putAll(perk.getModifiers(this.slot, stack, perkInstance.getSlot().value));
                 }
             }
         }
@@ -91,21 +86,15 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         private String color;
         private int tier;
         private List<List<PerkSlot>> slotsForTier;
-        private List<ItemStack> perkStacks;
 
         public ArmorPerkHolder(ItemStack stack, List<List<PerkSlot>> slotsForTier) {
             super(stack);
             CompoundTag tag = getItemTag(stack);
             this.slotsForTier = slotsForTier;
-            this.perkStacks = new ArrayList<>();
             if(tag == null)
                 return;
             color = tag.getString("color");
             tier = tag.getInt("tier");
-            var count = tag.getInt("count");
-            for(int i = 0; i < count; i++){
-                perkStacks.add(ItemStack.of(tag.getCompound("perk" + i)));
-            }
         }
 
         public String getColor() {
@@ -126,25 +115,12 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
             writeItem();
         }
 
-        public void setPerkStacks(List<ItemStack> perkStacks){
-            this.perkStacks = perkStacks;
-            writeItem();
-        }
-
-        public List<ItemStack> getPerkStacks(){
-            return perkStacks;
-        }
-
         @Override
         public void writeToNBT(CompoundTag tag) {
             super.writeToNBT(tag);
             if(color != null)
                 tag.putString("color", color);
             tag.putInt("tier", tier);
-            tag.putInt("count", perkStacks.size());
-            for(int i = 0; i < perkStacks.size(); i++){
-                tag.put("perk" + i, perkStacks.get(i).save(new CompoundTag()));
-            }
         }
 
         @Override

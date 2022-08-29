@@ -1,30 +1,49 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
+import com.hollingsworth.arsnouveau.api.util.RomanNumber;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents an object or thing that stores a set of perks.
  */
 public interface IPerkHolder<T> {
 
-    @Nonnull PerkSet getPerkSet();
+    default List<PerkInstance> getPerkInstances(){
+        List<PerkInstance> perkInstances = new ArrayList<>();
+        List<PerkSlot> slots = new ArrayList<>(getSlotsForTier());
+        List<IPerk> perks = getPerks();
+        slots.sort(Comparator.comparingInt(a -> a.value));
+        for (PerkSlot slot : slots) {
+            for (IPerk perk : perks) {
+                perkInstances.add(new PerkInstance(slot, perk));
+            }
+        }
+        return perkInstances;
+    }
+
+    List<IPerk> getPerks();
+
+    void setPerks(List<IPerk> perks);
 
     List<PerkSlot> getSlotsForTier();
 
     default boolean isEmpty(){
-        return getPerkSet().isEmpty();
+        return getPerks().isEmpty();
     }
 
     default void appendPerkTooltip(List<Component> tooltip, T obj){
-        if(getPerkSet().getPerkMap().isEmpty())
+        if(isEmpty())
             return;
-        for(Map.Entry<IPerk, PerkSlot> entry : getPerkSet().getPerkMap().entrySet()){
-            tooltip.add(Component.literal(entry.getKey().getRegistryName() + ":"  + entry.getValue().value));
+        for(PerkInstance perkInstance : getPerkInstances()){
+            IPerk perk = perkInstance.getPerk();
+            ResourceLocation location = perk.getRegistryName();
+            tooltip.add(Component.literal(Component.translatable("item." + location.getNamespace() + "." + location.getPath()).getString()
+                    + " " + RomanNumber.toRoman(perkInstance.getSlot().value)));
         }
-//        tooltip.add(Component.translatable("tooltip.ars_nouveau.armor.perks", getPerkSet().getPerkMap().size()).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 }
