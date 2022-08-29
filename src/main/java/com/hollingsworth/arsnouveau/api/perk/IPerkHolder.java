@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
 import com.hollingsworth.arsnouveau.api.util.RomanNumber;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -17,10 +17,9 @@ public interface IPerkHolder<T> {
         List<PerkInstance> perkInstances = new ArrayList<>();
         List<PerkSlot> slots = new ArrayList<>(getSlotsForTier());
         List<IPerk> perks = getPerks();
-        slots.sort(Comparator.comparingInt(a -> a.value));
-        for (PerkSlot slot : slots) {
-            for (IPerk perk : perks) {
-                perkInstances.add(new PerkInstance(slot, perk));
+        for(int i = 0; i < slots.size(); i++){
+            if(i < perks.size()) {
+                perkInstances.add(new PerkInstance(slots.get(i), perks.get(i)));
             }
         }
         return perkInstances;
@@ -37,13 +36,17 @@ public interface IPerkHolder<T> {
     }
 
     default void appendPerkTooltip(List<Component> tooltip, T obj){
-        if(isEmpty())
-            return;
+
         for(PerkInstance perkInstance : getPerkInstances()){
             IPerk perk = perkInstance.getPerk();
             ResourceLocation location = perk.getRegistryName();
             tooltip.add(Component.literal(Component.translatable("item." + location.getNamespace() + "." + location.getPath()).getString()
                     + " " + RomanNumber.toRoman(perkInstance.getSlot().value)));
+        }
+        int missing = getSlotsForTier().size() - getPerkInstances().size();
+        for(int i = 0; i < missing; i++){
+            PerkSlot slot = new ArrayList<>(getSlotsForTier()).subList(getPerkInstances().size(), getSlotsForTier().size()).get(i);
+            tooltip.add(Component.literal(Component.translatable("Empty").getString() + " " + RomanNumber.toRoman(slot.value)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
         }
     }
 }

@@ -20,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IDyeable {
@@ -66,10 +68,10 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         super.appendHoverText(stack, world, tooltip, flag);
         IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
         if (perkProvider != null) {
-            perkProvider.getPerkHolder(stack).appendPerkTooltip(tooltip, stack);
             if(perkProvider.getPerkHolder(stack) instanceof ArmorPerkHolder armorPerkHolder){
                 tooltip.add(Component.translatable("ars_nouveau.tier", armorPerkHolder.getTier() + 1).withStyle(ChatFormatting.GOLD));
             }
+            perkProvider.getPerkHolder(stack).appendPerkTooltip(tooltip, stack);
         }
     }
 
@@ -125,7 +127,9 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
 
         @Override
         public List<PerkSlot> getSlotsForTier() {
-            return slotsForTier.get(tier);
+            List<PerkSlot> slots = new ArrayList<>(slotsForTier.get(tier));
+            slots.sort(Comparator.comparingInt((a) -> -a.value));
+            return slots;
         }
     }
 }

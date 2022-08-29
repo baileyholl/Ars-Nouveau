@@ -17,7 +17,7 @@ import java.util.List;
  * Serializes a set of perks from an itemstack.
  */
 public abstract class StackPerkHolder extends ItemstackData implements IPerkHolder<ItemStack> {
-    private ImmutableList<IPerk> perks;
+    private List<IPerk> perks;
 
     public StackPerkHolder(ItemStack stack) {
         super(stack);
@@ -47,13 +47,13 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
     }
 
     @Override
-    public ImmutableList<IPerk> getPerks() {
+    public List<IPerk> getPerks() {
         return perks;
     }
 
     @Override
     public void setPerks(List<IPerk> perks) {
-        this.perks = ImmutableList.copyOf(perks);
+        this.perks = new ArrayList<>(perks);
         writeItem();
     }
 
