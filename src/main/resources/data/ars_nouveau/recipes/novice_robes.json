@@ -4,12 +4,15 @@
   "key": {
     "x": {
       "item": "ars_nouveau:magebloom_fiber"
+    },
+    "y": {
+      "item": "minecraft:golden_chestplate"
     }
   },
   "pattern": [
-    "x x",
-    "xxx",
-    "xxx"
+    " x ",
+    "xyx",
+    " x "
   ],
   "result": {
     "item": "ars_nouveau:novice_robes"

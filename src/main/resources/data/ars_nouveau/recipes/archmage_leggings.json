@@ -3,13 +3,16 @@
   "group": "ars_nouveau",
   "key": {
     "x": {
-      "item": "ars_nouveau:end_fiber"
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    "y": {
+      "item": "minecraft:diamond_leggings"
     }
   },
   "pattern": [
-    "xxx",
-    "x x",
-    "x x"
+    " x ",
+    "xyx",
+    " x "
   ],
   "result": {
     "item": "ars_nouveau:archmage_leggings"

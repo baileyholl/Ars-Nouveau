@@ -3,13 +3,16 @@
   "group": "ars_nouveau",
   "key": {
     "x": {
-      "item": "ars_nouveau:blaze_fiber"
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    "y": {
+      "item": "minecraft:iron_chestplate"
     }
   },
   "pattern": [
-    "x x",
-    "xxx",
-    "xxx"
+    " x ",
+    "xyx",
+    " x "
   ],
   "result": {
     "item": "ars_nouveau:apprentice_robes"

@@ -1,12 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "ars_nouveau",
   "key": {
     "x": {
       "item": "ars_nouveau:magebloom_fiber"
     },
     "y": {
-      "item": "minecraft:iron_helmet"
+      "item": "ars_nouveau:scribes_table"
     }
   },
   "pattern": [
@@ -15,6 +14,6 @@
     " x "
   ],
   "result": {
-    "item": "ars_nouveau:apprentice_hood"
+    "item": "ars_nouveau:alteration_table"
   }
 }

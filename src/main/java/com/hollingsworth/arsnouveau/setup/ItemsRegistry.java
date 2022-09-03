@@ -277,7 +277,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
     public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
-
+    public static RegistryWrapper<ModItem> BLANK_THREAD = register(LibItemNames.BLANK_THREAD, () -> new ModItem().withTooltip("tooltip.ars_nouveau.blank_thread"));
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));
