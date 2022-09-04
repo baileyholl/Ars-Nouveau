@@ -663,7 +663,7 @@
 	"ars_nouveau.spell_set": "Spell set.",
 	"block.ars_nouveau.vitalic_sourcelink": "Vitalic Sourcelink",
 	"block.ars_nouveau.alchemical_sourcelink": "Alchemical Sourcelink",
-	"ars_nouveau.page1.armor": "Magical robes provide additional mana and bonus mana regen. To cast the largest and most powerful spells, you will need a mana pool bigger than a beginning spell caster. Each piece of armor will provide a bonus, and each tier provides a greater bonus than the previous. To begin crafting armor, you will need to obtain Mageblooms.",
+	"ars_nouveau.page1.armor": "Magical robes will increase the wearers mana regen and can be upgraded with special abilities using Threads. The Sorceror's set provides the lowest defence, but provides the most powerful set of slots for Threads. The Arcanist's and Battlemage's sets provide increasingly more defence, but fewer and less powerful Thread Slots. For more information on Threads, see the section on Armor and Perks.",
 	"ars_nouveau.page.potion_jar": "A jar that stores up to 100 potions. Potion can be removed by using an Empty Bottle or Potion Flask on the jar. Wixies will use these jars during Potion Autocrafting. The jar may be locked by using a Dominion Wand while sneaking. Locked Jars will only receive the potion it is locked to from Wixies. Can be used with a Comparator.",
 	"ars_nouveau.glyph_crafting": "Glyph Crafting",
 	"ars_nouveau.page1.scribes_table": "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories.",
@@ -1162,5 +1162,14 @@
 	"entity.ars_nouveau.scryer_camera": "Scryer Camera",
 	"entity.ars_nouveau.spell_arrow": "Spell Arrow",
 	"entity.ars_nouveau.spell_proj": "Spell Projectile",
-	"block.ars_nouveau.alteration_apparatus": "Alteration Apparatus"
+	"ars_nouveau.armor": "Armor and Perks",
+	"ars_nouveau.page.armor_upgrading": "Armor Upgrading",
+	"ars_nouveau.armor_desc": "Threads can be slotted into magical armor to provide additional effects. Armor can be upgraded to new tiers, unlocking additional and more powerful thread slots.",
+	"ars_nouveau.page1.armor_upgrading": "Magical armor can be upgraded with Threads to provide additional effects. Each type of armor has a different number of slots, and those slots vary in size. Larger slots will increase the power of threads, and some threads require a slot of a certain size or larger. ",
+	"ars_nouveau.page2.armor_upgrading": "Armor also has three tiers, and these tiers may be increased using the Enchanting Apparatus and the upgrade recipes found in this section. Each tier will increase the amount of mana regen the armor grants, and increases the number and size of the slots of the armor.",
+	"block.ars_nouveau.alteration_table": "Alteration Table",
+	"ars_nouveau.page.alteration_table": "Alteration Table",
+	"ars_nouveau.page1.alteration_table": "Used to inscribe Threads onto magical armors. To use the table, place armor onto the stand of the table. The tablet will display the available Thread Slots on the armor. To add or remove a Thread, use the thread on the tablet of the table. Removing the armor will apply the threads to the armor. To remove a thread, place the armor on the table and interact with the display with an empty hand.",
+	"item.ars_nouveau.blank_thread": "Blank Thread",
+	"tooltip.ars_nouveau.blank_thread": "Used to craft threads that may be used to empower your magical armor."
 }

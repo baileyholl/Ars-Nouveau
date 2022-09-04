@@ -19,8 +19,7 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:novice_boots",
-      "recipe2": "ars_nouveau:blaze_fiber"
+      "recipe": "ars_nouveau:novice_boots"
     },
     {
       "type": "patchouli:crafting",
@@ -34,17 +33,18 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:end_fiber",
-      "recipe2": "ars_nouveau:archmage_hood"
-    },
-    {
-      "type": "patchouli:crafting",
       "recipe": "ars_nouveau:archmage_robes",
       "recipe2": "ars_nouveau:archmage_leggings"
     },
     {
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:archmage_boots"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:armor/armor_upgrade"
+      ]
     }
   ]
 }

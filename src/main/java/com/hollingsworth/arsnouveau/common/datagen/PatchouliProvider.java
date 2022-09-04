@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -11,6 +12,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -50,6 +52,7 @@ public class PatchouliProvider implements DataProvider {
     public static ResourceLocation GLYPHS_1 = new ResourceLocation(ArsNouveau.MODID, "glyphs_1");
     public static ResourceLocation GLYPHS_2 = new ResourceLocation(ArsNouveau.MODID, "glyphs_2");
     public static ResourceLocation GLYPHS_3 = new ResourceLocation(ArsNouveau.MODID, "glyphs_3");
+    public static ResourceLocation ARMOR = new ResourceLocation(ArsNouveau.MODID, "armor");
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
@@ -72,6 +75,10 @@ public class PatchouliProvider implements DataProvider {
 
         for (AbstractSpellPart s : ArsNouveauAPI.getInstance().getSpellpartMap().values()) {
             addGlyphPage(s);
+        }
+
+        for (IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
+            addPerkPage(perk);
         }
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "spell_casting")
@@ -295,12 +302,12 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER).withRecipe2(ItemsRegistry.NOVICE_HOOD))
                 .withPage(new CraftingPage(ItemsRegistry.NOVICE_ROBES).withRecipe2(ItemsRegistry.NOVICE_LEGGINGS))
-                .withPage(new CraftingPage(ItemsRegistry.NOVICE_BOOTS).withRecipe2(ItemsRegistry.BLAZE_FIBER))
+                .withPage(new CraftingPage(ItemsRegistry.NOVICE_BOOTS))
                 .withPage(new CraftingPage(ItemsRegistry.APPRENTICE_HOOD).withRecipe2(ItemsRegistry.APPRENTICE_ROBES))
                 .withPage(new CraftingPage(ItemsRegistry.APPRENTICE_LEGGINGS).withRecipe2(ItemsRegistry.APPRENTICE_BOOTS))
-                .withPage(new CraftingPage(ItemsRegistry.END_FIBER).withRecipe2(ItemsRegistry.ARCHMAGE_HOOD))
                 .withPage(new CraftingPage(ItemsRegistry.ARCHMAGE_ROBES).withRecipe2(ItemsRegistry.ARCHMAGE_LEGGINGS))
-                .withPage(new CraftingPage(ItemsRegistry.ARCHMAGE_BOOTS)), getPath(EQUIPMENT, "armor"));
+                .withPage(new CraftingPage(ItemsRegistry.ARCHMAGE_BOOTS))
+                .withPage(new RelationsPage().withEntry(ARMOR, "armor_upgrade")), getPath(EQUIPMENT, "armor"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
@@ -442,6 +449,20 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(ItemsRegistry.SPLASH_LAUNCHER)
                 .withPage(new ApparatusPage(ItemsRegistry.SPLASH_LAUNCHER))
                 .withPage(new ApparatusPage(ItemsRegistry.LINGERING_LAUNCHER)), getPath(EQUIPMENT, "flask_launcher"));
+
+        addPage(new PatchouliBuilder(ARMOR, "armor_upgrading")
+                .withLocalizedText()
+                .withLocalizedText()
+                .withIcon(ItemsRegistry.APPRENTICE_HOOD)
+                .withPage(new ApparatusPage("ars_nouveau:upgrade_1"))
+                .withPage(new ApparatusPage("ars_nouveau:upgrade_2"))
+                .withPage(new RelationsPage().withEntry(EQUIPMENT, "armor"))
+                .withSortNum(-1), getPath(ARMOR, "armor_upgrade"));
+        addPage(new PatchouliBuilder(MACHINES, "alteration_table")
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.ALTERATION_APPARATUS).withRecipe2(ItemsRegistry.BLANK_THREAD))
+                .withPage(new RelationsPage().withEntry(ARMOR, "armor_upgrade").withEntry(EQUIPMENT, "armor"))
+                .withIcon(BlockRegistry.ALTERATION_APPARATUS), getPath(MACHINES, "alteration_table"));
     }
 
     public String getLangPath(String name, int count) {
@@ -536,6 +557,15 @@ public class PatchouliProvider implements DataProvider {
             builder.withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(enchantment).getPath() + "_" + i));
         }
         this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/enchantments/" + getRegistryName(enchantment).getPath() + ".json")));
+    }
+
+    public void addPerkPage(IPerk perk){
+        PerkItem perkItem = ArsNouveauAPI.getInstance().getPerkItemMap().get(perk.getRegistryName());
+        PatchouliBuilder builder = new PatchouliBuilder(ARMOR, perkItem)
+                .withIcon(perkItem)
+                .withTextPage(perk.getDescriptionKey())
+                .withPage(new ApparatusPage(perkItem));
+        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/armor/" + perk.getRegistryName().getPath() + ".json")));
     }
 
     List<Enchantment> enchants = Arrays.asList(

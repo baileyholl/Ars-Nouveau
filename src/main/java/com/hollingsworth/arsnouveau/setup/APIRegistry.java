@@ -137,7 +137,7 @@ public class APIRegistry {
         registerPerk(PotionDurationPerk.INSTANCE);
         registerPerk(RepairingPerk.INSTANCE);
         registerPerk(SaturationPerk.INSTANCE);
-        registerPerk(ToughnessPerk.INSTANCE);
+//        registerPerk(ToughnessPerk.INSTANCE);
         registerPerk(SpellDamagePerk.INSTANCE);
     }
 
@@ -216,10 +216,6 @@ public class APIRegistry {
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
         )));
-    }
-
-    public static void deferredRegistration(){
-
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

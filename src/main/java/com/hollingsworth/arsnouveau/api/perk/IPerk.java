@@ -50,4 +50,8 @@ public interface IPerk {
     default String getLangDescription(){
         return "";
     }
+
+    default String getDescriptionKey() {
+        return getRegistryName().getNamespace() + ".perk_desc." + getRegistryName().getPath();
+    }
 }
