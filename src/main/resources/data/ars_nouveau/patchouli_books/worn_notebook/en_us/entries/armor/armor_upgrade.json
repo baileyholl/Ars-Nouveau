@@ -9,7 +9,8 @@
     },
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page2.armor_upgrading"
+      "text": "ars_nouveau.page2.armor_upgrading",
+      "title": "ars_nouveau.armor_tiers"
     },
     {
       "type": "ars_nouveau:apparatus_recipe",
@@ -22,7 +23,8 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "ars_nouveau:equipment/armor"
+        "ars_nouveau:equipment/armor",
+        "ars_nouveau:machines/alteration_table"
       ]
     }
   ],

@@ -452,11 +452,11 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(ARMOR, "armor_upgrading")
                 .withLocalizedText()
-                .withLocalizedText()
+                .withPage(new TextPage(getLangPath("armor_upgrading", 2)).withTitle("ars_nouveau.armor_tiers"))
                 .withIcon(ItemsRegistry.APPRENTICE_HOOD)
                 .withPage(new ApparatusPage("ars_nouveau:upgrade_1"))
                 .withPage(new ApparatusPage("ars_nouveau:upgrade_2"))
-                .withPage(new RelationsPage().withEntry(EQUIPMENT, "armor"))
+                .withPage(new RelationsPage().withEntry(EQUIPMENT, "armor").withEntry(MACHINES, "alteration_table"))
                 .withSortNum(-1), getPath(ARMOR, "armor_upgrade"));
         addPage(new PatchouliBuilder(MACHINES, "alteration_table")
                 .withLocalizedText()
