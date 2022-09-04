@@ -115,6 +115,7 @@ public class GuiEntityInfoHUD {
 
         drawHoveringText(ItemStack.EMPTY, poseStack, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
+        poseStack.popPose();
     }
     public static final Color VANILLA_TOOLTIP_BORDER_1 = new Color(0x50_5000ff, true);
     public static final Color VANILLA_TOOLTIP_BORDER_2 = new Color(0x50_28007f, true);

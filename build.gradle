@@ -28,7 +28,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '3.2.10'
+version = '3.3.0'
 
 
 configurations {
@@ -41,7 +41,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.19.1'
+archivesBaseName = 'ars_nouveau-1.19.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
