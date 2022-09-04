@@ -1,9 +1,10 @@
 package com.hollingsworth.arsnouveau.common.mixin.perks;
 
-import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
+import com.hollingsworth.arsnouveau.common.perk.DepthsPerk;
+import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,8 +16,11 @@ public class PerkLivingEntity {
     @Inject(method = "decreaseAirSupply", at = @At("HEAD"), cancellable = true)
     protected void decreaseAirSupply(int pCurrentAir, CallbackInfoReturnable<Integer> cir) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
-        AttributeInstance instance = thisEntity.getAttribute(PerkAttributes.DEPTHS.get());
-        if(instance != null && thisEntity.getRandom().nextDouble() <= instance.getValue()) {
+        if(!(thisEntity instanceof Player player)){
+            return;
+        }
+        int numDepths = PerkUtil.countForPerk(DepthsPerk.INSTANCE, player);
+        if(numDepths >= 3 || thisEntity.getRandom().nextDouble() <= numDepths * .33) {
             cir.setReturnValue(thisEntity.getAirSupply());
         }
     }
@@ -24,7 +28,9 @@ public class PerkLivingEntity {
     @Inject(method = "getJumpBoostPower", at = @At("RETURN"), cancellable = true)
     protected void getJumpPower(CallbackInfoReturnable<Double> cir) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
-        double power = PerkUtil.perkValue(thisEntity, PerkAttributes.JUMP_HEIGHT.get());
-        cir.setReturnValue(cir.getReturnValueD() + power);
+        if(!(thisEntity instanceof Player player)){
+            return;
+        }
+        cir.setReturnValue(cir.getReturnValueD() + PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, player) * 0.1);
     }
 }

@@ -29,17 +29,12 @@ public class StarbunclePerk extends Perk {
     }
 
     @Override
-    public int getCountCap() {
-        return 3;
-    }
-
-    @Override
     public String getLangName() {
         return "Starbuncle";
     }
 
     @Override
     public String getLangDescription() {
-        return "Increases the speed of the player by 20% each level.";
+        return "Increases the speed of the player by 20%% each level.";
     }
 }

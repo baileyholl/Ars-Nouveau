@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -116,8 +118,22 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.max_perks"));
             return;
         }
-        this.perkList.add(stack.split(1));
-        updateBlock();
+        PerkSlot foundSlot = getAvailableSlot(perkHolder);
+        if(stack.getItem() instanceof PerkItem perkItem) {
+            IPerk perk = perkItem.perk;
+            if(foundSlot != null && perk.validForSlot(foundSlot, stack, player)) {
+                this.perkList.add(stack.split(1));
+                updateBlock();
+            }
+        }
+    }
+
+    private PerkSlot getAvailableSlot(IPerkHolder<ItemStack> perkHolder){
+        if(this.perkList.size() >= perkHolder.getSlotsForTier().size()){
+            return null;
+        }else{
+            return perkHolder.getSlotsForTier().get(this.perkList.size());
+        }
     }
 
     @Override

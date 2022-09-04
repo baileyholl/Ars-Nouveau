@@ -14,6 +14,8 @@ import com.hollingsworth.arsnouveau.common.command.ResetCommand;
 import com.hollingsworth.arsnouveau.common.command.ToggleLightCommand;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
+import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
+import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
@@ -174,7 +176,9 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void fallEvent(LivingFallEvent fallEvent) {
-        double jumpBonus = PerkUtil.valueOrZero(fallEvent.getEntity(), PerkAttributes.JUMP_HEIGHT.get());
+        if(!(fallEvent.getEntity() instanceof Player player))
+            return;
+        double jumpBonus = PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, player);
         fallEvent.setDistance((float) (fallEvent.getDistance() - (jumpBonus / 0.1)));
     }
 
@@ -223,7 +227,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onLootingEvent(LootingLevelEvent event) {
         if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof Player living) {
-            event.setLootingLevel(event.getLootingLevel() + (int) Math.round(PerkUtil.valueOrZero(living, PerkAttributes.DRYGMY.get())));
+            event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
         }
     }
 

@@ -4,10 +4,12 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
+import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -44,5 +46,20 @@ public class PerkUtil {
             }
         }
         return perkItems;
+    }
+
+    public static int countForPerk(IPerk perkInstance, Player player){
+        int maxCount = 0;
+        for(ItemStack stack : player.inventory.armor){
+            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
+            if(holder == null)
+                continue;
+            for(PerkInstance instance : holder.getPerkInstances()){
+                if(instance.getPerk() == perkInstance){
+                   maxCount = Math.max(maxCount, instance.getSlot().value);
+                }
+            }
+        }
+        return Math.min(perkInstance.getCountCap(), maxCount);
     }
 }

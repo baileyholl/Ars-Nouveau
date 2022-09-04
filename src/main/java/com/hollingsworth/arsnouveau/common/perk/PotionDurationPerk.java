@@ -27,11 +27,6 @@ public class PotionDurationPerk extends Perk {
     }
 
     @Override
-    public int getCountCap() {
-        return 3;
-    }
-
-    @Override
     public String getLangName() {
         return "Wixie";
     }

@@ -1,12 +1,14 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.perk.GlidingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -65,6 +67,6 @@ public class EffectGlide extends AbstractEffect {
     }
 
     public static boolean canGlide(LivingEntity entity) {
-        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || entity.getAttributeValue(PerkAttributes.GLIDING.get()) > 0.0;
+        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || (entity instanceof Player player && PerkUtil.countForPerk(GlidingPerk.INSTANCE, player) > 0.0);
     }
 }

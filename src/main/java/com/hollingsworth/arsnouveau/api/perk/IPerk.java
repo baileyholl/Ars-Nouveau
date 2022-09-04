@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -30,13 +31,19 @@ public interface IPerk {
     }
 
     default boolean validForSlot(PerkSlot slot, ItemStack stack, Player player){
-        return this.minimumSlot().value <= slot.value;
+        if(this.minimumSlot().value > slot.value){
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.invalid_for_slot", this.minimumSlot().value));
+            return false;
+        }
+        return true;
     }
 
     /**
      * The maximum amount of times we count this perk before the rest are wasted.
      */
-    int getCountCap();
+    default int getCountCap(){
+        return 99;
+    }
 
     ResourceLocation getRegistryName();
 

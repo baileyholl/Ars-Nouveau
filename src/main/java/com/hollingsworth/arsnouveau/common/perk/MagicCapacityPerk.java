@@ -26,12 +26,6 @@ public class MagicCapacityPerk extends Perk {
         return attributeBuilder().put(PerkAttributes.MAX_MANA_BONUS.get(), new AttributeModifier(PERK_UUID, "MagicCapacity",  0.1 * slotValue, AttributeModifier.Operation.MULTIPLY_TOTAL)).build();
     }
 
-
-    @Override
-    public int getCountCap() {
-        return 3;
-    }
-
     @Override
     public String getLangName() {
         return "Magic Capacity";
@@ -39,6 +33,6 @@ public class MagicCapacityPerk extends Perk {
 
     @Override
     public String getLangDescription() {
-        return "Increases the users maximum mana by 10% per level.";
+        return "Increases the users maximum mana by 10%% per level.";
     }
 }

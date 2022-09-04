@@ -89,6 +89,7 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
         }
+        itemUnchecked(ItemsRegistry.BLANK_THREAD);
     }
 
     public void blockAsItem(String s){

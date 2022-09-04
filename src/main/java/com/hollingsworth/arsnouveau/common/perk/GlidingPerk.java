@@ -1,15 +1,9 @@
 package com.hollingsworth.arsnouveau.common.perk;
 
-import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
-import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 
@@ -20,11 +14,6 @@ public class GlidingPerk extends Perk {
 
     public GlidingPerk(ResourceLocation key) {
         super(key);
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
-        return attributeBuilder().put(PerkAttributes.GLIDING.get(), new AttributeModifier(PERK_UUID, "Gliding", 1 * slotValue, AttributeModifier.Operation.ADDITION)).build();
     }
 
     @Override

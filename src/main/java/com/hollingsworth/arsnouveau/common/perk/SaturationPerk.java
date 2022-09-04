@@ -34,17 +34,12 @@ public class SaturationPerk extends Perk {
     }
 
     @Override
-    public int getCountCap() {
-        return 3;
-    }
-
-    @Override
     public String getLangName() {
         return "Whirlisprig";
     }
 
     @Override
     public String getLangDescription() {
-        return "Increases the saturation of consumed food by 30% each level.";
+        return "Increases the saturation of consumed food by 30%% each level.";
     }
 }
