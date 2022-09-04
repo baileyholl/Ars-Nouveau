@@ -30,10 +30,10 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -48,17 +48,18 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if (shooter != null) {
-            Vec3 origLoc = shooter.position;
+        Vec3 origLoc = shooter.position;
+        if (!ForgeEventFactory.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             shooter.teleportTo(entity.getX(), entity.getY(), entity.getZ());
+        if (!(entity instanceof LivingEntity living) || !ForgeEventFactory.onEnderTeleport(living, origLoc.x(), origLoc.y(), origLoc.z()).isCanceled()) {
             entity.teleportTo(origLoc.x(), origLoc.y(), origLoc.z());
         }
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult result, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult result, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE));
         BlockState origState = world.getBlockState(result.getBlockPos());
         Player playerEntity = getPlayer(shooter, (ServerLevel) world);
