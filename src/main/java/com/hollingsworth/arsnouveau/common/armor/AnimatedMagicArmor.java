@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import net.minecraft.client.model.HumanoidModel;
