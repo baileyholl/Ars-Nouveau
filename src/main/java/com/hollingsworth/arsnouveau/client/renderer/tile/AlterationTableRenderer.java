@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.google.common.collect.Maps;
+import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
-import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -246,7 +246,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             }
             return;
         }
-        if(!(PerkUtil.getPerkHolder(tile.armorStack) instanceof MagicArmor.ArmorPerkHolder armorPerkHolder)){
+        if(!(PerkUtil.getPerkHolder(tile.armorStack) instanceof ArmorPerkHolder armorPerkHolder)){
           return;
         }
         List<PerkSlot> perks = armorPerkHolder.getSlotsForTier();

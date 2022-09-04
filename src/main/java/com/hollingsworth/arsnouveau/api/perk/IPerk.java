@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 
@@ -28,7 +29,7 @@ public interface IPerk {
         return PerkSlot.ONE;
     }
 
-    default boolean validForSlot(PerkSlot slot){
+    default boolean validForSlot(PerkSlot slot, ItemStack stack, Player player){
         return this.minimumSlot().value <= slot.value;
     }
 

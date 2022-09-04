@@ -4,9 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -61,7 +61,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe{
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(reagent);
-        if(!(perkHolder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder)){
+        if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return false;
         }
         return armorPerkHolder.getTier() == (tier - 1) && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
@@ -70,7 +70,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe{
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(reagent);
-        if(!(perkHolder instanceof MagicArmor.ArmorPerkHolder armorPerkHolder)){
+        if(!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)){
             return reagent.copy();
         }
         armorPerkHolder.setTier(tier);
