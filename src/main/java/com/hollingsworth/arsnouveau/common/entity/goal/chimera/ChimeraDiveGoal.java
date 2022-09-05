@@ -88,10 +88,12 @@ public class ChimeraDiveGoal extends Goal {
         if ((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) || (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
             makeExplosion();
             endGoal();
+            return;
         }
         if (isDiving && (boss.isInWall() || boss.horizontalCollision || boss.verticalCollision)) {
             makeExplosion();
             endGoal();
+            return;
         }
         if (isDiving && divePos == null && boss.getTarget() == null) {
             endGoal();
