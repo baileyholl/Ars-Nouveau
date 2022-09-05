@@ -49,4 +49,8 @@ public interface IPerkHolder<T> {
             tooltip.add(Component.literal(Component.translatable("Empty").getString() + " " + RomanNumber.toRoman(slot.value)).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
         }
     }
+
+    int getTier();
+
+    void setTier(int tier);
 }

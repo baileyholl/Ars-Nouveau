@@ -18,11 +18,15 @@ import java.util.List;
  */
 public abstract class StackPerkHolder extends ItemstackData implements IPerkHolder<ItemStack> {
     private List<IPerk> perks;
+    private int tier;
 
     public StackPerkHolder(ItemStack stack) {
         super(stack);
         CompoundTag tag = getItemTag(stack);
         List<IPerk> perkList = new ArrayList<>();
+        if(tag != null){
+            tier = tag.getInt("tier");
+        }
         if(tag != null && tag.contains("perks")) {
             ListTag perkTag = tag.getList("perks", SerializationUtil.COMPOUND_TAG_TYPE);
             for (int i = 0; i < perkTag.size(); i++) {
@@ -54,6 +58,15 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
     @Override
     public void setPerks(List<IPerk> perks) {
         this.perks = new ArrayList<>(perks);
+        writeItem();
+    }
+
+    public int getTier() {
+        return this.tier;
+    }
+
+    public void setTier(int tier) {
+        this.tier = tier;
         writeItem();
     }
 

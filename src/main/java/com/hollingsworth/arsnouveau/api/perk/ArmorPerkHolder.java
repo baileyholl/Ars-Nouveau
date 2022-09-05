@@ -11,7 +11,6 @@ import java.util.List;
 public class ArmorPerkHolder extends StackPerkHolder {
 
     private String color;
-    private int tier;
     private List<List<PerkSlot>> slotsForTier;
 
     public ArmorPerkHolder(ItemStack stack, List<List<PerkSlot>> slotsForTier) {
@@ -21,7 +20,6 @@ public class ArmorPerkHolder extends StackPerkHolder {
         if (tag == null)
             return;
         color = tag.getString("color");
-        tier = tag.getInt("tier");
     }
 
     public String getColor() {
@@ -33,26 +31,16 @@ public class ArmorPerkHolder extends StackPerkHolder {
         writeItem();
     }
 
-    public int getTier() {
-        return this.tier;
-    }
-
-    public void setTier(int tier) {
-        this.tier = tier;
-        writeItem();
-    }
-
     @Override
     public void writeToNBT(CompoundTag tag) {
         super.writeToNBT(tag);
         if (color != null)
             tag.putString("color", color);
-        tag.putInt("tier", tier);
     }
 
     @Override
     public List<PerkSlot> getSlotsForTier() {
-        List<PerkSlot> slots = new ArrayList<>(slotsForTier.get(tier));
+        List<PerkSlot> slots = new ArrayList<>(slotsForTier.get(getTier()));
         slots.sort(Comparator.comparingInt((a) -> -a.value));
         return slots;
     }

@@ -20,7 +20,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
+import java.util.UUID;
 
+/**
+ * IManaEquipment will be removed, and this class will be replaced by AnimatedMagicArmor
+ */
+@Deprecated(forRemoval = true)
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment, IDyeable {
 
     public MagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
@@ -47,13 +52,16 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         ImmutableMultimap.Builder<Attribute, AttributeModifier> attributes = new ImmutableMultimap.Builder<>();
         attributes.putAll(super.getDefaultAttributeModifiers(pEquipmentSlot));
         if (this.slot == pEquipmentSlot) {
-            IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
-            if(perkProvider != null){
-                IPerkHolder<ItemStack> perkHolder = perkProvider.getPerkHolder(stack);
+            UUID uuid = ARMOR_MODIFIER_UUID_PER_SLOT[slot.getIndex()];
+            IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(stack);
+            if(perkHolder != null){
+                attributes.put(PerkAttributes.FLAT_MANA_BONUS.get(), new AttributeModifier(uuid, "max_mana_armor", 30 * (perkHolder.getTier() + 1), AttributeModifier.Operation.ADDITION));
+                attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_armor", perkHolder.getTier() + 1, AttributeModifier.Operation.ADDITION));
                 for(PerkInstance perkInstance : perkHolder.getPerkInstances()){
                     IPerk perk = perkInstance.getPerk();
                     attributes.putAll(perk.getModifiers(this.slot, stack, perkInstance.getSlot().value));
                 }
+
             }
         }
         return attributes.build();
@@ -78,23 +86,5 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
             armorPerkHolder.setColor(dyeColor.getName());
         }
-    }
-
-    @Override
-    public int getMaxManaBoost(ItemStack i) {
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(i);
-        if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
-            return 30 * (armorPerkHolder.getTier() + 1);
-        }
-        return 0;
-    }
-
-    @Override
-    public int getManaRegenBonus(ItemStack i) {
-        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(i);
-        if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
-            return armorPerkHolder.getTier() + 1;
-        }
-        return 0;
     }
 }
