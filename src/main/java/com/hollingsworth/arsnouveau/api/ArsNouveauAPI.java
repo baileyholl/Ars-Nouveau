@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -123,8 +124,8 @@ public class ArsNouveauAPI {
         part.buildConfig(spellBuilder);
         spec = spellBuilder.build();
         part.CONFIG = spec;
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, part.CONFIG, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath() + ".toml");
-
+        ANModConfig anModConfig = new ANModConfig(ModConfig.Type.SERVER, part.CONFIG, ModLoadingContext.get().getActiveContainer(), part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath());
+        ModLoadingContext.get().getActiveContainer().addConfig(anModConfig);
         return spellpartMap.put(part.getRegistryName(), part);
     }
 

@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
+import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -49,12 +51,12 @@ public class ArsNouveau {
 
     public ArsNouveau(){
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
-
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
-
         APIRegistry.setup();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
+        ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(),MODID + "-server");
+        ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
 
@@ -67,7 +69,6 @@ public class ArsNouveau {
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
-//        GLM.register(modEventBus);
     }
 
     public void setup(final FMLCommonSetupEvent event) {

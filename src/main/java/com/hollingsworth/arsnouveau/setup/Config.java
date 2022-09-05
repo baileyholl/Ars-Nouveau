@@ -22,25 +22,13 @@ public class Config {
     public static final String CATEGORY_SPELLS = "spells";
     public static final String DRYGMY_CATEGORY = "drygmy_production";
 
-    public static ForgeConfigSpec SERVER_CONFIG;
+    public static ForgeConfigSpec COMMON_CONFIG;
     public static ForgeConfigSpec CLIENT_CONFIG;
 
     public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
-    public static ForgeConfigSpec.IntValue INIT_MAX_MANA;
-    public static ForgeConfigSpec.IntValue INIT_MANA_REGEN;
-
-    public static ForgeConfigSpec.IntValue GLYPH_MAX_BONUS;
-    public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
 
     public static Integer TREE_SPAWN_RATE = 100;
 
-    public static ForgeConfigSpec.IntValue TIER_MAX_BONUS;
-    public static ForgeConfigSpec.IntValue MANA_BOOST_BONUS;
-    public static ForgeConfigSpec.IntValue MANA_REGEN_ENCHANT_BONUS;
-    public static ForgeConfigSpec.IntValue MANA_REGEN_POTION;
-
-
-    public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
 
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
@@ -56,13 +44,10 @@ public class Config {
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
 
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
-    public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
-    public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
 
     public static ForgeConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
-    public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
 
     public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
     public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
@@ -72,7 +57,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
-    // Convert to ResourceLocations so we dont need to create so many objects over strings
+
     public static Map<ResourceLocation, Integer> ENTITY_LIGHT_MAP = new HashMap<>();
     public static Map<ResourceLocation, Integer> ITEM_LIGHTMAP = new HashMap<>();
 
@@ -125,35 +110,16 @@ public class Config {
         DRYGMY_UNIQUE_BONUS = SERVER_BUILDER.comment("Bonus number of items a drygmy produces per unique mob").defineInRange("drygmyUniqueBonus", 2, 0, 300);
         DRYGMY_BASE_ITEM = SERVER_BUILDER.comment("Base number of items a drygmy produces per cycle before bonuses.").defineInRange("drygmyBaseItems", 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
         DRYGMY_QUANTITY_CAP = SERVER_BUILDER.comment("Max Bonus number of items a drygmy produces from nearby entities. Each entity equals 1 item.").defineInRange("drygmyQuantityCap", 5, 0, 300);
+        SERVER_BUILDER.pop();
 
-        SERVER_BUILDER.pop();
-        SERVER_BUILDER.comment("Mana").push("mana");
-        INIT_MANA_REGEN = SERVER_BUILDER.comment("Base mana regen in seconds").defineInRange("baseRegen", 5, 0, Integer.MAX_VALUE);
-        INIT_MAX_MANA = SERVER_BUILDER.comment("Base max mana").defineInRange("baseMax", 100, 0, Integer.MAX_VALUE);
-        REGEN_INTERVAL = SERVER_BUILDER.comment("How often max and regen will be calculated, in ticks. NOTE: Having the base mana regen AT LEAST this value is recommended.")
-                .defineInRange("updateInterval", 5, 1, 20);
-        GLYPH_MAX_BONUS = SERVER_BUILDER.comment("Max mana bonus per glyph").defineInRange("glyphmax", 15, 0, Integer.MAX_VALUE);
-        TIER_MAX_BONUS = SERVER_BUILDER.comment("Max mana bonus for tier of book").defineInRange("tierMax", 50, 0, Integer.MAX_VALUE);
-        MANA_BOOST_BONUS = SERVER_BUILDER.comment("Mana Boost value per level").defineInRange("manaBoost", 25, 0, Integer.MAX_VALUE);
-        MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
-        GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
-        MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
-        SERVER_BUILDER.pop();
-        SERVER_BUILDER.push("Spells");
-        ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
-                .define("enforceCapOnCast", true);
-        ENFORCE_GLYPH_LIMIT_ON_CAST = SERVER_BUILDER.comment("Enforce glyph per spell limit on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
-                .define("enforceGlyphLimitOnCast", true);
-        SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Items").push("item");
-        CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Debug").push("debug");
         MAX_LOG_EVENTS = SERVER_BUILDER.comment("Max number of log events to keep on entities. Lowering this number may make it difficult to debug why your entities are stuck.").defineInRange("maxLogEvents", 100, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
 
-        SERVER_CONFIG = SERVER_BUILDER.build();
+        COMMON_CONFIG = SERVER_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
