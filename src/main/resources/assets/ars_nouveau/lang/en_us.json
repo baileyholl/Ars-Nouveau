@@ -408,7 +408,7 @@
 	"ars_nouveau.perk_desc.thread_starbuncle": "Increases the speed of the player by 20%% each level.",
 	"ars_nouveau.perk_desc.thread_warding": "Reduces the amount of magic damage taken by a flat amount each level.",
 	"ars_nouveau.perk_desc.thread_whirlisprig": "Increases the saturation of consumed food by 30%% each level.",
-	"ars_nouveau.perk_desc.thread_wixie": "Increases the duration of potions by 15% each level.",
+	"ars_nouveau.perk_desc.thread_wixie": "Increases the duration of potions by 15%% each level.",
 	"ars_nouveau.ritual_desc.ritual_awakening": "Awakens nearby Archwood trees into Weald Walkers and Budding Amethyst into Amethyst Golems. Weald Walkers can be given a position in the world to guard against hostile mobs. They will heal over time, and turn into Weald Waddlers if they die. To create a Weald Walker, perform this ritual near the base of an Archwood Tree.",
 	"ars_nouveau.ritual_desc.ritual_binding": "The Ritual of Binding converts nearby eligible entities into Bound Scripts, used for summoning a Familiar. For more information, see the section on Familiars.",
 	"ars_nouveau.ritual_desc.ritual_burrowing": "Digs four adjacent holes to bedrock, dropping any blocks.",
@@ -1179,7 +1179,11 @@
 	"ars_nouveau.perk.spell_damage": "Spell Power",
 	"ars_nouveau.perk.saturation": "Bonus Saturation",
 	"ars_nouveau.perk.wixie": "Potion Duration",
-	"ars_nouveau.perk.drygmy": "Looting",
 	"ars_nouveau.perk.jump_height": "Jump Power",
-	"ars_nouveau.perk.depths": ""
+	"ars_nouveau.page.threads": "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.",
+	"ars_nouveau.threads": "Thread Slots",
+	"ars_nouveau.thread_layout": "Thread Tiers",
+	"ars_nouveau.page.applying_perks": "Applying Threads",
+	"ars_nouveau.page1.applying_perks": "Threads may be applied to armor using the Alteration Apparatus. Each piece of armor has a unique set of Thread Slots with their own variety of levels. Some Threads may require a Thread Slot of a minimum level, but many threads simply increase in power based on the slot they are given.",
+	"ars_nouveau.page2.appling_perks": "Threads only apply a single time on an entire armor set, and they do not stack. For more information on applying threads, see the Alteration Table."
 }

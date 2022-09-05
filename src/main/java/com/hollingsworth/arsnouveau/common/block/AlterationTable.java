@@ -7,12 +7,15 @@ import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -63,6 +66,25 @@ public class AlterationTable extends TableBlock{
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new AlterationTile(pPos, pState);
+    }
+
+    @Override
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if (worldIn.getBlockEntity(pos) instanceof AlterationTile tile) {
+            tile.dropItems();
+        }
+    }
+
+    // If the user breaks the other side of the table, this side needs to drop its item
+    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+        if (!world.isClientSide()) {
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof AlterationTile tile) {
+                tile.dropItems();
+            }
+        }
+        return Blocks.AIR.defaultBlockState();
     }
 
 }

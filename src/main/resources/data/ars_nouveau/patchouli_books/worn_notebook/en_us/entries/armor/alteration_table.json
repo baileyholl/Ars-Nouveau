@@ -1,5 +1,5 @@
 {
-  "category": "ars_nouveau:machines",
+  "category": "ars_nouveau:armor",
   "icon": "ars_nouveau:alteration_table",
   "name": "ars_nouveau.page.alteration_table",
   "pages": [
@@ -16,8 +16,9 @@
       "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:armor/armor_upgrade",
-        "ars_nouveau:equipment/armor"
+        "ars_nouveau:armor/armor"
       ]
     }
-  ]
+  ],
+  "sortnum": 3
 }

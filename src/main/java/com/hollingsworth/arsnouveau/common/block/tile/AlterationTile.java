@@ -136,6 +136,15 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
         }
     }
 
+    public void dropItems(){
+        if(!armorStack.isEmpty()){
+            level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), armorStack.copy()));
+        }
+        for(ItemStack stack : perkList){
+            level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack.copy()));
+        }
+    }
+
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);

@@ -33,6 +33,6 @@ public class PotionDurationPerk extends Perk {
 
     @Override
     public String getLangDescription() {
-        return "Increases the duration of potions by 15% each level.";
+        return "Increases the duration of potions by 15%% each level.";
     }
 }

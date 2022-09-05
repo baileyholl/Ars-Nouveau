@@ -23,10 +23,10 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "ars_nouveau:equipment/armor",
+        "ars_nouveau:armor/armor",
         "ars_nouveau:machines/alteration_table"
       ]
     }
   ],
-  "sortnum": -1
+  "sortnum": 1
 }

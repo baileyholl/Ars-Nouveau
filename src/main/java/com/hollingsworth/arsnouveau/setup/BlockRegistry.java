@@ -338,7 +338,7 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<AlterationTile> ARMOR_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockRegistryKey)
-    public static AlterationTable ALTERATION_APPARATUS;
+    public static AlterationTable ALTERATION_TABLE;
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
@@ -502,7 +502,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCRYERS_OCULUS, BlockEntityType.Builder.of(ScryersOculusTile::new, BlockRegistry.SCRYERS_OCULUS).build(null));
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null));
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
-        registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_APPARATUS).build(null));
+        registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -707,7 +707,7 @@ public class BlockRegistry {
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
        }
-        registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_APPARATUS, defaultItemProperties()) {
+        registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_TABLE, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                 return AlterationTableRenderer::getISTER;

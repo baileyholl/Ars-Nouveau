@@ -79,4 +79,22 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
             armorPerkHolder.setColor(dyeColor.getName());
         }
     }
+
+    @Override
+    public int getMaxManaBoost(ItemStack i) {
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(i);
+        if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
+            return 30 * (armorPerkHolder.getTier() + 1);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getManaRegenBonus(ItemStack i) {
+        IPerkHolder<ItemStack> perkHolder = PerkUtil.getPerkHolder(i);
+        if(perkHolder instanceof ArmorPerkHolder armorPerkHolder){
+            return armorPerkHolder.getTier() + 1;
+        }
+        return 0;
+    }
 }

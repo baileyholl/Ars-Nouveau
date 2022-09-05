@@ -1,5 +1,5 @@
 {
-  "category": "ars_nouveau:equipment",
+  "category": "ars_nouveau:armor",
   "icon": "ars_nouveau:novice_robes",
   "name": "ars_nouveau.page.armor",
   "pages": [
@@ -9,17 +9,30 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:magebloom_fiber",
-      "recipe2": "ars_nouveau:novice_hood"
+      "recipe": "ars_nouveau:magebloom_fiber"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.threads",
+      "title": "ars_nouveau.threads"
+    },
+    {
+      "type": "patchouli:image",
+      "border": true,
+      "images": [
+        "ars_nouveau:textures/gui/entries/arcanist_thread_diagram.png"
+      ],
+      "title": "ars_nouveau.thread_layout"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:novice_robes",
-      "recipe2": "ars_nouveau:novice_leggings"
+      "recipe": "ars_nouveau:novice_hood",
+      "recipe2": "ars_nouveau:novice_robes"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:novice_boots"
+      "recipe": "ars_nouveau:novice_leggings",
+      "recipe2": "ars_nouveau:novice_boots"
     },
     {
       "type": "patchouli:crafting",

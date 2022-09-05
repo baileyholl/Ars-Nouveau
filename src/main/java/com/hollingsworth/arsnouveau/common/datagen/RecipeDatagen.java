@@ -624,7 +624,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('x', ItemsRegistry.MAGE_FIBER)
                     .define('y', Tags.Items.NUGGETS_GOLD).save(consumer);
 
-            shapedBuilder(BlockRegistry.ALTERATION_APPARATUS)
+            shapedBuilder(BlockRegistry.ALTERATION_TABLE)
                     .pattern(" x ")
                     .pattern("xyx")
                     .pattern(" x ")

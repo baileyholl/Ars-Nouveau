@@ -57,7 +57,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     @Override
     public void renderEarly(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         try {
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_APPARATUS)
+            if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
                 return;
             if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != BedPart.HEAD)
                 return;
@@ -195,7 +195,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     @Override
     public void render(AlterationTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
         try {
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_APPARATUS)
+            if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
                 return;
             if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != BedPart.HEAD)
                 return;

@@ -11,5 +11,6 @@
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:thread_wixie"
     }
-  ]
+  ],
+  "sortnum": 99
 }
