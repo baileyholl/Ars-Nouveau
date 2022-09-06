@@ -62,7 +62,6 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(MethodTouch.INSTANCE).withIngredient(Ingredient.of(ItemTags.BUTTONS)));
         add(get(MethodUnderfoot.INSTANCE).withItem(Items.IRON_BOOTS).withIngredient(Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES)));
 
-        add(get(EffectAquatic.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withIngredient(Ingredient.of(ItemTags.FISHES)).withIngredient(Ingredient.of(ItemTags.FISHES)));
         add(get(EffectBlink.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.ENDER_PEARLS), 4));
         add(get(EffectBounce.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withIngredient(Ingredient.of(Tags.Items.SLIMEBALLS), 3));
         add(get(EffectBreak.INSTANCE).withItem(Items.IRON_PICKAXE));

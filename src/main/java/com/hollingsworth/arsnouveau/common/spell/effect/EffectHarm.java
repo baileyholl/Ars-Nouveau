@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
@@ -13,7 +14,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectHarm extends AbstractEffect {
@@ -45,6 +46,7 @@ public class EffectHarm extends AbstractEffect {
         addExtendTimeConfig(builder, 5);
     }
 
+
     @Override
     public boolean defaultedStarterGlyph() {
         return true;
@@ -63,6 +65,11 @@ public class EffectHarm extends AbstractEffect {
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentFortune.INSTANCE
         );
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 
     @Override

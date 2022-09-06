@@ -47,6 +47,7 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
             perkTag.putString("perk", perk.getRegistryName().toString());
             listTag.add(perkTag);
         });
+        tag.putInt("tier", tier);
         tag.put("perks", listTag);
     }
 

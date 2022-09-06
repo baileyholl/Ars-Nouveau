@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -25,6 +26,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EffectCrush extends AbstractEffect {
@@ -58,8 +60,8 @@ public class EffectCrush extends AbstractEffect {
             List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
             boolean placedBlock = false;
             for (ItemStack i : outputs) {
-                if (!placedBlock && i.getItem() instanceof BlockItem) {
-                    world.setBlockAndUpdate(p, ((BlockItem) i.getItem()).getBlock().defaultBlockState());
+                if (!placedBlock && i.getItem() instanceof BlockItem blockItem) {
+                    world.setBlockAndUpdate(p, blockItem.getBlock().defaultBlockState());
                     i.shrink(1);
                     placedBlock = true;
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
@@ -80,7 +82,7 @@ public class EffectCrush extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         dealDamage(world, shooter, (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier()), spellStats, rayTraceResult.getEntity(), DamageSource.CRAMMING);
     }
 
@@ -99,6 +101,11 @@ public class EffectCrush extends AbstractEffect {
                 AugmentAOE.INSTANCE, AugmentPierce.INSTANCE,
                 AugmentFortune.INSTANCE
         );
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 
     @Override

@@ -326,7 +326,7 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder()
                 .withPedestalItem(4, ItemsRegistry.WATER_ESSENCE)
                 .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, Ingredient.of(Items.HEART_OF_THE_SEA))
+                .withPedestalItem(1, Ingredient.of(Items.NAUTILUS_SHELL))
                 .buildEnchantmentRecipe(Enchantments.DEPTH_STRIDER, 3, 9000));
 
         addRecipe(builder()

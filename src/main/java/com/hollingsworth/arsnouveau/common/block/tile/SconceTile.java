@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
@@ -19,8 +20,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 
-public class SconceTile extends ModdedTile implements ILightable, ITickable {
+public class SconceTile extends ModdedTile implements ILightable, ITickable, IDispellable {
 
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean lit;
@@ -54,6 +56,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
             world.sendBlockUpdated(((BlockHitResult) rayTraceResult).getBlockPos(), state,
                     state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
         }
+        updateBlock();
     }
 
     @Override
@@ -95,5 +98,12 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
 
         }
 
+    }
+
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        this.lit = false;
+        updateBlock();
+        return true;
     }
 }
