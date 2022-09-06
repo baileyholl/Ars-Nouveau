@@ -1183,5 +1183,8 @@
 	"ars_nouveau.thread_layout": "Thread Tiers",
 	"ars_nouveau.page.applying_perks": "Applying Threads",
 	"ars_nouveau.page1.applying_perks": "Threads may be applied to armor using the Alteration Apparatus. Each piece of armor has a unique set of Thread Slots with their own variety of levels. Some Threads may require a Thread Slot of a minimum level, but many threads simply increase in power based on the slot they are given.",
-	"ars_nouveau.page2.applying_perks": "Threads only apply a single time on an entire armor set, and they do not stack. For more information on applying threads, see the Alteration Table."
+	"ars_nouveau.page2.applying_perks": "Threads only apply a single time on an entire armor set, and they do not stack. For more information on applying threads, see the Alteration Table.",
+	"ars_nouveau.perk.not_perk": "Use a thread to apply it onto the selected armor.",
+	"ars_nouveau.perk.set_armor": "Place armor onto the table.",
+	"ars_nouveau.perk.max_perks": "This armor has reached its maximum number of perks."
 }

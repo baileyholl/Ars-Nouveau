@@ -20,7 +20,9 @@
       "type": "patchouli:image",
       "border": true,
       "images": [
-        "ars_nouveau:textures/gui/entries/arcanist_thread_diagram.png"
+        "ars_nouveau:textures/gui/entries/sorcerer_diagram.png",
+        "ars_nouveau:textures/gui/entries/arcanist_thread_diagram.png",
+        "ars_nouveau:textures/gui/entries/battlemage_diagram.png"
       ],
       "title": "ars_nouveau.thread_layout"
     },
