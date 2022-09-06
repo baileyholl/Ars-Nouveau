@@ -1186,5 +1186,6 @@
 	"ars_nouveau.page2.applying_perks": "Threads only apply a single time on an entire armor set, and they do not stack. For more information on applying threads, see the Alteration Table.",
 	"ars_nouveau.perk.not_perk": "Use a thread to apply it onto the selected armor.",
 	"ars_nouveau.perk.set_armor": "Place armor onto the table.",
-	"ars_nouveau.perk.max_perks": "This armor has reached its maximum number of perks."
+	"ars_nouveau.perk.max_perks": "This armor has reached its maximum number of perks.",
+	"ars_nouveau.page.layout_desc": "Each set of armor has its own unique set of Thread Slots."
 }

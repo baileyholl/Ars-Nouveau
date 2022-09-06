@@ -24,6 +24,7 @@
         "ars_nouveau:textures/gui/entries/arcanist_thread_diagram.png",
         "ars_nouveau:textures/gui/entries/battlemage_diagram.png"
       ],
+      "text": "ars_nouveau.page.layout_desc",
       "title": "ars_nouveau.thread_layout"
     },
     {
