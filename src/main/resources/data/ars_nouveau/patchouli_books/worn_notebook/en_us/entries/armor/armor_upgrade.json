@@ -13,11 +13,11 @@
       "title": "ars_nouveau.armor_tiers"
     },
     {
-      "type": "ars_nouveau:apparatus_recipe",
+      "type": "ars_nouveau:no_output_apparatus_recipe",
       "recipe": "ars_nouveau:upgrade_1"
     },
     {
-      "type": "ars_nouveau:apparatus_recipe",
+      "type": "ars_nouveau:no_output_apparatus_recipe",
       "recipe": "ars_nouveau:upgrade_2"
     },
     {

@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe{
+public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITextOutput{
 
     public int tier; // 0 indexed
 
@@ -81,6 +82,11 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe{
     @Override
     public RecipeType<?> getType() {
         return RecipeRegistry.ARMOR_UPGRADE_TYPE.get();
+    }
+
+    @Override
+    public Component getOutputComponent() {
+        return Component.translatable("ars_nouveau.armor_upgrade.book_desc", tier);
     }
 
     public static class Serializer implements RecipeSerializer<ArmorUpgradeRecipe> {

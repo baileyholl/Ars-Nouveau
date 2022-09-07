@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +27,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe.getParchment;
 
-public class SpellWriteRecipe extends EnchantingApparatusRecipe {
+public class SpellWriteRecipe extends EnchantingApparatusRecipe implements ITextOutput {
 
     public SpellWriteRecipe(ResourceLocation id, List<Ingredient> pedestalItems, int cost) {
         this.pedestalItems = pedestalItems;
@@ -79,6 +80,11 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe {
     @Override
     public RecipeType<?> getType() {
         return RecipeRegistry.SPELL_WRITE_TYPE.get();
+    }
+
+    @Override
+    public Component getOutputComponent() {
+        return Component.translatable("ars_nouveau.spell_write.book_desc");
     }
 
     public static class Serializer implements RecipeSerializer<SpellWriteRecipe> {

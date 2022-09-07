@@ -32,7 +32,7 @@
       "text": "ars_nouveau.page3.reactive_enchantment"
     },
     {
-      "type": "ars_nouveau:apparatus_recipe",
+      "type": "ars_nouveau:no_output_apparatus_recipe",
       "recipe": "ars_nouveau:spell_write"
     }
   ]

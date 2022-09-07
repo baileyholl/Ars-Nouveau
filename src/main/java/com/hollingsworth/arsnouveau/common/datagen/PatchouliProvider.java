@@ -202,7 +202,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 3))
                 .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 4))
                 .withLocalizedText()
-                .withPage(new ApparatusPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
+                .withPage(new ApparatusTextPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
         addBasicItem(ItemsRegistry.RING_OF_GREATER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_GREATER_DISCOUNT));
         addBasicItem(ItemsRegistry.RING_OF_LESSER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_LESSER_DISCOUNT));
@@ -461,8 +461,8 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withPage(new TextPage(getLangPath("armor_upgrading", 2)).withTitle("ars_nouveau.armor_tiers"))
                 .withIcon(ItemsRegistry.APPRENTICE_HOOD)
-                .withPage(new ApparatusPage("ars_nouveau:upgrade_1"))
-                .withPage(new ApparatusPage("ars_nouveau:upgrade_2"))
+                .withPage(new ApparatusTextPage("ars_nouveau:upgrade_1"))
+                .withPage(new ApparatusTextPage("ars_nouveau:upgrade_2"))
                 .withPage(new RelationsPage().withEntry(ARMOR, "armor").withEntry(MACHINES, "alteration_table"))
 
                 .withSortNum(1), getPath(ARMOR, "armor_upgrade"));
