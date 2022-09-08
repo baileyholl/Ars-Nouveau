@@ -11,7 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Serializes a set of perks from an itemstack.
@@ -19,21 +21,25 @@ import java.util.List;
 public abstract class StackPerkHolder extends ItemstackData implements IPerkHolder<ItemStack> {
     private List<IPerk> perks;
     private int tier;
+    private Map<IPerk, CompoundTag> perkTags;
 
     public StackPerkHolder(ItemStack stack) {
         super(stack);
+        perkTags = new HashMap<>();
         CompoundTag tag = getItemTag(stack);
         List<IPerk> perkList = new ArrayList<>();
         if(tag != null){
             tier = tag.getInt("tier");
         }
         if(tag != null && tag.contains("perks")) {
-            ListTag perkTag = tag.getList("perks", SerializationUtil.COMPOUND_TAG_TYPE);
-            for (int i = 0; i < perkTag.size(); i++) {
-                CompoundTag perkId = perkTag.getCompound(i);
-                String perkName = perkId.getString("perk");
+            ListTag perkTagList = tag.getList("perks", SerializationUtil.COMPOUND_TAG_TYPE);
+            for (int i = 0; i < perkTagList.size(); i++) {
+                CompoundTag perkTag = perkTagList.getCompound(i);
+                String perkName = perkTag.getString("perk");
+                CompoundTag perkData = perkTag.getCompound("data");
                 IPerk iPerk = ArsNouveauAPI.getInstance().getPerkMap().getOrDefault(new ResourceLocation(perkName), StarbunclePerk.INSTANCE);
                 perkList.add(iPerk);
+                this.perkTags.put(iPerk, perkData);
             }
         }
         perks = ImmutableList.copyOf(perkList);
@@ -45,6 +51,7 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
         getPerks().forEach((perk) -> {
             CompoundTag perkTag = new CompoundTag();
             perkTag.putString("perk", perk.getRegistryName().toString());
+            perkTag.put("data", perkTags.getOrDefault(perk, new CompoundTag()));
             listTag.add(perkTag);
         });
         tag.putInt("tier", tier);
@@ -68,6 +75,17 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
 
     public void setTier(int tier) {
         this.tier = tier;
+        writeItem();
+    }
+
+    @Override
+    public CompoundTag getTagForPerk(IPerk perk) {
+        return this.perkTags.getOrDefault(perk, new CompoundTag());
+    }
+
+    @Override
+    public void setTagForPerk(IPerk perk, CompoundTag tag) {
+        perkTags.put(perk, tag);
         writeItem();
     }
 

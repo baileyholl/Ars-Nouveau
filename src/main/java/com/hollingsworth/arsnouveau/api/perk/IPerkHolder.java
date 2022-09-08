@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 
 import com.hollingsworth.arsnouveau.api.util.RomanNumber;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -53,4 +54,8 @@ public interface IPerkHolder<T> {
     int getTier();
 
     void setTier(int tier);
+
+    CompoundTag getTagForPerk(IPerk perk);
+
+    void setTagForPerk(IPerk perk, CompoundTag tag);
 }
