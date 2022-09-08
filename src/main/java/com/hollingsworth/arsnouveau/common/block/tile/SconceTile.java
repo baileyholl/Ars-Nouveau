@@ -103,6 +103,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         this.lit = false;
+        level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(SconceBlock.LIGHT_LEVEL, 0), 3);
         updateBlock();
         return true;
     }

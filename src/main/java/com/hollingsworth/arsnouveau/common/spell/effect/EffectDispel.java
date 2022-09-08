@@ -48,10 +48,13 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
             return;
         if (world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
+            dispellable.onDispel(shooter);
+        }
+        if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
             dispellable.onDispel(shooter);
         }
         MinecraftForge.EVENT_BUS.post(new DispelEvent.Post(rayTraceResult, world, shooter, spellStats, spellContext));
