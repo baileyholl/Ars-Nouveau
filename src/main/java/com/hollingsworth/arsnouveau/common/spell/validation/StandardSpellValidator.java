@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.validation;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -53,10 +53,10 @@ public class StandardSpellValidator implements ISpellValidator {
         if (enforceCastTimeValidations) {
             validators.add(NON_EMPTY_SPELL);
             validators.add(REQUIRE_CAST_METHOD_START);
-            if (Config.ENFORCE_AUGMENT_CAP_ON_CAST.get()) {
+            if (ServerConfig.ENFORCE_AUGMENT_CAP_ON_CAST.get()) {
                 validators.add(EFFECT_AUGMENTATION_POLICY);
             }
-            if (Config.ENFORCE_GLYPH_LIMIT_ON_CAST.get()) {
+            if (ServerConfig.ENFORCE_GLYPH_LIMIT_ON_CAST.get()) {
                 validators.add(GLYPH_OCCURRENCES_POLICY);
             }
         }

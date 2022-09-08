@@ -1,0 +1,24 @@
+{
+  "category": "ars_nouveau:armor",
+  "icon": "ars_nouveau:alteration_table",
+  "name": "ars_nouveau.page.alteration_table",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.alteration_table"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:alteration_table",
+      "recipe2": "ars_nouveau:blank_thread"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:armor/armor_upgrade",
+        "ars_nouveau:armor/armor"
+      ]
+    }
+  ],
+  "sortnum": 3
+}

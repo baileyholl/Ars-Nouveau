@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
@@ -34,6 +35,11 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
         }
 
         return output; // Return the modified output
+    }
+
+    @Override
+    public RecipeType<?> getType() {
+        return RecipeRegistry.BOOK_UPGRADE_TYPE.get();
     }
 
     @Override

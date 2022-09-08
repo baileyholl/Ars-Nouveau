@@ -107,7 +107,7 @@ public abstract class AbstractRitual {
     }
 
     public String getName() {
-        return Component.translatable("ars_nouveau.tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
+        return Component.translatable(getRegistryName().getNamespace() + ".tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
     public String getDescription() {

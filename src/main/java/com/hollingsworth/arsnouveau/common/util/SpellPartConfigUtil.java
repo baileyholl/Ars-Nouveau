@@ -43,21 +43,9 @@ public class SpellPartConfigUtil {
          * Retrieves the maximum number of times the given augment may be applied, given the configuration.
          */
         public int getAugmentLimit(ResourceLocation augmentTag) {
-            if (limits == null) {
-                limits = parseAugmentLimits();
-            }
+            // No caching so /reload works
+            limits = parseAugmentLimits();
             return limits.getOrDefault(augmentTag, Integer.MAX_VALUE);
-        }
-
-        /**
-         * Sets the maximum number of times the given augment may be applied and updates the configuration.
-         */
-        public void setAugmentLimit(ResourceLocation augmentTag, int limit) {
-            if (limits == null) {
-                limits = parseAugmentLimits();
-            }
-            limits.put(augmentTag, limit);
-            configValue.set(writeConfig(limits));
         }
 
         /**

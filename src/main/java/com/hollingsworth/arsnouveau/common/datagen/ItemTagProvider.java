@@ -25,6 +25,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
     public static TagKey<Item> SHARD_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/shard"));
     public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "fruits/berry"));
+
     public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_126530_, p_126531_, modId, existingFileHelper);
     }
@@ -146,5 +147,34 @@ public class ItemTagProvider extends ItemTagsProvider {
                 ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
                 ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
                 ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
+
+        this.tag(Tags.Items.ARMORS).add(ItemsRegistry.NOVICE_ROBES.asItem(),
+                ItemsRegistry.APPRENTICE_ROBES.asItem(),
+                ItemsRegistry.ARCHMAGE_ROBES.asItem(),
+                ItemsRegistry.NOVICE_BOOTS.asItem(),
+                ItemsRegistry.APPRENTICE_BOOTS.asItem(),
+                ItemsRegistry.ARCHMAGE_BOOTS.asItem(),
+                ItemsRegistry.NOVICE_LEGGINGS.asItem(),
+                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
+                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem(),
+                ItemsRegistry.NOVICE_HOOD.asItem(),
+                ItemsRegistry.APPRENTICE_HOOD.asItem(),
+                ItemsRegistry.ARCHMAGE_HOOD.asItem());
+
+        this.tag(Tags.Items.ARMORS_BOOTS)
+                .add(ItemsRegistry.NOVICE_BOOTS.asItem(),
+                        ItemsRegistry.APPRENTICE_BOOTS.asItem(),
+                        ItemsRegistry.ARCHMAGE_BOOTS.asItem());
+        this.tag(Tags.Items.ARMORS_CHESTPLATES)
+                .add(ItemsRegistry.NOVICE_ROBES.asItem(),
+                        ItemsRegistry.APPRENTICE_ROBES.asItem(),
+                        ItemsRegistry.ARCHMAGE_ROBES.asItem());
+        this.tag(Tags.Items.ARMORS_HELMETS)
+                .add(ItemsRegistry.NOVICE_HOOD.asItem(),
+                        ItemsRegistry.APPRENTICE_HOOD.asItem(),
+                        ItemsRegistry.ARCHMAGE_HOOD.asItem());
+        this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.NOVICE_LEGGINGS.asItem(),
+                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
+                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem());
     }
 }

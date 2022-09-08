@@ -90,8 +90,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             return;
         Entity target = event.getEntity();
         Entity applier = event.getEffectSource();
-        if(target.level.isClientSide)
-            return;
+
         boolean isBeneficialOwner = target.equals(getOwner()) && event.getEffectInstance().getEffect().isBeneficial();
         boolean isApplierOwner = applier != null && applier.equals(this.getOwner());
         if(isBeneficialOwner || isApplierOwner){

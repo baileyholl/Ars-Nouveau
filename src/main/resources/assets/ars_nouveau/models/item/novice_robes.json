@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/novice_robes"
+ 	"layer0": "ars_nouveau:items/light_armor/sorcerers_wrap_tint",
+	"layer1": "ars_nouveau:items/light_armor/sorcerers_wrap_gold"
   }
 }

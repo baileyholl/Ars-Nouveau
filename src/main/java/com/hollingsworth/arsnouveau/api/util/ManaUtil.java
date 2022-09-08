@@ -4,11 +4,11 @@ import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.mana.ManaAttributes;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,20 +42,20 @@ public class ManaUtil {
         if (mana == null)
             return 0;
 
-        int max = Config.INIT_MAX_MANA.get();
+        int max = ServerConfig.INIT_MAX_MANA.get();
 
-        if (e.getAttribute(ManaAttributes.MAX_MANA.get()) != null)
-            max += e.getAttributeValue(ManaAttributes.MAX_MANA.get());
+        max += PerkUtil.perkValue(e, PerkAttributes.FLAT_MANA_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
-            max += (Config.MANA_BOOST_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()));
+            max += (ServerConfig.MANA_BOOST_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()));
         }
 
         int tier = mana.getBookTier();
         int numGlyphs = mana.getGlyphBonus();
-        max += numGlyphs * Config.GLYPH_MAX_BONUS.get();
-        max += tier * Config.TIER_MAX_BONUS.get();
+        max += numGlyphs * ServerConfig.GLYPH_MAX_BONUS.get();
+        max += tier * ServerConfig.TIER_MAX_BONUS.get();
 
+        max *= PerkUtil.perkValue(e, PerkAttributes.MAX_MANA_BONUS.get());
         MaxManaCalcEvent event = new MaxManaCalcEvent(e, max);
         MinecraftForge.EVENT_BUS.post(event);
         max = event.getMax();
@@ -66,20 +66,20 @@ public class ManaUtil {
         IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
 
         if(mana == null) return 0;
-        double regen = Config.INIT_MANA_REGEN.get();
+        double regen = ServerConfig.INIT_MANA_REGEN.get();
 
-        if (e.getAttribute(ManaAttributes.MANA_REGEN.get()) != null)
-            regen += e.getAttributeValue(ManaAttributes.MANA_REGEN.get());
+        if (e.getAttribute(PerkAttributes.MANA_REGEN_BONUS.get()) != null)
+            regen += e.getAttributeValue(PerkAttributes.MANA_REGEN_BONUS.get());
 
         for(ItemStack i : e.getAllSlots()){
-            regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get());
+            regen += ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get());
         }
         int tier = mana.getBookTier();
         double numGlyphs = mana.getGlyphBonus();
-        regen += numGlyphs * Config.GLYPH_REGEN_BONUS.get();
+        regen += numGlyphs * ServerConfig.GLYPH_REGEN_BONUS.get();
         regen += tier;
         if (e.hasEffect(ModPotions.MANA_REGEN_EFFECT.get()))
-            regen += Config.MANA_REGEN_POTION.get() * (1 + e.getEffect(ModPotions.MANA_REGEN_EFFECT.get()).getAmplifier());
+            regen += ServerConfig.MANA_REGEN_POTION.get() * (1 + e.getEffect(ModPotions.MANA_REGEN_EFFECT.get()).getAmplifier());
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();

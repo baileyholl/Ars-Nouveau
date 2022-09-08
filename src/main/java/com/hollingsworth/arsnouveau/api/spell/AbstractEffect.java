@@ -113,18 +113,16 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void dealDamage(Level world, @Nonnull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
-        if (!(world instanceof ServerLevel server))
+        if (!(world instanceof ServerLevel server) || (entity instanceof LivingEntity living && living.getHealth() <= 0))
             return;
 
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
-
         SpellDamageEvent event = new SpellDamageEvent(source, shooter, entity, totalDamage);
         MinecraftForge.EVENT_BUS.post(event);
 
         source = event.damageSource;
         totalDamage = event.damage;
-
-        if (entity instanceof LivingEntity living && living.getHealth() <= 0 || totalDamage <= 0 || event.isCanceled())
+        if (totalDamage <= 0 || event.isCanceled())
             return;
 
         entity.hurt(source, totalDamage);

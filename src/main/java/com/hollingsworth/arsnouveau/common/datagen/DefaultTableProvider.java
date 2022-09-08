@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -134,6 +135,7 @@ public class DefaultTableProvider extends LootTableProvider {
             for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
                 registerDropSelf(BlockRegistry.getBlock(s));
             }
+            registerBedCondition(BlockRegistry.ALTERATION_TABLE, AlterationTable.PART, BedPart.HEAD);
         }
 
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {

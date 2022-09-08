@@ -29,11 +29,11 @@ public class ArcanePedestalRenderer extends GeoBlockRenderer<ArcanePedestalTile>
         if (tileEntityIn.getStack() == null || tileEntityIn.getStack().isEmpty())
             return;
 
-        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.getStack())) {
-            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.getStack());
+        if (tileEntityIn.renderEntity == null || !ItemStack.matches(tileEntityIn.renderEntity.getItem(), tileEntityIn.getStack())) {
+            tileEntityIn.renderEntity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.getStack());
         }
 
-        ItemEntity entityItem = tileEntityIn.entity;
+        ItemEntity entityItem = tileEntityIn.renderEntity;
         matrixStack.pushPose();
         tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
         entityItem.setYHeadRot(tileEntityIn.frames);

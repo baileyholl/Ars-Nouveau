@@ -21,7 +21,8 @@
     "camera.TrackedEntityMixin",
     "elytra.ClientElytraMixin",
     "elytra.ElytraPlayerMixin",
-    "elytra.MixinLivingEntity"
+    "elytra.MixinLivingEntity",
+    "perks.PerkLivingEntity"
   ],
   "minVersion": "0.8"
 }

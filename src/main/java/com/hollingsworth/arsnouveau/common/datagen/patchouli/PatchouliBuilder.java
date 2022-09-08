@@ -66,7 +66,7 @@ public class PatchouliBuilder {
         return this;
     }
 
-    private PatchouliBuilder withCategory(ResourceLocation path) {
+    public PatchouliBuilder withCategory(ResourceLocation path) {
         object.addProperty("category", path.toString());
         return this;
     }

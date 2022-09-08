@@ -2,22 +2,24 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
+import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
@@ -48,10 +50,8 @@ public class ApparatusRecipeProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
         for (IEnchantingRecipe g : recipes) {
             if (g instanceof EnchantingApparatusRecipe recipe) {
-                //who put this thing here? System.out.println(g);
                 Path path = getRecipePath(output, recipe.getId().getPath());
                 DataProvider.saveStable(cache, recipe.asRecipe(), path);
-
             }
         }
 
@@ -186,6 +186,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
@@ -327,7 +328,7 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder()
                 .withPedestalItem(4, ItemsRegistry.WATER_ESSENCE)
                 .withPedestalItem(3, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, Ingredient.of(Items.HEART_OF_THE_SEA))
+                .withPedestalItem(1, Ingredient.of(Items.NAUTILUS_SHELL))
                 .buildEnchantmentRecipe(Enchantments.DEPTH_STRIDER, 3, 9000));
 
         addRecipe(builder()
@@ -802,6 +803,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
@@ -926,6 +928,123 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.DRAGON_BREATH)
                 .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
                 .build());
+
+        addRecipe(new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.RODS_BLAZE), Ingredient.of(Tags.Items.RODS_BLAZE)), 2500, 1));
+        addRecipe(new ArmorUpgradeRecipe(List.of(Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Tags.Items.ENDER_PEARLS), Ingredient.of(Items.CHORUS_FRUIT)), 5000, 2));
+
+
+        addRecipe(builder().withResult(getPerkItem(StarbunclePerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemsRegistry.STARBUNCLE_SHARD)
+                .withPedestalItem(3, Items.SUGAR)
+                .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(FeatherPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(4, Tags.Items.FEATHERS)
+                .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(JumpHeightPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(Items.SPIDER_EYE)
+                .withPedestalItem(3, Items.RABBIT_HIDE)
+                .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(SaturationPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemsRegistry.WHIRLISPRIG_SHARDS)
+                .withPedestalItem(2, ItemsRegistry.EARTH_ESSENCE)
+                .withPedestalItem(Items.GOLDEN_APPLE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(DepthsPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemTags.FISHES)
+                .withPedestalItem(2, ItemsRegistry.WATER_ESSENCE)
+                .withPedestalItem(Items.PUFFERFISH)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(RepairingPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(Items.ANVIL)
+                .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(PotionDurationPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemsRegistry.WIXIE_SHARD)
+                .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
+                .withPedestalItem(2, Tags.Items.CROPS_NETHER_WART)
+                .withPedestalItem(Items.BLAZE_ROD)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(LootingPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, ItemsRegistry.DRYGMY_SHARD)
+                .withPedestalItem(2, ItemsRegistry.EARTH_ESSENCE)
+                .withPedestalItem(Items.RABBIT_FOOT)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(SpellDamagePerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(ItemsRegistry.FIRE_ESSENCE)
+                .withPedestalItem(ItemsRegistry.MAGE_BLOOM)
+                .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                .withPedestalItem(ItemsRegistry.WATER_ESSENCE)
+                .withPedestalItem(ItemsRegistry.ABJURATION_ESSENCE)
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
+                .withPedestalItem(ItemsRegistry.EARTH_ESSENCE)
+                .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(GlidingPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(2, ItemsRegistry.AIR_ESSENCE)
+                .withPedestalItem(Items.ELYTRA)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(MagicCapacityPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(3, BlockRegistry.SOURCEBERRY_BUSH)
+                .withPedestalItem(3, ItemsRegistry.MAGE_BLOOM)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(MagicResistPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(8, ItemsRegistry.MAGE_FIBER)
+                .build());
+
+
+        makeArmor(ItemsRegistry.NOVICE_BOOTS, Items.GOLDEN_BOOTS);
+        makeArmor(ItemsRegistry.NOVICE_LEGGINGS, Items.GOLDEN_LEGGINGS);
+        makeArmor(ItemsRegistry.NOVICE_ROBES, Items.GOLDEN_CHESTPLATE);
+        makeArmor(ItemsRegistry.NOVICE_HOOD, Items.GOLDEN_HELMET);
+
+        makeArmor(ItemsRegistry.APPRENTICE_HOOD, Items.IRON_HELMET);
+        makeArmor(ItemsRegistry.APPRENTICE_ROBES, Items.IRON_CHESTPLATE);
+        makeArmor(ItemsRegistry.APPRENTICE_LEGGINGS, Items.IRON_LEGGINGS);
+        makeArmor(ItemsRegistry.APPRENTICE_BOOTS, Items.IRON_BOOTS);
+
+        makeArmor(ItemsRegistry.ARCHMAGE_BOOTS, Items.DIAMOND_BOOTS);
+        makeArmor(ItemsRegistry.ARCHMAGE_LEGGINGS, Items.DIAMOND_LEGGINGS);
+        makeArmor(ItemsRegistry.ARCHMAGE_ROBES, Items.DIAMOND_CHESTPLATE);
+        makeArmor(ItemsRegistry.ARCHMAGE_HOOD, Items.DIAMOND_HELMET);
+
+    }
+
+    public void makeArmor(ItemLike outputItem, ItemLike armorItem) {
+        addRecipe(builder().withResult(outputItem)
+                .withReagent(armorItem)
+                .withPedestalItem(4, ItemsRegistry.MAGE_FIBER)
+                .keepNbtOfReagent(true)
+                .build());
+    }
+
+    public PerkItem getPerkItem(ResourceLocation id) {
+        return ArsNouveauAPI.getInstance().getPerkItemMap().get(id);
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe) {

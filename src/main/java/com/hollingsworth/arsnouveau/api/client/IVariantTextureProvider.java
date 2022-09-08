@@ -3,8 +3,15 @@ package com.hollingsworth.arsnouveau.api.client;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
-public interface IVariantTextureProvider {
+public interface IVariantTextureProvider<T> {
 
-    ResourceLocation getTexture(LivingEntity entity);
+    @Deprecated(forRemoval = true)
+    default ResourceLocation getTexture(LivingEntity entity){
+        return null;
+    }
+
+    default ResourceLocation getTexture(T entity){
+        return getTexture((LivingEntity)entity);
+    }
 
 }
