@@ -631,20 +631,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('x', ItemsRegistry.MAGE_FIBER)
                     .define('y', BlockRegistry.SCRIBES_BLOCK).save(consumer);
 
-            makeArmor(ItemsRegistry.NOVICE_BOOTS, Items.GOLDEN_BOOTS);
-            makeArmor(ItemsRegistry.NOVICE_LEGGINGS, Items.GOLDEN_LEGGINGS);
-            makeArmor(ItemsRegistry.NOVICE_ROBES, Items.GOLDEN_CHESTPLATE);
-            makeArmor(ItemsRegistry.NOVICE_HOOD, Items.GOLDEN_HELMET);
-
-            makeArmor(ItemsRegistry.APPRENTICE_HOOD, Items.IRON_HELMET);
-            makeArmor(ItemsRegistry.APPRENTICE_ROBES, Items.IRON_CHESTPLATE);
-            makeArmor(ItemsRegistry.APPRENTICE_LEGGINGS, Items.IRON_LEGGINGS);
-            makeArmor(ItemsRegistry.APPRENTICE_BOOTS, Items.IRON_BOOTS);
-
-            makeArmor(ItemsRegistry.ARCHMAGE_BOOTS, Items.DIAMOND_BOOTS);
-            makeArmor(ItemsRegistry.ARCHMAGE_LEGGINGS, Items.DIAMOND_LEGGINGS);
-            makeArmor(ItemsRegistry.ARCHMAGE_ROBES, Items.DIAMOND_CHESTPLATE);
-            makeArmor(ItemsRegistry.ARCHMAGE_HOOD, Items.DIAMOND_HELMET);
 
         }
     }
@@ -738,16 +724,5 @@ public class RecipeDatagen extends RecipeProvider {
     public static void makeStonecutter(Consumer<FinishedRecipe> consumer, ItemLike input, ItemLike output, String reg) {
         SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), output).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_" + STONECUTTER_COUNTER));
         STONECUTTER_COUNTER++;
-    }
-
-    public void makeArmor(ItemLike outputItem, ItemLike armorItem) {
-        ShapedRecipeBuilder.shaped(outputItem)
-                .pattern(" x ")
-                .pattern("xyx")
-                .pattern(" x ")
-                .define('x', ItemsRegistry.MAGE_FIBER).group(ArsNouveau.MODID)
-                .define('y', armorItem)
-                .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(this.consumer);
     }
 }

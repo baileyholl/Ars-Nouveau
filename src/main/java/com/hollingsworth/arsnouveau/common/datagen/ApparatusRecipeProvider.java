@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
@@ -185,6 +186,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(RecipeDatagen.SOURCE_GEM_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
@@ -801,6 +803,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
@@ -1012,6 +1015,31 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder().withResult(getPerkItem(MagicResistPerk.INSTANCE.getRegistryName()))
                 .withReagent(ItemsRegistry.BLANK_THREAD)
                 .withPedestalItem(8, ItemsRegistry.MAGE_FIBER)
+                .build());
+
+
+        makeArmor(ItemsRegistry.NOVICE_BOOTS, Items.GOLDEN_BOOTS);
+        makeArmor(ItemsRegistry.NOVICE_LEGGINGS, Items.GOLDEN_LEGGINGS);
+        makeArmor(ItemsRegistry.NOVICE_ROBES, Items.GOLDEN_CHESTPLATE);
+        makeArmor(ItemsRegistry.NOVICE_HOOD, Items.GOLDEN_HELMET);
+
+        makeArmor(ItemsRegistry.APPRENTICE_HOOD, Items.IRON_HELMET);
+        makeArmor(ItemsRegistry.APPRENTICE_ROBES, Items.IRON_CHESTPLATE);
+        makeArmor(ItemsRegistry.APPRENTICE_LEGGINGS, Items.IRON_LEGGINGS);
+        makeArmor(ItemsRegistry.APPRENTICE_BOOTS, Items.IRON_BOOTS);
+
+        makeArmor(ItemsRegistry.ARCHMAGE_BOOTS, Items.DIAMOND_BOOTS);
+        makeArmor(ItemsRegistry.ARCHMAGE_LEGGINGS, Items.DIAMOND_LEGGINGS);
+        makeArmor(ItemsRegistry.ARCHMAGE_ROBES, Items.DIAMOND_CHESTPLATE);
+        makeArmor(ItemsRegistry.ARCHMAGE_HOOD, Items.DIAMOND_HELMET);
+
+    }
+
+    public void makeArmor(ItemLike outputItem, ItemLike armorItem) {
+        addRecipe(builder().withResult(outputItem)
+                .withReagent(armorItem)
+                .withPedestalItem(4, ItemsRegistry.MAGE_FIBER)
+                .keepNbtOfReagent(true)
                 .build());
     }
 

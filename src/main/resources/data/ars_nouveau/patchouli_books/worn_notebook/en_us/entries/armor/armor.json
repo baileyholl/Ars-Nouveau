@@ -28,32 +28,51 @@
       "title": "ars_nouveau.thread_layout"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:novice_hood",
-      "recipe2": "ars_nouveau:novice_robes"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:novice_hood"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:novice_leggings",
-      "recipe2": "ars_nouveau:novice_boots"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:novice_robes"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:apprentice_hood",
-      "recipe2": "ars_nouveau:apprentice_robes"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:novice_leggings"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:apprentice_leggings",
-      "recipe2": "ars_nouveau:apprentice_boots"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:novice_boots"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:archmage_robes",
-      "recipe2": "ars_nouveau:archmage_leggings"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:apprentice_hood"
     },
     {
-      "type": "patchouli:crafting",
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:apprentice_robes"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:apprentice_leggings"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:apprentice_boots"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:archmage_hood"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:archmage_robes"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:archmage_leggings"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:archmage_boots"
     },
     {
