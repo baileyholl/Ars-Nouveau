@@ -215,6 +215,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         if (isCrafting)
             return;
         super.setItem(index, stack);
+        attemptCraft(stack, null);
     }
 
     AnimationController craftController;
