@@ -87,6 +87,13 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
         return Component.translatable("ars_nouveau.spell_write.book_desc");
     }
 
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.SPELL_WRITE_RECIPE.get();
+    }
+
+
     public static class Serializer implements RecipeSerializer<SpellWriteRecipe> {
 
         @Override

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -61,5 +62,9 @@ public interface IPerk {
 
     default String getDescriptionKey() {
         return getRegistryName().getNamespace() + ".perk_desc." + getRegistryName().getPath();
+    }
+
+    default CompoundTag saveData(CompoundTag tag){
+        return tag;
     }
 }

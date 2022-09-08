@@ -89,6 +89,11 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
         return Component.translatable("ars_nouveau.armor_upgrade.book_desc", tier);
     }
 
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.ARMOR_SERIALIZER.get();
+    }
+
     public static class Serializer implements RecipeSerializer<ArmorUpgradeRecipe> {
 
         @Override
