@@ -136,8 +136,12 @@ public class APIRegistry {
         registerPerk(PotionDurationPerk.INSTANCE);
         registerPerk(RepairingPerk.INSTANCE);
         registerPerk(SaturationPerk.INSTANCE);
-//        registerPerk(ToughnessPerk.INSTANCE);
         registerPerk(SpellDamagePerk.INSTANCE);
+        registerPerk(BondedPerk.INSTANCE);
+        registerPerk(ChillingPerk.INSTANCE);
+        registerPerk(IgnitePerk.INSTANCE);
+        registerPerk(TotemPerk.INSTANCE);
+        registerPerk(VampiricPerk.INSTANCE);
     }
 
     public static void postInit() {

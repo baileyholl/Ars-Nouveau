@@ -1,0 +1,22 @@
+package com.hollingsworth.arsnouveau.common.perk;
+
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.perk.Perk;
+import net.minecraft.resources.ResourceLocation;
+
+public class VampiricPerk extends Perk {
+    public static VampiricPerk INSTANCE = new VampiricPerk(new ResourceLocation(ArsNouveau.MODID, "thread_vampiric"));
+    public VampiricPerk(ResourceLocation key) {
+        super(key);
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Dealing damage with spells heals you for a portion of the damage dealt.";
+    }
+
+    @Override
+    public String getLangName() {
+        return "Vampiric";
+    }
+}

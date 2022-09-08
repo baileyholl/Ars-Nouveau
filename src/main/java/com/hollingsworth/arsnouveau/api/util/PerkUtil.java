@@ -60,6 +60,6 @@ public class PerkUtil {
                 }
             }
         }
-        return Math.min(perkInstance.getCountCap(), maxCount);
+        return maxCount;
     }
 }

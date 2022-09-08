@@ -17,11 +17,6 @@ public class GlidingPerk extends Perk {
     }
 
     @Override
-    public int getCountCap() {
-        return 1;
-    }
-
-    @Override
     public PerkSlot minimumSlot() {
         return PerkSlot.THREE;
     }
