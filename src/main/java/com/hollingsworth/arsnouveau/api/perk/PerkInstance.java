@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Objects;
+
 public class PerkInstance {
 
     private PerkSlot slot;
@@ -27,5 +29,18 @@ public class PerkInstance {
 
     public IPerk getPerk(){
         return perk;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PerkInstance that = (PerkInstance) o;
+        return Objects.equals(slot, that.slot) && Objects.equals(perk, that.perk);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(slot, perk);
     }
 }

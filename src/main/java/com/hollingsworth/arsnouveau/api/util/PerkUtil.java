@@ -48,15 +48,19 @@ public class PerkUtil {
         return perkItems;
     }
 
+    public static List<PerkInstance> getPerksFromItem(ItemStack stack){
+        List<PerkInstance> perkInstances = new ArrayList<>();
+        IPerkHolder<ItemStack> holder = getPerkHolder(stack);
+        if(holder == null)
+            return perkInstances;
+        perkInstances.addAll(holder.getPerkInstances());
+        return perkInstances;
+    }
+
     public static List<PerkInstance> getPerksFromPlayer(Player player){
         List<PerkInstance> perkInstances = new ArrayList<>();
         for(ItemStack stack : player.inventory.armor){
-            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
-            if(holder == null)
-                continue;
-            for(PerkInstance instance : holder.getPerkInstances()){
-                perkInstances.add(instance);
-            }
+            perkInstances.addAll(getPerksFromItem(stack));
         }
         return perkInstances;
     }

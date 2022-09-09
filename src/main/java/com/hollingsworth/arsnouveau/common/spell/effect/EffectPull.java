@@ -34,8 +34,6 @@ public class EffectPull extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (shooter == null)
-            return;
         Entity target = rayTraceResult.getEntity();
         Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
         double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
@@ -44,7 +42,7 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult blockHitResult, Level world, @org.jetbrains.annotations.Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult blockHitResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, blockHitResult.getBlockPos(), blockHitResult, spellStats);
         for (BlockPos p : posList) {
             if (!canBlockBeHarvested(spellStats, world, p)) {
