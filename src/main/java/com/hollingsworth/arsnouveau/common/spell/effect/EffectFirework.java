@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EffectFirework extends AbstractEffect {
+public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     public static EffectFirework INSTANCE = new EffectFirework();
 

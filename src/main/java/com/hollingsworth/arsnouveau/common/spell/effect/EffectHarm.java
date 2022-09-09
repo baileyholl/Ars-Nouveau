@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectHarm extends AbstractEffect {
+public class EffectHarm extends AbstractEffect implements IDamageEffect {
     public static EffectHarm INSTANCE = new EffectHarm();
 
     private EffectHarm() {
@@ -32,7 +32,7 @@ public class EffectHarm extends AbstractEffect {
             if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
                 applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
-                dealDamage(world, shooter, (float) damage, spellStats, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
+                attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)), (float) damage);
             }
         }
     }

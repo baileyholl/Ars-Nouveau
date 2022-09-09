@@ -22,10 +22,14 @@ import java.util.List;
 
 public interface IDamageEffect {
 
-    default void dealDamage(Level world, @Nonnull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
-        if (!(world instanceof ServerLevel server) || (entity instanceof LivingEntity living && living.getHealth() <= 0))
-            return;
+    default boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity){
+        return !(entity instanceof LivingEntity living && living.getHealth() <= 0);
+    }
 
+    default void attemptDamage(Level world, @Nonnull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage){
+        if (!canDamage(shooter, stats, spellContext, resolver, entity))
+            return;
+        ServerLevel server = (ServerLevel) world;
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
         SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage);
         MinecraftForge.EVENT_BUS.post(damageEvent);

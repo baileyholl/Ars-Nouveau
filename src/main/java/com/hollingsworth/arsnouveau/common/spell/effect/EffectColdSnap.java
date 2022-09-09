@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectColdSnap extends AbstractEffect {
+public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
     public static EffectColdSnap INSTANCE = new EffectColdSnap();
 

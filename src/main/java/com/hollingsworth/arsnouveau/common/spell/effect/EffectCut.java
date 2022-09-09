@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectCut extends AbstractEffect {
+public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     public static EffectCut INSTANCE = new EffectCut();
 

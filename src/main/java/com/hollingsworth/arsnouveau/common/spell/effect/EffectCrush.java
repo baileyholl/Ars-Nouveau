@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectCrush extends AbstractEffect {
+public class EffectCrush extends AbstractEffect implements IDamageEffect{
 
     public static EffectCrush INSTANCE = new EffectCrush();
 

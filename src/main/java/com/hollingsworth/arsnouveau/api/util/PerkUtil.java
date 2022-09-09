@@ -48,6 +48,19 @@ public class PerkUtil {
         return perkItems;
     }
 
+    public static List<PerkInstance> getPerksFromPlayer(Player player){
+        List<PerkInstance> perkInstances = new ArrayList<>();
+        for(ItemStack stack : player.inventory.armor){
+            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
+            if(holder == null)
+                continue;
+            for(PerkInstance instance : holder.getPerkInstances()){
+                perkInstances.add(instance);
+            }
+        }
+        return perkInstances;
+    }
+
     public static int countForPerk(IPerk perkInstance, Player player){
         int maxCount = 0;
         for(ItemStack stack : player.inventory.armor){

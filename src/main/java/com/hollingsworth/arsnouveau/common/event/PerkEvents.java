@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.perk;
+package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
@@ -12,4 +12,5 @@ public class PerkEvents {
     public static void equipmentChangedEvent(final LivingEquipmentChangeEvent event) {
 
     }
+
 }

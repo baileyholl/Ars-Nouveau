@@ -4,8 +4,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public interface TickablePerk extends IPerk {
+public interface ITickablePerk {
 
-    void tick(ItemStack stack, Level world, Player player, Integer strength);
+    void tick(ItemStack stack, Level world, Player player, PerkInstance strength);
 
 }

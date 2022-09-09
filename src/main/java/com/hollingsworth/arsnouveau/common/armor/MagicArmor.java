@@ -41,8 +41,8 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment, ID
         if(perkHolder == null)
             return;
         for(PerkInstance instance : perkHolder.getPerkInstances()) {
-            if(instance.getPerk() instanceof TickablePerk tickablePerk){
-                tickablePerk.tick(stack, world, player, instance.getSlot().value);
+            if(instance.getPerk() instanceof ITickablePerk tickablePerk){
+                tickablePerk.tick(stack, world, player, instance);
             }
         }
     }

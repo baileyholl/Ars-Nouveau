@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectFlare extends AbstractEffect {
+public class EffectFlare extends AbstractEffect implements IDamageEffect {
     public static EffectFlare INSTANCE = new EffectFlare();
 
     private EffectFlare() {

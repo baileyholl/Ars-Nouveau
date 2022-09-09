@@ -5,7 +5,10 @@ import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
+import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -23,6 +26,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
@@ -149,7 +153,7 @@ public class SpellResolver {
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
         if (spellResolveEvent.isCanceled())
             return;
-
+        List<PerkInstance> perkInstances = shooter instanceof Player player ? PerkUtil.getPerksFromPlayer(player) : new ArrayList<>();
         while (spellContext.hasNextPart()) {
             AbstractSpellPart part = spellContext.nextPart();
             if (part == null)
@@ -162,14 +166,28 @@ public class SpellResolver {
                     .setAugments(augments)
                     .addItemsFromEntity(shooter)
                     .build(part, this.hitResult, world, shooter, spellContext);
-            if (part instanceof AbstractEffect effect) {
-                EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
-                if (MinecraftForge.EVENT_BUS.post(preEvent))
-                    continue;
-                effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-                MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
+            if(!(part instanceof AbstractEffect effect))
+                continue;
+
+            EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+            if (MinecraftForge.EVENT_BUS.post(preEvent))
+                continue;
+
+            for(PerkInstance perkInstance : perkInstances){
+                if(perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk){
+                    effectPerk.onPreResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
+                }
             }
+            effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
+            for(PerkInstance perkInstance : perkInstances){
+                if(perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk){
+                    effectPerk.onPostResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
+                }
+            }
+
+            MinecraftForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
         }
+
         MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, this));
     }
 

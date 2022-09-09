@@ -13,7 +13,7 @@ public class PerkSlot {
     public static final PerkSlot THREE = new PerkSlot(new ResourceLocation(ArsNouveau.MODID, "three"), 3);
 
     public final ResourceLocation id;
-    public final int value;
+    public final int value; // oneIndexed
     public PerkSlot(ResourceLocation id, int value){
         this.value = value;
         this.id = id;

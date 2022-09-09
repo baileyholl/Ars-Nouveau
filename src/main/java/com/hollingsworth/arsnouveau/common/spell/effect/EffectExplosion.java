@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectExplosion extends AbstractEffect {
+public class EffectExplosion extends AbstractEffect implements IDamageEffect {
     public static EffectExplosion INSTANCE = new EffectExplosion();
 
     private EffectExplosion() {

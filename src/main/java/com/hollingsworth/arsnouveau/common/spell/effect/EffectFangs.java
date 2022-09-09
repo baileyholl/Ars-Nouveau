@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectFangs extends AbstractEffect {
+public class EffectFangs extends AbstractEffect implements IDamageEffect {
     public static EffectFangs INSTANCE = new EffectFangs();
 
     private EffectFangs() {
