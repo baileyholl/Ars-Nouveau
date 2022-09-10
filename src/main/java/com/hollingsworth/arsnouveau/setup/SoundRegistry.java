@@ -13,10 +13,10 @@ import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class SoundRegistry {
     public static final DeferredRegister<SoundEvent> SOUND_REG = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MODID);
-    public static final String DEFAULT_SOUND_LIB = "default_family";
+    public static final String DEFAULT_SOUND_LIB = "fire_family";
     public static final String GAIA_SOUND_LIB = "gaia_family";
     public static final String TEMPESTRY_SOUND_LIB = "tempestry_family";
-    public static final String FIRE_SOUND_LIB = "fire_family";
+    public static final String FIRE_SOUND_LIB = "fire_family_2";
     public static final String NO_SOUND_LIB = "empty";
 
     public static final String EA_CHANNEL = "ea_channel";

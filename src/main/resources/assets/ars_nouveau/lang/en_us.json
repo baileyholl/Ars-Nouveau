@@ -965,7 +965,6 @@
 	"ars_nouveau.sounds.volume": "Volume: ",
 	"ars_nouveau.gui.sounds": "Sounds",
 	"ars_nouveau.sounds.title": "Spell Sound",
-	"ars_nouveau.sound.fire_family": "Fire Family",
 	"ars_nouveau.sound.empty": "No Sound",
 	"ars_nouveau.earth_essence.tooltip": "Can be used on Dirt to turn it into Grass.",
 	"ars_nouveau.fire_essence.tooltip": "Can be used a a fuel source.",
@@ -1201,6 +1200,7 @@
 	"ars_nouveau.perks.duplicated": "You have equipped armor that contains a perk you already have. You will only receive the effect of the perk once.",
 	"ars_nouveau.totem_perk.trigger": "Thread of Undying will reactive the next time you sleep.",
 	"ars_nouveau.totem_perk.active": "Thread of Undying is now active.",
+	"ars_nouveau.sound.fire_family": "Fire Family",
 	"ars_nouveau.sound.default_family": "Default",
 	"ars_nouveau.sound.tempestry_family": "Tempestry Family",
 	"ars_nouveau.sound.gaia_family": "Gaia Family"
