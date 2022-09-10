@@ -1202,5 +1202,8 @@
 	"ars_nouveau.spell_write.book_desc": "Accepts Reactive Items",
 	"ars_nouveau.perks.duplicated": "You have equipped armor that contains a perk you already have. You will only receive the effect of the perk once.",
 	"ars_nouveau.totem_perk.trigger": "Thread of Undying will reactive the next time you sleep.",
-	"ars_nouveau.totem_perk.active": "Thread of Undying is now active."
+	"ars_nouveau.totem_perk.active": "Thread of Undying is now active.",
+	"ars_nouveau.sound.default_family": "Default",
+	"ars_nouveau.sound.tempestry_family": "Tempestry Family",
+	"ars_nouveau.sound.gaia_family": "Gaia Family"
 }

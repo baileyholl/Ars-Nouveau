@@ -62,6 +62,7 @@ public class ModSetup {
         Deferred.CONFG_REG.register(modEventBus);
         Deferred.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
+        SoundRegistry.SOUND_REG.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event) {

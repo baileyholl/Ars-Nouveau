@@ -2,7 +2,7 @@
   "empty": {
     "sounds": []
   },
-  "fire_family": {
+  "default_family": {
     "sounds": [
       {
         "name": "ars_nouveau:fire_projectile_medium"
@@ -29,5 +29,14 @@
         "name": "ars_nouveau:apparatus_finish"
       }
     ]
+  },
+  "gaia_family": {
+    "sounds": ["ars_nouveau:gaia_1","ars_nouveau:gaia_2","ars_nouveau:gaia_3","ars_nouveau:gaia_4" ]
+  },
+  "tempestry_family": {
+    "sounds": ["ars_nouveau:tempestry_1","ars_nouveau:tempestry_2","ars_nouveau:tempestry_3","ars_nouveau:tempestry_4" ]
+  },
+  "fire_family": {
+    "sounds": ["ars_nouveau:pyro_1","ars_nouveau:pyro_2","ars_nouveau:pyro_3","ars_nouveau:pyro_4" ]
   }
 }

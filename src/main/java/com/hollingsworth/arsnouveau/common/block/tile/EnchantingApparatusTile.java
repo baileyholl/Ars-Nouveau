@@ -96,7 +96,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
                     clearItems();
                     setChanged();
                     ParticleUtil.spawnPoof((ServerLevel) level, worldPosition);
-                    level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_FINISH, SoundSource.BLOCKS, 1, 1);
+                    level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_FINISH.get(), SoundSource.BLOCKS, 1, 1);
                 }
 
                 this.isCrafting = false;
@@ -157,7 +157,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         this.isCrafting = true;
         updateBlock();
         Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
-        level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_CHANNEL, SoundSource.BLOCKS, 1, 1);
+        level.playSound(null, getBlockPos(), SoundRegistry.APPARATUS_CHANNEL.get(), SoundSource.BLOCKS, 1, 1);
         return true;
     }
 

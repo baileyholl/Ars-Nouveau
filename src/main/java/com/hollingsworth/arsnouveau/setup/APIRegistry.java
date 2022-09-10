@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
@@ -17,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
+import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 import java.util.List;
@@ -219,6 +221,18 @@ public class APIRegistry {
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
         )));
+
+        SoundRegistry.DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY.get(), Component.translatable("ars_nouveau.sound.default_family"));
+        SoundRegistry.EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY.get(), Component.translatable("ars_nouveau.sound.empty"));
+        SoundRegistry.GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY.get(), Component.translatable("ars_nouveau.sound.gaia_family"));
+        SoundRegistry.TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY.get(), Component.translatable("ars_nouveau.sound.tempestry_family"));
+        SoundRegistry.FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY.get(), Component.translatable("ars_nouveau.sound.fire_family"));
+
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
