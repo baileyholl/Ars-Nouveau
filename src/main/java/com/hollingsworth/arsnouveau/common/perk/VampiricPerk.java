@@ -12,7 +12,7 @@ public class VampiricPerk extends Perk {
 
     @Override
     public String getLangDescription() {
-        return "Dealing damage with spells heals you for a portion of the damage dealt.";
+        return "Dealing damage with spells heals you for 20%% per level of the damage dealt.";
     }
 
     @Override
