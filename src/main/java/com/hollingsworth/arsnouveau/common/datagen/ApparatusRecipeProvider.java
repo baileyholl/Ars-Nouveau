@@ -1033,6 +1033,34 @@ public class ApparatusRecipeProvider implements DataProvider {
         makeArmor(ItemsRegistry.ARCHMAGE_ROBES, Items.DIAMOND_CHESTPLATE);
         makeArmor(ItemsRegistry.ARCHMAGE_HOOD, Items.DIAMOND_HELMET);
 
+        addRecipe(builder().withResult(getPerkItem(IgnitePerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(Items.MAGMA_CREAM)
+                .withPedestalItem(ItemsRegistry.FIRE_ESSENCE)
+                .withPedestalItem(Items.FIRE_CHARGE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(ChillingPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(Items.BLUE_ICE)
+                .withPedestalItem(2, ItemsRegistry.WATER_ESSENCE)
+                .withPedestalItem(Items.POWDER_SNOW_BUCKET)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(VampiricPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(BlockRegistry.MENDOSTEEN_POD)
+                .withPedestalItem(Items.SCULK_CATALYST)
+                .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
+                .build());
+
+        addRecipe(builder().withResult(getPerkItem(TotemPerk.INSTANCE.getRegistryName()))
+                .withReagent(ItemsRegistry.BLANK_THREAD)
+                .withPedestalItem(Items.TOTEM_OF_UNDYING)
+                .withPedestalItem(Items.PHANTOM_MEMBRANE)
+                .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
+                .build());
+
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

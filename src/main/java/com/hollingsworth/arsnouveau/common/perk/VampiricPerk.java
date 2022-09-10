@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.perk.Perk;
 import net.minecraft.resources.ResourceLocation;
 
 public class VampiricPerk extends Perk {
-    public static VampiricPerk INSTANCE = new VampiricPerk(new ResourceLocation(ArsNouveau.MODID, "thread_vampiric"));
+    public static VampiricPerk INSTANCE = new VampiricPerk(new ResourceLocation(ArsNouveau.MODID, "thread_life_drain"));
     public VampiricPerk(ResourceLocation key) {
         super(key);
     }
@@ -17,6 +17,6 @@ public class VampiricPerk extends Perk {
 
     @Override
     public String getLangName() {
-        return "Vampiric";
+        return "Life Drain";
     }
 }

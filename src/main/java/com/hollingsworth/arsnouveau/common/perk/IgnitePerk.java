@@ -13,7 +13,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class IgnitePerk extends Perk implements IEffectResolvePerk {
-    public static IgnitePerk INSTANCE = new IgnitePerk(new ResourceLocation(ArsNouveau.MODID, "thread_ignite"));
+    public static IgnitePerk INSTANCE = new IgnitePerk(new ResourceLocation(ArsNouveau.MODID, "thread_kindling"));
 
     public IgnitePerk(ResourceLocation key) {
         super(key);
@@ -26,7 +26,7 @@ public class IgnitePerk extends Perk implements IEffectResolvePerk {
 
     @Override
     public String getLangName() {
-        return "Ignition";
+        return "Kindling";
     }
 
     @Override

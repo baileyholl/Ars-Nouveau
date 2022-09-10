@@ -137,7 +137,7 @@ public class APIRegistry {
         registerPerk(RepairingPerk.INSTANCE);
         registerPerk(SaturationPerk.INSTANCE);
         registerPerk(SpellDamagePerk.INSTANCE);
-        registerPerk(BondedPerk.INSTANCE);
+//        registerPerk(BondedPerk.INSTANCE);
         registerPerk(ChillingPerk.INSTANCE);
         registerPerk(IgnitePerk.INSTANCE);
         registerPerk(TotemPerk.INSTANCE);

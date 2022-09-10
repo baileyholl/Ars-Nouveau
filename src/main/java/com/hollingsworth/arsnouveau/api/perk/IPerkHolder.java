@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public interface IPerkHolder<T> {
 
     void setTier(int tier);
 
-    CompoundTag getTagForPerk(IPerk perk);
+    @Nullable CompoundTag getTagForPerk(IPerk perk);
 
     void setTagForPerk(IPerk perk, CompoundTag tag);
 }

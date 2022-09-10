@@ -1,0 +1,30 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:thread_kindling"
+  },
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "minecraft:magma_cream"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:fire_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:fire_charge"
+      }
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:blank_thread"
+    }
+  ],
+  "sourceCost": 0
+}

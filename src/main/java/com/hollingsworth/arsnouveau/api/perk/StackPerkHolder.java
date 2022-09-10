@@ -10,6 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +80,8 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
     }
 
     @Override
-    public CompoundTag getTagForPerk(IPerk perk) {
-        return this.perkTags.getOrDefault(perk, new CompoundTag());
+    public @Nullable CompoundTag getTagForPerk(IPerk perk) {
+        return this.perkTags.getOrDefault(perk, null);
     }
 
     @Override

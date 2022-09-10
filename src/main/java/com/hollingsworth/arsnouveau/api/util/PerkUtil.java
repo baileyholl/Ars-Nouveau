@@ -65,18 +65,35 @@ public class PerkUtil {
         return perkInstances;
     }
 
-    public static int countForPerk(IPerk perkInstance, Player player){
+    public static int countForPerk(IPerk perk, Player player){
         int maxCount = 0;
         for(ItemStack stack : player.inventory.armor){
             IPerkHolder<ItemStack> holder = getPerkHolder(stack);
             if(holder == null)
                 continue;
             for(PerkInstance instance : holder.getPerkInstances()){
-                if(instance.getPerk() == perkInstance){
+                if(instance.getPerk() == perk){
                    maxCount = Math.max(maxCount, instance.getSlot().value);
                 }
             }
         }
         return maxCount;
+    }
+
+    public static @Nullable IPerkHolder<ItemStack> getHolderForPerk(IPerk perk, Player player){
+        IPerkHolder<ItemStack> highestHolder = null;
+        int maxCount = 0;
+        for(ItemStack stack : player.inventory.armor){
+            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
+            if(holder == null)
+                continue;
+            for(PerkInstance instance : holder.getPerkInstances()){
+                if(instance.getPerk() == perk){
+                    maxCount = Math.max(maxCount, instance.getSlot().value);
+                    highestHolder = holder;
+                }
+            }
+        }
+        return highestHolder;
     }
 }
