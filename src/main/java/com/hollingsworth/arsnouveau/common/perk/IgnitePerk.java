@@ -21,7 +21,7 @@ public class IgnitePerk extends Perk implements IEffectResolvePerk {
 
     @Override
     public String getLangDescription() {
-        return "Damaging effects cause the target to burn for a short duration before the effect resolves.";
+        return "Damaging effects cause the target to burn for a short duration before the effect resolves. Burn time is increased by 5 seconds per level.";
     }
 
     @Override

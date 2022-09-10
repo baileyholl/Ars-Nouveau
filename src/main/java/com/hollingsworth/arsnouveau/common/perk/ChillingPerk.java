@@ -23,7 +23,7 @@ public class ChillingPerk extends Perk implements IEffectResolvePerk {
 
     @Override
     public String getLangDescription() {
-        return "Damaging effects inflict a short amount of Freezing before the effect resolves.";
+        return "Damaging effects inflict Freezing on the target before the spell resolves. Freezing lasts for 10 seconds per level, and becomes Freezing 2 at a level 3 slot.";
     }
 
     @Override
