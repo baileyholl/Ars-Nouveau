@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
+
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -62,7 +62,6 @@ public class GuiEntityInfoHUD {
                 iTooltipProvider.getTooltip(tooltip);
             }
             if (result.getEntity() instanceof ItemFrame frame) {
-                List<ItemStack> stacks = new ArrayList<>();
                 ItemStack stack = frame.getItem();
                 CompoundTag tag = stack.getOrCreateTag();
                 for(String s : tag.getAllKeys()){
@@ -124,6 +123,7 @@ public class GuiEntityInfoHUD {
 
         drawHoveringText(ItemStack.EMPTY, poseStack, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
+        poseStack.popPose();
     }
     public static final Color VANILLA_TOOLTIP_BORDER_1 = new Color(0x50_5000ff, true);
     public static final Color VANILLA_TOOLTIP_BORDER_2 = new Color(0x50_28007f, true);

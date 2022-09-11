@@ -13,7 +13,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -22,6 +24,10 @@ public class FamiliarEvents {
     public static List<FamiliarEntity> getFamiliars(Predicate<FamiliarEntity> predicate){
         List<FamiliarEntity> stale = new ArrayList<>();
         List<FamiliarEntity> matching = new ArrayList<>();
+        // No clue what would make this null, but carryon managed it...
+        if(FamiliarEntity.FAMILIAR_SET == null) {
+            FamiliarEntity.FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
+        }
         for(FamiliarEntity familiarEntity : FamiliarEntity.FAMILIAR_SET){
             if(familiarEntity.isRemoved() || familiarEntity.terminatedFamiliar || familiarEntity.getOwner() == null) {
                 stale.add(familiarEntity);
