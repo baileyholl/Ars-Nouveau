@@ -14,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
@@ -70,11 +69,6 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
             }
         }
         return nonnulllist;
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return RecipeRegistry.POTION_FLASK_TYPE.get();
     }
 
     @Override
