@@ -17,7 +17,7 @@
     "announce_to_chat": false,
     "background": "ars_nouveau:textures/gui/advancements/backgrounds/sourcestone.png",
     "description": {
-      "translate": "advancements.story.root.description"
+      "translate": "ars_nouveau.advancement.desc.root"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": false,
     "title": {
-      "translate": "ars_nouveau.advancements.title"
+      "translate": "ars_nouveau.advancement.title.root"
     }
   },
   "requirements": [

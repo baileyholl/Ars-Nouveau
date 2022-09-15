@@ -1,0 +1,37 @@
+{
+  "parent": "ars_nouveau:novice_book",
+  "criteria": {
+    "has_apprentice_spell_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ars_nouveau:apprentice_spell_book"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.apprentice_book"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "ars_nouveau:apprentice_spell_book"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.apprentice_book"
+    }
+  },
+  "requirements": [
+    [
+      "has_apprentice_spell_book"
+    ]
+  ]
+}
