@@ -1,0 +1,29 @@
+{
+  "parent": "ars_nouveau:rituals",
+  "criteria": {
+    "familiar": {
+      "conditions": {},
+      "trigger": "ars_nouveau:familiar"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.familiar"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "ars_nouveau:ritual_binding"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.familiar"
+    }
+  },
+  "requirements": [
+    [
+      "familiar"
+    ]
+  ]
+}

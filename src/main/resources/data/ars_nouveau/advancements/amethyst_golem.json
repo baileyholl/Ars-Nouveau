@@ -1,0 +1,37 @@
+{
+  "parent": "ars_nouveau:rituals",
+  "criteria": {
+    "has_amethyst_golem_charm": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ars_nouveau:amethyst_golem_charm"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.amethyst_golem"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "ars_nouveau:amethyst_golem_charm"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.amethyst_golem"
+    }
+  },
+  "requirements": [
+    [
+      "has_amethyst_golem_charm"
+    ]
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "parent": "ars_nouveau:root",
+  "criteria": {
+    "poof_mob": {
+      "conditions": {},
+      "trigger": "ars_nouveau:poof_mob"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.poof_mob"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:gold_nugget"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.poof_mob"
+    }
+  },
+  "requirements": [
+    [
+      "poof_mob"
+    ]
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "parent": "ars_nouveau:starby_charm",
+  "criteria": {
+    "has_wixie_hat": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ars_nouveau:wixie_hat"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.starby_witch_hat"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "ars_nouveau:wixie_hat"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.starby_witch_hat"
+    }
+  },
+  "requirements": [
+    [
+      "has_wixie_hat"
+    ]
+  ]
+}
