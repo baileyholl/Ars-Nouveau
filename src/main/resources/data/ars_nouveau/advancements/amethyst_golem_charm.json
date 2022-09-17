@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:starby_charm",
+  "parent": "ars_nouveau:ritual_brazier",
   "criteria": {
-    "has_starbuncle_shades": {
+    "has_amethyst_golem_charm": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:starbuncle_shades"
+              "ars_nouveau:amethyst_golem_charm"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.starby_glasses"
+      "translate": "ars_nouveau.advancement.description.amethyst_golem_charm"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:starbuncle_shades"
+      "item": "ars_nouveau:amethyst_golem_charm"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.starby_glasses"
+      "translate": "ars_nouveau.advancement.title.amethyst_golem_charm"
     }
   },
   "requirements": [
     [
-      "has_starbuncle_shades"
+      "has_amethyst_golem_charm"
     ]
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "parent": "ars_nouveau:rituals",
+  "parent": "ars_nouveau:ritual_brazier",
   "criteria": {
     "familiar": {
       "conditions": {},

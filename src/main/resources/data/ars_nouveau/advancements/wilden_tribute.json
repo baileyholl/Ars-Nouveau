@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:root",
+  "parent": "ars_nouveau:apprentice_spell_book",
   "criteria": {
-    "has_novice_spell_book": {
+    "has_wilden_tribute": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:novice_spell_book"
+              "ars_nouveau:wilden_tribute"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.novice_book"
+      "translate": "ars_nouveau.advancement.description.wilden_tribute"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:novice_spell_book"
+      "item": "ars_nouveau:wilden_tribute"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.novice_book"
+      "translate": "ars_nouveau.advancement.title.wilden_tribute"
     }
   },
   "requirements": [
     [
-      "has_novice_spell_book"
+      "has_wilden_tribute"
     ]
   ]
 }

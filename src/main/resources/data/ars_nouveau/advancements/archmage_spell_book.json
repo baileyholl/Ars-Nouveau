@@ -1,5 +1,5 @@
 {
-  "parent": "ars_nouveau:apprentice_book",
+  "parent": "ars_nouveau:wilden_tribute",
   "criteria": {
     "has_archmage_spell_book": {
       "conditions": {
@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.archmage_book"
+      "translate": "ars_nouveau.advancement.description.archmage_spell_book"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.archmage_book"
+      "translate": "ars_nouveau.advancement.title.archmage_spell_book"
     }
   },
   "requirements": [

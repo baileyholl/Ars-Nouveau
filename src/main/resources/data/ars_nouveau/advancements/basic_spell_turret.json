@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:root",
+  "parent": "ars_nouveau:enchanting_apparatus",
   "criteria": {
-    "has_ritual_brazier": {
+    "has_basic_spell_turret": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:ritual_brazier"
+              "ars_nouveau:basic_spell_turret"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.rituals"
+      "translate": "ars_nouveau.advancement.description.basic_spell_turret"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:ritual_brazier"
+      "item": "ars_nouveau:basic_spell_turret"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.rituals"
+      "translate": "ars_nouveau.advancement.title.basic_spell_turret"
     }
   },
   "requirements": [
     [
-      "has_ritual_brazier"
+      "has_basic_spell_turret"
     ]
   ]
 }

@@ -1,0 +1,37 @@
+{
+  "parent": "ars_nouveau:magebloom_crop",
+  "criteria": {
+    "has_alteration_table": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ars_nouveau:alteration_table"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.alteration_table"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "ars_nouveau:alteration_table"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.alteration_table"
+    }
+  },
+  "requirements": [
+    [
+      "has_alteration_table"
+    ]
+  ]
+}

@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:rituals",
+  "parent": "ars_nouveau:root",
   "criteria": {
-    "has_amethyst_golem_charm": {
+    "has_ritual_brazier": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:amethyst_golem_charm"
+              "ars_nouveau:ritual_brazier"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.amethyst_golem"
+      "translate": "ars_nouveau.advancement.description.ritual_brazier"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:amethyst_golem_charm"
+      "item": "ars_nouveau:ritual_brazier"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.amethyst_golem"
+      "translate": "ars_nouveau.advancement.title.ritual_brazier"
     }
   },
   "requirements": [
     [
-      "has_amethyst_golem_charm"
+      "has_ritual_brazier"
     ]
   ]
 }

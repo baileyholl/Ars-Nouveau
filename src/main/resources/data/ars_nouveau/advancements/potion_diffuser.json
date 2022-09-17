@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:novice_book",
+  "parent": "ars_nouveau:potion_melder",
   "criteria": {
-    "has_apprentice_spell_book": {
+    "has_potion_diffuser": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:apprentice_spell_book"
+              "ars_nouveau:potion_diffuser"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.apprentice_book"
+      "translate": "ars_nouveau.advancement.description.potion_diffuser"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:apprentice_spell_book"
+      "item": "ars_nouveau:potion_diffuser"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.apprentice_book"
+      "translate": "ars_nouveau.advancement.title.potion_diffuser"
     }
   },
   "requirements": [
     [
-      "has_apprentice_spell_book"
+      "has_potion_diffuser"
     ]
   ]
 }

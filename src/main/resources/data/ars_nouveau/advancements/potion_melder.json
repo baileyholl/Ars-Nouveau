@@ -1,0 +1,37 @@
+{
+  "parent": "ars_nouveau:enchanting_apparatus",
+  "criteria": {
+    "has_potion_melder": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ars_nouveau:potion_melder"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "ars_nouveau.advancement.description.potion_melder"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "ars_nouveau:potion_melder"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "ars_nouveau.advancement.title.potion_melder"
+    }
+  },
+  "requirements": [
+    [
+      "has_potion_melder"
+    ]
+  ]
+}
