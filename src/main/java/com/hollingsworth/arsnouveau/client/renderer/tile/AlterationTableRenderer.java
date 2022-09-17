@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
@@ -12,6 +13,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmorStandArmorModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -25,6 +27,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -32,6 +35,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraftforge.client.ForgeHooksClient;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
@@ -47,6 +52,8 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
     public final ArmorStandArmorModel innerModel;
     public final ArmorStandArmorModel outerModel;
+
+    public static final PerlinSimplexNoise noise = new PerlinSimplexNoise(new LegacyRandomSource(2906), IntList.of( 1, 2,3,4,5));
 
     public AlterationTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(p_i226006_1_, new GenericModel<>("alteration_table").withEmptyAnim());
@@ -76,11 +83,23 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         if (!(state.getBlock() instanceof AlterationTable))
             return;
         if(tile.armorStack.getItem() instanceof ArmorItem armorItem) {
-            double yOffset = Math.pow(Math.cos((ClientInfo.ticksInGame + ticks)  /20f)/4, 2);
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
-            matrixStack.translate(1.05, -1.65 + yOffset + rotForSlot(armorItem.getSlot()), 0);
+            // to rotate around a point: scale, point translate, rotate, object translate
             matrixStack.scale(0.5f, 0.5f, 0.5f);
-            this.renderArmorPiece(tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
+            matrixStack.translate(-2.1, 3.3, 0);
+            double yOffset = Mth.smoothstepDerivative((Math.sin((ClientInfo.ticksInGame + ticks) / 20f) + 1f) / 2f) * 0.0625;
+            if (tile.newPerkTimer >= 0) {
+                // need zero it out or else it fights the translation we're doing below
+                yOffset = 0;
+                float percentage = Mth.abs( tile.newPerkTimer - 20) / 20f;
+                double smooooooooth = Mth.smoothstep(percentage);
+                double perkYOffset = 0.625 - (smooooooooth * 0.625);
+                matrixStack.mulPose(Vector3f.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
+                matrixStack.translate(0, perkYOffset, 0);
+            }
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
+            matrixStack.translate(0, yOffset + rotForSlot(armorItem.getSlot()), 0);
+
+            this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
         }else {
             Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemTransforms.TransformType.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         }
@@ -121,13 +140,13 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     public float rotForSlot(EquipmentSlot slot){
         switch (slot){
             case HEAD:
-                return 0;
+                return 0.3f;
             case CHEST:
                 return 0;
             case LEGS:
                 return -0.2f;
             case FEET:
-                return -0.3f;
+                return -0.6f;
             default:
                 return 0;
         }
@@ -137,7 +156,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return (this.usesInnerModel(pSlot) ? this.innerModel : this.outerModel);
     }
 
-    private void renderArmorPiece(ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel) {
+    private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel) {
         if(!(itemstack.getItem() instanceof ArmorItem armoritem))
             return;
 

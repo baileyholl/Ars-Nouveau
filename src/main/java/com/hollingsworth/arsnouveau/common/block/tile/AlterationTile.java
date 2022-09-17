@@ -17,6 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,6 +37,8 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
     public ItemStack armorStack = ItemStack.EMPTY;
     public ItemEntity renderEntity;
     public List<ItemStack> perkList = new ArrayList<>();
+
+    public int newPerkTimer = 0;
 
     public AlterationTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -75,6 +78,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             armorPerkHolder.setPerks(new ArrayList<>());
             this.armorStack = stack.copy();
             stack.shrink(1);
+            this.newPerkTimer = 0;
             updateBlock();
         }
     }
@@ -123,6 +127,9 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             IPerk perk = perkItem.perk;
             if(foundSlot != null && perk.validForSlot(foundSlot, stack, player)) {
                 this.perkList.add(stack.split(1));
+                if (newPerkTimer <= 0) {
+                    newPerkTimer = 40;
+                }
                 updateBlock();
             }
         }
@@ -159,6 +166,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             tag.put("perk" + count, perkTag);
             count++;
         }
+        tag.putInt("newPerkTimer", newPerkTimer);
     }
 
     @Override
@@ -172,6 +180,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             ItemStack perk = ItemStack.of(perkTag);
             perkList.add(perk);
         }
+        this.newPerkTimer = compound.getInt("newPerkTimer");
     }
 
     @Override
@@ -179,4 +188,12 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
         return super.getRenderBoundingBox().inflate(2);
     }
 
+    @Override
+    public void tick(Level level, BlockState state, BlockPos pos) {
+        if (level.isClientSide) {
+            if (newPerkTimer >= 0) {
+                newPerkTimer--;
+            }
+        }
+    }
 }
