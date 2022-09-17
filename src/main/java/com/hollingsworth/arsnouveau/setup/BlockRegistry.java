@@ -340,6 +340,11 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockRegistryKey)
     public static AlterationTable ALTERATION_TABLE;
 
+    @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<MobJarTile> MOB_JAR_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockRegistryKey)
+    public static MobJar MOB_JAR;
+
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
@@ -454,6 +459,7 @@ public class BlockRegistry {
             }
         }
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
+        registry.register(LibBlockNames.MOB_JAR, new MobJar());
 
     }
 
@@ -503,6 +509,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null));
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
         registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
+        registry.register(LibBlockNames.MOB_JAR, BlockEntityType.Builder.of(MobJarTile::new, BlockRegistry.MOB_JAR).build(null));
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -713,6 +720,7 @@ public class BlockRegistry {
                 return AlterationTableRenderer::getISTER;
             }
         });
+        registry.register(LibBlockNames.MOB_JAR, getDefaultBlockItem(BlockRegistry.MOB_JAR));
 
     }
 
