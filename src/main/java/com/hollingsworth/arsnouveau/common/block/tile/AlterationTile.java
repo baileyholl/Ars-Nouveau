@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -68,7 +69,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
     }
 
     public boolean isMasterTile() {
-        return getBlockState().getValue(AlterationTable.PART) == BedPart.HEAD;
+        return getBlockState().getValue(AlterationTable.PART) == ThreePartBlock.HEAD;
     }
 
     public void setArmorStack(ItemStack stack, Player player){

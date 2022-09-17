@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
+import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,7 +35,6 @@ import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -66,7 +66,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         try {
             if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
                 return;
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != BedPart.HEAD)
+            if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
                 return;
 
             this.renderArmorStack(tile, matrixStack, ticks, iRenderTypeBuffer, bufferIn, packedLightIn, packedOverlayIn, partialTicks);
@@ -216,7 +216,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         try {
             if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
                 return;
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != BedPart.HEAD)
+            if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
                 return;
             Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.FACING);
             stack.pushPose();
