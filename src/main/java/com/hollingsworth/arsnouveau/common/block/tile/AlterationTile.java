@@ -78,6 +78,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             armorPerkHolder.setPerks(new ArrayList<>());
             this.armorStack = stack.copy();
             stack.shrink(1);
+            this.newPerkTimer = 0;
             updateBlock();
         }
     }
@@ -126,7 +127,7 @@ public class AlterationTile extends ModdedTile implements IAnimatable, ITickable
             IPerk perk = perkItem.perk;
             if(foundSlot != null && perk.validForSlot(foundSlot, stack, player)) {
                 this.perkList.add(stack.split(1));
-                if (newPerkTimer < 0) {
+                if (newPerkTimer <= 0) {
                     newPerkTimer = 40;
                 }
                 updateBlock();

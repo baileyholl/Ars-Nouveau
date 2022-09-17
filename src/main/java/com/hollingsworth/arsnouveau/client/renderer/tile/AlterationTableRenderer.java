@@ -95,21 +95,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 double perkYOffset = 0.625 - (smooooooooth * 0.625);
                 matrixStack.mulPose(Vector3f.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
                 matrixStack.translate(0, perkYOffset, 0);
-
-                if (tile.newPerkTimer % 8 == 0) {
-                    for (float x = 0; x < 4; x++) {
-                        for (int z = 0; z < 4; z++) {
-                            double xNoise = (noise.getValue(ClientInfo.ticksInGame + x, ClientInfo.ticksInGame + z, false) + 1) / 2f;
-                            double yNoise = noise.getValue(ClientInfo.ticksInGame + x + z, ClientInfo.ticksInGame + perkYOffset, false) * 0.5f;
-                            double zNoise = (noise.getValue(ClientInfo.ticksInGame + z, ClientInfo.ticksInGame + x, false) + 1) / 2f;
-                            tile.getLevel().addParticle(ParticleSparkleData.createData(ParticleColor.fromInt(0xFF55FF)),
-                                    (float) (tile.getBlockPos().getX() + xNoise),
-                                    (float) (tile.getBlockPos().getY() + 1.75 + yNoise),
-                                    (float) (tile.getBlockPos().getZ() + zNoise),
-                                    0, 0, 0);
-                        }
-                    }
-                }
             }
             matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
             matrixStack.translate(0, yOffset + rotForSlot(armorItem.getSlot()), 0);
@@ -155,13 +140,13 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     public float rotForSlot(EquipmentSlot slot){
         switch (slot){
             case HEAD:
-                return 0;
+                return 0.3f;
             case CHEST:
                 return 0;
             case LEGS:
                 return -0.2f;
             case FEET:
-                return -0.3f;
+                return -0.6f;
             default:
                 return 0;
         }
@@ -177,7 +162,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
         EquipmentSlot pSlot = armoritem.getSlot();
         Model model = getArmorModelHook(itemstack, pSlot, armorModel);
-        boolean flag1 = itemstack.hasFoil() || tile.newPerkTimer >= 0;
+        boolean flag1 = itemstack.hasFoil();
         if (armoritem instanceof DyeableLeatherItem dyeableLeatherItem) {
             int i = dyeableLeatherItem.getColor(itemstack);
             float f = (i >> 16 & 255) / 255.0F;
