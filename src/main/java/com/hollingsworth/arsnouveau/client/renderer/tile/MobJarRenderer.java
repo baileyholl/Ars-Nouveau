@@ -41,12 +41,12 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
         float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
 
         if ((double)f1 > 1.0d) {
-            f /= f1 * 1.2;
+            f /= f1 * 1.0;
         }
 //        EntityDimensions ogDim = entity.getDimensions(entity.getPose());
 //        EntityDimensions dimensions = new EntityDimensions(ogDim.width * f, ogDim.height * f, false);
 //        entity.eyeHeight = dimensions.height * 0.8f;
-        pPoseStack.translate(0.5D, 0.2F, 0.5D);
+        pPoseStack.translate(0.5D, 0.0F, 0.5D);
         pPoseStack.scale(f, f, f);
         Direction direction = pBlockEntity.getBlockState().getValue(MobJar.FACING);
         if(direction == Direction.EAST) {

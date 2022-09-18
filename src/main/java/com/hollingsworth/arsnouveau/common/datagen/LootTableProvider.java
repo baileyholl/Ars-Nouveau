@@ -65,6 +65,19 @@ public class LootTableProvider extends BaseLootTableProvider {
         blockTables.put(BlockRegistry.MENDOSTEEN_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.MENDOSTEEN_POD.asItem(), BlockRegistry.MENDOSTEEN_POD)));
         blockTables.put(BlockRegistry.FROSTAYA_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.FROSTAYA_POD.asItem(), BlockRegistry.FROSTAYA_POD)));
         blockTables.put(BlockRegistry.BOMBEGRANTE_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BOMBEGRANTE_POD.asItem(), BlockRegistry.BOMBEGRANTE_POD)));
+
+
+        LootPool.Builder mobJarBuilder = LootPool.lootPool()
+                .name("mob_jar")
+                .setRolls(ConstantValue.exactly(1))
+                .add(LootItem.lootTableItem(BlockRegistry.MOB_JAR)
+                        .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+                        .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                                .copy("entityTag", "BlockEntityTag.entityTag", CopyNbtFunction.MergeStrategy.REPLACE))
+                        .apply(SetContainerContents.setContents(BlockRegistry.MOB_JAR_TILE)
+                                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                );
+        blockTables.put(BlockRegistry.MOB_JAR, LootTable.lootTable().withPool(mobJarBuilder));
     }
 
     public LootPool.Builder POD_BUILDER(Item item, Block block){

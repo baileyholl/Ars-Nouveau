@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "tag": "forge:glass"
+    },
+    "y": {
+      "item": "ars_nouveau:archwood_slab"
+    }
+  },
+  "pattern": [
+    "yyy",
+    "x x",
+    "xxx"
+  ],
+  "result": {
+    "item": "ars_nouveau:mob_jar"
+  }
+}

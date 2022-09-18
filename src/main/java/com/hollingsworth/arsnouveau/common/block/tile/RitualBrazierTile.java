@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -185,14 +186,14 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         if (ritual != null) {
             tooltips.add(Component.literal(ritual.getName()));
             if (isOff) {
-                tooltips.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
+                tooltips.add(Component.translatable("ars_nouveau.tooltip.turned_off").withStyle(ChatFormatting.GOLD));
                 return;
             }
             if (!ritual.isRunning()) {
                 if (!ritual.canStart()) {
-                    tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet"));
+                    tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet").withStyle(ChatFormatting.GOLD));
                 } else
-                    tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting"));
+                    tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting").withStyle(ChatFormatting.GOLD));
             } else {
 
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.running"));
@@ -204,7 +205,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                 }
             }
             if (ritual.needsSourceNow())
-                tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana"));
+                tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana").withStyle(ChatFormatting.GOLD));
         }
     }
 

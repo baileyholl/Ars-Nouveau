@@ -65,11 +65,10 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
-    static final VoxelShape shape = Stream.of(
-            Block.box(4, 13, 4, 12, 14, 12),
-            Block.box(2, 0, 2, 14, 2, 14),
-            Block.box(3, 2, 3, 13, 13, 13),
-            Block.box(3, 14, 3, 13, 16, 13)
+    public static final VoxelShape shape = Stream.of(
+            Block.box(3, 14, 3, 13, 16, 13),
+            Block.box(1, 0, 1, 15, 13, 15),
+            Block.box(4, 13, 4, 12, 14, 12)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override

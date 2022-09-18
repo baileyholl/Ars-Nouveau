@@ -18,7 +18,7 @@ public class RitualLib {
     public static final String BINDING = prependRitual("binding");
     public static final String AWAKENING = prependRitual("awakening");
     public static final String HARVEST = prependRitual("harvest");
-
+    public static final String CONTAINMENT = prependRitual("containment");
     public static String prependRitual(String ritual) {
         return "ritual_" + ritual;
     }
