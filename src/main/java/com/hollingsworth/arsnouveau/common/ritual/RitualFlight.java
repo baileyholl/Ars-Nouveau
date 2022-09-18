@@ -58,17 +58,19 @@ public class RitualFlight extends AbstractRitual {
         public static Set<BlockPos> activePositions = new HashSet<>();
 
         public static @Nullable RitualFlight getFlightRitual(Level world, BlockPos pos) {
+            if(!world.isLoaded(pos))
+                return null;
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof RitualBrazierTile) {
-                if (((RitualBrazierTile) entity).ritual instanceof RitualFlight)
-                    return (RitualFlight) ((RitualBrazierTile) entity).ritual;
+            if (entity instanceof RitualBrazierTile tile) {
+                if (tile.ritual instanceof RitualFlight ritualFlight)
+                    return ritualFlight;
             }
             return null;
         }
 
         public static void grantFlight(LivingEntity entity) {
             BlockPos pos = getValidPosition(entity.level, entity.blockPosition());
-            if (pos == null)
+            if (pos == null || !entity.level.isLoaded(pos))
                 return;
             BlockEntity tileEntity = entity.level.getBlockEntity(pos);
             if (tileEntity instanceof RitualBrazierTile) {
@@ -83,6 +85,8 @@ public class RitualFlight extends AbstractRitual {
             List<BlockPos> stalePositions = new ArrayList<>();
             BlockPos foundPos = null;
             for (BlockPos p : activePositions) {
+                if(!world.isLoaded(p))
+                    continue;
                 if (BlockUtil.distanceFrom(p, fromPos) <= 60) {
                     RitualFlight ritualFlight = getFlightRitual(world, p);
                     if (ritualFlight == null) {
