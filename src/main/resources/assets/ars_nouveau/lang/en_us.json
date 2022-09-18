@@ -1208,5 +1208,6 @@
 	"ars_nouveau.sound.default_family": "Default",
 	"ars_nouveau.sound.tempestry_family": "Tempestry Family",
 	"ars_nouveau.sound.gaia_family": "Gaia Family",
-	"block.ars_nouveau.mob_jar": "Containment Jar"
+	"block.ars_nouveau.mob_jar": "Containment Jar",
+	"ars_nouveau.page.mob_jar": "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar."
 }

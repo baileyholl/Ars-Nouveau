@@ -1,0 +1,21 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:mob_jar",
+  "name": "block.ars_nouveau.mob_jar",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.mob_jar"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:mob_jar"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:rituals/ritual_containment"
+      ]
+    }
+  ]
+}

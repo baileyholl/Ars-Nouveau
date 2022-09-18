@@ -486,7 +486,9 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.ALTERATION_TABLE)
                 .withSortNum(3), getPath(ARMOR, "alteration_table"));
 
-
+        addPage(buildBasicItem(BlockRegistry.MOB_JAR, MACHINES, new CraftingPage(BlockRegistry.MOB_JAR))
+                .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT)),
+                getPath(MACHINES, "mob_jar"));
     }
 
     public String getLangPath(String name, int count) {
@@ -501,13 +503,18 @@ public class PatchouliProvider implements DataProvider {
         this.pages.add(new PatchouliPage(builder, path));
     }
 
-    public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+    public PatchouliBuilder buildBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
                 .withPage(new TextPage("ars_nouveau.page." + getRegistryName(item.asItem()).getPath()));
         if (recipePage != null) {
             builder.withPage(recipePage);
         }
+        return builder;
+    }
+
+    public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+        PatchouliBuilder builder = buildBasicItem(item, category, recipePage);
         this.pages.add(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
     }
 

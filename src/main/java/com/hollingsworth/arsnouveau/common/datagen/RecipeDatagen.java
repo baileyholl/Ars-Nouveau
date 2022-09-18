@@ -12,6 +12,7 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -635,6 +636,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("x x")
                     .pattern("xxx").define('y', BlockRegistry.ARCHWOOD_SLABS).define('x', Ingredient.of(Tags.Items.GLASS)).save(consumer);
 
+            shapelessBuilder(getRitualItem(RitualLib.CONTAINMENT)).requires(BlockRegistry.VEXING_LOG).requires(ItemsRegistry.MANIPULATION_ESSENCE).requires(Items.GLASS_BOTTLE, 3).save(consumer);
 
         }
     }
