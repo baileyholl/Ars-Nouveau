@@ -11,8 +11,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
@@ -24,7 +22,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public abstract class TableBlock extends TickableModBlock{
-    public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
+    public static final EnumProperty<ThreePartBlock> PART = BlockProps.TABLE_ENUM;
     protected static final VoxelShape BASE = Block.box(0.0D, 0D, 0.0D, 16.0D, 16, 16.0D);
     protected static final VoxelShape LEG_NORTH_WEST = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 3.0D, 3.0D);
     protected static final VoxelShape LEG_SOUTH_WEST = Block.box(0.0D, 0.0D, 16.0D, 3.0D, 3.0D, 16.0D);
@@ -38,7 +36,7 @@ public abstract class TableBlock extends TickableModBlock{
 
     public TableBlock() {
         super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion());
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, ThreePartBlock.FOOT));
 
     }
 
@@ -51,7 +49,7 @@ public abstract class TableBlock extends TickableModBlock{
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (!world.isClientSide) {
             BlockPos blockpos = pos.relative(state.getValue(FACING));
-            world.setBlock(blockpos, state.setValue(PART, BedPart.HEAD), 3);
+            world.setBlock(blockpos, state.setValue(PART, ThreePartBlock.HEAD), 3);
             world.blockUpdated(pos, Blocks.AIR);
             state.updateNeighbourShapes(world, pos, 3);
         }
@@ -78,17 +76,17 @@ public abstract class TableBlock extends TickableModBlock{
         }
     }
 
-    private static Direction getNeighbourDirection(BedPart p_208070_0_, Direction p_208070_1_) {
-        return p_208070_0_ == BedPart.FOOT ? p_208070_1_ : p_208070_1_.getOpposite();
+    public static Direction getNeighbourDirection(ThreePartBlock p_208070_0_, Direction p_208070_1_) {
+        return p_208070_0_ == ThreePartBlock.FOOT ? p_208070_1_ : p_208070_1_.getOpposite();
     }
 
     public static Direction getConnectedDirection(BlockState p_226862_0_) {
         Direction direction = p_226862_0_.getValue(FACING);
-        return p_226862_0_.getValue(PART) == BedPart.HEAD ? direction.getOpposite() : direction;
+        return p_226862_0_.getValue(PART) == ThreePartBlock.HEAD ? direction.getOpposite() : direction;
     }
 
-    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
-        Direction direction = getConnectedDirection(p_220053_1_).getOpposite();
+    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        Direction direction = getConnectedDirection(state).getOpposite();
         return switch (direction) {
             case NORTH -> NORTH_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
