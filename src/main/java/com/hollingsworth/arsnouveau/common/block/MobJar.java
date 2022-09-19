@@ -3,8 +3,15 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,23 +21,47 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class MobJar extends TickableModBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
+
     public MobJar() {
         super(defaultProperties().noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        MobJarTile tile = (MobJarTile) pLevel.getBlockEntity(pPos);
+        if (tile == null) {
+            return InteractionResult.PASS;
+        }
+        if(tile.getEntity() != null){
+            ItemStack stack = pPlayer.getItemInHand(pHand);
+            if(stack.getItem() instanceof SpawnEggItem spawnEggItem){
+                EntityType type = spawnEggItem.getType(null);
+                type.create(pLevel);
+            }
+        }
+
+        tile.dispatchBehavior((behavior) -> {
+            behavior.use(pState, pLevel, pPos, pPlayer, pHand, pHit, tile);
+        });
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     @Override
@@ -83,4 +114,8 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         return new MobJarTile(pPos, pState);
     }
 
+    @Override
+    public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
+        super.initializeClient(consumer);
+    }
 }

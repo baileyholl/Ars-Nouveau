@@ -8,17 +8,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 
 public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
@@ -29,11 +21,11 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
 
     @Override
     public void render(MobJarTile pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        Entity entity = pBlockEntity.displayEntity == null ? pBlockEntity.getEntity() : pBlockEntity.displayEntity;
+        Entity entity = pBlockEntity.cachedEntity == null ? pBlockEntity.getEntity() : pBlockEntity.cachedEntity;
         if(entity == null)
             return;
-        if(pBlockEntity.displayEntity == null){
-            pBlockEntity.displayEntity = entity;
+        if(pBlockEntity.cachedEntity == null){
+            pBlockEntity.cachedEntity = entity;
         }
         entity.setBoundingBox(new AABB(BlockPos.ZERO));
         entity.setPos(pBlockEntity.getX(), pBlockEntity.getY(), pBlockEntity.getZ());
@@ -43,9 +35,6 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
         if ((double)f1 > 1.0d) {
             f /= f1 * 1.0;
         }
-//        EntityDimensions ogDim = entity.getDimensions(entity.getPose());
-//        EntityDimensions dimensions = new EntityDimensions(ogDim.width * f, ogDim.height * f, false);
-//        entity.eyeHeight = dimensions.height * 0.8f;
         pPoseStack.translate(0.5D, 0.0F, 0.5D);
         pPoseStack.scale(f, f, f);
         Direction direction = pBlockEntity.getBlockState().getValue(MobJar.FACING);

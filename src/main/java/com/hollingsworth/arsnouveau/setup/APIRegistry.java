@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
@@ -13,12 +14,16 @@ import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
+import com.hollingsworth.arsnouveau.common.mob_jar.ChickenBehavior;
+import com.hollingsworth.arsnouveau.common.mob_jar.CowBehavior;
+import com.hollingsworth.arsnouveau.common.mob_jar.VillagerBehavior;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -234,6 +239,10 @@ public class APIRegistry {
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
+
+        JarBehaviorRegistry.register(EntityType.COW, new CowBehavior());
+        JarBehaviorRegistry.register(EntityType.CHICKEN, new ChickenBehavior());
+        JarBehaviorRegistry.register(EntityType.VILLAGER, new VillagerBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
