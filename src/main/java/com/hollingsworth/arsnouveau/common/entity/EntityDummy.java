@@ -27,15 +27,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
-
-import net.minecraft.world.entity.Entity.RemovalReason;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class EntityDummy extends PathfinderMob implements ISummon {
     @OnlyIn(Dist.CLIENT)
@@ -127,7 +125,6 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         if (this.playerInfo == null) {
             this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerID());
         }
-
         return this.playerInfo;
     }
 
@@ -183,4 +180,12 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public void setOwnerID(UUID uuid) {
         this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean isSlim() {
+        if (this.playerInfo != null) {
+            return playerInfo.getModelName().equals("slim");
+        }else return false;
+    }
+
 }
