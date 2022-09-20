@@ -469,7 +469,7 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(ItemsRegistry.APPRENTICE_HOOD)
                 .withPage(new ApparatusTextPage("ars_nouveau:upgrade_1"))
                 .withPage(new ApparatusTextPage("ars_nouveau:upgrade_2"))
-                .withPage(new RelationsPage().withEntry(ARMOR, "armor").withEntry(MACHINES, "alteration_table"))
+                .withPage(new RelationsPage().withEntry(ARMOR, "armor").withEntry(ARMOR, "alteration_table"))
 
                 .withSortNum(1), getPath(ARMOR, "armor_upgrade"));
         addPage(new PatchouliBuilder(ARMOR, "applying_perks")

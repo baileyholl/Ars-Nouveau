@@ -183,6 +183,9 @@ public class Config {
         map.put("minecraft:shroomlight", 10);
         map.put("minecraft:glow_ink_sac", 10);
         map.put("minecraft:nether_star", 14);
+        map.put("minecraft:ochre_froglight", 15);
+        map.put("minecraft:pearlescent_froglight", 15);
+        map.put("minecraft:verdant_froglight", 15);
         return map;
     }
 

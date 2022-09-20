@@ -20,10 +20,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.IForgeShearable;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
@@ -65,14 +67,19 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         }
     }
 
+    private boolean dupeCheck(Level world, BlockPos pos){
+        BlockEntity be = world.getBlockEntity(pos);
+        return be != null && (world.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() ||
+                              be instanceof ArcanePedestalTile || be instanceof ScribesTile);
+    }
+
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         ItemStack axe = new ItemStack(Items.DIAMOND_AXE);
         applyEnchantments(spellStats, axe);
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
         entity.setItemInHand(InteractionHand.MAIN_HAND, axe);
         // TODO Replace with AN shears
-        if (world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()))
-            return;
+        if (dupeCheck(world, p)) return;
         entity.setPos(p.getX(), p.getY(), p.getZ());
         world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         axe.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
@@ -88,9 +95,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
         entity.setItemInHand(InteractionHand.MAIN_HAND, shears);
         // TODO Replace with AN shears
-        if (world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() ||
-                world.getBlockEntity(p) instanceof ArcanePedestalTile || world.getBlockEntity(p) instanceof ScribesTile))
-            return;
+        if (dupeCheck(world, p)) return;
         entity.setPos(p.getX(), p.getY(), p.getZ());
         world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         shears.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));

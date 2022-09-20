@@ -35,8 +35,13 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         return p_110775_1_.getSkinTextureLocation();
     }
 
+    private final PlayerModel<EntityDummy> playerModel;
+    private final PlayerModel<EntityDummy> playerModelSlim;
+
     public DummyRenderer(EntityRendererProvider.Context context, boolean slim) {
         super(context, new PlayerModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
+        playerModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER),false);
+        playerModelSlim = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
         this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
         this.addLayer(new ArrowLayer<>(context, this));
@@ -55,28 +60,34 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         return p_225627_1_.isCrouching() ? new Vec3(0.0D, -0.125D, 0.0D) : super.getRenderOffset(p_225627_1_, p_225627_2_);
     }
 
-    private void setModelProperties(EntityDummy p_177137_1_) {
+    private void setModelProperties(EntityDummy pEntityDummy) {
+        if (pEntityDummy.isSlim()){
+            this.model = playerModelSlim;
+        }else {
+            this.model = playerModel;
+        }
+
         PlayerModel<EntityDummy> playermodel = this.getModel();
-        if (p_177137_1_.isSpectator()) {
+        if (pEntityDummy.isSpectator()) {
             playermodel.setAllVisible(false);
             playermodel.head.visible = true;
             playermodel.hat.visible = true;
         } else {
             playermodel.setAllVisible(true);
-//            playermodel.hat.visible = p_177137_1_.isModelPartShown(PlayerModelPart.HAT);
-//            playermodel.jacket.visible = p_177137_1_.isModelPartShown(PlayerModelPart.JACKET);
-//            playermodel.leftPants.visible = p_177137_1_.isModelPartShown(PlayerModelPart.LEFT_PANTS_LEG);
-//            playermodel.rightPants.visible = p_177137_1_.isModelPartShown(PlayerModelPart.RIGHT_PANTS_LEG);
-//            playermodel.leftSleeve.visible = p_177137_1_.isModelPartShown(PlayerModelPart.LEFT_SLEEVE);
-//            playermodel.rightSleeve.visible = p_177137_1_.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE);
-            playermodel.crouching = p_177137_1_.isCrouching();
-            HumanoidModel.ArmPose bipedmodel$armpose = getArmPose(p_177137_1_, InteractionHand.MAIN_HAND);
-            HumanoidModel.ArmPose bipedmodel$armpose1 = getArmPose(p_177137_1_, InteractionHand.OFF_HAND);
+//            playermodel.hat.visible = pEntityDummy.isModelPartShown(PlayerModelPart.HAT);
+//            playermodel.jacket.visible = pEntityDummy.isModelPartShown(PlayerModelPart.JACKET);
+//            playermodel.leftPants.visible = pEntityDummy.isModelPartShown(PlayerModelPart.LEFT_PANTS_LEG);
+//            playermodel.rightPants.visible = pEntityDummy.isModelPartShown(PlayerModelPart.RIGHT_PANTS_LEG);
+//            playermodel.leftSleeve.visible = pEntityDummy.isModelPartShown(PlayerModelPart.LEFT_SLEEVE);
+//            playermodel.rightSleeve.visible = pEntityDummy.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE);
+            playermodel.crouching = pEntityDummy.isCrouching();
+            HumanoidModel.ArmPose bipedmodel$armpose = getArmPose(pEntityDummy, InteractionHand.MAIN_HAND);
+            HumanoidModel.ArmPose bipedmodel$armpose1 = getArmPose(pEntityDummy, InteractionHand.OFF_HAND);
             if (bipedmodel$armpose.isTwoHanded()) {
-                bipedmodel$armpose1 = p_177137_1_.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
+                bipedmodel$armpose1 = pEntityDummy.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
             }
 
-            if (p_177137_1_.getMainArm() == HumanoidArm.RIGHT) {
+            if (pEntityDummy.getMainArm() == HumanoidArm.RIGHT) {
                 playermodel.rightArmPose = bipedmodel$armpose;
                 playermodel.leftArmPose = bipedmodel$armpose1;
             } else {
@@ -87,12 +98,12 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
     }
 
-    private static HumanoidModel.ArmPose getArmPose(EntityDummy p_241741_0_, InteractionHand p_241741_1_) {
-        ItemStack itemstack = p_241741_0_.getItemInHand(p_241741_1_);
+    private static HumanoidModel.ArmPose getArmPose(EntityDummy pEntityDummy, InteractionHand p_241741_1_) {
+        ItemStack itemstack = pEntityDummy.getItemInHand(p_241741_1_);
         if (itemstack.isEmpty()) {
             return HumanoidModel.ArmPose.EMPTY;
         } else {
-            if (p_241741_0_.getUsedItemHand() == p_241741_1_ && p_241741_0_.getUseItemRemainingTicks() > 0) {
+            if (pEntityDummy.getUsedItemHand() == p_241741_1_ && pEntityDummy.getUseItemRemainingTicks() > 0) {
                 UseAnim useaction = itemstack.getUseAnimation();
                 if (useaction == UseAnim.BLOCK) {
                     return HumanoidModel.ArmPose.BLOCK;
@@ -106,10 +117,10 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
                     return HumanoidModel.ArmPose.THROW_SPEAR;
                 }
 
-                if (useaction == UseAnim.CROSSBOW && p_241741_1_ == p_241741_0_.getUsedItemHand()) {
+                if (useaction == UseAnim.CROSSBOW && p_241741_1_ == pEntityDummy.getUsedItemHand()) {
                     return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
                 }
-            } else if (!p_241741_0_.swinging && itemstack.getItem() == Items.CROSSBOW && CrossbowItem.isCharged(itemstack)) {
+            } else if (!pEntityDummy.swinging && itemstack.getItem() == Items.CROSSBOW && CrossbowItem.isCharged(itemstack)) {
                 return HumanoidModel.ArmPose.CROSSBOW_HOLD;
             }
 
@@ -119,12 +130,10 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
 
     protected void scale(EntityDummy p_225620_1_, PoseStack p_225620_2_, float p_225620_3_) {
-        float f = 0.9375F;
         p_225620_2_.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
     protected void renderNameTag(EntityDummy p_225629_1_, Component p_225629_2_, PoseStack p_225629_3_, MultiBufferSource p_225629_4_, int p_225629_5_) {
-        double d0 = this.entityRenderDispatcher.distanceToSqr(p_225629_1_);
         p_225629_3_.pushPose();
 
         super.renderNameTag(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);

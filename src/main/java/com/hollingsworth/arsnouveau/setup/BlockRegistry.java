@@ -57,6 +57,10 @@ public class BlockRegistry {
     public static LightBlock LIGHT_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<LightTile> LIGHT_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.T_LIGHT_BLOCK, registryName = BlockRegistryKey)
+    public static LightBlock T_LIGHT_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.T_LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<LightTile> T_LIGHT_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey)
@@ -350,6 +354,7 @@ public class BlockRegistry {
         //blocks
         registry.register(LibBlockNames.MAGE_BLOCK, new MageBlock());
         registry.register(LibBlockNames.LIGHT_BLOCK, new LightBlock());
+        registry.register(LibBlockNames.T_LIGHT_BLOCK, new TempLightBlock());
         registry.register(LibBlockNames.SOURCE_JAR, new SourceJar());
         registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new CreativeSourceJar());
         registry.register(LibBlockNames.SCRIBES_BLOCK, new ScribesBlock());
@@ -475,6 +480,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, BlockEntityType.Builder.of(AgronomicSourcelinkTile::new, BlockRegistry.AGRONOMIC_SOURCELINK).build(null));
         registry.register(LibBlockNames.SOURCE_JAR, BlockEntityType.Builder.of(SourceJarTile::new, BlockRegistry.SOURCE_JAR).build(null));
         registry.register(LibBlockNames.LIGHT_BLOCK, BlockEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null));
+        registry.register(LibBlockNames.T_LIGHT_BLOCK, BlockEntityType.Builder.of(TempLightTile::new, BlockRegistry.T_LIGHT_BLOCK).build(null));
         registry.register(LibBlockNames.ENCHANTING_APPARATUS, BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null));
         registry.register(LibBlockNames.ARCANE_PEDESTAL, BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null));
         registry.register(LibBlockNames.SCRIBES_BLOCK, BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null));

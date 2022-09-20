@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -26,6 +27,18 @@ public class MethodProjectile extends AbstractCastMethod {
 
     private MethodProjectile() {
         super(GlyphLib.MethodProjectileID, "Projectile");
+    }
+
+    public ForgeConfigSpec.IntValue PROJECTILE_TTL;
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        PROJECTILE_TTL = builder.comment("Max lifespan of the projectile, in seconds.").defineInRange("max_lifespan",60, 0, Integer.MAX_VALUE);
+    }
+
+    public int getProjectileLifespan(){
+        return PROJECTILE_TTL != null ? PROJECTILE_TTL.get() : 60;
     }
 
     @Override

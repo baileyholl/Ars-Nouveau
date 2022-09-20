@@ -5,6 +5,7 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
+    "elytra.ClientElytraMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
@@ -19,7 +20,6 @@
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
     "camera.TrackedEntityMixin",
-    "elytra.ClientElytraMixin",
     "elytra.ElytraPlayerMixin",
     "elytra.MixinLivingEntity",
     "perks.PerkLivingEntity"

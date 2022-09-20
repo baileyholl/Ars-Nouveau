@@ -24,7 +24,7 @@
       "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:armor/armor",
-        "ars_nouveau:machines/alteration_table"
+        "ars_nouveau:armor/alteration_table"
       ]
     }
   ],
