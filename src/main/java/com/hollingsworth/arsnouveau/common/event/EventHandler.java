@@ -46,6 +46,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -107,8 +108,8 @@ public class EventHandler {
         if (tag.getBoolean(book_tag))
             return;
 
-        LivingEntity entity = e.getEntity();
-        e.getEntity().getCommandSenderWorld().addFreshEntity(new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WORN_NOTEBOOK)));
+        Player entity = e.getEntity();
+        ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
         tag.putBoolean(book_tag, true);
         e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
     }

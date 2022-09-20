@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +43,8 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public int numSensitive;
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
-    public int expireTime = 60 * 20;
+    @Deprecated
+    public int expireTime = 60*20;
 
     public Set<BlockPos> hitList = new HashSet<>();
 
@@ -146,7 +148,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public int getExpirationTime() {
-        return expireTime;
+        return MethodProjectile.INSTANCE.getProjectileLifespan() * 20;
     }
 
     /**

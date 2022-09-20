@@ -21,9 +21,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Set;
 
 public class EffectBlink extends AbstractEffect {
@@ -34,7 +35,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
@@ -53,7 +54,7 @@ public class EffectBlink extends AbstractEffect {
             return;
         }
 
-        if (isRealPlayer(shooter) && spellContext.castingTile == null && shooter != null) {
+        if (isRealPlayer(shooter) && spellContext.castingTile == null) {
             if (shooter.getOffhandItem().getItem() instanceof WarpScroll) {
                 WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(shooter.getOffhandItem());
                 if (data.isValid() && data.canTeleportWithDim(world)) {
@@ -68,9 +69,12 @@ public class EffectBlink extends AbstractEffect {
     }
 
     public static void warpEntity(Entity entity, BlockPos warpPos) {
-        if (entity == null)
-            return;
+        if (entity == null) return;
         Level world = entity.level;
+        if (entity instanceof LivingEntity living){
+            Event event = ForgeEventFactory.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
+            if (event.isCanceled()) return;
+        }
         ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
@@ -82,7 +86,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = rayTraceResult.getLocation();
         if (isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
             warpEntity(shooter, new BlockPos(vec));
