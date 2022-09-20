@@ -15,10 +15,7 @@ import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
-import com.hollingsworth.arsnouveau.common.mob_jar.ChickenBehavior;
-import com.hollingsworth.arsnouveau.common.mob_jar.CowBehavior;
-import com.hollingsworth.arsnouveau.common.mob_jar.SheepBehavior;
-import com.hollingsworth.arsnouveau.common.mob_jar.VillagerBehavior;
+import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -246,6 +243,7 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.CHICKEN, new ChickenBehavior());
         JarBehaviorRegistry.register(EntityType.VILLAGER, new VillagerBehavior());
         JarBehaviorRegistry.register(EntityType.SHEEP, new SheepBehavior());
+        JarBehaviorRegistry.register(EntityType.FROG, new FrogBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

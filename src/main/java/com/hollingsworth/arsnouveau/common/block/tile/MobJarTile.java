@@ -15,7 +15,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -27,6 +26,8 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
     public Entity cachedEntity;
 
     private CompoundTag entityTag;
+
+    private CompoundTag extraDataTag;
 
     public MobJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.MOB_JAR_TILE, pos, state);
@@ -53,6 +54,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
         CompoundTag tag = new CompoundTag();
         if(entity.shouldBeSaved() && entity.save(tag)){
             this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());
+            this.extraDataTag = null;
             updateBlock();
             return true;
         }
@@ -73,11 +75,21 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
         Entity entity = getEntity();
         if(entity == null)
             return false;
-        entity.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 1, getBlockPos().getZ() + 0.5);
+        entity.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 1.0, getBlockPos().getZ() + 0.5);
         level.addFreshEntity(entity);
         this.cachedEntity = null;
+        this.extraDataTag = null;
         updateBlock();
         return true;
+    }
+
+    public CompoundTag getExtraDataTag(){
+        return extraDataTag == null ? new CompoundTag() : extraDataTag;
+    }
+
+    public void setExtraDataTag(CompoundTag tag){
+        this.extraDataTag = tag;
+        setChanged();
     }
 
     @Override
@@ -92,6 +104,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
                 tag.put("entityTag", cacheTag);
             }
         }
+        if(extraDataTag != null) {
+            tag.put("extraMobData", extraDataTag);
+        }
     }
 
     @Override
@@ -101,6 +116,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
             this.entityTag = pTag.getCompound("entityTag");
             this.cachedEntity = null;
         }
+        this.extraDataTag = pTag.getCompound("extraMobData");
     }
 
     @Override
