@@ -5,10 +5,12 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,11 +38,12 @@ public class RitualMobCapture extends AbstractRitual {
                     if(tile == null || tile.getEntity() != null){
                         continue;
                     }
-                    for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), (e) -> e instanceof LivingEntity && !(e instanceof Player))){
+                    for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
                         if(tile.setEntityData(e)){
                             e.remove(Entity.RemovalReason.DISCARDED);
                             EntityFlyingItem followProjectile = new EntityFlyingItem(level, e.position, Vec3.atCenterOf(tile.getBlockPos()), 100, 50, 100);
                             level.addFreshEntity(followProjectile);
+                            ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());
                             didWorkOnce = true;
                             break;
                         }
@@ -51,6 +54,15 @@ public class RitualMobCapture extends AbstractRitual {
                 this.setNeedsSource(true);
             }
         }
+    }
+
+    public boolean canJar(Entity e){
+        if(e.getType().is(EntityTags.JAR_WHITELIST))
+            return true;
+        if(e.getType().is(EntityTags.JAR_BLACKLIST)){
+            return false;
+        }
+        return e instanceof LivingEntity && !(e instanceof Player);
     }
 
     @Override

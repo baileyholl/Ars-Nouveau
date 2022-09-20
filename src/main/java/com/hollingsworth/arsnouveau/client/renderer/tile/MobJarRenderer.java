@@ -48,7 +48,7 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
             pPoseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
         }
         pPoseStack.mulPose(pBlockEntity.getBlockState().getValue(MobJar.FACING).getRotation());
-
+        entity.setDeltaMovement(0,0,0);
         this.entityRenderer.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 0, pPoseStack, pBufferSource, pPackedLight);
         for(Entity entity1 : entity.getPassengers()){
             this.entityRenderer.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, 0, pPoseStack, pBufferSource, pPackedLight);

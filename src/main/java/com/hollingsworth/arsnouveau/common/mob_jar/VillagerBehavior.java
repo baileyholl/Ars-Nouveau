@@ -20,4 +20,23 @@ public class VillagerBehavior extends JarBehavior<Villager> {
         villager.mobInteract(player, handIn);
 
     }
+
+    @Override
+    public void tick(MobJarTile tile) {
+        if(tile.getLevel().isClientSide)
+            return;
+        Villager villager = entityFromJar(tile);
+        if (!villager.isTrading() && villager.updateMerchantTimer > 0) {
+            --villager.updateMerchantTimer;
+            if (villager.updateMerchantTimer <= 0) {
+                if (villager.increaseProfessionLevelOnUpdate) {
+                    villager.increaseMerchantCareer();
+                    villager.increaseProfessionLevelOnUpdate = false;
+                }
+            }
+        }
+        if(villager.shouldRestock()){
+            villager.restock();
+        }
+    }
 }
