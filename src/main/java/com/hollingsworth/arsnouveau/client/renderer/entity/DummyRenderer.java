@@ -134,8 +134,10 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
     }
 
     protected void renderNameTag(EntityDummy p_225629_1_, Component p_225629_2_, PoseStack p_225629_3_, MultiBufferSource p_225629_4_, int p_225629_5_) {
+        if(!p_225629_1_.shouldShowName()){
+            return;
+        }
         p_225629_3_.pushPose();
-
         super.renderNameTag(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);
         p_225629_3_.popPose();
     }

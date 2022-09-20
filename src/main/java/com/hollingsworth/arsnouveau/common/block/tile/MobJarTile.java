@@ -66,6 +66,12 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
            cachedEntity = loadEntityFromTag(entityTag);
            cachedEntity.setBoundingBox(new AABB(0,0,0,0,0,0));
            cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
+           cachedEntity.setCustomNameVisible(false);
+           cachedEntity.setNoGravity(true);
+           cachedEntity.noPhysics = true;
+//           if(level.isClientSide){
+//               cachedEntity.level = ClientJarWorld.of(cachedEntity.level);
+//           }
         }
         return cachedEntity;
     }

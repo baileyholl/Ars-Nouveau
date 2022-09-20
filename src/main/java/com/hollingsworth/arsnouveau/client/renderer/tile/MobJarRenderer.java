@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -8,10 +9,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
     private final EntityRenderDispatcher entityRenderer;
@@ -27,16 +29,26 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
         if(pBlockEntity.cachedEntity == null){
             pBlockEntity.cachedEntity = entity;
         }
-        entity.setBoundingBox(new AABB(BlockPos.ZERO));
-        entity.setPos(pBlockEntity.getX(), pBlockEntity.getY(), pBlockEntity.getZ());
         float f = 0.53125F;
         float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
 
         if ((double)f1 > 1.0d) {
             f /= f1 * 1.0;
         }
-        pPoseStack.translate(0.5D, 0.0F, 0.5D);
-        pPoseStack.scale(f, f, f);
+        AtomicReference<Vec3> adjustedScale = new AtomicReference<>(new Vec3(0, 0, 0));
+        AtomicReference<Vec3> adjustedTranslation = new AtomicReference<>(new Vec3(0, 0, 0));
+
+        JarBehaviorRegistry.forEach(entity, jarBehavior ->{
+            Vec3 customScale = jarBehavior.scaleOffset(pBlockEntity);
+            adjustedScale.set(adjustedScale.get().add(customScale));
+            adjustedTranslation.set(adjustedTranslation.get().add(jarBehavior.translate(pBlockEntity)));
+        });
+
+        Vec3 scale = new Vec3(f, f, f).multiply(adjustedScale.get());
+        Vec3 translate = new Vec3(0.5, 0, 0.5).add(adjustedTranslation.get());
+        pPoseStack.translate(translate.x, translate.y, translate.z);
+        pPoseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
+
         Direction direction = pBlockEntity.getBlockState().getValue(MobJar.FACING);
         if(direction == Direction.EAST) {
             pPoseStack.mulPose(Vector3f.ZP.rotationDegrees(90.0F));

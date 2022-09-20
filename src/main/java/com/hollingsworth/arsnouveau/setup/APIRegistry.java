@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
@@ -244,6 +243,8 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.VILLAGER, new VillagerBehavior());
         JarBehaviorRegistry.register(EntityType.SHEEP, new SheepBehavior());
         JarBehaviorRegistry.register(EntityType.FROG, new FrogBehavior());
+        JarBehaviorRegistry.register(EntityType.PIGLIN, new PiglinBehavior());
+        JarBehaviorRegistry.register(EntityType.GHAST, new GhastBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
