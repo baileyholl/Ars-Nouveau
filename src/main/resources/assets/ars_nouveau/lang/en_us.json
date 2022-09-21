@@ -835,7 +835,7 @@
 	"ars_nouveau.page1.drygmy_charm": "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.",
 	"ars_nouveau.page2.drygmy_charm": "A Drygmy can also produce experience gems!",
 	"ars_nouveau.page3.drygmy_charm": "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.",
-	"ars_nouveau.page4.drygmy_charm": "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home.",
+	"ars_nouveau.page4.drygmy_charm": "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home. Nearby Containment Jars will also count as an entity.",
 	"ars_nouveau.page5.drygmy_charm": "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into nearby inventories. Each time this occurs, the henge will require Source to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of Source next to the Henge.",
 	"ars_nouveau.happiness": "Happiness",
 	"ars_nouveau.production": "Production",
@@ -1210,5 +1210,8 @@
 	"ars_nouveau.sound.tempestry_family": "Tempestry Family",
 	"ars_nouveau.sound.gaia_family": "Gaia Family",
 	"block.ars_nouveau.mob_jar": "Containment Jar",
-	"ars_nouveau.page.mob_jar": "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar."
+	"ars_nouveau.page.mob_jar": "Containment Jar",
+	"ars_nouveau.page1.mob_jar": "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar.",
+	"ars_nouveau.page2.mob_jar": "Many entities can be interacted with inside the jar and will continue to simulate while inside the jar. Some examples include: chickens will lay eggs, sheep can be sheared, cows can be milked, and some mobs like the Blaze will turn the jar into a light source. Experiment with a variety of mobs to create aesthetic and functional farms. Drygmys will also treat the jar as if it were a normal entity in the area.",
+	"ars_nouveau.title.mob_jar": "Functionality"
 }

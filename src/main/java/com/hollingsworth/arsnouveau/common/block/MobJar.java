@@ -99,6 +99,17 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         }
     }
 
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        MobJarTile tile = (MobJarTile) worldIn.getBlockEntity(pos);
+        if (tile == null || tile.getEntity() == null) return 0;
+        return 15;
+    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

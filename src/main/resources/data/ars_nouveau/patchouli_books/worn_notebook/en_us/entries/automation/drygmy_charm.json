@@ -30,6 +30,12 @@
       "type": "patchouli:text",
       "text": "ars_nouveau.page5.drygmy_charm",
       "title": "ars_nouveau.production"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/mob_jar"
+      ]
     }
   ]
 }

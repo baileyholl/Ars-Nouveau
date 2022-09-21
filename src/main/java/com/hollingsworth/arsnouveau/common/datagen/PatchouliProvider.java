@@ -178,7 +178,8 @@ public class PatchouliProvider implements DataProvider {
                         .withText(getLangPath("drygmy_charm", 2)))
                 .withPage(new TextPage(getLangPath("drygmy_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("drygmy_charm", 4)).withTitle("ars_nouveau.happiness"))
-                .withPage(new TextPage(getLangPath("drygmy_charm", 5)).withTitle("ars_nouveau.production")), getPath(AUTOMATION, "drygmy_charm"));
+                .withPage(new TextPage(getLangPath("drygmy_charm", 5)).withTitle("ars_nouveau.production"))
+                .withPage(new RelationsPage().withEntry(MACHINES, "mob_jar")), getPath(AUTOMATION, "drygmy_charm"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.DULL_TRINKET)
                 .withPage(new CraftingPage(ItemsRegistry.DULL_TRINKET).withRecipe2(ItemsRegistry.MUNDANE_BELT))
@@ -486,9 +487,13 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.ALTERATION_TABLE)
                 .withSortNum(3), getPath(ARMOR, "alteration_table"));
 
-        addPage(buildBasicItem(BlockRegistry.MOB_JAR, MACHINES, new CraftingPage(BlockRegistry.MOB_JAR))
-                .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT)),
-                getPath(MACHINES, "mob_jar"));
+        addPage(new PatchouliBuilder(MACHINES, "mob_jar")
+                .withIcon(BlockRegistry.MOB_JAR)
+                .withLocalizedText()
+                .withPage(new TextPage("ars_nouveau.page2.mob_jar").withTitle("ars_nouveau.title.mob_jar"))
+                .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
+                .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
+
     }
 
     public String getLangPath(String name, int count) {
