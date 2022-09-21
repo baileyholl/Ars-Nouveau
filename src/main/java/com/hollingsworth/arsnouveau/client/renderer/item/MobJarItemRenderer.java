@@ -7,12 +7,8 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.function.Function;
 
 public class MobJarItemRenderer extends FixedGeoItemRenderer<MobJarItem> {
 
@@ -24,13 +20,9 @@ public class MobJarItemRenderer extends FixedGeoItemRenderer<MobJarItem> {
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         super.renderByItem(stack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
 
-        if(!stack.hasTag())
+        Entity entity = MobJarItem.fromItem(stack);
+        if(entity == null)
             return;
-        CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-        CompoundTag entityTag = blockTag.getCompound("entityTag");
-        if(entityTag.isEmpty())
-            return;
-        Entity entity = EntityType.loadEntityRecursive(entityTag, Minecraft.getInstance().level, Function.identity());
         pPoseStack.pushPose();
         float f = 0.43125F;
         float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
