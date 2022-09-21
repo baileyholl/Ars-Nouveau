@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,7 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -56,10 +58,21 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
             this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());
             this.extraDataTag = null;
             this.entityTag = tag;
+            this.level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(MobJar.LIGHT_LEVEL, calculateLight()));
             updateBlock();
             return true;
         }
         return false;
+    }
+
+    public int calculateLight(){
+        if(getEntity() == null)
+            return 0;
+        AtomicInteger light = new AtomicInteger();
+        JarBehaviorRegistry.forEach(getEntity(), (behavior) -> {
+            light.set(Math.max(light.get(), behavior.lightLevel(this)));
+        });
+        return light.get();
     }
 
     public @Nullable Entity getEntity(){
@@ -79,7 +92,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        Entity entity = getEntity();
+        if(entityTag == null)
+            return false;
+        Entity entity = loadEntityFromTag(entityTag);
         if(entity == null)
             return false;
         entity.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 1.0, getBlockPos().getZ() + 0.5);

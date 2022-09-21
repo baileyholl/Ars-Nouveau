@@ -62,7 +62,7 @@ public class RitualMobCapture extends AbstractRitual {
         if(e.getType().is(EntityTags.JAR_BLACKLIST)){
             return false;
         }
-        return e instanceof LivingEntity && !(e instanceof Player);
+        return e instanceof LivingEntity livingEntity && !(e instanceof Player) && !((LivingEntity) e).isDeadOrDying();
     }
 
     @Override

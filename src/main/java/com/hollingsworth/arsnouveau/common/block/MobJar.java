@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -38,10 +42,11 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class MobJar extends TickableModBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final Property<Integer> LIGHT_LEVEL = IntegerProperty.create("level", 0, 15);
 
     public MobJar() {
-        super(defaultProperties().noOcclusion());
-        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH));
+        super(defaultProperties().noOcclusion().lightLevel((state) -> state.getValue(LIGHT_LEVEL)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
@@ -73,6 +78,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        context.getLevel().scheduleTick(context.getClickedPos(), this, 1);
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
@@ -85,8 +91,21 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        if(pLevel.isClientSide)
+            return;
+        if(pLevel.getBlockEntity(pPos) instanceof MobJarTile tile){
+            int light = tile.calculateLight();
+            if(pState.getValue(LIGHT_LEVEL) != light){
+                pLevel.setBlock(pPos, pState.setValue(LIGHT_LEVEL, light), 2);
+            }
+        }
+    }
+
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, WATERLOGGED, LIGHT_LEVEL);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -106,7 +125,6 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return shape;
     }
-
 
     @Nullable
     @Override

@@ -245,6 +245,11 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.FROG, new FrogBehavior());
         JarBehaviorRegistry.register(EntityType.PIGLIN, new PiglinBehavior());
         JarBehaviorRegistry.register(EntityType.GHAST, new GhastBehavior());
+        JarBehaviorRegistry.register(EntityType.SQUID, new SquidBehavior());
+        JarBehaviorRegistry.register(EntityType.GLOW_SQUID, new GlowSquidBehavior());
+        JarBehaviorRegistry.register(EntityType.BLAZE, new BlazeBehavior());
+        JarBehaviorRegistry.register(EntityType.PANDA, new PandaBehavior());
+        JarBehaviorRegistry.register(EntityType.GOAT, new GoatBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
