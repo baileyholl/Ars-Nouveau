@@ -23,12 +23,9 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
 
     @Override
     public void render(MobJarTile pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        Entity entity = pBlockEntity.cachedEntity == null ? pBlockEntity.getEntity() : pBlockEntity.cachedEntity;
+        Entity entity = pBlockEntity.getEntity();
         if(entity == null)
             return;
-        if(pBlockEntity.cachedEntity == null){
-            pBlockEntity.cachedEntity = entity;
-        }
         float f = 0.53125F;
         float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
 
@@ -44,7 +41,7 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
             adjustedTranslation.set(adjustedTranslation.get().add(jarBehavior.translate(pBlockEntity)));
         });
 
-        Vec3 scale = new Vec3(f, f, f).multiply(adjustedScale.get());
+        Vec3 scale = new Vec3(f, f, f).multiply(adjustedScale.get().add(1,1,1));
         Vec3 translate = new Vec3(0.5, 0, 0.5).add(adjustedTranslation.get());
         pPoseStack.translate(translate.x, translate.y, translate.z);
         pPoseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);

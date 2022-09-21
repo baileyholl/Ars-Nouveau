@@ -55,6 +55,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
         if(entity.shouldBeSaved() && entity.save(tag)){
             this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());
             this.extraDataTag = null;
+            this.entityTag = tag;
             updateBlock();
             return true;
         }
@@ -66,9 +67,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
            cachedEntity = loadEntityFromTag(entityTag);
            cachedEntity.setBoundingBox(new AABB(0,0,0,0,0,0));
            cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
-           cachedEntity.setCustomNameVisible(false);
-           cachedEntity.setNoGravity(true);
-           cachedEntity.noPhysics = true;
+//           cachedEntity.setCustomNameVisible(false);
+//           cachedEntity.setNoGravity(true);
+//           cachedEntity.noPhysics = true;
 //           if(level.isClientSide){
 //               cachedEntity.level = ClientJarWorld.of(cachedEntity.level);
 //           }
@@ -83,6 +84,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
             return false;
         entity.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 1.0, getBlockPos().getZ() + 0.5);
         level.addFreshEntity(entity);
+        this.entityTag = null;
         this.cachedEntity = null;
         this.extraDataTag = null;
         updateBlock();

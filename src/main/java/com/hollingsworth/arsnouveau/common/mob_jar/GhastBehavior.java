@@ -9,7 +9,8 @@ public class GhastBehavior extends JarBehavior<Ghast> {
 
     @Override
     public Vec3 scaleOffset(MobJarTile pBlockEntity) {
-        return new Vec3(0.7,0.7,0.7);
+        float scale = -0.25F;
+        return new Vec3(scale, scale, scale);
     }
 
     @Override
