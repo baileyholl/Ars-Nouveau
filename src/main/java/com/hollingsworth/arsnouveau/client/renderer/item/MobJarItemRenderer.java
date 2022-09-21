@@ -20,7 +20,7 @@ public class MobJarItemRenderer extends FixedGeoItemRenderer<MobJarItem> {
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType pTransformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         super.renderByItem(stack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
 
-        Entity entity = MobJarItem.fromItem(stack);
+        Entity entity = MobJarItem.fromItem(stack, Minecraft.getInstance().level);
         if(entity == null)
             return;
         pPoseStack.pushPose();

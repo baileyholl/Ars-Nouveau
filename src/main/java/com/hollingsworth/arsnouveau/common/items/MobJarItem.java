@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -52,20 +51,22 @@ public class MobJarItem extends BlockItem implements IAnimatable {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(stack, pLevel, pTooltip, pFlag);
-        Entity entity = fromItem(stack);
+        if(pLevel == null)
+            return;
+        Entity entity = fromItem(stack, pLevel);
         if(entity == null)
             return;
         pTooltip.add(entity.getDisplayName());
     }
 
-    public static Entity fromItem(ItemStack stack){
+    public static Entity fromItem(ItemStack stack, Level level){
         if(!stack.hasTag())
             return null;
         CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
         CompoundTag entityTag = blockTag.getCompound("entityTag");
         if(entityTag.isEmpty())
             return null;
-        Entity entity = EntityType.loadEntityRecursive(entityTag, Minecraft.getInstance().level, Function.identity());
+        Entity entity = EntityType.loadEntityRecursive(entityTag, level, Function.identity());
         return entity;
     }
 }
