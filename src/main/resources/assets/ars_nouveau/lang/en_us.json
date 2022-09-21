@@ -1211,7 +1211,7 @@
 	"ars_nouveau.sound.gaia_family": "Gaia Family",
 	"block.ars_nouveau.mob_jar": "Containment Jar",
 	"ars_nouveau.page.mob_jar": "Containment Jar",
-	"ars_nouveau.page1.mob_jar": "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar.",
+	"ars_nouveau.page1.mob_jar": "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar. Note Blocks placed above a jar will play an ambient sound of the mob inside.",
 	"ars_nouveau.page2.mob_jar": "Many entities can be interacted with inside the jar and will continue to simulate while inside the jar. Some examples include: chickens will lay eggs, sheep can be sheared, cows can be milked, and some mobs like the Blaze will turn the jar into a light source. Experiment with a variety of mobs to create aesthetic and functional farms. Drygmys will also treat the jar as if it were a normal entity in the area.",
 	"ars_nouveau.title.mob_jar": "Functionality"
 }
