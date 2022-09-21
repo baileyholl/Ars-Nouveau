@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
+import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -726,7 +727,7 @@ public class BlockRegistry {
                 return AlterationTableRenderer::getISTER;
             }
         });
-        registry.register(LibBlockNames.MOB_JAR, getDefaultBlockItem(BlockRegistry.MOB_JAR));
+        registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
 
     }
 

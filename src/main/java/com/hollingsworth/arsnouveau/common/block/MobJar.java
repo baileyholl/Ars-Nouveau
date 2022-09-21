@@ -30,12 +30,9 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -132,8 +129,4 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         return new MobJarTile(pPos, pState);
     }
 
-    @Override
-    public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
-        super.initializeClient(consumer);
-    }
 }
