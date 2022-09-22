@@ -28,7 +28,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '3.3.2'
+version = '3.3.3'
 
 
 configurations {
@@ -194,6 +194,8 @@ dependencies {
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    implementation fg.deobf("curse.maven:ss-619320:3960038") // sophisticated storage
+    implementation fg.deobf("curse.maven:ss-618298:3960018") // sophisticated storage
     //runtimeOnly fg.deobf("curse.maven:ruby-574856:3864138") // Rubidium
 
 }

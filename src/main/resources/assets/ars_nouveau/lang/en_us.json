@@ -52,6 +52,7 @@
 	"item.ars_nouveau.dominion_wand":"Dominion Wand",
 	"block.ars_nouveau.scribes_table": "Scribe's Table",
 	"block.ars_nouveau.light_block": "Light",
+	"block.ars_nouveau.temporary_light_block": "Temporary Light",
 	"block.ars_nouveau.mage_block": "Mage Block",
 	"block.ars_nouveau.agronomic_sourcelink": "Agronomic Sourcelink",
 	"block.ars_nouveau.source_jar": "Source Jar",

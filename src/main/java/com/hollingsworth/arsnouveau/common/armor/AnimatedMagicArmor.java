@@ -33,6 +33,11 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
 
     }
 
+    @Override
+    public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer) {
+        return true;
+    }
+
     AnimationFactory factory = new AnimationFactory(this);
     @Override
     public AnimationFactory getFactory() {

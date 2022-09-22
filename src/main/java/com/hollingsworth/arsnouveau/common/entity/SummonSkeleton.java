@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -110,7 +111,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-        this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 6.0f, 3.0f));
+        this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new SummonSkeleton.CopyOwnerTargetGoal(this));
@@ -143,6 +144,14 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
                 this.goalSelector.addGoal(4, this.meleeGoal);
             }
         }
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource instanceof EntityDamageSource eSource && eSource.getEntity() instanceof ISummon summon){
+            if (summon.getOwnerID() != null && summon.getOwnerID().equals(this.getOwnerID())) return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     /**

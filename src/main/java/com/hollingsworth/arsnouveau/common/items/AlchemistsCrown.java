@@ -14,6 +14,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -50,7 +51,7 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
                 break;
             ItemStack item = player.inventory.getItem(i);
             PotionData potionData = new PotionData(item);
-            if(potionData.isEmpty())
+            if(potionData.isEmpty() || item.getItem() instanceof ArrowItem)
                 continue;
             slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new AlchemistsCrown.SlotData(i, item)));
         }

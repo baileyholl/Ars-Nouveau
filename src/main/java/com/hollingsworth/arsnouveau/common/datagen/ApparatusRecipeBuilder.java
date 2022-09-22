@@ -98,6 +98,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
+    public ApparatusRecipeBuilder withId(ResourceLocation id) {
+        this.recipe.id = id;
+        return this;
+    }
+
     public EnchantingApparatusRecipe build() {
         if (recipe.id.getPath().equals("empty"))
             recipe.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(recipe.result.getItem()).getPath());

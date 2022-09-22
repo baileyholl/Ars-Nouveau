@@ -59,7 +59,7 @@ public class ScribesBlock extends TableBlock {
             return InteractionResult.SUCCESS;
         }
 
-        if (state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
+        if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
             if (tile == null)
