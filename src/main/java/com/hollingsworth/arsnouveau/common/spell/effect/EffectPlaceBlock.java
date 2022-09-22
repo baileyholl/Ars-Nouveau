@@ -29,6 +29,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,11 +51,11 @@ public class EffectPlaceBlock extends AbstractEffect {
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos1 : posList) {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
-            if (spellContext.castingTile instanceof IPlaceBlockResponder) {
-                ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
+            if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
+                ItemStack stack = iInventoryResponder.extractItem((i) -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1);
+                
                 if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item))
                     return;
-
                 fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
                 if (MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
                     continue;
@@ -68,6 +70,12 @@ public class EffectPlaceBlock extends AbstractEffect {
                 BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)),
                         hitPos.relative(direction), direction);
                 item.place(context);
+                for(IItemHandler handler1 : iInventoryResponder.getInventory()){
+                    ItemHandlerHelper.insertItem(handler1, stack, false);
+                    if(stack.isEmpty())
+                        break;
+                }
+
                 BlockPos affectedPos = context.getClickedPos();
                 ShapersFocus.tryPropagateBlockSpell(
                         new BlockHitResult(new Vec3(affectedPos.getX(), affectedPos.getY(), affectedPos.getZ()),
