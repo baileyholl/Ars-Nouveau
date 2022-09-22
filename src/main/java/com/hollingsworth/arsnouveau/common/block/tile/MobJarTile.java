@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -53,13 +54,19 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
     }
 
     public boolean setEntityData(Entity entity){
+        return setEntityData(entity,  level);
+    }
+
+    public boolean setEntityData(Entity entity, Level level){
         CompoundTag tag = new CompoundTag();
         if(entity.shouldBeSaved() && entity.save(tag)){
             this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());
             this.extraDataTag = null;
             this.entityTag = tag;
-            this.level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(MobJar.LIGHT_LEVEL, calculateLight()));
-            updateBlock();
+            if(!level.isClientSide) {
+                level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(MobJar.LIGHT_LEVEL, calculateLight()));
+                updateBlock();
+            }
             return true;
         }
         return false;
@@ -78,6 +85,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
     public @Nullable Entity getEntity(){
        if(entityTag != null && cachedEntity == null){
            cachedEntity = loadEntityFromTag(entityTag);
+           if(cachedEntity == null){
+               return null;
+           }
            cachedEntity.setBoundingBox(new AABB(0,0,0,0,0,0));
            cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
 //           cachedEntity.setCustomNameVisible(false);
