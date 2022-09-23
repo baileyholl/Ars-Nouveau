@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
@@ -13,12 +14,14 @@ import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
+import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -106,6 +109,7 @@ public class APIRegistry {
         registerRitual(new RitualBinding());
         registerRitual(new RitualAwakening());
         registerRitual(new RitualHarvest());
+        registerRitual(new RitualMobCapture());
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());
         registerFamiliar(new WhirlisprigFamiliarHolder());
@@ -233,6 +237,19 @@ public class APIRegistry {
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
+
+        JarBehaviorRegistry.register(EntityType.COW, new CowBehavior());
+        JarBehaviorRegistry.register(EntityType.CHICKEN, new ChickenBehavior());
+        JarBehaviorRegistry.register(EntityType.VILLAGER, new VillagerBehavior());
+        JarBehaviorRegistry.register(EntityType.SHEEP, new SheepBehavior());
+        JarBehaviorRegistry.register(EntityType.FROG, new FrogBehavior());
+        JarBehaviorRegistry.register(EntityType.PIGLIN, new PiglinBehavior());
+        JarBehaviorRegistry.register(EntityType.GHAST, new GhastBehavior());
+        JarBehaviorRegistry.register(EntityType.SQUID, new SquidBehavior());
+        JarBehaviorRegistry.register(EntityType.GLOW_SQUID, new GlowSquidBehavior());
+        JarBehaviorRegistry.register(EntityType.BLAZE, new BlazeBehavior());
+        JarBehaviorRegistry.register(EntityType.PANDA, new PandaBehavior());
+        JarBehaviorRegistry.register(EntityType.GOAT, new GoatBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

@@ -95,8 +95,8 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
         event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_OCULUS_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
-        event.registerBlockEntityRenderer(BlockRegistry.ARMOR_TILE, (t) -> new AlterationTableRenderer(t));
-
+        event.registerBlockEntityRenderer(BlockRegistry.ARMOR_TILE, AlterationTableRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MOB_JAR_TILE, MobJarRenderer::new);
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),

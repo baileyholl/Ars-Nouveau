@@ -26,6 +26,7 @@ public class WhirlisprigRenderer extends TextureVariantRenderer<Whirlisprig> {
             super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
             if (Minecraft.getInstance().isPaused())
                 return;
+
             Level world = entityIn.getCommandSenderWorld();
             Random rand = ParticleUtil.r;
             Vec3 particlePos = entityIn.position();
@@ -36,14 +37,14 @@ public class WhirlisprigRenderer extends TextureVariantRenderer<Whirlisprig> {
             float offsetY = sylph.getPositionY() / 9f;
             float roteAngle = propellers.getRotationY() / 4;
 
-            if (rand.nextInt(5) == 0) {
-                for (int i = 0; i < 5; i++) {
-                    world.addParticle(ParticleSparkleData.createData(new ParticleColor(52, 255, 36), 0.05f, 60),
-                            particlePos.x() + Math.cos(roteAngle) / 2, particlePos.y() + 0.5 + offsetY, particlePos.z() + Math.sin(roteAngle) / 2,
-                            0, 0, 0);
-                }
-
-            }
+//            if (rand.nextInt(5) == 0) {
+//                for (int i = 0; i < 5; i++) {
+//                    world.addParticle(ParticleSparkleData.createData(new ParticleColor(52, 255, 36), 0.05f, 60),
+//                            particlePos.x() + Math.cos(roteAngle) / 2.0, particlePos.y() + 0.5 + offsetY, particlePos.z() + Math.sin(roteAngle) / 2.0,
+//                            0, 0, 0);
+//                }
+//
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }

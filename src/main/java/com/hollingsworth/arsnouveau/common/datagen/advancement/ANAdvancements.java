@@ -52,6 +52,8 @@ public class ANAdvancements implements Consumer<Consumer<Advancement>> {
         saveBasicItem(ItemsRegistry.AMETHYST_GOLEM_CHARM, rituals);
         builder("familiar").display(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)), FrameType.GOAL)
                 .addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.FAMILIAR.getId(), EntityPredicate.Composite.ANY)).parent(rituals).save(con);
+        var jars = saveBasicItem(BlockRegistry.MOB_JAR, rituals);
+        builder("shrunk_starbuncle").display(ItemsRegistry.STARBUNCLE_CHARM, FrameType.CHALLENGE, true).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.SHRUNK_STARBY.getId(), EntityPredicate.Composite.ANY)).parent(jars).save(con);
         var chamber = saveBasicItem(BlockRegistry.IMBUEMENT_BLOCK, root);
         var jar = saveBasicItem(BlockRegistry.SOURCE_JAR, chamber);
         var apparatus = saveBasicItem(BlockRegistry.ENCHANTING_APP_BLOCK, chamber);

@@ -17,6 +17,7 @@ public class ANCriteriaTriggers {
     public static final PlayerTrigger CHIMERA_EXPLOSION = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "chimera_explosion")));
     public static final PlayerTrigger CREATE_PORTAL = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "portals")));
     public static final PlayerTrigger PRISMATIC = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "prismatic")));
+    public static final PlayerTrigger SHRUNK_STARBY = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "shrunk_starby")));
 
     public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
         AABB aabb = new AABB(pos).inflate(radius);

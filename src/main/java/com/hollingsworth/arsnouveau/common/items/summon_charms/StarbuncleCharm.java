@@ -25,7 +25,7 @@ public class StarbuncleCharm extends AbstractSummonCharm {
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         Starbuncle carbuncle = new Starbuncle(world, true);
         Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(context.getItemInHand().getOrCreateTag());
-        carbuncle.setPos(pos.getX(), pos.above().getY(), pos.getZ());
+        carbuncle.setPos(pos.getX() + 0.5, pos.above().getY(), pos.getZ() + 0.5);
         carbuncle.data = data;
         carbuncle.restoreFromTag();
         world.addFreshEntity(carbuncle);
