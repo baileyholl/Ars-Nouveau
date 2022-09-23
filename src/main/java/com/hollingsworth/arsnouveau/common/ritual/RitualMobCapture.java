@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -45,6 +47,9 @@ public class RitualMobCapture extends AbstractRitual {
                             level.addFreshEntity(followProjectile);
                             ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());
                             didWorkOnce = true;
+                            if(e instanceof Starbuncle starbuncle){
+                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.SHRUNK_STARBY, (ServerLevel) level, starbuncle.blockPosition(), 10);
+                            }
                             break;
                         }
                     }

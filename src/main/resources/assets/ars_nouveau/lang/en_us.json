@@ -1283,5 +1283,9 @@
 	"ars_nouveau.adv.title.drygmy_charm": "Moose Dance",
 	"ars_nouveau.adv.desc.drygmy_charm": "Acquire a Drygmy Charm",
 	"ars_nouveau.adv.title.source_jar": "Not a Fluid!",
-	"ars_nouveau.adv.desc.source_jar": "Acquire a Source Jar"
+	"ars_nouveau.adv.desc.source_jar": "Acquire a Source Jar",
+	"ars_nouveau.adv.title.mob_jar": "Tiny Home",
+	"ars_nouveau.adv.desc.mob_jar": "Acquire a Containment Jar",
+	"ars_nouveau.adv.title.shrunk_starbuncle": "Honey I Shrunk the Starbuncle",
+	"ars_nouveau.adv.desc.shrunk_starbuncle": "Put a Starbuncle in a Containment Jar"
 }
