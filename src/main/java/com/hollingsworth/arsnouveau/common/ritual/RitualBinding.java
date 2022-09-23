@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -48,6 +49,7 @@ public class RitualBinding extends AbstractRitual {
                             ParticleUtil.spawnPoof((ServerLevel) world, entity.blockPosition());
                             world.addFreshEntity(new ItemEntity(world, entity.blockPosition().getX(), entity.blockPosition().getY(), entity.blockPosition().getZ(), familiarHolder.getOutputItem()));
                             world.playSound(null, entity.blockPosition(), SoundEvents.BOOK_PUT, SoundSource.NEUTRAL, 1.0f, 1.0f);
+                            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.FAMILIAR, (ServerLevel) world, entity.blockPosition(), 8);
                         }
                     }
                 }

@@ -43,6 +43,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public int numSensitive;
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
+    public int prismRedirect;
     @Deprecated
     public int expireTime = 60*20;
 
