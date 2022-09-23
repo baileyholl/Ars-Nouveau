@@ -66,7 +66,6 @@ public class MobJarItem extends BlockItem implements IAnimatable {
         CompoundTag entityTag = blockTag.getCompound("entityTag");
         if(entityTag.isEmpty())
             return null;
-        Entity entity = EntityType.loadEntityRecursive(entityTag, level, Function.identity());
-        return entity;
+        return EntityType.loadEntityRecursive(entityTag, level, Function.identity());
     }
 }
