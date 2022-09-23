@@ -9,7 +9,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.familiar"
+      "translate": "ars_nouveau.adv.desc.familiar"
     },
     "frame": "goal",
     "hidden": false,
@@ -18,7 +18,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.familiar"
+      "translate": "ars_nouveau.adv.title.familiar"
     }
   },
   "requirements": [

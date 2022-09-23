@@ -15,7 +15,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.eat_bombegranate"
+      "translate": "ars_nouveau.adv.desc.eat_bombegranate"
     },
     "frame": "task",
     "hidden": true,
@@ -24,7 +24,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.eat_bombegranate"
+      "translate": "ars_nouveau.adv.title.eat_bombegranate"
     }
   },
   "requirements": [

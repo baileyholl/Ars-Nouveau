@@ -33,13 +33,14 @@ public class ANAdvancements implements Consumer<Consumer<Advancement>> {
         Advancement poofMob = builder("poof_mob").display(Items.GOLD_NUGGET, FrameType.TASK).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.POOF_MOB.getId(), EntityPredicate.Composite.ANY)).parent(root).save(con);
         saveBasicItem(ItemsRegistry.WIXIE_CHARM, poofMob);
         saveBasicItem(ItemsRegistry.WHIRLISPRIG_CHARM, poofMob);
-
+        saveBasicItem(ItemsRegistry.DRYGMY_CHARM, poofMob);
         Advancement starbyCharm = builder("starby_charm").normalItemRequirement(ItemsRegistry.STARBUNCLE_CHARM).parent(poofMob).save(con);
         saveBasicItem(ItemsRegistry.STARBUNCLE_SHADES, starbyCharm);
         saveBasicItem(ItemsRegistry.WIXIE_HAT, starbyCharm);
         Advancement novice = saveBasicItem(ItemsRegistry.NOVICE_SPELLBOOK, root);
         Advancement mages = saveBasicItem(ItemsRegistry.APPRENTICE_SPELLBOOK, novice);
         var tribue = saveBasicItem(ItemsRegistry.WILDEN_TRIBUTE, mages);
+        builder("wilden_explosion").display(ItemsRegistry.WILDEN_TRIBUTE, FrameType.CHALLENGE, true).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.CHIMERA_EXPLOSION.getId(), EntityPredicate.Composite.ANY)).parent(tribue).save(con);
         saveBasicItem(ItemsRegistry.ARCHMAGE_SPELLBOOK, tribue);
         saveBasicItem(ItemsRegistry.SUMMONING_FOCUS, tribue);
         saveBasicItem(ItemsRegistry.SHAPERS_FOCUS, novice);
@@ -52,6 +53,7 @@ public class ANAdvancements implements Consumer<Consumer<Advancement>> {
         builder("familiar").display(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)), FrameType.GOAL)
                 .addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.FAMILIAR.getId(), EntityPredicate.Composite.ANY)).parent(rituals).save(con);
         var chamber = saveBasicItem(BlockRegistry.IMBUEMENT_BLOCK, root);
+        var jar = saveBasicItem(BlockRegistry.SOURCE_JAR, chamber);
         var apparatus = saveBasicItem(BlockRegistry.ENCHANTING_APP_BLOCK, chamber);
         saveBasicItem(BlockRegistry.SCRYERS_OCULUS, apparatus);
         var potionJar = saveBasicItem(BlockRegistry.POTION_JAR, apparatus);
@@ -59,10 +61,12 @@ public class ANAdvancements implements Consumer<Consumer<Advancement>> {
         saveBasicItem(BlockRegistry.POTION_DIFFUSER, potionJar);
         saveBasicItem(ItemsRegistry.POTION_FLASK, potionJar);
         var turret = saveBasicItem(BlockRegistry.BASIC_SPELL_TURRET, apparatus);
-        saveBasicItem(BlockRegistry.SPELL_PRISM, turret);
+        var prism = saveBasicItem(BlockRegistry.SPELL_PRISM, turret);
+        builder("prismatic").display(BlockRegistry.SPELL_PRISM, FrameType.CHALLENGE, true).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.PRISMATIC.getId(), EntityPredicate.Composite.ANY)).parent(prism).save(con);
         var magebloom = saveBasicItem(BlockRegistry.MAGE_BLOOM_CROP, apparatus);
+        var warpScroll = saveBasicItem(ItemsRegistry.WARP_SCROLL, magebloom);
+        builder("create_portal").display(BlockRegistry.CREATIVE_SOURCE_JAR, FrameType.CHALLENGE, false).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.CREATE_PORTAL.getId(), EntityPredicate.Composite.ANY)).parent(warpScroll).save(con);
         var alteration = saveBasicItem(BlockRegistry.ALTERATION_TABLE, magebloom);
-        saveBasicItem(ItemsRegistry.BLANK_THREAD, alteration);
     }
 
     public ANAdvancementBuilder buildBasicItem(ItemLike item, Advancement parent){

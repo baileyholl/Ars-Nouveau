@@ -1,12 +1,12 @@
 {
   "parent": "ars_nouveau:potion_jar",
   "criteria": {
-    "has_potion_diffuser": {
+    "has_potion_flask": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:potion_diffuser"
+              "ars_nouveau:potion_flask"
             ]
           }
         ]
@@ -17,21 +17,22 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.adv.desc.potion_diffuser"
+      "translate": "ars_nouveau.adv.desc.potion_flask"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:potion_diffuser"
+      "item": "ars_nouveau:potion_flask",
+      "nbt": "{Damage:8}"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.adv.title.potion_diffuser"
+      "translate": "ars_nouveau.adv.title.potion_flask"
     }
   },
   "requirements": [
     [
-      "has_potion_diffuser"
+      "has_potion_flask"
     ]
   ]
 }

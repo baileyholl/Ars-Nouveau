@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.magebloom_crop"
+      "translate": "ars_nouveau.adv.desc.magebloom_crop"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.magebloom_crop"
+      "translate": "ars_nouveau.adv.title.magebloom_crop"
     }
   },
   "requirements": [

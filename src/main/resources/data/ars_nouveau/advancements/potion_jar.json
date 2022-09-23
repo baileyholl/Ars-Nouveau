@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:potion_jar",
+  "parent": "ars_nouveau:enchanting_apparatus",
   "criteria": {
-    "has_potion_diffuser": {
+    "has_potion_jar": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:potion_diffuser"
+              "ars_nouveau:potion_jar"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.adv.desc.potion_diffuser"
+      "translate": "ars_nouveau.adv.desc.potion_jar"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:potion_diffuser"
+      "item": "ars_nouveau:potion_jar"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.adv.title.potion_diffuser"
+      "translate": "ars_nouveau.adv.title.potion_jar"
     }
   },
   "requirements": [
     [
-      "has_potion_diffuser"
+      "has_potion_jar"
     ]
   ]
 }

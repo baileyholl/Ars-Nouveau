@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.imbuement_chamber"
+      "translate": "ars_nouveau.adv.desc.imbuement_chamber"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.imbuement_chamber"
+      "translate": "ars_nouveau.adv.title.imbuement_chamber"
     }
   },
   "requirements": [

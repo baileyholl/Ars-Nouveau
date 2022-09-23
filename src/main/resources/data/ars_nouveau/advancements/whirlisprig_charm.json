@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.whirlisprig_charm"
+      "translate": "ars_nouveau.adv.desc.whirlisprig_charm"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.whirlisprig_charm"
+      "translate": "ars_nouveau.adv.title.whirlisprig_charm"
     }
   },
   "requirements": [

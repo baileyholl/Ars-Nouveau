@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.spell_prism"
+      "translate": "ars_nouveau.adv.desc.spell_prism"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.spell_prism"
+      "translate": "ars_nouveau.adv.title.spell_prism"
     }
   },
   "requirements": [

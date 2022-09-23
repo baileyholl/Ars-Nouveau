@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.amethyst_golem_charm"
+      "translate": "ars_nouveau.adv.desc.amethyst_golem_charm"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.amethyst_golem_charm"
+      "translate": "ars_nouveau.adv.title.amethyst_golem_charm"
     }
   },
   "requirements": [

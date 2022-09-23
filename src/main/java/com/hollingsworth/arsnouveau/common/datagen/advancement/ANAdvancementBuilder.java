@@ -76,7 +76,7 @@ public class ANAdvancementBuilder implements net.minecraftforge.common.extension
 
     // The following displays cannot be used for roots.
     public ANAdvancementBuilder display(ItemStack pItem, FrameType pFrame) {
-        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("description"), null, pFrame, true, true, false));
+        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("desc"), null, pFrame, true, true, false));
     }
 
     public ANAdvancementBuilder display(ItemLike pItem, FrameType pFrame) {
@@ -85,7 +85,7 @@ public class ANAdvancementBuilder implements net.minecraftforge.common.extension
 
     // The following displays cannot be used for roots.
     public ANAdvancementBuilder display(ItemStack pItem, FrameType pFrame, boolean hidden) {
-        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("description"), null, pFrame, true, true, hidden));
+        return this.display(new DisplayInfo(pItem, this.getComponent("title"), this.getComponent("desc"), null, pFrame, true, true, hidden));
     }
 
     public ANAdvancementBuilder display(ItemLike pItem, FrameType pFrame, boolean hidden) {
@@ -138,7 +138,7 @@ public class ANAdvancementBuilder implements net.minecraftforge.common.extension
     }
 
     public MutableComponent getComponent(String type){
-        return Component.translatable(modid + ".advancement." + type + "." + fileKey);
+        return Component.translatable(modid + ".adv." + type + "." + fileKey);
     }
 
     /**

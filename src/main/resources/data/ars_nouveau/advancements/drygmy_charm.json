@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:potion_jar",
+  "parent": "ars_nouveau:poof_mob",
   "criteria": {
-    "has_potion_diffuser": {
+    "has_drygmy_charm": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:potion_diffuser"
+              "ars_nouveau:drygmy_charm"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.adv.desc.potion_diffuser"
+      "translate": "ars_nouveau.adv.desc.drygmy_charm"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:potion_diffuser"
+      "item": "ars_nouveau:drygmy_charm"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.adv.title.potion_diffuser"
+      "translate": "ars_nouveau.adv.title.drygmy_charm"
     }
   },
   "requirements": [
     [
-      "has_potion_diffuser"
+      "has_drygmy_charm"
     ]
   ]
 }

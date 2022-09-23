@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.novice_spell_book"
+      "translate": "ars_nouveau.adv.desc.novice_spell_book"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.novice_spell_book"
+      "translate": "ars_nouveau.adv.title.novice_spell_book"
     }
   },
   "requirements": [

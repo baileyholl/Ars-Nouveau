@@ -1,12 +1,12 @@
 {
-  "parent": "ars_nouveau:potion_jar",
+  "parent": "ars_nouveau:magebloom_crop",
   "criteria": {
-    "has_potion_diffuser": {
+    "has_warp_scroll": {
       "conditions": {
         "items": [
           {
             "items": [
-              "ars_nouveau:potion_diffuser"
+              "ars_nouveau:warp_scroll"
             ]
           }
         ]
@@ -17,21 +17,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.adv.desc.potion_diffuser"
+      "translate": "ars_nouveau.adv.desc.warp_scroll"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "ars_nouveau:potion_diffuser"
+      "item": "ars_nouveau:warp_scroll"
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.adv.title.potion_diffuser"
+      "translate": "ars_nouveau.adv.title.warp_scroll"
     }
   },
   "requirements": [
     [
-      "has_potion_diffuser"
+      "has_warp_scroll"
     ]
   ]
 }

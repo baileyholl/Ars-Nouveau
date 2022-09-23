@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.wixie_hat"
+      "translate": "ars_nouveau.adv.desc.wixie_hat"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.wixie_hat"
+      "translate": "ars_nouveau.adv.title.wixie_hat"
     }
   },
   "requirements": [

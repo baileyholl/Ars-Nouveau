@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDecelerate;
@@ -13,8 +14,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SpellPrismBlock extends ModBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -37,6 +36,10 @@ public class SpellPrismBlock extends ModBlock {
         Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
         Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
+        spell.prismRedirect++;
+        if(spell.prismRedirect >= 3){
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC, world, pos, 10);
+        }
         if (spell.spellResolver == null) {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;

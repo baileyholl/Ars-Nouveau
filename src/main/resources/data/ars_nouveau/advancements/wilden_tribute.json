@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.wilden_tribute"
+      "translate": "ars_nouveau.adv.desc.wilden_tribute"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.wilden_tribute"
+      "translate": "ars_nouveau.adv.title.wilden_tribute"
     }
   },
   "requirements": [

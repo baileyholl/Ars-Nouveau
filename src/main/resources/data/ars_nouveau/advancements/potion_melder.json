@@ -1,5 +1,5 @@
 {
-  "parent": "ars_nouveau:enchanting_apparatus",
+  "parent": "ars_nouveau:potion_jar",
   "criteria": {
     "has_potion_melder": {
       "conditions": {
@@ -17,7 +17,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "ars_nouveau.advancement.description.potion_melder"
+      "translate": "ars_nouveau.adv.desc.potion_melder"
     },
     "frame": "task",
     "hidden": false,
@@ -26,7 +26,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "ars_nouveau.advancement.title.potion_melder"
+      "translate": "ars_nouveau.adv.title.potion_melder"
     }
   },
   "requirements": [
