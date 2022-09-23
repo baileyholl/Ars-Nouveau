@@ -5,10 +5,10 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
-    "elytra.ClientElytraMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
+    "elytra.ClientElytraMixin",
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
@@ -22,8 +22,9 @@
     "camera.TrackedEntityMixin",
     "elytra.ElytraPlayerMixin",
     "elytra.MixinLivingEntity",
-    "perks.PerkLivingEntity",
-    "jar.MobAccessorMixin"
+    "jar.DispenserMixin",
+    "jar.MobAccessorMixin",
+    "perks.PerkLivingEntity"
   ],
   "minVersion": "0.8"
 }

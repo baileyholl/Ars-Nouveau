@@ -250,6 +250,7 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.BLAZE, new BlazeBehavior());
         JarBehaviorRegistry.register(EntityType.PANDA, new PandaBehavior());
         JarBehaviorRegistry.register(EntityType.GOAT, new GoatBehavior());
+        JarBehaviorRegistry.register(EntityType.MOOSHROOM, new MooshroomBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
