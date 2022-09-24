@@ -1287,5 +1287,7 @@
 	"ars_nouveau.adv.title.mob_jar": "Tiny Home",
 	"ars_nouveau.adv.desc.mob_jar": "Acquire a Containment Jar",
 	"ars_nouveau.adv.title.shrunk_starbuncle": "Honey I Shrunk the Starbuncle",
-	"ars_nouveau.adv.desc.shrunk_starbuncle": "Put a Starbuncle in a Containment Jar"
+	"ars_nouveau.adv.desc.shrunk_starbuncle": "Put a Starbuncle in a Containment Jar",
+	"block.ars_nouveau.void_prism": "Void Prism",
+	"ars_nouveau.page.void_prism": "Destroys any spell projectiles that pass through it."
 }

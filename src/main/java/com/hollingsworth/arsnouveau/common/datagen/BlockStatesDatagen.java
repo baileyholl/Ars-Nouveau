@@ -31,6 +31,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerOnlyState(BlockRegistry.POTION_DIFFUSER, LibBlockNames.POTION_DIFFUSER);
         registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
 
+        registerNormalCube(BlockRegistry.VOID_PRISM, LibBlockNames.VOID_PRISM);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
         }

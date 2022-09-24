@@ -494,6 +494,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
 
+        addBasicItem(BlockRegistry.VOID_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.VOID_PRISM));
     }
 
     public String getLangPath(String name, int count) {

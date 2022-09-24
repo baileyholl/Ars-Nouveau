@@ -74,7 +74,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.SCRYERS_CRYSTAL,
                 BlockRegistry.SCRYERS_OCULUS,
                 BlockRegistry.POTION_DIFFUSER,
-                BlockRegistry.MOB_JAR
+                BlockRegistry.MOB_JAR,
+                BlockRegistry.VOID_PRISM
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(

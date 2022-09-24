@@ -90,6 +90,7 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
         }
         itemUnchecked(ItemsRegistry.BLANK_THREAD);
+        getBuilder(LibBlockNames.VOID_PRISM).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.VOID_PRISM));
     }
 
     public void blockAsItem(String s){
@@ -142,7 +143,6 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
     private ResourceLocation spellTexture(final Item item) {
         final ResourceLocation name = registryName(item);
-        System.out.println(new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath().replace("glyph_", "")).toString());
         return new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath().replace("glyph_", ""));
     }
 }

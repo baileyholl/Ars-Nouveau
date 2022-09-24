@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.common.block.SpellPrismBlock;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -263,8 +263,8 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
 
-            if (state.getBlock() instanceof SpellPrismBlock) {
-                SpellPrismBlock.redirectSpell((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
+            if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
+                prismaticBlock.onHit((ServerLevel) level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }
 

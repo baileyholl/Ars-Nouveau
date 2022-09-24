@@ -16,4 +16,5 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> SPELL_CAN_HIT = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "spell_can_hit"));
     public static final TagKey<EntityType<?>> JAR_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_blacklist"));
     public static final TagKey<EntityType<?>> JAR_WHITELIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_whitelist"));
+    public static final TagKey<EntityType<?>> FAMILIAR = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "familiar"));
 }

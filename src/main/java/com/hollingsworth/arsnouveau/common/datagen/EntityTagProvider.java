@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.Registry;
@@ -33,8 +32,13 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(ModEntities.WILDEN_HUNTER.get(), ModEntities.WILDEN_GUARDIAN.get(),
                         ModEntities.WILDEN_STALKER.get()
                 );
-        this.tag(EntityTags.JAR_BLACKLIST);
-        this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"));
+        this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
+                        ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
+                        ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
+        this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
+        this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"))
+                .add(EntityType.ITEM).add(EntityType.END_CRYSTAL)
+                .add(EntityType.BOAT).add(EntityType.CHEST_BOAT);
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {

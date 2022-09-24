@@ -350,6 +350,9 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockRegistryKey)
     public static MobJar MOB_JAR;
 
+    @ObjectHolder(value = prepend + LibBlockNames.VOID_PRISM, registryName = BlockRegistryKey)
+    public static VoidPrism VOID_PRISM;
+
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
@@ -466,7 +469,7 @@ public class BlockRegistry {
         }
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
-
+        registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
     }
 
     public static MagicLeaves createLeavesBlock(MaterialColor color) {
@@ -728,7 +731,7 @@ public class BlockRegistry {
             }
         });
         registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
-
+        registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {
