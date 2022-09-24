@@ -12,6 +12,7 @@ import java.util.function.Function;
  * Represents an ItemHandler and its list of filters.
  */
 public class FilterableItemHandler {
+
     private IItemHandler handler;
     private List<Function<ItemStack, ItemScroll.SortPref>> filters;
 
@@ -28,17 +29,8 @@ public class FilterableItemHandler {
         return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
     }
 
-    public boolean canExtract(int slot){
-        return getHighestPreference(handler.getStackInSlot(slot)) != ItemScroll.SortPref.INVALID;
-    }
-
-    public ItemScroll.SortPref getInsertionPref(ItemStack stack){
-        return getHighestPreference(stack);
-    }
-
-    public ItemScroll.SortPref getExtractPref(int slot){
-        ItemStack stack = handler.getStackInSlot(slot);
-        return getHighestPreference(stack);
+    public boolean canExtract(ItemStack stack){
+        return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
     }
 
     /**
@@ -56,5 +48,13 @@ public class FilterableItemHandler {
             }
         }
         return pref;
+    }
+
+    public IItemHandler getHandler() {
+        return handler;
+    }
+
+    public List<Function<ItemStack, ItemScroll.SortPref>> getFilters() {
+        return filters;
     }
 }
