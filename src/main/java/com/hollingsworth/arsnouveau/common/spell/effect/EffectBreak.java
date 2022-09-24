@@ -40,13 +40,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     public ItemStack getStack(LivingEntity shooter) {
-        return new ItemStack(Items.DIAMOND_PICKAXE);
-//        if(isRealPlayer(shooter)){
-//            ItemStack mainHand = getPlayer(shooter, (ServerLevel)shooter.level).getMainHandItem();
-//            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerLevel)shooter.level).getOffhandItem() : mainHand).copy();
-//        }
-//
-//        return new ItemStack(Items.DIAMOND_PICKAXE);
+        return shooter.getMainHandItem().copy();
     }
 
     @Override
@@ -65,30 +59,22 @@ public class EffectBreak extends AbstractEffect {
             if (!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1) || state.is(BlockTagProvider.BREAK_BLACKLIST)) {
                 continue;
             }
-            if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
-                stack.enchant(Enchantments.SILK_TOUCH, 1);
-                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                if (!state.is(BlockTagProvider.NO_BREAK_DROP))
-                    destroyBlockSafely(world, pos1, false, shooter);
-            } else if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
-                int bonus = spellStats.getBuffCount(AugmentFortune.INSTANCE);
-                stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
-                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, bonus, 0));
-                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                if (!state.is(BlockTagProvider.NO_BREAK_DROP))
-                    destroyBlockSafely(world, pos1, false, shooter);
-            } else {
-                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                if (!state.is(BlockTagProvider.NO_BREAK_DROP))
-                    destroyBlockSafely(world, pos1, false, shooter);
-                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, 0, 0));
-            }
+            int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
+            int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
+            stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
+            stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
+
+            state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+            if (!state.is(BlockTagProvider.NO_BREAK_DROP))
+                destroyBlockSafely(world, pos1, false, shooter);
+
+            state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, numFortune, numSilkTouch));
+
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false
             ), world, shooter, spellContext, resolver);
         }
     }
-
 
     @Override
     public boolean defaultedStarterGlyph() {
