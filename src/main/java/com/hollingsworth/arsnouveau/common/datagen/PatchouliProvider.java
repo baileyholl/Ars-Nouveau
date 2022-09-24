@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -11,6 +12,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -50,6 +52,7 @@ public class PatchouliProvider implements DataProvider {
     public static ResourceLocation GLYPHS_1 = new ResourceLocation(ArsNouveau.MODID, "glyphs_1");
     public static ResourceLocation GLYPHS_2 = new ResourceLocation(ArsNouveau.MODID, "glyphs_2");
     public static ResourceLocation GLYPHS_3 = new ResourceLocation(ArsNouveau.MODID, "glyphs_3");
+    public static ResourceLocation ARMOR = new ResourceLocation(ArsNouveau.MODID, "armor");
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
@@ -72,6 +75,10 @@ public class PatchouliProvider implements DataProvider {
 
         for (AbstractSpellPart s : ArsNouveauAPI.getInstance().getSpellpartMap().values()) {
             addGlyphPage(s);
+        }
+
+        for (IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
+            addPerkPage(perk);
         }
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "spell_casting")
@@ -171,7 +178,8 @@ public class PatchouliProvider implements DataProvider {
                         .withText(getLangPath("drygmy_charm", 2)))
                 .withPage(new TextPage(getLangPath("drygmy_charm", 3)).withTitle("ars_nouveau.summoning"))
                 .withPage(new TextPage(getLangPath("drygmy_charm", 4)).withTitle("ars_nouveau.happiness"))
-                .withPage(new TextPage(getLangPath("drygmy_charm", 5)).withTitle("ars_nouveau.production")), getPath(AUTOMATION, "drygmy_charm"));
+                .withPage(new TextPage(getLangPath("drygmy_charm", 5)).withTitle("ars_nouveau.production"))
+                .withPage(new RelationsPage().withEntry(MACHINES, "mob_jar")), getPath(AUTOMATION, "drygmy_charm"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.DULL_TRINKET)
                 .withPage(new CraftingPage(ItemsRegistry.DULL_TRINKET).withRecipe2(ItemsRegistry.MUNDANE_BELT))
@@ -195,7 +203,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 3))
                 .withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()).getPath() + "_" + 4))
                 .withLocalizedText()
-                .withPage(new ApparatusPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
+                .withPage(new ApparatusTextPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
         addBasicItem(ItemsRegistry.RING_OF_GREATER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_GREATER_DISCOUNT));
         addBasicItem(ItemsRegistry.RING_OF_LESSER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_LESSER_DISCOUNT));
@@ -289,18 +297,6 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(ItemsRegistry.DOMINION_ROD, AUTOMATION, new ApparatusPage(ItemsRegistry.DOMINION_ROD));
         addBasicItem(BlockRegistry.SPELL_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.SPELL_PRISM));
         addBasicItem(BlockRegistry.SCONCE_BLOCK, RESOURCES, new CraftingPage(BlockRegistry.SCONCE_BLOCK));
-
-        addPage(new PatchouliBuilder(EQUIPMENT, "armor")
-                .withIcon(ItemsRegistry.NOVICE_ROBES)
-                .withLocalizedText()
-                .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER).withRecipe2(ItemsRegistry.NOVICE_HOOD))
-                .withPage(new CraftingPage(ItemsRegistry.NOVICE_ROBES).withRecipe2(ItemsRegistry.NOVICE_LEGGINGS))
-                .withPage(new CraftingPage(ItemsRegistry.NOVICE_BOOTS).withRecipe2(ItemsRegistry.BLAZE_FIBER))
-                .withPage(new CraftingPage(ItemsRegistry.APPRENTICE_HOOD).withRecipe2(ItemsRegistry.APPRENTICE_ROBES))
-                .withPage(new CraftingPage(ItemsRegistry.APPRENTICE_LEGGINGS).withRecipe2(ItemsRegistry.APPRENTICE_BOOTS))
-                .withPage(new CraftingPage(ItemsRegistry.END_FIBER).withRecipe2(ItemsRegistry.ARCHMAGE_HOOD))
-                .withPage(new CraftingPage(ItemsRegistry.ARCHMAGE_ROBES).withRecipe2(ItemsRegistry.ARCHMAGE_LEGGINGS))
-                .withPage(new CraftingPage(ItemsRegistry.ARCHMAGE_BOOTS)), getPath(EQUIPMENT, "armor"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
@@ -442,6 +438,63 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(ItemsRegistry.SPLASH_LAUNCHER)
                 .withPage(new ApparatusPage(ItemsRegistry.SPLASH_LAUNCHER))
                 .withPage(new ApparatusPage(ItemsRegistry.LINGERING_LAUNCHER)), getPath(EQUIPMENT, "flask_launcher"));
+
+        PatchouliBuilder ARMOR_ENTRY = new PatchouliBuilder(EQUIPMENT, "armor")
+                .withIcon(ItemsRegistry.NOVICE_ROBES)
+                .withLocalizedText()
+                .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER))
+                .withPage(new TextPage("ars_nouveau.page.threads").withTitle("ars_nouveau.threads"))
+                .withPage(new ImagePage().withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/sorcerer_diagram.png"))
+                        .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/arcanist_thread_diagram.png"))
+                        .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/battlemage_diagram.png"))
+                        .withBorder().withTitle("ars_nouveau.thread_layout")
+                        .withText("ars_nouveau.page.layout_desc"))
+                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_HOOD))
+                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_ROBES))
+                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_LEGGINGS))
+                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_BOOTS))
+                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_HOOD))
+                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_ROBES))
+                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_LEGGINGS))
+                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_BOOTS))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_HOOD))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_ROBES))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_LEGGINGS))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_BOOTS))
+                .withPage(new RelationsPage().withEntry(ARMOR, "armor_upgrade"));
+        addPage(ARMOR_ENTRY.withCategory(ARMOR), getPath(ARMOR, "armor"));
+
+        addPage(new PatchouliBuilder(ARMOR, "armor_upgrading")
+                .withLocalizedText()
+                .withPage(new TextPage(getLangPath("armor_upgrading", 2)).withTitle("ars_nouveau.armor_tiers"))
+                .withIcon(ItemsRegistry.APPRENTICE_HOOD)
+                .withPage(new ApparatusTextPage("ars_nouveau:upgrade_1"))
+                .withPage(new ApparatusTextPage("ars_nouveau:upgrade_2"))
+                .withPage(new RelationsPage().withEntry(ARMOR, "armor").withEntry(ARMOR, "alteration_table"))
+
+                .withSortNum(1), getPath(ARMOR, "armor_upgrade"));
+        addPage(new PatchouliBuilder(ARMOR, "applying_perks")
+                .withLocalizedText()
+                .withLocalizedText()
+                .withPage(new RelationsPage().withEntry(ARMOR, "alteration_table"))
+                .withIcon(ItemsRegistry.BLANK_THREAD)
+                .withSortNum(2), getPath(ARMOR, "applying_perks"));
+
+        addPage(new PatchouliBuilder(ARMOR, "alteration_table")
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.ALTERATION_TABLE).withRecipe2(ItemsRegistry.BLANK_THREAD))
+                .withPage(new RelationsPage().withEntry(ARMOR, "armor_upgrade").withEntry(ARMOR, "armor"))
+                .withIcon(BlockRegistry.ALTERATION_TABLE)
+                .withSortNum(3), getPath(ARMOR, "alteration_table"));
+
+        addPage(new PatchouliBuilder(MACHINES, "mob_jar")
+                .withIcon(BlockRegistry.MOB_JAR)
+                .withLocalizedText()
+                .withPage(new TextPage("ars_nouveau.page2.mob_jar").withTitle("ars_nouveau.title.mob_jar"))
+                .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
+                .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
+
+        addBasicItem(BlockRegistry.VOID_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.VOID_PRISM));
     }
 
     public String getLangPath(String name, int count) {
@@ -456,13 +509,18 @@ public class PatchouliProvider implements DataProvider {
         this.pages.add(new PatchouliPage(builder, path));
     }
 
-    public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+    public PatchouliBuilder buildBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
                 .withPage(new TextPage("ars_nouveau.page." + getRegistryName(item.asItem()).getPath()));
         if (recipePage != null) {
             builder.withPage(recipePage);
         }
+        return builder;
+    }
+
+    public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+        PatchouliBuilder builder = buildBasicItem(item, category, recipePage);
         this.pages.add(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
     }
 
@@ -536,6 +594,15 @@ public class PatchouliProvider implements DataProvider {
             builder.withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(enchantment).getPath() + "_" + i));
         }
         this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/enchantments/" + getRegistryName(enchantment).getPath() + ".json")));
+    }
+
+    public void addPerkPage(IPerk perk){
+        PerkItem perkItem = ArsNouveauAPI.getInstance().getPerkItemMap().get(perk.getRegistryName());
+        PatchouliBuilder builder = new PatchouliBuilder(ARMOR, perkItem)
+                .withIcon(perkItem)
+                .withTextPage(perk.getDescriptionKey())
+                .withPage(new ApparatusPage(perkItem)).withSortNum(99);
+        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/ars_nouveau/patchouli/armor/" + perk.getRegistryName().getPath() + ".json")));
     }
 
     List<Enchantment> enchants = Arrays.asList(

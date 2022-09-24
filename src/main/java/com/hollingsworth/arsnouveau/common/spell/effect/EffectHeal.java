@@ -6,12 +6,12 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Set;
 
 public class EffectHeal extends AbstractEffect {
@@ -22,7 +22,7 @@ public class EffectHeal extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             if (entity.isRemoved() || entity.getHealth() <= 0)
                 return;
@@ -31,6 +31,9 @@ public class EffectHeal extends AbstractEffect {
             if (entity.isInvertedHealAndHarm()) {
                 dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
             } else {
+                if(entity instanceof Player player){
+                    player.causeFoodExhaustion(2.5f);
+                }
                 entity.heal(healVal);
             }
 
@@ -65,7 +68,7 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Heals a small amount of health for the target. When used on Undead, the spell will deal an equal amount of magic damage.";
+        return "Heals a small amount of health and consumes hunger from the caster. When used on Undead, the spell will deal an equal amount of magic damage.";
     }
 
     @Nonnull

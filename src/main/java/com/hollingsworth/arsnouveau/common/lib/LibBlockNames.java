@@ -8,6 +8,8 @@ public class LibBlockNames {
 
     public final static String MAGE_BLOCK = "mage_block";
     public final static String LIGHT_BLOCK = "light_block";
+    public static final String T_LIGHT_BLOCK = "temporary_light_block";
+
     public final static String ENCHANTING_APPARATUS = "enchanting_apparatus";
     public final static String SOURCE_JAR = "source_jar";
     public final static String MAGE_BLOOM = "magebloom_crop";
@@ -137,6 +139,9 @@ public class LibBlockNames {
     public static final String BASTION_POD = "bastion_pod";
     public static final String POTION_DIFFUSER = "potion_diffuser";
 
+    public static final String ALTERATION_TABLE = "alteration_table";
+    public static final String MOB_JAR = "mob_jar";
+
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
             SMOOTH_SOURCESTONE_BASKET, SMOOTH_SOURCESTONE_MOSAIC, SMOOTH_SOURCESTONE_ALTERNATING, SMOOTH_SOURCESTONE_LARGE_BRICKS, SMOOTH_SOURCESTONE, SMOOTH_SOURCESTONE_SMALL_BRICKS,
@@ -145,4 +150,5 @@ public class LibBlockNames {
     };
 
     public static final List<String> DIRECTIONAL_SOURCESTONE = List.of(GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS);
+    public static final String VOID_PRISM = "void_prism";
 }

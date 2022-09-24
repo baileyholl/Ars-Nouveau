@@ -12,11 +12,13 @@ public class GenericModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
     public ResourceLocation textLoc;
     public ResourceLocation animationLoc;
     public String textPathRoot = "blocks";
+    public String name;
 
     public GenericModel(String name) {
         this.modelLocation = new ResourceLocation(ArsNouveau.MODID, "geo/" + name + ".geo.json");
         this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/" + textPathRoot + "/" + name + ".png");
         this.animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/" + name + "_animations.json");
+        this.name = name;
     }
 
     public GenericModel(String name, String textPath) {

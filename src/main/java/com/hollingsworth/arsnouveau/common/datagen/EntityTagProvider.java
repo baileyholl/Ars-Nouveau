@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
@@ -18,21 +18,27 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags() {
-        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "disintegration_blacklist")));
-        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "disintegration_whitelist")));
-        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "drygmy_blacklist")))
-                .add(EntityType.IRON_GOLEM);
-        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "magic_find")))
+        this.tag(EntityTags.DISINTEGRATION_BLACKLIST);
+        this.tag(EntityTags.DISINTEGRATION_WHITELIST);
+        this.tag(EntityTags.DRYGMY_BLACKLIST).add(EntityType.IRON_GOLEM);
+        this.tag(EntityTags.MAGIC_FIND)
                 .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.ENTITY_DRYGMY.get(),
                         ModEntities.WHIRLISPRIG_TYPE.get(),
                         ModEntities.ENTITY_BOOKWYRM_TYPE.get(),
                         ModEntities.ENTITY_WIXIE_TYPE.get()
                 );
-        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "spell_can_hit")));
-        this.tag(create(new ResourceLocation(ArsNouveau.MODID, "an_hostile")))
+        this.tag(EntityTags.SPELL_CAN_HIT);
+        this.tag(EntityTags.HOSTILE_MOBS)
                 .add(ModEntities.WILDEN_HUNTER.get(), ModEntities.WILDEN_GUARDIAN.get(),
                         ModEntities.WILDEN_STALKER.get()
                 );
+        this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
+                        ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
+                        ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
+        this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
+        this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"))
+                .add(EntityType.ITEM).add(EntityType.END_CRYSTAL)
+                .add(EntityType.BOAT).add(EntityType.CHEST_BOAT);
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {

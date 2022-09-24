@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
+import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -64,7 +65,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void tick() {
-        if (getBlockState().getValue(ScribesBlock.PART) != BedPart.HEAD)
+        if (getBlockState().getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
             return;
         if (!level.isClientSide && !synced) {
             updateBlock();
@@ -223,7 +224,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     }
 
     public boolean isMasterTile() {
-        return getBlockState().getValue(ScribesBlock.PART) == BedPart.HEAD;
+        return getBlockState().getValue(ScribesBlock.PART) == ThreePartBlock.HEAD;
     }
 
     public boolean canConsumeItemstack(ItemStack stack) {

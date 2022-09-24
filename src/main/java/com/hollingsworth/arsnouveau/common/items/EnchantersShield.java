@@ -2,12 +2,11 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.FixedGeoItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.item.ShieldModel;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -33,15 +32,9 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
-        if (world.isClientSide() || world.getGameTime() % 200 != 0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
-            return;
-
-        CapabilityRegistry.getMana((LivingEntity) entity).ifPresent(mana -> {
-            if (mana.getCurrentMana() > 20) {
-                mana.removeMana(20);
-                stack.setDamageValue(stack.getDamageValue() - 1);
-            }
-        });
+        super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
+        if(entity instanceof Player player)
+            RepairingPerk.attemptRepair(stack, player);
     }
 
     @Override

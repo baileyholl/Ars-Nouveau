@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,19 +18,22 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.IForgeShearable;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class EffectCut extends AbstractEffect {
+public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     public static EffectCut INSTANCE = new EffectCut();
 
@@ -38,7 +42,7 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         if (entity instanceof IForgeShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
@@ -53,26 +57,48 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
-            ItemStack shears = new ItemStack(Items.SHEARS);
-            applyEnchantments(spellStats, shears);
-            if (world.getBlockState(p).getBlock() instanceof IForgeShearable shearable) {
-
-                if (shearable.isShearable(shears, world, p)) {
-                    List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
-                    items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
-                }
+            if(spellStats.getBuffCount(AugmentAmplify.INSTANCE) > 0){
+                doStrip(p, rayTraceResult, world, shooter, spellStats, spellContext, resolver);
+            }else{
+                doShear(p, rayTraceResult, world, shooter, spellStats, spellContext, resolver);
             }
-            Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
-            entity.setItemInHand(InteractionHand.MAIN_HAND, shears);
-            // TODO Replace with AN shears
-            if (world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() ||
-                    world.getBlockEntity(p) instanceof ArcanePedestalTile || world.getBlockEntity(p) instanceof ScribesTile))
-                continue;
-            entity.setPos(p.getX(), p.getY(), p.getZ());
-            world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
         }
+    }
+
+    private boolean dupeCheck(Level world, BlockPos pos){
+        BlockEntity be = world.getBlockEntity(pos);
+        return be != null && (world.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() ||
+                              be instanceof ArcanePedestalTile || be instanceof ScribesTile);
+    }
+
+    public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+        ItemStack axe = new ItemStack(Items.DIAMOND_AXE);
+        applyEnchantments(spellStats, axe);
+        Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
+        entity.setItemInHand(InteractionHand.MAIN_HAND, axe);
+        // TODO Replace with AN shears
+        if (dupeCheck(world, p)) return;
+        entity.setPos(p.getX(), p.getY(), p.getZ());
+        world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
+        axe.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
+    }
+
+    public void doShear(BlockPos p, BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+        ItemStack shears = new ItemStack(Items.SHEARS);
+        applyEnchantments(spellStats, shears);
+        if (world.getBlockState(p).getBlock() instanceof IForgeShearable shearable && shearable.isShearable(shears, world, p)) {
+            List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
+            items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
+        }
+        Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
+        entity.setItemInHand(InteractionHand.MAIN_HAND, shears);
+        // TODO Replace with AN shears
+        if (dupeCheck(world, p)) return;
+        entity.setPos(p.getX(), p.getY(), p.getZ());
+        world.getBlockState(p).use(world, entity, InteractionHand.MAIN_HAND, rayTraceResult);
+        shears.useOn(new UseOnContext(entity, InteractionHand.MAIN_HAND, rayTraceResult));
     }
 
     @Override
@@ -92,8 +118,13 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
+    }
+
+    @Override
     public String getBookDescription() {
-        return "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. For simulating breaking with shears, see Break and Sensitive. Costs nothing.";
+        return "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. Amplify will simulate using an Axe instead of Shears. For simulating breaking with shears, see Break and Sensitive. Costs nothing.";
     }
 
     @Override

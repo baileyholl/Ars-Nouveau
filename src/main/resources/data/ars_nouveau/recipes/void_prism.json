@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "tag": "forge:obsidian"
+    },
+    "y": {
+      "item": "ars_nouveau:spell_prism"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "result": {
+    "item": "ars_nouveau:void_prism"
+  }
+}

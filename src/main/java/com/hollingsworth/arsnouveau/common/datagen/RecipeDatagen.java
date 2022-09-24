@@ -17,7 +17,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
@@ -31,14 +30,12 @@ public class RecipeDatagen extends RecipeProvider {
     public static Ingredient ARCHWOOD_LOG = Ingredient.of(ItemTagProvider.ARCHWOOD_LOG_TAG);
     public static Ingredient WILDEN_DROP = Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG);
 
-
+    public Consumer<FinishedRecipe> consumer;
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         {
+            this.consumer = consumer;
             Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
-            makeArmor("novice", consumer, ItemsRegistry.MAGE_FIBER);
-            makeArmor("apprentice", consumer, ItemsRegistry.BLAZE_FIBER);
-            makeArmor("archmage", consumer, ItemsRegistry.END_FIBER);
 
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.WORN_NOTEBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -619,6 +616,30 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('x', BlockRegistry.ARCHWOOD_PLANK)
                     .define('y', Tags.Items.RODS_BLAZE)
                     .define('z', Tags.Items.INGOTS_GOLD).save(consumer);
+
+            shapedBuilder(ItemsRegistry.BLANK_THREAD, 1)
+                    .pattern("xxx")
+                    .pattern("yyy")
+                    .pattern("xxx")
+                    .define('x', ItemsRegistry.MAGE_FIBER)
+                    .define('y', Tags.Items.NUGGETS_GOLD).save(consumer);
+
+            shapedBuilder(BlockRegistry.ALTERATION_TABLE)
+                    .pattern(" x ")
+                    .pattern("xyx")
+                    .pattern(" x ")
+                    .define('x', ItemsRegistry.MAGE_FIBER)
+                    .define('y', BlockRegistry.SCRIBES_BLOCK).save(consumer);
+            shapedBuilder(BlockRegistry.MOB_JAR)
+                    .pattern("yyy")
+                    .pattern("x x")
+                    .pattern("xxx").define('y', BlockRegistry.ARCHWOOD_SLABS).define('x', Ingredient.of(Tags.Items.GLASS)).save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.CONTAINMENT)).requires(BlockRegistry.VEXING_LOG).requires(ItemsRegistry.MANIPULATION_ESSENCE).requires(Items.GLASS_BOTTLE, 3).save(consumer);
+            shapedBuilder(BlockRegistry.VOID_PRISM)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('y', BlockRegistry.SPELL_PRISM).define('x', Ingredient.of(Tags.Items.OBSIDIAN)).save(consumer);
         }
     }
 
@@ -711,35 +732,5 @@ public class RecipeDatagen extends RecipeProvider {
     public static void makeStonecutter(Consumer<FinishedRecipe> consumer, ItemLike input, ItemLike output, String reg) {
         SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), output).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_" + STONECUTTER_COUNTER));
         STONECUTTER_COUNTER++;
-    }
-
-    public static void makeArmor(String prefix, Consumer<FinishedRecipe> consumer, ItemLike material) {
-        ShapedRecipeBuilder.shaped(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, prefix + "_boots")))
-                .pattern("   ")
-                .pattern("x x")
-                .pattern("x x").define('x', material).group(ArsNouveau.MODID)
-                .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(consumer);
-
-        ShapedRecipeBuilder.shaped(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, prefix + "_leggings")))
-                .pattern("xxx")
-                .pattern("x x")
-                .pattern("x x").define('x', material).group(ArsNouveau.MODID)
-                .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(consumer);
-
-        ShapedRecipeBuilder.shaped(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, prefix + "_hood")))
-                .pattern("xxx")
-                .pattern("x x")
-                .pattern("   ").define('x', material).group(ArsNouveau.MODID)
-                .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(consumer);
-
-        ShapedRecipeBuilder.shaped(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, prefix + "_robes")))
-                .pattern("x x")
-                .pattern("xxx")
-                .pattern("xxx").define('x', material).group(ArsNouveau.MODID)
-                .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                .save(consumer);
     }
 }

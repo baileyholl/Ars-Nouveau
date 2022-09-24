@@ -8,6 +8,7 @@
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
+    "elytra.ClientElytraMixin",
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
@@ -19,9 +20,11 @@
     "camera.ChunkMapMixin",
     "camera.PlayerListMixin",
     "camera.TrackedEntityMixin",
-    "elytra.ClientElytraMixin",
     "elytra.ElytraPlayerMixin",
-    "elytra.MixinLivingEntity"
+    "elytra.MixinLivingEntity",
+    "jar.DispenserMixin",
+    "jar.MobAccessorMixin",
+    "perks.PerkLivingEntity"
   ],
   "minVersion": "0.8"
 }

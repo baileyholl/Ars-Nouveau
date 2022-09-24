@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
+import com.hollingsworth.arsnouveau.common.block.tile.TempLightTile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
@@ -17,6 +18,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -26,6 +29,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class EffectLight extends AbstractEffect {
     public static EffectLight INSTANCE = new EffectLight();
@@ -40,12 +45,12 @@ public class EffectLight extends AbstractEffect {
             iLightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
         }
 
-        if (!(rayTraceResult.getEntity() instanceof LivingEntity))
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        if (shooter == null || !shooter.equals(rayTraceResult.getEntity())) {
-            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), MobEffects.GLOWING, spellStats);
+        if (shooter == null || !shooter.equals(living)) {
+            applyConfigPotion(living, MobEffects.GLOWING, spellStats);
         }
-        applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), MobEffects.NIGHT_VISION, spellStats);
+        applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
     }
 
     @Override
@@ -57,16 +62,20 @@ public class EffectLight extends AbstractEffect {
         if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof ILightable lightable) {
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
-        }else if(world.getBlockState(rayTraceResult.getBlockPos()).getBlock() instanceof ILightable lightable){
+        } else if (world.getBlockState(rayTraceResult.getBlockPos()).getBlock() instanceof ILightable lightable) {
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
         }
 
         if (world.getBlockState(pos).getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))) {
-            world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState().setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
+            BlockState lightBlockState = (spellStats.getDurationMultiplier() != 0 ? BlockRegistry.T_LIGHT_BLOCK : BlockRegistry.LIGHT_BLOCK).defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
+            world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
                 tile.color = spellContext.getColors();
+                if (tile instanceof TempLightTile) ((TempLightTile) tile).lengthModifier = spellStats.getDurationMultiplier();
             }
+            world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+
         }
     }
 

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
+import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -57,6 +58,10 @@ public class BlockRegistry {
     public static LightBlock LIGHT_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<LightTile> LIGHT_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.T_LIGHT_BLOCK, registryName = BlockRegistryKey)
+    public static LightBlock T_LIGHT_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.T_LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<LightTile> T_LIGHT_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey)
@@ -335,11 +340,25 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<PotionDiffuserTile> POTION_DIFFUSER_TILE;
 
+    @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<AlterationTile> ARMOR_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockRegistryKey)
+    public static AlterationTable ALTERATION_TABLE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<MobJarTile> MOB_JAR_TILE;
+    @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockRegistryKey)
+    public static MobJar MOB_JAR;
+
+    @ObjectHolder(value = prepend + LibBlockNames.VOID_PRISM, registryName = BlockRegistryKey)
+    public static VoidPrism VOID_PRISM;
+
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
         registry.register(LibBlockNames.MAGE_BLOCK, new MageBlock());
         registry.register(LibBlockNames.LIGHT_BLOCK, new LightBlock());
+        registry.register(LibBlockNames.T_LIGHT_BLOCK, new TempLightBlock());
         registry.register(LibBlockNames.SOURCE_JAR, new SourceJar());
         registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new CreativeSourceJar());
         registry.register(LibBlockNames.SCRIBES_BLOCK, new ScribesBlock());
@@ -448,7 +467,9 @@ public class BlockRegistry {
                 registry.register(s, new ModBlock());
             }
         }
-
+        registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
+        registry.register(LibBlockNames.MOB_JAR, new MobJar());
+        registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
     }
 
     public static MagicLeaves createLeavesBlock(MaterialColor color) {
@@ -463,6 +484,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, BlockEntityType.Builder.of(AgronomicSourcelinkTile::new, BlockRegistry.AGRONOMIC_SOURCELINK).build(null));
         registry.register(LibBlockNames.SOURCE_JAR, BlockEntityType.Builder.of(SourceJarTile::new, BlockRegistry.SOURCE_JAR).build(null));
         registry.register(LibBlockNames.LIGHT_BLOCK, BlockEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null));
+        registry.register(LibBlockNames.T_LIGHT_BLOCK, BlockEntityType.Builder.of(TempLightTile::new, BlockRegistry.T_LIGHT_BLOCK).build(null));
         registry.register(LibBlockNames.ENCHANTING_APPARATUS, BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null));
         registry.register(LibBlockNames.ARCANE_PEDESTAL, BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null));
         registry.register(LibBlockNames.SCRIBES_BLOCK, BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null));
@@ -496,6 +518,8 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCRYERS_OCULUS, BlockEntityType.Builder.of(ScryersOculusTile::new, BlockRegistry.SCRYERS_OCULUS).build(null));
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null));
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
+        registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
+        registry.register(LibBlockNames.MOB_JAR, BlockEntityType.Builder.of(MobJarTile::new, BlockRegistry.MOB_JAR).build(null));
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -700,8 +724,14 @@ public class BlockRegistry {
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
        }
-
-
+        registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_TABLE, defaultItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return AlterationTableRenderer::getISTER;
+            }
+        });
+        registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
+        registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {

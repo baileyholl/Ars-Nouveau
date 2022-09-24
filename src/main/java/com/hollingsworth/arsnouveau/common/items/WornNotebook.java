@@ -27,6 +27,6 @@ public class WornNotebook extends ModItem {
             PatchouliAPI.get().openBookGUI(player, ForgeRegistries.ITEMS.getKey(this));
         }
 
-        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 }

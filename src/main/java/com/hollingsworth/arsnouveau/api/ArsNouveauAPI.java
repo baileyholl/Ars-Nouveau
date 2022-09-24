@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -12,14 +14,18 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.brewing.BrewingRecipe;
@@ -77,6 +83,11 @@ public class ArsNouveauAPI {
 
     private ConcurrentHashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new ConcurrentHashMap<>();
 
+    private ConcurrentHashMap<ResourceLocation, IPerk> perkMap = new ConcurrentHashMap<>();
+
+    private ConcurrentHashMap<ResourceLocation, PerkItem> perkItemMap = new ConcurrentHashMap<>();
+
+    private ConcurrentHashMap<Item, IPerkProvider<ItemStack>> itemPerkProviderMap = new ConcurrentHashMap<>();
     /**
      * Validator to use when crafting a spell in the spell book.
      */
@@ -113,8 +124,8 @@ public class ArsNouveauAPI {
         part.buildConfig(spellBuilder);
         spec = spellBuilder.build();
         part.CONFIG = spec;
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, part.CONFIG, part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath() + ".toml");
-
+        ANModConfig anModConfig = new ANModConfig(ModConfig.Type.SERVER, part.CONFIG, ModLoadingContext.get().getActiveContainer(), part.getRegistryName().getNamespace() + "/" + part.getRegistryName().getPath());
+        ModLoadingContext.get().getActiveContainer().addConfig(anModConfig);
         return spellpartMap.put(part.getRegistryName(), part);
     }
 
@@ -167,6 +178,18 @@ public class ArsNouveauAPI {
 
     public Set<RecipeType<? extends IEnchantingRecipe>> getEnchantingRecipeTypes() {
         return enchantingRecipeTypes;
+    }
+
+    public Map<ResourceLocation, IPerk> getPerkMap() {
+        return perkMap;
+    }
+
+    public Map<ResourceLocation, PerkItem> getPerkItemMap() {
+        return perkItemMap;
+    }
+
+    public Map<Item, IPerkProvider<ItemStack>> getItemPerkProviderMap() {
+        return itemPerkProviderMap;
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
@@ -228,6 +251,20 @@ public class ArsNouveauAPI {
     public boolean registerScryer(IScryer scryer) {
         this.scryerMap.put(scryer.getRegistryName(), scryer);
         return true;
+    }
+
+    public boolean registerPerk(IPerk perk){
+        perkMap.put(perk.getRegistryName(), perk);
+        return true;
+    }
+
+    public boolean registerPerkProvider(ItemLike item, IPerkProvider<ItemStack> provider){
+        itemPerkProviderMap.put(item.asItem(), provider);
+        return true;
+    }
+
+    public @Nullable IPerkProvider<ItemStack> getPerkProvider(Item item){
+        return itemPerkProviderMap.get(item);
     }
 
     public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry() {

@@ -131,6 +131,12 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public void refreshEntitiesAndBonus() {
         Set<ResourceLocation> uniqueEntities;
         this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
+        for(BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)){
+            if(level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity){
+                nearbyEntities.add(livingEntity);
+            }
+        }
+
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof Player)).collect(Collectors.toList());
         uniqueEntities = nearbyEntities.stream().map(l -> EntityType.getKey(l.getType())).collect(Collectors.toSet());
         this.bonus = uniqueEntities.size() * Config.DRYGMY_UNIQUE_BONUS.get() + Math.min(Config.DRYGMY_QUANTITY_CAP.get(), nearbyEntities.size());

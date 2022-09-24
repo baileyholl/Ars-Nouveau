@@ -1,18 +1,26 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.events.ClientHandler;
 import com.hollingsworth.arsnouveau.client.events.TextureEvent;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
+import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
+import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -49,12 +57,12 @@ public class ArsNouveau {
 
     public ArsNouveau(){
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
-
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
-
         APIRegistry.setup();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
+        ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(),MODID + "-server");
+        ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
 
@@ -67,7 +75,7 @@ public class ArsNouveau {
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
-//        GLM.register(modEventBus);
+        ANCriteriaTriggers.init();
     }
 
     public void setup(final FMLCommonSetupEvent event) {
@@ -93,6 +101,9 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MENDOSTEEN_POD.asItem(),0.65f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FROSTAYA_POD.asItem(),0.65f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BASTION_POD.asItem(),0.65f);
+            for (RitualTablet tablet : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
+                DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
+            }
         });
     }
 

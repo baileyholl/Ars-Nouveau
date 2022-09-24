@@ -2,16 +2,29 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
+import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
+import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
+import com.hollingsworth.arsnouveau.common.mob_jar.*;
+import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class APIRegistry {
 
@@ -34,7 +47,6 @@ public class APIRegistry {
         registerSpell(EffectExplosion.INSTANCE);
         registerSpell(EffectLightning.INSTANCE);
         registerSpell(EffectSlowfall.INSTANCE);
-        registerSpell(EffectAquatic.INSTANCE);
         registerSpell(EffectFangs.INSTANCE);
         registerSpell(EffectSummonVex.INSTANCE);
         registerSpell(AugmentAccelerate.INSTANCE);
@@ -97,6 +109,7 @@ public class APIRegistry {
         registerRitual(new RitualBinding());
         registerRitual(new RitualAwakening());
         registerRitual(new RitualHarvest());
+        registerRitual(new RitualMobCapture());
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());
         registerFamiliar(new WhirlisprigFamiliarHolder());
@@ -113,10 +126,28 @@ public class APIRegistry {
         registerSpell(EffectLinger.INSTANCE);
         registerSpell(EffectSenseMagic.INSTANCE);
         registerSpell(EffectInfuse.INSTANCE);
-        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        api.registerScryer(SingleBlockScryer.INSTANCE);
-        api.registerScryer(CompoundScryer.INSTANCE);
-        api.registerScryer(TagScryer.INSTANCE);
+
+        registerScryer(SingleBlockScryer.INSTANCE);
+        registerScryer(CompoundScryer.INSTANCE);
+        registerScryer(TagScryer.INSTANCE);
+
+        registerPerk(StarbunclePerk.INSTANCE);
+        registerPerk(DepthsPerk.INSTANCE);
+        registerPerk(FeatherPerk.INSTANCE);
+        registerPerk(GlidingPerk.INSTANCE);
+        registerPerk(JumpHeightPerk.INSTANCE);
+        registerPerk(LootingPerk.INSTANCE);
+        registerPerk(MagicCapacityPerk.INSTANCE);
+        registerPerk(MagicResistPerk.INSTANCE);
+        registerPerk(PotionDurationPerk.INSTANCE);
+        registerPerk(RepairingPerk.INSTANCE);
+        registerPerk(SaturationPerk.INSTANCE);
+        registerPerk(SpellDamagePerk.INSTANCE);
+//        registerPerk(BondedPerk.INSTANCE);
+        registerPerk(ChillingPerk.INSTANCE);
+        registerPerk(IgnitePerk.INSTANCE);
+        registerPerk(TotemPerk.INSTANCE);
+        registerPerk(VampiricPerk.INSTANCE);
     }
 
     public static void postInit() {
@@ -125,6 +156,101 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+        )));
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_HOOD, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.TWO)
+        )));
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_LEGGINGS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        )));
+        api.registerPerkProvider(ItemsRegistry.ARCHMAGE_ROBES, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                List.of(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_HOOD, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.ONE, PerkSlot.THREE)
+        )));
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.TWO)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_LEGGINGS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.APPRENTICE_ROBES, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_BOOTS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_ROBES, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.TWO),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_LEGGINGS, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.TWO),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.THREE),
+                Arrays.asList(PerkSlot.TWO, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        api.registerPerkProvider(ItemsRegistry.NOVICE_HOOD, stack -> new ArmorPerkHolder(stack, Arrays.asList(
+                Arrays.asList(PerkSlot.ONE),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO),
+                Arrays.asList(PerkSlot.ONE, PerkSlot.TWO, PerkSlot.THREE)
+        )));
+
+        SoundRegistry.DEFAULT_SPELL_SOUND = new SpellSound(SoundRegistry.DEFAULT_FAMILY.get(), Component.translatable("ars_nouveau.sound.default_family"));
+        SoundRegistry.EMPTY_SPELL_SOUND = new SpellSound(SoundRegistry.EMPTY_SOUND_FAMILY.get(), Component.translatable("ars_nouveau.sound.empty"));
+        SoundRegistry.GAIA_SPELL_SOUND = new SpellSound(SoundRegistry.GAIA_FAMILY.get(), Component.translatable("ars_nouveau.sound.gaia_family"));
+        SoundRegistry.TEMPESTRY_SPELL_SOUND = new SpellSound(SoundRegistry.TEMPESTRY_FAMILY.get(), Component.translatable("ars_nouveau.sound.tempestry_family"));
+        SoundRegistry.FIRE_SPELL_SOUND = new SpellSound(SoundRegistry.FIRE_FAMILY.get(), Component.translatable("ars_nouveau.sound.fire_family"));
+
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
+        ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
+
+        JarBehaviorRegistry.register(EntityType.COW, new CowBehavior());
+        JarBehaviorRegistry.register(EntityType.CHICKEN, new ChickenBehavior());
+        JarBehaviorRegistry.register(EntityType.VILLAGER, new VillagerBehavior());
+        JarBehaviorRegistry.register(EntityType.SHEEP, new SheepBehavior());
+        JarBehaviorRegistry.register(EntityType.FROG, new FrogBehavior());
+        JarBehaviorRegistry.register(EntityType.PIGLIN, new PiglinBehavior());
+        JarBehaviorRegistry.register(EntityType.GHAST, new GhastBehavior());
+        JarBehaviorRegistry.register(EntityType.SQUID, new SquidBehavior());
+        JarBehaviorRegistry.register(EntityType.GLOW_SQUID, new GlowSquidBehavior());
+        JarBehaviorRegistry.register(EntityType.BLAZE, new BlazeBehavior());
+        JarBehaviorRegistry.register(EntityType.PANDA, new PandaBehavior());
+        JarBehaviorRegistry.register(EntityType.GOAT, new GoatBehavior());
+        JarBehaviorRegistry.register(EntityType.MOOSHROOM, new MooshroomBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {
@@ -133,6 +259,14 @@ public class APIRegistry {
 
     public static void registerSpell(AbstractSpellPart spellPart) {
         ArsNouveauAPI.getInstance().registerSpell(spellPart);
+    }
+
+    public static void registerPerk(IPerk perk){
+        ArsNouveauAPI.getInstance().registerPerk(perk);
+    }
+
+    public static void registerScryer(IScryer scryer){
+        ArsNouveauAPI.getInstance().registerScryer(scryer);
     }
 
     public static void registerRitual(AbstractRitual ritual) {

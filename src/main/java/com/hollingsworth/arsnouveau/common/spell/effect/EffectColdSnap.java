@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,9 +22,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
-public class EffectColdSnap extends AbstractEffect {
+public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
     public static EffectColdSnap INSTANCE = new EffectColdSnap();
 
@@ -59,7 +61,7 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     public boolean canDamage(LivingEntity livingEntity) {
-        return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN);
+        return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) || livingEntity.getPercentFrozen() > 0.0;
     }
 
     public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity) {
@@ -78,7 +80,11 @@ public class EffectColdSnap extends AbstractEffect {
         addAmpConfig(builder, 2.5);
         addPotionConfig(builder, 5);
         addExtendTimeConfig(builder, 1);
+    }
 
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 
     @Override
@@ -99,7 +105,7 @@ public class EffectColdSnap extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Snares and causes a burst of damage to an entity that is afflicted by Slowness or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE.";
+        return "Snares and causes a burst of damage to an entity that is afflicted by slowness, freezing, or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE.";
     }
 
     @Override

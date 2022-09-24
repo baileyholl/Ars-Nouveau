@@ -67,14 +67,26 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
+    /**
+     * See IPotionEffect
+     */
+    @Deprecated(forRemoval = true)
     public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats) {
         applyConfigPotion(entity, potionEffect, spellStats, true);
     }
 
+    /**
+     * See IPotionEffect
+     */
+    @Deprecated(forRemoval = true)
     public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats, boolean showParticles) {
         applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get(), showParticles);
     }
 
+    /**
+     * See IPotionEffect
+     */
+    @Deprecated(forRemoval = true)
     public void applyPotion(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles) {
         if (entity == null)
             return;
@@ -112,22 +124,30 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return BlockUtil.canBlockBeHarvested(stats, world, pos);
     }
 
+    /**
+     * See IDamageEffect
+     */
+    @Deprecated(forRemoval = true)
     public void dealDamage(Level world, @Nonnull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
-        if (!(world instanceof ServerLevel server))
+        if (!(world instanceof ServerLevel server) || (entity instanceof LivingEntity living && living.getHealth() <= 0))
             return;
 
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
+        SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage);
+        MinecraftForge.EVENT_BUS.post(damageEvent);
 
-        SpellDamageEvent event = new SpellDamageEvent(source, shooter, entity, totalDamage);
-        MinecraftForge.EVENT_BUS.post(event);
-
-        source = event.damageSource;
-        totalDamage = event.damage;
-
-        if (entity instanceof LivingEntity living && living.getHealth() <= 0 || totalDamage <= 0 || event.isCanceled())
+        source = damageEvent.damageSource;
+        totalDamage = damageEvent.damage;
+        if (totalDamage <= 0 || damageEvent.isCanceled())
             return;
+        SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage);
+        MinecraftForge.EVENT_BUS.post(preDamage);
 
         entity.hurt(source, totalDamage);
+
+        SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage);
+        MinecraftForge.EVENT_BUS.post(postDamage);
+
         Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
         if (!(entity instanceof LivingEntity mob))
             return;
@@ -141,6 +161,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
+    /**
+     * See IDamageEffect
+     */
+    @Deprecated(forRemoval = true)
     public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
         shooter = !(shooter instanceof Player) ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
         return DamageSource.playerAttack((Player) shooter);

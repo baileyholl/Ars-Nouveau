@@ -109,11 +109,11 @@ public class SoundScreen extends BaseBook {
             return;
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         BlockPos pos = localPlayer.getOnPos().above(2);
-        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent(), SoundSource.PLAYERS, (float) volume / 100f, (float) pitch / 100f, false);
+        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent(), SoundSource.PLAYERS, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f, false);
     }
 
     public void onSaveClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volume / 100f, (float) pitch / 100f)));
+        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f)));
     }
 
     @Override

@@ -2,10 +2,12 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
@@ -88,10 +90,12 @@ public class ChimeraDiveGoal extends Goal {
         if ((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) || (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
             makeExplosion();
             endGoal();
+            return;
         }
         if (isDiving && (boss.isInWall() || boss.horizontalCollision || boss.verticalCollision)) {
             makeExplosion();
             endGoal();
+            return;
         }
         if (isDiving && divePos == null && boss.getTarget() == null) {
             endGoal();
@@ -111,6 +115,8 @@ public class ChimeraDiveGoal extends Goal {
         boss.setDeltaMovement(0, 0, 0);
         boss.getNavigation().moveTo(this.boss.getTarget() != null ? this.boss.getTarget() : this.boss, 0.0f);
         finished = true;
+        ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION, (ServerLevel) boss.level, new BlockPos(boss.position().x, boss.position.y, boss.position.z), 10);
+        System.out.println("trigger");
 
     }
 

@@ -17,6 +17,9 @@ buildscript {
 
 }
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -25,17 +28,31 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '3.2.8'
+version = '3.4.0'
 
+
+configurations {
+    library
+    shade // <- Create a 'shade' configuration
+    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
+}
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.19.1'
+archivesBaseName = 'ars_nouveau-1.19.2'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.withSourcesJar()
 
+// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
+// If you have any module issues, check these files to make sure there are no duplicate dependencies
+minecraft.runs.all {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
 
 minecraft {
 
@@ -74,7 +91,7 @@ minecraft {
         }
 
         server {
-            workingDirectory project.file('run')
+            workingDirectory project.file('server')
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -142,20 +159,25 @@ repositories {
     }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 dependencies {
 
     minecraft "net.minecraftforge:forge:1.19.2-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
+    shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
+    library fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.12")
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:${jei_version}")
     // at runtime, use the full JEI
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-common:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:${jei_version}")
+
 
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
@@ -168,10 +190,12 @@ dependencies {
     /*implementation*///compileOnly fg.deobf("curse.maven:security-64760:3834343") // Securitycraft
 //    implementation fg.deobf("curse.maven:byg-247560:3848133") // BYG
 //    implementation fg.deobf("curse.maven:bop-220318:3852435") // BOP
-
+//    implementation fg.deobf("curse.maven:ars_elemental-561470:3906641") // ars elemental
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    implementation fg.deobf("curse.maven:ss-619320:3960038") // sophisticated storage
+    implementation fg.deobf("curse.maven:ss-618298:3960018") // sophisticated storage
     //runtimeOnly fg.deobf("curse.maven:ruby-574856:3864138") // Rubidium
 
 }
@@ -197,28 +221,50 @@ jar {
 // we define a custom artifact that is sourced from the reobfJar output task
 // and then declare that to be published
 // Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
+
+shadowJar {
+    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
+
+//    // Skip unnecessary assets and duplicated java files GeckoLib comes with
+//    exclude 'software/bernie/example/**'
+//    exclude 'assets/geckolib3/**'
+//    exclude '**/*.java'
+//    relocate 'software.bernie.shadowed', 'software.bernie.modid.shadowed' // <- Move the shadowed geckolib shadowed packages. This prevents classpath conflicts in runtime
+//    relocate 'software.bernie.geckolib', 'software.bernie.modid.geckolib' // <- Move the shadowed geckolib package. This prevents classpath conflicts in runtime
+
+    classifier ''
+    relocate 'com.llamalad7', 'shadowed.llamalad7'
+
+    finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+    mergeServiceFiles()
 }
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    archiveBaseName.set(project.archivesBaseName)
-    archiveVersion.set("${project.version}")
-    archiveClassifier.set('sources')
-}
+
+
 artifacts {
     archives sourcesJar
 }
+
+reobf { // <- Add the output of shadowJar to reobfuscation, so shadowed content is reobfuscated
+    shadowJar {}
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            artifact reobfArtifact
-            artifact sourcesJar
+            from components.java
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
         }
     }
     repositories {

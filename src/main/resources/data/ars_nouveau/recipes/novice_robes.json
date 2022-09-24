@@ -1,17 +1,35 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "group": "ars_nouveau",
-  "key": {
-    "x": {
-      "item": "ars_nouveau:magebloom_fiber"
-    }
-  },
-  "pattern": [
-    "x x",
-    "xxx",
-    "xxx"
-  ],
-  "result": {
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": true,
+  "output": {
     "item": "ars_nouveau:novice_robes"
-  }
+  },
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:magebloom_fiber"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:magebloom_fiber"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:magebloom_fiber"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:magebloom_fiber"
+      }
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:golden_chestplate"
+    }
+  ],
+  "sourceCost": 0
 }

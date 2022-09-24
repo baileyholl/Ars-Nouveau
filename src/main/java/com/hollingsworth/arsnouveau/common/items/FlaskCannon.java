@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,10 +26,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -59,7 +57,7 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
         if(pLevel.isClientSide)
             return;
-        if(!(pEntity instanceof Player player)){
+        if(!(pEntity instanceof ServerPlayer player)){
             return;
         }
         PotionLauncherData potionLauncherData = new PotionLauncherData(pStack);
@@ -67,20 +65,8 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
         if(lastSlot < 0 || lastSlot >= player.inventory.getContainerSize())
             return;
         ItemStack item = player.inventory.getItem(lastSlot);
-        if(item.getItem() instanceof PotionFlask){
-            PotionFlask.FlaskData flaskData = new PotionFlask.FlaskData(item);
-            if(flaskData.getCount() != potionLauncherData.amountLeft){
-                Networking.INSTANCE.sendToServer(new PacketSetLauncher(potionLauncherData.lastSlot));
-                return;
-            }
-        }else if(item.getItem() instanceof PotionItem){
-            if(potionLauncherData.amountLeft != 1){
-                Networking.INSTANCE.sendToServer(new PacketSetLauncher(potionLauncherData.lastSlot));
-                return;
-            }
-        }else{
+        if (!(item.getItem() instanceof PotionFlask) && !(item.getItem() instanceof PotionItem)) {
             potionLauncherData.setAmountLeft(0);
-            Networking.INSTANCE.sendToServer(new PacketSetLauncher(potionLauncherData.lastSlot));
         }
     }
 
@@ -104,7 +90,6 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
         pLevel.addFreshEntity(thrownpotion);
         pPlayer.getCooldowns().addCooldown(this, 10);
         potionLauncherData.setLastDataForRender(new PotionData(stckToThrow));
-        Networking.INSTANCE.sendToServer(new PacketSetLauncher(potionLauncherData.lastSlot));
         return new InteractionResultHolder<>(InteractionResult.CONSUME, itemstack);
     }
 
@@ -149,7 +134,7 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
                 break;
             ItemStack item = player.inventory.getItem(i);
             PotionData potionData = new PotionData(item);
-            if(potionData.isEmpty())
+            if(potionData.isEmpty() || item.getItem() instanceof ArrowItem)
                 continue;
             slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new AlchemistsCrown.SlotData(i, item)));
         }

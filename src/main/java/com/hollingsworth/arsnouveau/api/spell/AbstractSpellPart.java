@@ -151,8 +151,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * Override this method to provide defaults for the augmentation limits configuration.
      */
     protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        addDefaultAugmentLimits(defaults);
         return defaults;
     }
+
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {}
 
     // Default value for the starter spell config
     public boolean defaultedStarterGlyph() {

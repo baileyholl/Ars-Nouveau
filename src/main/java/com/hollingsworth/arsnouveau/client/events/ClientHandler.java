@@ -2,6 +2,10 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
+import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
+import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
@@ -9,8 +13,12 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBook
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarCarbyRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarWhirlisprigRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamiliarRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
+import com.hollingsworth.arsnouveau.common.armor.HeavyArmor;
+import com.hollingsworth.arsnouveau.common.armor.LightArmor;
+import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
@@ -27,9 +35,11 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -47,6 +57,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientForgeHandler.localize;
 
@@ -60,6 +71,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.T_LIGHT_TILE, LightRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
@@ -83,8 +95,8 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
         event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_OCULUS_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
-
-
+        event.registerBlockEntityRenderer(BlockRegistry.ARMOR_TILE, AlterationTableRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MOB_JAR_TILE, MobJarRenderer::new);
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),
@@ -161,6 +173,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
+
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), new ResourceLocation(ArsNouveau.MODID, "blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
@@ -176,7 +189,23 @@ public class ClientHandler {
                     };
                 }
             });
+            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "amount"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("currentFill") / 10000.0F) : 0.0F;
+            });
+            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
+                CompoundTag tag = stack.getTag();
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F; 
+            });
         });
+    }
+
+    @SubscribeEvent
+    public static void registerLayers(EntityRenderersEvent.AddLayers addLayers){
+        GeoArmorRenderer.registerArmorRenderer(LightArmor.class, () -> new ArmorRenderer(new GenericModel<>("light_armor", "items/light_armor").withEmptyAnim()));
+        GeoArmorRenderer.registerArmorRenderer(MediumArmor.class,() ->  new ArmorRenderer(new GenericModel<>("medium_armor","items/medium_armor").withEmptyAnim()));
+        GeoArmorRenderer.registerArmorRenderer(HeavyArmor.class, () -> new ArmorRenderer(new GenericModel<>("heavy_armor","items/heavy_armor").withEmptyAnim()));
+
     }
 
 
@@ -195,16 +224,86 @@ public class ClientHandler {
                         new ParticleColor(200, 0, 200).getColor(),
                 ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
 
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_ROBES);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_BOOTS);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_HOOD);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_LEGGINGS);
+
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_ROBES);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_BOOTS);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_HOOD);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_LEGGINGS);
+
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_ROBES);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_BOOTS);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_HOOD);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_LEGGINGS);
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
                         ? jarTile.getColor()
                         : -1, BlockRegistry.POTION_JAR);
+
 
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
                         ? melderTile.getColor()
                         : -1, BlockRegistry.POTION_MELDER);
 
+
+        event.getItemColors().register((stack, color) -> {
+            if (color > 0 || !stack.hasTag()) {
+                return -1;
+            }
+            CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
+            if(blockTag.contains("potionData")){
+                PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
+                return PotionUtils.getColor(data.fullEffects());
+            }
+            return -1;
+        }, BlockRegistry.POTION_JAR);
+
+    }
+
+    public static int colorFromArmor(ItemStack stack){
+        IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
+        if(!(holder instanceof ArmorPerkHolder armorPerkHolder))
+            return DyeColor.PURPLE.getTextColor();
+        return DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor();
     }
 
     public static int colorFromFlask(ItemStack stack) {

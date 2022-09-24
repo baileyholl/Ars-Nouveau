@@ -73,7 +73,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.SPELL_PRISM,
                 BlockRegistry.SCRYERS_CRYSTAL,
                 BlockRegistry.SCRYERS_OCULUS,
-                BlockRegistry.POTION_DIFFUSER
+                BlockRegistry.POTION_DIFFUSER,
+                BlockRegistry.MOB_JAR,
+                BlockRegistry.VOID_PRISM
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
@@ -104,7 +106,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.STRIPPED_AWLOG_PURPLE,
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE,
                 BlockRegistry.BOOKWYRM_LECTERN,
-                BlockRegistry.ARCHWOOD_CHEST
+                BlockRegistry.ARCHWOOD_CHEST,
+                BlockRegistry.ALTERATION_TABLE
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE,
@@ -246,7 +249,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.PURPLE_SBED
         );
         this.tag(BREAK_BLACKLIST);
-        this.tag(NO_BREAK_DROP);
+        this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
 
 
     }

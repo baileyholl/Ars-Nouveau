@@ -33,7 +33,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         for (int i = 0; i < inv.getContainerSize(); i++) {
             final ItemStack stack = inv.getItem(i);
             if (stack.getItem() instanceof PotionFlask flask) {
-                flaskPotionStack = stack;
+                flaskPotionStack = stack.copy();
                 if(flask.isMax(stack))
                     return ItemStack.EMPTY;
             }

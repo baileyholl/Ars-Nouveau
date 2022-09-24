@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,9 +21,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
-public class EffectFangs extends AbstractEffect {
+public class EffectFangs extends AbstractEffect implements IDamageEffect {
     public static EffectFangs INSTANCE = new EffectFangs();
 
     private EffectFangs() {
@@ -78,6 +80,11 @@ public class EffectFangs extends AbstractEffect {
         super.buildConfig(builder);
         addDamageConfig(builder, 6.0);
         addAmpConfig(builder, 3.0);
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 
     private void spawnFangs(Level world, double xAngle, double zAngle, double yStart, double yEnd, float rotationYaw, int tickDelay, LivingEntity caster, float damage) {

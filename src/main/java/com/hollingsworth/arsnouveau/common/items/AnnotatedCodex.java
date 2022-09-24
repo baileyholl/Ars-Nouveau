@@ -7,8 +7,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class AnnotatedCodex extends ModItem {
 
     public AnnotatedCodex(Properties properties) {
@@ -39,7 +37,7 @@ public class AnnotatedCodex extends ModItem {
     }
 
     public int getUnlockLevelCost(Collection<AbstractSpellPart> spellParts) {
-        int expPerGlyph = Config.CODEX_COST_PER_GLYPH.get();
+        int expPerGlyph = ServerConfig.CODEX_COST_PER_GLYPH.get();
         return ScribesTile.getLevelsFromExp(expPerGlyph * spellParts.size());
     }
 

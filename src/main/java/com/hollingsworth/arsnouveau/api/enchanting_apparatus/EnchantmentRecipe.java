@@ -90,7 +90,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
 
     @Override
     public ItemStack assemble(EnchantingApparatusTile inv) {
-        ItemStack stack = inv.getCatalystItem().getItem() == Items.BOOK ? new ItemStack(Items.ENCHANTED_BOOK) : inv.getCatalystItem().copy();
+        ItemStack stack = inv.getStack().getItem() == Items.BOOK ? new ItemStack(Items.ENCHANTED_BOOK) : inv.getStack().copy();
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
         enchantments.put(enchantment, enchantLevel);
         EnchantmentHelper.setEnchantments(enchantments, stack);

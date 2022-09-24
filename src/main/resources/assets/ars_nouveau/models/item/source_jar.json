@@ -1,4 +1,71 @@
 {
-  "parent": "ars_nouveau:block/source_jar/source_jar0"
+  "parent": "ars_nouveau:block/source_jar/source_jar0",
+  "overrides": [
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.01
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar_sliver"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.10
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar10"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.20
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar20"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.30
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar30"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.40
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar40"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.50
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar50"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.60
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar60"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.70
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar80"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.80
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar80"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.90
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar90"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 1.00
+      },
+      "model": "ars_nouveau:block/source_jar/source_jar100"
+    }
+  ]
 }
-

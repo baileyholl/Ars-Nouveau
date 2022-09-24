@@ -3,11 +3,12 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
-import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
-import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
+import com.hollingsworth.arsnouveau.common.armor.HeavyArmor;
+import com.hollingsworth.arsnouveau.common.armor.LightArmor;
+import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
@@ -28,7 +29,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -224,28 +228,28 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1)));
 
-    public static RegistryWrapper<NoviceArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new NoviceArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<LightArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new LightArmor(EquipmentSlot.FEET));
 
-    public static RegistryWrapper<NoviceArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new NoviceArmor(EquipmentSlot.LEGS));
+    public static RegistryWrapper<LightArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new LightArmor(EquipmentSlot.LEGS));
 
-    public static RegistryWrapper<NoviceArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new NoviceArmor(EquipmentSlot.CHEST));
+    public static RegistryWrapper<LightArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new LightArmor(EquipmentSlot.CHEST));
 
-    public static RegistryWrapper<NoviceArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new NoviceArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<LightArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new LightArmor(EquipmentSlot.HEAD));
 
-    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new ApprenticeArmor(EquipmentSlot.FEET));
-    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new ApprenticeArmor(EquipmentSlot.LEGS));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new MediumArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new MediumArmor(EquipmentSlot.LEGS));
 
-    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new ApprenticeArmor(EquipmentSlot.CHEST));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new MediumArmor(EquipmentSlot.CHEST));
 
-    public static RegistryWrapper<ApprenticeArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new ApprenticeArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new MediumArmor(EquipmentSlot.HEAD));
 
-    public static RegistryWrapper<MasterArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new MasterArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new HeavyArmor(EquipmentSlot.FEET));
 
-    public static RegistryWrapper<MasterArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new MasterArmor(EquipmentSlot.LEGS));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new HeavyArmor(EquipmentSlot.LEGS));
 
-    public static RegistryWrapper<MasterArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new MasterArmor(EquipmentSlot.CHEST));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new HeavyArmor(EquipmentSlot.CHEST));
 
-    public static RegistryWrapper<MasterArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new MasterArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new HeavyArmor(EquipmentSlot.HEAD));
 
 
     public static RegistryWrapper<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, () -> new DowsingRod().withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod")));
@@ -273,7 +277,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
     public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
-
+    public static RegistryWrapper<ModItem> BLANK_THREAD = register(LibItemNames.BLANK_THREAD, () -> new ModItem().withTooltip("tooltip.ars_nouveau.blank_thread"));
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));
@@ -284,23 +288,29 @@ public class ItemsRegistry {
     }
 
     public static void onItemRegistry(IForgeRegistry<Item> registry) {
-        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : ArsNouveauAPI.getInstance().getGlyphItemMap().entrySet()) {
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : api.getGlyphItemMap().entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
             registry.register(glyphEntry.getKey(), glyph);
             glyph.spellPart.glyphItem = glyph;
-
         }
 
-        for (AbstractRitual ritual : ArsNouveauAPI.getInstance().getRitualMap().values()) {
+        for (AbstractRitual ritual : api.getRitualMap().values()) {
             RitualTablet tablet = new RitualTablet(ritual);
             registry.register(ritual.getRegistryName(), tablet);
-            ArsNouveauAPI.getInstance().getRitualItemMap().put(ritual.getRegistryName(), tablet);
+            api.getRitualItemMap().put(ritual.getRegistryName(), tablet);
         }
 
-        for (AbstractFamiliarHolder holder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
+        for (AbstractFamiliarHolder holder : api.getFamiliarHolderMap().values()) {
             FamiliarScript script = new FamiliarScript(holder);
-            ArsNouveauAPI.getInstance().getFamiliarScriptMap().put(holder.getRegistryName(), script);
+            api.getFamiliarScriptMap().put(holder.getRegistryName(), script);
             registry.register(holder.getRegistryName(), script);
+        }
+
+        for(IPerk perk : api.getPerkMap().values()) {
+            PerkItem perkItem = new PerkItem(perk);
+            api.getPerkItemMap().put(perk.getRegistryName(), perkItem);
+            registry.register(perk.getRegistryName(), perkItem);
         }
 
         registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
@@ -308,7 +318,6 @@ public class ItemsRegistry {
         registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
         registry.register(LibItemNames.WILDEN_GUARDIAN_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
         registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
-
     }
 
 

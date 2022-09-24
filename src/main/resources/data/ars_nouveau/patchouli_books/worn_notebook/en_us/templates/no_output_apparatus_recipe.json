@@ -1,0 +1,32 @@
+{
+  "processor": "com.hollingsworth.arsnouveau.client.patchouli.NoOutputApparatusProcessor",
+  "components": [
+    {
+      "type": "patchouli:header",
+      "text": "block.ars_nouveau.enchanting_apparatus",
+      "x": -1,
+      "y": -1
+    },
+    {
+      "type": "patchouli:custom",
+      "class": "com.hollingsworth.arsnouveau.client.patchouli.component.RotatingItemListComponent",
+      "x": -1,
+      "y": 21,
+      "recipe_type": "enchanting_apparatus",
+      "recipe_name": "#recipe"
+    },
+    {
+      "type": "patchouli:item",
+      "item": "#reagent",
+      "framed": true,
+      "x": 49,
+      "y": 53
+    },
+	{
+      "type": "patchouli:header",
+      "text": "#output",
+      "x": -1,
+      "y": 130
+    }
+  ]
+}

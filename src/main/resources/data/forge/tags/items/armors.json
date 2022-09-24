@@ -1,0 +1,16 @@
+{
+  "values": [
+    "ars_nouveau:novice_robes",
+    "ars_nouveau:apprentice_robes",
+    "ars_nouveau:archmage_robes",
+    "ars_nouveau:novice_boots",
+    "ars_nouveau:apprentice_boots",
+    "ars_nouveau:archmage_boots",
+    "ars_nouveau:novice_leggings",
+    "ars_nouveau:apprentice_leggings",
+    "ars_nouveau:archmage_leggings",
+    "ars_nouveau:novice_hood",
+    "ars_nouveau:apprentice_hood",
+    "ars_nouveau:archmage_hood"
+  ]
+}

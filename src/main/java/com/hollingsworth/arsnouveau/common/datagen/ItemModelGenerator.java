@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -40,18 +41,26 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         }
         for (RitualTablet i : ArsNouveauAPI.getInstance().getRitualItemMap().values()) {
             try {
-                getBuilder(i.ritual.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
+                getBuilder(i.ritual.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
             } catch (Exception e) {
                 System.out.println("No texture for " + i);
             }
         }
         for (FamiliarScript i : ArsNouveauAPI.getInstance().getFamiliarScriptMap().values()) {
             try {
-                getBuilder( ((FamiliarScript) i).familiar.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
+                getBuilder(i.familiar.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
             } catch (Exception e) {
                 System.out.println("No texture for " + i);
             }
          }
+
+        for (PerkItem i : ArsNouveauAPI.getInstance().getPerkItemMap().values()) {
+            try {
+                getBuilder(i.perk.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
+            } catch (Exception e) {
+                System.out.println("No texture for " + i);
+            }
+        }
 
 
         getBuilder(LibBlockNames.STRIPPED_AWLOG_BLUE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.STRIPPED_AWLOG_BLUE));
@@ -80,6 +89,8 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
         }
+        itemUnchecked(ItemsRegistry.BLANK_THREAD);
+        getBuilder(LibBlockNames.VOID_PRISM).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.VOID_PRISM));
     }
 
     public void blockAsItem(String s){
@@ -132,12 +143,6 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
     private ResourceLocation spellTexture(final Item item) {
         final ResourceLocation name = registryName(item);
-        System.out.println(new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath().replace("glyph_", "")).toString());
         return new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath().replace("glyph_", ""));
-    }
-
-    private ResourceLocation ritualTexture(final Item item) {
-        final ResourceLocation name = registryName(item);
-        return new ResourceLocation(name.getNamespace(), "items" + "/" + name.getPath());
     }
 }

@@ -21,8 +21,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class EnchantingApparatusBlock extends TickableModBlock {
 
     public EnchantingApparatusBlock() {
@@ -51,7 +49,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return InteractionResult.SUCCESS;
         }
-        if (tile.getCatalystItem() == null || tile.getCatalystItem().isEmpty()) {
+        if (tile.getStack() == null || tile.getStack().isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if (recipe == null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
@@ -59,15 +57,15 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
             } else {
                 if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                    tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
+                    tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
                 }
             }
         } else {
-            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getCatalystItem());
+            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
             world.addFreshEntity(item);
-            tile.setCatalystItem(ItemStack.EMPTY);
+            tile.setStack(ItemStack.EMPTY);
             if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                tile.setCatalystItem(player.getInventory().removeItem(player.getInventory().selected, 1));
+                tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
             }
         }
 
@@ -83,8 +81,8 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.getCatalystItem() != null) {
-            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getCatalystItem()));
+        if (worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile tile && tile.getStack() != null) {
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
         }
     }
 

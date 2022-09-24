@@ -51,6 +51,11 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     }
 
     @Override
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.REACTIVE_RECIPE.get();
+    }
+
+    @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         ItemStack resultStack = super.getResult(pedestalItems, reagent, enchantingApparatusTile);
         ItemStack parchment = getParchment(pedestalItems);

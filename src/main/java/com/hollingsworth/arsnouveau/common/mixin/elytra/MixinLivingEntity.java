@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.mixin.elytra;
 
-import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class MixinLivingEntity {
             )
     )
     public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || stack.canElytraFly(entity);
+        return EffectGlide.canGlide(entity) || stack.canElytraFly(entity);
     }
 
     @Redirect(
@@ -31,6 +31,6 @@ public class MixinLivingEntity {
             )
     )
     public boolean eytraValidOverride(ItemStack stack, LivingEntity entity, int flightTicks) {
-        return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || stack.elytraFlightTick(entity, flightTicks);
+        return EffectGlide.canGlide(entity) || stack.elytraFlightTick(entity, flightTicks);
     }
 }

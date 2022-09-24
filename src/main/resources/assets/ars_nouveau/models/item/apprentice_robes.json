@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "ars_nouveau:items/apprentice_robes"
-  }
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "ars_nouveau:items/medium_armor/arcanists_robes_tint",
+        "layer1": "ars_nouveau:items/medium_armor/arcanists_robes_gold"
+    }
 }

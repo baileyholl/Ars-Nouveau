@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
@@ -15,6 +16,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,13 +33,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.List;
 
-public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable, IPickupResponder {
+public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable, IPickupResponder, IDispellable {
     public AbstractRitual ritual;
     AnimationFactory manager = new AnimationFactory(this);
     public boolean isDecorative;
@@ -183,14 +186,14 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         if (ritual != null) {
             tooltips.add(Component.literal(ritual.getName()));
             if (isOff) {
-                tooltips.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
+                tooltips.add(Component.translatable("ars_nouveau.tooltip.turned_off").withStyle(ChatFormatting.GOLD));
                 return;
             }
             if (!ritual.isRunning()) {
                 if (!ritual.canStart()) {
-                    tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet"));
+                    tooltips.add(Component.translatable("ars_nouveau.tooltip.conditions_unmet").withStyle(ChatFormatting.GOLD));
                 } else
-                    tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting"));
+                    tooltips.add(Component.translatable("ars_nouveau.tooltip.waiting").withStyle(ChatFormatting.GOLD));
             } else {
 
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.running"));
@@ -202,7 +205,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                 }
             }
             if (ritual.needsSourceNow())
-                tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana"));
+                tooltips.add(Component.translatable("ars_nouveau.wixie.need_mana").withStyle(ChatFormatting.GOLD));
         }
     }
 
@@ -223,6 +226,16 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         BlockState state = world.getBlockState(getBlockPos());
         world.setBlock(getBlockPos(), state.setValue(RitualBrazierBlock.LIT, true), 3);
         updateBlock();
+    }
+
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        if(!isDecorative)
+            return false;
+        isDecorative = false;
+        level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(RitualBrazierBlock.LIT, false), 3);
+        updateBlock();
+        return true;
     }
 
     @NotNull

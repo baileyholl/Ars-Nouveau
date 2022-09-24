@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class ConfiguredSpellSound {
     public static ConfiguredSpellSound EMPTY = new ConfiguredSpellSound(SoundRegistry.EMPTY_SPELL_SOUND, 1, 1); // If the user wants no sound, make it empty.
-    public static ConfiguredSpellSound DEFAULT = new ConfiguredSpellSound(SoundRegistry.FIRE_SPELL_SOUND, 1, 1); // The default sound to be returned for null casters.
+    public static ConfiguredSpellSound DEFAULT = new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 1, 1); // The default sound to be returned for null casters.
 
     public @Nullable SpellSound sound;
     public float volume;

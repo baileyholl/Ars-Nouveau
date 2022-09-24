@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
@@ -13,10 +14,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
-public class EffectHarm extends AbstractEffect {
+public class EffectHarm extends AbstractEffect implements IDamageEffect {
     public static EffectHarm INSTANCE = new EffectHarm();
 
     private EffectHarm() {
@@ -31,7 +32,7 @@ public class EffectHarm extends AbstractEffect {
             if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
                 applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
-                dealDamage(world, shooter, (float) damage, spellStats, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)));
+                attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)), (float) damage);
             }
         }
     }
@@ -44,6 +45,7 @@ public class EffectHarm extends AbstractEffect {
         addPotionConfig(builder, 5);
         addExtendTimeConfig(builder, 5);
     }
+
 
     @Override
     public boolean defaultedStarterGlyph() {
@@ -63,6 +65,11 @@ public class EffectHarm extends AbstractEffect {
                 AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentFortune.INSTANCE
         );
+    }
+
+    @Override
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+        defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 
     @Override

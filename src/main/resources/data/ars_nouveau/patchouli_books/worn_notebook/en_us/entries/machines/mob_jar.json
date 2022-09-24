@@ -1,0 +1,27 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:mob_jar",
+  "name": "ars_nouveau.page.mob_jar",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.mob_jar"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.mob_jar",
+      "title": "ars_nouveau.title.mob_jar"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:mob_jar"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:rituals/ritual_containment",
+        "ars_nouveau:automation/drygmy_charm"
+      ]
+    }
+  ]
+}

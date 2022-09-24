@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -30,6 +31,11 @@ public class LangDatagen extends LanguageProvider {
         for (RitualTablet i : arsNouveauAPI.getRitualItemMap().values()) {
             add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
             add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
+        }
+
+        for (PerkItem i : arsNouveauAPI.getPerkItemMap().values()) {
+            add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
+            add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());
         }
     }
 }

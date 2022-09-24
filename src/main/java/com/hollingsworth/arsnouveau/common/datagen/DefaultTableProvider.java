@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
+import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.datafixers.util.Pair;
@@ -14,7 +16,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -95,7 +96,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_MELDER);
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
             registerDropSelf(BlockRegistry.SCONCE_BLOCK);
-            registerBedCondition(BlockRegistry.SCRIBES_BLOCK, ScribesBlock.PART, BedPart.HEAD);
+            registerBedCondition(BlockRegistry.SCRIBES_BLOCK, ScribesBlock.PART, ThreePartBlock.HEAD);
             registerDrop(BlockRegistry.DRYGMY_BLOCK, Items.MOSSY_COBBLESTONE);
 
             registerDropSelf(BlockRegistry.VITALIC_BLOCK);
@@ -134,6 +135,8 @@ public class DefaultTableProvider extends LootTableProvider {
             for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
                 registerDropSelf(BlockRegistry.getBlock(s));
             }
+            registerBedCondition(BlockRegistry.ALTERATION_TABLE, AlterationTable.PART, ThreePartBlock.HEAD);
+            registerDropSelf(BlockRegistry.VOID_PRISM);
         }
 
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {

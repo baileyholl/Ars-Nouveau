@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -18,9 +19,12 @@ public class NBTUtil {
     public static CompoundTag storeBlockPos(CompoundTag tag, String prefix, BlockPos pos) {
         if (pos == null)
             return tag;
-        tag.putDouble(prefix + "_x", pos.getX());
-        tag.putDouble(prefix + "_y", pos.getY());
-        tag.putDouble(prefix + "_z", pos.getZ());
+        writePositional(tag, prefix, pos.getX(), pos.getY(), pos.getZ());
+        return tag;
+    }
+
+    public static CompoundTag storeVec(CompoundTag tag, String prefix, Vec3 vec){
+        writePositional(tag, prefix, vec.x, vec.y, vec.z);
         return tag;
     }
 
@@ -31,9 +35,23 @@ public class NBTUtil {
         return tag;
     }
 
+    public static CompoundTag writePositional(CompoundTag tag, String prefix, double x, double y, double z){
+        tag.putDouble(prefix + "_x", x);
+        tag.putDouble(prefix + "_y", y);
+        tag.putDouble(prefix + "_z", z);
+        return tag;
+    }
+
     @Deprecated
     public static BlockPos getBlockPos(CompoundTag tag, String prefix) {
         return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
+    }
+
+    public static Vec3 getVec(CompoundTag tag, String prefix){
+        if(tag == null){
+            return null;
+        }
+        return new Vec3(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
 
     public static @Nullable BlockPos getNullablePos(CompoundTag tag, String prefix) {

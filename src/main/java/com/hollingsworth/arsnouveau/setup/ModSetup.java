@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.api.mana.ManaAttributes;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ModParticles;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
@@ -56,12 +56,13 @@ public class ModSetup {
         RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
-        ManaAttributes.ATTRIBUTES.register(modEventBus);
+        PerkAttributes.ATTRIBUTES.register(modEventBus);
         TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register(modEventBus);
         Deferred.FEAT_REG.register(modEventBus);
         Deferred.CONFG_REG.register(modEventBus);
         Deferred.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
+        SoundRegistry.SOUND_REG.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event) {
