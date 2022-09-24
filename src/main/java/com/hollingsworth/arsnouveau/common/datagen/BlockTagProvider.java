@@ -249,7 +249,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.PURPLE_SBED
         );
         this.tag(BREAK_BLACKLIST);
-        this.tag(NO_BREAK_DROP);
+        this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
 
 
     }
