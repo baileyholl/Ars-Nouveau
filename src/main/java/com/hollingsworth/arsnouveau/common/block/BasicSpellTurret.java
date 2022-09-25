@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -178,24 +177,27 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (handIn == InteractionHand.MAIN_HAND) {
-            ItemStack stack = player.getItemInHand(handIn);
-            if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
-                return InteractionResult.SUCCESS;
-            Spell spell = CasterUtil.getCaster(stack).getSpell();
-            if (spell.isEmpty())
-                return InteractionResult.SUCCESS;
-            if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
-                return InteractionResult.SUCCESS;
-            }
-            if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
-                tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
-                tile.setChanged();
-                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
-                worldIn.sendBlockUpdated(pos, state, state, 2);
-            }
+        if (handIn != InteractionHand.MAIN_HAND) {
+            return InteractionResult.PASS;
         }
+        if (worldIn.isClientSide)
+            return InteractionResult.SUCCESS;
+        ItemStack stack = player.getItemInHand(handIn);
+        Spell spell = CasterUtil.getCaster(stack).getSpell();
+        if (spell.isEmpty())
+            return InteractionResult.SUCCESS;
+        if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
+            return InteractionResult.SUCCESS;
+        }
+        if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
+            tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
+            tile.spellCaster.setSpell(spell.clone());
+            tile.setChanged();
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
+            worldIn.sendBlockUpdated(pos, state, state, 2);
+        }
+
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
