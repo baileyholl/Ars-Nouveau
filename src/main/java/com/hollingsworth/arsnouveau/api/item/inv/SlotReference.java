@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.item;
+package com.hollingsworth.arsnouveau.api.item.inv;
 
 import net.minecraftforge.items.IItemHandler;
 

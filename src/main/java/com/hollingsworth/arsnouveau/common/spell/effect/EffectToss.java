@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.core.BlockPos;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -30,56 +32,64 @@ public class EffectToss extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getEntity().blockPosition();
-        summonStack(shooter, spellContext, world, pos);
+        summonStack(shooter, spellContext, world, pos, new InventoryManager(spellContext.getCaster()));
     }
 
-    public void summonStack(LivingEntity shooter, SpellContext context, Level world, BlockPos pos) {
-        ItemStack casterStack = extractStackFromCaster(shooter, context, (i) -> {
+    public void summonStack(LivingEntity shooter, SpellContext context, Level world, BlockPos pos, InventoryManager inventoryManager) {
+        if (isRealPlayer(shooter)) {
+            inventoryManager.withSlotMax(9);
+        }
+        ExtractedStack casterStack = inventoryManager.extractItem((i) ->{
             if (!i.isEmpty() && shooter instanceof Player) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
             }
             return false;
         }, 64);
-
-        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, casterStack.copy()));
-        casterStack.setCount(0);
+        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, casterStack.stack.copy()));
+        casterStack.stack.setCount(0);
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-        if (world.getBlockEntity(rayTraceResult.getBlockPos()) != null && world.getBlockEntity(rayTraceResult.getBlockPos()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            BlockEntity tileEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
-            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        InventoryManager manager = new InventoryManager(spellContext.getCaster());
+        if(isRealPlayer(shooter)){
+            manager.withSlotMax(9);
+        }
+        if (world.getBlockEntity(rayTraceResult.getBlockPos()) == null) {
+            summonStack(shooter, spellContext, world, pos, manager);
+            return;
+        }
+        BlockEntity tileEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
+        IItemHandler targetInv = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 
-            if (iItemHandler == null) {
-                return;
+        if (targetInv == null) {
+            return;
+        }
+        // Extracts a stack from the caster that can be inserted into the target inventory
+        ExtractedStack casterStack = manager.extractByAmount(stackToExtract ->{
+            if(stackToExtract.isEmpty())
+                return 0;
+            if (shooter instanceof Player && ItemStack.matches(shooter.getMainHandItem(), stackToExtract)) {
+                return 0;
             }
-
-            ItemStack casterStack = getItemFromCaster(shooter, spellContext, (i) -> {
-
-                if (i.isEmpty())
-                    return false;
-                if (shooter instanceof Player) {
-                    return !ItemStack.matches(shooter.getMainHandItem(), i);
-                }
-                return true;
-            });
-            ItemStack stack = extractStackFromCaster(shooter, spellContext, (stack1) -> {
-                if (stack1.isEmpty())
-                    return false;
-                for (int i = 0; i < iItemHandler.getSlots(); i++) {
-                    if (iItemHandler.isItemValid(i, casterStack)) {
-                        return true;
+            for (int i = 0; i < targetInv.getSlots(); i++) {
+                ItemStack stackInTarget = targetInv.getStackInSlot(i);
+                if(stackInTarget.isEmpty()){
+                    return targetInv.getSlotLimit(i);
+                }else if (ItemHandlerHelper.canItemStacksStack(targetInv.getStackInSlot(i), stackToExtract)) {
+                    ItemStack handlerStack = targetInv.getStackInSlot(i);
+                    int maxRoom = handlerStack.getMaxStackSize() - handlerStack.getCount();
+                    int adjustedMax = Math.min(maxRoom, targetInv.getSlotLimit(i));
+                    if(adjustedMax > 0) {
+                        return adjustedMax;
                     }
                 }
-                return false;
-            }, 64);
-            ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, stack, false);
-            insertStackToCaster(shooter, spellContext, left);
-        } else {
-            summonStack(shooter, spellContext, world, pos);
-        }
+            }
+            return 0;
+        });
+        casterStack.stack = ItemHandlerHelper.insertItemStacked(targetInv, casterStack.getStack(), false);
+        casterStack.returnOrDrop(world, pos);
     }
 
     @Nonnull

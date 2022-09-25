@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.item;
+package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.ItemStack;

@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -141,7 +142,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         BlockPos validStorePos = getValidStorePos(stack);
         if (validStorePos == null)
             return -1;
-        IItemHandler handler = level.getBlockEntity(validStorePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler handler = level.getBlockEntity(validStorePos).getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (handler == null)
             return -1;
 

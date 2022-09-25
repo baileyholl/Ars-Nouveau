@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +34,12 @@ public class SpellContext implements Cloneable {
     private Level level;
 
     public CompoundTag tag = new CompoundTag();
+    private IWrappedCaster wrappedCaster;
 
+    /**
+     * Use wrapped caster version
+     */
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster) {
         this.level = level;
         this.spell = spell;
@@ -40,6 +47,12 @@ public class SpellContext implements Cloneable {
         this.isCanceled = false;
         this.currentIndex = 0;
         this.colors = spell.color.clone();
+        this.wrappedCaster = new LivingCaster(getUnwrappedCaster());
+    }
+
+    public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
+        this(level, spell, caster);
+        this.wrappedCaster = wrappedCaster;
     }
 
     public @Nullable AbstractSpellPart nextPart() {
@@ -71,11 +84,12 @@ public class SpellContext implements Cloneable {
         return this;
     }
 
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public SpellContext withCastingTile(BlockEntity tile) {
         this.castingTile = tile;
         return this;
     }
-
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public SpellContext withCaster(@Nullable LivingEntity caster) {
         this.caster = caster;
         return this;
@@ -85,7 +99,7 @@ public class SpellContext implements Cloneable {
         this.colors = colors;
         return this;
     }
-
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public SpellContext withType(CasterType type) {
         this.type = type;
         return this;
@@ -112,6 +126,10 @@ public class SpellContext implements Cloneable {
         return shooter;
     }
 
+    public @Nonnull IWrappedCaster getCaster(){
+        return wrappedCaster;
+    }
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public CasterType getType() {
         return this.type == null ? CasterType.OTHER : type;
     }
@@ -177,11 +195,14 @@ public class SpellContext implements Cloneable {
     /**
      * The type of caster that created the spell. Used for removing or changing behaviors of effects that would otherwise cause problems, like GUI opening effects.
      */
+    //TODO: Move caster type to own class
     public static class CasterType {
         public static final CasterType RUNE = new CasterType("rune");
         public static final CasterType TURRET = new CasterType("turret");
         public static final CasterType ENTITY = new CasterType("entity");
         public static final CasterType OTHER = new CasterType("other");
+        public static final CasterType LIVING_ENTITY = new CasterType("living_entity");
+        public static final CasterType PLAYER = new CasterType("player");
         public String id;
 
         public CasterType(String id) {
