@@ -82,15 +82,14 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
         TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
             @Override
-            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction direction) {
-                BlockPos touchPos = new BlockPos(dispensePosition.x(), dispensePosition.y(), dispensePosition.z());
-                if (direction == Direction.WEST || direction == Direction.NORTH) {
-                    touchPos = touchPos.relative(direction);
+            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
+                BlockPos touchPos = pos.relative(facingDir);
+                if(serverLevel.getBlockState(touchPos).canBeReplaced(new BlockPlaceContext(serverLevel, fakePlayer, InteractionHand.MAIN_HAND, ItemStack.EMPTY,
+                        new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()), facingDir, touchPos, false)))) {
+                    touchPos = touchPos.relative(facingDir);
                 }
-                if (direction == Direction.DOWN) // Why do I need to do this? Why does the vanilla dispenser code not offset correctly for DOWN?
-                    touchPos = touchPos.below();
                 resolver.onCastOnBlock(new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
-                        direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false));
+                        facingDir.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false));
             }
         });
     }

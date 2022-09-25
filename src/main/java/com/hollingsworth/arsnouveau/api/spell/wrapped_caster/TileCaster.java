@@ -29,21 +29,23 @@ public class TileCaster implements IWrappedCaster{
 
     public void initFilterables(){
         for (Direction d : Direction.values()) {
-            BlockEntity tileEntity = tile.getLevel().getBlockEntity(tile.getBlockPos().relative(d));
-            if (tileEntity == null)
+            BlockEntity adjacentInvTile = tile.getLevel().getBlockEntity(tile.getBlockPos().relative(d));
+            if (adjacentInvTile == null)
                 continue;
-            tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inv ->{
+            adjacentInvTile.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inv ->{
                 List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
                 for (ItemFrame i : tile.getLevel().getEntitiesOfClass(ItemFrame.class, new AABB(tile.getBlockPos()).inflate(1))) {
                     // Check if these frames are attached to the tile
                     BlockEntity adjTile = tile.getLevel().getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-                    if (adjTile == null || !adjTile.equals(tile) || i.getItem().isEmpty())
-                        continue;
-
                     ItemStack stackInFrame = i.getItem();
+                    if (adjTile == null || !adjTile.equals(adjacentInvTile) || i.getItem().isEmpty() || stackInFrame.isEmpty()) {
+                        continue;
+                    }
 
                     if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
                         filters.add(stackToStore -> scrollItem.getSortPref(stackToStore, stackInFrame, inv));
+                    }else{
+                        filters.add(stackToStore -> stackToStore.getItem() == stackInFrame.getItem() ? ItemScroll.SortPref.HIGHEST : ItemScroll.SortPref.INVALID);
                     }
                 }
                 handlers.add(new FilterableItemHandler(inv, filters));
