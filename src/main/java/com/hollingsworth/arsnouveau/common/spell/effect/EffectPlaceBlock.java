@@ -18,9 +18,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
@@ -42,11 +42,11 @@ public class EffectPlaceBlock extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos1 : posList) {
-            BlockPos hitPos = pos1.relative(rayTraceResult.getDirection());
-            boolean notReplaceable = !world.getBlockState(hitPos).getMaterial().isReplaceable();
+            pos1 = rayTraceResult.isInside() ? pos1 : pos1.relative(rayTraceResult.getDirection());
+            boolean notReplaceable = !world.getBlockState(pos1).getMaterial().isReplaceable();
             if (notReplaceable || MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer)))
                 continue;
-            place(rayTraceResult, world, shooter, spellStats, spellContext, resolver, fakePlayer);
+            place(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false), world, shooter, spellStats, spellContext, resolver, fakePlayer);
         }
     }
 
@@ -66,7 +66,7 @@ public class EffectPlaceBlock extends AbstractEffect {
 
     public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer) {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
+        BlockPlaceContext context = new BlockPlaceContext(fakePlayer, InteractionHand.MAIN_HAND, stack, result);
         return item.place(context);
     }
 

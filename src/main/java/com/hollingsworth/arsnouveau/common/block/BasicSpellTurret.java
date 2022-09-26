@@ -84,12 +84,8 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             @Override
             public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
                 BlockPos touchPos = pos.relative(facingDir);
-                if(serverLevel.getBlockState(touchPos).canBeReplaced(new BlockPlaceContext(serverLevel, fakePlayer, InteractionHand.MAIN_HAND, ItemStack.EMPTY,
-                        new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()), facingDir, touchPos, false)))) {
-                    touchPos = touchPos.relative(facingDir);
-                }
-                resolver.onCastOnBlock(new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
-                        facingDir.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false));
+                Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
+                resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
             }
         });
     }
