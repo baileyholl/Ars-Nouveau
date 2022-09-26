@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +36,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -43,6 +45,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -84,8 +87,14 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             @Override
             public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
                 BlockPos touchPos = pos.relative(facingDir);
-                Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
-                resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class,new AABB(touchPos));
+                if(!entityList.isEmpty()){
+                    LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
+                    resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
+                }else {
+                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
+                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                }
             }
         });
     }
