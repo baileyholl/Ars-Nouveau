@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +39,6 @@ public class InventoryManager {
         return filterables;
     }
 
-    public ItemStack insertStack(ItemStack stack){
-        for(FilterableItemHandler filterableItemHandler : getPreferredInventories(stack)){
-            if(stack.isEmpty())
-                return stack;
-            stack = ItemHandlerHelper.insertItem(filterableItemHandler.getHandler(), stack, false);
-        }
-        return stack;
-    }
 
     public ExtractedStack extractByAmount(ToIntFunction<ItemStack> getExtractAmount){
         ItemScroll.SortPref highestPref = ItemScroll.SortPref.INVALID;

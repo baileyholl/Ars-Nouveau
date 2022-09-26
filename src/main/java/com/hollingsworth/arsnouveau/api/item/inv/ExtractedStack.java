@@ -24,6 +24,20 @@ public class ExtractedStack extends SlotReference{
         return from(slotReference.getHandler(), slotReference.getSlot(), amount);
     }
 
+    public ItemStack replaceAndReturn(ItemStack stack){
+        this.stack = stack;
+        this.stack = this.returnStack();
+        return this.stack;
+    }
+
+    public void replaceAndReturnOrDrop(ItemStack stack, Level level, BlockPos pos){
+        this.replaceAndReturn(stack);
+        if(!this.stack.isEmpty()){
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, this.stack.copy()));
+            this.stack.setCount(0);
+        }
+    }
+
     /**
      * Returns the itemstack back to the handler and slot it came from, if possible.
      * @return The remainder
