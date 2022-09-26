@@ -16,8 +16,12 @@ public class ExtractedStack extends SlotReference{
         this.stack = stack;
     }
 
-    public static ExtractedStack from(IItemHandler handler, int amount, int slot){
+    public static ExtractedStack from(IItemHandler handler, int slot, int amount){
         return new ExtractedStack(handler.extractItem(slot, amount, false), handler, slot);
+    }
+
+    public static ExtractedStack from(SlotReference slotReference, int amount){
+        return from(slotReference.getHandler(), slotReference.getSlot(), amount);
     }
 
     /**

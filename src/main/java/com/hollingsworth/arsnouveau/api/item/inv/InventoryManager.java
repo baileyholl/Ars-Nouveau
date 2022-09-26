@@ -89,7 +89,7 @@ public class InventoryManager {
         if(highestHandler == null){
             return new ExtractedStack(ItemStack.EMPTY, null, -1);
         }
-        return ExtractedStack.from(highestHandler.getHandler(),toExtract, slot);
+        return ExtractedStack.from(highestHandler.getHandler(), slot, toExtract);
     }
 
     /**
@@ -97,6 +97,42 @@ public class InventoryManager {
      * @param predicate The predicate to match items against.
      */
     public ExtractedStack extractItem(Predicate<ItemStack> predicate, int count){
+        FilterableItemHandler highestHandler = highestPrefInventory(getInventory(), predicate);
+        if(highestHandler == null){
+            return new ExtractedStack(ItemStack.EMPTY, null, -1);
+        }
+        return extractItem(highestHandler, predicate, count);
+    }
+
+    public ExtractedStack extractItem(FilterableItemHandler filteredHandler, Predicate<ItemStack> stackPredicate, int count){
+        SlotReference slotRef = findItem(filteredHandler, stackPredicate);
+        if(slotRef.isEmpty()){
+            return new ExtractedStack(ItemStack.EMPTY, null, -1);
+        }
+        return ExtractedStack.from(slotRef, count);
+    }
+
+
+    public SlotReference findItem(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate){
+        for(int slot = 0; slot < slotsForHandler(itemHandler); slot++){
+            ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canExtract(stackInSlot)){
+                return new SlotReference(itemHandler.getHandler(), slot);
+            }
+        }
+        return new SlotReference(null, -1);
+    }
+
+
+    public List<FilterableItemHandler> getPreferredInventories(ItemStack stack){
+        List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
+        filtered = filtered.stream().filter(filterableItemHandler -> filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID).collect(Collectors.toCollection(ArrayList::new));
+        /// Sort highest pref first
+        filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
+        return filtered;
+    }
+
+    private FilterableItemHandler highestPrefInventory(List<FilterableItemHandler> inventories, Predicate<ItemStack> predicate){
         ItemScroll.SortPref highestPref = ItemScroll.SortPref.INVALID;
         FilterableItemHandler highestHandler = null;
         for(FilterableItemHandler wrapper : getInventory()){
@@ -114,36 +150,14 @@ public class InventoryManager {
                     pref = foundPref;
                 }
                 if(pref == ItemScroll.SortPref.HIGHEST)
-                    return extractItem(wrapper, predicate, count);
+                    return wrapper;
             }
             if(pref.ordinal() > highestPref.ordinal()){
                 highestHandler = wrapper;
                 highestPref = pref;
             }
         }
-        if(highestHandler == null){
-            return new ExtractedStack(ItemStack.EMPTY, null, -1);
-        }
-        return extractItem(highestHandler, predicate, count);
-    }
-
-    public ExtractedStack extractItem(FilterableItemHandler filteredHandler, Predicate<ItemStack> stack, int count){
-        for(int slot = 0; slot < slotsForHandler(filteredHandler); slot++){
-            ItemStack stackInSlot = filteredHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stack.test(stackInSlot) && filteredHandler.canExtract(stackInSlot)){
-                return new ExtractedStack(filteredHandler.getHandler().extractItem(slot, count, false), filteredHandler.getHandler(), slot);
-            }
-        }
-        return new ExtractedStack(ItemStack.EMPTY, null, -1);
-    }
-
-
-    public List<FilterableItemHandler> getPreferredInventories(ItemStack stack){
-        List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
-        filtered = filtered.stream().filter(filterableItemHandler -> filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID).collect(Collectors.toCollection(ArrayList::new));
-        /// Sort highest pref first
-        filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
-        return filtered;
+        return highestHandler;
     }
 
     private int slotsForHandler(FilterableItemHandler handler){
