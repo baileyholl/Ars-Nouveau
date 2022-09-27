@@ -52,8 +52,6 @@ public class EffectPlaceBlock extends AbstractEffect {
 
     public void place(BlockHitResult resolveResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, FakePlayer fakePlayer){
         InventoryManager manager = spellContext.getCaster().getInvManager();
-        if(isRealPlayer(shooter))
-            manager.withSlotMax(9);
         ExtractedStack extractItem = manager.extractItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1);
         if(extractItem.isEmpty())
             return;

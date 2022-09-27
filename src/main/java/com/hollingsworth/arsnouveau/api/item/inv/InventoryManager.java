@@ -18,8 +18,6 @@ public class InventoryManager {
 
     private List<FilterableItemHandler> filterables;
 
-    private boolean hasTransformed;
-
     private int slotMax = -1;
 
     public InventoryManager(List<FilterableItemHandler> filterables){
@@ -101,6 +99,14 @@ public class InventoryManager {
             return new ExtractedStack(ItemStack.EMPTY, null, -1);
         }
         return ExtractedStack.from(slotRef, count);
+    }
+
+    public SlotReference findItem(Predicate<ItemStack> predicate){
+        FilterableItemHandler highestHandler = highestPrefInventory(getInventory(), predicate);
+        if(highestHandler == null){
+            return new SlotReference(null, -1);
+        }
+        return findItem(highestHandler, predicate);
     }
 
 

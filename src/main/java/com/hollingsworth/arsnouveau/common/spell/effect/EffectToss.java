@@ -36,9 +36,6 @@ public class EffectToss extends AbstractEffect {
     }
 
     public void summonStack(LivingEntity shooter, SpellContext context, Level world, BlockPos pos, InventoryManager inventoryManager) {
-        if (isRealPlayer(shooter)) {
-            inventoryManager.withSlotMax(9);
-        }
         ExtractedStack casterStack = inventoryManager.extractItem((i) ->{
             if (!i.isEmpty() && shooter instanceof Player) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
@@ -53,9 +50,6 @@ public class EffectToss extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
         InventoryManager manager = new InventoryManager(spellContext.getCaster());
-        if(isRealPlayer(shooter)){
-            manager.withSlotMax(9);
-        }
         if (world.getBlockEntity(rayTraceResult.getBlockPos()) == null) {
             summonStack(shooter, spellContext, world, pos, manager);
             return;

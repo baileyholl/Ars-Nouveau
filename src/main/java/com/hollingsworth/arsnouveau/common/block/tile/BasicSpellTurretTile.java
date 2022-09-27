@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
+import com.hollingsworth.arsnouveau.api.spell.TurretSpellCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +26,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener, ITickable, ISpellCasterProvider {
+public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder, ITooltipProvider, IAnimatable, IAnimationListener, ITickable, ISpellCasterProvider {
 
     boolean playRecoil;
     public TurretSpellCaster spellCaster = new TurretSpellCaster(new CompoundTag());
@@ -44,11 +46,6 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     @Override
     public @Nonnull ItemStack onPickup(ItemStack stack) {
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
-    }
-
-    @Override
-    public ItemStack onPlaceBlock() {
-        return BlockUtil.getItemAdjacent(level, worldPosition, (stack) -> stack.getItem() instanceof BlockItem);
     }
 
     @Override
