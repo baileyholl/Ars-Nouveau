@@ -16,6 +16,10 @@ public class SlotReference {
         this.slot = slot;
     }
 
+    public static SlotReference empty(){
+        return new SlotReference(null, -1);
+    }
+
     public boolean isEmpty(){
         return handler == null || slot < 0;
     }

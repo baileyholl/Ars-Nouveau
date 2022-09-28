@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.google.common.collect.Lists;
+import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -59,7 +60,7 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     public ItemStack fireworkFromInv(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter) {
         InventoryManager manager = spellContext.getCaster().getInvManager();
-        SlotReference slotReference = manager.findItem(i -> i.getItem() == Items.FIREWORK_ROCKET);
+        SlotReference slotReference = manager.findItem(i -> i.getItem() == Items.FIREWORK_ROCKET, InteractType.EXTRACT);
         if(slotReference.getHandler() != null){
             ItemStack firework = slotReference.getHandler().getStackInSlot(slotReference.getSlot());
             if(!firework.isEmpty()){

@@ -24,6 +24,10 @@ public class ExtractedStack extends SlotReference{
         return from(slotReference.getHandler(), slotReference.getSlot(), amount);
     }
 
+    public static ExtractedStack empty(){
+        return new ExtractedStack(ItemStack.EMPTY, null, -1);
+    }
+
     public ItemStack replaceAndReturn(ItemStack stack){
         this.stack = stack;
         this.stack = this.returnStack();

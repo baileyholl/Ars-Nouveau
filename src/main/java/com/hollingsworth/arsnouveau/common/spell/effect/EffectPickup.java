@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,20 +39,13 @@ public class EffectPickup extends AbstractEffect {
 
         List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
+        InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
         for (ItemEntity i : entityList) {
-
-            if (shooter instanceof Player player && isNotFakePlayer(player) && spellContext.castingTile == null) {
-                ItemStack stack = i.getItem();
-                if (MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(player, i)))
-                    continue;
-                if (!stack.isEmpty() && !player.addItem(stack)) {
-                    i.setPos(player.getX(), player.getY(), player.getZ());
-                }
-            } else if (shooter instanceof IPickupResponder iPickupResponder) {
-                i.setItem(iPickupResponder.onPickup(i.getItem()));
-            } else if (spellContext.castingTile instanceof IPickupResponder iPickupResponder) {
-                i.setItem(iPickupResponder.onPickup(i.getItem()));
-            }
+            ItemStack stack = i.getItem();
+            if (stack.isEmpty() || MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(getPlayer(shooter, (ServerLevel) world), i)))
+                continue;
+            stack = manager.insertStack(stack);
+            i.setItem(stack);
         }
         List<ExperienceOrb> orbList = world.getEntitiesOfClass(ExperienceOrb.class, new AABB(
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));

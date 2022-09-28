@@ -14,7 +14,7 @@ import java.util.List;
 public class LivingCaster implements IWrappedCaster {
     public LivingEntity livingEntity;
 
-    private List<FilterableItemHandler> filterableItemHandlers;
+    protected List<FilterableItemHandler> filterableItemHandlers;
 
     public LivingCaster(LivingEntity livingEntity){
         this.livingEntity = livingEntity;

@@ -25,12 +25,25 @@ public class FilterableItemHandler {
         this.filters = filters;
     }
 
+    /**
+     * If this inventory supports insertion of the given stack.
+     */
     public boolean canInsert(ItemStack stack){
         return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
     }
 
+    /**
+     * If this inventory supports extraction of the given stack.
+     */
     public boolean canExtract(ItemStack stack){
         return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
+    }
+
+    /**
+     * If this inventory supports extraction or insertion of the given stack.
+     */
+    public boolean canInteractFor(ItemStack stack, InteractType type){
+        return type == InteractType.EXTRACT ? canExtract(stack) : canInsert(stack);
     }
 
     /**
