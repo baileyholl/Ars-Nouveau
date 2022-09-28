@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -38,10 +41,13 @@ public class EffectBlink extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
-        if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
-            ItemStack scroll = iInventoryResponder.getItem((i) -> i.sameItem(ItemsRegistry.WARP_SCROLL.asItem().getDefaultInstance()));
-            if (!scroll.isEmpty()) {
-                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(scroll);
+
+        if (!isRealPlayer(shooter)) {
+            InventoryManager manager = spellContext.getCaster().getInvManager();
+            SlotReference reference = manager.findItem(i -> i.getItem() == ItemsRegistry.WARP_SCROLL.asItem(), InteractType.EXTRACT);
+            if (!reference.isEmpty()) {
+                ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
+                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(stack);
                 if (data.isValid() && data.canTeleportWithDim(world)) {
                     warpEntity(rayTraceResult.getEntity(), data.getPos());
                     return;
@@ -54,7 +60,7 @@ public class EffectBlink extends AbstractEffect {
             return;
         }
 
-        if (isRealPlayer(shooter) && spellContext.castingTile == null) {
+        if (isRealPlayer(shooter)) {
             if (shooter.getOffhandItem().getItem() instanceof WarpScroll) {
                 WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(shooter.getOffhandItem());
                 if (data.isValid() && data.canTeleportWithDim(world)) {
