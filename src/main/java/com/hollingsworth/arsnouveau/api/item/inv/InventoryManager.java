@@ -2,7 +2,10 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
@@ -43,6 +46,14 @@ public class InventoryManager {
 
     public List<FilterableItemHandler> getInventory(){
         return filterables;
+    }
+
+    public void insertOrDrop(ItemStack stack, Level level, BlockPos pos){
+        ItemStack remainder = insertStack(stack);
+        if(!remainder.isEmpty()){
+            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), remainder.copy()));
+            remainder.setCount(0);
+        }
     }
 
     public ItemStack insertStack(ItemStack stack){
