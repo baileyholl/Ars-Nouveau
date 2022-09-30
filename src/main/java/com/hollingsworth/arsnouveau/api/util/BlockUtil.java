@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -283,6 +284,18 @@ public class BlockUtil {
                     + xDiff + " | " + yDiff + " | " + zDiff);
         }
         return result;
+    }
+
+    public static void updateObservers(Level level, BlockPos pos ){
+        for (Direction d : Direction.values()) {
+            BlockPos adjacentPos = pos.relative(d);
+            if (level.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock) {
+                BlockState observer = level.getBlockState(adjacentPos);
+                if (adjacentPos.relative(observer.getValue(ObserverBlock.FACING)).equals(pos)) { // Make sure the observer is facing us.
+                    level.scheduleTick(pos.relative(d), level.getBlockState(pos.relative(d)).getBlock(), 2);
+                }
+            }
+        }
     }
 
     private BlockUtil() {
