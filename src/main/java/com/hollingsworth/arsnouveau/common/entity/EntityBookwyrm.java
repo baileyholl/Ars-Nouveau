@@ -6,9 +6,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.spell.IInteractResponder;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BookwyrmLecternTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -37,7 +35,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -50,7 +47,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable, IVariantColorProvider<EntityBookwyrm> {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IAnimatable, IVariantColorProvider<EntityBookwyrm> {
 
     public static final EntityDataAccessor<String> SPELL_STRING = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
@@ -193,20 +190,6 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     }
 
-
-    @Override
-    public ItemStack getHeldItem() {
-        if (lecternPos != null && level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile tile) {
-            for (IItemHandler inv : BlockUtil.getAdjacentInventories(level, tile.getBlockPos())) {
-                for (int i = 0; i < inv.getSlots(); i++) {
-                    if (inv.getStackInSlot(i).sameItem(this.entityData.get(HELD_ITEM)))
-                        return inv.getStackInSlot(i).split(1);
-                }
-            }
-
-        }
-        return ItemStack.EMPTY;
-    }
 
     public @Nullable BookwyrmLecternTile getTile() {
         return lecternPos == null || !(level.getBlockEntity(lecternPos) instanceof BookwyrmLecternTile) ? null : (BookwyrmLecternTile) level.getBlockEntity(lecternPos);

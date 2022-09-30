@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
+import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
@@ -32,6 +34,10 @@ public class InventoryManager {
 
     public InventoryManager(IWrappedCaster wrappedCaster){
         this(wrappedCaster.getInventory());
+    }
+
+    public static InventoryManager fromTile(BlockEntity blockEntity){
+        return new InventoryManager(InvUtil.adjacentInventories(blockEntity.getLevel(), blockEntity.getBlockPos()));
     }
 
     public InventoryManager extractSlotMax(int slotMax){

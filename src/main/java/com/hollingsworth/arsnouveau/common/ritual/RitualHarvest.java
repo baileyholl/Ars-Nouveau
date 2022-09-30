@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -86,11 +87,12 @@ public class RitualHarvest extends AbstractRitual {
                 break;
             }
         }
+        InventoryManager manager = tile.getInventoryManager();
         cropDrops.forEach(d -> {
             if (d.isEmpty() || d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()) {
                 return;
             }
-            d = tile.onPickup(d);
+            d = manager.insertStack(d);
             if(!d.isEmpty()) {
                 world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), d));
             }
