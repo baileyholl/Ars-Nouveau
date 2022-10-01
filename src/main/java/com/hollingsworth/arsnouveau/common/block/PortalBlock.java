@@ -86,9 +86,15 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (worldIn.getBlockEntity(pos) instanceof PortalTile tile && !(entityIn instanceof Player)) {
-            tile.warp(entityIn);
-            entityIn.fallDistance = 0;
+        if (worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
+            if(entityIn instanceof Player player) {
+                if(!tile.entityQueue.contains(player)){
+                    tile.entityQueue.add(player);
+                }
+            }else{
+                tile.warp(entityIn);
+                entityIn.fallDistance = 0;
+            }
         }
     }
 
@@ -114,7 +120,7 @@ public class PortalBlock extends TickableModBlock {
                     tile.rotationVec = data.getRotation();
                     tile.displayName = displayName;
                     tile.isHorizontal = true;
-                    tile.update();
+                    tile.updateBlock();
                 }
             });
             return true;
@@ -315,7 +321,7 @@ public class PortalBlock extends TickableModBlock {
                         tile.dimID = data.getDimension();
                         tile.rotationVec = data.getRotation();
                         tile.displayName = displayName;
-                        tile.update();
+                        tile.updateBlock();
                     }
                 }
             }
