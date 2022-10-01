@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -42,7 +43,7 @@ public class EffectBlink extends AbstractEffect {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
-        if (!isRealPlayer(shooter)) {
+        if (spellContext.getCaster() instanceof TileCaster) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
             SlotReference reference = manager.findItem(i -> i.getItem() == ItemsRegistry.WARP_SCROLL.asItem(), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
