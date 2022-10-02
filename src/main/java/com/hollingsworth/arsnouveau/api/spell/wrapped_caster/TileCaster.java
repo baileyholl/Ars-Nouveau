@@ -10,18 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileCaster implements IWrappedCaster{
-    private SpellContext.CasterType casterType;
-    private List<FilterableItemHandler> handlers;
-    public BlockEntity tile;
+    protected SpellContext.CasterType casterType;
+    protected List<FilterableItemHandler> handlers;
+    protected BlockEntity tile;
 
     public TileCaster(BlockEntity tile, SpellContext.CasterType casterType){
         this.tile = tile;
         this.casterType = casterType;
         handlers = new ArrayList<>();
-        initFilterables();
+        initFilterables(tile);
     }
 
-    public void initFilterables(){
+    public void initFilterables(BlockEntity tile){
         handlers = new ArrayList<>(InvUtil.adjacentInventories(tile.getLevel(), tile.getBlockPos()));
     }
 
@@ -33,5 +33,9 @@ public class TileCaster implements IWrappedCaster{
     @Override
     public SpellContext.CasterType getCasterType() {
         return casterType;
+    }
+
+    public BlockEntity getTile(){
+        return tile;
     }
 }
