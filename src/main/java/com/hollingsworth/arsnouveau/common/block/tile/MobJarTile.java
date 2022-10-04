@@ -14,11 +14,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -53,11 +53,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
         }
     }
 
-    public boolean setEntityData(Entity entity){
-        return setEntityData(entity,  level);
-    }
-
-    public boolean setEntityData(Entity entity, Level level){
+    public boolean setEntityData(@Nonnull Entity entity){
         CompoundTag tag = new CompoundTag();
         if(entity.shouldBeSaved() && entity.save(tag)){
             this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());

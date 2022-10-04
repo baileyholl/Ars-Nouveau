@@ -13,13 +13,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -142,9 +143,7 @@ public class BlockUtil {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(d));
             if (tileEntity == null)
                 continue;
-
-            if (tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
-                iInventories.add(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null));
+            tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iInventories::add);
         }
 
         return iInventories;
@@ -285,6 +284,18 @@ public class BlockUtil {
                     + xDiff + " | " + yDiff + " | " + zDiff);
         }
         return result;
+    }
+
+    public static void updateObservers(Level level, BlockPos pos ){
+        for (Direction d : Direction.values()) {
+            BlockPos adjacentPos = pos.relative(d);
+            if (level.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock) {
+                BlockState observer = level.getBlockState(adjacentPos);
+                if (adjacentPos.relative(observer.getValue(ObserverBlock.FACING)).equals(pos)) { // Make sure the observer is facing us.
+                    level.scheduleTick(pos.relative(d), level.getBlockState(pos.relative(d)).getBlock(), 2);
+                }
+            }
+        }
     }
 
     private BlockUtil() {

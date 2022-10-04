@@ -19,8 +19,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public abstract class ItemScroll extends ModItem implements IScribeable {
 
     public ItemScroll() {
@@ -45,14 +43,14 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
-
+    // TODO: Move this to API.
     public enum SortPref {
         INVALID,
         LOW,
         HIGH,
         HIGHEST
     }
-
+    @Deprecated(forRemoval = true)
     public static String ITEM_PREFIX = "item_";
 
     @Override

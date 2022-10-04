@@ -24,8 +24,8 @@ public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFalli
     }
 
     public void render(EnchantedFallingBlock pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
-        BlockState blockstate = pEntity.getBlockState();
-        if (blockstate.getRenderShape() == RenderShape.MODEL) {
+        try {
+            BlockState blockstate = pEntity.getBlockState();
             Level level = pEntity.getLevel();
             if (blockstate != level.getBlockState(pEntity.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                 pMatrixStack.pushPose();
@@ -37,7 +37,10 @@ public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFalli
                 pMatrixStack.popPose();
                 super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
             }
+        }catch (Exception e){
+            // We typically don't render non-models like this, so catch our shenanigans.
         }
+
     }
 
     /**

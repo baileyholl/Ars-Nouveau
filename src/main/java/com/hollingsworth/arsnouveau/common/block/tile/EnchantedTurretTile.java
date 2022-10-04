@@ -1,8 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,7 +9,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class EnchantedTurretTile extends BasicSpellTurretTile implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider {
+public class EnchantedTurretTile extends BasicSpellTurretTile {
 
     public EnchantedTurretTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, pos, state);

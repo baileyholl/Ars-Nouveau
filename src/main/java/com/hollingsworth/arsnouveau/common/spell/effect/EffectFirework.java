@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.google.common.collect.Lists;
+import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -37,12 +40,11 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-
         if (!(rayTraceResult.getEntity() instanceof LivingEntity)) {
             return;
         }
 
-        ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
+        ItemStack firework = fireworkFromInv(spellContext, spellStats, shooter);
         for (int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
             spawnFireworkOnEntity(rayTraceResult, world, shooter, firework);
         }
@@ -50,16 +52,22 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
+        ItemStack firework = fireworkFromInv(spellContext, spellStats, shooter);
         for (int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
             spawnFireworkOnBlock(rayTraceResult, world, shooter, i, firework, spellContext);
         }
     }
 
-    public ItemStack getCorrectFirework(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter) {
-        ItemStack firework = getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier());
-        ItemStack foundStack = getItemFromCaster(shooter, spellContext, Items.FIREWORK_ROCKET);
-        return !foundStack.isEmpty() ? foundStack : firework;
+    public ItemStack fireworkFromInv(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter) {
+        InventoryManager manager = spellContext.getCaster().getInvManager();
+        SlotReference slotReference = manager.findItem(i -> i.getItem() == Items.FIREWORK_ROCKET, InteractType.EXTRACT);
+        if(slotReference.getHandler() != null){
+            ItemStack firework = slotReference.getHandler().getStackInSlot(slotReference.getSlot());
+            if(!firework.isEmpty()){
+                return firework;
+            }
+        }
+        return getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier());
     }
 
     public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context) {

@@ -136,12 +136,22 @@ public class EntityProjectileSpell extends ColoredProjectile {
             this.onHit(raytraceresult);
             this.hasImpulse = true;
         }
-        if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult
+        if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
                 && canTraversePortals()) {
             BlockRegistry.PORTAL_BLOCK.onProjectileHit(level, level.getBlockState(new BlockPos(raytraceresult.getLocation())),
-                    (BlockHitResult) raytraceresult, this);
+                    blockHitResult, this);
 
         }
+    }
+
+    /**
+     * Override this to transform the hit result before resolving.
+     */
+    public @Nullable HitResult transformHitResult(@Nullable HitResult hitResult) {
+        if(hitResult instanceof BlockHitResult hitResult1){
+            return new BlockHitResult(hitResult1.getLocation(), hitResult1.getDirection(), hitResult1.getBlockPos(), false);
+        }
+        return hitResult;
     }
 
     public boolean canTraversePortals() {
@@ -249,8 +259,9 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     @Override
     protected void onHit(HitResult result) {
-        if (!level.isClientSide && result instanceof EntityHitResult) {
-            if (((EntityHitResult) result).getEntity().equals(this.getOwner())) return;
+        result = transformHitResult(result);
+        if (!level.isClientSide && result instanceof EntityHitResult entityHitResult) {
+            if (entityHitResult.getEntity().equals(this.getOwner())) return;
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
                 Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
@@ -259,7 +270,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
         }
 
-        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
+        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
 
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
 
@@ -267,7 +278,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 prismaticBlock.onHit((ServerLevel) level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }
-
 
             if (state.getMaterial() == Material.PORTAL) {
                 state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);

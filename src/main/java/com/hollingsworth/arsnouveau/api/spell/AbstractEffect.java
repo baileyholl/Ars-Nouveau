@@ -235,6 +235,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         addExtendTimeConfig(builder, 8);
     }
 
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public ItemStack getItemFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate) {
         if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
             return iInventoryResponder.getItem(predicate);
@@ -252,10 +253,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return ItemStack.EMPTY;
     }
 
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public ItemStack getItemFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Item item) {
         return getItemFromCaster(shooter, spellContext, (i) -> i.sameItem(new ItemStack(item)));
     }
 
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public ItemStack extractStackFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate, int maxExtract) {
         IInventoryResponder responder = null;
         if (spellContext.castingTile instanceof IInventoryResponder) {
@@ -277,6 +280,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return ItemStack.EMPTY;
     }
 
+    @Deprecated(forRemoval = true, since = "3.4.0")
     public ItemStack insertStackToCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, ItemStack stack) {
         IPickupResponder responder = null;
         if (spellContext.castingTile instanceof IPickupResponder) {

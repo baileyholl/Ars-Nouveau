@@ -21,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -119,7 +119,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public boolean isPositionValidTake(BlockPos p) {
         if (p == null || level.getBlockEntity(p) == null)
             return false;
-        IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (iItemHandler == null)
             return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
@@ -141,7 +141,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         BlockPos validStorePos = getValidStorePos(stack);
         if (validStorePos == null)
             return -1;
-        IItemHandler handler = level.getBlockEntity(validStorePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler handler = level.getBlockEntity(validStorePos).getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (handler == null)
             return -1;
 
@@ -164,7 +164,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (tile == null || stack == null || stack.isEmpty())
             return ItemScroll.SortPref.INVALID;
 
-        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (handler == null)
             return ItemScroll.SortPref.INVALID;
         for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(tile.getBlockPos()).inflate(1))) {
@@ -202,7 +202,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
         if (storedPos == null)
             return;
-        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             addToPos(storedPos);
         }
@@ -214,7 +214,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
 
-        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos);
         }

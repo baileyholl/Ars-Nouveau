@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
@@ -30,21 +32,24 @@ public class EffectInfuse extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         if (rayTraceResult.getEntity() instanceof LivingEntity livingEntity) {
-            ItemStack flask = getItemFromCaster(shooter, spellContext, (i) -> {
+            InventoryManager manager = spellContext.getCaster().getInvManager();
+            ExtractedStack extractedFlask = manager.extractItem(i -> {
                 PotionFlask.FlaskData data = new PotionFlask.FlaskData(i);
                 return !data.getPotion().isEmpty() && data.getCount() > 0;
-            });
-            if (!flask.isEmpty()) {
-                PotionFlask.FlaskData data = new PotionFlask.FlaskData(flask);
+            }, 1);
+            if (!extractedFlask.isEmpty()) {
+                PotionFlask.FlaskData data = new PotionFlask.FlaskData(extractedFlask.getStack());
                 data.getPotion().applyEffects(shooter, shooter, livingEntity);
                 data.setCount(data.getCount() - 1);
+                extractedFlask.returnOrDrop(world, shooter.getOnPos());
             } else {
-                ItemStack potion = getItemFromCaster(shooter, spellContext, (i) -> i.getItem() instanceof PotionItem);
+                ExtractedStack potion = manager.extractItem(i -> i.getItem() instanceof PotionItem, 1);
                 if (!potion.isEmpty()) {
-                    PotionData potionData = new PotionData(potion);
+                    ItemStack stack = potion.getStack();
+                    PotionData potionData = new PotionData(stack);
                     potionData.applyEffects(shooter, shooter, livingEntity);
-                    potion.shrink(1);
-                    insertStackToCaster(shooter, spellContext, new ItemStack(Items.GLASS_BOTTLE));
+                    stack.shrink(1);
+                    potion.replaceAndReturnOrDrop(new ItemStack(Items.GLASS_BOTTLE), world, shooter.getOnPos());
                 }
             }
         }

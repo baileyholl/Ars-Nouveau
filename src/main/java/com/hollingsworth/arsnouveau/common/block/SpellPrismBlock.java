@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
@@ -79,14 +80,6 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
         float velocity = Math.max(0.1f, 0.5f + 0.1f * Math.min(2, acceleration));
 
         spell.shoot(direction.getStepX(), (direction.getStepY()), direction.getStepZ(), velocity, 0);
-        for (Direction d : Direction.values()) {
-            BlockPos adjacentPos = pos.relative(d);
-            if (world.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock) {
-                BlockState observer = world.getBlockState(adjacentPos);
-                if (adjacentPos.relative(observer.getValue(FACING)).equals(pos)) { // Make sure the observer is facing us.
-                    world.scheduleTick(pos.relative(d), world.getBlockState(pos.relative(d)).getBlock(), 2);
-                }
-            }
-        }
+        BlockUtil.updateObservers(world, pos);
     }
 }

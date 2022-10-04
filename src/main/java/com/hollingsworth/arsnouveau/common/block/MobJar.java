@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -7,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -52,14 +54,22 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         if (tile == null) {
             return InteractionResult.PASS;
         }
-        if(tile.getEntity() != null){
+        if(tile.getEntity() == null && !pLevel.isClientSide){
             ItemStack stack = pPlayer.getItemInHand(pHand);
             if(stack.getItem() instanceof SpawnEggItem spawnEggItem){
                 EntityType type = spawnEggItem.getType(null);
-                type.create(pLevel);
+                Entity entity = type.create(pLevel);
+                if(entity != null) {
+                    tile.setEntityData(entity);
+                    stack.shrink(1);
+                    return InteractionResult.CONSUME;
+                }
             }
         }
-
+        if(tile.getEntity() != null && !JarBehaviorRegistry.containsEntity(tile.getEntity())){
+            pPlayer.interactOn(tile.getEntity(), pHand);
+            tile.updateBlock();
+        }
         tile.dispatchBehavior((behavior) -> {
             behavior.use(pState, pLevel, pPos, pPlayer, pHand, pHit, tile);
         });

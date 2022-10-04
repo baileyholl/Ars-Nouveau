@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -30,30 +32,23 @@ public class EffectName extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component newName = null;
-        if (spellContext.castingTile instanceof IInventoryResponder) {
-            newName = (((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(Items.NAME_TAG))).getDisplayName().plainCopy();
-        } else if (shooter instanceof Player playerEntity) {
-            NonNullList<ItemStack> list = playerEntity.inventory.items;
-            for (int i = 0; i < 9; i++) {
-                ItemStack stack = list.get(i);
-                if (stack.getItem() == Items.NAME_TAG) {
-                    newName = stack.getDisplayName().plainCopy();
-                    break;
-                }
-            }
-            if (newName == null) {
-                ItemStack stack = StackUtil.getHeldSpellbook(playerEntity);
-                if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
-                    ISpellCaster caster = CasterUtil.getCaster(stack);
-                    newName = Component.literal(caster.getSpellName());
-                }
+        InventoryManager manager = spellContext.getCaster().getInvManager();
+        SlotReference slotRef = manager.findItem(i -> i.getItem() == Items.NAME_TAG, InteractType.EXTRACT);
+        if(slotRef.getHandler() != null){
+            ItemStack stack = slotRef.getHandler().getStackInSlot(slotRef.getSlot());
+            newName = stack.getDisplayName().plainCopy();
+        }
+        if (newName == null && isRealPlayer(shooter) && shooter instanceof Player player) {
+            ItemStack stack = StackUtil.getHeldSpellbook(player);
+            if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
+                ISpellCaster caster = CasterUtil.getCaster(stack);
+                newName = Component.literal(caster.getSpellName());
             }
         }
-        rayTraceResult.getEntity().setCustomName((newName != null) ? newName : Component.empty());
-        if (rayTraceResult.getEntity() instanceof Mob) {
-            ((Mob) rayTraceResult.getEntity()).setPersistenceRequired();
+        rayTraceResult.getEntity().setCustomName(newName);
+        if (rayTraceResult.getEntity() instanceof Mob mob) {
+            mob.setPersistenceRequired();
         }
-
     }
 
     public SpellTier getTier() {

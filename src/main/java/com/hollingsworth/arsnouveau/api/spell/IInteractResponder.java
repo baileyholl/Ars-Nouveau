@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Used by spell casters that support the Interact spell
  */
+@Deprecated
 public interface IInteractResponder {
     /**
      * @return the held item used by the fake player.

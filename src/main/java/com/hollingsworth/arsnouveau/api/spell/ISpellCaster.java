@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
@@ -122,7 +123,7 @@ public interface ISpellCaster {
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
 
-        SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, playerIn), worldIn, playerIn, handIn);
+        SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, playerIn, new LivingCaster(playerIn)), worldIn, playerIn, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
         HitResult result = SpellUtil.rayTrace(playerIn, 5, 0, isSensitive);
         if (result instanceof BlockHitResult blockHit) {

@@ -40,7 +40,8 @@ public class EffectBreak extends AbstractEffect {
     }
 
     public ItemStack getStack(LivingEntity shooter) {
-        return shooter.getMainHandItem().copy();
+        ItemStack stack = shooter.getMainHandItem().copy();
+        return stack.isEmpty() ? new ItemStack(Items.DIAMOND_PICKAXE) : stack;
     }
 
     @Override
@@ -53,16 +54,17 @@ public class EffectBreak extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
         ItemStack stack = spellStats.hasBuff(AugmentSensitive.INSTANCE) ? new ItemStack(Items.SHEARS) : getStack(shooter);
 
+        int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
+        int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
+        stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
+        stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
+
         for (BlockPos pos1 : posList) {
             state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1) || state.is(BlockTagProvider.BREAK_BLACKLIST)) {
                 continue;
             }
-            int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
-            int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
-            stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
-            stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
 
             state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
             if (!state.is(BlockTagProvider.NO_BREAK_DROP))

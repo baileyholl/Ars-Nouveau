@@ -4,10 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.RuneCaster;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
@@ -24,19 +23,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 
-public class RuneTile extends ModdedTile implements IPickupResponder, IAnimatable, ITickable, ITooltipProvider {
+public class RuneTile extends ModdedTile implements IAnimatable, ITickable, ITooltipProvider {
     public Spell spell = new Spell();
     public boolean isTemporary;
     public boolean disabled;
@@ -68,7 +63,7 @@ public class RuneTile extends ModdedTile implements IPickupResponder, IAnimatabl
 
             Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
             playerEntity = playerEntity == null ? ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
+            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
@@ -139,34 +134,6 @@ public class RuneTile extends ModdedTile implements IPickupResponder, IAnimatabl
                 updateBlock();
             }
         }
-    }
-
-    @Override
-    public List<IItemHandler> getInventory() {
-        // if sensitive, return the players inventory
-        if (isSensitive) {
-            Player player = level.getPlayerByUUID(uuid);
-            if (player != null) {
-                List<IItemHandler> handlers = new ArrayList<>();
-                handlers.add(new PlayerInvWrapper(player.getInventory()));
-                return handlers;
-            }
-            return new ArrayList<>();
-        }
-        return BlockUtil.getAdjacentInventories(level, worldPosition);
-    }
-
-    @Override
-    public @Nonnull ItemStack onPickup(ItemStack stack) {
-        // If sensitive, add the stack to the player inventory
-        if (isSensitive) {
-            Player player = level.getPlayerByUUID(uuid);
-            if (player != null) {
-                player.inventory.add(stack);
-            }
-            return stack;
-        }
-        return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 
     @Override
