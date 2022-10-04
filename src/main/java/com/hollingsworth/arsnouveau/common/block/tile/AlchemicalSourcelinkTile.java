@@ -30,7 +30,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile {
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && level.getGameTime() % 20 == 0) {
+        if (!level.isClientSide && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
             BlockPos potionPos = findNearbyPotion(level, worldPosition);
             if (potionPos != null) {
                 PotionJarTile tile = (PotionJarTile) level.getBlockEntity(potionPos);
