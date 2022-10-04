@@ -25,4 +25,8 @@ public class JarBehaviorRegistry {
             consumer.accept(jarBehavior);
         }
     }
+
+    public static boolean containsEntity(Entity entity){
+        return BEHAVIOR_REGISTRY.containsKey(entity.getType());
+    }
 }
