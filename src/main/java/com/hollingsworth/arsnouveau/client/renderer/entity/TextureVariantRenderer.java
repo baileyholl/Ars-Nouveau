@@ -15,7 +15,7 @@ public class TextureVariantRenderer<T extends LivingEntity & IVariantTextureProv
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
-        return entity.getTexture(entity);
+        return entity.getTexture((Object) entity);
     }
 
 }
