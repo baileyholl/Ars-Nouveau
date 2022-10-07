@@ -5,7 +5,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
@@ -18,10 +20,10 @@ public class BookwyrmModel<T extends LivingEntity & IAnimatable> extends Animate
     @Override
     public void setLivingAnimations(T entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-//        IBone head = this.getAnimationProcessor().getBone("head");
-//        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-//        head.setRotationX(extraData.headPitch * 0.010453292F);
-//        head.setRotationY(extraData.netHeadYaw * 0.015453292F);
+        IBone head = this.getAnimationProcessor().getBone("head");
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        head.setRotationX(extraData.headPitch * 0.010453292F);
+        head.setRotationY(extraData.netHeadYaw * 0.015453292F);
     }
 
     @Override

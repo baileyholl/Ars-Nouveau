@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
     public void tick() {
         try {
             if (level.isClientSide && this.cachedEntity != null) {
-                if(cachedEntity instanceof Mob mob){
+                if(cachedEntity instanceof Mob mob && !(mob instanceof Bee)){
                     mob.getLookControl().tick();
                 }
             }
