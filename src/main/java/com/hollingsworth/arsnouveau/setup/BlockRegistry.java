@@ -353,6 +353,13 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.VOID_PRISM, registryName = BlockRegistryKey)
     public static VoidPrism VOID_PRISM;
 
+
+    @ObjectHolder(value = prepend + LibBlockNames.REPOSITORY, registryName = BlockRegistryKey)
+    public static RepositoryBlock REPOSITORY;
+
+    @ObjectHolder(value = prepend + LibBlockNames.REPOSITORY, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<RepositoryTile> REPOSITORY_TILE;
+
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
@@ -470,6 +477,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
+        registry.register(LibBlockNames.REPOSITORY, new RepositoryBlock());
     }
 
     public static MagicLeaves createLeavesBlock(MaterialColor color) {
@@ -520,6 +528,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
         registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
         registry.register(LibBlockNames.MOB_JAR, BlockEntityType.Builder.of(MobJarTile::new, BlockRegistry.MOB_JAR).build(null));
+        registry.register(LibBlockNames.REPOSITORY, BlockEntityType.Builder.of(RepositoryTile::new, BlockRegistry.REPOSITORY).build(null));
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -732,6 +741,7 @@ public class BlockRegistry {
         });
         registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
         registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
+        registry.register(LibBlockNames.REPOSITORY, getDefaultBlockItem(BlockRegistry.REPOSITORY));
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {
