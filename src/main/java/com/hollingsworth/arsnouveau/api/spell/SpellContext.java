@@ -131,7 +131,7 @@ public class SpellContext implements Cloneable {
     }
     @Deprecated(forRemoval = true, since = "3.4.0")
     public CasterType getType() {
-        return this.type == null ? CasterType.OTHER : type;
+        return this.type == null ? this.wrappedCaster.getCasterType() : type;
     }
 
     public int getCurrentIndex() {
