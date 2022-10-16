@@ -169,10 +169,11 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.13')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.44')
 
     implementation fg.deobf("curse.maven:exp-556861:3865719")// functional storage
     implementation fg.deobf("curse.maven:exp-287342:3819942") // titanium
+    implementation fg.deobf("curse.maven:exp-224218:3905502")// compact machines
 //    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
 
 //    runtimeOnly fg.deobf("curse.maven:security-64760:3696873") // Securitycraft
