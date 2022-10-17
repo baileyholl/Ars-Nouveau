@@ -283,9 +283,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.PURPLE_SBED
         );
         this.tag(BREAK_BLACKLIST);
-        this.tag(NO_BREAK_DROP);
-
-
+        this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
     }
     protected Path getPath(ResourceLocation p_126514_) {
         return this.generator.getOutputFolder().resolve("data/" + p_126514_.getNamespace() + "/tags/blocks/" + p_126514_.getPath() + ".json");
