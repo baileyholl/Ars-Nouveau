@@ -33,7 +33,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 20 == 0){
             BlockPos potionPos = findNearbyPotion(level, worldPosition);
-            if(potionPos != null){
+            if(potionPos != null && canAcceptSource()){
                 PotionJarTile tile = (PotionJarTile) level.getBlockEntity(potionPos);
                 int mana = 75;
                 Set<MobEffect> effectTypes = new HashSet<>();
