@@ -45,8 +45,10 @@ public class EffectIntangible extends AbstractEffect {
             int id = Block.getId(state);
             world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
             IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
-            tile.stateID = id;
-            tile.maxLength = duration * 20;
+            if(tile != null) {
+                tile.stateID = id;
+                tile.maxLength = duration * 20;
+            }
         }
     }
 
