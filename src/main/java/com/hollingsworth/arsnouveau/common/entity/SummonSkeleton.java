@@ -9,6 +9,7 @@ import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -91,6 +92,13 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     }
 
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource instanceof EntityDamageSource eSource && eSource.getEntity() instanceof ISummon summon){
+            if (summon.getOwnerID() != null && summon.getOwnerID().equals(this.getOwnerID())) return false;
+        }
+        return super.hurt(pSource, pAmount);
+    }
 
     @Override
     protected void registerGoals() {
