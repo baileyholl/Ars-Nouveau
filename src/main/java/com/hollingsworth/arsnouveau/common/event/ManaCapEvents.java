@@ -28,14 +28,15 @@ public class ManaCapEvents {
         IManaCap mana = CapabilityRegistry.getMana(e.player).orElse(null);
         if (mana == null)
             return;
-
-        if (mana.getCurrentMana() != mana.getMaxMana()) {
+        // Force sync mana to client because client caps vanish on world change
+        boolean shouldIgnoreMax = e.player.getLevel().getGameTime() % 60 == 0;
+        if (mana.getCurrentMana() != mana.getMaxMana() || shouldIgnoreMax) {
             double regenPerSecond = ManaUtil.getManaRegen(e.player) / Math.max(1, ((int) MEAN_TPS / ServerConfig.REGEN_INTERVAL.get()));
             mana.addMana(regenPerSecond);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
         int max = ManaUtil.getMaxMana(e.player);
-        if (mana.getMaxMana() != max) {
+        if (mana.getMaxMana() != max || shouldIgnoreMax) {
             mana.setMaxMana(max);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
