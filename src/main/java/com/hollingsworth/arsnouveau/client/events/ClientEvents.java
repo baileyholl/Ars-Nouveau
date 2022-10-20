@@ -11,6 +11,11 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEvents {
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e){
-        PatchouliTooltipEvent.onTooltip(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+        try {
+            // Uses patchouli internals, don't crash if they change something :)
+            PatchouliTooltipEvent.onTooltip(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }
