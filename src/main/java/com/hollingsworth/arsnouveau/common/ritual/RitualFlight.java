@@ -56,6 +56,8 @@ public class RitualFlight extends AbstractRitual {
         public static Set<BlockPos> activePositions = new HashSet<>();
 
         public static @Nullable RitualFlight getFlightRitual(Level world, BlockPos pos){
+            if(!world.isLoaded(pos))
+                return null;
             BlockEntity entity = world.getBlockEntity(pos);
             if(entity instanceof RitualBrazierTile){
                 if(((RitualBrazierTile) entity).ritual instanceof RitualFlight)
