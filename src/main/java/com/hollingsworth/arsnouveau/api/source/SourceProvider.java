@@ -26,7 +26,7 @@ public class SourceProvider implements ISpecialSourceProvider {
 
     @Override
     public boolean isValid() {
-        return tile != null;
+        return isValid;
     }
 
     @Override

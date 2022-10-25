@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -55,10 +55,10 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
         }
 
         if (level.getGameTime() % 100 == 0 && getSource() > 0) {
-            BlockPos jarPos = SourceUtil.canGiveSourceClosest(worldPosition, level, 5);
-            if (jarPos != null) {
-                transferSource(this, (ISourceTile) level.getBlockEntity(jarPos));
-                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
+            List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
+            if(!providers.isEmpty()){
+                transferSource(this, providers.get(0).getSource());
+                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.get(0).getCurrentPos());
             }
         }
     }

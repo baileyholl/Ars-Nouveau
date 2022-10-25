@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.SourceProvider;
+import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -21,9 +21,9 @@ public class RelayCollectorTile extends RelayTile {
         if (disabled)
             return;
         if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
-            List<SourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
+            List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
 
-            for (SourceProvider provider : takeList) {
+            for (ISpecialSourceProvider provider : takeList) {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
