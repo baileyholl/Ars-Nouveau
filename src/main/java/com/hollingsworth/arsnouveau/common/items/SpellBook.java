@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketAnimatePlayer;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -68,6 +69,9 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        if(handIn == InteractionHand.OFF_HAND){
+            Networking.sendToNearby(worldIn, playerIn, new PacketAnimatePlayer("animation.model.new"));
+        }
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {

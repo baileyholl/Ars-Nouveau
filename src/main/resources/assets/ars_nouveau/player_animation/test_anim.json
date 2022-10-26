@@ -1,0 +1,20 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.model.new": {
+			"animation_length": 1.12,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [7.5, 0, 0]
+						},
+						"1.08": {
+							"vector": [-160, 0, 0]
+						}
+					}
+				}
+			}
+		}
+	}
+}

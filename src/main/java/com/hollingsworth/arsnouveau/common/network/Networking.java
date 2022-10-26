@@ -207,7 +207,11 @@ public class Networking {
                 PacketSetLauncher::toBytes,
                 PacketSetLauncher::new,
                 PacketSetLauncher::handle);
-
+        INSTANCE.registerMessage(nextID(),
+                PacketAnimatePlayer.class,
+                PacketAnimatePlayer::toBytes,
+                PacketAnimatePlayer::new,
+                PacketAnimatePlayer::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
