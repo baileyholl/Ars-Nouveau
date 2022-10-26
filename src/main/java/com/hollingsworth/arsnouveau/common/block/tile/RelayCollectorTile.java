@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -21,20 +21,22 @@ public class RelayCollectorTile extends RelayTile {
         if (disabled)
             return;
         if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
-            List<BlockPos> takeList = SourceUtil.canTakeSourceAny(getBlockPos(), level, 5);
+            List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
 
-            for (BlockPos pos : takeList) {
+            for (ISpecialSourceProvider provider : takeList) {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-
-                if (!level.isLoaded(pos) || pos.equals(this.getToPos()) || pos.equals(this.getFromPos()) || !(level.getBlockEntity(pos) instanceof ISourceTile)) {
+                if(this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()){
+                    continue;
+                }
+                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getBlockEntity(this.getFromPos()) == provider.getSource()){
                     continue;
                 }
 
-                int transferred = transferSource((ISourceTile) level.getBlockEntity(pos), this);
+                int transferred = transferSource(provider.getSource(), this);
                 if (transferred > 0) {
-                    ParticleUtil.spawnFollowProjectile(level, pos, this.worldPosition);
+                    ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition);
                 }
             }
 

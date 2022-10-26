@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
@@ -120,10 +121,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             if (!canAcceptSource(Math.min(200, recipe.source)))
                 return;
 
-            BlockPos takePos = SourceUtil.takeSourceNearby(worldPosition, level, 2, Math.min(200, recipe.source));
+            ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, recipe.source));
             if (takePos != null) {
                 this.addSource(transferRate);
-                EntityFlyingItem item = new EntityFlyingItem(level, takePos.above(), worldPosition, 255, 50, 80)
+                EntityFlyingItem item = new EntityFlyingItem(level, takePos.getCurrentPos().above(), worldPosition, 255, 50, 80)
                         .withNoTouch();
                 item.setDistanceAdjust(2f);
                 level.addFreshEntity(item);

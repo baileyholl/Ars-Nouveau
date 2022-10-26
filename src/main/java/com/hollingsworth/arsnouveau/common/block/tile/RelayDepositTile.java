@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -21,16 +21,21 @@ public class RelayDepositTile extends RelayTile {
         if (disabled)
             return;
         if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0) {
-            List<BlockPos> posList = SourceUtil.canGiveSourceAny(worldPosition, level, 5);
-            for (BlockPos jarPos : posList) {
-                if (this.getSource() == 0)
+            List<ISpecialSourceProvider> posList = SourceUtil.canGiveSource(worldPosition, level, 5);
+            for (ISpecialSourceProvider provider : posList) {
+                if (this.getSource() <= 0)
                     break;
-                if (!level.isLoaded(jarPos))
-                    continue;
 
-                if (jarPos != null && !jarPos.equals(this.getToPos()) && !jarPos.equals(this.getFromPos()) && level.getBlockEntity(jarPos) instanceof SourceJarTile) {
-                    transferSource(this, (ISourceTile) level.getBlockEntity(jarPos));
-                    ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
+                if(this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()){
+                    continue;
+                }
+                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getBlockEntity(this.getFromPos()) == provider.getSource()){
+                    continue;
+                }
+
+                if (!(provider.getSource() instanceof RelayTile)) {
+                    transferSource(this, provider.getSource());
+                    ParticleUtil.spawnFollowProjectile(level, this.worldPosition, provider.getCurrentPos());
                 }
             }
         }

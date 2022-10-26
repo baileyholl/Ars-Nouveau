@@ -68,7 +68,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             return;
         }
         if (!level.isClientSide && !hasSource && level.getGameTime() % 20 == 0) {
-            if (SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
+            if (SourceUtil.takeSourceWithParticles(worldPosition, level, 5, 100) != null) {
                 hasSource = true;
                 updateBlock();
             }

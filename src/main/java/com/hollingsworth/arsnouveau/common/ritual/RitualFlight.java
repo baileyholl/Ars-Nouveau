@@ -73,11 +73,9 @@ public class RitualFlight extends AbstractRitual {
             if (pos == null || !entity.level.isLoaded(pos))
                 return;
             BlockEntity tileEntity = entity.level.getBlockEntity(pos);
-            if (tileEntity instanceof RitualBrazierTile) {
-                if (((RitualBrazierTile) tileEntity).ritual instanceof RitualFlight) {
-                    ((RitualBrazierTile) tileEntity).ritual.setNeedsSource(true);
-                    entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 90 * 20));
-                }
+            if (tileEntity instanceof RitualBrazierTile tile && tile.ritual instanceof RitualFlight ritualFlight) {
+                tile.ritual.setNeedsSource(true);
+                entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 90 * 20));
             }
         }
 
