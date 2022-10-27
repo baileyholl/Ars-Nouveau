@@ -28,7 +28,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '3.4.3'
+version = '3.4.5'
 
 
 configurations {
@@ -180,7 +180,7 @@ dependencies {
 
 
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
+    shade fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
 
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.0.117")
 
@@ -224,17 +224,14 @@ jar {
 
 shadowJar {
     configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
-
-//    // Skip unnecessary assets and duplicated java files GeckoLib comes with
-//    exclude 'software/bernie/example/**'
-//    exclude 'assets/geckolib3/**'
-//    exclude '**/*.java'
-//    relocate 'software.bernie.shadowed', 'software.bernie.modid.shadowed' // <- Move the shadowed geckolib shadowed packages. This prevents classpath conflicts in runtime
-//    relocate 'software.bernie.geckolib', 'software.bernie.modid.geckolib' // <- Move the shadowed geckolib package. This prevents classpath conflicts in runtime
+    exclude 'software/bernie/example/**'
+    exclude 'assets/geckolib3/**'
+    exclude '**/*.java'
 
     classifier ''
     relocate 'com.llamalad7', 'shadowed.llamalad7'
-
+    relocate 'software.bernie.shadowed', 'software.bernie.ars_nouveau.shadowed'
+    relocate 'software.bernie.geckolib', 'software.bernie.ars_nouveau.geckolib'
     finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
     mergeServiceFiles()
 }
