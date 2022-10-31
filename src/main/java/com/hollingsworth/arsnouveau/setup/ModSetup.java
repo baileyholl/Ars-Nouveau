@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ModParticles;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.Deferred;
 import com.hollingsworth.arsnouveau.common.world.biome.ModBiomes;
@@ -46,7 +47,6 @@ public class ModSetup {
 
     public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
-    //some things need to be deferred to maintain sanity
     public static void registers(IEventBus modEventBus) {
         ItemsRegistry.ITEMS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
@@ -63,6 +63,7 @@ public class ModSetup {
         Deferred.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);
+        MenuRegistry.MENU_REG.register(modEventBus);
     }
 
     public static void registerEvents(RegisterEvent event) {
