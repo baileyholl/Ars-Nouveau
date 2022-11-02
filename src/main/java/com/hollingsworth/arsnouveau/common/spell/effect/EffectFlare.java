@@ -41,7 +41,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
             dealDamage(world, shooter, damage, spellStats, livingEntity, source);
             ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
-            for (Entity e : world.getEntities(shooter, new AABB(
+            for (Entity e : world.getEntities(CASTER_AFFECTED.get() ? null : shooter, new AABB(
                     livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
                 if (e.equals(livingEntity) || !(e instanceof LivingEntity))
                     continue;
@@ -65,6 +65,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         addDamageConfig(builder, 7.0);
         addAmpConfig(builder, 3.0);
         addExtendTimeConfig(builder, 1);
+	addCasterAffectedConfig(builder, false);
     }
 
     @Override

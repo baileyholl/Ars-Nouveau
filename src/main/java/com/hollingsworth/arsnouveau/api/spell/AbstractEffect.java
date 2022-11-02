@@ -199,6 +199,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public ForgeConfigSpec.IntValue EXTEND_TIME;
     public ForgeConfigSpec.IntValue GENERIC_INT;
     public ForgeConfigSpec.DoubleValue GENERIC_DOUBLE;
+    public ForgeConfigSpec.BooleanValue CASTER_AFFECTED;
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -233,6 +234,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder) {
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
+    }
+
+    public void addCasterAffectedConfig(ForgeConfigSpec.Builder builder, boolean defaultValue) {
+	CASTER_AFFECTED = builder.comment("Whether this effect affects its own caster").define("caster_affected", defaultValue);
     }
 
     @Deprecated(forRemoval = true, since = "3.4.0")

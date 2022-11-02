@@ -41,7 +41,7 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         intensity -= 0.5 * dampen;
         Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.NONE : Explosion.BlockInteraction.DESTROY;
         mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.BREAK : mode;
-        explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
+        explode(world, CASTER_AFFECTED.get() ? null : shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }
 
     public Explosion explode(Level world, @Nullable Entity e, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator context,
@@ -73,6 +73,7 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addAmpConfig(builder, 0.5);
+	addCasterAffectedConfig(builder, false);
         BASE = builder.comment("Explosion base intensity").defineInRange("base", 0.75, 0.0, 100);
         AOE_BONUS = builder.comment("AOE intensity bonus").defineInRange("aoe_bonus", 1.5, 0.0, 100);
         addDamageConfig(builder, 6.0);

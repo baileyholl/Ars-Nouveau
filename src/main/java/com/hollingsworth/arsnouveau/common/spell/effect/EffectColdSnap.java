@@ -49,7 +49,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
 
         for (LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
-            if (e.equals(livingEntity) || e.equals(shooter))
+            if (e.equals(livingEntity) || (!CASTER_AFFECTED.get() && e.equals(shooter)))
                 continue;
             if (canDamage(e)) {
                 vec = e.position();
@@ -80,6 +80,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         addAmpConfig(builder, 2.5);
         addPotionConfig(builder, 5);
         addExtendTimeConfig(builder, 1);
+	addCasterAffectedConfig(builder, false);
     }
 
     @Override
