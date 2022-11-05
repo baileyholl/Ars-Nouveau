@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,22 +30,34 @@ public class MethodProjectile extends AbstractCastMethod {
         super(GlyphLib.MethodProjectileID, "Projectile");
     }
 
+    public ForgeConfigSpec.IntValue PROJECTILE_TTL;
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        PROJECTILE_TTL = builder.comment("Max lifespan of the projectile, in seconds.").defineInRange("max_lifespan", 60, 0, Integer.MAX_VALUE);
+    }
+
+    public int getProjectileLifespan() {
+        return PROJECTILE_TTL != null ? PROJECTILE_TTL.get() : 60;
+    }
+
     @Override
     public int getDefaultManaCost() {
         return 10;
     }
 
-    public void summonProjectiles(Level world, LivingEntity shooter, SpellStats stats, SpellResolver resolver){
+    public void summonProjectiles(Level world, LivingEntity shooter, SpellStats stats, SpellResolver resolver) {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
         projectiles.add(projectileSpell);
         int numSplits = stats.getBuffCount(AugmentSplit.INSTANCE);
 
         float sizeRatio = shooter.getEyeHeight() / Player.DEFAULT_EYE_HEIGHT;
-        for(int i =1; i < numSplits + 1; i++){
-            Direction offset =shooter.getDirection().getClockWise();
-            if(i%2==0) offset = offset.getOpposite();
-             // Alternate sides
+        for (int i = 1; i < numSplits + 1; i++) {
+            Direction offset = shooter.getDirection().getClockWise();
+            if (i % 2 == 0) offset = offset.getOpposite();
+            // Alternate sides
             BlockPos projPos = shooter.blockPosition().relative(offset, i).offset(0, 1.5 * sizeRatio, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());

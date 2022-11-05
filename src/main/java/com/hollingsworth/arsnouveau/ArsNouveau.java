@@ -69,13 +69,8 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
-//        event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
-        //TODO: Restore archwood forest
-        if(false && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
-           // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
-        }
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event){

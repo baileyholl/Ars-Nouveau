@@ -57,6 +57,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
         ISpellCaster caster = CasterUtil.getCaster(parchment);
         ReactiveCaster reactiveCaster = new ReactiveCaster(reagent);
         reactiveCaster.setSpell(caster.getSpell());
+        reactiveCaster.setColor(caster.getColor());
         return reagent.copy();
     }
 
