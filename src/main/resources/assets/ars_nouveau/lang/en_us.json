@@ -28,7 +28,7 @@
 	"ars_nouveau.glyph_desc.glyph_ender_inventory": "Opens your personal ender chest inventory from anywhere.",
 	"ars_nouveau.glyph_desc.glyph_evaporate": "Deletes fluids in an area. Can be expanded with AOE.",
 	"ars_nouveau.glyph_desc.glyph_exchange": "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. When used on entities, the locations of the caster and the entity hit are swapped.",
-	"ars_nouveau.glyph_desc.glyph_explosion": "Causes an explosion at the location. Amplify increases the damage and size by a small amount, while AOE will increase the size of the explosion by a large amount, but not damage.",
+	"ars_nouveau.glyph_desc.glyph_explosion": "Causes an explosion at the location. Amplify increases the damage and size by a small amount, while AOE will increase the size of the explosion by a large amount, but not damage. Dampen will disable terrain damage.",
 	"ars_nouveau.glyph_desc.glyph_extend_time": "Extends the time that spells last, including buffs, fangs, and summons",
 	"ars_nouveau.glyph_desc.glyph_extract": "Applies a silk-touch effect to Break and causes Explosion to not destroy blocks that drop. Cannot be combined with Fortune.",
 	"ars_nouveau.glyph_desc.glyph_fangs": "Summons Evoker Fangs in the direction where the spell was targeted. Using fangs on your self will spawn them in an area around you.",
