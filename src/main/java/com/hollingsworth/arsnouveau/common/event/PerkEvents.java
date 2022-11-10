@@ -49,8 +49,6 @@ public class PerkEvents {
             for(IPerk equippedPerks : playerPerks){
                 if(itemPerks.contains(equippedPerks)){
                     PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.perks.duplicated"));
-                    System.out.println(itemPerks.size());
-                    System.out.println(playerPerks.size());
                     return;
                 }
             }
