@@ -125,7 +125,6 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         if (this.playerInfo == null) {
             this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerID());
         }
-
         return this.playerInfo;
     }
     public Component getName() {
@@ -179,4 +178,12 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public void setOwnerID(UUID uuid) {
         this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean isSlim() {
+        if (this.playerInfo != null) {
+            return playerInfo.getModelName().equals("slim");
+        } else return false;
+    }
+
 }

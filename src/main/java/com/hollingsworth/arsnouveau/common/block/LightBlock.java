@@ -30,7 +30,11 @@ public class LightBlock extends ModBlock implements EntityBlock, SimpleWaterlogg
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(defaultProperties().lightLevel((bs)-> bs.getValue(LIGHT_LEVEL) == 0 ? 14 :  bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f,0f), LibBlockNames.LIGHT_BLOCK);
+        this(LibBlockNames.LIGHT_BLOCK);
+    }
+
+    public LightBlock(String regName) {
+        super(defaultProperties().lightLevel((bs) -> bs.getValue(LIGHT_LEVEL) == 0 ? 14 : bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f, 0f), regName);
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
     }
 
@@ -58,9 +62,8 @@ public class LightBlock extends ModBlock implements EntityBlock, SimpleWaterlogg
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof LightTile){
+        if (context.getLevel().getBlockEntity(context.getClickedPos()) instanceof LightTile tile) {
             Random random = context.getLevel().random;
-            LightTile tile = (LightTile) context.getLevel().getBlockEntity(context.getClickedPos());
             tile.red = Math.max(10, random.nextInt(255));
             tile.green = Math.max(10, random.nextInt(255));
             tile.blue = Math.max(10, random.nextInt(255));

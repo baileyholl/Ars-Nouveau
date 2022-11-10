@@ -44,31 +44,56 @@ public class BlockRegistry {
 
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS);
 
-    @ObjectHolder(LibBlockNames.MAGE_BLOCK) public static MageBlock MAGE_BLOCK;
-    @ObjectHolder(LibBlockNames.MAGE_BLOCK) public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
+    @ObjectHolder(LibBlockNames.MAGE_BLOCK)
+    public static MageBlock MAGE_BLOCK;
+    @ObjectHolder(LibBlockNames.MAGE_BLOCK)
+    public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
 
-    @ObjectHolder(LibBlockNames.LIGHT_BLOCK) public static LightBlock LIGHT_BLOCK;
-    @ObjectHolder(LibBlockNames.LIGHT_BLOCK) public static BlockEntityType<LightTile> LIGHT_TILE;
-    @ObjectHolder(LibBlockNames.AGRONOMIC_SOURCELINK) public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
-    @ObjectHolder(LibBlockNames.AGRONOMIC_SOURCELINK) public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
+    @ObjectHolder(LibBlockNames.LIGHT_BLOCK)
+    public static LightBlock LIGHT_BLOCK;
+    @ObjectHolder(LibBlockNames.LIGHT_BLOCK)
+    public static BlockEntityType<LightTile> LIGHT_TILE;
+    @ObjectHolder(LibBlockNames.T_LIGHT_BLOCK)
+    public static LightBlock T_LIGHT_BLOCK;
+    @ObjectHolder(LibBlockNames.T_LIGHT_BLOCK)
+    public static BlockEntityType<LightTile> T_LIGHT_TILE;
+    @ObjectHolder(LibBlockNames.AGRONOMIC_SOURCELINK)
+    public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
+    @ObjectHolder(LibBlockNames.AGRONOMIC_SOURCELINK)
+    public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
 
-    @ObjectHolder(LibBlockNames.ENCHANTING_APPARATUS) public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
-    @ObjectHolder(LibBlockNames.ENCHANTING_APPARATUS) public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
+    @ObjectHolder(LibBlockNames.ENCHANTING_APPARATUS)
+    public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
+    @ObjectHolder(LibBlockNames.ENCHANTING_APPARATUS)
+    public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
 
-    @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL) public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
-    @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL) public static ArcanePedestal ARCANE_PEDESTAL;
-    @ObjectHolder(LibBlockNames.SOURCE_JAR) public static SourceJar SOURCE_JAR;
-    @ObjectHolder(LibBlockNames.SOURCE_JAR) public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
-    @ObjectHolder(LibBlockNames.RELAY) public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
+    @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL)
+    public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
+    @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL)
+    public static ArcanePedestal ARCANE_PEDESTAL;
+    @ObjectHolder(LibBlockNames.SOURCE_JAR)
+    public static SourceJar SOURCE_JAR;
+    @ObjectHolder(LibBlockNames.SOURCE_JAR)
+    public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
+    @ObjectHolder(LibBlockNames.RELAY)
+    public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
 
-    @ObjectHolder(LibBlockNames.MAGE_BLOOM) public static MageBloomCrop MAGE_BLOOM_CROP;
-    @ObjectHolder(LibBlockNames.ARCANE_BRICKS) public static ModBlock ARCANE_BRICKS;
-    @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static ScribesBlock SCRIBES_BLOCK;
-    @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static SummoningCrystal SUMMONING_CRYSTAL;
-    @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static BlockEntityType<SummoningCrystalTile> SUMMONING_CRYSTAL_TILE;
-    @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
-    @ObjectHolder(LibBlockNames.ARCANE_ROAD) public static TickableModBlock ARCANE_ROAD;
-    @ObjectHolder(LibBlockNames.RELAY) public static Relay RELAY;
+    @ObjectHolder(LibBlockNames.MAGE_BLOOM)
+    public static MageBloomCrop MAGE_BLOOM_CROP;
+    @ObjectHolder(LibBlockNames.ARCANE_BRICKS)
+    public static ModBlock ARCANE_BRICKS;
+    @ObjectHolder(LibBlockNames.SCRIBES_BLOCK)
+    public static ScribesBlock SCRIBES_BLOCK;
+    @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL)
+    public static SummoningCrystal SUMMONING_CRYSTAL;
+    @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL)
+    public static BlockEntityType<SummoningCrystalTile> SUMMONING_CRYSTAL_TILE;
+    @ObjectHolder(LibBlockNames.SCRIBES_BLOCK)
+    public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
+    @ObjectHolder(LibBlockNames.ARCANE_ROAD)
+    public static TickableModBlock ARCANE_ROAD;
+    @ObjectHolder(LibBlockNames.RELAY)
+    public static Relay RELAY;
     @ObjectHolder(LibBlockNames.RUNE) public static BlockEntityType<RuneTile> RUNE_TILE;
     @ObjectHolder(LibBlockNames.RUNE) public static RuneBlock RUNE_BLOCK;
     @ObjectHolder(LibBlockNames.PORTAL) public static PortalBlock PORTAL_BLOCK;
@@ -229,6 +254,7 @@ public class BlockRegistry {
             IForgeRegistry<Block> registry = blockRegistryEvent.getRegistry();
             registry.register(new MageBlock());
             registry.register(new LightBlock());
+            registry.register(new TempLightBlock());
             registry.register(new AgronomicSourcelinkBlock());
             registry.register(new SourceJar());
             registry.register(new MageBloomCrop());
@@ -352,6 +378,7 @@ public class BlockRegistry {
             registry.register(BlockEntityType.Builder.of(AgronomicSourcelinkTile::new, BlockRegistry.AGRONOMIC_SOURCELINK).build(null).setRegistryName(LibBlockNames.AGRONOMIC_SOURCELINK));
             registry.register(BlockEntityType.Builder.of(SourceJarTile::new, BlockRegistry.SOURCE_JAR).build(null).setRegistryName(LibBlockNames.SOURCE_JAR));
             registry.register(BlockEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null).setRegistryName(LibBlockNames.LIGHT_BLOCK));
+            registry.register(BlockEntityType.Builder.of(TempLightTile::new, BlockRegistry.T_LIGHT_BLOCK).build(null).setRegistryName(LibBlockNames.T_LIGHT_BLOCK));
             registry.register(BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName(LibBlockNames.ENCHANTING_APPARATUS));
             registry.register(BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             registry.register(BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));

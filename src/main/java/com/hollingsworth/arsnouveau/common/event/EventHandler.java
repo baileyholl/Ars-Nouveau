@@ -43,6 +43,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -98,15 +99,14 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if(e.getEntityLiving().getCommandSenderWorld().isClientSide || !Config.SPAWN_BOOK.get())
+        if (e.getEntityLiving().getCommandSenderWorld().isClientSide || !Config.SPAWN_BOOK.get())
             return;
         CompoundTag tag = e.getPlayer().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
-        if(tag.getBoolean(book_tag))
+        if (tag.getBoolean(book_tag))
             return;
-
-        LivingEntity entity = e.getEntityLiving();
-        e.getEntityLiving().getCommandSenderWorld().addFreshEntity(new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WORN_NOTEBOOK)));
+        Player entity = (Player) e.getEntityLiving();
+        ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
         tag.putBoolean(book_tag, true);
         e.getPlayer().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
     }
@@ -133,10 +133,9 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event){
-        if(!event.getEntityLiving().level.isClientSide  && event.getEntityLiving() instanceof Player){
-            Player entity = (Player) event.getEntityLiving();
-            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null){
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (!event.getEntityLiving().level.isClientSide && event.getEntityLiving() instanceof Player entity) {
+            if (entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null) {
                 RitualFlight.RitualFlightHandler.grantFlight(entity);
             }
 
@@ -174,11 +173,10 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void dispelEvent(DispelEvent event){
-        if(event.rayTraceResult instanceof EntityHitResult && ((EntityHitResult) event.rayTraceResult).getEntity() instanceof LivingEntity){
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) event.rayTraceResult).getEntity();
-            if(entity instanceof Witch){
-                if(entity.getHealth() <= entity.getMaxHealth()/2){
+    public static void dispelEvent(DispelEvent event) {
+        if (event.rayTraceResult instanceof EntityHitResult && ((EntityHitResult) event.rayTraceResult).getEntity() instanceof LivingEntity entity) {
+            if (entity instanceof Witch) {
+                if (entity.getHealth() <= entity.getMaxHealth() / 2) {
                     entity.remove(Entity.RemovalReason.KILLED);
                     ParticleUtil.spawnPoof((ServerLevel) event.world, entity.blockPosition());
                     event.world.addFreshEntity(new ItemEntity(event.world, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));

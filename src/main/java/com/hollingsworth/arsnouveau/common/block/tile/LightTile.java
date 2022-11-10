@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class LightTile extends ModdedTile {
@@ -12,7 +13,11 @@ public class LightTile extends ModdedTile {
     public int blue = 255;
 
     public LightTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.LIGHT_TILE, pos, state);
+        this(BlockRegistry.LIGHT_TILE, pos, state);
+    }
+
+    public LightTile(BlockEntityType<?> lightTile, BlockPos pos, BlockState state) {
+        super(lightTile, pos, state);
     }
 
     @Override

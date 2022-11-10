@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -42,6 +43,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public int numSensitive;
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
+    @Deprecated
     public int expireTime = 60 * 20;
 
     public Set<BlockPos> hitList = new HashSet<>();
@@ -135,34 +137,34 @@ public class EntityProjectileSpell extends ColoredProjectile {
             this.hasImpulse = true;
         }
         if(raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult
-         && canTraversePortals()){
-            BlockRegistry.PORTAL_BLOCK.onProjectileHit(level,level.getBlockState(new BlockPos(raytraceresult.getLocation())),
-                    (BlockHitResult)raytraceresult, this );
+         && canTraversePortals()) {
+            BlockRegistry.PORTAL_BLOCK.onProjectileHit(level, level.getBlockState(new BlockPos(raytraceresult.getLocation())),
+                    (BlockHitResult) raytraceresult, this);
 
         }
     }
 
-    public boolean canTraversePortals(){
+    public boolean canTraversePortals() {
         return canTraversePortals;
     }
 
-    public int getExpirationTime(){
-        return expireTime;
+    public int getExpirationTime() {
+        return MethodProjectile.INSTANCE.getProjectileLifespan() * 20;
     }
 
     /**
      * Moves the projectile to the next position
      */
-    public void tickNextPosition(){
+    public void tickNextPosition() {
         Vec3 vec3d = this.getDeltaMovement();
         double x = this.getX() + vec3d.x;
         double y = this.getY() + vec3d.y;
         double z = this.getZ() + vec3d.z;
         if (!this.isNoGravity()) {
             Vec3 vec3d1 = this.getDeltaMovement();
-            this.setDeltaMovement(vec3d1.x, vec3d1.y , vec3d1.z);
+            this.setDeltaMovement(vec3d1.x, vec3d1.y, vec3d1.z);
         }
-        this.setPos(x,y,z);
+        this.setPos(x, y, z);
     }
 
     public int getParticleDelay(){
@@ -201,13 +203,13 @@ public class EntityProjectileSpell extends ColoredProjectile {
         float f = -Mth.sin(rotationYawIn * ((float)Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float)Math.PI / 180F));
         float f1 = -Mth.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
         float f2 = Mth.cos(rotationYawIn * ((float)Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float)Math.PI / 180F));
-        this.shoot(f, f1, f2, 0.0F, inaccuracy); //overriding this, a better solution might exists
+        this.shoot(f, f1, f2, 0.0F, inaccuracy); //overriding this, a better solution might exist
         Vec3 vec3d = entityThrower.getLookAngle();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3d.x, vec3d.y, vec3d.z).scale(velocity));
     }
 
     /**
-     * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
+     * Similar to setArrowHeading, it's point the throwable entity to an x, y, z direction.
      */
     public void shoot(double x, double y, double z, float velocity, float inaccuracy)
     {
@@ -259,19 +261,18 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
         }
 
-        if (!level.isClientSide && result instanceof BlockHitResult  && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
+        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
 
-            BlockHitResult blockraytraceresult = (BlockHitResult)result;
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
 
-            if(state.getBlock() instanceof SpellPrismBlock){
+            if (state.getBlock() instanceof SpellPrismBlock) {
                 SpellPrismBlock.redirectSpell((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
                 return;
             }
 
 
-            if(state.getMaterial() == Material.PORTAL){
-                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(),this);
+            if (state.getMaterial() == Material.PORTAL) {
+                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }
 

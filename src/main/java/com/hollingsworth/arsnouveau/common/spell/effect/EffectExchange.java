@@ -30,6 +30,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -48,11 +49,12 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        if(shooter != null){
-            Vec3 origLoc = shooter.position;
+        Vec3 origLoc = shooter.position;
+        if (shooter != null && !ForgeEventFactory.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             shooter.teleportTo(entity.getX(), entity.getY(), entity.getZ());
+        if (!(entity instanceof LivingEntity living) || !ForgeEventFactory.onEnderTeleport(living, origLoc.x(), origLoc.y(), origLoc.z()).isCanceled()) {
             entity.teleportTo(origLoc.x(), origLoc.y(), origLoc.z());
         }
     }
