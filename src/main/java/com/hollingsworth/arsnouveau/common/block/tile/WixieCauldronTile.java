@@ -174,12 +174,11 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftPotionFromInventory(count, level, worldPosition);
             if (recipe == null)
                 return;
-            if (!(recipe.recipe.get(0) instanceof PotionIngredient)) {
+            if (!(recipe.recipe.get(0) instanceof PotionIngredient potionIngred)) {
                 isCraftingPotion = false;
                 return;
             }
 
-            PotionIngredient potionIngred = (PotionIngredient) recipe.recipe.get(0);
             Ingredient itemIngred = recipe.recipe.get(1);
             List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
             craftManager = new CraftingProgress(PotionUtils.getPotion(potionIngred.getStack()), needed, PotionUtils.getPotion(recipe.outputStack));

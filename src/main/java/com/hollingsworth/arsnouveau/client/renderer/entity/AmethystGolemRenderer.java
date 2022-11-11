@@ -43,7 +43,7 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (bone.getName().equals("item")) {
             stack.pushPose();
-            RenderUtils.moveToPivot(bone, stack);
+            RenderUtils.translateToPivotPoint(stack, bone);
             stack.translate(0, -0.10, 0);
             ItemStack itemstack = golem.getHeldStack();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) golem.getOnPos().asLong());

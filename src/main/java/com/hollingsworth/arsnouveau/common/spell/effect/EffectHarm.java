@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectHarm extends AbstractEffect implements IDamageEffect {
+public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotionEffect {
     public static EffectHarm INSTANCE = new EffectHarm();
 
     private EffectHarm() {
@@ -81,5 +81,15 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

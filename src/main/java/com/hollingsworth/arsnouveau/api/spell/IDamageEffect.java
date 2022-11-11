@@ -31,7 +31,7 @@ public interface IDamageEffect {
             return;
         ServerLevel server = (ServerLevel) world;
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
-        SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage);
+        SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage, spellContext);
         MinecraftForge.EVENT_BUS.post(damageEvent);
 
         source = damageEvent.damageSource;

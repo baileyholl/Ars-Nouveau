@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -24,7 +23,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 import java.util.Arrays;
 
-public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider {
+public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider<FamiliarBookwyrm> {
 
     public FamiliarBookwyrm(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -63,7 +62,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
     }
@@ -74,7 +73,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
+    public ResourceLocation getTexture(FamiliarBookwyrm entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
         if (color.isEmpty())
             color = "blue";

@@ -83,7 +83,8 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect{
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        dealDamage(world, shooter, (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier()), spellStats, rayTraceResult.getEntity(), DamageSource.CRAMMING);
+        float damage = (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+        attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.CRAMMING, damage);
     }
 
     @Override

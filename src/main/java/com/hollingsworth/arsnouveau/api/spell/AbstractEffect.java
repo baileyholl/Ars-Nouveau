@@ -67,13 +67,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
-    /**
-     * See IPotionEffect
-     */
-    @Deprecated(forRemoval = true)
-    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats) {
-        applyConfigPotion(entity, potionEffect, spellStats, true);
-    }
+    // @Deprecated(forRemoval = true)
+    // public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats) {
+    //     applyConfigPotion(entity, potionEffect, spellStats, true);
+    // }
 
     /**
      * See IPotionEffect
@@ -133,19 +130,19 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return;
 
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
-        SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage);
+        SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage, null);
         MinecraftForge.EVENT_BUS.post(damageEvent);
 
         source = damageEvent.damageSource;
         totalDamage = damageEvent.damage;
         if (totalDamage <= 0 || damageEvent.isCanceled())
             return;
-        SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage);
+        SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, null);
         MinecraftForge.EVENT_BUS.post(preDamage);
 
         entity.hurt(source, totalDamage);
 
-        SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage);
+        SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, null);
         MinecraftForge.EVENT_BUS.post(postDamage);
 
         Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
@@ -159,15 +156,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
             items.forEach(mob::spawnAtLocation);
         }
-    }
-
-    /**
-     * See IDamageEffect
-     */
-    @Deprecated(forRemoval = true)
-    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        shooter = !(shooter instanceof Player) ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
-        return DamageSource.playerAttack((Player) shooter);
     }
 
     public Vec3 safelyGetHitPos(HitResult result) {

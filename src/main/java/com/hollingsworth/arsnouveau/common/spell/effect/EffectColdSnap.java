@@ -9,10 +9,10 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -21,7 +21,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,9 +33,8 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        Entity entity = rayTraceResult.getEntity();
-        if (!(entity instanceof LivingEntity livingEntity))
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity))
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
@@ -46,14 +44,14 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         if (!canDamage(livingEntity))
             return;
 
-        damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
+        damage(vec, world, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
 
         for (LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
             if (e.equals(livingEntity) || e.equals(shooter))
                 continue;
             if (canDamage(e)) {
                 vec = e.position();
-                damage(vec, world, shooter, spellStats, damage, snareSec, e);
+                damage(vec, world, shooter, e, spellStats, spellContext, resolver, snareSec, damage);
             } else {
                 e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
             }
@@ -64,13 +62,18 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) || livingEntity.getPercentFrozen() > 0.0;
     }
 
-    public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity) {
-        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
-        damageSource.setMagic();
-        dealDamage(world, shooter, damage, stats, livingEntity, damageSource);
+    public void damage(Vec3 vec, Level world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, int snareTime, float damage) {
+        attemptDamage(world, shooter, stats, context, resolver, livingEntity, buildDamageSource(world, shooter), damage);
         ((ServerLevel) world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y + 0.5, vec.z, 50,
                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
         livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), 20 * snareTime));
+    }
+
+    @Override
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
+        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
+        damageSource.setMagic();
+        return damageSource;
     }
 
     @Override

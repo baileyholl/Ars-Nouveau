@@ -22,7 +22,7 @@ public class GlyphProcessor implements IComponentProcessor {
         String recipeID = variables.get("recipe").asString();
         try {
             recipe = (GlyphRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

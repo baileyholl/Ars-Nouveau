@@ -65,14 +65,15 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider {
-    AnimationFactory manager = new AnimationFactory(this);
+public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
 
     public int timeSinceBonemeal = 0;
@@ -99,7 +100,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "idleController", 20, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override
@@ -125,11 +126,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         return super.mobInteract(player, hand);
     }
 
-    public String getColor() {
+    public String getColor(Whirlisprig entity) {
         return this.entityData.get(COLOR);
     }
 
-    public void setColor(String color) {
+    public void setColor(String color, Whirlisprig entity) {
         this.entityData.set(COLOR, color);
     }
 
@@ -452,7 +453,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
+    public ResourceLocation getTexture(Whirlisprig entity) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
     }
 }

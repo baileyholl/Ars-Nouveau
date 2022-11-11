@@ -17,7 +17,6 @@ import com.hollingsworth.arsnouveau.setup.*;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;

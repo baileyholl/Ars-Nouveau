@@ -10,8 +10,7 @@ import javax.annotation.Nonnull;
 import java.util.function.UnaryOperator;
 
 /**
- * Yoinked from Create MIT
- * https://github.com/Creators-of-Create/Create
+ * Yoinked from <a href="https://github.com/Creators-of-Create/Create">Create MIT</a>
  */
 public class Color {
     public final static Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0).setImmutable();

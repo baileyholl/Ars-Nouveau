@@ -77,7 +77,7 @@ public class LightManager {
             }
             return 0;
         }));
-        register(EntityType.ENDERMAN, (enderMan ->{
+        register(EntityType.ENDERMAN, (enderMan -> {
 
             if (enderMan.getCarriedBlock() != null) {
                 return DynamLightUtil.fromItemLike(enderMan.getCarriedBlock().getBlock());
@@ -85,10 +85,10 @@ public class LightManager {
             return 0;
         }));
 
-        register(EntityType.ITEM, (p) -> DynamLightUtil.fromItemLike((((ItemEntity)p).getItem().getItem())));
-        register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((((ItemFrame)p).getItem().getItem())));
-        register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((((ItemFrame) p).getItem().getItem()))));
-        register(EntityType.GLOW_SQUID, (p) ->  (int) Mth.clampedLerp(0.f, 12.f, 1.f - ((GlowSquid)p).getDarkTicksRemaining() / 10.f));
+        register(EntityType.ITEM, (p) -> DynamLightUtil.fromItemLike((p.getItem().getItem())));
+        register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((p.getItem().getItem())));
+        register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((p.getItem().getItem()))));
+        register(EntityType.GLOW_SQUID, (p) -> (int) Mth.clampedLerp(0.f, 12.f, 1.f - p.getDarkTicksRemaining() / 10.f));
     }
 
     public static < T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {

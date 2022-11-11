@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.function.Supplier;
 
@@ -109,6 +109,6 @@ public class PickupAmethystGoal extends Goal {
         if (golem.getHome() == null)
             return false;
         BlockEntity entity = golem.getLevel().getBlockEntity(golem.getHome());
-        return canUse.get() && golem.pickupCooldown <= 0 && entity != null && entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
+        return canUse.get() && golem.pickupCooldown <= 0 && entity != null && entity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent();
     }
 }

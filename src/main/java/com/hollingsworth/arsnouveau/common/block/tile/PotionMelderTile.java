@@ -33,6 +33,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     public List<BlockPos> fromJars = new ArrayList<>();
     public BlockPos toPos;
 
-    AnimationFactory manager = new AnimationFactory(this);
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public PotionMelderTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.POTION_MELDER_TYPE, pos, state);
@@ -57,7 +58,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         if(level.isClientSide){
             BlockPos pos = getBlockPos();
             if(level.random.nextInt(6) == 0){
-                level.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + ParticleUtil.inRange(-0.25, 0.25) + 0.5, pos.getY() + 1, pos.getZ() + 0.5 + + ParticleUtil.inRange(-0.25, 0.25), 0, 0, 0);
+                level.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + ParticleUtil.inRange(-0.25, 0.25) + 0.5, pos.getY() + 1, pos.getZ() + 0.5 + ParticleUtil.inRange(-0.25, 0.25), 0, 0, 0);
 
             }
         }
@@ -208,13 +209,13 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     }
 
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("stir", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("stir"));
         return this.isMixing ? PlayState.CONTINUE : PlayState.STOP;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
         animationData.setResetSpeedInTicks(0.0);
     }
 

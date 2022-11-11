@@ -21,7 +21,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
@@ -42,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener, IVariantTextureProvider {
+public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener, IVariantTextureProvider<FamiliarWixie> {
     public int debuffCooldown;
 
     public FamiliarWixie(EntityType<? extends PathfinderMob> ent, Level world) {
@@ -127,12 +126,12 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             return;
         if (arg == EntityWixie.Animations.CAST.ordinal()) {
             controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
+            controller.setAnimation(new AnimationBuilder().addAnimation("cast"));
         }
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
+    public ResourceLocation getTexture(FamiliarWixie entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
         if (color.isEmpty())
             color = "blue";

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 /**
  * This mixin fixes camera chunks disappearing when the player entity moves while viewing a camera (e.g. while being in a
  * minecart or falling)
- * https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/LevelRendererMixin.java
+ * <a href="https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/mixin/camera/LevelRendererMixin.java">From SecurityCraft</a>
  */
 @Mixin(value = LevelRenderer.class, priority = 1100)
 public class LevelRendererMixin {

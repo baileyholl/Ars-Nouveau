@@ -18,6 +18,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.List;
 
@@ -55,10 +56,10 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         tooltip.add(Component.literal(Component.translatable("ars_nouveau.spell_turret.casting").getString() + spellCaster.getSpell().getDisplayString()));
     }
 
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         if (playRecoil) {
             event.getController().clearAnimationCache();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("recoil", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("recoil"));
             playRecoil = false;
         }
         return PlayState.CONTINUE;
@@ -72,7 +73,7 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         data.addAnimationController(castController);
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

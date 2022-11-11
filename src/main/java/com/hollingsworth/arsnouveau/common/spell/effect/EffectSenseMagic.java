@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class EffectSenseMagic extends AbstractEffect {
+public class EffectSenseMagic extends AbstractEffect implements IPotionEffect {
 
     public static EffectSenseMagic INSTANCE = new EffectSenseMagic(GlyphLib.EffectSenseMagicID, "Sense Magic");
 
@@ -61,5 +61,15 @@ public class EffectSenseMagic extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

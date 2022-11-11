@@ -20,9 +20,9 @@ public class CosmeticRenderUtil {
         //checks should have already been made, but pattern variables ftw
         matrix.pushPose();
 
-        RenderUtils.moveToPivot(bone, matrix);
-        RenderUtils.rotate(bone, matrix);
-        RenderUtils.translate(bone, matrix);
+        RenderUtils.translateToPivotPoint(matrix, bone);
+        RenderUtils.rotateMatrixAroundBone(matrix, bone);
+        RenderUtils.translateMatrixToBone(matrix, bone);
         Vec3 translations = cosmetic.getTranslations();
         Vec3 scaling = cosmetic.getScaling();
         matrix.translate(translations.x, translations.y, translations.z);

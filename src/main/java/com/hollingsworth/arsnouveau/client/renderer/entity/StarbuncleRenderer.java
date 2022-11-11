@@ -57,7 +57,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (bone.getName().equals("item")) {
             stack.pushPose();
-            RenderUtils.moveToPivot(bone, stack);
+            RenderUtils.translateToPivotPoint(stack, bone);
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = starbuncle.getHeldStack();

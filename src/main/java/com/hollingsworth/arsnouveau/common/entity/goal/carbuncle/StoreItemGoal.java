@@ -12,13 +12,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class StoreItemGoal extends ExtendedRangeGoal {
 
@@ -78,7 +76,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
                 return;
             }
 
-            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+            IItemHandler iItemHandler = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
             if (iItemHandler != null) {
                 ItemStack oldStack = new ItemStack(starbuncle.getHeldStack().getItem(), starbuncle.getHeldStack().getCount());
 

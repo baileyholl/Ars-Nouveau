@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectFreeze extends AbstractEffect {
+public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     public static EffectFreeze INSTANCE = new EffectFreeze();
 
     private EffectFreeze() {
@@ -38,7 +38,7 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             BlockPos affectedPos = extinguishOrFreeze(world, p, spellStats);
@@ -61,10 +61,10 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!(rayTraceResult.getEntity() instanceof LivingEntity))
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), MobEffects.MOVEMENT_SLOWDOWN, spellStats);
+        applyConfigPotion(living, MobEffects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
     /**
@@ -140,5 +140,15 @@ public class EffectFreeze extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_WATER);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

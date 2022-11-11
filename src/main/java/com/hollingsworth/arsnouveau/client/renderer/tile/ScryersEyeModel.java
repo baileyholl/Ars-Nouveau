@@ -33,8 +33,8 @@ public class ScryersEyeModel extends AnimatedGeoModel<ScryersOculusTile> {
 
 
     @Override
-    public void setLivingAnimations(ScryersOculusTile pBlockEntity, Integer uniqueID) {
-        super.setLivingAnimations(pBlockEntity, uniqueID);
+    public void setCustomAnimations(ScryersOculusTile pBlockEntity, int uniqueID) {
+        super.setCustomAnimations(pBlockEntity, uniqueID);
         IBone eye = this.getAnimationProcessor().getBone("eye");
         if (eye == null)
             return;

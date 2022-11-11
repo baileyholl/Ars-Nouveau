@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class EffectGravity extends AbstractEffect {
+public class EffectGravity extends AbstractEffect implements IPotionEffect {
     public static EffectGravity INSTANCE = new EffectGravity();
 
     private EffectGravity() {
@@ -44,7 +44,7 @@ public class EffectGravity extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             if (spellStats.hasBuff(AugmentExtendTime.INSTANCE)) {
                 applyConfigPotion(living, ModPotions.GRAVITY_EFFECT.get(), spellStats);
@@ -93,5 +93,15 @@ public class EffectGravity extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ShockedEffect extends MobEffect {
@@ -30,16 +30,16 @@ public class ShockedEffect extends MobEffect {
     public void applyEffectTick(LivingEntity entity, int amp) {
         int multiplier = 0;
         for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = i.getCapability(ForgeCapabilities.ENERGY).orElse(null);
             if (energyStorage != null) {
                 multiplier++;
             }
         }
 
-        IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+        IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(ForgeCapabilities.ENERGY).orElse(null);
         if (energyStorage != null)
             multiplier++;
-        energyStorage = entity.getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+        energyStorage = entity.getOffhandItem().getCapability(ForgeCapabilities.ENERGY).orElse(null);
         if (energyStorage != null)
             multiplier++;
         if (multiplier > 0) {

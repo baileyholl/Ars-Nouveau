@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
@@ -45,16 +44,15 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.world.entity.Entity.RemovalReason;
-
-public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantColorProvider {
-    AnimationFactory manager = new AnimationFactory(this);
+public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantColorProvider<EntityWixie> {
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
@@ -232,10 +230,10 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     public void startAnimation(int arg) {
         if (arg == Animations.CAST.ordinal() && castController != null) {
             castController.markNeedsReload();
-            castController.setAnimation(new AnimationBuilder().addAnimation("cast", false));
+            castController.setAnimation(new AnimationBuilder().addAnimation("cast"));
         } else if (arg == Animations.SUMMON_ITEM.ordinal() && summonController != null) {
             summonController.markNeedsReload();
-            summonController.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
+            summonController.setAnimation(new AnimationBuilder().addAnimation("summon_item"));
         }
     }
 
@@ -264,21 +262,21 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
-        String color = getColor().toLowerCase();
+    public ResourceLocation getTexture(EntityWixie entity) {
+        String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
     }
 
     @Override
-    public String getColor() {
+    public String getColor(EntityWixie entityWixie) {
         return this.getEntityData().get(COLOR);
     }
 
     @Override
-    public void setColor(String color) {
-        this.getEntityData().set(COLOR,color);
+    public void setColor(String color, EntityWixie entityWixie) {
+        this.getEntityData().set(COLOR, color);
     }
 
 

@@ -21,8 +21,8 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
     //wilden_warder_defense
 
     @Override
-    public void setLivingAnimations(WildenGuardian entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(WildenGuardian entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);

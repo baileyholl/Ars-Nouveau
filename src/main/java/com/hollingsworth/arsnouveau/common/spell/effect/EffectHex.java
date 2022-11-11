@@ -12,11 +12,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectHex extends AbstractEffect {
+public class EffectHex extends AbstractEffect implements IPotionEffect {
     public static EffectHex INSTANCE = new EffectHex();
 
     private EffectHex() {
@@ -24,7 +23,7 @@ public class EffectHex extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         if (!(entity instanceof LivingEntity living))
             return;
@@ -71,4 +70,15 @@ public class EffectHex extends AbstractEffect {
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);
     }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
+    }
+
 }

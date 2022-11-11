@@ -11,7 +11,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ public class EffectLinger extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityLingeringSpell entityLingeringSpell = new EntityLingeringSpell(world, shooter);
@@ -35,7 +34,7 @@ public class EffectLinger extends AbstractEffect {
         entityLingeringSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
-        SpellContext newContext = new SpellContext(world, newSpell, shooter).withCastingTile(spellContext.castingTile).withType(spellContext.getType());
+        SpellContext newContext = new SpellContext(world, newSpell, shooter, spellContext.getCaster()).withCastingTile(spellContext.castingTile).withType(spellContext.getType());
         entityLingeringSpell.spellResolver = new SpellResolver(newContext);
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
         entityLingeringSpell.setColor(spellContext.getColors());

@@ -12,7 +12,7 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 
 /**
- * Simplified verison of ElementalCraft https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/particle/ElementTypeParticleData.java
+ * Simplified version of <a href="https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/particle/ElementTypeParticleData.java">ElementalCraft</a>
  */
 
 public class ColorParticleTypeData implements ParticleOptions {

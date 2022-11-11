@@ -17,7 +17,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +28,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity))
             return;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
@@ -38,14 +37,14 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         int fireSec = (int) (5.0 + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
         DamageSource source = buildDamageSource(world, shooter).setIsFire();
         if (livingEntity.isOnFire()) {
-            dealDamage(world, shooter, damage, spellStats, livingEntity, source);
+            attemptDamage(world, shooter, spellStats, spellContext, resolver, livingEntity, source, damage);
             ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
             for (Entity e : world.getEntities(shooter, new AABB(
                     livingEntity.position().add(range, range, range), livingEntity.position().subtract(range, range, range)))) {
                 if (e.equals(livingEntity) || !(e instanceof LivingEntity))
                     continue;
-                dealDamage(world, shooter, damage, spellStats, e, source);
+                attemptDamage(world, shooter, spellStats, spellContext, resolver, e, source, damage);
                 e.setSecondsOnFire(fireSec);
                 vec = e.position();
                 ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,

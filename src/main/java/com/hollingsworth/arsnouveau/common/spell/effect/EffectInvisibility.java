@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectInvisibility extends AbstractEffect {
+public class EffectInvisibility extends AbstractEffect implements IPotionEffect {
     public static EffectInvisibility INSTANCE = new EffectInvisibility();
 
 
@@ -63,4 +63,15 @@ public class EffectInvisibility extends AbstractEffect {
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);
     }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
+    }
+
 }

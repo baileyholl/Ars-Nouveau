@@ -18,6 +18,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -38,7 +39,7 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
         return true;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -69,7 +70,7 @@ public class AnimatedMagicArmor extends MagicArmor implements IManaEquipment, IA
     }
 
     @Override
-    public void setColor(String color) {
+    public void setColor(String color, ItemStack armor) {
 
     }
 

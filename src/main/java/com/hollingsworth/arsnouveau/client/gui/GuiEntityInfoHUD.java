@@ -95,8 +95,8 @@ public class GuiEntityInfoHUD {
             tooltipHeight += (tooltip.size() - 1) * 10;
         }
         int xOffset = Config.TOOLTIP_X_OFFSET.get();
-        int posX = width / 2 +  xOffset;
-        int posY = height / 2 + + Config.TOOLTIP_Y_OFFSET.get();
+        int posX = width / 2 + xOffset;
+        int posY = height / 2 + Config.TOOLTIP_Y_OFFSET.get();
 
         posX = Math.min(posX, width - tooltipTextWidth - 20);
         posY = Math.min(posY, height - tooltipHeight - 20);

@@ -11,12 +11,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class TakeItemGoal extends ExtendedRangeGoal {
     Starbuncle starbuncle;
@@ -62,7 +60,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
     public void getItem() {
         Level world = starbuncle.level;
-        IItemHandler iItemHandler = world.getBlockEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler iItemHandler = world.getBlockEntity(takePos).getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + takePos.toString()));
             takePos = null;

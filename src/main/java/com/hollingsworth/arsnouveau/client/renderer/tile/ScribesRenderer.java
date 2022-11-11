@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
@@ -33,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
-    public static AnimatedGeoModel model = new GenericModel("scribes_table");
+    public static AnimatedGeoModel model = new GenericModel<>("scribes_table");
 
     public ScribesRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);

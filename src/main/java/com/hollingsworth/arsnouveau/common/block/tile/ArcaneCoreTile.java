@@ -10,6 +10,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class ArcaneCoreTile extends ModdedTile implements IAnimatable {
 
@@ -19,15 +20,15 @@ public class ArcaneCoreTile extends ModdedTile implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1, this::spin));
+        data.addAnimationController(new AnimationController<>(this, "controller", 1, this::spin));
     }
 
-    public PlayState spin(AnimationEvent e) {
-        e.getController().setAnimation(new AnimationBuilder().addAnimation("gem_spin", true));
+    public PlayState spin(AnimationEvent<?> e) {
+        e.getController().setAnimation(new AnimationBuilder().addAnimation("gem_spin"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

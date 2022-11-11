@@ -3,8 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
-import net.minecraft.world.item.Item.Properties;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class AnimModItem extends ModItem implements IAnimatable {
 
@@ -20,7 +19,7 @@ public class AnimModItem extends ModItem implements IAnimatable {
     public void registerControllers(AnimationData data) {
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

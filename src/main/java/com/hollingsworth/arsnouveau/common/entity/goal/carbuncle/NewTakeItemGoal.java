@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +44,7 @@ public class NewTakeItemGoal extends GoToPosGoal<StarbyTransportBehavior>{
             starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
             return true;
         }
-        IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler iItemHandler = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return true;

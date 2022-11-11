@@ -32,7 +32,7 @@ import java.util.Set;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class EffectLight extends AbstractEffect {
+public class EffectLight extends AbstractEffect implements IPotionEffect {
     public static EffectLight INSTANCE = new EffectLight();
 
     private EffectLight() {
@@ -72,7 +72,8 @@ public class EffectLight extends AbstractEffect {
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
                 tile.color = spellContext.getColors();
-                if (tile instanceof TempLightTile) ((TempLightTile) tile).lengthModifier = spellStats.getDurationMultiplier();
+                if (tile instanceof TempLightTile tempLightTile)
+                    tempLightTile.lengthModifier = spellStats.getDurationMultiplier();
             }
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
 
@@ -112,5 +113,15 @@ public class EffectLight extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

@@ -42,6 +42,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -200,12 +201,12 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         data.addAnimationController(new AnimationController<>(this, "walkController", 1, this::idle));
     }
 
-    public PlayState idle(AnimationEvent event) {
+    public PlayState idle(AnimationEvent<?> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -258,19 +259,19 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public ResourceLocation getTexture(EntityBookwyrm entity) {
-        String color = getColor().toLowerCase();
+        String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
     }
 
     @Override
-    public String getColor() {
+    public String getColor(EntityBookwyrm entityBookwyrm) {
         return getEntityData().get(EntityBookwyrm.COLOR);
     }
 
     @Override
-    public void setColor(String color) {
+    public void setColor(String color, EntityBookwyrm entityBookwyrm) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
     }
 

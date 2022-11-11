@@ -20,8 +20,8 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
 
 
     @Override
-    public void setLivingAnimations(EntityChimera entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(EntityChimera entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);

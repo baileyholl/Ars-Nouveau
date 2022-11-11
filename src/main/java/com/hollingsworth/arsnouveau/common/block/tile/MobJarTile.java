@@ -126,7 +126,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         CompoundTag cacheTag = new CompoundTag();
-        // Check both conditions because the entity may never have been loaded on the server side.
+        // Check both conditions because the entity may have never been loaded on the server side.
         if(entityTag != null || cachedEntity != null){
             cachedEntity = getEntity();
             if(cachedEntity != null) {

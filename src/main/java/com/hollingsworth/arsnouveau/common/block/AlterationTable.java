@@ -176,17 +176,13 @@ public class AlterationTable extends TableBlock{
 
     public List<Direction> getConnectedDirections(BlockState state){
         Direction direction = state.getValue(FACING);
-        switch (state.getValue(PART)){
-            case HEAD:
-                return List.of(direction.getOpposite());
-            case FOOT:
-                return List.of(direction, Direction.UP);
-            case OTHER:
-                return List.of(Direction.DOWN);
-            default:
-                return List.of();
-        }
-     }
+        return switch (state.getValue(PART)) {
+            case HEAD -> List.of(direction.getOpposite());
+            case FOOT -> List.of(direction, Direction.UP);
+            case OTHER -> List.of(Direction.DOWN);
+            default -> List.of();
+        };
+    }
 
     @Nullable
     @Override

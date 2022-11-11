@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
@@ -130,26 +129,21 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
                 matrixStack.mulPose(Vector3f.XP.rotation(-bone.getRotationX()));
             }
             GeoBone locBone = (GeoBone) getGeoModelProvider().getBone("top_" + (i + 1));
-            RenderUtils.moveToPivot(locBone, matrixStack);
+            RenderUtils.translateToPivotPoint(matrixStack, locBone);
             matrixStack.scale(0.18f, 0.18f, 0.18f);
             Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemTransforms.TransformType.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
             matrixStack.popPose();
         }
     }
 
-    public float rotForSlot(EquipmentSlot slot){
-        switch (slot){
-            case HEAD:
-                return 0.3f;
-            case CHEST:
-                return 0;
-            case LEGS:
-                return -0.2f;
-            case FEET:
-                return -0.6f;
-            default:
-                return 0;
-        }
+    public float rotForSlot(EquipmentSlot slot) {
+        return switch (slot) {
+            case HEAD -> 0.3f;
+            case CHEST -> 0;
+            case LEGS -> -0.2f;
+            case FEET -> -0.6f;
+            default -> 0;
+        };
     }
 
     private ArmorStandArmorModel getArmorModel(EquipmentSlot pSlot) {

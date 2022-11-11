@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public class EffectHeal extends AbstractEffect {
+public class EffectHeal extends AbstractEffect implements IDamageEffect {
     public static EffectHeal INSTANCE = new EffectHeal();
 
     private EffectHeal() {
@@ -29,7 +29,7 @@ public class EffectHeal extends AbstractEffect {
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             if (entity.isInvertedHealAndHarm()) {
-                dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
+                attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter).setMagic(), healVal);
             } else {
                 if(entity instanceof Player player){
                     player.causeFoodExhaustion(2.5f);

@@ -9,10 +9,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectBounce extends AbstractEffect {
+public class EffectBounce extends AbstractEffect implements IPotionEffect {
 
     public static EffectBounce INSTANCE = new EffectBounce();
 
@@ -21,7 +20,7 @@ public class EffectBounce extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             applyConfigPotion(living, ModPotions.BOUNCE_EFFECT.get(), spellStats);
         }
@@ -54,5 +53,15 @@ public class EffectBounce extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getPotionAugments();
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

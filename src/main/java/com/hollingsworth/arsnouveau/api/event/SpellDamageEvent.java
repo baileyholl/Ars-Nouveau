@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

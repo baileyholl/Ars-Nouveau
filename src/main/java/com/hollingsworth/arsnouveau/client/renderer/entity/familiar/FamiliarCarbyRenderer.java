@@ -36,8 +36,8 @@ public class FamiliarCarbyRenderer<T extends FamiliarStarbuncle> extends Generic
         private final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
 
         @Override
-        public void setLivingAnimations(T entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
-            super.setLivingAnimations(entity, uniqueID, customPredicate);
+        public void setCustomAnimations(T entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+            super.setCustomAnimations(entity, uniqueID, customPredicate);
             IBone head = this.getAnimationProcessor().getBone("head");
             EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
             head.setRotationX(extraData.headPitch * 0.017453292F);

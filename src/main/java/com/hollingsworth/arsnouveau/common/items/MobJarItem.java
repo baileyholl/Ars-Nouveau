@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,7 +43,8 @@ public class MobJarItem extends BlockItem implements IAnimatable {
     public void registerControllers(AnimationData data) {
 
     }
-    AnimationFactory factory = new AnimationFactory(this);
+
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
     @Override
     public AnimationFactory getFactory() {
         return factory;
