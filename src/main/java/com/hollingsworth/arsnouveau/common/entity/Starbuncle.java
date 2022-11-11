@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
@@ -74,7 +75,7 @@ import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
 
     public enum StarbuncleGoalState {
@@ -552,6 +553,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void setColor(String color) {
         this.data.color = color;
         this.entityData.set(COLOR, data.color);
+    }
+
+    @Override
+    public void setColor(String color, Starbuncle object) {
+        setColor(color);
     }
 
     public String getColor() {

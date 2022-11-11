@@ -18,10 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,12 +28,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectCrush extends AbstractEffect implements IDamageEffect{
+public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
     public static EffectCrush INSTANCE = new EffectCrush();
 
     private EffectCrush() {
         super(GlyphLib.EffectCrushID, "Crush");
+    }
+
+    @Override
+    public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+            double aoeBuff = spellStats.getAoeMultiplier();
+            int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
+            int maxItemCrush = (int) (4 + (4 * aoeBuff) + (4 * pierceBuff));
+            List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(new BlockPos(rayTraceResult.getLocation())).inflate(aoeBuff + 1.0));
+            if (!itemEntities.isEmpty()) {
+                crushItems(world, itemEntities, maxItemCrush);
+            }
+        } else {
+            super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
+        }
+    }
+
+    @Override
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        float damage = (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+        attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.CRAMMING, damage);
     }
 
     @Override
@@ -81,10 +101,35 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect{
         }
     }
 
-    @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        float damage = (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.CRAMMING, damage);
+
+    public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
+        List<CrushRecipe> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
+        CrushRecipe lastHit = null; // Cache this for AOE hits
+        int itemsCrushed = 0;
+        for (ItemEntity IE : itemEntities) {
+            if (itemsCrushed > maxItemCrush) {
+                break;
+            }
+
+            ItemStack stack = IE.getItem();
+            Item item = stack.getItem();
+
+            if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
+                lastHit = recipes.stream().filter(recipe -> recipe.matches(item.getDefaultInstance(), world)).findFirst().orElse(null);
+            }
+
+            if (lastHit == null) continue;
+
+            while (!stack.isEmpty() && itemsCrushed <= maxItemCrush) {
+                List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
+                stack.shrink(1);
+                itemsCrushed++;
+                for (ItemStack result : outputs) {
+                    world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), result.copy()));
+                }
+            }
+
+        }
     }
 
     @Override
@@ -100,7 +145,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect{
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentAOE.INSTANCE, AugmentPierce.INSTANCE,
-                AugmentFortune.INSTANCE
+                AugmentFortune.INSTANCE, AugmentSensitive.INSTANCE
         );
     }
 
@@ -111,7 +156,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect{
 
     @Override
     public String getBookDescription() {
-        return "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming.";
+        return "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. Need Sensitive to work on items. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming.";
     }
 
     @Override

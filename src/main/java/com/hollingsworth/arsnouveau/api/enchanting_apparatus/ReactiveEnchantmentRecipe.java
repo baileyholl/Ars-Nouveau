@@ -47,7 +47,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return RecipeRegistry.ENCHANTMENT_TYPE.get();
+        return RecipeRegistry.REACTIVE_TYPE.get();
     }
 
     @Override

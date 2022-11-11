@@ -19,13 +19,13 @@ public class ArsEvents {
     }
 
     @SubscribeEvent
-    public static void spellCalc(SpellDamageEvent e) {
-        if(e.caster == null)
+    public static void spellCalc(SpellDamageEvent.Pre e) {
+        if (e.caster == null)
             return;
         if (e.caster.hasEffect(ModPotions.SPELL_DAMAGE_EFFECT.get())) {
             e.damage += 1.5f * (e.caster.getEffect(ModPotions.SPELL_DAMAGE_EFFECT.get()).getAmplifier() + 1);
         }
-        if(e.caster.getAttributes().hasAttribute(PerkAttributes.SPELL_DAMAGE_BONUS.get())){
+        if (e.caster.getAttributes().hasAttribute(PerkAttributes.SPELL_DAMAGE_BONUS.get())) {
             e.damage += e.caster.getAttributeValue(PerkAttributes.SPELL_DAMAGE_BONUS.get());
         }
     }

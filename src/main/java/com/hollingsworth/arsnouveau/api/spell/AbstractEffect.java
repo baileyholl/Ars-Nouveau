@@ -67,10 +67,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
-    // @Deprecated(forRemoval = true)
-    // public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats) {
-    //     applyConfigPotion(entity, potionEffect, spellStats, true);
-    // }
+    /**
+     * See IPotionEffect
+     */
+    @Deprecated(forRemoval = true)
+    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats) {
+        applyConfigPotion(entity, potionEffect, spellStats, true);
+    }
 
     /**
      * See IPotionEffect
@@ -130,25 +133,22 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return;
 
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
-        SpellDamageEvent damageEvent = new SpellDamageEvent(source, shooter, entity, totalDamage, null);
-        MinecraftForge.EVENT_BUS.post(damageEvent);
 
-        source = damageEvent.damageSource;
-        totalDamage = damageEvent.damage;
-        if (totalDamage <= 0 || damageEvent.isCanceled())
-            return;
         SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, null);
         MinecraftForge.EVENT_BUS.post(preDamage);
 
-        entity.hurt(source, totalDamage);
+        source = preDamage.damageSource;
+        totalDamage = preDamage.damage;
+        if (totalDamage <= 0 || preDamage.isCanceled())
+            return;
+
+        if (!entity.hurt(source, totalDamage)) return;
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, null);
         MinecraftForge.EVENT_BUS.post(postDamage);
 
-        Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
-        if (!(entity instanceof LivingEntity mob))
-            return;
-        if (mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
+        if (entity instanceof LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
+            Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
             LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, DamageSource.playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
@@ -156,6 +156,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
             items.forEach(mob::spawnAtLocation);
         }
+
     }
 
     public Vec3 safelyGetHitPos(HitResult result) {

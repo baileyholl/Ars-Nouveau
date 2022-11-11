@@ -39,10 +39,9 @@ public class SpellDamageEvent extends Event {
         public Pre(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
             super(source, shooter, entity, totalDamage, context);
         }
-        // TODO: Make this true then SpellDamageEvent is private.
         @Override
         public boolean isCancelable() {
-            return false;
+            return true;
         }
     }
 
