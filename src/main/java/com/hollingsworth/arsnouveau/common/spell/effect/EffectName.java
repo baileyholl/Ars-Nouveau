@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -48,6 +49,8 @@ public class EffectName extends AbstractEffect {
         rayTraceResult.getEntity().setCustomName(newName);
         if (rayTraceResult.getEntity() instanceof Mob mob) {
             mob.setPersistenceRequired();
+        } else if (rayTraceResult.getEntity() instanceof ItemEntity item) {
+            item.getItem().setHoverName(newName);
         }
     }
 

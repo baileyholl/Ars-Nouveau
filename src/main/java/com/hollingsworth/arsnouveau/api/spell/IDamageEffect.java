@@ -36,11 +36,11 @@ public interface IDamageEffect {
      * @param entity       Target
      * @param source       DamageType
      * @param baseDamage   Starting damage
-     * @return true if Damage is dealt, false if damage was canceled or reduced to 0
+     * //TODO @return true if Damage is dealt, false if damage was canceled or reduced to 0
      */
-    default boolean attemptDamage(Level world, @Nonnull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage) {
+    default void attemptDamage(Level world, @Nonnull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage) {
         if (!canDamage(shooter, stats, spellContext, resolver, entity))
-            return false;
+            return; //false;
         ServerLevel server = (ServerLevel) world;
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
 
@@ -50,10 +50,10 @@ public interface IDamageEffect {
         source = preDamage.damageSource;
         totalDamage = preDamage.damage;
         if (totalDamage <= 0 || preDamage.isCanceled())
-            return false;
+            return; // false;
 
         if (!entity.hurt(source, totalDamage)) {
-            return false;
+            return; //false;
         }
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
@@ -69,7 +69,7 @@ public interface IDamageEffect {
             items.forEach(mob::spawnAtLocation);
         }
 
-        return true;
+        //return true;
     }
 
     /**
