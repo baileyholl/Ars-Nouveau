@@ -12,6 +12,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -39,8 +42,14 @@ public class EffectEvaporate extends AbstractEffect {
     }
 
     public void evaporate(Level world, BlockPos p, BlockHitResult rayTraceResult, LivingEntity shooter, SpellContext context, SpellResolver resolver) {
-        if (!world.getFluidState(p).isEmpty() && world.getBlockState(p).getBlock() instanceof LiquidBlock) {
+        BlockState state = world.getBlockState(p);
+        if (!world.getFluidState(p).isEmpty() && state.getBlock() instanceof LiquidBlock) {
             world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+            ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                    new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
+            ), world, shooter, context, resolver);
+        } else if (state.getBlock() instanceof SimpleWaterloggedBlock && state.getValue(BlockStateProperties.WATERLOGGED)) {
+            world.setBlock(p, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE), 3);
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
             ), world, shooter, context, resolver);
