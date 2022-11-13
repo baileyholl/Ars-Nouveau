@@ -59,7 +59,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     .and(i -> !(i.getItem() instanceof SpellArrow) || (i.getItem() instanceof SpellArrow && canPlayerCastSpell(shootable, playerEntity)));
             ItemStack itemstack = ProjectileWeaponItem.getHeldProjectile(playerEntity, predicate);
             if (!itemstack.isEmpty()) {
-                return itemstack;
+                return net.minecraftforge.common.ForgeHooks.getProjectile(playerEntity, shootable, itemstack);
             } else {
                 predicate = projectileWeaponItem.getAllSupportedProjectiles().and(i ->
                         !(i.getItem() instanceof SpellArrow) ||
@@ -69,11 +69,11 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                 for (int i = 0; i < playerEntity.getInventory().getContainerSize(); ++i) {
                     ItemStack itemstack1 = playerEntity.inventory.getItem(i);
                     if (predicate.test(itemstack1)) {
-                        return itemstack1;
+                        return net.minecraftforge.common.ForgeHooks.getProjectile(playerEntity, shootable, itemstack1);
                     }
                 }
 
-                return playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
+                return net.minecraftforge.common.ForgeHooks.getProjectile(playerEntity, shootable, playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
             }
         }
     }
