@@ -209,7 +209,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
         if (storedPos == null)
             return;
-        if (getItemCapFromTile(level.getBlockEntity(storedPos)) != null) {
+        BlockEntity blockEntity = level.getBlockEntity(storedPos);
+        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             addToPos(storedPos);
         }
@@ -221,7 +222,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
 
-        if (getItemCapFromTile(level.getBlockEntity(storedPos)) != null) {
+        BlockEntity blockEntity = level.getBlockEntity(storedPos);
+        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos);
         }
