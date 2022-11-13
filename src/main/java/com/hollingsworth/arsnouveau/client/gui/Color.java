@@ -5,8 +5,8 @@ import com.google.common.hash.Hashing;
 import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.UnaryOperator;
 
 /**
@@ -254,7 +254,7 @@ public class Color {
 
     // ********* //
 
-    public static Color mixColors(@Nonnull Color c1, @Nonnull Color c2, float w) {
+    public static Color mixColors(@NotNull Color c1,@NotNull Color c2, float w) {
         return new Color(
                 (int) (c1.getRed() + (c2.getRed() - c1.getRed()) * w),
                 (int) (c1.getGreen() + (c2.getGreen() - c1.getGreen()) * w),

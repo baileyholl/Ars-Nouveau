@@ -12,8 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnchantingApparatusRecipeCategory extends MultiInputCategory<EnchantingApparatusRecipe> {
 
@@ -47,7 +46,7 @@ public class EnchantingApparatusRecipeCategory extends MultiInputCategory<Enchan
     }
 
     @Override
-    public void draw(EnchantingApparatusRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(EnchantingApparatusRecipe recipe,@NotNull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         if (recipe.consumesSource())
             renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0.0f, 100f, 10);

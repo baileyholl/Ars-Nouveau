@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.PatchouliAPI;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class WornNotebook extends ModItem {
 
@@ -19,7 +19,7 @@ public class WornNotebook extends ModItem {
         super(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);

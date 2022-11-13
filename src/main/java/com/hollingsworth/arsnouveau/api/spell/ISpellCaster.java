@@ -29,8 +29,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +41,10 @@ import java.util.Map;
  */
 public interface ISpellCaster {
 
-    @Nonnull
+   @NotNull
     Spell getSpell();
 
-    @Nonnull
+   @NotNull
     Spell getSpell(int slot);
 
     int getMaxSlots();
@@ -74,17 +74,17 @@ public interface ISpellCaster {
 
     void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot);
 
-    @Nonnull
+   @NotNull
     ParticleColor getColor(int slot);
 
-    @Nonnull
+   @NotNull
     ParticleColor getColor();
 
     void setColor(ParticleColor color);
 
     void setColor(ParticleColor color, int slot);
 
-    @Nonnull
+   @NotNull
     ConfiguredSpellSound getSound(int slot);
 
     void setSound(ConfiguredSpellSound sound, int slot);
@@ -107,13 +107,13 @@ public interface ISpellCaster {
 
     Map<Integer, Spell> getSpells();
 
-    @Nonnull
+   @NotNull
     @Deprecated(forRemoval = true)
     default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster) {
         return caster.getSpell();
     }
 
-    @Nonnull
+   @NotNull
     default Spell getSpell(Level world, LivingEntity playerEntity, InteractionHand hand, ISpellCaster caster) {
         return caster.getSpell();
     }
@@ -123,7 +123,7 @@ public interface ISpellCaster {
         return spell;
     }
 
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @Nullable Component invalidMessage, @Nonnull Spell spell) {
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @Nullable Component invalidMessage,@NotNull Spell spell) {
         ItemStack stack = entity.getItemInHand(handIn);
 
         if (worldIn.isClientSide)
@@ -172,7 +172,7 @@ public interface ISpellCaster {
 
     //TODO: 1.19.3 remove this
     @Deprecated(forRemoval = true)
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage, @Nonnull Spell spell) {
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage,@NotNull Spell spell) {
         return castSpell(worldIn, (LivingEntity) playerIn, handIn, invalidMessage, spell);
     }
 

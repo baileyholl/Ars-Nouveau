@@ -10,8 +10,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class SpellContext implements Cloneable {
      * Use wrapped caster version
      */
     @Deprecated(forRemoval = true, since = "3.4.0")
-    public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster) {
+    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster) {
         this.level = level;
         this.spell = spell;
         this.caster = caster;
@@ -50,7 +50,7 @@ public class SpellContext implements Cloneable {
         this.wrappedCaster = new LivingCaster(getUnwrappedCaster());
     }
 
-    public SpellContext(Level level, @Nonnull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
+    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this(level, spell, caster);
         this.wrappedCaster = wrappedCaster;
     }
@@ -115,7 +115,7 @@ public class SpellContext implements Cloneable {
      * This should always default to a fake player if an actual entity did not cast the spell.
      * Generally tiles would set the caster in this context, but casters can be nullable.
      */
-    public @Nonnull LivingEntity getUnwrappedCaster() {
+    public@NotNull LivingEntity getUnwrappedCaster() {
         LivingEntity shooter = this.caster;
         if (shooter == null && this.castingTile != null) {
             shooter = ANFakePlayer.getPlayer((ServerLevel) level);
@@ -126,7 +126,7 @@ public class SpellContext implements Cloneable {
         return shooter;
     }
 
-    public @Nonnull IWrappedCaster getCaster(){
+    public@NotNull IWrappedCaster getCaster(){
         return wrappedCaster;
     }
     @Deprecated(forRemoval = true, since = "3.4.0")
@@ -153,11 +153,11 @@ public class SpellContext implements Cloneable {
         isCanceled = canceled;
     }
 
-    public @Nonnull Spell getSpell() {
+    public@NotNull Spell getSpell() {
         return spell == null ? new Spell() : spell;
     }
 
-    public @Nonnull Spell getRemainingSpell() {
+    public@NotNull Spell getRemainingSpell() {
         if (getCurrentIndex() >= getSpell().recipe.size())
             return getSpell().clone().setRecipe(new ArrayList<>());
         return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));

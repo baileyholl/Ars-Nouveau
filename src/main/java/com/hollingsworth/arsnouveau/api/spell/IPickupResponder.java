@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Used by spellcasting entities or blocks that support receiving items.
@@ -18,6 +17,6 @@ public interface IPickupResponder extends IInventoryResponder {
      * @return Returns the resulting itemstack
      */
     @Deprecated
-    @Nonnull
+   @NotNull
     ItemStack onPickup(ItemStack stack);
 }

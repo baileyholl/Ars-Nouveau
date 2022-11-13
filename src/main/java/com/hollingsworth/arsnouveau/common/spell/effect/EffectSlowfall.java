@@ -9,8 +9,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -45,7 +45,7 @@ public class EffectSlowfall extends AbstractEffect implements IPotionEffect {
         return SpellTier.TWO;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
@@ -56,7 +56,7 @@ public class EffectSlowfall extends AbstractEffect implements IPotionEffect {
         return "Applies the Slow Fall buff.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

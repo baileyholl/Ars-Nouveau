@@ -11,8 +11,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -146,7 +146,7 @@ public abstract class AbstractRitual {
         this.setContext(RitualContext.read(tag.getCompound("context")));
     }
 
-    public @Nonnull RitualContext getContext() {
+    public@NotNull RitualContext getContext() {
         if (context == null)
             context = new RitualContext();
         return context;

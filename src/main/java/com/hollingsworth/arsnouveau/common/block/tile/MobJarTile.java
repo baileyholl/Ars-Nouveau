@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -54,7 +53,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
         }
     }
 
-    public boolean setEntityData(@Nonnull Entity entity){
+    public boolean setEntityData(@NotNull Entity entity){
         CompoundTag tag = new CompoundTag();
         if(entity.shouldBeSaved() && entity.save(tag)){
             this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());

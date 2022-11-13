@@ -23,12 +23,12 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.ScreenUtils;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,7 +136,7 @@ public class GuiEntityInfoHUD {
                 backgroundColor, borderColorStart, borderColorEnd, font);
     }
 
-    public static void drawHoveringText(@Nonnull final ItemStack stack, PoseStack mStack,
+    public static void drawHoveringText(@NotNull final ItemStack stack, PoseStack mStack,
                                         List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
                                         int maxTextWidth, Font font) {
         drawHoveringText(stack, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
@@ -144,7 +144,7 @@ public class GuiEntityInfoHUD {
                 font);
     }
 
-    public static void drawHoveringText(@Nonnull final ItemStack stack, PoseStack pStack,
+    public static void drawHoveringText(@NotNull final ItemStack stack, PoseStack pStack,
                                         List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
                                         int maxTextWidth, int backgroundColor, int borderColorStart, int borderColorEnd, Font font) {
         if (textLines.isEmpty())

@@ -35,6 +35,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -44,7 +45,6 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -109,7 +109,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float p_70097_2_) {
+    public boolean hurt(@NotNull DamageSource source, float p_70097_2_) {
         if (source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.CACTUS)
             return false;
         return super.hurt(source, p_70097_2_);
@@ -223,7 +223,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         return false;
     }
 
-    public @Nonnull ItemStack getHeldStack() {
+    public@NotNull ItemStack getHeldStack() {
         return this.entityData.get(HELD_ITEM);
     }
 

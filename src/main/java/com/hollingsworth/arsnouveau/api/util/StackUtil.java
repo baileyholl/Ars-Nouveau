@@ -8,12 +8,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class StackUtil {
 
-    public static @Nonnull ItemStack getHeldSpellbook(Player playerEntity) {
+    public static@NotNull ItemStack getHeldSpellbook(Player playerEntity) {
         ItemStack book = playerEntity.getMainHandItem().getItem() instanceof SpellBook ? playerEntity.getMainHandItem() : null;
         return book == null ? (playerEntity.getOffhandItem().getItem() instanceof SpellBook ? playerEntity.getOffhandItem() : ItemStack.EMPTY) : book;
     }
@@ -28,7 +28,7 @@ public class StackUtil {
         return casterTool == null ? (player.getOffhandItem().getItem() instanceof ISpellHotkeyListener listener && listener.canQuickCast() ? InteractionHand.OFF_HAND : null) : casterTool;
     }
 
-    public static @Nonnull ItemStack getHeldRadial(Player playerEntity) {
+    public static@NotNull ItemStack getHeldRadial(Player playerEntity) {
         ItemStack book = playerEntity.getMainHandItem().getItem() instanceof IRadialProvider ? playerEntity.getMainHandItem() : ItemStack.EMPTY;
         return book.isEmpty() ? playerEntity.getOffhandItem() : book;
     }

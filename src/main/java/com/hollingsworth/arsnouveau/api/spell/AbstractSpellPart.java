@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +82,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
      * This should not be accessed directly, but can be overridden.
      */
-    protected abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
+    protected abstract@NotNull Set<AbstractAugment> getCompatibleAugments();
 
     /**
      * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}
@@ -95,7 +95,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * A helper for mods to add schools.
      * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
      */
-    protected @Nonnull Set<SpellSchool> getSchools() {
+    protected@NotNull Set<SpellSchool> getSchools() {
         return setOf();
     }
 

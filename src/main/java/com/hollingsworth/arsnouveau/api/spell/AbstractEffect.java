@@ -34,8 +34,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +53,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super(tag, description);
     }
 
-    public void onResolve(HitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolve(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult instanceof BlockHitResult blockHitResult) {
             onResolveBlock(blockHitResult, world, shooter, spellStats, spellContext, resolver);
         } else if (rayTraceResult instanceof EntityHitResult entityHitResult) {
@@ -61,10 +61,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), time));
     }
 
-    public void summonLivingEntity(HitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon) {
+    public void summonLivingEntity(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon) {
         if (isRealPlayer(shooter))
             summon.setOwnerID(shooter.getUUID());
         if (summon.getLivingEntity() != null)
@@ -128,7 +128,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
      * See IDamageEffect
      */
     @Deprecated(forRemoval = true)
-    public void dealDamage(Level world, @Nonnull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
+    public void dealDamage(Level world,@NotNull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
         if (!(world instanceof ServerLevel server) || (entity instanceof LivingEntity living && living.getHealth() <= 0))
             return;
 
@@ -225,7 +225,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     @Deprecated(forRemoval = true, since = "3.4.0")
-    public ItemStack getItemFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate) {
+    public ItemStack getItemFromCaster(@NotNull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate) {
         if (spellContext.castingTile instanceof IInventoryResponder iInventoryResponder) {
             return iInventoryResponder.getItem(predicate);
         } else if (shooter instanceof IInventoryResponder responder) {
@@ -243,12 +243,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     @Deprecated(forRemoval = true, since = "3.4.0")
-    public ItemStack getItemFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Item item) {
+    public ItemStack getItemFromCaster(@NotNull LivingEntity shooter, SpellContext spellContext, Item item) {
         return getItemFromCaster(shooter, spellContext, (i) -> i.sameItem(new ItemStack(item)));
     }
 
     @Deprecated(forRemoval = true, since = "3.4.0")
-    public ItemStack extractStackFromCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate, int maxExtract) {
+    public ItemStack extractStackFromCaster(@NotNull LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate, int maxExtract) {
         IInventoryResponder responder = null;
         if (spellContext.castingTile instanceof IInventoryResponder) {
             responder = (IInventoryResponder) spellContext.castingTile;
@@ -270,7 +270,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     @Deprecated(forRemoval = true, since = "3.4.0")
-    public ItemStack insertStackToCaster(@Nonnull LivingEntity shooter, SpellContext spellContext, ItemStack stack) {
+    public ItemStack insertStackToCaster(@NotNull LivingEntity shooter, SpellContext spellContext, ItemStack stack) {
         IPickupResponder responder = null;
         if (spellContext.castingTile instanceof IPickupResponder) {
             responder = (IPickupResponder) spellContext.castingTile;

@@ -20,8 +20,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
@@ -64,7 +63,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void draw(CrushRecipe recipe, @Nonnull IRecipeSlotsView slotsView, @Nonnull PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(CrushRecipe recipe,@NotNull IRecipeSlotsView slotsView,@NotNull PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw(matrixStack, 30, 6);
         Font renderer = Minecraft.getInstance().font;

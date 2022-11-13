@@ -19,8 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -90,7 +90,7 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
     }
 
     //Get the modified EffectInstance from the parent class.
-    public abstract @Nonnull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
+    public abstract@NotNull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
 
 
     @Override

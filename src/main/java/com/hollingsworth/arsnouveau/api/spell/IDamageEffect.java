@@ -16,8 +16,8 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface IDamageEffect {
@@ -38,7 +38,7 @@ public interface IDamageEffect {
      * @param baseDamage   Starting damage
      * //TODO @return true if Damage is dealt, false if damage was canceled or reduced to 0
      */
-    default void attemptDamage(Level world, @Nonnull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage) {
+    default void attemptDamage(Level world,@NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage) {
         if (!canDamage(shooter, stats, spellContext, resolver, entity))
             return; //false;
         ServerLevel server = (ServerLevel) world;

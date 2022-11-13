@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class RegistryWrapper<T> implements Supplier<T>, ItemLike {
@@ -14,7 +14,7 @@ public class RegistryWrapper<T> implements Supplier<T>, ItemLike {
         this.registryObject = registryObject;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public T get() {
         return registryObject.get();
