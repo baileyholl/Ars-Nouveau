@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
@@ -562,6 +563,14 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     public String getColor() {
         return this.entityData.get(COLOR);
+    }
+
+    @Override
+    public ResourceLocation getTexture(Starbuncle entity) {
+        String color = getColor(entity);
+        if (color.isEmpty()) color = COLORS.ORANGE.name();
+
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color.toLowerCase() + ".png");
     }
 
     public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};

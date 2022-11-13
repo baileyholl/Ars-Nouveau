@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
+import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -61,34 +62,23 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = starbuncle.getHeldStack();
-            if(starbuncle.dynamicBehavior != null){
+            if (starbuncle.dynamicBehavior != null) {
                 itemstack = starbuncle.dynamicBehavior.getStackForRender();
             }
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
-        //can be generalized as in Starbuncle familiar
-        if (bone.getName().equals("head")) {
+        if (this.starbuncle.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
             CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, this.starbuncle, packedLightIn);
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
-    //TODO use ITextureVariant
-    public ResourceLocation getColor(Starbuncle e) {
-        String color = e.getEntityData().get(Starbuncle.COLOR).toLowerCase();
-
-        if (color.isEmpty())
-            return ORANGE;
-
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color + ".png");
-    }
-
     @Override
     public ResourceLocation getTextureLocation(Starbuncle entity) {
-        return entity.isTamed() ? getColor(entity) : WILD_TEXTURE;
+        return entity.isTamed() ? entity.getTexture(entity) : WILD_TEXTURE;
     }
 
     @Override
