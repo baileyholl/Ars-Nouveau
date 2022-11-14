@@ -48,8 +48,10 @@ public class ModSetup {
 
     public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
-    //some things need to be deferred to maintain sanity
+    //Forge want everything deferred, every cycle bring more pain to the old holders
     public static void registers(IEventBus modEventBus) {
+        BlockRegistry.BLOCKS.register(modEventBus);
+        BlockRegistry.BLOCK_ENTITIES.register(modEventBus);
         ItemsRegistry.ITEMS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
