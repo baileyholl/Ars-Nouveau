@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -51,7 +50,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
             double x = tile.getBlockPos().getX();
             double y = tile.getBlockPos().getY();
             double z = tile.getBlockPos().getZ();
-            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem() : ItemsRegistry.BLANK_GLYPH.get() : tile.getStack().getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn, ticks + partialTicks);
+            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn, ticks + partialTicks);
         } catch (Throwable t) {
             t.printStackTrace();
             // Mercy for HORRIBLE RENDER CHANGING MODS
@@ -99,7 +98,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         }
     }
 
-    public void renderPressedItem(ScribesTile tile, Item itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight, int packedOverlay, float partialTicks) {
+    public void renderPressedItem(ScribesTile tile, ItemStack itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight, int packedOverlay, float partialTicks) {
         Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
 
         matrixStack.pushPose();
@@ -124,7 +123,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         matrixStack.translate(-0.7, 0, 0);
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemToRender, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
         if (tile.recipe != null && !tile.crafting) {
             List<Ingredient> inputs = tile.getRemainingRequired();

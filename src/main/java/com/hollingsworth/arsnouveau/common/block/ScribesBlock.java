@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -80,6 +80,8 @@ public class ScribesBlock extends TableBlock {
 
             if (stack.getItem() instanceof IScribeable) {
                 ((IScribeable) stack.getItem()).onScribe(world, pos, player, handIn, stack);
+                BlockState updateState = world.getBlockState(tile.getBlockPos());
+                world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
             }
         }
 
