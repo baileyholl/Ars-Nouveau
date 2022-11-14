@@ -59,6 +59,6 @@ Craft spells, create powerful baubles, and summon magical creatures!
 [[dependencies.ars_nouveau]]
     modId="geckolib3"
     mandatory=true
-    versionRange="[3.0.64,3.0.96]"
+    versionRange="[3.0.103,)"
     ordering="AFTER"
     side="BOTH"

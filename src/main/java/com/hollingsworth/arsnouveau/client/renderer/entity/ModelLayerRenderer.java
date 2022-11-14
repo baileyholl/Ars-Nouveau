@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayerRenderer implements IGeoRenderer<T> {
     AnimatedGeoModel geoModelProvider;
+    public IRenderTypeBuffer rtb;
     private static Map<Class<? extends ArmorItem>, GeoArmorRenderer> renderers = new ConcurrentHashMap<>();
 
     static
@@ -45,6 +46,16 @@ public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayer
     public ModelLayerRenderer(IGeoRenderer<T> entityRendererIn, AnimatedGeoModel modelProvider) {
         super(entityRendererIn);
         this.geoModelProvider = modelProvider;
+    }
+
+    @Override
+    public void setCurrentRTB(IRenderTypeBuffer rtb) {
+        this.rtb = rtb;
+    }
+
+    @Override
+    public IRenderTypeBuffer getCurrentRTB() {
+        return this.rtb;
     }
 
     @Override
