@@ -23,19 +23,19 @@ import java.util.ArrayList;
 @ObjectHolder(ArsNouveau.MODID)
 public class ModPotions {
 
-    public static final ShieldEffect SHIELD_POTION = new ShieldEffect();
-    public static final ShockedEffect SHOCKED_EFFECT = new ShockedEffect();
-    public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
-    public static final SummoningSicknessEffect SUMMONING_SICKNESS = new SummoningSicknessEffect();
-    public static final HexEffect HEX_EFFECT = new HexEffect();
-    public static final ScryingEffect SCRYING_EFFECT = new ScryingEffect();
-    public static final GlideEffect GLIDE_EFFECT = new GlideEffect();
-    public static final SnareEffect SNARE_EFFECT = new SnareEffect();
-    public static final FlightEffect FLIGHT_EFFECT = new FlightEffect();
-    public static final GravityEffect GRAVITY_EFFECT = new GravityEffect();
+    public static final Effect SHIELD_POTION = new ShieldEffect();
+    public static final Effect SHOCKED_EFFECT = new ShockedEffect();
+    public static final Effect MANA_REGEN_EFFECT = new ManaRegenEffect();
+    public static final Effect SUMMONING_SICKNESS = new SummoningSicknessEffect();
+    public static final Effect HEX_EFFECT = new HexEffect();
+    public static final Effect SCRYING_EFFECT = new ScryingEffect();
+    public static final Effect GLIDE_EFFECT = new GlideEffect();
+    public static final Effect SNARE_EFFECT = new SnareEffect();
+    public static final Effect FLIGHT_EFFECT = new FlightEffect();
+    public static final Effect GRAVITY_EFFECT = new GravityEffect();
     public static final Effect SPELL_DAMAGE_EFFECT = new PublicEffect(EffectType.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).setRegistryName(ArsNouveau.MODID, LibPotions.SPELL_DAMAGE);
     public static final Effect FAMILIAR_SICKNESS_EFFECT = new PublicEffect(EffectType.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()).setRegistryName(ArsNouveau.MODID, LibPotions.FAMILIAR_SICKNESS);
-    public static final BounceEffect BOUNCE_EFFECT = new BounceEffect();
+    public static final Effect BOUNCE_EFFECT = new BounceEffect();
     @ObjectHolder(LibPotions.MANA_REGEN) public static Potion MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_LONG) public static Potion LONG_MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_STRONG) public static Potion STRONG_MANA_REGEN_POTION;
