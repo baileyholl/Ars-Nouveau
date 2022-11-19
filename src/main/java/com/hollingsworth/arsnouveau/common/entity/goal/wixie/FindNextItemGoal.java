@@ -67,8 +67,8 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         if (wixie.cauldronPos == null)
             return false;
         BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
-        return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasSource && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff && !((WixieCauldronTile) tileEntity).craftManager.getNextItem().isEmpty();
+        return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile cauldronTile
+               && cauldronTile.hasSource && !cauldronTile.isCraftingDone() && !cauldronTile.isOff && !cauldronTile.craftManager.getNextItem().isEmpty();
     }
 
     @Override

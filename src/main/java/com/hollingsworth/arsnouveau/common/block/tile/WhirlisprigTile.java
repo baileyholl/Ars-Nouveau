@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.DropDistribution;
+import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -54,11 +54,6 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
     public int progress;
     public Map<BlockState, Integer> genTable = new HashMap<>();
     public Map<BlockState, Integer> scoreMap = new HashMap<>();
-
-    public WhirlisprigTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-    }
-
     public WhirlisprigTile(BlockPos pPos, BlockState pState) {
         super(BlockRegistry.WHIRLISPRIG_TILE, pPos, pState);
     }
@@ -203,22 +198,24 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
 
     public void convertedEffect() {
         super.convertedEffect();
-        if (tickCounter >= 120 && !level.isClientSide) {
-            converted = true;
-            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
-            Whirlisprig entityWhirlisprig = new Whirlisprig(level, true, new BlockPos(getBlockPos()));
-            entityWhirlisprig.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
-            level.addFreshEntity(entityWhirlisprig);
-            ParticleUtil.spawnPoof((ServerLevel) level, worldPosition.above());
-            tickCounter = 0;
-            return;
-        }
-        if (tickCounter % 10 == 0 && !level.isClientSide) {
-            RandomSource r = level.random;
-            int min = -2;
-            int max = 2;
-            EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
-            level.addFreshEntity(proj1);
+        if (level != null && !level.isClientSide) {
+            if (tickCounter >= 120) {
+                converted = true;
+                level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
+                Whirlisprig entityWhirlisprig = new Whirlisprig(level, true, new BlockPos(getBlockPos()));
+                entityWhirlisprig.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
+                level.addFreshEntity(entityWhirlisprig);
+                ParticleUtil.spawnPoof((ServerLevel) level, worldPosition.above());
+                tickCounter = 0;
+                return;
+            }
+            if (tickCounter % 10 == 0) {
+                RandomSource r = level.random;
+                int min = -2;
+                int max = 2;
+                EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
+                level.addFreshEntity(proj1);
+            }
         }
     }
 
@@ -229,6 +226,8 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
         tag.putInt("diversityScore", diversityScore);
         tag.putInt("progress", progress);
         tag.putInt("evalTicks", ticksToNextEval);
+        if (ignoreItems != null && !ignoreItems.isEmpty())
+            NBTUtil.writeItems(tag, "ignored_", ignoreItems);
     }
 
     @Override
@@ -238,12 +237,12 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
         diversityScore = compound.getInt("diversityScore");
         progress = compound.getInt("progress");
         ticksToNextEval = compound.getInt("evalTicks");
+        ignoreItems = NBTUtil.readItems(compound, "ignored_");
     }
 
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController controller = new AnimationController<>(this, "rotateController", 1, this::walkPredicate);
-        data.addAnimationController(controller);
+        data.addAnimationController(new AnimationController<>(this, "rotateController", 1, this::walkPredicate));
     }
 
     private <T extends IAnimatable> PlayState walkPredicate(AnimationEvent<T> tAnimationEvent) {

@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
@@ -82,7 +81,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     public boolean droppingShards; // Strictly used by non-tamed spawns for giving shards
     public static final EntityDataAccessor<Integer> MOOD_SCORE = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.STRING);
-    public List<ItemStack> ignoreItems;
     public int diversityScore;
     public BlockPos flowerPos;
     public int timeSinceGen;
@@ -117,9 +115,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         if (player.getCommandSenderWorld().isClientSide)
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem()) {
+        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem() && getTile() != null) {
             ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(stack);
-            this.ignoreItems =  new ArrayList<>(scrollData.getItems());
+            getTile().ignoreItems.addAll(scrollData.getItems());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.whirlisprig.ignore"));
         }
         return super.mobInteract(player, hand);
@@ -184,13 +182,14 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
             } else {
                 PortUtil.sendMessage(player, Component.translatable("whirlisprig.extremely_diverse"));
             }
-            if (ignoreItems != null && !ignoreItems.isEmpty()) {
+            WhirlisprigTile tile = getTile();
+            if (tile.ignoreItems != null && !tile.ignoreItems.isEmpty()) {
                 StringBuilder status = new StringBuilder();
                 status.append(Component.translatable("ars_nouveau.whirlisprig.ignore_list").getString());
-                for (ItemStack i : ignoreItems) {
+                for (ItemStack i : tile.ignoreItems) {
                     status.append(i.getHoverName().getString()).append(" ");
                 }
-                PortUtil.sendMessage(player, status.toString());
+                PortUtil.sendMessage(player, Component.literal(status.toString()));
             }
 
             return InteractionResult.SUCCESS;
@@ -401,7 +400,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
             tryResetGoals();
             setBehaviors = true;
         }
-        ignoreItems = NBTUtil.readItems(tag, "ignored_");
         this.entityData.set(COLOR, tag.getString("color"));
         this.timeSinceGen = tag.getInt("genTime");
     }
@@ -425,8 +423,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         tag.putInt("score", this.entityData.get(Whirlisprig.MOOD_SCORE));
         tag.putString("color", this.entityData.get(COLOR));
         tag.putInt("genTime", timeSinceGen);
-        if (ignoreItems != null && !ignoreItems.isEmpty())
-            NBTUtil.writeItems(tag, "ignored_", ignoreItems);
+
     }
 
     @Override

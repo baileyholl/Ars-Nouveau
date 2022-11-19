@@ -26,7 +26,7 @@ public class CollectEssenceGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return drygmy.channelCooldown <= 0;
+        return drygmy.channelCooldown <= 0 && drygmy.getHome() != null && !drygmy.getHome().isOff;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CollectEssenceGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !complete && canUse() && target != null && !target.isRemoved() && target.isAlive() && drygmy.getHome() != null;
+        return !complete && canUse() && target != null && !target.isRemoved() && target.isAlive();
     }
 
     @Override
