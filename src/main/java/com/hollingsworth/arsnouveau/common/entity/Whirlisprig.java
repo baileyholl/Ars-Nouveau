@@ -33,7 +33,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -89,7 +88,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     public int timeSinceGen;
     private boolean setBehaviors;
 
-    private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
+    private PlayState idlePredicate(AnimationEvent<?> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
         } else {
@@ -156,7 +155,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
         ItemStack stack = player.getItemInHand(hand);
         String color = getColorFromStack(stack);
-        if (color != null && !getColor().equals(color)) {
+        if (color != null && !getColor(this).equals(color)) {
             this.entityData.set(COLOR, color);
             stack.shrink(1);
             return InteractionResult.SUCCESS;
@@ -454,6 +453,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public ResourceLocation getTexture(Whirlisprig entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
     }
 }

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -304,7 +305,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void performRangedAttack(LivingEntity entity, float p_82196_2_) {
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this).withColors(color));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this, new LivingCaster(this)).withColors(color));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
         projectileSpell.setColor(color);
         projectileSpell.shoot(this, this.getXRot(), this.getYRot(), 0.0F, 1.0f, 0.8f);

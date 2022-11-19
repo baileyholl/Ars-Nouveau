@@ -27,12 +27,15 @@ public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
         }
     }
 
+    static final ParticleColor WhiteColor = new ParticleColor(255, 255, 255);
+
     @Override
     public Color getRenderColor(Object animatable, float partialTick, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight) {
-        ParticleColor color = ParticleColor.defaultParticleColor();
-        if (currentItemStack.hasTag()) {
-            color = ((EnchantersSword) animatable).getSpellCaster(currentItemStack).getColor();
-        }
+        ParticleColor color = WhiteColor;
+        if (currentItemStack.hasTag())
+            if (currentItemStack.getTag().contains("ars_nouveau:caster")) {
+                color = ((EnchantersSword) animatable).getSpellCaster(currentItemStack).getColor();
+            }
         return Color.ofRGB(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b);
     }
 
