@@ -7,11 +7,17 @@ import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BookwyrmCharm extends AbstractSummonCharm {
     public BookwyrmCharm() {
@@ -36,5 +42,12 @@ public class BookwyrmCharm extends AbstractSummonCharm {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
+    }
+
+    //TODO:Remove this when rework is done
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        tooltip2.add(Component.literal("Currently disabled for rework, stay tuned for its comeback in the future"));
     }
 }
