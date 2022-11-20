@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.world.biome.ModBiomes;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -69,6 +68,7 @@ public class ModSetup {
         SoundRegistry.SOUND_REG.register(modEventBus);
     }
 
+    //TODO:Switch to DeferredReg where possible
     public static void registerEvents(RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)) {
             IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
@@ -82,10 +82,6 @@ public class ModSetup {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
             IForgeRegistry<BlockEntityType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.onTileEntityRegistry(registry);
-        }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.SOUND_EVENTS)) {
-            IForgeRegistry<SoundEvent> registry = Objects.requireNonNull(event.getForgeRegistry());
-            SoundRegistry.onSoundRegistry(registry);
         }
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BIOMES)) {
             IForgeRegistry<Biome> registry = Objects.requireNonNull(event.getForgeRegistry());

@@ -44,7 +44,7 @@ public class PortalBlock extends TickableModBlock {
 
     public PortalBlock() {
         super(BlockBehaviour.Properties.of(Material.PORTAL).noCollission().strength(-1.0F, 3600000.0F).noLootTable());
-        this.registerDefaultState(this.stateDefinition.any().setValue(AXIS, Direction.Axis.X));
+        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -88,9 +88,7 @@ public class PortalBlock extends TickableModBlock {
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         if (worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
             if(entityIn instanceof Player player) {
-                if(!tile.entityQueue.contains(player)){
-                    tile.entityQueue.add(player);
-                }
+                tile.entityQueue.add(player);
             }else{
                 tile.warp(entityIn);
                 entityIn.fallDistance = 0;
@@ -109,11 +107,11 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public boolean trySpawnHoriztonalPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
+    public boolean trySpawnHorizontalPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
         FlatPortalAreaHelper helper = new FlatPortalAreaHelper().init(worldIn, stackPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
         if (helper.isValidFrame()) {
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
-                worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.X), 18);
+                worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.Y), 18);
                 if (worldIn.getBlockEntity(blockPos) instanceof PortalTile tile) {
                     tile.warpPos = data.getPos();
                     tile.dimID = data.getDimension();
@@ -140,7 +138,7 @@ public class PortalBlock extends TickableModBlock {
         };
     }
 
-    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 
     /**
      * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
@@ -210,7 +208,9 @@ public class PortalBlock extends TickableModBlock {
             }
 
             // Some cursed decompiled mojang code
-            for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
+            BlockPos blockpos = pos;
+            while (pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below()))) {
+                pos = pos.below();
             }
 
             int i = this.getDistanceUntilEdge(pos, this.leftDir) - 1;
