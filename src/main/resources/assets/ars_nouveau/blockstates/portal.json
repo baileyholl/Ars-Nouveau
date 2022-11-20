@@ -1,5 +1,13 @@
 {
     "variants": {
-        "": { "model": "block/end_portal" }
+        "axis=x": {
+            "model": "ars_nouveau:block/warp_portal_ns"
+        },
+        "axis=z": {
+            "model": "ars_nouveau:block/warp_portal_ew"
+        },
+        "axis=y": {
+            "model": "ars_nouveau:block/warp_portal_ud"
+        }
     }
 }
