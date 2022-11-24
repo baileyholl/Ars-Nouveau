@@ -35,6 +35,7 @@ public class ItemTagProvider extends ItemTagsProvider {
 
         this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
 
+        this.tag(ItemTags.MUSIC_DISCS).add(ItemsRegistry.FIREL_DISC.get());
         this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
                         ItemsRegistry.SOURCE_BERRY_ROLL.get());
@@ -111,6 +112,7 @@ public class ItemTagProvider extends ItemTagsProvider {
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(Tags.Items.SEEDS)
                 .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());
+        this.tag(Tags.Items.CROPS).add(ItemsRegistry.MAGE_BLOOM.asItem());
         this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
         this.tag(SOURCE_GEM_BLOCK_TAG)
                 .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());

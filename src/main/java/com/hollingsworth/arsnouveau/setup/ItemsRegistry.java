@@ -276,7 +276,7 @@ public class ItemsRegistry {
     public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
     public static RegistryWrapper<ModItem> BLANK_THREAD = register(LibItemNames.BLANK_THREAD, () -> new ModItem().withTooltip("tooltip.ars_nouveau.blank_thread"));
 
-    public static RegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().rarity(Rarity.RARE), 20 * 240));
+    public static RegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 240));
 
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
