@@ -340,10 +340,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public ItemStack removeItem(int pIndex, int pCount) {
-        ItemStack copy = stack.copy();
-        stack.shrink(1);
+        ItemStack removed = stack.split(1);
         updateBlock();
-        return copy;
+        return removed;
     }
 
     @Override
