@@ -1301,5 +1301,7 @@
 	"ars_nouveau.adv.title.shrunk_starbuncle": "Honey I Shrunk the Starbuncle",
 	"ars_nouveau.adv.desc.shrunk_starbuncle": "Put a Starbuncle in a Containment Jar",
 	"block.ars_nouveau.void_prism": "Void Prism",
-	"ars_nouveau.page.void_prism": "Destroys any spell projectiles that pass through it."
+	"ars_nouveau.page.void_prism": "Destroys any spell projectiles that pass through it.",
+	"item.ars_nouveau.music_disc_aria_biblio": "Music Disc",
+	"item.ars_nouveau.music_disc_aria_biblio.desc": "Firel - Aria Biblio"
 }

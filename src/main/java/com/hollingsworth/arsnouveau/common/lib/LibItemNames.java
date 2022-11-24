@@ -130,4 +130,6 @@ public class LibItemNames {
     public static final String SPLASH_LAUNCHER = "splash_flask_cannon";
     public static final String LINGERING_LAUNCHER = "lingering_flask_cannon";
     public static final String BLANK_THREAD = "blank_thread";
+    public static final String FIREL_DISC = "music_disc_aria_biblio";
+
 }
