@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Used by block placing effects
@@ -14,7 +13,7 @@ public interface IPlaceBlockResponder extends IInventoryResponder {
      *
      * @return Returns the itemstack that will attempt to be placed.
      */
-    @Nonnull
+   @NotNull
     ItemStack onPlaceBlock();
 
 }

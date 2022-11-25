@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -46,7 +45,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTMENT_RECIPE_ID));
+        return RecipeRegistry.ENCHANTMENT_TYPE.get();
     }
 
     public boolean doesReagentMatch(ItemStack stack, Player playerEntity) {
@@ -74,7 +73,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
         return true;
     }
 
-    // Override and move reagent match to the end so we can give feedback
+    // Override and move reagent match to the end, so we can give feedback
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());

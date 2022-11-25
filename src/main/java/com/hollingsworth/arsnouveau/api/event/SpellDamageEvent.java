@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,10 +39,9 @@ public class SpellDamageEvent extends Event {
         public Pre(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
             super(source, shooter, entity, totalDamage, context);
         }
-        // TODO: Make this true then SpellDamageEvent is private.
         @Override
         public boolean isCancelable() {
-            return false;
+            return true;
         }
     }
 

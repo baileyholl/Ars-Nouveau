@@ -25,10 +25,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -36,11 +37,12 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable, ITooltipProvider {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
@@ -241,10 +243,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         updateBlock();
     }
 
-    @Nonnull
+   @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandler.cast();
         }
         return super.getCapability(cap, side);
@@ -258,21 +260,21 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1, this::idlePredicate));
-        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 1, this::slowCraftPredicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 1, this::idlePredicate));
+        data.addAnimationController(new AnimationController<>(this, "slowcraft_controller", 1, this::slowCraftPredicate));
     }
 
-    private PlayState slowCraftPredicate(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow", true));
+    private PlayState slowCraftPredicate(AnimationEvent<?> animationEvent) {
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow"));
         return PlayState.CONTINUE;
     }
 
-    private PlayState idlePredicate(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("float", true));
+    private PlayState idlePredicate(AnimationEvent<?> animationEvent) {
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("float"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

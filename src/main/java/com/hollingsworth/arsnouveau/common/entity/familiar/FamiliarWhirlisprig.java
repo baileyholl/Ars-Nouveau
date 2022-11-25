@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -24,7 +23,7 @@ import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider {
+public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider<FamiliarWhirlisprig> {
     public FamiliarWhirlisprig(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
     }
@@ -95,7 +94,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
+    public ResourceLocation getTexture(FamiliarWhirlisprig entity) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
     }
 }

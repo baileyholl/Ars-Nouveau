@@ -21,9 +21,9 @@ public class ANCriteriaTriggers {
 
     public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
         AABB aabb = new AABB(pos).inflate(radius);
-        for(Player player : level.players()) {
+        for (ServerPlayer player : level.players()) {
             if (aabb.contains(player.getX(), player.getY(), player.getZ())) {
-                criteria.trigger((ServerPlayer) player);
+                criteria.trigger(player);
             }
         }
     }

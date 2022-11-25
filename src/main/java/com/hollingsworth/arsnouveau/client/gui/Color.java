@@ -5,13 +5,12 @@ import com.google.common.hash.Hashing;
 import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.UnaryOperator;
 
 /**
- * Yoinked from Create MIT
- * https://github.com/Creators-of-Create/Create
+ * Yoinked from <a href="https://github.com/Creators-of-Create/Create">Create MIT</a>
  */
 public class Color {
     public final static Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0).setImmutable();
@@ -255,7 +254,7 @@ public class Color {
 
     // ********* //
 
-    public static Color mixColors(@Nonnull Color c1, @Nonnull Color c2, float w) {
+    public static Color mixColors(@NotNull Color c1,@NotNull Color c2, float w) {
         return new Color(
                 (int) (c1.getRed() + (c2.getRed() - c1.getRed()) * w),
                 (int) (c1.getGreen() + (c2.getGreen() - c1.getGreen()) * w),

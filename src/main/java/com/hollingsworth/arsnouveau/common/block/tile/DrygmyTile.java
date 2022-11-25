@@ -226,6 +226,9 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        if (isOff) {
+            tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
+        }
         if (this.needsMana) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana"));
         }

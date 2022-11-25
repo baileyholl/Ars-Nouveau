@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class FindItem extends Goal {
-    private Starbuncle starbuncle;
+    protected Starbuncle starbuncle;
     boolean itemStuck;
     int timeFinding;
     int stuckTicks;

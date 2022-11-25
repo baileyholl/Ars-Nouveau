@@ -12,12 +12,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectGlide extends AbstractEffect {
+public class EffectGlide extends AbstractEffect implements IPotionEffect {
 
     public static EffectGlide INSTANCE = new EffectGlide();
 
@@ -26,7 +25,7 @@ public class EffectGlide extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             applyConfigPotion(living, ModPotions.GLIDE_EFFECT.get(), spellStats);
         }
@@ -54,13 +53,13 @@ public class EffectGlide extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);
@@ -68,5 +67,15 @@ public class EffectGlide extends AbstractEffect {
 
     public static boolean canGlide(LivingEntity entity) {
         return entity.hasEffect(ModPotions.GLIDE_EFFECT.get()) || (entity instanceof Player player && PerkUtil.countForPerk(GlidingPerk.INSTANCE, player) > 0.0);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

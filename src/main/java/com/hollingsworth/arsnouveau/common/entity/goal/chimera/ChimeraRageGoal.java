@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
@@ -65,7 +66,7 @@ public class ChimeraRageGoal extends Goal {
                     .add(EffectPull.INSTANCE)
                     .add(AugmentAmplify.INSTANCE, 2)
                     .add(EffectGravity.INSTANCE)
-                    .add(AugmentExtendTime.INSTANCE), chimera));
+                    .add(AugmentExtendTime.INSTANCE), chimera, new LivingCaster(chimera)));
             resolver.onCastOnEntity(target);
             PortUtil.sendMessage(target, Component.translatable("ars_nouveau.chimera.rage"));
         }

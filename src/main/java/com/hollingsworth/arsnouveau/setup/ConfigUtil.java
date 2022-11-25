@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class ConfigUtil {
     /**
      * Pattern describing an entry in a map
-     *
+     * <p>
      * Expected format is "string=int"
      * Example: "fortune=3"
      */

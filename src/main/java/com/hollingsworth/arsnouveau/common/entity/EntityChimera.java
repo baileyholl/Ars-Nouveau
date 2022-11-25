@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
@@ -65,6 +66,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 
@@ -115,8 +117,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
     }
 
-    AnimationController attackController;
-    AnimationController crouchController;
+    AnimationController<EntityChimera> attackController;
+    AnimationController<EntityChimera> crouchController;
 
     @Override
     public void registerControllers(AnimationData animationData) {
@@ -128,12 +130,12 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     }
 
 
-    private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
+    private PlayState attackPredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
 
 
-    private <E extends Entity> PlayState crouchPredicate(AnimationEvent event) {
+    private PlayState crouchPredicate(AnimationEvent<?> event) {
         if (isDefensive()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("crouch"));
             return PlayState.CONTINUE;
@@ -141,7 +143,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         return PlayState.STOP;
     }
 
-    private <E extends Entity> PlayState groundPredicate(AnimationEvent e) {
+    private PlayState groundPredicate(AnimationEvent<?> e) {
         if (!isDefensive() && e.isMoving() && !isFlying()) {
             e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
@@ -234,7 +236,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                             .add(EffectDelay.INSTANCE)
                             .add(EffectKnockback.INSTANCE)
                             .add(AugmentAmplify.INSTANCE, 2)
-                            , this));
+                            , this, new LivingCaster(this)));
                     resolver.onCastOnEntity(ItemStack.EMPTY, e, InteractionHand.MAIN_HAND);
                 }
                 getRandomUpgrade();
@@ -460,7 +462,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         return 300 / (getPhase() + 1);
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -575,7 +577,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                     return;
                 }
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("claw_swipe", false).addAnimation("idle"));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("claw_swipe").addAnimation("idle"));
             }
 
             if (arg == Animations.HOWL.ordinal()) {
@@ -583,21 +585,21 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                     return;
                 }
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("howl", false).addAnimation("idle"));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
             }
 
             if (arg == Animations.CHARGE.ordinal()) {
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("ready_charge", false).addAnimation("charge", true));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("ready_charge").addAnimation("charge"));
             }
 
             if (arg == Animations.FLYING.ordinal()) {
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("flying", true));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("flying"));
             }
             if (arg == Animations.DIVE_BOMB.ordinal()) {
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("divebomb", true));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("divebomb"));
             }
         } catch (Exception e) {
             e.printStackTrace();

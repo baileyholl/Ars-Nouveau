@@ -61,8 +61,8 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     }
 
 
-    public PlayState spinPredicate(AnimationEvent event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("key_rotation", true));
+    public PlayState spinPredicate(AnimationEvent<?> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("key_rotation"));
         return PlayState.CONTINUE;
     }
 

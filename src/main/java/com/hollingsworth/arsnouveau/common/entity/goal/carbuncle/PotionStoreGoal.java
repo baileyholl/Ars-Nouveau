@@ -9,11 +9,17 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.Nullable;
 
-public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior>{
+public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior> {
     public PotionStoreGoal(Starbuncle starbuncle, StarbyPotionBehavior behavior) {
         super(starbuncle, behavior, () -> {
             return behavior.getHeldPotion().getPotion() != Potions.EMPTY;
         });
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.STORING_ITEM;
     }
 
     @Nullable

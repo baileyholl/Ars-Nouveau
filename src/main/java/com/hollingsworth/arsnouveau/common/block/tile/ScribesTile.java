@@ -27,14 +27,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -42,11 +41,13 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
 public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
@@ -123,8 +124,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     public void checkInventories() {
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).isPresent()) {
-                IItemHandler handler = level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
+            if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).isPresent()) {
+                IItemHandler handler = level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).orElse(null);
                 if (handler != null) {
                     for (int i = 0; i < handler.getSlots(); i++) {
                         ItemStack stack = handler.getStackInSlot(i);
@@ -300,12 +301,12 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             return;
         }
         controller.markNeedsReload();
-        controller.setAnimation(new AnimationBuilder().addAnimation("create_glyph", false));
+        controller.setAnimation(new AnimationBuilder().addAnimation("create_glyph"));
     }
 
     @Override
     public void registerControllers(AnimationData data) {
-        this.controller = new AnimationController(this, "controller", 1, this::idlePredicate);
+        this.controller = new AnimationController<>(this, "controller", 1, this::idlePredicate);
         data.addAnimationController(controller);
     }
 
@@ -314,8 +315,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         return super.getRenderBoundingBox().inflate(2);
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
-    AnimationController controller;
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimationController<ScribesTile> controller;
 
     @Override
     public AnimationFactory getFactory() {
@@ -339,10 +340,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public ItemStack removeItem(int pIndex, int pCount) {
-        ItemStack copy = stack.copy();
-        stack.shrink(1);
+        ItemStack removed = stack.split(1);
         updateBlock();
-        return copy;
+        return removed;
     }
 
     @Override
@@ -370,10 +370,10 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         updateBlock();
     }
 
-    @Nonnull
+   @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == ITEM_HANDLER) {
             return itemHandler.cast();
         }
         return super.getCapability(cap, side);

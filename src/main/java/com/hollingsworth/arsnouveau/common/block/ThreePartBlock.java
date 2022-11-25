@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public enum ThreePartBlock implements StringRepresentable {
     HEAD("head"),

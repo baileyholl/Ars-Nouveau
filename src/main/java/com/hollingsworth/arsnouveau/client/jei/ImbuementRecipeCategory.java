@@ -12,8 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe> {
 
@@ -48,7 +47,7 @@ public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe>
     }
 
     @Override
-    public void draw(ImbuementRecipe recipe, @Nonnull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(ImbuementRecipe recipe,@NotNull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.source), 0.0f, 100f, 10);
     }

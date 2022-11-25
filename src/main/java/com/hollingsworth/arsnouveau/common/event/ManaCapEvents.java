@@ -52,7 +52,7 @@ public class ManaCapEvents {
         if (e.getOriginal().level.isClientSide)
             return;
 
-        CapabilityRegistry.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> CapabilityRegistry.getMana(e.getOriginal()).ifPresent(origMana -> {
+        CapabilityRegistry.getMana(e.getEntity()).ifPresent(newMana -> CapabilityRegistry.getMana(e.getOriginal()).ifPresent(origMana -> {
             newMana.setMaxMana(origMana.getMaxMana());
             newMana.setGlyphBonus(origMana.getGlyphBonus());
             newMana.setBookTier(origMana.getBookTier());

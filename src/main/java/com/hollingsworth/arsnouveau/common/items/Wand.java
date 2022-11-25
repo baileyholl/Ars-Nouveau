@@ -27,6 +27,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Wand extends ModItem implements IAnimatable, ICasterTool {
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public Wand(Properties properties) {
         super(properties);
@@ -45,7 +46,7 @@ public class Wand extends ModItem implements IAnimatable, ICasterTool {
     }
 
     private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("wand_gem_spin", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("wand_gem_spin"));
         return PlayState.CONTINUE;
     }
 
@@ -58,7 +59,7 @@ public class Wand extends ModItem implements IAnimatable, ICasterTool {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 20, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
     @Override

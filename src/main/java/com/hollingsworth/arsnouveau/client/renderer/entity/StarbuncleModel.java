@@ -16,8 +16,8 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
     private static final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
 
     @Override
-    public void setLivingAnimations(Starbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(Starbuncle entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         if (entity.partyCarby)
             return;
         IBone head = this.getAnimationProcessor().getBone("head");

@@ -10,13 +10,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class NewStoreItemGoal extends GoToPosGoal<StarbyTransportBehavior>{
+public class NewStoreItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoal<T> {
 
-    public NewStoreItemGoal(Starbuncle starbuncle, StarbyTransportBehavior behavior) {
+    public NewStoreItemGoal(Starbuncle starbuncle, T behavior) {
         super(starbuncle, behavior, () -> !starbuncle.getHeldStack().isEmpty());
     }
 
@@ -42,8 +41,8 @@ public class NewStoreItemGoal extends GoToPosGoal<StarbyTransportBehavior>{
             return true;
         }
 
-        IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-        if(iItemHandler == null) {
+        IItemHandler iItemHandler = behavior.getItemCapFromTile(tileEntity);
+        if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return true;
         }

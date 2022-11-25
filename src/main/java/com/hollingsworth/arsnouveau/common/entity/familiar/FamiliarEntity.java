@@ -39,6 +39,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -121,7 +122,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
 
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
     public AnimationController controller;
@@ -144,7 +145,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         return (LivingEntity) ((ServerLevel) level).getEntity(getOwnerID());
     }
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

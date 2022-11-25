@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -49,7 +50,7 @@ public class SpellArrow extends ArrowItem {
         Spell spell = spellCaster.getSpell();
         modifySpell(spell);
         spell.addDiscount(part.getCastingCost() * numParts);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, spell, entity)).withSilent(true);
+        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, spell, entity, new PlayerCaster(entity))).withSilent(true);
         spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
         return spellArrow;
     }

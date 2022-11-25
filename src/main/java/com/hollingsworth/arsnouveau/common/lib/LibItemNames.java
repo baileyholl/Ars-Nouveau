@@ -72,6 +72,7 @@ public class LibItemNames {
     public static final String ENCHANTERS_SHIELD = "enchanters_shield";
 
     public static final String STARBUNCLE_SE = "starbuncle_se";
+    public static final String DRYGMY_SE = "drygmy_se";
     public static final String SYLPH_SE = "whirlisprig_se";
 
     public static final String WILDEN_HUNTER_SE = "wilden_hunter_se";
@@ -129,4 +130,6 @@ public class LibItemNames {
     public static final String SPLASH_LAUNCHER = "splash_flask_cannon";
     public static final String LINGERING_LAUNCHER = "lingering_flask_cannon";
     public static final String BLANK_THREAD = "blank_thread";
+    public static final String FIREL_DISC = "music_disc_aria_biblio";
+
 }

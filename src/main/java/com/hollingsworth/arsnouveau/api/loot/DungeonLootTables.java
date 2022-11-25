@@ -73,6 +73,8 @@ public class DungeonLootTables {
             return new ItemStack(tablets.get(r.nextInt(tablets.size())));
         });
 
+        RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.FIREL_DISC.get()));
+
         RARE_LOOT.add(() -> makeTome("Xacris' Tiny Hut", new Spell()
                         .add(MethodUnderfoot.INSTANCE)
                         .add(EffectPhantomBlock.INSTANCE)

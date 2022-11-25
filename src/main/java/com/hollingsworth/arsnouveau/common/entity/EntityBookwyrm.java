@@ -35,6 +35,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -42,8 +43,8 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float p_70097_2_) {
+    public boolean hurt(@NotNull DamageSource source, float p_70097_2_) {
         if (source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.CACTUS)
             return false;
         return super.hurt(source, p_70097_2_);
@@ -200,12 +201,12 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         data.addAnimationController(new AnimationController<>(this, "walkController", 1, this::idle));
     }
 
-    public PlayState idle(AnimationEvent event) {
+    public PlayState idle(AnimationEvent<?> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -222,7 +223,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         return false;
     }
 
-    public @Nonnull ItemStack getHeldStack() {
+    public@NotNull ItemStack getHeldStack() {
         return this.entityData.get(HELD_ITEM);
     }
 
@@ -258,19 +259,19 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public ResourceLocation getTexture(EntityBookwyrm entity) {
-        String color = getColor().toLowerCase();
+        String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
     }
 
     @Override
-    public String getColor() {
+    public String getColor(EntityBookwyrm entityBookwyrm) {
         return getEntityData().get(EntityBookwyrm.COLOR);
     }
 
     @Override
-    public void setColor(String color) {
+    public void setColor(String color, EntityBookwyrm entityBookwyrm) {
         getEntityData().set(EntityBookwyrm.COLOR, color);
     }
 

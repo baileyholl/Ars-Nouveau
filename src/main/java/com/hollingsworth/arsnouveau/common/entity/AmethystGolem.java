@@ -48,14 +48,13 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
-
-import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
@@ -280,11 +279,11 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         data.addAnimationController(new AnimationController<>(this, "attack_controller", 5f, this::attackController));
     }
 
-    private PlayState attackController(AnimationEvent animationEvent) {
+    private PlayState attackController(AnimationEvent<?> animationEvent) {
         return PlayState.CONTINUE;
     }
 
-    private PlayState runController(AnimationEvent animationEvent) {
+    private PlayState runController(AnimationEvent<?> animationEvent) {
         if (isStomping()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("harvest2"));
             return PlayState.CONTINUE;
@@ -334,7 +333,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         return 0;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

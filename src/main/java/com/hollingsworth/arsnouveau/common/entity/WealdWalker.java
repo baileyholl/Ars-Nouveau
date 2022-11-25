@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -44,6 +45,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -231,16 +233,16 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "run_controller", 1.0f, this::runController));
-        attackController = new AnimationController(this, "attack_controller", 5f, this::attackController);
+        data.addAnimationController(new AnimationController<>(this, "run_controller", 1.0f, this::runController));
+        attackController = new AnimationController<>(this, "attack_controller", 5f, this::attackController);
         data.addAnimationController(attackController);
     }
 
-    private PlayState attackController(AnimationEvent animationEvent) {
+    private PlayState attackController(AnimationEvent<?> animationEvent) {
         return PlayState.CONTINUE;
     }
 
-    private PlayState runController(AnimationEvent animationEvent) {
+    private PlayState runController(AnimationEvent<?> animationEvent) {
         if (entityData.get(SMASHING) || entityData.get(CASTING))
             return PlayState.STOP;
         if (animationEvent.getController().getCurrentAnimation() != null && !(animationEvent.getController().getCurrentAnimation().animationName.equals("run_master"))) {
@@ -253,7 +255,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
         return PlayState.STOP;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -269,7 +271,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
                     return;
                 }
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("smash", false).addAnimation("idle", false));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("smash").addAnimation("idle"));
             }
 
             if (arg == Animations.CAST.ordinal()) {
@@ -277,7 +279,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
                     return;
                 }
                 attackController.markNeedsReload();
-                attackController.setAnimation(new AnimationBuilder().addAnimation("cast", false).addAnimation("idle", false));
+                attackController.setAnimation(new AnimationBuilder().addAnimation("cast").addAnimation("idle"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -303,7 +305,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
 
     @Override
     public void performRangedAttack(LivingEntity entity, float p_82196_2_) {
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this).withColors(color));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this, new LivingCaster(this)).withColors(color));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
         projectileSpell.setColor(color);
         projectileSpell.shoot(this, this.getXRot(), this.getYRot(), 0.0F, 1.0f, 0.8f);

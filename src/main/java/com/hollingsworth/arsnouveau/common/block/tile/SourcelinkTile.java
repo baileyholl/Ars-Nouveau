@@ -20,6 +20,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -91,10 +92,10 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
+        data.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -118,7 +119,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
         if (this.isDisabled)
             return PlayState.STOP;
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation"));
         return PlayState.CONTINUE;
     }
 }

@@ -18,6 +18,16 @@ public interface ICosmeticItem {
 
     Vec3 getScaling();
 
+    //Entity Sensitive
+    //translate relative to bone pivot
+    default Vec3 getTranslations(LivingEntity entity) {
+        return getTranslations();
+    }
+
+    default Vec3 getScaling(LivingEntity entity) {
+        return getScaling();
+    }
+
     /**
      * @param entity check if is compatible with the cosmetic item
      */

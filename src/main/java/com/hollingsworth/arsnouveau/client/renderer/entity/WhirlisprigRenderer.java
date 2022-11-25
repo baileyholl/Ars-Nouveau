@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -24,7 +23,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 import java.util.Arrays;
 
-public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener, IVariantTextureProvider {
+public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener, IVariantTextureProvider<FamiliarDrygmy> {
 
     public FamiliarDrygmy(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -77,7 +76,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
+    public ResourceLocation getTexture(FamiliarDrygmy entity) {
         String color = getEntityData().get(COLOR).toLowerCase();
         if (color.isEmpty())
             color = "brown";
