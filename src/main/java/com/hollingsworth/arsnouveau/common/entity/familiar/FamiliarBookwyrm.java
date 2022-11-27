@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
@@ -23,7 +22,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 import java.util.Arrays;
 
-public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider<FamiliarBookwyrm> {
+public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCastListener {
 
     public FamiliarBookwyrm(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -73,8 +72,8 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public ResourceLocation getTexture(FamiliarBookwyrm entity) {
-        String color = getEntityData().get(COLOR).toLowerCase();
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");

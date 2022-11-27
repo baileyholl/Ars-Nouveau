@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
@@ -23,7 +22,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 import java.util.Arrays;
 
-public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener, IVariantTextureProvider<FamiliarDrygmy> {
+public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener {
 
     public FamiliarDrygmy(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -62,7 +61,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
@@ -76,10 +75,9 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public ResourceLocation getTexture(FamiliarDrygmy entity) {
-        String color = getEntityData().get(COLOR).toLowerCase();
-        if (color.isEmpty())
-            color = "brown";
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        String color = getColor().toLowerCase();
+        if (color.isEmpty()) color = "brown";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
     }
 }
