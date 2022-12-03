@@ -278,6 +278,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 240));
 
+    public static RegistryWrapper<Item> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));

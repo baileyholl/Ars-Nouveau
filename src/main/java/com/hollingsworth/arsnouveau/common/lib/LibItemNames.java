@@ -121,10 +121,6 @@ public class LibItemNames {
     public static final String SHAPERS_FOCUS = "shapers_focus";
 
     public static final String ALCHEMISTS_CROWN = "alchemists_crown";
-    public static final String FROSTAYA = "frostaya";
-    public static final String BOMBEGRANTE = "bombegrante";
-    public static final String MENDOSTEEN = "mendosteen";
-    public static final String BASTION_FRUIT = "bastion_fruit";
     public static final String WIXIE_HAT = "wixie_hat";
 
     public static final String SPLASH_LAUNCHER = "splash_flask_cannon";
@@ -132,4 +128,5 @@ public class LibItemNames {
     public static final String BLANK_THREAD = "blank_thread";
     public static final String FIREL_DISC = "music_disc_aria_biblio";
 
+    public static final String STARBY_GIFT = "starby_gift";
 }
