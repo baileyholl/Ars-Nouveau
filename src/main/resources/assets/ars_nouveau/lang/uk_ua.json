@@ -355,7 +355,7 @@
 	"ars_nouveau.relay.one_to": "Живить: %d",
 	"ars_nouveau.relay.no_from": "Нічим не живиться",
 	"ars_nouveau.relay.one_from": "Живиться від: %d",
-	"ars_nouveau.rune.touch": "Runes must have Touch as their first glyph.",
+	"ars_nouveau.rune.touch": "Руни повинні мати гліф Дотик як перший.",
 	"ars_nouveau.bookwyrm.strict_mode": "Strict mode set to %s",
 	"item.ars_nouveau.allow_scroll": "Звиток Предмету: Дозвіл",
 	"item.ars_nouveau.deny_scroll": "Звиток Предмету: Заборона",
