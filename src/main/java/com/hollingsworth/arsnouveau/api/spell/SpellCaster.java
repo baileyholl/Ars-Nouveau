@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +24,14 @@ public class SpellCaster implements ISpellCaster {
         this.stack = stack;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Spell getSpell() {
         return spells.getOrDefault(getCurrentSlot(), new Spell());
     }
 
     @Override
-    public @Nonnull Spell getSpell(int slot) {
+    public@NotNull Spell getSpell(int slot) {
         return spells.getOrDefault(slot, new Spell());
     }
 
@@ -120,7 +120,7 @@ public class SpellCaster implements ISpellCaster {
         writeItem(stack);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ConfiguredSpellSound getSound(int slot) {
         return this.getSpell(slot).sound;
@@ -132,7 +132,7 @@ public class SpellCaster implements ISpellCaster {
         writeItem(stack);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ParticleColor getColor() {
         return this.getSpell().color;

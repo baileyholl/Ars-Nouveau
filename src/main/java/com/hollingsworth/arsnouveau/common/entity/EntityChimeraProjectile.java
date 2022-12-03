@@ -20,10 +20,9 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.Collection;
-
-import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class EntityChimeraProjectile extends AbstractArrow implements IAnimatable {
     int groundMax;
@@ -59,7 +58,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         return ItemStack.EMPTY;
     }
 
-    private <E extends Entity> PlayState attackPredicate(AnimationEvent e) {
+    private <E extends Entity> PlayState attackPredicate(AnimationEvent<?> e) {
 //        e.getController().setAnimation(new AnimationBuilder().addAnimation("spike_spin"));
         return PlayState.STOP;
     }
@@ -148,7 +147,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         return !(entity instanceof EntityChimera) && super.canHitEntity(entity);
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

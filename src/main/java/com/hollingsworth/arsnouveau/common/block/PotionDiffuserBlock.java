@@ -9,6 +9,11 @@ import net.minecraft.world.level.gameevent.GameEventListener;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionDiffuserBlock extends TickableModBlock {
+
+    public PotionDiffuserBlock() {
+        super(defaultProperties().noOcclusion());
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {

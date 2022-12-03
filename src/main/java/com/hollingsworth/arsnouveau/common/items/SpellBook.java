@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ import java.util.function.Consumer;
 public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDyeable {
 
     public SpellTier tier;
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public SpellBook(SpellTier tier) {
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));

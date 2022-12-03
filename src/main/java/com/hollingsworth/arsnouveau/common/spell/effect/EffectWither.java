@@ -9,13 +9,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectWither extends AbstractEffect {
+public class EffectWither extends AbstractEffect implements IPotionEffect {
     public static EffectWither INSTANCE = new EffectWither();
 
     private EffectWither() {
@@ -55,7 +55,7 @@ public class EffectWither extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getPotionAugments();
@@ -66,9 +66,20 @@ public class EffectWither extends AbstractEffect {
         return "Applies the Wither debuff.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);
     }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
+    }
 }
+

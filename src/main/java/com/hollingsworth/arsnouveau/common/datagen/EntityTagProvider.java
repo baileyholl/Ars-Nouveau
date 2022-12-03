@@ -25,7 +25,8 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.ENTITY_DRYGMY.get(),
                         ModEntities.WHIRLISPRIG_TYPE.get(),
                         ModEntities.ENTITY_BOOKWYRM_TYPE.get(),
-                        ModEntities.ENTITY_WIXIE_TYPE.get()
+                        ModEntities.ENTITY_WIXIE_TYPE.get(),
+                        ModEntities.GIFT_STARBY.get()
                 );
         this.tag(EntityTags.SPELL_CAN_HIT);
         this.tag(EntityTags.HOSTILE_MOBS)

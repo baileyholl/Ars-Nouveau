@@ -202,14 +202,21 @@ public class ModEntities {
             .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
 
     public static final RegistryObject<EntityType<EnchantedFallingBlock>> ENCHANTED_FALLING_BLOCK = registerEntity(
-            "enchanted_falling_block", (
-                    EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
-                            .setShouldReceiveVelocityUpdates(true)
-                            .setTrackingRange(256)));
+            "enchanted_falling_block", EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
+    public static final RegistryObject<EntityType<EnchantedMageblock>> ENCHANTED_MAGE_BLOCK = registerEntity(
+            "enchanted_mage_block", EntityType.Builder.<EnchantedMageblock>of(EnchantedMageblock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
 
+    public static final RegistryObject<EntityType<GiftStarbuncle>> GIFT_STARBY = registerEntity(LibEntityNames.GIFT_STARBY, EntityType.Builder.of(GiftStarbuncle::new, MobCategory.CREATURE)
+            .sized(0.6F, 0.63F).setTrackingRange(10)
+            .setShouldReceiveVelocityUpdates(true));
 
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
+        SpawnPlacements.register(GIFT_STARBY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_DRYGMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
 
@@ -261,6 +268,7 @@ public class ModEntities {
             event.put(ENTITY_VEXING_WEALD.get(), WealdWalker.attributes().build());
             event.put(AMETHYST_GOLEM.get(), AmethystGolem.attributes().build());
             event.put(SUMMON_SKELETON.get(), SummonSkeleton.createAttributes().build());
+            event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
         }
     }
 

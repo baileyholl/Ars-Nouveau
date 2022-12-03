@@ -11,13 +11,14 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -48,6 +49,8 @@ public class EffectName extends AbstractEffect {
         rayTraceResult.getEntity().setCustomName(newName);
         if (rayTraceResult.getEntity() instanceof Mob mob) {
             mob.setPersistenceRequired();
+        } else if (rayTraceResult.getEntity() instanceof ItemEntity item) {
+            item.getItem().setHoverName(newName);
         }
     }
 
@@ -55,7 +58,7 @@ public class EffectName extends AbstractEffect {
         return SpellTier.TWO;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
@@ -66,7 +69,7 @@ public class EffectName extends AbstractEffect {
         return 25;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();

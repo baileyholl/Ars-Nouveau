@@ -18,7 +18,7 @@
 	"ars_nouveau.glyph_desc.glyph_cold_snap": "Snares and causes a burst of damage to an entity that is afflicted by slowness, freezing, or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE.",
 	"ars_nouveau.glyph_desc.glyph_conjure_water": "Places water at a location or extinguishes entities on fire.",
 	"ars_nouveau.glyph_desc.glyph_craft": "Opens the crafting menu.",
-	"ars_nouveau.glyph_desc.glyph_crush": "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming.",
+	"ars_nouveau.glyph_desc.glyph_crush": "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. Need Sensitive to work on items. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming.",
 	"ars_nouveau.glyph_desc.glyph_cut": "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. Amplify will simulate using an Axe instead of Shears. For simulating breaking with shears, see Break and Sensitive. Costs nothing.",
 	"ars_nouveau.glyph_desc.glyph_dampen": "Decreases the power of most spells. Decreases the mana cost slighty, but never below 0.",
 	"ars_nouveau.glyph_desc.glyph_decelerate": "Decreases the speed of projectile spells.",
@@ -629,6 +629,7 @@
 	"effect.ars_nouveau.glide": "Glide",
 	"effect.ars_nouveau.snared": "Snared",
 	"item.ars_nouveau.starbuncle_se": "Starbuncle Spawn Egg",
+	"item.ars_nouveau.drygmy_se": "Drygmy Spawn Egg",
 	"item.ars_nouveau.whirlisprig_se": "Whirlisprig Spawn Egg",
 	"item.ars_nouveau.wilden_hunter_se": "Wilden Hunter Spawn Egg",
 	"item.ars_nouveau.wilden_guardian_se": "Wilden Guardian Spawn Egg",
@@ -1300,5 +1301,11 @@
 	"ars_nouveau.adv.title.shrunk_starbuncle": "Honey I Shrunk the Starbuncle",
 	"ars_nouveau.adv.desc.shrunk_starbuncle": "Put a Starbuncle in a Containment Jar",
 	"block.ars_nouveau.void_prism": "Void Prism",
-	"ars_nouveau.page.void_prism": "Destroys any spell projectiles that pass through it."
+	"ars_nouveau.page.void_prism": "Destroys any spell projectiles that pass through it.",
+	"item.ars_nouveau.music_disc_aria_biblio": "Music Disc",
+	"item.ars_nouveau.music_disc_aria_biblio.desc": "Firel - Aria Biblio",
+	"item.ars_nouveau.starby_gift": "Starbuncle Gift",
+	"ars_nouveau.present.give": "Give this to a friend and they will get bonus items, or open it for yourself!",
+	"ars_nouveau.present.from": "A gift from %s",
+	"entity.ars_nouveau.gift_starby": "Starbuncle"
 }

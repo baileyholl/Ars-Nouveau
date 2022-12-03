@@ -19,8 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -64,7 +64,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
-    default @Nonnull ISpellCaster getSpellCaster(ItemStack stack) {
+    default@NotNull ISpellCaster getSpellCaster(ItemStack stack) {
         return new SpellCaster(stack);
     }
 

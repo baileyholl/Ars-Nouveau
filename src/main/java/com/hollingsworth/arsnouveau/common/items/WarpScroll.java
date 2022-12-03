@@ -38,11 +38,11 @@ public class WarpScroll extends ModItem {
         String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
         WarpScrollData data = new WarpScrollData(stack);
         if (data.isValid()
-                && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
-                && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
-                && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-                || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName))
-                && SourceUtil.takeSourceWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+            && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
+            && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+            && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
+                || BlockRegistry.PORTAL_BLOCK.trySpawnHorizontalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName))
+            && SourceUtil.takeSourceWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),

@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.world.Deferred;
 import com.hollingsworth.arsnouveau.common.world.biome.ModBiomes;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import net.minecraft.core.Registry;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -20,6 +20,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.registries.*;
 import software.bernie.geckolib3.GeckoLib;
+import top.theillusivec4.curios.Curios;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
 
@@ -34,7 +35,7 @@ public class ModSetup {
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.CHARM.getMessageBuilder().build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.RING.getMessageBuilder().size(2).build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BELT.getMessageBuilder().build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("an_focus").size(1).build());
+        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("an_focus").size(1).icon(new ResourceLocation(Curios.MODID, "slot/empty_curio_slot")).build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.NECKLACE.getMessageBuilder().build());
     }
 
@@ -46,8 +47,10 @@ public class ModSetup {
 
     public static RegistryObject<TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
-    //some things need to be deferred to maintain sanity
+    //Forge want everything deferred, every cycle bring more pain to the old holders
     public static void registers(IEventBus modEventBus) {
+        BlockRegistry.BLOCKS.register(modEventBus);
+        BlockRegistry.BLOCK_ENTITIES.register(modEventBus);
         ItemsRegistry.ITEMS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
@@ -65,6 +68,7 @@ public class ModSetup {
         SoundRegistry.SOUND_REG.register(modEventBus);
     }
 
+    //TODO:Switch to DeferredReg where possible
     public static void registerEvents(RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)) {
             IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
@@ -78,10 +82,6 @@ public class ModSetup {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES)) {
             IForgeRegistry<BlockEntityType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.onTileEntityRegistry(registry);
-        }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.SOUND_EVENTS)) {
-            IForgeRegistry<SoundEvent> registry = Objects.requireNonNull(event.getForgeRegistry());
-            SoundRegistry.onSoundRegistry(registry);
         }
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BIOMES)) {
             IForgeRegistry<Biome> registry = Objects.requireNonNull(event.getForgeRegistry());

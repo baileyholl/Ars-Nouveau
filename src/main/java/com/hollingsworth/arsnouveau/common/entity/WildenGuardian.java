@@ -34,11 +34,12 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
 public class WildenGuardian extends Monster implements IAnimatable, IAnimationListener {
-    AnimationFactory manager = new AnimationFactory(this);
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
     public int laserCooldown;
     public int armorCooldown;
     public int armorTimeRemaining;
@@ -192,7 +193,7 @@ public class WildenGuardian extends Monster implements IAnimatable, IAnimationLi
     @Override
     public void startAnimation(int arg) {
         try {
-            AnimationController controller = attackController;
+            AnimationController<?> controller = attackController;
             if (attackController == null)
                 return;
             if (arg == WildenHunter.Animations.ATTACK.ordinal()) {
@@ -232,15 +233,15 @@ public class WildenGuardian extends Monster implements IAnimatable, IAnimationLi
         this.entityData.define(IS_ARMORED, false);
     }
 
-    private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
+    private PlayState attackPredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
 
-    AnimationController attackController;
+    AnimationController<WildenGuardian> attackController;
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        attackController = new AnimationController(this, "attackController", 1, this::attackPredicate);
+        attackController = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
         animationData.addAnimationController(attackController);
     }
 

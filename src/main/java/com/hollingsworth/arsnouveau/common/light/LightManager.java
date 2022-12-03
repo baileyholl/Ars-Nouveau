@@ -12,9 +12,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.GlowSquid;
-import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -37,7 +34,7 @@ public class LightManager {
 
     public static List<Integer> jarHoldingEntityList = new ArrayList<>();
     public static int lastUpdateCount = 0;
-    private static Map<EntityType<?>, List<Function<?, Integer>>> LIGHT_REGISTRY = new HashMap<>();
+    private static final Map<EntityType<?>, List<Function<?, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
     public static void init() {
 
@@ -52,12 +49,15 @@ public class LightManager {
             return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
         }));
 
-        register(EntityType.FALLING_BLOCK, (p) ->{
+        register(EntityType.FALLING_BLOCK, (p) -> {
             return p.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
 
-        register(ModEntities.ENCHANTED_FALLING_BLOCK.get(), p ->{
-            return  p.getBlockState().getLightEmission(p.level, p.blockPosition());
+        register(ModEntities.ENCHANTED_FALLING_BLOCK.get(), p -> {
+            return p.getBlockState().getLightEmission(p.level, p.blockPosition());
+        });
+        register(ModEntities.ENCHANTED_MAGE_BLOCK.get(), p -> {
+            return p.getBlockState().getLightEmission(p.level, p.blockPosition());
         });
         register(ModEntities.ENTITY_FLYING_ITEM.get(), (p -> 10));
         register(ModEntities.ENTITY_FOLLOW_PROJ.get(), (p -> 10));
@@ -77,7 +77,7 @@ public class LightManager {
             }
             return 0;
         }));
-        register(EntityType.ENDERMAN, (enderMan ->{
+        register(EntityType.ENDERMAN, (enderMan -> {
 
             if (enderMan.getCarriedBlock() != null) {
                 return DynamLightUtil.fromItemLike(enderMan.getCarriedBlock().getBlock());
@@ -85,10 +85,10 @@ public class LightManager {
             return 0;
         }));
 
-        register(EntityType.ITEM, (p) -> DynamLightUtil.fromItemLike((((ItemEntity)p).getItem().getItem())));
-        register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((((ItemFrame)p).getItem().getItem())));
-        register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((((ItemFrame) p).getItem().getItem()))));
-        register(EntityType.GLOW_SQUID, (p) ->  (int) Mth.clampedLerp(0.f, 12.f, 1.f - ((GlowSquid)p).getDarkTicksRemaining() / 10.f));
+        register(EntityType.ITEM, (p) -> DynamLightUtil.fromItemLike((p.getItem().getItem())));
+        register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((p.getItem().getItem())));
+        register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((p.getItem().getItem()))));
+        register(EntityType.GLOW_SQUID, (p) -> (int) Mth.clampedLerp(0.f, 12.f, 1.f - p.getDarkTicksRemaining() / 10.f));
     }
 
     public static < T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {

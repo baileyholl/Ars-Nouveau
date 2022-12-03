@@ -54,7 +54,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public ItemStack craftingItem;
     public int entityID;
     public boolean hasSource;
-    public boolean isOff;
     public boolean isCraftingPotion;
     public boolean needsPotionStorage;
     RecipeWrapper recipeWrapper;
@@ -67,7 +66,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide)
+        if (level == null || level.isClientSide())
             return;
 
         if (!hasSource && level.getGameTime() % 5 == 0 && SourceUtil.takeSourceWithParticles(worldPosition, level, 6, 50) != null) {
@@ -76,8 +75,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             setChanged();
         }
 
-        if (!hasSource)
-            return;
+        if (!hasSource) return;
 
         if (this.recipeWrapper == null && craftingItem != null)
             setRecipes(null, craftingItem);
@@ -174,12 +172,11 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftPotionFromInventory(count, level, worldPosition);
             if (recipe == null)
                 return;
-            if (!(recipe.recipe.get(0) instanceof PotionIngredient)) {
+            if (!(recipe.recipe.get(0) instanceof PotionIngredient potionIngred)) {
                 isCraftingPotion = false;
                 return;
             }
 
-            PotionIngredient potionIngred = (PotionIngredient) recipe.recipe.get(0);
             Ingredient itemIngred = recipe.recipe.get(1);
             List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
             craftManager = new CraftingProgress(PotionUtils.getPotion(potionIngred.getStack()), needed, PotionUtils.getPotion(recipe.outputStack));
@@ -343,7 +340,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         craftManager = CraftingProgress.read(compound);
         this.entityID = compound.getInt("entityid");
         this.hasSource = compound.getBoolean("hasmana");
-        this.isOff = compound.getBoolean("off");
         this.isCraftingPotion = compound.getBoolean("isPotion");
         needsPotionStorage = compound.getBoolean("storage");
     }
@@ -362,7 +358,6 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         compound.putInt("entityid", entityID);
         compound.putBoolean("hasmana", hasSource);
-        compound.putBoolean("off", isOff);
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
     }

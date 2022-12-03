@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProper
 public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
-        super(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
+        this(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
     }
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
@@ -93,7 +94,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     public void registerControllers(AnimationData animationData) {
     }
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

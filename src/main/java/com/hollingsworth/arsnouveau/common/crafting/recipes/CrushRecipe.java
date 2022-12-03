@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class CrushRecipe implements Recipe<Container> {
         return this.input.test(i);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ItemStack assemble(Container inventory) {
         return ItemStack.EMPTY;
@@ -86,13 +86,13 @@ public class CrushRecipe implements Recipe<Container> {
         return true;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ItemStack getResultItem() {
         return ItemStack.EMPTY;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ResourceLocation getId() {
         return id;

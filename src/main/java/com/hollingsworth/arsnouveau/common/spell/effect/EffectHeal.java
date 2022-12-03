@@ -10,11 +10,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
-public class EffectHeal extends AbstractEffect {
+public class EffectHeal extends AbstractEffect implements IDamageEffect {
     public static EffectHeal INSTANCE = new EffectHeal();
 
     private EffectHeal() {
@@ -22,14 +22,14 @@ public class EffectHeal extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity entity) {
             if (entity.isRemoved() || entity.getHealth() <= 0)
                 return;
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             if (entity.isInvertedHealAndHarm()) {
-                dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
+                attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter).setMagic(), healVal);
             } else {
                 if(entity instanceof Player player){
                     player.causeFoodExhaustion(2.5f);
@@ -57,7 +57,7 @@ public class EffectHeal extends AbstractEffect {
         return SpellTier.TWO;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -71,7 +71,7 @@ public class EffectHeal extends AbstractEffect {
         return "Heals a small amount of health and consumes hunger from the caster. When used on Undead, the spell will deal an equal amount of magic damage.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);

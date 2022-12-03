@@ -31,6 +31,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class WildenStalker extends Monster implements IAnimatable, IAnimationListener {
     int leapCooldown;
@@ -121,12 +122,12 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         try {
             if (arg == Animations.DIVE.ordinal()) {
                 flyController.markNeedsReload();
-                flyController.setAnimation(new AnimationBuilder().addAnimation("dive", true));
+                flyController.setAnimation(new AnimationBuilder().addAnimation("dive"));
             }
 
             if (arg == Animations.FLY.ordinal()) {
                 flyController.markNeedsReload();
-                flyController.setAnimation(new AnimationBuilder().addAnimation("flying", true));
+                flyController.setAnimation(new AnimationBuilder().addAnimation("flying"));
             }
 
             if (arg == Animations.ATTACK.ordinal()) {
@@ -134,7 +135,7 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
                     return;
                 }
                 groundController.markNeedsReload();
-                groundController.setAnimation(new AnimationBuilder().addAnimation("attack", false).addAnimation("idle"));
+                groundController.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
             }
 
         } catch (Exception e) {
@@ -142,26 +143,26 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         }
     }
 
-    private <E extends Entity> PlayState flyPredicate(AnimationEvent event) {
+    private PlayState flyPredicate(AnimationEvent<?> event) {
         return isFlying() ? PlayState.CONTINUE : PlayState.STOP;
     }
 
-    private <E extends Entity> PlayState groundPredicate(AnimationEvent e) {
+    private PlayState groundPredicate(AnimationEvent<?> e) {
         return isFlying() ? PlayState.STOP : PlayState.CONTINUE;
     }
 
-    AnimationController flyController;
-    AnimationController groundController;
+    AnimationController<WildenStalker> flyController;
+    AnimationController<WildenStalker> groundController;
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        flyController = new AnimationController(this, "flyController", 1, this::flyPredicate);
+        flyController = new AnimationController<>(this, "flyController", 1, this::flyPredicate);
         animationData.addAnimationController(flyController);
-        groundController = new AnimationController(this, "groundController", 1, this::groundPredicate);
+        groundController = new AnimationController<>(this, "groundController", 1, this::groundPredicate);
         animationData.addAnimationController(groundController);
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

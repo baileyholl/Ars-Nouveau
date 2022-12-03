@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
@@ -11,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -24,7 +22,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 import java.util.Arrays;
 
-public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider {
+public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCastListener {
 
     public FamiliarBookwyrm(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -63,7 +61,7 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
     }
@@ -74,8 +72,8 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
-        String color = getEntityData().get(COLOR).toLowerCase();
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");

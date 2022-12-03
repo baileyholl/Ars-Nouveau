@@ -13,8 +13,8 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWandable {
@@ -62,7 +62,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
     }
 
-    public @Nonnull PotionData getData() {
+    public@NotNull PotionData getData() {
         return data;
     }
 

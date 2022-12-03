@@ -34,6 +34,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -223,14 +224,14 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        idleController = new AnimationController(this, "controller", 0, this::idlePredicate);
+        idleController = new AnimationController<>(this, "controller", 0, this::idlePredicate);
         animationData.addAnimationController(idleController);
-        craftController = new AnimationController(this, "craft_controller", 0, this::craftPredicate);
+        craftController = new AnimationController<>(this, "craft_controller", 0, this::craftPredicate);
         animationData.addAnimationController(craftController);
         animationData.setResetSpeedInTicks(0.0);
     }
 
-    AnimationFactory manager = new AnimationFactory(this);
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -238,7 +239,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
         return PlayState.CONTINUE;
     }
 
@@ -253,7 +254,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         try {
             if (craftController != null) {
                 craftController.markNeedsReload();
-                craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
+                craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting"));
             }
         }catch (Exception e){
             e.printStackTrace();

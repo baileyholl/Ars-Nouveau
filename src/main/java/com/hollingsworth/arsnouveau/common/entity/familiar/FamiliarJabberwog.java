@@ -24,7 +24,7 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
             return PlayState.CONTINUE;

@@ -47,7 +47,7 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
         this.currentItemStack = itemStack;
         GeoModel model = modelProvider instanceof TransformAnimatedModel transformAnimatedModel ? modelProvider.getModel(transformAnimatedModel.getModelResource((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource((SpellBook) animatable));
         AnimationEvent<?> itemEvent = new AnimationEvent<>((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
-        modelProvider.setLivingAnimations((SpellBook) animatable, this.getUniqueID((SpellBook) animatable), itemEvent);
+        modelProvider.setCustomAnimations((SpellBook) animatable, this.getInstanceId((SpellBook) animatable), itemEvent);
         stack.pushPose();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0.5, 0.5);

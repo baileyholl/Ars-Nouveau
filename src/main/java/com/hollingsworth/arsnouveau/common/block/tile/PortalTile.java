@@ -19,8 +19,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;
 
@@ -30,20 +31,20 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public Vec2 rotationVec;
     public String displayName;
     public boolean isHorizontal;
-    public List<Entity> entityQueue = new ArrayList<>();
+    public Set<Entity> entityQueue = new HashSet<>();
 
     public PortalTile(BlockPos pos, BlockState state) {
         super(PORTAL_TILE_TYPE, pos, state);
     }
 
     public void warp(Entity e) {
-        if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+        if ((level instanceof ServerLevel serverLevel) && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
             e.moveTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5,
                     rotationVec != null ? rotationVec.y : e.getYRot(), rotationVec != null ? rotationVec.x : e.getXRot());
             e.setXRot(rotationVec != null ? rotationVec.x : e.getXRot());
             e.setYRot(rotationVec != null ? rotationVec.y : e.getYRot());
             Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.getXRot(), e.getYRot()));
-            ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+            serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
     }
@@ -77,10 +78,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
     @Override
     public void tick() {
-        if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
-            List<Entity> entities = entityQueue;
-            if(!entities.isEmpty()){
-                for(Entity e : entities){
+        if (level != null && !level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+            Set<Entity> entities = entityQueue;
+            if (!entities.isEmpty()) {
+                for (Entity e : entities) {
                     if (e instanceof EntityFollowProjectile || BlockUtil.distanceFrom(e.blockPosition(), worldPosition) > 2)
                         continue;
                     level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);

@@ -23,6 +23,7 @@ public class GoToBedGoal extends Goal {
     public boolean canContinueToUse() {
         if(ticksRunning >= 20 * 15){
             starbuncle.addGoalDebug(this, new DebugEvent("BedTimeout", "Took too long to find bed"));
+            starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
             return false;
         }
         return !unreachable && canUse();
@@ -41,7 +42,6 @@ public class GoToBedGoal extends Goal {
     @Override
     public void stop() {
         super.stop();
-        starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
         ticksRunning = 0;
     }
 

@@ -44,6 +44,10 @@ public class BiomeModifiersProvider {
                 new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(),
                         5, 1, 2)
         ));
+        modifierMap.put(GIFT_STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
+                new MobSpawnSettings.SpawnerData(ModEntities.GIFT_STARBY.get(),
+                        1, 1, 1)
+        ));
         modifierMap.put(DRYGMY_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
                 new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY.get(),
                         3, 1, 2)
@@ -81,6 +85,7 @@ public class BiomeModifiersProvider {
     }
 
     static final ResourceLocation STARBUNCLE_SPAWN = prefix("starbuncle_spawn");
+    static final ResourceLocation GIFT_STARBUNCLE_SPAWN = prefix("gift_starbuncle_spawn");
     static final ResourceLocation DRYGMY_SPAWN = prefix("drygmy_spawn");
     static final ResourceLocation WHIRLISPRIG_SPAWN = prefix("whirlisprig_spawn");
     static final ResourceLocation WILDEN_HUNTER_SPAWN = prefix("wilden_hunter_spawn");

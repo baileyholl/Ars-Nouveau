@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +56,12 @@ public class Spell implements Cloneable {
         return this;
     }
 
-    public Spell setRecipe(@Nonnull List<AbstractSpellPart> recipe) {
+    public Spell setRecipe(@NotNull List<AbstractSpellPart> recipe) {
         this.recipe = recipe;
         return this;
     }
 
-    public Spell withColor(@Nonnull ParticleColor color) {
+    public Spell withColor(@NotNull ParticleColor color) {
         this.color = color;
         return this;
     }

@@ -48,7 +48,7 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
         AnimationEvent itemEvent = new AnimationEvent((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
         if (modelProvider == null)
             return;
-        modelProvider.setLivingAnimations((IAnimatable) animatable, this.getUniqueID(animatable), itemEvent);
+        modelProvider.setCustomAnimations((IAnimatable) animatable, this.getInstanceId(animatable), itemEvent);
         stack.pushPose();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0.5, 0.5);

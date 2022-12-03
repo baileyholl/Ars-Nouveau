@@ -156,7 +156,7 @@ public class InventoryManager {
     public List<FilterableItemHandler> preferredForStack(ItemStack stack){
         List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
         filtered = filtered.stream().filter(filterableItemHandler -> filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID).collect(Collectors.toCollection(ArrayList::new));
-        /// Sort highest pref first
+        /// Sort by highest pref first
         filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
         return filtered;
     }
