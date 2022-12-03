@@ -38,12 +38,12 @@ public interface IDamageEffect {
         totalDamage = damageEvent.damage;
         if (totalDamage <= 0 || damageEvent.isCanceled())
             return;
-        SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage);
+        SpellDamageEvent.Pre preDamage = new SpellDamageEvent.Pre(source, shooter, entity, totalDamage, spellContext);
         MinecraftForge.EVENT_BUS.post(preDamage);
 
         entity.hurt(source, totalDamage);
 
-        SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage);
+        SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
         MinecraftForge.EVENT_BUS.post(postDamage);
 
         Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
