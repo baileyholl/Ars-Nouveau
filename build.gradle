@@ -166,9 +166,9 @@ dependencies {
     minecraft "net.minecraftforge:forge:1.19.2-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
-    shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
-    library fg.deobf("com.github.LlamaLad7:MixinExtras:0.0.12")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.12")
+    shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.1.1")
+    library fg.deobf("com.github.LlamaLad7:MixinExtras:0.1.1")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 

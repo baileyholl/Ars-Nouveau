@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -79,7 +80,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void tick() {
         if (level == null) return;
-        if (level.isClientSide) {
+        if (level instanceof ClientLevel) {
 
             int baseAge = draining ? 20 : 40;
             int randBound = draining ? 3 : 6;
