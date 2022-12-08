@@ -221,4 +221,14 @@ public class ParticleUtil {
                     0, 0, 0);
         }
     }
+
+    public static void spawnOrb(Level level, ParticleColor color, BlockPos pos, int lifetime) {
+        if (level instanceof ServerLevel server) {
+            for (int i = 0; i <= 10; i++)
+                server.sendParticles(
+                        GlowParticleData.createData(color, 0.4f, 0.5f, lifetime),
+                        pos.getX() + ParticleUtil.inRange(0.3, 0.7), pos.getY() + ParticleUtil.inRange(-0.2, 0.2), pos.getZ() + ParticleUtil.inRange(0.3, 0.7), 1,
+                        0d, 0d, 0, 0);
+        }
+    }
 }

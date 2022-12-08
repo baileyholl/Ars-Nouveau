@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantingApparatusRecipeCategory extends MultiInputCategory<EnchantingApparatusRecipe> {
+public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusRecipe> extends MultiInputCategory<T> {
 
     public IDrawable background;
     public IDrawable icon;
@@ -26,8 +26,9 @@ public class EnchantingApparatusRecipeCategory extends MultiInputCategory<Enchan
     }
 
     @Override
-    public RecipeType<EnchantingApparatusRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.ENCHANTING_APP_RECIPE_TYPE;
+    public RecipeType<T> getRecipeType() {
+        //noinspection unchecked
+        return (RecipeType<T>) JEIArsNouveauPlugin.ENCHANTING_APP_RECIPE_TYPE;
     }
 
     @Override
@@ -51,4 +52,5 @@ public class EnchantingApparatusRecipeCategory extends MultiInputCategory<Enchan
         if (recipe.consumesSource())
             renderer.draw(matrixStack, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0.0f, 100f, 10);
     }
+
 }
