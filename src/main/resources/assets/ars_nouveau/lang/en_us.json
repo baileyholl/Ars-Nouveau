@@ -762,7 +762,7 @@
 	"ars_nouveau.source": "Source: %s",
 	"ars_nouveau.crush_recipe": "Crush Glyph",
 	"ars_nouveau.enchanting_apparatus": "Enchanting Apparatus",
-
+	"ars_nouveau.armor_upgrade": "Magic Armor Upgrade",
 	"ars_nouveau.page.apparatus_crafting": "Apparatus Crafting",
 	"ars_nouveau.page1.apparatus_crafting": "The Enchanting Apparatus is used for crafting special machines, curios, and equipment used to progress in Ars Nouveau. Crafting with the Enchanting Apparatus requires up to eight Arcane Pedestals, an Arcane Core, and the Enchanting Apparatus block. Once you have setup your apparatus, you should craft your first Magebloom Seed.",
 	"ars_nouveau.page.better_casting": "Better Casting",
