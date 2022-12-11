@@ -358,6 +358,24 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.VOID_PRISM, registryName = BlockRegistryKey)
     public static VoidPrism VOID_PRISM;
 
+    @ObjectHolder(value = prepend + LibBlockNames.FALSE_WEAVE, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<FalseWeaveTile> FALSE_WEAVE_TILE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.FALSE_WEAVE, registryName = BlockRegistryKey)
+    public static FalseWeave FALSE_WEAVE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.MIRROR_WEAVE, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<MirrorWeaveTile> MIRROR_WEAVE_TILE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.MIRROR_WEAVE, registryName = BlockRegistryKey)
+    public static MirrorWeave MIRROR_WEAVE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.GHOST_WEAVE, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<GhostWeaveTile> GHOST_WEAVE_TILE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.GHOST_WEAVE, registryName = BlockRegistryKey)
+    public static GhostWeave GHOST_WEAVE;
+
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
@@ -475,6 +493,9 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
+        registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave());
+        registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave());
+        registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave());
     }
 
     public static MagicLeaves createLeavesBlock(MaterialColor color) {
@@ -525,6 +546,10 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
         registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
         registry.register(LibBlockNames.MOB_JAR, BlockEntityType.Builder.of(MobJarTile::new, BlockRegistry.MOB_JAR).build(null));
+        registry.register(LibBlockNames.FALSE_WEAVE, BlockEntityType.Builder.of(FalseWeaveTile::new, BlockRegistry.FALSE_WEAVE).build(null));
+        registry.register(LibBlockNames.MIRROR_WEAVE, BlockEntityType.Builder.of(MirrorWeaveTile::new, BlockRegistry.MIRROR_WEAVE).build(null));
+        registry.register(LibBlockNames.GHOST_WEAVE, BlockEntityType.Builder.of(GhostWeaveTile::new, BlockRegistry.GHOST_WEAVE).build(null));
+
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
@@ -737,6 +762,9 @@ public class BlockRegistry {
         });
         registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
         registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
+        registry.register(LibBlockNames.GHOST_WEAVE, getDefaultBlockItem(BlockRegistry.GHOST_WEAVE));
+        registry.register(LibBlockNames.FALSE_WEAVE, getDefaultBlockItem(BlockRegistry.FALSE_WEAVE));
+        registry.register(LibBlockNames.MIRROR_WEAVE, getDefaultBlockItem(BlockRegistry.MIRROR_WEAVE));
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {
