@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,11 +21,13 @@ public class ClientEventHandler {
      * @param event the catched event.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void renderWorldLastEvent(final RenderLevelLastEvent event) {
-        ClientInfo.partialTicks = event.getPartialTick();
-        if (DEBUG_DRAW) {
-            Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
+    public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+            ClientInfo.partialTicks = event.getPartialTick();
+            if (DEBUG_DRAW) {
+                Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
+            }
+            LightManager.updateAll(event.getLevelRenderer());
         }
-        LightManager.updateAll(event.getLevelRenderer());
     }
 }

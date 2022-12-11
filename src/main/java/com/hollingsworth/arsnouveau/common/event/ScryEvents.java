@@ -21,8 +21,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -36,7 +37,7 @@ import static com.hollingsworth.arsnouveau.api.util.DropDistribution.rand;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ScryEvents {
     @SubscribeEvent
-    public static void playerLoginEvent(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
+    public static void playerLoginEvent(final PlayerLoggedInEvent event) {
         if (!event.getEntity().level.isClientSide && event.getEntity().hasEffect(ModPotions.SCRYING_EFFECT.get())) {
             CompoundTag tag = event.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new PacketGetPersistentData(tag));
@@ -72,7 +73,9 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderWorldLast(final RenderLevelLastEvent event) {
+    public static void onRenderWorldLast(final RenderLevelStageEvent event) {
+
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
         final Player playerEntity = Minecraft.getInstance().player;
 
         if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT.get()) == null)
