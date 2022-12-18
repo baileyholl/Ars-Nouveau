@@ -9,10 +9,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -23,7 +20,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     public BlockState blockState = Blocks.SAND.defaultBlockState();
 
     public MirrorWeave() {
-        super(Block.Properties.of(Material.DECORATION).noOcclusion());
+        super(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion());
     }
 
     @Override

@@ -145,6 +145,7 @@ public class LibBlockNames {
     public static final String FALSE_WEAVE = "falseweave";
     public static final String GHOST_WEAVE = "ghostweave";
     public static final String MIRROR_WEAVE = "mirrorweave";
+    public static final String MAGEBLOOM_BLOCK = "magebloom_block";
 
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{

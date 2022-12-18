@@ -17,10 +17,10 @@ public class MirrorWeaveTile extends ModdedTile implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimationData data) {}
 
-    }
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

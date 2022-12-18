@@ -376,6 +376,8 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.GHOST_WEAVE, registryName = BlockRegistryKey)
     public static GhostWeave GHOST_WEAVE;
 
+    @ObjectHolder(value = prepend + LibBlockNames.MAGEBLOOM_BLOCK, registryName = BlockRegistryKey)
+    public static ModBlock MAGEBLOOM_BLOCK;
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
 
         //blocks
@@ -496,6 +498,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave());
         registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave());
         registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave());
+        registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, MaterialColor.COLOR_PINK).strength(0.1F).sound(SoundType.WOOL)));
     }
 
     public static MagicLeaves createLeavesBlock(MaterialColor color) {
@@ -765,6 +768,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.GHOST_WEAVE, getDefaultBlockItem(BlockRegistry.GHOST_WEAVE));
         registry.register(LibBlockNames.FALSE_WEAVE, getDefaultBlockItem(BlockRegistry.FALSE_WEAVE));
         registry.register(LibBlockNames.MIRROR_WEAVE, getDefaultBlockItem(BlockRegistry.MIRROR_WEAVE));
+        registry.register(LibBlockNames.MAGEBLOOM_BLOCK, getDefaultBlockItem(BlockRegistry.MAGEBLOOM_BLOCK));
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {
