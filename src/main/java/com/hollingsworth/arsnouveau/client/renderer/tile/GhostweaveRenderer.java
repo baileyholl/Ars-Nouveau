@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
-import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
+import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,19 +13,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile> {
+public class GhostweaveRenderer implements BlockEntityRenderer<GhostWeaveTile> {
     private BlockRenderDispatcher blockRenderer;
-    public MirrorweaveRenderer(BlockEntityRendererProvider.Context pContext) {
+
+    public GhostweaveRenderer(BlockEntityRendererProvider.Context pContext) {
         this.blockRenderer = pContext.getBlockRenderDispatcher();
     }
 
     @Override
-    public void render(MirrorWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(GhostWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = tileEntityIn.mimicState;
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get())){
-            renderState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
-        }
-        if (renderState == null)
+        boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get());
+        boolean shouldShow =  hasMagicFind || !tileEntityIn.isInvisible();
+        if(!shouldShow)
             return;
         ModelBlockRenderer.enableCaching();
         pPoseStack.pushPose();

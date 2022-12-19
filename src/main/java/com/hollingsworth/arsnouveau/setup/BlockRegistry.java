@@ -495,8 +495,8 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
-        registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave());
-        registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave());
+        registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
+        registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave());
         registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, MaterialColor.COLOR_PINK).strength(0.1F).sound(SoundType.WOOL)));
     }

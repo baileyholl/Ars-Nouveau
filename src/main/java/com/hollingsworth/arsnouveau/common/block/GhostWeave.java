@@ -2,14 +2,17 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public class GhostWeave extends ModBlock implements EntityBlock {
+public class GhostWeave extends MirrorWeave {
 
+
+    public GhostWeave(Properties properties) {
+        super(properties);
+    }
 
     @Nullable
     @Override
