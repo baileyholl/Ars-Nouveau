@@ -26,7 +26,7 @@ public class EffectSenseMagic extends AbstractEffect implements IPotionEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        applyConfigPotion(living, ModPotions.MAGIC_FIND_EFFECT.get(), spellStats);
+        ((IPotionEffect)this).applyConfigPotion(living, ModPotions.MAGIC_FIND_EFFECT.get(), spellStats);
     }
 
     @Override

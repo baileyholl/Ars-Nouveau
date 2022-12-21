@@ -78,8 +78,8 @@ public class ScribesBlock extends TableBlock {
             if (stack == null || stack.isEmpty())
                 return InteractionResult.SUCCESS;
 
-            if (stack.getItem() instanceof IScribeable) {
-                ((IScribeable) stack.getItem()).onScribe(world, pos, player, handIn, stack);
+            if (stack.getItem() instanceof IScribeable scribeable) {
+                scribeable.onScribe(world, pos, player, handIn, stack);
                 BlockState updateState = world.getBlockState(tile.getBlockPos());
                 world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
             }

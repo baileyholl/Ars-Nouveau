@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -19,6 +20,11 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
 
     private EffectHeal() {
         super(GlyphLib.EffectHealID, "Heal");
+    }
+
+    @Override
+    public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity) {
+        return entity instanceof LivingEntity living && living.isInvertedHealAndHarm() && IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity);
     }
 
     @Override

@@ -24,8 +24,8 @@ public class EffectInvisibility extends AbstractEffect implements IPotionEffect 
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof LivingEntity) {
-            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), MobEffects.INVISIBILITY, spellStats, false);
+        if (rayTraceResult.getEntity() instanceof LivingEntity living) {
+            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.INVISIBILITY, spellStats, false);
         }
     }
 
