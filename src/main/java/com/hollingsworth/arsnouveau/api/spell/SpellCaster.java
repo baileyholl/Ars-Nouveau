@@ -127,6 +127,11 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
+    public void setSound(ConfiguredSpellSound sound) {
+        this.setSound(sound, getCurrentSlot());
+    }
+
+    @Override
     public void setSound(ConfiguredSpellSound sound, int slot) {
         this.getSpell(slot).sound = sound;
         writeItem(stack);

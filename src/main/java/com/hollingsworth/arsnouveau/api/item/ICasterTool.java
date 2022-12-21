@@ -43,6 +43,8 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             spell = heldCaster.getSpell();
             thisCaster.setColor(heldCaster.getColor());
             thisCaster.setFlavorText(heldCaster.getFlavorText());
+            thisCaster.setSpellName(heldCaster.getSpellName());
+            thisCaster.setSound(heldCaster.getCurrentSound());
         }
         if (isScribedSpellValid(thisCaster, player, handIn, stack, spell)) {
             success = setSpell(thisCaster, player, handIn, stack, spell);
