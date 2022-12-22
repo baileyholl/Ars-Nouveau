@@ -44,8 +44,11 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
         if(tile != null){
             ItemStack stack = pPlayer.getItemInHand(pHand);
             if(stack.getItem() instanceof BlockItem blockItem){
+                if(tile.mimicState.is(blockItem.getBlock())){
+                    return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+                }
                 tile.nextState = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(pLevel, pPlayer, pHand, stack, pHit));
-                this.setMimicState(pLevel, pPos);
+                this.setMimicState(pLevel, pPos, !pPlayer.isShiftKeyDown());
                 return InteractionResult.SUCCESS;
             }
         }
@@ -53,7 +56,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
-    public void setMimicState(Level level, BlockPos pos){
+    public void setMimicState(Level level, BlockPos pos, boolean updateNeighbors) {
         MirrorWeaveTile tile = (MirrorWeaveTile) level.getBlockEntity(pos);
         if(tile == null || tile.mimicState == null || tile.nextState == null || tile.nextState.equals(tile.mimicState)){
             return;
@@ -63,6 +66,8 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
         level.setBlockAndUpdate(pos, tile.getBlockState().setValue(LIGHT_LEVEL, tile.mimicState.getLightEmission(level, pos)));
         tile.updateBlock();
         int ticks = 1;
+        if(!updateNeighbors)
+            return;
         for(Direction d : Direction.values()){
             BlockPos offset = pos.relative(d);
             if(level.getBlockEntity(offset) instanceof MirrorWeaveTile neighbor){
@@ -79,7 +84,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
         MirrorWeaveTile tile = (MirrorWeaveTile) pLevel.getBlockEntity(pPos);
         if(tile == null)
             return;
-        this.setMimicState(pLevel, pPos);
+        this.setMimicState(pLevel, pPos, true);
     }
 
     @Override
