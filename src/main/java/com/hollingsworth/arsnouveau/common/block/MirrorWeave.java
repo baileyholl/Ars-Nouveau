@@ -43,7 +43,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
         MirrorWeaveTile tile = (MirrorWeaveTile) pLevel.getBlockEntity(pPos);
         if(tile != null){
             ItemStack stack = pPlayer.getItemInHand(pHand);
-            if(stack.getItem() instanceof BlockItem blockItem){
+            if(stack.getItem() instanceof BlockItem blockItem && !(blockItem.getBlock() instanceof EntityBlock)){
                 if(tile.mimicState.is(blockItem.getBlock())){
                     return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
                 }

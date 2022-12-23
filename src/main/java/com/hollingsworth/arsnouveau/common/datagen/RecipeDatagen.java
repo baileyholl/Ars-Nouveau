@@ -644,7 +644,7 @@ public class RecipeDatagen extends RecipeProvider {
             shapedBuilder(BlockRegistry.MAGEBLOOM_BLOCK)
                     .pattern("xx ")
                     .pattern("xx ")
-                    .define('x', BlockRegistry.MAGE_BLOOM_CROP).save(consumer);
+                    .define('x', ItemsRegistry.MAGE_FIBER).save(consumer);
 
             shapelessBuilder(BlockRegistry.MAGE_BLOOM_CROP, 4).requires(BlockRegistry.MAGEBLOOM_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID,"magebloom_block_to_magebloom"));
 
