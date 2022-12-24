@@ -22,6 +22,8 @@ public class LibBlockNames {
     public static final String IMBUEMENT_CHAMBER = "imbuement_chamber";
     public static final String ARCANE_CORE = "arcane_core";
     public static final String ENCHANTED_SPELL_TURRET = "spell_turret";
+    public static final String ROTATING_SPELL_TURRET = "rotating_spell_turret";
+
     public static final String REDSTONE_AIR = "redstone_air";
     public static final String INTANGIBLE_AIR = "intangible_air";
     public static final String VOLCANIC_SOURCELINK = "volcanic_sourcelink";
