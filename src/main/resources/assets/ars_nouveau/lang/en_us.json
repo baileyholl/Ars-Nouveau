@@ -734,7 +734,6 @@
 	"block.ars_nouveau.basic_spell_turret": "Basic Spell Turret",
 	"block.ars_nouveau.spell_turret": "Enchanted Spell Turret",
 	"block.ars_nouveau.timer_spell_turret": "Timer Spell Turret",
-	"block.ars_nouveau.rotating_spell_turret": "Adjustable Spell Turret",
 	"effect.ars_nouveau.bounce": "Bounce",
 	"ars_nouveau.starbuncle.path": "Starbuncle will prefer to path on this block if it is on their way.",
 	"ars_nouveau.starbuncle.pathing": "Preferring to path on %s",
@@ -1314,7 +1313,7 @@
 	"block.ars_nouveau.mirrorweave": "Mirrorweave",
 	"block.ars_nouveau.magebloom_block": "Magebloom Block",
 	"ars_nouveau.page.illusion_blocks": "Illusion Blocks",
-	"ars_nouveau.page1.illusion_blocks": "Mirrorweave can replicate the appearance of any block that is used on it. These blocks will take on the same collisions and light as their replicated block. Sense Magic will reveal the illusion. All illusion blocks can also be used as frames for portals. Casting light on an illusion block will allow it to emit light.",
+	"ars_nouveau.page1.illusion_blocks": "Mirrorweave can replicate the appearance of any block that is used on it. These blocks will take on the same collisions and light as their replicated block. Sense Magic will reveal the illusion. All illusion blocks can also be used as frames for portals.",
 	"ars_nouveau.page2.illusion_blocks": "Falseweave has the same properties as Mirrorweave, but can be passed through as if it were air. Sense Magic will cause the block to become invisible, revealing any hidden paths.",
 	"ars_nouveau.page3.illusion_blocks": "Ghostweave has the same properties as Mirrorweave, but can be turned into an invisible wall by casting Invisbility on it. Casting Dispel will reveal the block again. Sense Magic will cause the block to appear solid again."
 }

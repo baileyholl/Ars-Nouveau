@@ -28,7 +28,8 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '3.5.0.1'
+
+version = '3.6.0'
 
 
 configurations {
