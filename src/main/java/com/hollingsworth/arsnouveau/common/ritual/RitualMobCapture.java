@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.PartEntity;
 
 public class RitualMobCapture extends AbstractRitual {
     @Override
@@ -65,6 +66,9 @@ public class RitualMobCapture extends AbstractRitual {
         if(e.getType().is(EntityTags.JAR_WHITELIST))
             return true;
         if(e.getType().is(EntityTags.JAR_BLACKLIST)){
+            return false;
+        }
+        if(e instanceof PartEntity) {
             return false;
         }
         return e instanceof LivingEntity livingEntity && !(e instanceof Player) && !((LivingEntity) e).isDeadOrDying();
