@@ -35,7 +35,10 @@ public class BlockStatesDatagen extends BlockStateProvider {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             registerNormalCube(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)), s);
         }
-
+        registerNormalCube(BlockRegistry.MAGEBLOOM_BLOCK, LibBlockNames.MAGEBLOOM_BLOCK);
+        registerNormalCube(BlockRegistry.FALSE_WEAVE, LibBlockNames.FALSE_WEAVE);
+        registerNormalCube(BlockRegistry.GHOST_WEAVE, LibBlockNames.GHOST_WEAVE);
+        registerNormalCube(BlockRegistry.MIRROR_WEAVE, LibBlockNames.MIRROR_WEAVE);
     }
 
     private void registerOnlyState(Block block, String registry) {
