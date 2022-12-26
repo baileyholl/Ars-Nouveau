@@ -1,10 +1,15 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -29,4 +34,21 @@ public class ArsEvents {
             e.damage += e.caster.getAttributeValue(PerkAttributes.SPELL_DAMAGE_BONUS.get());
         }
     }
+
+    @SubscribeEvent
+    public static void spellResolve(SpellResolveEvent.Post e) {
+        if(e.spell.recipe.contains(EffectInvisibility.INSTANCE) && e.rayTraceResult instanceof BlockHitResult blockHitResult){
+            if(e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile){
+                ghostWeaveTile.setVisibility(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void dispelEvent(DispelEvent e) {
+        if(e.rayTraceResult instanceof BlockHitResult blockHitResult && e.world.getBlockEntity(blockHitResult.getBlockPos()) instanceof GhostWeaveTile ghostWeaveTile){
+            ghostWeaveTile.setVisibility(false);
+        }
+    }
+
 }
