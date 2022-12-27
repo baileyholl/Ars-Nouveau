@@ -47,8 +47,6 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         this.addLayer(new ArrowLayer<>(context, this));
         this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
         this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
-//        this.addLayer(new SpinAttackEffectLayer<>(this));
-//        this.addLayer(new BeeStingerLayer<>(this));
     }
 
     public void render(EntityDummy p_225623_1_, float p_225623_2_, float p_225623_3_, PoseStack p_225623_4_, MultiBufferSource p_225623_5_, int p_225623_6_) {
@@ -74,12 +72,6 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
             playermodel.hat.visible = true;
         } else {
             playermodel.setAllVisible(true);
-//            playermodel.hat.visible = pEntityDummy.isModelPartShown(PlayerModelPart.HAT);
-//            playermodel.jacket.visible = pEntityDummy.isModelPartShown(PlayerModelPart.JACKET);
-//            playermodel.leftPants.visible = pEntityDummy.isModelPartShown(PlayerModelPart.LEFT_PANTS_LEG);
-//            playermodel.rightPants.visible = pEntityDummy.isModelPartShown(PlayerModelPart.RIGHT_PANTS_LEG);
-//            playermodel.leftSleeve.visible = pEntityDummy.isModelPartShown(PlayerModelPart.LEFT_SLEEVE);
-//            playermodel.rightSleeve.visible = pEntityDummy.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE);
             playermodel.crouching = pEntityDummy.isCrouching();
             HumanoidModel.ArmPose bipedmodel$armpose = getArmPose(pEntityDummy, InteractionHand.MAIN_HAND);
             HumanoidModel.ArmPose bipedmodel$armpose1 = getArmPose(pEntityDummy, InteractionHand.OFF_HAND);

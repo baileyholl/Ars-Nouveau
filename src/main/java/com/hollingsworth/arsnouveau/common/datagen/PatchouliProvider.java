@@ -184,7 +184,11 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.DULL_TRINKET)
                 .withPage(new CraftingPage(ItemsRegistry.DULL_TRINKET).withRecipe2(ItemsRegistry.MUNDANE_BELT))
                 .withPage(new CraftingPage(ItemsRegistry.RING_OF_POTENTIAL)), getPath(EQUIPMENT, "dull_items"));
-        addBasicItem(BlockRegistry.MAGE_BLOOM_CROP, RESOURCES, new ApparatusPage(BlockRegistry.MAGE_BLOOM_CROP));
+
+        addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.MAGE_BLOOM_CROP)
+                .withTextPage("ars_nouveau.page.magebloom_crop")
+                .withPage(new ApparatusPage(BlockRegistry.MAGE_BLOOM_CROP))
+                .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER).withRecipe2(BlockRegistry.MAGEBLOOM_BLOCK)), getPath(RESOURCES, "magebloom_crop"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.POTION_FLASK)
                 .withLocalizedText()
@@ -495,6 +499,12 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
 
         addBasicItem(BlockRegistry.VOID_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.VOID_PRISM));
+        addPage(new PatchouliBuilder(RESOURCES, "illusion_blocks").withIcon(BlockRegistry.GHOST_WEAVE).withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.MIRROR_WEAVE))
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.FALSE_WEAVE))
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.GHOST_WEAVE)), getPath(RESOURCES, "illusion_blocks"));
     }
 
     public String getLangPath(String name, int count) {
