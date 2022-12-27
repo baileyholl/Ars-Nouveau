@@ -200,6 +200,7 @@ dependencies {
     implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
     implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
+    runtimeOnly fg.deobf("curse.maven:config-443900:4064952")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
 }
