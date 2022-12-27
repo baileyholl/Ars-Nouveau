@@ -64,13 +64,13 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
-    default@NotNull ISpellCaster getSpellCaster(ItemStack stack) {
+    default @NotNull ISpellCaster getSpellCaster(ItemStack stack) {
         return new SpellCaster(stack);
     }
 
     @Override
     default ISpellCaster getSpellCaster() {
-        return new SpellCaster(new CompoundTag());
+        return getSpellCaster(new CompoundTag());
     }
 
     @Override

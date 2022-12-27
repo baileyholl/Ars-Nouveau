@@ -37,7 +37,8 @@ public class PacketHotkeyPressed {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
             if (player != null) {
-                InteractionHand hand = StackUtil.getHeldCasterTool(player);
+                // Returns the hand holding an item with slots > 1, this only checks for NEXT/PREVIOUS slots for hotkeys.
+                InteractionHand hand = StackUtil.getHeldCasterTool(player, (tool) -> tool.getSpellCaster().getMaxSlots() > 1);
                 if (hand == null)
                     return;
                 ItemStack stack = player.getItemInHand(hand);

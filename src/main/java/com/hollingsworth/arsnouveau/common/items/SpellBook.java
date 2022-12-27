@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
@@ -26,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDyeable {
+public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDyeable, IRadialProvider {
 
     public SpellTier tier;
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
@@ -82,7 +84,7 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
         });
         ISpellCaster caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
+        return caster.castSpell(worldIn, (LivingEntity) playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
     /**
@@ -130,6 +132,16 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @Override
     public ISpellCaster getSpellCaster(ItemStack stack) {
         return new BookCaster(stack);
+    }
+
+    @Override
+    public ISpellCaster getSpellCaster() {
+        return new BookCaster(new CompoundTag());
+    }
+
+    @Override
+    public ISpellCaster getSpellCaster(CompoundTag tag) {
+        return new BookCaster(tag);
     }
 
     @Override
