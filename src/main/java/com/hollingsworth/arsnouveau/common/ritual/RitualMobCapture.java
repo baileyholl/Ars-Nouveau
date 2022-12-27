@@ -15,10 +15,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.PartEntity;
 
 public class RitualMobCapture extends AbstractRitual {
     @Override
@@ -41,6 +43,11 @@ public class RitualMobCapture extends AbstractRitual {
                         continue;
                     }
                     for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
+                        if(e instanceof Mob mob && ((Mob) e).isLeashed() && e.shouldBeSaved()){
+                            if(mob.isLeashed()){
+                                mob.dropLeash(true, true);
+                            }
+                        }
                         if(tile.setEntityData(e)){
                             e.remove(Entity.RemovalReason.DISCARDED);
                             EntityFlyingItem followProjectile = new EntityFlyingItem(level, e.position, Vec3.atCenterOf(tile.getBlockPos()), 100, 50, 100);
@@ -65,6 +72,9 @@ public class RitualMobCapture extends AbstractRitual {
         if(e.getType().is(EntityTags.JAR_WHITELIST))
             return true;
         if(e.getType().is(EntityTags.JAR_BLACKLIST)){
+            return false;
+        }
+        if(e instanceof PartEntity) {
             return false;
         }
         return e instanceof LivingEntity livingEntity && !(e instanceof Player) && !((LivingEntity) e).isDeadOrDying();

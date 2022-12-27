@@ -59,13 +59,8 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         return super.mobInteract(player, hand);
     }
 
-    public String getColor() {
-        return this.entityData.get(COLOR);
-    }
-
-
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;

@@ -123,6 +123,8 @@ public class BlockTagProvider extends BlockTagsProvider {
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
         }
 
+        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE,BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
+
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
                 Blocks.RED_MUSHROOM_BLOCK,

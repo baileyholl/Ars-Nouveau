@@ -137,6 +137,11 @@ public class DefaultTableProvider extends LootTableProvider {
             }
             registerBedCondition(BlockRegistry.ALTERATION_TABLE, AlterationTable.PART, ThreePartBlock.HEAD);
             registerDropSelf(BlockRegistry.VOID_PRISM);
+            registerDropSelf(BlockRegistry.MAGEBLOOM_BLOCK);
+            registerDropSelf(BlockRegistry.GHOST_WEAVE);
+            registerDropSelf(BlockRegistry.FALSE_WEAVE);
+            registerDropSelf(BlockRegistry.MIRROR_WEAVE);
+
         }
 
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {

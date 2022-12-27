@@ -210,8 +210,13 @@ public class ModEntities {
                     .setShouldReceiveVelocityUpdates(true)
                     .setTrackingRange(256));
 
+    public static final RegistryObject<EntityType<GiftStarbuncle>> GIFT_STARBY = registerEntity(LibEntityNames.GIFT_STARBY, EntityType.Builder.of(GiftStarbuncle::new, MobCategory.CREATURE)
+            .sized(0.6F, 0.63F).setTrackingRange(10)
+            .setShouldReceiveVelocityUpdates(true));
+
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
+        SpawnPlacements.register(GIFT_STARBY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_DRYGMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
 
@@ -263,6 +268,7 @@ public class ModEntities {
             event.put(ENTITY_VEXING_WEALD.get(), WealdWalker.attributes().build());
             event.put(AMETHYST_GOLEM.get(), AmethystGolem.attributes().build());
             event.put(SUMMON_SKELETON.get(), SummonSkeleton.createAttributes().build());
+            event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
         }
     }
 

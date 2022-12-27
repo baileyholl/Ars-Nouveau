@@ -21,6 +21,10 @@
     "ars_nouveau:smooth_gilded_sourcestone_basketweave",
     "ars_nouveau:smooth_gilded_sourcestone_alternating",
     "ars_nouveau:smooth_gilded_sourcestone_large_bricks",
-    "ars_nouveau:smooth_gilded_sourcestone_small_bricks"
+    "ars_nouveau:smooth_gilded_sourcestone_small_bricks",
+    "ars_nouveau:falseweave",
+    "ars_nouveau:mirrorweave",
+    "ars_nouveau:ghostweave",
+    "ars_nouveau:magebloom_block"
   ]
 }

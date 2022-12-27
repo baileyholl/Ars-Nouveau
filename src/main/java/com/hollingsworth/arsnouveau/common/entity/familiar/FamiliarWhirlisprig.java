@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
@@ -23,7 +22,7 @@ import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener, IVariantTextureProvider<FamiliarWhirlisprig> {
+public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener {
     public FamiliarWhirlisprig(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
     }
@@ -65,8 +64,8 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
             return;
 
         if (!event.getEntity().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
-            if (event.getItem().getItem().getFoodProperties() != null && event.getItem().getItem().isEdible()) {
-                FoodProperties food = event.getItem().getItem().getFoodProperties();
+            FoodProperties food = event.getItem().getItem().getFoodProperties(event.getItem(), getOwner());
+            if (food != null && event.getItem().getItem().isEdible()) {
                 float saturationModifier = food.getSaturationModifier();
                 int nutrition = food.getNutrition();
                 float satAmount = nutrition * saturationModifier * 2.0f;
@@ -79,7 +78,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
         } else {
@@ -94,7 +93,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public ResourceLocation getTexture(FamiliarWhirlisprig entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor()) + ".png");
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
 }

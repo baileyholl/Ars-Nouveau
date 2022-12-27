@@ -640,6 +640,28 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx").define('y', BlockRegistry.SPELL_PRISM).define('x', Ingredient.of(Tags.Items.OBSIDIAN)).save(consumer);
+
+            shapedBuilder(BlockRegistry.MAGEBLOOM_BLOCK)
+                    .pattern("xx ")
+                    .pattern("xx ")
+                    .define('x', ItemsRegistry.MAGE_FIBER).save(consumer);
+
+            shapelessBuilder(BlockRegistry.MAGE_BLOOM_CROP, 4).requires(BlockRegistry.MAGEBLOOM_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID,"magebloom_block_to_magebloom"));
+
+            shapedBuilder(BlockRegistry.FALSE_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.AIR_ESSENCE).save(consumer);
+
+            shapedBuilder(BlockRegistry.GHOST_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.ABJURATION_ESSENCE).save(consumer);
+
+            shapedBuilder(BlockRegistry.MIRROR_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.CONJURATION_ESSENCE).save(consumer);
         }
     }
 

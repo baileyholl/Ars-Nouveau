@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public abstract class MultiInputCategory<T> implements IRecipeCategory<T> {
-    Function<T, MultiProvider> multiProvider;
+    protected Function<T, MultiProvider> multiProvider;
+    protected Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
     public MultiInputCategory(IGuiHelper helper, Function<T, MultiProvider> multiProvider) {
         this.multiProvider = multiProvider;
@@ -29,11 +30,9 @@ public abstract class MultiInputCategory<T> implements IRecipeCategory<T> {
         if (provider.optionalCenter != null)
             builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addIngredients(provider.optionalCenter);
 
-        Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
-
-        for (int i = 0; i < inputs.size(); i++) {
+        for (Ingredient input : inputs) {
             builder.addSlot(RecipeIngredientRole.INPUT, (int) point.x, (int) point.y)
-                    .addIngredients(inputs.get(i));
+                    .addIngredients(input);
             point = rotatePointAbout(point, center, angleBetweenEach);
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, 86, 10).addIngredient(VanillaTypes.ITEM_STACK, provider.output);

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -43,8 +44,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile.pedestalList;
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable, ITooltipProvider {
+
+public class ImbuementTile extends AbstractSourceMachine implements Container, IWandable, ITickable, IAnimatable, ITooltipProvider {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -65,7 +68,17 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
+    public void onWanded(Player playerEntity) {
+        if (level != null) {
+            for (BlockPos pos : pedestalList(getBlockPos(), 1, level)) {
+                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.above(), 300);
+            }
+        }
+    }
+
+    @Override
     public void tick() {
+        if (level == null) return;
         if (level.isClientSide) {
 
             int baseAge = draining ? 20 : 40;
@@ -211,10 +224,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public ItemStack removeItem(int index, int count) {
-        ItemStack copy = stack.copy().split(count);
-        stack.shrink(count);
+        ItemStack split = stack.split(count);
         updateBlock();
-        return copy;
+        return split;
     }
 
     @Override
@@ -283,7 +295,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public List<ItemStack> getPedestalItems() {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        for (BlockPos p : BlockPos.betweenClosed(this.getBlockPos().offset(1, -1, 1), this.getBlockPos().offset(-1, 1, -1))) {
+        for (BlockPos p : pedestalList(getBlockPos(), 1, getLevel())) {
             if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && !pedestalTile.getStack().isEmpty()) {
                 pedestalItems.add(pedestalTile.getStack());
             }

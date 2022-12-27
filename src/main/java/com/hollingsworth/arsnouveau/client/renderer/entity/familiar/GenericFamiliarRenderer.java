@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity.familiar;
 
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.client.renderer.entity.GenericRenderer;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
@@ -43,9 +42,7 @@ public class GenericFamiliarRenderer<T extends FamiliarEntity> extends GenericRe
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
-        if (entity instanceof IVariantTextureProvider<?> variantTextureProvider)
-            return variantTextureProvider.getTexture(entity);
-        return null;
+            return entity.getTexture(entity);
     }
 
 }

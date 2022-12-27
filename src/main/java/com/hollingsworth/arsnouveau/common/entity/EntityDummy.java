@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -107,7 +108,13 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public ItemStack getItemBySlot(EquipmentSlot p_184582_1_) {
         if (!level.isClientSide)
             return ItemStack.EMPTY;
-        return level.getPlayerByUUID(getOwnerID()) != null ? level.getPlayerByUUID(getOwnerID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
+
+        ItemStack heldStack = level.getPlayerByUUID(getOwnerID()) != null ? level.getPlayerByUUID(getOwnerID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
+        if(heldStack.getItem() == BlockRegistry.MOB_JAR.asItem()){
+            return new ItemStack(BlockRegistry.MOB_JAR.asItem());
+        }
+
+        return heldStack;
     }
 
     @Override

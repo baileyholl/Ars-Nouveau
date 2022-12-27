@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
@@ -41,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener, IVariantTextureProvider<FamiliarWixie> {
+public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener {
     public int debuffCooldown;
 
     public FamiliarWixie(EntityType<? extends PathfinderMob> ent, Level world) {
@@ -111,7 +110,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
 
@@ -131,8 +130,8 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     @Override
-    public ResourceLocation getTexture(FamiliarWixie entity) {
-        String color = getEntityData().get(COLOR).toLowerCase();
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
