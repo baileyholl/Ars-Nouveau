@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
-import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -15,6 +14,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -73,52 +73,46 @@ public class ModPotions {
     public static final RegistryObject<Potion> STRONG_DEFENCE_POTION = POTIONS.register(strongPotion(DEFENCE), () -> new Potion(new MobEffectInstance(DEFENCE_EFFECT.get(), 3600, 1)));
 
     public static void addRecipes() {
-        ItemStack AWKWARD = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD);
 
-        ItemStack manaPot = stackFor(MANA_REGEN_POTION.get());
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.AWKWARD), Ingredient.of(BlockRegistry.SOURCEBERRY_BUSH), stackFor(MANA_REGEN_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(MANA_REGEN_POTION.get()), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_MANA_REGEN_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(MANA_REGEN_POTION.get()), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_MANA_REGEN_POTION.get())));
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.SOURCEBERRY_BUSH), manaPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_MANA_REGEN_POTION.get())));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_MANA_REGEN_POTION.get())));
-
-        ItemStack sDamagePot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.SPELL_DAMAGE_POTION.get());
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(ItemsRegistry.MAGE_BLOOM), sDamagePot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(sDamagePot), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.SPELL_DAMAGE_POTION_STRONG.get())));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(sDamagePot), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.SPELL_DAMAGE_POTION_LONG.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.AWKWARD), Ingredient.of(ItemsRegistry.MAGE_BLOOM), stackFor(ModPotions.SPELL_DAMAGE_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.SPELL_DAMAGE_POTION.get()), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.SPELL_DAMAGE_POTION_STRONG.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.SPELL_DAMAGE_POTION.get()), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.SPELL_DAMAGE_POTION_LONG.get())));
 
         // Recovery potions
-        ItemStack recoveryPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.RECOVERY_POTION.get());
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.MENDOSTEEN_POD), recoveryPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(recoveryPot), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_RECOVERY_POTION.get())));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(recoveryPot), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_RECOVERY_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.AWKWARD), Ingredient.of(BlockRegistry.MENDOSTEEN_POD), stackFor(ModPotions.RECOVERY_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.RECOVERY_POTION.get()), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_RECOVERY_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.RECOVERY_POTION.get()), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_RECOVERY_POTION.get())));
 
         // Blast potions using Bombegranate
-        ItemStack blastPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.BLAST_POTION.get());
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.BOMBEGRANTE_POD), blastPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(blastPot), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_BLAST_POTION.get())));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(blastPot), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_BLAST_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.AWKWARD), Ingredient.of(BlockRegistry.BOMBEGRANTE_POD), stackFor(ModPotions.BLAST_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.BLAST_POTION.get()), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_BLAST_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.BLAST_POTION.get()), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_BLAST_POTION.get())));
 
         // Freezing potions
-        ItemStack freezingPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.FREEZING_POTION.get());
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.FROSTAYA_POD), freezingPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(freezingPot), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_FREEZING_POTION.get())));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(freezingPot), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_FREEZING_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.AWKWARD), Ingredient.of(BlockRegistry.FROSTAYA_POD), stackFor(ModPotions.FREEZING_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.FREEZING_POTION.get()), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_FREEZING_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.FREEZING_POTION.get()), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_FREEZING_POTION.get())));
 
         // Defence potions
-        ItemStack defencePot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.DEFENCE_POTION.get());
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.BASTION_POD), defencePot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(defencePot), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_DEFENCE_POTION.get())));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(defencePot), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_DEFENCE_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.AWKWARD), Ingredient.of(BlockRegistry.BASTION_POD), stackFor(ModPotions.DEFENCE_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.DEFENCE_POTION.get()), Ingredient.of(Items.GLOWSTONE_DUST), stackFor(ModPotions.STRONG_DEFENCE_POTION.get())));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(ModPotions.DEFENCE_POTION.get()), Ingredient.of(Items.REDSTONE), stackFor(ModPotions.LONG_DEFENCE_POTION.get())));
 
-        ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_WING), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LEAPING)));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_HORN), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRENGTH)));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_SPIKE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WATER_BREATHING)));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.WATER), Ingredient.of(ItemsRegistry.WILDEN_WING), stackFor(Potions.LEAPING)));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.WATER), Ingredient.of(ItemsRegistry.WILDEN_HORN), stackFor(Potions.STRENGTH)));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.WATER), Ingredient.of(ItemsRegistry.WILDEN_SPIKE), stackFor(Potions.LONG_WATER_BREATHING)));
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.ABJURATION_ESSENCE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(fromPotion(Potions.WATER), Ingredient.of(ItemsRegistry.ABJURATION_ESSENCE), stackFor(Potions.AWKWARD)));
+    }
 
-
-
+    public static PartialNBTIngredient fromPotion(Potion potion) {
+        ItemStack stack = new ItemStack(Items.POTION);
+        PotionUtils.setPotion(stack, potion);
+        return PartialNBTIngredient.of(Items.POTION, stack.getOrCreateTag());
     }
 
     public static ItemStack stackFor(Potion potion){
