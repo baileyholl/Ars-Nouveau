@@ -91,6 +91,10 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         }
         itemUnchecked(ItemsRegistry.BLANK_THREAD);
         getBuilder(LibBlockNames.VOID_PRISM).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.VOID_PRISM));
+        getBuilder(LibBlockNames.FALSE_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.FALSE_WEAVE));
+        getBuilder(LibBlockNames.MIRROR_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MIRROR_WEAVE));
+        getBuilder(LibBlockNames.GHOST_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GHOST_WEAVE));
+        getBuilder(LibBlockNames.MAGEBLOOM_BLOCK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MAGEBLOOM_BLOCK));
     }
 
     public void blockAsItem(String s){

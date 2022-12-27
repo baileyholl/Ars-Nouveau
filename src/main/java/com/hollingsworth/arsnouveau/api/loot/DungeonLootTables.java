@@ -197,6 +197,14 @@ public class DungeonLootTables {
                 .add(EffectFirework.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE, 4)
                 .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(255, 255, 255)));
+
+        RARE_LOOT.add(() -> makeTome("Othy's Death By 100 Pricks", new Spell()
+                .add(MethodProjectile.INSTANCE)
+                .add(AugmentPierce.INSTANCE, 2)
+                .add(EffectLinger.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(EffectSummonVex.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
     }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool) {

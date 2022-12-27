@@ -144,6 +144,12 @@ public class LibBlockNames {
     public static final String ALTERATION_TABLE = "alteration_table";
     public static final String MOB_JAR = "mob_jar";
 
+    public static final String FALSE_WEAVE = "falseweave";
+    public static final String GHOST_WEAVE = "ghostweave";
+    public static final String MIRROR_WEAVE = "mirrorweave";
+    public static final String MAGEBLOOM_BLOCK = "magebloom_block";
+
+
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
             SMOOTH_SOURCESTONE_BASKET, SMOOTH_SOURCESTONE_MOSAIC, SMOOTH_SOURCESTONE_ALTERNATING, SMOOTH_SOURCESTONE_LARGE_BRICKS, SMOOTH_SOURCESTONE, SMOOTH_SOURCESTONE_SMALL_BRICKS,
