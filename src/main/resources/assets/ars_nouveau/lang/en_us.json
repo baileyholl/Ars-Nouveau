@@ -734,6 +734,7 @@
 	"block.ars_nouveau.basic_spell_turret": "Basic Spell Turret",
 	"block.ars_nouveau.spell_turret": "Enchanted Spell Turret",
 	"block.ars_nouveau.timer_spell_turret": "Timer Spell Turret",
+	"block.ars_nouveau.rotating_spell_turret": "Adjustable Spell Turret",
 	"effect.ars_nouveau.bounce": "Bounce",
 	"ars_nouveau.starbuncle.path": "Starbuncle will prefer to path on this block if it is on their way.",
 	"ars_nouveau.starbuncle.pathing": "Preferring to path on %s",
