@@ -6,13 +6,10 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -104,15 +101,4 @@ public class ModPotions {
 
 
     }
-
-    public static PartialNBTIngredient fromPotion(Potion potion) {
-        ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtils.setPotion(stack, potion);
-        return PartialNBTIngredient.of(Items.POTION, stack.getOrCreateTag());
-    }
-
-    public static ItemStack stackFor(Potion potion){
-        return PotionUtils.setPotion(new ItemStack(Items.POTION), potion);
-    }
-
 }
