@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
@@ -49,6 +50,7 @@ import java.util.List;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+@SuppressWarnings("deprecation")
 public class BasicSpellTurret extends TickableModBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -78,20 +80,26 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
                 spell.setPos(iposition.x(), iposition.y(), iposition.z());
-                spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+                if (tile instanceof RotatingTurretTile rotatingTurretTile) {
+                    Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
+                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
+                } else {
+                    spell.shoot(direction.getStepX(), ((float) direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+                }
                 world.addFreshEntity(spell);
             }
         });
 
         TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
             @Override
+            //TODO: Adapt and test for adjustable turrets, it's not 100% broken but they won't use the corners (will use one of the two close directions)
             public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
                 BlockPos touchPos = pos.relative(facingDir);
-                List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class,new AABB(touchPos));
-                if(!entityList.isEmpty()){
+                List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(touchPos));
+                if (!entityList.isEmpty()) {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
-                }else {
+                } else {
                     Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
                     resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
                 }
@@ -112,8 +120,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET))
-                .withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET)));
         if (resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, tile, world, pos, fakePlayer, iposition, direction);
             caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
@@ -164,7 +171,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-   @NotNull
+    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -188,20 +195,19 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(handIn);
         Spell spell = CasterUtil.getCaster(stack).getSpell();
-        if (spell.isEmpty())
-            return InteractionResult.SUCCESS;
-        if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
-            return InteractionResult.SUCCESS;
+        if (!spell.isEmpty()) {
+            if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
+                return InteractionResult.SUCCESS;
+            }
+            if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
+                tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
+                tile.spellCaster.setSpell(spell.clone());
+                tile.updateBlock();
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
+                worldIn.sendBlockUpdated(pos, state, state, 2);
+            }
         }
-        if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
-            tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
-            tile.spellCaster.setSpell(spell.clone());
-            tile.setChanged();
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
-            worldIn.sendBlockUpdated(pos, state, state, 2);
-        }
-
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 

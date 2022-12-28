@@ -48,9 +48,9 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
         if (shooter == null || !shooter.equals(living)) {
-            applyConfigPotion(living, MobEffects.GLOWING, spellStats);
+            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.GLOWING, spellStats);
         }
-        applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
+        ((IPotionEffect)this).applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
     }
 
     @Override

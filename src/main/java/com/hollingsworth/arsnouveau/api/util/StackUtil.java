@@ -7,8 +7,8 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
@@ -40,5 +40,15 @@ public class StackUtil {
     public static @NotNull ItemStack getHeldRadial(Player playerEntity) {
         ItemStack book = playerEntity.getMainHandItem().getItem() instanceof IRadialProvider ? playerEntity.getMainHandItem() : ItemStack.EMPTY;
         return book.isEmpty() ? playerEntity.getOffhandItem() : book;
+    }
+
+    public static ItemStack getHeldCasterToolOrEmpty(Player player) {
+        ItemStack stack = ItemStack.EMPTY;
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ICasterTool){
+            stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+        }else if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ICasterTool){
+            stack = player.getItemInHand(InteractionHand.OFF_HAND);
+        }
+        return stack;
     }
 }

@@ -53,7 +53,9 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(Component.literal(Component.translatable("ars_nouveau.spell_turret.casting").getString() + spellCaster.getSpell().getDisplayString()));
+        tooltip.add(Component.translatable("ars_nouveau.spell_turret.casting"));
+        if (!spellCaster.getSpellName().isEmpty()) tooltip.add(Component.literal(spellCaster.getSpellName()));
+        tooltip.add(Component.literal(spellCaster.getSpell().getDisplayString()));
     }
 
     public PlayState walkPredicate(AnimationEvent<?> event) {

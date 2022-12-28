@@ -43,6 +43,8 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             spell = heldCaster.getSpell();
             thisCaster.setColor(heldCaster.getColor());
             thisCaster.setFlavorText(heldCaster.getFlavorText());
+            thisCaster.setSpellName(heldCaster.getSpellName());
+            thisCaster.setSound(heldCaster.getCurrentSound());
         }
         if (isScribedSpellValid(thisCaster, player, handIn, stack, spell)) {
             success = setSpell(thisCaster, player, handIn, stack, spell);
@@ -101,7 +103,9 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
             tooltip2.add(Component.translatable("ars_nouveau.tooltip.can_inscribe"));
             return;
         }
-
+        if (!caster.getSpellName().isEmpty()){
+         tooltip2.add(Component.literal(caster.getSpellName()));
+        }
         Spell spell = caster.getSpell();
         tooltip2.add(Component.literal(spell.getDisplayString()));
         if (!caster.getFlavorText().isEmpty())

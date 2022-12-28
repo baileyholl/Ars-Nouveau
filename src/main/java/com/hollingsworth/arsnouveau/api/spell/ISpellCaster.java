@@ -87,6 +87,8 @@ public interface ISpellCaster {
    @NotNull
     ConfiguredSpellSound getSound(int slot);
 
+    void setSound(ConfiguredSpellSound sound);
+
     void setSound(ConfiguredSpellSound sound, int slot);
 
     default ConfiguredSpellSound getCurrentSound() {

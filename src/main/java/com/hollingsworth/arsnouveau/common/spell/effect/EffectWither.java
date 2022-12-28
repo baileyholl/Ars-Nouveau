@@ -26,7 +26,7 @@ public class EffectWither extends AbstractEffect implements IPotionEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            applyConfigPotion(living, MobEffects.WITHER, spellStats);
+            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.WITHER, spellStats);
         }
 
     }

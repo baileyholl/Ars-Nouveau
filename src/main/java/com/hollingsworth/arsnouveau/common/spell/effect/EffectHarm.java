@@ -30,7 +30,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
             int time = (int) spellStats.getDurationMultiplier();
             if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
-                applyConfigPotion(entity, MobEffects.POISON, spellStats);
+                ((IPotionEffect)this).applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
                 attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)), (float) damage);
             }
