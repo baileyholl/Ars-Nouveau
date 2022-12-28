@@ -100,7 +100,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5));
+                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
                     resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
                 }
             }
