@@ -3,13 +3,12 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -68,8 +67,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     private boolean dupeCheck(Level world, BlockPos pos){
         BlockEntity be = world.getBlockEntity(pos);
-        return be != null && (world.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() ||
-                              be instanceof ArcanePedestalTile || be instanceof ScribesTile);
+        return be != null && (world.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() || be instanceof Container);
     }
 
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
