@@ -1,16 +1,25 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.spell.ILightable;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class MirrorWeaveTile extends ModdedTile implements IAnimatable {
+public class MirrorWeaveTile extends ModdedTile implements IAnimatable, ILightable {
     public BlockState mimicState;
     public BlockState nextState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
 
@@ -51,5 +60,16 @@ public class MirrorWeaveTile extends ModdedTile implements IAnimatable {
 
     public BlockState getDefaultBlockState(){
         return BlockRegistry.MIRROR_WEAVE.defaultBlockState();
+    }
+
+    @Override
+    public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
+        if (rayTraceResult instanceof BlockHitResult) {
+            BlockState state = world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos());
+            world.setBlock(getBlockPos(), state.setValue(MirrorWeave.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
+            world.sendBlockUpdated(((BlockHitResult) rayTraceResult).getBlockPos(), state,
+                    state.setValue(MirrorWeave.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
+        }
+        updateBlock();
     }
 }
