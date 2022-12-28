@@ -100,7 +100,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    Vec3 hitVec = new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ());
+                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5));
                     resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
                 }
             }
@@ -203,7 +203,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
                 tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
                 tile.spellCaster.setSpell(spell.clone());
-                tile.setChanged();
+                tile.updateBlock();
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.spell_set"));
                 worldIn.sendBlockUpdated(pos, state, state, 2);
             }
