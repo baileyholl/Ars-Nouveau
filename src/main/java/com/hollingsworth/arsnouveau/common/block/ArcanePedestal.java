@@ -108,4 +108,16 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        ArcanePedestalTile tile = (ArcanePedestalTile) worldIn.getBlockEntity(pos);
+        if (tile == null || tile.getStack().isEmpty()) return 0;
+        return 15;
+    }
 }

@@ -113,7 +113,7 @@ public class KeyHandler {
     }
 
     @SubscribeEvent
-    public static void mouseEvent(final InputEvent.MouseButton event) {
+    public static void mouseEvent(final InputEvent.MouseButton.Post event) {
 
         if (MINECRAFT.player == null || event.getAction() != 1)
             return;
@@ -127,7 +127,6 @@ public class KeyHandler {
             return;
         if(MINECRAFT.screen == null || MINECRAFT.screen instanceof GuiRadialMenu)
             checkKeysPressed(event.getKey());
-
     }
 
     public static void sendHotkeyPacket(PacketHotkeyPressed.Key key) {

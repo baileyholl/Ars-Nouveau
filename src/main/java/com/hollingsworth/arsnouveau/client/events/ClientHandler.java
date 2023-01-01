@@ -88,6 +88,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ROTATING_TURRET_TILE.get(), RotatingTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
@@ -98,6 +99,10 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_OCULUS_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
         event.registerBlockEntityRenderer(BlockRegistry.ARMOR_TILE, AlterationTableRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.MOB_JAR_TILE, MobJarRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MIRROR_WEAVE_TILE, MirrorweaveRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.GHOST_WEAVE_TILE, GhostweaveRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.FALSE_WEAVE_TILE, FalseweaveRenderer::new);
+
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),

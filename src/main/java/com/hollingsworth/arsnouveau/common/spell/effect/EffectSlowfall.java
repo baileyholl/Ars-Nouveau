@@ -24,7 +24,7 @@ public class EffectSlowfall extends AbstractEffect implements IPotionEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            applyConfigPotion(living, MobEffects.SLOW_FALLING, spellStats);
+            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.SLOW_FALLING, spellStats);
         }
     }
 

@@ -1,14 +1,15 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -40,8 +41,8 @@ public class EffectName extends AbstractEffect {
             newName = stack.getDisplayName().plainCopy();
         }
         if (newName == null && isRealPlayer(shooter) && shooter instanceof Player player) {
-            ItemStack stack = StackUtil.getHeldSpellbook(player);
-            if (stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null) {
+            ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(player);
+            if (stack != ItemStack.EMPTY && stack.getTag() != null) {
                 ISpellCaster caster = CasterUtil.getCaster(stack);
                 newName = Component.literal(caster.getSpellName());
             }

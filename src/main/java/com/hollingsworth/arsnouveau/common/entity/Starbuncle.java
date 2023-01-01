@@ -561,6 +561,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         setColor(color);
     }
 
+    @Override
+    public String getColor(Starbuncle object) {
+        return this.entityData.get(COLOR);
+    }
+
     public String getColor() {
         return this.entityData.get(COLOR);
     }

@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -10,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface ISpellHotkeyListener extends IRadialProvider {
+public interface ISpellHotkeyListener {
 
     default void onNextKeyPressed(ItemStack stack, ServerPlayer player) {
         ISpellCaster iSpellCaster = CasterUtil.getCaster(stack);
@@ -34,14 +33,5 @@ public interface ISpellHotkeyListener extends IRadialProvider {
 
     @OnlyIn(Dist.CLIENT)
     default void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    default void onRadialKeyPressed(ItemStack stack, Player player) {
-    }
-
-    @Override
-    default int forKey() {
-        return ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
     }
 }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.item;
 
+import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,7 +13,9 @@ public interface IRadialProvider {
      * @return the key code
      */
     @OnlyIn(Dist.CLIENT)
-    int forKey();
+    default int forKey() {
+        return ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
+    }
 
     /**
      * When the key is clicked to open the menu
