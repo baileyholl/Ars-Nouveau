@@ -175,6 +175,9 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        this.toPos = null;
+        this.fromPos = null;
+        
         if (NBTUtil.hasBlockPos(tag, TO)) {
             this.toPos = NBTUtil.getBlockPos(tag, TO);
         }
