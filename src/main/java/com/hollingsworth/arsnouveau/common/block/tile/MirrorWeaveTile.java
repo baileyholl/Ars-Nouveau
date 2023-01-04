@@ -18,6 +18,7 @@ import net.minecraft.world.phys.HitResult;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class MirrorWeaveTile extends ModdedTile implements IAnimatable, ILightable {
     public BlockState mimicState;
@@ -35,7 +36,7 @@ public class MirrorWeaveTile extends ModdedTile implements IAnimatable, ILightab
     @Override
     public void registerControllers(AnimationData data) {}
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
