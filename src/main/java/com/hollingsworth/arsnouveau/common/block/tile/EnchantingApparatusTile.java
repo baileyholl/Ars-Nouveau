@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -28,7 +28,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -42,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends SingleItemTile implements Container, IWandable, ITickable, IAnimatable, IAnimationListener {
+public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, IAnimatable, IAnimationListener {
 
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
@@ -55,7 +54,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     @Override
-    public void onWanded(Player playerEntity) {
+    public void lightPedestal(Level level) {
         if (level != null) {
             for (BlockPos pos : pedestalList()) {
                 ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.above(), 300);
@@ -131,17 +130,6 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         }
     }
 
-    public static List<BlockPos> pedestalList(BlockPos blockPos, int offset, @NotNull Level level) {
-        ArrayList<BlockPos> posList = new ArrayList<>();
-        for (BlockPos b : BlockPos.betweenClosed(blockPos.offset(offset, -offset, offset), blockPos.offset(-offset, offset, -offset))) {
-            if (level.getBlockEntity(b) instanceof ArcanePedestalTile tile) {
-                posList.add(b.immutable());
-            }
-        }
-        return posList;
-    }
-
-    // Used for rendering on the client
     public List<BlockPos> pedestalList() {
         return pedestalList(getBlockPos(), 3, getLevel());
     }
