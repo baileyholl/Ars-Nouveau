@@ -734,6 +734,7 @@
 	"block.ars_nouveau.basic_spell_turret": "Базова Чаклунська Турель",
 	"block.ars_nouveau.spell_turret": "Зачарована Чаклунська Турель",
 	"block.ars_nouveau.timer_spell_turret": "Часова Чаклунська Турель",
+	"block.ars_nouveau.rotating_spell_turret": "Налаштовувана Чаклунська Турель",
 	"effect.ars_nouveau.bounce": "Відскок",
 	"ars_nouveau.starbuncle.path": "Старбункул віддаватиме перевагу цим блокам для створення свого шляху.",
 	"ars_nouveau.starbuncle.pathing": "Надає перевагу: %s",
@@ -762,7 +763,7 @@
 	"ars_nouveau.source": "Джерело: %s",
 	"ars_nouveau.crush_recipe": "Гліф розсипався",
 	"ars_nouveau.enchanting_apparatus": "Зачарувальний Апарат",
-
+	"ars_nouveau.armor_upgrade": "Покращення Броні",
 	"ars_nouveau.page.apparatus_crafting": "Апаратобудування",
 	"ars_nouveau.page1.apparatus_crafting": "$(l)Зачарувальний Апарат$() використовується для створення спеціальних пристроїв та спорядження. Для створення через цей Апарат, він вимагає 8 $(l)П'єдесталів$() Таїни навколо себе та 1 $(l)Ядро Таїни$() під собою. В першу чергу радимо створити $(l)Насіння Магоцвіту$().",
 	"ars_nouveau.page.better_casting": "Краще Заклинання",
@@ -1307,5 +1308,13 @@
 	"item.ars_nouveau.starby_gift": "Подарунок Старбункула",
 	"ars_nouveau.present.give": "Подаруйте другу, щоб він отримав бонусні предмети, або відкрийте самі!",
 	"ars_nouveau.present.from": "Подарунок від %s",
-	"entity.ars_nouveau.gift_starby": "Старбункул"
+	"entity.ars_nouveau.gift_starby": "Старбункул",
+	"block.ars_nouveau.falseweave": "Фальшивий Спліт",
+	"block.ars_nouveau.ghostweave": "Примарний Спліт",
+	"block.ars_nouveau.mirrorweave": "Дзеркальний Спліт",
+	"block.ars_nouveau.magebloom_block": "Блок Магоцвіту",
+	"ars_nouveau.page.illusion_blocks": "Ілюзорні Блоки",
+	"ars_nouveau.page1.illusion_blocks": "Дзеркальний Спліт може відтворювати вигляд будь-якого блоку, який використовується на ньому. Ці блоки візьмуть на себе ті ж колізії і рівень світла, що й оригінал. Чуття Магії розкриє ілюзію. Всі ілюзорні блоки також можуть використовуватися як рамки для порталів. Використання закляття Світло на ілюзійному блоку дозволить йому світитись.",
+	"ars_nouveau.page2.illusion_blocks": "Фальшивий Спліт має такі ж властивості, як і Дзеркальний, але може бути пройдений наскрізь. Чуття Магії зробить блок невидимим, відкриючи будь-які приховані шляхи.",
+	"ars_nouveau.page3.illusion_blocks": "Примарний Спліт має такі ж властивості, як і Дзеркальний, але може бути перетворений на невидиму стіну закляттям Невидимість. Закляття Розвіяння, або Чуття Магії зроблять блок знову видимим."
 }
