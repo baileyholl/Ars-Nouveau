@@ -26,9 +26,7 @@ public class PacketMountCamera {
     }
 
     public static PacketMountCamera decode(FriendlyByteBuf buf) {
-        PacketMountCamera message = new PacketMountCamera();
-        message.pos = buf.readBlockPos();
-        return message;
+        return new PacketMountCamera(buf.readBlockPos());
     }
 
     public static void onMessage(PacketMountCamera message, Supplier<NetworkEvent.Context> ctx) {

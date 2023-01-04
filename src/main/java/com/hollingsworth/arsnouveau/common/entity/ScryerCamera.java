@@ -162,8 +162,8 @@ public class ScryerCamera extends Entity {
             SectionPos chunkPos = SectionPos.of(this.blockPosition());
             int view = this.viewDistance <= 0 ? this.level.getServer().getPlayerList().getViewDistance() : this.viewDistance;
 
-            for (int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; ++x) {
-                for (int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; ++z) {
+            for (int x = chunkPos.getX() - view; x <= chunkPos.getX() + view; x++) {
+                for (int z = chunkPos.getZ() - view; z <= chunkPos.getZ() + view; z++) {
                     ForgeChunkManager.forceChunk((ServerLevel) this.level, ArsNouveau.MODID, this, x, z, false, false);
                 }
             }
