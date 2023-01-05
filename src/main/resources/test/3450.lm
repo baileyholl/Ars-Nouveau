@@ -1,0 +1,50 @@
+Language model created by QuickLM on Wed Jan  4 21:23:53 EST 2023
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 6 sentences and 8 words
+
+\data\
+ngram 1=8
+ngram 2=12
+ngram 3=7
+
+\1-grams:
+-0.8016 </s> -0.3010
+-0.8016 <s> -0.2264
+-1.5798 BREAK -0.2264
+-1.2788 CAST -0.2126
+-1.5798 HARM -0.2264
+-1.5798 LEAP -0.2264
+-1.5798 PROJECTILE -0.2264
+-1.5798 SPELL -0.2264
+
+\2-grams:
+-1.0792 <s> BREAK 0.0000
+-0.7782 <s> CAST 0.0000
+-1.0792 <s> HARM 0.0000
+-1.0792 <s> LEAP 0.0000
+-1.0792 <s> PROJECTILE 0.0000
+-0.3010 BREAK </s> -0.3010
+-0.6021 CAST </s> -0.3010
+-0.6021 CAST SPELL 0.0000
+-0.3010 HARM </s> -0.3010
+-0.3010 LEAP </s> -0.3010
+-0.3010 PROJECTILE </s> -0.3010
+-0.3010 SPELL </s> -0.3010
+
+\3-grams:
+-0.3010 <s> BREAK </s>
+-0.6021 <s> CAST </s>
+-0.6021 <s> CAST SPELL
+-0.3010 <s> HARM </s>
+-0.3010 <s> LEAP </s>
+-0.3010 <s> PROJECTILE </s>
+-0.3010 CAST SPELL </s>
+
+\end\
