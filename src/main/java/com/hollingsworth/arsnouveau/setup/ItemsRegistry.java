@@ -280,6 +280,8 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<Item> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
 
+    public static RegistryWrapper<Item> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1)));
+
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));
     }
