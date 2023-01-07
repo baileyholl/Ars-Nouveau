@@ -109,7 +109,6 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         if(ammoStack.getItem() instanceof FormSpellArrow formSpellArrow && formSpellArrow.part == AugmentSplit.INSTANCE){
             numProjectiles += formSpellArrow.numParts;
         }
-        System.out.println(numProjectiles);
         for(int k = 0; k < numProjectiles; ++k) {
             if (k > 0) {
                 ammoStack = ammoCopy.copy();
