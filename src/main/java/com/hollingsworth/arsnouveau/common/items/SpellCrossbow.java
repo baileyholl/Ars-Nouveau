@@ -2,13 +2,21 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellCrossbowRenderer;
+import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,11 +35,14 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -45,7 +56,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (isCharged(itemstack)) {
-            shoot(pLevel, pPlayer, pHand, itemstack, getShootingPower(itemstack), 1.0F);
+            shootStoredProjectiles(pLevel, pPlayer, pHand, itemstack, getShootingPower(itemstack), 1.0F);
             setCharged(itemstack, false);
             return InteractionResultHolder.consume(itemstack);
         } else if (!pPlayer.getProjectile(itemstack).isEmpty()) {
@@ -62,7 +73,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
     }
 
     private float getShootingPower(ItemStack pCrossbowStack) {
-        return hasChargedProjectiile(pCrossbowStack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
+        return hasChargedProjectile(pCrossbowStack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
     }
 
     /**
@@ -80,23 +91,35 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
     }
 
     private boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pCrossbowStack);
-        int j = i == 0 ? 1 : 3;
-        boolean flag = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
-        ItemStack itemstack = pShooter.getProjectile(pCrossbowStack);
-        ItemStack itemstack1 = itemstack.copy();
+        int multishotLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, pCrossbowStack);
+        int numProjectiles = multishotLevel == 0 ? 1 : 3;
+        boolean isCreative = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
+        ItemStack ammoStack = pShooter.getProjectile(pCrossbowStack);
+        ItemStack ammoCopy = ammoStack.copy();
 
-        for(int k = 0; k < j; ++k) {
+        ISpellCaster caster = getSpellCaster(pCrossbowStack);
+        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting(pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter)));
+        boolean consumedMana = false;
+
+        if(resolver.withSilent(true).canCast(pShooter)){
+            resolver.expendMana();
+            consumedMana = true;
+            numProjectiles += resolver.spell.getBuffsAtIndex(0, pShooter, AugmentSplit.INSTANCE);
+        }
+        if(ammoStack.getItem() instanceof FormSpellArrow formSpellArrow && formSpellArrow.part == AugmentSplit.INSTANCE){
+            numProjectiles += formSpellArrow.numParts;
+        }
+        System.out.println(numProjectiles);
+        for(int k = 0; k < numProjectiles; ++k) {
             if (k > 0) {
-                itemstack = itemstack1.copy();
+                ammoStack = ammoCopy.copy();
             }
 
-            if (itemstack.isEmpty() && flag) {
-                itemstack = new ItemStack(Items.ARROW);
-                itemstack1 = itemstack.copy();
+            if (ammoStack.isEmpty() && isCreative) {
+                ammoStack = new ItemStack(Items.ARROW);
+                ammoCopy = ammoStack.copy();
             }
-
-            if (!loadProjectile(pShooter, pCrossbowStack, itemstack, k > 0, flag)) {
+            if (!loadProjectile(pShooter, pCrossbowStack, ammoStack, k > 0, isCreative, consumedMana)) {
                 return false;
             }
         }
@@ -104,7 +127,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         return true;
     }
 
-    private boolean loadProjectile(LivingEntity pShooter, ItemStack pCrossbowStack, ItemStack pAmmoStack, boolean pHasAmmo, boolean pIsCreative) {
+    private boolean loadProjectile(LivingEntity pShooter, ItemStack pCrossbowStack, ItemStack pAmmoStack, boolean pHasAmmo, boolean pIsCreative, boolean consumedMana) {
         if (pAmmoStack.isEmpty()) {
             return false;
         } else {
@@ -118,13 +141,12 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
             } else {
                 itemstack = pAmmoStack.copy();
             }
-
-            addChargedProjectile(pCrossbowStack, itemstack);
+            addChargedProjectile(pCrossbowStack, itemstack, consumedMana);
             return true;
         }
     }
 
-    private void addChargedProjectile(ItemStack pCrossbowStack, ItemStack pAmmoStack) {
+    private void addChargedProjectile(ItemStack pCrossbowStack, ItemStack pAmmoStack, boolean isSpell) {
         CompoundTag compoundtag = pCrossbowStack.getOrCreateTag();
         ListTag listtag;
         if (compoundtag.contains("ChargedProjectiles", 9)) {
@@ -137,6 +159,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         pAmmoStack.save(compoundtag1);
         listtag.add(compoundtag1);
         compoundtag.put("ChargedProjectiles", listtag);
+        compoundtag.putBoolean("isSpell", isSpell);
     }
 
     private List<ItemStack> getChargedProjectiles(ItemStack pCrossbowStack) {
@@ -165,23 +188,30 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
 
     }
 
-    public boolean hasChargedProjectiile(ItemStack pCrossbowStack, Item pAmmoItem) {
+    public boolean hasChargedProjectile(ItemStack pCrossbowStack, Item pAmmoItem) {
         return getChargedProjectiles(pCrossbowStack).stream().anyMatch((p_40870_) -> {
             return p_40870_.is(pAmmoItem);
         });
     }
 
-    private void shootProjectile(Level pLevel, LivingEntity pShooter, InteractionHand pHand, ItemStack pCrossbowStack, ItemStack pAmmoStack, float pSoundPitch, boolean pIsCreativeMode, float pVelocity, float pInaccuracy, float pProjectileAngle) {
-        if (!pLevel.isClientSide) {
+    public void shootOne(Level worldIn, LivingEntity pShooter, InteractionHand pHand, ItemStack pCrossbowStack, ItemStack pAmmoStack, float pSoundPitch, boolean pIsCreativeMode, float pVelocity, float pInaccuracy, float pProjectileAngle, boolean isSpell) {
+        if (!worldIn.isClientSide) {
             boolean flag = pAmmoStack.is(Items.FIREWORK_ROCKET);
             Projectile projectile;
             if (flag) {
-                projectile = new FireworkRocketEntity(pLevel, pAmmoStack, pShooter, pShooter.getX(), pShooter.getEyeY() - (double)0.15F, pShooter.getZ(), true);
+                projectile = new FireworkRocketEntity(worldIn, pAmmoStack, pShooter, pShooter.getX(), pShooter.getEyeY() - (double)0.15F, pShooter.getZ(), true);
             } else {
-                projectile = getArrow(pLevel, pShooter, pCrossbowStack, pAmmoStack);
+                projectile = getArrow(worldIn, pShooter, pCrossbowStack, pAmmoStack);
                 if (pIsCreativeMode || pProjectileAngle != 0.0F) {
                     ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
+            }
+            LivingCaster livingCaster = pShooter instanceof Player ? new PlayerCaster((Player)pShooter) : new LivingCaster(pShooter);
+            ISpellCaster caster = getSpellCaster(pCrossbowStack);
+            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster));
+            if (pAmmoStack.getItem() == Items.ARROW && isSpell) {
+                projectile = buildSpellArrow(worldIn, pShooter, caster);
+                ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
             }
 
             if (pShooter instanceof CrossbowAttackMob) {
@@ -199,8 +229,8 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
             pCrossbowStack.hurtAndBreak(flag ? 3 : 1, pShooter, (p_40858_) -> {
                 p_40858_.broadcastBreakEvent(pHand);
             });
-            pLevel.addFreshEntity(projectile);
-            pLevel.playSound((Player)null, pShooter.getX(), pShooter.getY(), pShooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, pSoundPitch);
+            worldIn.addFreshEntity(projectile);
+            worldIn.playSound((Player)null, pShooter.getX(), pShooter.getY(), pShooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, pSoundPitch);
         }
     }
 
@@ -221,27 +251,27 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         return abstractarrow;
     }
     // was override of performShooting
-    public void shoot(Level pLevel, LivingEntity pShooter, InteractionHand pUsedHand, ItemStack pCrossbowStack, float pVelocity, float pInaccuracy) {
+    public void shootStoredProjectiles(Level pLevel, LivingEntity pShooter, InteractionHand pUsedHand, ItemStack pCrossbowStack, float pVelocity, float pInaccuracy) {
         if (pShooter instanceof Player player && net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pCrossbowStack, pShooter.level, player, 1, true) < 0) return;
         List<ItemStack> list = getChargedProjectiles(pCrossbowStack);
         float[] afloat = getShotPitches(pShooter.getRandom());
-
+        boolean isSpell = pCrossbowStack.hasTag() && pCrossbowStack.getTag().getBoolean("isSpell");
         for(int i = 0; i < list.size(); ++i) {
             ItemStack itemstack = list.get(i);
             boolean flag = pShooter instanceof Player && ((Player)pShooter).getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                if (i == 0) {
-                     shootProjectile(pLevel, pShooter, pUsedHand, pCrossbowStack, itemstack, afloat[i], flag, pVelocity, pInaccuracy, 0.0F);
-                } else if (i == 1) {
-                    shootProjectile(pLevel, pShooter, pUsedHand, pCrossbowStack, itemstack, afloat[i], flag, pVelocity, pInaccuracy, -10.0F);
-                } else if (i == 2) {
-                    shootProjectile(pLevel, pShooter, pUsedHand, pCrossbowStack, itemstack, afloat[i], flag, pVelocity, pInaccuracy, 10.0F);
+                float offset = 10.0f * (float)((i > 0 ? 1 + i : 0) / 2);
+                boolean isOdd = i % 2 == 1;
+                if (isOdd) {
+                    offset *= -1;
                 }
+                shootOne(pLevel, pShooter, pUsedHand, pCrossbowStack, itemstack, i == 0 ? 1 : getRandomShotPitch(isOdd == pShooter.getRandom().nextBoolean(), pShooter.getRandom()), flag, pVelocity, pInaccuracy, offset, isSpell);
             }
         }
 
         onCrossbowShot(pLevel, pShooter, pCrossbowStack);
     }
+
 
     /**
      * Called after {@plainlink #fireProjectiles} to clear the charged projectile and to update the player advancements.
@@ -261,6 +291,57 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
         return super.getAllSupportedProjectiles().or(i -> i.getItem() instanceof SpellArrow);
+    }
+
+    public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, ISpellCaster caster) {
+        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity);
+        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity))).withSilent(true);
+        spellArrow.setColors(caster.getColor());
+        return spellArrow;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+        getInformation(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    }
+
+    @Override
+    public boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+        return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    }
+
+    @Override
+    public void sendInvalidMessage(Player player) {
+        PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.bow.invalid"));
+    }
+
+    @Override
+    public boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
+        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
+        recipe.add(MethodProjectile.INSTANCE);
+        recipe.addAll(spell.recipe);
+        spell.recipe = recipe;
+        return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
+    }
+
+    @NotNull
+    @Override
+    public ISpellCaster getSpellCaster(ItemStack stack) {
+        return new BasicReductionCaster(stack, (spell -> {
+            spell.addDiscount(MethodProjectile.INSTANCE.getCastingCost());
+            return spell;
+        }));
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        return true;
     }
 
     @Override

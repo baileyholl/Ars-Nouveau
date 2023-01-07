@@ -312,6 +312,18 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(ItemsRegistry.ENCHANTERS_SHIELD, EQUIPMENT, new ApparatusPage(ItemsRegistry.ENCHANTERS_SHIELD));
         addBasicItem(ItemsRegistry.ENCHANTERS_SWORD, EQUIPMENT, new ApparatusPage(ItemsRegistry.ENCHANTERS_SWORD));
         addBasicItem(ItemsRegistry.SPELL_BOW, EQUIPMENT, new ApparatusPage(ItemsRegistry.SPELL_BOW));
+        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.SPELL_BOW)
+                .withLocalizedText()
+                .withPage(new ApparatusPage(ItemsRegistry.SPELL_BOW))
+                .withPage(new ImbuementPage("ars_nouveau:imbuement_amplify_arrow"))
+                .withPage(new ImbuementPage("ars_nouveau:imbuement_pierce_arrow"))
+                .withPage(new ImbuementPage("ars_nouveau:imbuement_split_arrow")), getPath(EQUIPMENT, "spell_bow"));
+        addPage(new PatchouliBuilder(EQUIPMENT, ItemsRegistry.SPELL_CROSSBOW)
+                .withLocalizedText()
+                .withPage(new ApparatusPage(ItemsRegistry.SPELL_CROSSBOW))
+                .withPage(new ImbuementPage("ars_nouveau:imbuement_amplify_arrow"))
+                .withPage(new ImbuementPage("ars_nouveau:imbuement_pierce_arrow"))
+                .withPage(new ImbuementPage("ars_nouveau:imbuement_split_arrow")), getPath(EQUIPMENT, "spell_crossbow"));
         addBasicItem(ItemsRegistry.RUNIC_CHALK, EQUIPMENT, new CraftingPage(ItemsRegistry.RUNIC_CHALK));
         addBasicItem(ItemsRegistry.WARP_SCROLL, EQUIPMENT, new CraftingPage(ItemsRegistry.WARP_SCROLL));
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.IMBUEMENT_BLOCK)

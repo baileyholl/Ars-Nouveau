@@ -445,11 +445,11 @@
 	"item.ars_nouveau.split_arrow": "Augment Arrow: Split",
 	"item.ars_nouveau.amplify_arrow": "Augment Arrow: Amplify",
 	"item.ars_nouveau.pierce_arrow": "Augment Arrow: Pierce",
-	"ars_nouveau.page.spell_bow": "A bow that can be inscribed with a spell using the Scribes Table. If the player has enough mana, arrows will become Spell Arrows and will apply the spell on their target. If no arrows are in the inventory, a spell arrow that deals 0 damage will be cast. If there is not enough mana, regular arrows will be fired. Enchanter's Bows may use special Augment Arrows for empowering the inscribed spell.",
+	"ars_nouveau.page1.spell_bow": "A bow that can be inscribed with a spell using the Scribes Table. If the player has enough mana, arrows will become Spell Arrows and will apply the spell on their target. If no arrows are in the inventory, a spell arrow that deals 0 damage will be cast. If there is not enough mana, regular arrows will be fired. Enchanter's Bows may use special Augment Arrows for empowering the inscribed spell.",
 	"ars_nouveau.page.amplify_arrow": "Adds two amplifies to the end of the inscribed spell when used. Each recipe makes 32.",
 	"ars_nouveau.page.pierce_arrow": "Adds two pierce to the beginning of the chain. Each recipe makes 32.",
 	"ars_nouveau.page.split_arrow": "Adds two split to the beginning of the chain. If a spell arrow will deal damage, each split arrow will as well. Each recipe makes 32.",
-	"ars_nouveau.bow.invalid": "Bows may only accept spells that do not contain a form.",
+	"ars_nouveau.bow.invalid": "This tool may only accept spells that do not contain a form.",
 	"ars_nouveau.norecipe": "No recipe found.",
 	"ars_nouveau.apparatus.nomana": "Not enough source nearby.",
 	"ars_nouveau.reset.cleared": "Progress cleared.",
@@ -1317,5 +1317,6 @@
 	"ars_nouveau.page1.illusion_blocks": "Mirrorweave can replicate the appearance of any block that is used on it. These blocks will take on the same collisions and light as their replicated block. Sense Magic will reveal the illusion. All illusion blocks can also be used as frames for portals. Casting light on an illusion block will allow it to emit light.",
 	"ars_nouveau.page2.illusion_blocks": "Falseweave has the same properties as Mirrorweave, but can be passed through as if it were air. Sense Magic will cause the block to become invisible, revealing any hidden paths.",
 	"ars_nouveau.page3.illusion_blocks": "Ghostweave has the same properties as Mirrorweave, but can be turned into an invisible wall by casting Invisbility on it. Casting Dispel will reveal the block again. Sense Magic will cause the block to appear solid again.",
-	"item.ars_nouveau.spell_crossbow": "Enchanter's Crossbow"
+	"item.ars_nouveau.spell_crossbow": "Enchanter's Crossbow",
+	"ars_nouveau.page1.spell_crossbow": "A crossbow that can be inscribed with a spell. The mana cost of the spell will be deducted when the bow is loaded if mana is present. Enchanter's Crossbows may use special augment arrows to empower their spells."
 }

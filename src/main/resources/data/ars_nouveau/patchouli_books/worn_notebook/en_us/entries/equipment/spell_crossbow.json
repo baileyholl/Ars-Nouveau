@@ -1,15 +1,15 @@
 {
   "category": "ars_nouveau:equipment",
-  "icon": "ars_nouveau:spell_bow",
-  "name": "item.ars_nouveau.spell_bow",
+  "icon": "ars_nouveau:spell_crossbow",
+  "name": "item.ars_nouveau.spell_crossbow",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page1.spell_bow"
+      "text": "ars_nouveau.page1.spell_crossbow"
     },
     {
       "type": "ars_nouveau:apparatus_recipe",
-      "recipe": "ars_nouveau:spell_bow"
+      "recipe": "ars_nouveau:spell_crossbow"
     },
     {
       "type": "ars_nouveau:imbuement_recipe",

@@ -66,6 +66,21 @@ public class ImbuementRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.REDSTONE)
                 .withPedestalItem(Items.CLOCK));
 
+        recipes.add(new ImbuementRecipe("pierce_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.PIERCE_ARROW.get()), 100)
+                .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
+                .withPedestalItem(ItemsRegistry.WILDEN_SPIKE.get()));
+
+        recipes.add(new ImbuementRecipe("amplify_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get()), 100)
+                .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND)));
+
+        recipes.add(new ImbuementRecipe("split_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.SPLIT_ARROW.get()), 100)
+                .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
+                .withPedestalItem(ItemsRegistry.WILDEN_HORN.get()));
+
         Path output = this.generator.getOutputFolder();
         for (ImbuementRecipe g : recipes) {
             Path path = getRecipePath(output, g.getId().getPath());

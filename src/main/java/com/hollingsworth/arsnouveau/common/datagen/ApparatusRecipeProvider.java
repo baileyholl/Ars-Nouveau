@@ -190,30 +190,6 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get(), 32))
-                .withReagent(Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
-                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
-                .build());
-
-
-        addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW.get(), 32))
-                .withReagent(Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, ItemsRegistry.WILDEN_HORN.get())
-                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
-                .build());
-        addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 32))
-                .withReagent(Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(ItemsRegistry.WILDEN_SPIKE)
-                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
-                .build());
-
-        addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK.get()))
                 .withReagent(Ingredient.of(Items.GLASS_BOTTLE))
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
@@ -1061,6 +1037,11 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .build());
 
+        addRecipe(builder().withResult(ItemsRegistry.SPELL_CROSSBOW)
+                .withReagent(Items.CROSSBOW)
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                .withPedestalItem(RecipeDatagen.SOURCE_GEM_BLOCK).build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {
