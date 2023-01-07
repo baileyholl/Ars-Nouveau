@@ -14,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class EarthEssence extends ModItem {
     public EarthEssence(Properties properties) {
         super(properties);
@@ -43,6 +41,6 @@ public class EarthEssence extends ModItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.earth_essence.tooltip").withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        tooltip2.add(Component.translatable("ars_nouveau.earth_essence.tooltip").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
     }
 }

@@ -41,10 +41,10 @@ import java.util.Map;
  */
 public interface ISpellCaster {
 
-   @NotNull
+    @NotNull
     Spell getSpell();
 
-   @NotNull
+    @NotNull
     Spell getSpell(int slot);
 
     int getMaxSlots();
@@ -74,17 +74,17 @@ public interface ISpellCaster {
 
     void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot);
 
-   @NotNull
+    @NotNull
     ParticleColor getColor(int slot);
 
-   @NotNull
+    @NotNull
     ParticleColor getColor();
 
     void setColor(ParticleColor color);
 
     void setColor(ParticleColor color, int slot);
 
-   @NotNull
+    @NotNull
     ConfiguredSpellSound getSound(int slot);
 
     void setSound(ConfiguredSpellSound sound);
@@ -105,17 +105,25 @@ public interface ISpellCaster {
 
     void setSpellName(String name, int slot);
 
+    void setSpellHidden(boolean hidden);
+
+    boolean isSpellHidden();
+
+    void setHiddenRecipe(String recipe);
+
+    String getHiddenRecipe();
+
     String getFlavorText();
 
     Map<Integer, Spell> getSpells();
 
-   @NotNull
+    @NotNull
     @Deprecated(forRemoval = true)
     default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster) {
         return caster.getSpell();
     }
 
-   @NotNull
+    @NotNull
     default Spell getSpell(Level world, LivingEntity playerEntity, InteractionHand hand, ISpellCaster caster) {
         return caster.getSpell();
     }
@@ -125,7 +133,7 @@ public interface ISpellCaster {
         return spell;
     }
 
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @Nullable Component invalidMessage,@NotNull Spell spell) {
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @Nullable Component invalidMessage, @NotNull Spell spell) {
         ItemStack stack = entity.getItemInHand(handIn);
 
         if (worldIn.isClientSide)
@@ -136,7 +144,7 @@ public interface ISpellCaster {
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
         Player player = entity instanceof Player thisPlayer ? thisPlayer : ANFakePlayer.getPlayer((ServerLevel) worldIn);
-        IWrappedCaster wrappedCaster =  entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
+        IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster), worldIn, player, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, entity, AugmentSensitive.INSTANCE) > 0;
         HitResult result = SpellUtil.rayTrace(entity, 5, 0, isSensitive);
@@ -157,11 +165,11 @@ public interface ISpellCaster {
         }
 
         if (result instanceof BlockHitResult blockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)) {
-            if(entity instanceof Player) {
+            if (entity instanceof Player) {
                 UseOnContext context = new UseOnContext(player, handIn, (BlockHitResult) result);
                 if (resolver.onCastOnBlock(context))
                     playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
-            }else if(resolver.onCastOnBlock(blockHitResult)){
+            } else if (resolver.onCastOnBlock(blockHitResult)) {
                 playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.NEUTRAL);
             }
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
@@ -174,7 +182,7 @@ public interface ISpellCaster {
 
     //TODO: 1.19.3 remove this
     @Deprecated(forRemoval = true)
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage,@NotNull Spell spell) {
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage, @NotNull Spell spell) {
         return castSpell(worldIn, (LivingEntity) playerIn, handIn, invalidMessage, spell);
     }
 
