@@ -43,7 +43,7 @@ public class RitualWildenSummoning extends AbstractRitual {
                     summon(chimera, getPos().above());
                     for(BlockPos b : BlockPos.betweenClosed(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))){
                         if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.getWorld(), chimera)) {
-                            return;
+                            continue;
                         }
                         if (SpellUtil.isCorrectHarvestLevel(4, this.getWorld().getBlockState(b))) {
                             BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), b, true);
