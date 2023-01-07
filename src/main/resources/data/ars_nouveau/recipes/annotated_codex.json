@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "ars_nouveau:spell_parchment"
+      "item": "ars_nouveau:blank_parchment"
     },
     {
       "item": "minecraft:leather"
