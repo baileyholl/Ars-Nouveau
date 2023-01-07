@@ -101,7 +101,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting(pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter)));
         boolean consumedMana = false;
 
-        if(resolver.withSilent(true).canCast(pShooter)){
+        if(!(pShooter instanceof Player) || resolver.withSilent(true).canCast(pShooter)){
             resolver.expendMana();
             consumedMana = true;
             numProjectiles += resolver.spell.getBuffsAtIndex(0, pShooter, AugmentSplit.INSTANCE);
