@@ -1,15 +1,16 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
+import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -27,9 +28,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+
 import static net.minecraft.core.Direction.*;
 
 public class RotatingSpellTurret extends BasicSpellTurret {
+
+    public static HashMap<AbstractCastMethod, ITurretBehavior> ROT_TURRET_BEHAVIOR_MAP = new HashMap<>();
+
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (player.getItemInHand(handIn).getItem() instanceof WarpScroll) {
@@ -55,8 +61,8 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET)));
-        if (resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
-            TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, tile, world, pos, fakePlayer, iposition, orderedByNearest(tile)[0].getOpposite());
+        if (resolver.castType != null && ROT_TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
+            ROT_TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, tile, world, pos, fakePlayer, iposition, orderedByNearest(tile)[0].getOpposite());
             caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
         }
     }
@@ -138,4 +144,37 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         return new RotatingTurretTile(pos, state);
     }
 
+    static {
+        ROT_TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
+            @Override
+            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel world, BlockPos pos, FakePlayer fakePlayer, Position iposition, Direction direction) {
+                EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
+                spell.setOwner(fakePlayer);
+                spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                RotatingTurretTile rotatingTurretTile = (RotatingTurretTile) tile;
+                Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
+                spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
+                world.addFreshEntity(spell);
+            }
+        });
+
+        /*
+        TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
+            @Override
+            //TODO: Adapt and test for adjustable turrets, it's not 100% broken but they won't use the corners (will use one of the two close directions)
+            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
+                BlockPos touchPos = pos.relative(facingDir);
+                List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(touchPos));
+                if (!entityList.isEmpty()) {
+                    LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
+                    resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
+                } else {
+                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
+                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                }
+            }
+        });
+        */
+    }
+    
 }

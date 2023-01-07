@@ -20,6 +20,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class MethodProjectile extends AbstractCastMethod {
@@ -47,31 +48,27 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     public void summonProjectiles(Level world, LivingEntity shooter, SpellStats stats, SpellResolver resolver) {
-        ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
-        projectiles.add(projectileSpell);
-        int numSplits = stats.getBuffCount(AugmentSplit.INSTANCE);
+        int numSplits =  1 + stats.getBuffCount(AugmentSplit.INSTANCE);
 
-        for (int i = 1; i < numSplits + 1; i++) {
-            Direction offset = shooter.getDirection().getClockWise();
-            if (i % 2 == 0) offset = offset.getOpposite();
-            // Alternate sides
-            BlockPos projPos = shooter.blockPosition().relative(offset, i);
-            projPos = projPos.offset(0, 1.5, 0);
+        List<EntityProjectileSpell> projectiles = new ArrayList<>();
+        for (int i = 0; i < numSplits; i++) {
             EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
-            spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
 
-        float velocity = Math.max(0.1f, 1.0f + stats.getAccMultiplier() / 2);
+        float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
+        int opposite = -1;
+        int counter = 0;
 
         for (EntityProjectileSpell proj : projectiles) {
-            proj.shoot(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, velocity, 0.8f);
+            proj.shoot(shooter, shooter.getXRot(), shooter.getYRot() + Math.round(counter / 2.0) * 10 * opposite, 0.0F, velocity, 0.8f);
+            opposite = opposite * -1;
+            counter++;
             world.addFreshEntity(proj);
         }
     }
 
-    // Summons the projectiles directly above the block, facing downwards.
+    // Summons the projectiles directly above the block, facing downwards. Legacy Splits
     public void summonProjectiles(Level world, BlockPos pos, LivingEntity shooter, SpellStats stats, SpellResolver resolver) {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
@@ -84,7 +81,7 @@ public class MethodProjectile extends AbstractCastMethod {
             Direction offset = shooter.getDirection().getClockWise();
             if (i % 2 == 0) offset = offset.getOpposite();
             // Alternate sides
-            BlockPos projPos = pos.relative(offset, i); // TODO: Fix split
+            BlockPos projPos = pos.relative(offset, i);
             projPos = projPos.offset(0, 1.5, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
