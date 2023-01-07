@@ -20,6 +20,7 @@ public class Spell implements Cloneable {
     public String name = "";
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+    public boolean isObfuscated = false;
     /**
      * The discount removed from the casting cost of the spell.
      * This value is not saved, but is set to 0 after each cast.
