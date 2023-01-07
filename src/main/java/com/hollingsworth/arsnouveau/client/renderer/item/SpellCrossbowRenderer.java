@@ -42,7 +42,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
 
     @Override
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if (transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND) {
+        if (transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND && !Minecraft.getInstance().isPaused()) {
             Player player = Minecraft.getInstance().player;
             Vec3 playerPos = player.position().add(0, player.getEyeHeight(), 0);
             Vec3 look = player.getLookAngle(); // or getLook(partialTicks)
@@ -50,17 +50,28 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
             Vec3 right = new Vec3(-look.z, 0, look.x).normalize();
             Vec3 forward = look;
             Vec3 down = right.cross(forward);
-
+            int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
             //These are used to calculate where the particles are going. We want them going into the laser, so we move the destination right, down, and forward a bit.
-            right = right.scale(-player.attackAnim);
-            forward = forward.scale(0.45f);
-            down = down.scale(-0.3 - player.attackAnim);
+            if(timeHeld > 72000){
+                right = right.scale(+0.1 - player.attackAnim);
+                forward = forward.scale(0.25f);
+                down = down.scale(-0.1 - player.attackAnim);
+            }else if(SpellCrossbow.isCharged(itemStack)){
+                right = right.scale(-0.05 - player.attackAnim);
+                forward = forward.scale(0.35f);
+                down = down.scale(-0.2 - player.attackAnim);
+            }else {
+                right = right.scale(-player.attackAnim);
+                forward = forward.scale(0.45f);
+                down = down.scale(-0.3 - player.attackAnim);
+            }
             Vec3 laserPos = playerPos.add(right);
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
             ISpellCaster tool = CasterUtil.getCaster(itemStack);
-            int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
-            if (timeHeld > 0 && timeHeld != 72000){
+
+
+            if (timeHeld > 0 && timeHeld != 72000 || SpellCrossbow.isCharged(itemStack)) {
                 float scaleAge = (float) ParticleUtil.inRange(0.05, 0.1);
                 if (player.level.random.nextInt(6) == 0) {
                     for (int i = 0; i < 1; i++) {
@@ -86,11 +97,10 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
         float outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 10.0f) % 360;
 
 
-        ItemStack heldStack = Minecraft.getInstance().player.getMainHandItem();
-        if (heldStack.equals(currentItemStack) && heldStack.getItem() instanceof SpellCrossbow spellCrossbow) {
+        if (currentItemStack.getItem() instanceof SpellCrossbow spellCrossbow) {
             int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks() + partialTicks);
 
-            if (SpellCrossbow.isCharged(heldStack)) {
+            if (SpellCrossbow.isCharged(currentItemStack)) {
                 right.setRotationY((float) (right.getRotationY() - Math.toRadians(35)));
                 left.setRotationY((float) (left.getRotationY() + Math.toRadians(35)));
                 outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;
@@ -107,6 +117,8 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
 
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
+
+
 
     @Override
     public Color getRenderColor(Object animatable, float partialTick, PoseStack poseStack, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, int packedLight) {

@@ -220,7 +220,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
      * Get the predicate to match ammunition when searching the player's inventory, not their main/offhand
      */
     public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return ARROW_ONLY.or(i -> i.getItem() instanceof SpellArrow);
+        return super.getAllSupportedProjectiles().or(i -> i.getItem() instanceof SpellArrow);
     }
 
     @Override
