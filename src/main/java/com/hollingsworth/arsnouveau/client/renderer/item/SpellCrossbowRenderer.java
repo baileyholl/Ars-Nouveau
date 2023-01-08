@@ -104,7 +104,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
                 right.setRotationY((float) (right.getRotationY() - Math.toRadians(35)));
                 left.setRotationY((float) (left.getRotationY() + Math.toRadians(35)));
                 outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;
-            }else if (timeHeld != 0 && timeHeld != 72000) {
+            }else if (timeHeld != 0 && timeHeld != 72000 && Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
                 var offset = 40;
                 timeHeld = Math.min(timeHeld, 72000);
                 right.setRotationY((float) (right.getRotationY() - Math.toRadians(30) - Math.toRadians(timeHeld)));
