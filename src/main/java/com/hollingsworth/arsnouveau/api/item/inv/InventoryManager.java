@@ -150,6 +150,21 @@ public class InventoryManager {
     }
 
     /**
+     * Returns a list with up to maxSlots references to matching stacks, if any. Does not modify the inventory.
+     */
+    public List<SlotReference> findItems(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type, int maxSlots){
+        List<SlotReference> slots = new ArrayList<>();
+        int numSlots = Math.min(maxSlotForType(itemHandler, type), maxSlots);
+        for(int slot = 0; slot < numSlots; slot++){
+            ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+                slots.add(new SlotReference(itemHandler.getHandler(), slot));
+            }
+        }
+        return slots;
+    }
+
+    /**
      * Returns the sorted list of highest preferred inventories for a given stack based on their list of filters.
      * @return The list of inventories sorted by highest preference.
      */
@@ -161,7 +176,7 @@ public class InventoryManager {
         return filtered;
     }
 
-    private FilterableItemHandler highestPrefInventory(List<FilterableItemHandler> inventories, Predicate<ItemStack> predicate, InteractType type){
+    public FilterableItemHandler highestPrefInventory(List<FilterableItemHandler> inventories, Predicate<ItemStack> predicate, InteractType type){
         ItemScroll.SortPref highestPref = ItemScroll.SortPref.INVALID;
         FilterableItemHandler highestHandler = null;
         for(FilterableItemHandler wrapper : inventories){
