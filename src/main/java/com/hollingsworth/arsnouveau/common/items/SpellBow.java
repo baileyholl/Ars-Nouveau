@@ -10,8 +10,6 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +22,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -59,7 +58,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     .and(i -> !(i.getItem() instanceof SpellArrow) || (i.getItem() instanceof SpellArrow && canPlayerCastSpell(shootable, playerEntity)));
             ItemStack itemstack = ProjectileWeaponItem.getHeldProjectile(playerEntity, predicate);
             if (!itemstack.isEmpty()) {
-                return net.minecraftforge.common.ForgeHooks.getProjectile(playerEntity, shootable, itemstack);
+                return ForgeHooks.getProjectile(playerEntity, shootable, itemstack);
             } else {
                 predicate = projectileWeaponItem.getAllSupportedProjectiles().and(i ->
                         !(i.getItem() instanceof SpellArrow) ||
@@ -69,11 +68,11 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                 for (int i = 0; i < playerEntity.getInventory().getContainerSize(); ++i) {
                     ItemStack itemstack1 = playerEntity.inventory.getItem(i);
                     if (predicate.test(itemstack1)) {
-                        return net.minecraftforge.common.ForgeHooks.getProjectile(playerEntity, shootable, itemstack1);
+                        return ForgeHooks.getProjectile(playerEntity, shootable, itemstack1);
                     }
                 }
 
-                return net.minecraftforge.common.ForgeHooks.getProjectile(playerEntity, shootable, playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
+                return ForgeHooks.getProjectile(playerEntity, shootable, playerEntity.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
             }
         }
     }
@@ -166,19 +165,17 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                         numSplits = arrow.spellResolver.spell.getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
                     }
 
-                    for (int i = 1; i < numSplits + 1; i++) {
-                        Direction offset = playerentity.getDirection().getClockWise();
-                        if (i % 2 == 0) offset = offset.getOpposite();
-                        // Alternate sides
-                        BlockPos projPos = playerentity.blockPosition().relative(offset, i);
-                        projPos = projPos.offset(0, 1.5, 0);
+                    for (int i = 0; i < numSplits; i++) {
                         EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow);
-                        spellArrow.setPos(projPos.getX(), spellArrow.blockPosition().getY(), projPos.getZ());
                         arrows.add(spellArrow);
                     }
                 }
+                int opposite = -1;
+                int counter = 0;
                 for (AbstractArrow arr : arrows) {
-                    arr.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot(), 0.0F, f * 3.0F, 1.0F);
+                    arr.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + Math.round(counter / 2.0) * 10 * opposite, 0.0F, f * 3.0F, 1.0F);
+                    opposite = opposite * -1;
+                    counter++;
                     if (f >= 1.0F) {
                         arr.setCritArrow(true);
                     }
