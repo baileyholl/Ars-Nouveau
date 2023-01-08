@@ -18,7 +18,6 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.*;
 import software.bernie.geckolib3.GeckoLib;
 import top.theillusivec4.curios.Curios;
@@ -67,10 +66,8 @@ public class ModSetup {
         Deferred.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);
-        if(!FMLEnvironment.production) {
-            VillagerRegistry.POIs.register(modEventBus);
-            VillagerRegistry.VILLAGERS.register(modEventBus);
-        }
+        VillagerRegistry.POIs.register(modEventBus);
+        VillagerRegistry.VILLAGERS.register(modEventBus);
     }
 
     //TODO:Switch to DeferredReg where possible

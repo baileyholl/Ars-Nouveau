@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class VillagerRegistry {
 
-    static String ARS_TRADER = "disguised_starbuncle";
+    static String ARS_TRADER = "shady_wizard";
 
 
 
@@ -20,6 +20,6 @@ public class VillagerRegistry {
     public static final DeferredRegister<PoiType> POIs = DeferredRegister.create(ForgeRegistries.POI_TYPES, ArsNouveau.MODID);
 
     public static final RegistryObject<PoiType> ARCANE_POI = POIs.register("arcane_poi", () -> new PoiType(ImmutableSet.copyOf(BlockRegistry.ARCANE_CORE_BLOCK.getStateDefinition().getPossibleStates()),1,1));
-    public static final RegistryObject<VillagerProfession> SHARDS_TRADER = VILLAGERS.register(ARS_TRADER, () -> new VillagerProfession(ARS_TRADER, (x) -> x.get() == ARCANE_POI.get(), (x) -> x.get() == ARCANE_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_SHEPHERD));
+    public static final RegistryObject<VillagerProfession> SHARDS_TRADER = VILLAGERS.register(ARS_TRADER, () -> new VillagerProfession(ARS_TRADER, (x) -> x.get() == ARCANE_POI.get(), (x) -> x.get() == ARCANE_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
 
 }
