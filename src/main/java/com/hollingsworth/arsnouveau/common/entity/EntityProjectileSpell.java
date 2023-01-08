@@ -212,9 +212,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         float f = -Mth.sin(rotationYawIn * ((float) Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float) Math.PI / 180F));
         float f1 = -Mth.sin((rotationPitchIn + pitchOffset) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(rotationYawIn * ((float) Math.PI / 180F)) * Mth.cos(rotationPitchIn * ((float) Math.PI / 180F));
-        this.shoot(f, f1, f2, 0.0F, inaccuracy); //overriding this, a better solution might exist
-        Vec3 vec3d = entityThrower.getLookAngle();
-        this.setDeltaMovement(this.getDeltaMovement().add(vec3d.x, vec3d.y, vec3d.z).scale(velocity));
+        this.shoot(f, f1, f2, velocity, inaccuracy);
     }
 
     /**

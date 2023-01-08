@@ -85,7 +85,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         if (f >= 1.0F && !isCharged(pStack) && tryLoadProjectiles(pEntityLiving, pStack)) {
             setCharged(pStack, true);
             SoundSource soundsource = pEntityLiving instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-            pLevel.playSound((Player)null, pEntityLiving.getX(), pEntityLiving.getY(), pEntityLiving.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F, 1.0F / (pLevel.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+            pLevel.playSound(null, pEntityLiving.getX(), pEntityLiving.getY(), pEntityLiving.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F, 1.0F / (pLevel.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
 
     }
@@ -213,8 +213,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
             }
 
-            if (pShooter instanceof CrossbowAttackMob) {
-                CrossbowAttackMob crossbowattackmob = (CrossbowAttackMob)pShooter;
+            if (pShooter instanceof CrossbowAttackMob crossbowattackmob) {
                 crossbowattackmob.shootCrossbowProjectile(crossbowattackmob.getTarget(), pCrossbowStack, projectile, pProjectileAngle);
             } else {
                 Vec3 vec31 = pShooter.getUpVector(1.0F);
@@ -222,14 +221,14 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
                 Vec3 vec3 = pShooter.getViewVector(1.0F);
                 Vector3f vector3f = new Vector3f(vec3);
                 vector3f.transform(quaternion);
-                projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), pVelocity, pInaccuracy);
+                projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), pVelocity, pInaccuracy);
             }
 
             pCrossbowStack.hurtAndBreak(flag ? 3 : 1, pShooter, (p_40858_) -> {
                 p_40858_.broadcastBreakEvent(pHand);
             });
             worldIn.addFreshEntity(projectile);
-            worldIn.playSound((Player)null, pShooter.getX(), pShooter.getY(), pShooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, pSoundPitch);
+            worldIn.playSound(null, pShooter.getX(), pShooter.getY(), pShooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, pSoundPitch);
         }
     }
 
@@ -242,7 +241,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
 
         abstractarrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractarrow.setShotFromCrossbow(true);
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
+        int i = pCrossbowStack.getEnchantmentLevel(Enchantments.PIERCING);
         if (i > 0) {
             abstractarrow.setPierceLevel((byte)i);
         }
