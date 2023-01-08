@@ -211,6 +211,9 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
             if (pAmmoStack.getItem() == Items.ARROW && isSpell) {
                 projectile = buildSpellArrow(worldIn, pShooter, caster);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
+            }else if(pAmmoStack.getItem() instanceof SpellArrow && projectile instanceof EntitySpellArrow spellArrow){
+                spellArrow.pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
+                spellArrow.setColors(resolver.spell.color);
             }
 
             if (pShooter instanceof CrossbowAttackMob crossbowattackmob) {
