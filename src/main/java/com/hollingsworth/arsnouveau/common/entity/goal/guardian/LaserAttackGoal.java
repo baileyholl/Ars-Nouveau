@@ -34,7 +34,7 @@ public class LaserAttackGoal extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && (this.guardian.distanceToSqr(this.guardian.getTarget()) > 9.0D) && guardian.laserCooldown == 0;
+        return super.canContinueToUse() && this.guardian.getTarget() != null && (this.guardian.distanceToSqr(this.guardian.getTarget()) > 9.0D) && guardian.laserCooldown == 0;
     }
 
     /**
@@ -43,6 +43,8 @@ public class LaserAttackGoal extends Goal {
     public void start() {
         this.tickCounter = -10;
         this.guardian.getNavigation().stop();
+        if(this.guardian.getTarget() == null)
+            return;
         this.guardian.getLookControl().setLookAt(this.guardian.getTarget(), 90.0F, 90.0F);
         this.guardian.setLaser(true);
     }

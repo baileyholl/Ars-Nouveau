@@ -8,9 +8,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
-
-import net.minecraft.world.item.crafting.Ingredient.ItemValue;
-
+/**
+ * @deprecated Use PartialNBTIngredient instead
+ * TODO: Remove in 1.20
+ */
+@Deprecated
 public class PotionIngredient extends Ingredient {
     private final ItemStack stack;
 
@@ -42,4 +44,5 @@ public class PotionIngredient extends Ingredient {
     public boolean isSimple() {
         return false;
     }
+
 }

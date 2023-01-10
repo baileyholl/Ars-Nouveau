@@ -44,7 +44,6 @@ public class SingleItemTile extends ModdedTile implements Container{
 
     @Override
     public ItemStack removeItem(int pSlot, int pAmount) {
-
         ItemStack copyStack = stack.copy().split(pAmount);
         stack.shrink(pAmount);
         updateBlock();

@@ -10,10 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class StackUtil {
 
-    public static@NotNull ItemStack getHeldSpellbook(Player playerEntity) {
+    public static @NotNull ItemStack getHeldSpellbook(Player playerEntity) {
         ItemStack book = playerEntity.getMainHandItem().getItem() instanceof SpellBook ? playerEntity.getMainHandItem() : null;
         return book == null ? (playerEntity.getOffhandItem().getItem() instanceof SpellBook ? playerEntity.getOffhandItem() : ItemStack.EMPTY) : book;
     }
@@ -23,12 +24,20 @@ public class StackUtil {
         return casterTool == null ? (player.getOffhandItem().getItem() instanceof ICasterTool ? InteractionHand.OFF_HAND : null) : casterTool;
     }
 
+    public static @Nullable InteractionHand getHeldCasterTool(Player player, Predicate<ICasterTool> filter){
+        if(player.getMainHandItem().getItem() instanceof ICasterTool casterTool && filter.test(casterTool))
+            return InteractionHand.MAIN_HAND;
+        if(player.getOffhandItem().getItem() instanceof ICasterTool casterTool && filter.test(casterTool))
+            return InteractionHand.OFF_HAND;
+        return null;
+    }
+
     public static @Nullable InteractionHand getQuickCaster(Player player) {
         InteractionHand casterTool = player.getMainHandItem().getItem() instanceof ISpellHotkeyListener listener && listener.canQuickCast() ? InteractionHand.MAIN_HAND : null;
         return casterTool == null ? (player.getOffhandItem().getItem() instanceof ISpellHotkeyListener listener && listener.canQuickCast() ? InteractionHand.OFF_HAND : null) : casterTool;
     }
 
-    public static@NotNull ItemStack getHeldRadial(Player playerEntity) {
+    public static @NotNull ItemStack getHeldRadial(Player playerEntity) {
         ItemStack book = playerEntity.getMainHandItem().getItem() instanceof IRadialProvider ? playerEntity.getMainHandItem() : ItemStack.EMPTY;
         return book.isEmpty() ? playerEntity.getOffhandItem() : book;
     }

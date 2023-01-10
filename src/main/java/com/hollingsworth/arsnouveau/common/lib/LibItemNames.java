@@ -129,4 +129,5 @@ public class LibItemNames {
     public static final String FIREL_DISC = "music_disc_aria_biblio";
 
     public static final String STARBY_GIFT = "starby_gift";
+    public static final String SPELL_CROSSBOW = "spell_crossbow";
 }

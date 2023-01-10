@@ -1,0 +1,27 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:spell_crossbow",
+  "name": "item.ars_nouveau.spell_crossbow",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.spell_crossbow"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:spell_crossbow"
+    },
+    {
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_amplify_arrow"
+    },
+    {
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_pierce_arrow"
+    },
+    {
+      "type": "ars_nouveau:imbuement_recipe",
+      "recipe": "ars_nouveau:imbuement_split_arrow"
+    }
+  ]
+}

@@ -18,6 +18,8 @@ public class SpellCaster implements ISpellCaster {
     private int slot;
     public ItemStack stack = ItemStack.EMPTY;
     public String flavorText = "";
+    public boolean isHidden;
+    public String hiddenText = "";
 
     public SpellCaster(ItemStack stack) {
         this(stack.getOrCreateTag());
@@ -105,6 +107,28 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
+    public void setSpellHidden(boolean hidden) {
+        this.isHidden = hidden;
+        writeItem(stack);
+    }
+
+    @Override
+    public boolean isSpellHidden() {
+        return isHidden;
+    }
+
+    @Override
+    public void setHiddenRecipe(String recipe) {
+        this.hiddenText = recipe;
+        writeItem(stack);
+    }
+
+    @Override
+    public String getHiddenRecipe() {
+        return hiddenText;
+    }
+
+    @Override
     public String getFlavorText() {
         return flavorText == null ? "" : flavorText;
     }
@@ -159,6 +183,8 @@ public class SpellCaster implements ISpellCaster {
         }
         tag.put("spells", spellTag);
         tag.putInt("spell_count", getSpells().size());
+        tag.putBoolean("is_hidden", isSpellHidden());
+        tag.putString("hidden_recipe", getHiddenRecipe());
         return tag;
     }
 
@@ -167,6 +193,8 @@ public class SpellCaster implements ISpellCaster {
 
         this.slot = tag.getInt("current_slot");
         this.flavorText = tag.getString("flavor");
+        this.isHidden = tag.getBoolean("is_hidden");
+        this.hiddenText = tag.getString("hidden_recipe");
         CompoundTag spellTag = tag.getCompound("spells");
         for (int i = 0; i < getMaxSlots(); i++) {
             if (spellTag.contains("spell" + i)) {

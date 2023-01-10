@@ -32,18 +32,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
+import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.ITEMS;
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
 public class BlockRegistry {
 
-    //TODO Switch to these
+    //TODO Switch to these for 1.20
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ArsNouveau.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ArsNouveau.MODID);
 
@@ -793,4 +791,26 @@ public class BlockRegistry {
     public static Block getBlock(String s) {
         return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
     }
+
+    //Somebody need to start it
+    public static final RegistryObject<Block> ROTATING_TURRET;
+    public static final RegistryObject<BlockEntityType<?>> ROTATING_TURRET_TILE;
+
+    static {
+        ROTATING_TURRET = BLOCKS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RotatingSpellTurret());
+        ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return BasicTurretRenderer::getISTER;
+            }
+        });
+        ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
+    }
+
+    static RegistryObject<Block> addBlock(String name, Supplier<Block> blockSupp) {
+        RegistryObject<Block> block = BLOCKS.register(name, blockSupp);
+        ITEMS.register(name, () -> getDefaultBlockItem(block.get()));
+        return block;
+    }
+
 }
