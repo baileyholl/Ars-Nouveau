@@ -92,6 +92,5 @@ public class Glyph extends ModItem {
         } else {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
         }
-
     }
 }
