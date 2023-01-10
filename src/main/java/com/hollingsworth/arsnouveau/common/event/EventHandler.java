@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -202,6 +203,9 @@ public class EventHandler {
             return;
         double jumpBonus = PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, player);
         fallEvent.setDistance((float) (fallEvent.getDistance() - (jumpBonus / 0.1)));
+        if(CuriosUtil.hasItem(fallEvent.getEntity(), ItemsRegistry.BELT_OF_LEVITATION.asItem())){
+            fallEvent.setDistance(Math.max(0, fallEvent.getDistance() - 6));
+        }
     }
 
     @SubscribeEvent

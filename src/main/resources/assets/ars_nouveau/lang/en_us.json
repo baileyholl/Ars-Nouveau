@@ -295,7 +295,7 @@
 	"ars_nouveau.page.amulet_of_mana_boost": "Increases max mana by a moderate amount.",
 	"ars_nouveau.page.amulet_of_mana_regen": "Increases mana regeneration by a moderate amount.",
 	"ars_nouveau.page.magebloom_crop": "A magically infused flower, Mageblooms provide additional source to nearby Agronomic Sourcelinks as they grow and provide a source of Magebloom Fiber. Mageblooms can also be used in crafting Potions of Spell Damage, increasing the damage of your spells.",
-	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise.",
+	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise. Reduces a small amount of fall damage while worn.",
 	"ars_nouveau.page.ring_of_lesser_discount": "In addition to providing a small bonus to maximum mana and mana regen, Rings of Discount reduce the total cost to cast a spell.",
 
 	"ars_nouveau.page.ring_of_greater_discount": "Provides a slightly larger discount over the Lesser Ring of Discount.",
