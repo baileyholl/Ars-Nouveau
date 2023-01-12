@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -30,6 +31,10 @@ public class EffectSnare extends AbstractEffect {
             living.hurtMarked = true;
         }
 
+        if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock) {
+            fallingBlock.groundBlock(true);
+        }
+
     }
 
 
@@ -40,7 +45,7 @@ public class EffectSnare extends AbstractEffect {
         addExtendTimeConfig(builder, 1);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE);
@@ -48,7 +53,7 @@ public class EffectSnare extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Stops entities from moving and jumping. Extend Time will increase the duration of this effect.";
+        return "Stops entities from moving and jumping. Extend Time will increase the duration of this effect. Snaring a block created from the Focus of Block Shaping will cause it to attempt to place itself immediately.";
     }
 
     @Override
@@ -56,7 +61,7 @@ public class EffectSnare extends AbstractEffect {
         return 100;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);
