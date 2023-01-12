@@ -272,10 +272,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void onWanded(Player playerEntity) {
+        boolean removeAcc = this.dynamicBehavior.clearOrRemove();
         this.dynamicBehavior.onWanded(playerEntity);
         data.pathBlock = null;
         data.bedPos = null;
-        if(!getCosmeticItem().isEmpty()){
+        if(!getCosmeticItem().isEmpty() && removeAcc){
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getCosmeticItem().split(1)));
             if(!(dynamicBehavior instanceof StarbyTransportBehavior)){
                 dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
