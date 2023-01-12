@@ -177,58 +177,66 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
                     this.discard();
                 }
             } else { // on ground
-                BlockState blockstate = this.level.getBlockState(blockpos);
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
-                if (!blockstate.is(Blocks.MOVING_PISTON)) {
-                    if (!this.cancelDrop) {
-                        boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level, blockpos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
-                        boolean flag3 = FallingBlock.isFree(this.level.getBlockState(blockpos.below())) && (!isConcrete || !isConcreteInWater);
-                        boolean flag4 = this.blockState.canSurvive(this.level, blockpos) && !flag3;
-                        if (flag2 && flag4) {
-                            if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level.getFluidState(blockpos).getType() == Fluids.WATER) {
-                                this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE);
-                            }
-
-                            if (this.level.setBlock(blockpos, this.blockState, 3)) {
-                                ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level.getBlockState(blockpos)));
-                                this.discard();
-                                if (block instanceof Fallable fallable) {
-                                    fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
-                                }
-
-                                if (this.blockData != null && this.blockState.hasBlockEntity()) {
-                                    BlockEntity blockentity = this.level.getBlockEntity(blockpos);
-                                    if (blockentity != null) {
-
-                                        try {
-                                            blockentity.load(this.blockData);
-                                        } catch (Exception exception) {
-
-                                        }
-
-                                        blockentity.setChanged();
-                                    }
-                                }
-                            } else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                                this.discard();
-                                this.callOnBrokenAfterFall(block, blockpos);
-                                this.spawnAtLocation(block);
-                            }
-                        } else {
-                            this.discard();
-                            if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                                this.callOnBrokenAfterFall(block, blockpos);
-                                this.spawnAtLocation(block);
-                            }
-                        }
-                    } else {
-                        this.discard();
-                        this.callOnBrokenAfterFall(block, blockpos);
-                    }
-                }
+               this.groundBlock(false);
             }
         }
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
+    }
+
+    public void groundBlock(boolean ignoreAir){
+        Block block = this.blockState.getBlock();
+        BlockPos blockpos = this.blockPosition();
+        BlockState blockstate = this.level.getBlockState(blockpos);
+        boolean isConcrete = this.blockState.getBlock() instanceof ConcretePowderBlock;
+        boolean isConcreteInWater = isConcrete && this.level.getFluidState(blockpos).is(FluidTags.WATER);
+        this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
+        if (!blockstate.is(Blocks.MOVING_PISTON)) {
+            if (!this.cancelDrop) {
+                boolean flag2 = blockstate.canBeReplaced(new DirectionalPlaceContext(this.level, blockpos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
+                boolean flag3 = FallingBlock.isFree(this.level.getBlockState(blockpos.below())) && (!isConcrete || !isConcreteInWater);
+                boolean flag4 = this.blockState.canSurvive(this.level, blockpos) && (!flag3 || ignoreAir);
+                if (flag2 && flag4) {
+                    if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level.getFluidState(blockpos).getType() == Fluids.WATER) {
+                        this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE);
+                    }
+
+                    if (this.level.setBlock(blockpos, this.blockState, 3)) {
+                        ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level.getBlockState(blockpos)));
+                        this.discard();
+                        if (block instanceof Fallable fallable) {
+                            fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
+                        }
+
+                        if (this.blockData != null && this.blockState.hasBlockEntity()) {
+                            BlockEntity blockentity = this.level.getBlockEntity(blockpos);
+                            if (blockentity != null) {
+
+                                try {
+                                    blockentity.load(this.blockData);
+                                } catch (Exception exception) {
+
+                                }
+
+                                blockentity.setChanged();
+                            }
+                        }
+                    } else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                        this.discard();
+                        this.callOnBrokenAfterFall(block, blockpos);
+                        this.spawnAtLocation(block);
+                    }
+                } else {
+                    this.discard();
+                    if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                        this.callOnBrokenAfterFall(block, blockpos);
+                        this.spawnAtLocation(block);
+                    }
+                }
+            } else {
+                this.discard();
+                this.callOnBrokenAfterFall(block, blockpos);
+            }
+        }
     }
 
     public float getStateDamageBonus() {

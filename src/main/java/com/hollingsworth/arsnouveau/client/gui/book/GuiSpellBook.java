@@ -23,9 +23,12 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -63,6 +66,7 @@ public class GuiSpellBook extends BaseBook {
     int formTextRow = 0;
     int augmentTextRow = 0;
     int effectTextRow = 0;
+    public int glyphsPerPage = 58;
 
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
         super();
@@ -161,6 +165,10 @@ public class GuiSpellBook extends BaseBook {
         validate();
     }
 
+    public int getNumPages() {
+        return (int) Math.ceil((double) displayedGlyphs.size() / 58);
+    }
+
 
     private void layoutAllGlyphs(int page) {
         clearButtons(glyphButtons);
@@ -180,9 +188,8 @@ public class GuiSpellBook extends BaseBook {
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).toList());
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).toList());
-        int perPage = 58;
         sorted.sort(COMPARE_TYPE_THEN_NAME);
-        sorted = sorted.subList(perPage * page, Math.min(sorted.size(), perPage * (page + 1)));
+        sorted = sorted.subList(glyphsPerPage * page, Math.min(sorted.size(), glyphsPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         int totalRowsPlaced = 0;
         int row_offset = page == 0 ? 2 : 0;
@@ -284,7 +291,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void updateNextPageButtons() {
-        if (displayedGlyphs.size() < 58) {
+        if (displayedGlyphs.size() < glyphsPerPage) {
             nextButton.visible = false;
             nextButton.active = false;
         } else {
@@ -302,8 +309,10 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onPageIncrease(Button button) {
+        if(page + 1 >= getNumPages())
+            return;
         page++;
-        if (displayedGlyphs.size() < 58 * (page + 1)) {
+        if (displayedGlyphs.size() < glyphsPerPage * (page + 1)) {
             nextButton.visible = false;
             nextButton.active = false;
         }
@@ -314,18 +323,36 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onPageDec(Button button) {
+        if(page <= 0){
+            page = 0;
+            return;
+        }
         page--;
         if (page == 0) {
             previousButton.active = false;
             previousButton.visible = false;
         }
 
-        if (displayedGlyphs.size() > 58 * (page + 1)) {
+        if (displayedGlyphs.size() > glyphsPerPage * (page + 1)) {
             nextButton.visible = true;
             nextButton.active = true;
         }
         layoutAllGlyphs(page);
         validate();
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
+        if (scroll < 0 && nextButton.active) {
+            onPageIncrease(nextButton);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        } else if (scroll > 0 && previousButton.active) {
+            onPageDec(previousButton);
+            manager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        }
+
+        return true;
     }
 
     public void onDocumentationClick(Button button) {

@@ -54,7 +54,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
 
         updateBlock();
         ParticleUtil.beam(blockPos, getBlockPos(), level);
-        PortUtil.sendMessageNoSpam(playerEntity, Component.literal("Turret now aims to" + blockPos));
+        PortUtil.sendMessageNoSpam(playerEntity, Component.literal("Turret now aims to " + blockPos.toShortString()));
     }
 
     public static double angleBetween(Vec3 a, Vec3 b) {

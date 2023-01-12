@@ -83,7 +83,6 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
             }
         }
         super.renderByItem(itemStack, transformType, stack, bufferIn, combinedLightIn, p_239207_6_);
-
     }
 
     @Override

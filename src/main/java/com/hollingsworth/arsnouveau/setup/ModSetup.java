@@ -66,6 +66,8 @@ public class ModSetup {
         Deferred.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);
+        VillagerRegistry.POIs.register(modEventBus);
+        VillagerRegistry.VILLAGERS.register(modEventBus);
     }
 
     //TODO:Switch to DeferredReg where possible

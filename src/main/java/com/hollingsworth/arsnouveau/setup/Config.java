@@ -50,7 +50,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
 
     public static ForgeConfigSpec.BooleanValue SPAWN_TOMES;
-    public static ForgeConfigSpec.BooleanValue WARP_END_RENDER;
+    public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
     public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
     public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
@@ -94,7 +94,7 @@ public class Config {
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         CLIENT_BUILDER.comment("Misc").push("misc");
-        WARP_END_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
+        ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
 
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);

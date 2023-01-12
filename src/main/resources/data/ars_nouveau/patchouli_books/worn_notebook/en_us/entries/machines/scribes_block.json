@@ -15,7 +15,7 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:spell_parchment",
+      "recipe": "ars_nouveau:blank_parchment",
       "recipe2": "ars_nouveau:scribes_table"
     }
   ]
