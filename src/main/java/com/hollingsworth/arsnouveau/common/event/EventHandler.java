@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
+import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
@@ -16,12 +18,14 @@ import com.hollingsworth.arsnouveau.common.command.ResetCommand;
 import com.hollingsworth.arsnouveau.common.command.ToggleLightCommand;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
+import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.VillagerRegistry;
@@ -43,6 +47,7 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,6 +63,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -249,13 +255,58 @@ public class EventHandler {
         PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
     }
+
     @SubscribeEvent
     public static void registerTrades(VillagerTradesEvent event){
         if (event.getType() == VillagerRegistry.SHARDS_TRADER.get()){
             Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
+            List<VillagerTrades.ItemListing> level1 = trades.get(1);
+            List<VillagerTrades.ItemListing> level2 = trades.get(2);
+            List<VillagerTrades.ItemListing> level3 = trades.get(3);
+            List<VillagerTrades.ItemListing> level4 = trades.get(4);
+            List<VillagerTrades.ItemListing> level5 = trades.get(5);
 
-            trades.get(1).add((trader, rand) -> new MerchantOffer(new ItemStack(Items.GOLD_NUGGET, 5), ItemsRegistry.STARBUNCLE_SHARD.get().getDefaultInstance(), 10, 8, 0.2F));
+            level1.add((trader, rand) -> itemToEmer(BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(ItemsRegistry.MAGE_FIBER, 16, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(BlockRegistry.BOMBEGRANTE_POD, 6, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(BlockRegistry.MENDOSTEEN_POD, 6, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(BlockRegistry.FROSTAYA_POD, 6, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(BlockRegistry.BASTION_POD, 6, 16, 2));
+            level1.add((trader, rand) -> itemToEmer(Items.AMETHYST_SHARD, 32, 16, 2));
+
+            level1.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
+
+            level2.add((trader, rand) -> emerToItem(BlockRegistry.GHOST_WEAVE, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(BlockRegistry.FALSE_WEAVE, 1, 8, 2));
+            level2.add((trader, rand) -> emerToItem(ItemsRegistry.WARP_SCROLL, 1, 8, 2));
+
+            level2.add((trader, rand) -> itemToEmer(ItemsRegistry.WILDEN_HORN, 4, 8, 12));
+            level2.add((trader, rand) -> itemToEmer(ItemsRegistry.WILDEN_SPIKE, 4, 8, 12));
+            level2.add((trader, rand) -> itemToEmer(ItemsRegistry.WILDEN_WING, 4, 8, 12));
+
+            List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
+            for(RitualTablet tablet : tablets){
+                level3.add((trader, rand) -> emerToItem(tablet, 4, 4, 12));
+            }
+
+            level4.add((trader, rand) -> emerToItem(ItemsRegistry.STARBUNCLE_SHARD, 20, 1, 20));
+            level4.add((trader, rand) -> emerToItem(ItemsRegistry.DRYGMY_SHARD, 20, 1, 20));
+            level4.add((trader, rand) -> emerToItem(ItemsRegistry.WIXIE_SHARD, 20, 1, 20));
+            level4.add((trader, rand) -> emerToItem(ItemsRegistry.WHIRLISPRIG_SHARDS, 20, 1, 20));
+
+            level5.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 16, 2));
+            level5.add((trader, rand) -> new MerchantOffer(new ItemStack(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
+
         }
+    }
+
+    public static MerchantOffer emerToItem(ItemLike itemLike, int cost, int uses, int exp){
+        return new VillagerTrades.ItemsForEmeralds(itemLike.asItem(), cost, uses, exp).getOffer(null, null);
+    }
+
+    public static MerchantOffer itemToEmer(ItemLike itemLike, int cost, int uses, int exp){
+        return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(null, null);
     }
 
 

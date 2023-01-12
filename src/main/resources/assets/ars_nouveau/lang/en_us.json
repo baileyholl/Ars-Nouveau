@@ -1321,5 +1321,6 @@
 	"ars_nouveau.page1.spell_crossbow": "A crossbow that can be inscribed with a spell. The mana cost of the spell will be deducted when the bow is loaded if mana is present. Enchanter's Crossbows may use special augment arrows to empower their spells.",
 	"ars_nouveau.tooltip.from_blank" : "Created by scribing a Blank Parchment in the scribes table.",
 	"ars_nouveau.manipulation_essence.tooltip": "Can be scribed onto a Spell Parchment or caster tool to permanently hide the spell.",
-	"ars_nouveau.spell_hidden": "Spell is now hidden."
+	"ars_nouveau.spell_hidden": "Spell is now hidden.",
+	"entity.minecraft.villager.ars_nouveau.shady_wizard": "Shady Wizard"
 }
