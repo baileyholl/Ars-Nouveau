@@ -126,6 +126,7 @@ public class APIRegistry {
         registerSpell(EffectLinger.INSTANCE);
         registerSpell(EffectSenseMagic.INSTANCE);
         registerSpell(EffectInfuse.INSTANCE);
+        registerSpell(EffectWall.INSTANCE);
 
         registerScryer(SingleBlockScryer.INSTANCE);
         registerScryer(CompoundScryer.INSTANCE);

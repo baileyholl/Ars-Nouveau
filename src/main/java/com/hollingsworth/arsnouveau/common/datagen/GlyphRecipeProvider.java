@@ -123,6 +123,9 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectName.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.NAME_TAG));
         add(get(EffectSenseMagic.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(ItemsRegistry.DOWSING_ROD).withItem(ItemsRegistry.STARBUNCLE_SHARD));
         add(get(EffectInfuse.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.GLASS_BOTTLE).withIngredient(Tags.Items.RODS_BLAZE, 1));
+        add(get(EffectWall.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
+                .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             DataProvider.saveStable(cache, recipe.asRecipe(), path);

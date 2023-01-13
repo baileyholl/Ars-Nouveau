@@ -214,6 +214,14 @@ public class ModEntities {
             .sized(0.6F, 0.63F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
 
+    public static final RegistryObject<EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
+            LibEntityNames.WALL,
+            EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .setTrackingRange(20)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setUpdateInterval(120).setCustomClientFactory(EntityWallSpell::new));
+
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(GIFT_STARBY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
