@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +10,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,8 +17,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class EntityLingeringSpell extends EntityProjectileSpell {
 
@@ -83,7 +81,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
             } else {
                 int i = 0;
                 for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
-                    if (entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt)
+                    if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST))
                         continue;
                     spellResolver.onResolveEffect(level, new EntityHitResult(entity));
                     i++;

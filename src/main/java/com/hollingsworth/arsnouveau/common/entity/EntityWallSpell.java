@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +12,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -107,7 +107,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 aabb = aabb.inflate(0, 0, 0.5);
             }
             for (Entity entity : level.getEntities(null, aabb)) {
-                if (entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt || entity instanceof EntityWallSpell) {
+                if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST)) {
                     continue;
                 }
                 Optional<EntityHit> hit = hitEntities.stream().filter(e -> e.entity.refersTo(entity)).findFirst();
