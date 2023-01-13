@@ -152,6 +152,8 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENCHANTED_FALLING_BLOCK.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), GiftStarbyRenderer::new);
+        event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
+                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
     }
 
     public static NamedGuiOverlay cameraOverlay = new NamedGuiOverlay(new ResourceLocation(ArsNouveau.MODID, "scry_camera"), (gui, pose, partialTick, width, height) -> {
