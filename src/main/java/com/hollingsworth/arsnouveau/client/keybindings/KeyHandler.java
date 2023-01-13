@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
 import com.hollingsworth.arsnouveau.common.network.PacketQuickCast;
@@ -81,7 +82,17 @@ public class KeyHandler {
             }
 
             if (MINECRAFT.screen == null) {
-                hotkeyListener.onOpenBookMenuKeyPressed(stack, player);
+                // TODO remove these exceptions and have casters tell which keys they capture
+                if(stack.getItem() instanceof SpellBook) {
+                    hotkeyListener.onOpenBookMenuKeyPressed(stack, player);
+                }else{
+                    // Check other hand for book
+                    InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+                    ItemStack otherStack = player.getItemInHand(otherHand);
+                    if(otherStack.getItem() instanceof ISpellHotkeyListener offhandListener){
+                        offhandListener.onOpenBookMenuKeyPressed(otherStack, player);
+                    }
+                }
             }
         }
         int slot = ModKeyBindings.usedQuickSlot(key);

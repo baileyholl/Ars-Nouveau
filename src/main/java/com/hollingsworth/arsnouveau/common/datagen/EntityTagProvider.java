@@ -40,6 +40,8 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"))
                 .add(EntityType.ITEM).add(EntityType.END_CRYSTAL)
                 .add(EntityType.BOAT).add(EntityType.CHEST_BOAT);
+        this.tag(EntityTags.LINGERING_BLACKLIST)
+                .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {

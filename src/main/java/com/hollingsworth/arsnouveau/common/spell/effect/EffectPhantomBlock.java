@@ -77,7 +77,7 @@ public class EffectPhantomBlock extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. ";
+        return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly.";
     }
 
    @NotNull

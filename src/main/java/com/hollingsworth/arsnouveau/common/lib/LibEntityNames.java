@@ -49,6 +49,7 @@ public class LibEntityNames {
     public static final String AMETHYST_GOLEM = "amethyst_golem";
     public static final String SCRYER_CAMERA = "scryer_camera";
     public static final String GIFT_STARBY = "gift_starby";
+    public static final String WALL = "wall";
     public static String appendFamiliar(String fam) {
         return "familiar_" + fam;
     }

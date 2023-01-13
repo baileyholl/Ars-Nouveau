@@ -103,9 +103,8 @@ public class APIRegistry {
         registerSpell(EffectLinger.INSTANCE);
         registerSpell(EffectSenseMagic.INSTANCE);
         registerSpell(EffectInfuse.INSTANCE);
-        if (!FMLEnvironment.production){
-            registerSpell(EffectRotate.INSTANCE);
-        }
+        registerSpell(EffectRotate.INSTANCE);
+        registerSpell(EffectWall.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -130,6 +129,7 @@ public class APIRegistry {
         registerFamiliar(new WixieFamiliarHolder());
 //        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliarHolder());
+
 
         registerScryer(SingleBlockScryer.INSTANCE);
         registerScryer(CompoundScryer.INSTANCE);
