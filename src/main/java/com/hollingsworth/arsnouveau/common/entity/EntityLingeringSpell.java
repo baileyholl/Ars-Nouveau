@@ -24,6 +24,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> SHOULD_FALL = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public double extendedTime;
     public int maxProcs = 100;
     public int totalProcs;
@@ -61,6 +62,8 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
 
     @Override
     public void tickNextPosition() {
+        if(!shouldFall())
+            return;
         if (!getLanded()) {
             this.setDeltaMovement(0, -0.2, 0);
         } else {
@@ -162,6 +165,14 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         return entityData.get(SENSITIVE);
     }
 
+    public void setShouldFall(boolean shouldFall) {
+        entityData.set(SHOULD_FALL, shouldFall);
+    }
+
+    public boolean shouldFall() {
+        return entityData.get(SHOULD_FALL);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -169,17 +180,20 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         entityData.define(AOE, 0f);
         entityData.define(LANDED, false);
         entityData.define(SENSITIVE, false);
+        entityData.define(SHOULD_FALL, true);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sensitive", isSensitive());
+        tag.putBoolean("shouldFall", shouldFall());
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
         setSensitive(compound.getBoolean("sensitive"));
+        setShouldFall(compound.getBoolean("shouldFall"));
     }
 }
