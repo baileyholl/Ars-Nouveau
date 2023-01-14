@@ -88,9 +88,10 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, tile.getData().getPotion());
             PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
-            player.addItem(potionStack);
-            player.getItemInHand(handIn).shrink(1);
-            tile.remove(100);
+            if(player.addItem(potionStack)) {
+                player.getItemInHand(handIn).shrink(1);
+                tile.remove(100);
+            }
         }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
             PotionUtils.setPotion(potionStack, tile.getData().getPotion());
