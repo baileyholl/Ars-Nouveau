@@ -44,6 +44,8 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(EntityType.BOAT).add(EntityType.CHEST_BOAT);
         this.tag(EntityTags.LINGERING_BLACKLIST)
                 .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
+        this.tag(EntityTags.BERRY_BLACKLIST)
+                .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.WHIRLISPRIG_TYPE.get(), EntityType.FOX, EntityType.BEE);
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {
