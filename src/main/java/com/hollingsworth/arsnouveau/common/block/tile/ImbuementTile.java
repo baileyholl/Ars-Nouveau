@@ -188,7 +188,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public int getMaxSource() {
-        return Integer.MAX_VALUE;
+        return 10000000;
     }
 
     @Override

@@ -58,4 +58,12 @@ public abstract class ChangeableBehavior implements IWandable {
     public ItemStack getStackForRender(){
         return ItemStack.EMPTY;
     }
+
+
+    /**
+     * @return true if onWanded can remove the current accessory, false if it only needs to reset connections
+     */
+    public boolean clearOrRemove() {
+        return true;
+    }
 }
