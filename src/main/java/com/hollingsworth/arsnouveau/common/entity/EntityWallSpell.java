@@ -36,6 +36,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     public int maxProcs = 100;
     public int totalProcs;
     List<EntityHit> hitEntities = new ArrayList<>();
+    public float growthFactor = 1.0f;
 
     public EntityWallSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
         super(ModEntities.WALL_SPELL.get(), worldIn);
@@ -98,13 +99,13 @@ public class EntityWallSpell extends EntityProjectileSpell {
 
             AABB aabb = new AABB(start, end);
             if(aabb.maxX == aabb.minX){
-                aabb = aabb.inflate(0.5, 0, 0);
+                aabb = aabb.inflate(growthFactor, 0, 0);
             }
             if(aabb.maxY == aabb.minY){
-                aabb = aabb.inflate(0, 0.5, 0);
+                aabb = aabb.inflate(0, growthFactor, 0);
             }
             if(aabb.maxZ == aabb.minZ){
-                aabb = aabb.inflate(0, 0, 0.5);
+                aabb = aabb.inflate(0, 0, growthFactor);
             }
             for (Entity entity : level.getEntities(null, aabb)) {
                 if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST)) {
@@ -153,9 +154,9 @@ public class EntityWallSpell extends EntityProjectileSpell {
         BlockPos.betweenClosedStream(pos.offset(range * getDirection().getStepX(), 0, range * getDirection().getStepZ()), pos.offset(-range  * getDirection().getStepX(), range, -range * getDirection().getStepZ())).forEach(blockPos -> {
             if (rand.nextInt(chance) == 0) {
                 for (int i = 0; i < rand.nextInt(numParticles); i++) {
-                    double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
-                    double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
-                    double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5) + 0.5;
+                    double x = blockPos.getX() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
+                    double y = blockPos.getY() + ParticleUtil.inRange(-growthFactor, growthFactor);
+                    double z = blockPos.getZ() + ParticleUtil.inRange(-growthFactor, growthFactor) + 0.5;
                     level.addParticle(ParticleLineData.createData(getParticleColor()),
                             x, y, z,
                             x, y + ParticleUtil.inRange(0.5, 5), z);
