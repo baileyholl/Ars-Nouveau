@@ -100,7 +100,7 @@ public class ParticleUtil {
     }
 
     public static void spawnTouch(ClientLevel world, BlockPos loc, ParticleColor particleColor) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             double d0 = loc.getX() + 0.5;
             double d1 = loc.getY() + 1.0;
             double d2 = loc.getZ() + .5;
