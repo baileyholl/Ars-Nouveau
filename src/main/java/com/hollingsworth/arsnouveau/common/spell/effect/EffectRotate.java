@@ -14,12 +14,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -55,8 +57,19 @@ public class EffectRotate extends AbstractEffect {
             }else {
                 entity.setYRot(angle);
             }
+            if(entity instanceof Projectile projectile){
+                Vec3 vec3d = projectile.getDeltaMovement();
+                projectile.setDeltaMovement(rotateVec(vec3d, 90));
+            }
             entity.hurtMarked = true;
         }
+    }
+
+    public Vec3 rotateVec(Vec3 vec, float angle) {
+        // Rotate the vector around the Y axis
+        double x = vec.x * Math.cos(angle) - vec.z * Math.sin(angle);
+        double z = vec.x * Math.sin(angle) + vec.z * Math.cos(angle);
+        return new Vec3(x, vec.y, z);
     }
 
     @Override
