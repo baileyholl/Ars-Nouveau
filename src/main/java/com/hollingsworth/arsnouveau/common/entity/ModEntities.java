@@ -159,8 +159,8 @@ public class ModEntities {
             .sized(0.5f, 0.5f).setTrackingRange(10));
     public static final RegistryObject<EntityType<FamiliarWhirlisprig>> ENTITY_FAMILIAR_SYLPH = registerEntity(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
             .sized(0.5f, 0.5f).setTrackingRange(10));
-    public static final RegistryObject<EntityType<FamiliarJabberwog>> ENTITY_FAMILIAR_JABBERWOG = registerEntity(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
-            .sized(0.5f, 0.5f).setTrackingRange(10));
+//    public static final RegistryObject<EntityType<FamiliarJabberwog>> ENTITY_FAMILIAR_JABBERWOG = registerEntity(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
+//            .sized(0.5f, 0.5f).setTrackingRange(10));
     public static final RegistryObject<EntityType<EntityLingeringSpell>> LINGER_SPELL = registerEntity(
             LibEntityNames.LINGER,
             EntityType.Builder.<EntityLingeringSpell>of(EntityLingeringSpell::new, MobCategory.MISC)
@@ -266,7 +266,7 @@ public class ModEntities {
             event.put(WILDEN_BOSS.get(), EntityChimera.getModdedAttributes().build());
             event.put(ENTITY_FAMILIAR_STARBUNCLE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarEntity.attributes().build());
-            event.put(ENTITY_FAMILIAR_JABBERWOG.get(), FamiliarEntity.attributes().build());
+//            event.put(ENTITY_FAMILIAR_JABBERWOG.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_WIXIE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_SYLPH.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_DRYGMY.get(), FamiliarEntity.attributes().build());
