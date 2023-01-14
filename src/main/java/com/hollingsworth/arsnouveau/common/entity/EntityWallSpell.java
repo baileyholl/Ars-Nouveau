@@ -32,6 +32,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Direction> DIRECTION = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.DIRECTION);
+    public static final EntityDataAccessor<Boolean> SHOULD_FALL = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.BOOLEAN);
     public double extendedTime;
     public int maxProcs = 100;
     public int totalProcs;
@@ -71,6 +72,8 @@ public class EntityWallSpell extends EntityProjectileSpell {
 
     @Override
     public void tickNextPosition() {
+        if(!shouldFall())
+            return;
         if (!getLanded()) {
             this.setDeltaMovement(0, -0.2, 0);
         } else {
@@ -223,6 +226,14 @@ public class EntityWallSpell extends EntityProjectileSpell {
         return entityData.get(DIRECTION);
     }
 
+    public void setShouldFall(boolean shouldFall) {
+        entityData.set(SHOULD_FALL, shouldFall);
+    }
+
+    public boolean shouldFall() {
+        return entityData.get(SHOULD_FALL);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -231,6 +242,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         entityData.define(LANDED, false);
         entityData.define(SENSITIVE, false);
         entityData.define(DIRECTION, Direction.NORTH);
+        entityData.define(SHOULD_FALL, true);
     }
 
     @Override
@@ -238,6 +250,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sensitive", isSensitive());
         tag.putString("direction", getDirection().name());
+        tag.putBoolean("should_fall", shouldFall());
     }
 
     @Override
@@ -245,6 +258,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         super.load(compound);
         setSensitive(compound.getBoolean("sensitive"));
         setDirection(Direction.valueOf(compound.getString("direction")));
+        setShouldFall(compound.getBoolean("should_fall"));
     }
     public static class EntityHit{
         long gameTime;
