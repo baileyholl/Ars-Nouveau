@@ -2,13 +2,17 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +36,10 @@ public class EffectSnare extends AbstractEffect {
         }
 
         if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock) {
-            fallingBlock.groundBlock(true);
+            BlockPos resultPos = fallingBlock.groundBlock(true);
+            if(resultPos != null) {
+                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(resultPos.getX(), resultPos.getY(), resultPos.getZ()), rayTraceResult.getEntity().getMotionDirection(), resultPos, false), world, shooter, spellContext, resolver);
+            }
         }
 
     }
