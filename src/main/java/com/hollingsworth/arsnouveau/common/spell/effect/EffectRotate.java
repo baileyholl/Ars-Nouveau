@@ -4,10 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +34,7 @@ public class EffectRotate extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Rotates a block or an entity clockwise. If augmented with sensitive it will change the axis of the block (if possible) or force the entity to turn their look";
+        return "Rotates a block or an entity clockwise. If augmented with sensitive it will change the axis of the block (if possible) or force the entity to turn their look. Dampen will rotate counter-clockwise.";
     }
 
     @Override
@@ -49,9 +46,10 @@ public class EffectRotate extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         boolean sensitive = spellStats.getBuffCount(AugmentSensitive.INSTANCE) >= 1;
-
-        for (int i = 0; i < 1 + spellStats.getAmpMultiplier(); i++) {
-            float angle = entity.rotate(Rotation.CLOCKWISE_90);
+        int ampMod = (int)spellStats.getAmpMultiplier();
+        boolean counterClockwise = ampMod < 0;
+        for (int i = 0; i < 1 + Math.abs(ampMod); i++) {
+            float angle = entity.rotate(counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
             if (sensitive){
                 entity.lookAt(EntityAnchorArgument.Anchor.FEET, entity.position.add(entity.getLookAngle().yRot(angle)));
             }else {
@@ -59,7 +57,7 @@ public class EffectRotate extends AbstractEffect {
             }
             if(entity instanceof Projectile projectile){
                 Vec3 vec3d = projectile.getDeltaMovement();
-                projectile.setDeltaMovement(rotateVec(vec3d, 90));
+                projectile.setDeltaMovement(rotateVec(vec3d, counterClockwise ? -90 : 90));
             }
             entity.hurtMarked = true;
         }
@@ -78,25 +76,27 @@ public class EffectRotate extends AbstractEffect {
         boolean swapAxis = spellStats.getBuffCount(AugmentSensitive.INSTANCE) >= 1;
         for (BlockPos pos : posList) {
             BlockState state = world.getBlockState(pos);
-            for (int i = 0; i < 1 + spellStats.getAmpMultiplier(); i++) {
+            int ampMod = (int)spellStats.getAmpMultiplier();
+            boolean counterClockwise = ampMod < 0;
+            for (int i = 0; i < (counterClockwise ? 0 : 1) + Math.abs(ampMod); i++) {
                 if (swapAxis) {
                     if (state.hasProperty(BlockStateProperties.AXIS)) {
                         state = state.setValue(BlockStateProperties.AXIS, switch (state.getValue(BlockStateProperties.AXIS)) {
-                            case X -> Axis.Y;
-                            case Y -> Axis.Z;
-                            case Z -> Axis.X;
+                            case X -> counterClockwise ? Axis.Z : Axis.Y;
+                            case Y -> counterClockwise ? Axis.X :Axis.Z;
+                            case Z -> counterClockwise ? Axis.Y :Axis.X;
                         });
                     } else if (state.hasProperty(BlockStateProperties.FACING)) {
                         Direction curr = state.getValue(BlockStateProperties.FACING);
                         state = state.setValue(BlockStateProperties.FACING, switch (curr) {
-                            case DOWN -> Direction.NORTH;
-                            case UP -> Direction.SOUTH;
-                            case NORTH, EAST -> Direction.UP;
-                            case SOUTH, WEST -> Direction.DOWN;
+                            case DOWN -> counterClockwise ? Direction.SOUTH : Direction.NORTH;
+                            case UP -> counterClockwise ? Direction.NORTH : Direction.SOUTH;
+                            case NORTH, EAST -> counterClockwise ? Direction.DOWN : Direction.UP;
+                            case SOUTH, WEST -> counterClockwise ? Direction.UP : Direction.DOWN;
                         });
                     }
                 } else {
-                    state = state.rotate(world, pos, Rotation.CLOCKWISE_90);
+                    state = state.rotate(world, pos, counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
                 }
             }
             world.setBlockAndUpdate(pos, state);
@@ -109,6 +109,7 @@ public class EffectRotate extends AbstractEffect {
         return 10;
     }
 
+
     @Override
     protected @NotNull Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
@@ -116,7 +117,7 @@ public class EffectRotate extends AbstractEffect {
 
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDampen.INSTANCE);
     }
 
 }
