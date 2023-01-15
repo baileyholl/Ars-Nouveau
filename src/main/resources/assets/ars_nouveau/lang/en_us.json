@@ -620,7 +620,7 @@
   "tooltip.ars_nouveau.glyph_disabled": "Disabled. Cannot be used.",
   "tooltip.ars_nouveau.glyph_level": "A tier %s glyph.",
   "tooltip.ars_nouveau.caster_level": "Can cast tier %s glyphs or lower.",
-  "tooltip.ars_nouveau.hold_shift": "Hold shift for more info.",
+  "tooltip.ars_nouveau.hold_shift": "Hold %s for more info.",
   "item.ars_nouveau.drygmy_shard": "Drygmy Shards",
   "item.ars_nouveau.drygmy_charm": "Drygmy Charm",
   "block.ars_nouveau.drygmy_stone": "Drygmy Henge",

@@ -41,7 +41,7 @@ public class PerkItem extends ModItem {
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())) {
             tooltip2.add(Component.translatable(perk.getDescriptionKey()));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
         }
     }
 }

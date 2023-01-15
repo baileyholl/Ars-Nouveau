@@ -639,7 +639,7 @@
 	"tooltip.ars_nouveau.glyph_disabled": "Відключено. Не може використовуватись.",
 	"tooltip.ars_nouveau.glyph_level": "Гліф %s рівня.",
 	"tooltip.ars_nouveau.caster_level": "Для гліфів %s рівня чи нижче.",
-	"tooltip.ars_nouveau.hold_shift": "Утримуй shift для подробиць.",
+	"tooltip.ars_nouveau.hold_shift": "Утримуй %s для подробиць.",
 	"item.ars_nouveau.drygmy_shard": "Осколок Дриґму",
 	"item.ars_nouveau.drygmy_charm": "Амулет Дриґму",
 	"block.ars_nouveau.drygmy_stone": "Оселя Дриґму",

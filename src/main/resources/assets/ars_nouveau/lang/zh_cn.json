@@ -639,7 +639,7 @@
 	"tooltip.ars_nouveau.glyph_disabled": "已禁用。不可使用。",
 	"tooltip.ars_nouveau.glyph_level": "一个%s级魔符。",
 	"tooltip.ars_nouveau.caster_level": "可用于施放%s级或更低级的魔符。",
-	"tooltip.ars_nouveau.hold_shift": "按住shift显示更多信息。",
+	"tooltip.ars_nouveau.hold_shift": "按住 %s 显示更多信息。",
 	"item.ars_nouveau.drygmy_shard": "德格米碎片",
 	"item.ars_nouveau.drygmy_charm": "德格米护符",
 	"block.ars_nouveau.drygmy_stone": "德格米石阵",
