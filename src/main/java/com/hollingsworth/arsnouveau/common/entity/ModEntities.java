@@ -167,6 +167,7 @@ public class ModEntities {
                     .sized(0.5f, 0.5f)
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
+                    .noSave()
                     .setUpdateInterval(120).setCustomClientFactory(EntityLingeringSpell::new));
     public static final RegistryObject<EntityType<WealdWalker>> ENTITY_CASCADING_WEALD = registerEntity(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                 WealdWalker walker = new WealdWalker(type, world);
@@ -219,6 +220,7 @@ public class ModEntities {
             EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f)
                     .setTrackingRange(20)
+                    .noSave()
                     .setShouldReceiveVelocityUpdates(true)
                     .setUpdateInterval(120).setCustomClientFactory(EntityWallSpell::new));
 
