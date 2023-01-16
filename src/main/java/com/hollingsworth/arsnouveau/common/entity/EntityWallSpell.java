@@ -59,7 +59,10 @@ public class EntityWallSpell extends EntityProjectileSpell {
     @Override
     public void tick() {
         if (!level.isClientSide) {
+            if(spellResolver == null)
+                return;
             boolean isOnGround = level.getBlockState(blockPosition()).getMaterial().blocksMotion();
+
             this.setLanded(isOnGround);
         }
         super.tick();
