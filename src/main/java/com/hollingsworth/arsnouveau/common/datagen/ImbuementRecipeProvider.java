@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImbuementRecipeProvider implements DataProvider {
-    protected final DataGenerator generator;
-    protected List<ImbuementRecipe> recipes = new ArrayList<>();
+    public final DataGenerator generator;
+    public List<ImbuementRecipe> recipes = new ArrayList<>();
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
 

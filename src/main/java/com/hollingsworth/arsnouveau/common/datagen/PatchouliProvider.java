@@ -37,7 +37,7 @@ import java.util.List;
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class PatchouliProvider implements DataProvider {
-    protected final DataGenerator generator;
+    public final DataGenerator generator;
     public static ResourceLocation AUTOMATION = new ResourceLocation(ArsNouveau.MODID, "automation");
     public static ResourceLocation ENCHANTMENTS = new ResourceLocation(ArsNouveau.MODID, "enchantments");
     public static ResourceLocation EQUIPMENT = new ResourceLocation(ArsNouveau.MODID, "equipment");

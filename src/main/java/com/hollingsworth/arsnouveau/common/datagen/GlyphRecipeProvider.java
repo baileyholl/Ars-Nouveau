@@ -30,10 +30,10 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class GlyphRecipeProvider implements DataProvider {
 
-    protected final DataGenerator generator;
+    public final DataGenerator generator;
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
-    protected List<GlyphRecipe> recipes = new ArrayList<>();
+    public List<GlyphRecipe> recipes = new ArrayList<>();
 
     public GlyphRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
