@@ -79,10 +79,10 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
             boolean placedBlock = false;
             for (ItemStack i : outputs) {
-                if (!placedBlock && i.getItem() instanceof BlockItem blockItem) {
+                if (!placedBlock && i.getItem() instanceof BlockItem blockItem && !lastHit.shouldSkipBlockPlace()) {
                     world.setBlockAndUpdate(p, blockItem.getBlock().defaultBlockState());
-                    i.shrink(1);
                     placedBlock = true;
+                    i.shrink(1);
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                             new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
                     ), world, shooter, spellContext, resolver);
