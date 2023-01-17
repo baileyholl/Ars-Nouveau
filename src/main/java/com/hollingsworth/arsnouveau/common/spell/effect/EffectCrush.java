@@ -79,7 +79,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
             boolean placedBlock = false;
             for (ItemStack i : outputs) {
-                if (!placedBlock && i.getItem() instanceof BlockItem blockItem) {
+                if (!placedBlock && i.getItem() instanceof BlockItem blockItem && !lastHit.shouldSkipBlockPlace()) {
                     world.setBlockAndUpdate(p, blockItem.getBlock().defaultBlockState());
                     i.shrink(1);
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
@@ -89,8 +89,6 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
                 if (!i.isEmpty()) {
                     world.addFreshEntity(new ItemEntity(world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, i));
                 }
-                // Only attempt to place the first entry in the recipe to allow for full control over the output
-                placedBlock = true;
             }
             if (!placedBlock) {
                 world.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState());
