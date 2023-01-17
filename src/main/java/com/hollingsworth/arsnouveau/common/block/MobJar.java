@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PlayerRideable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
@@ -57,7 +58,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         if(tile.getEntity() == null && !pLevel.isClientSide){
             ItemStack stack = pPlayer.getItemInHand(pHand);
             if(stack.getItem() instanceof SpawnEggItem spawnEggItem){
-                EntityType type = spawnEggItem.getType(null);
+                EntityType<?> type = spawnEggItem.getType(null);
                 Entity entity = type.create(pLevel);
                 if(entity != null) {
                     tile.setEntityData(entity);
@@ -66,7 +67,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 }
             }
         }
-        if(tile.getEntity() != null && !JarBehaviorRegistry.containsEntity(tile.getEntity())){
+        if(tile.getEntity() != null && !(tile.getEntity() instanceof PlayerRideable) && !JarBehaviorRegistry.containsEntity(tile.getEntity())){
             pPlayer.interactOn(tile.getEntity(), pHand);
             tile.updateBlock();
         }

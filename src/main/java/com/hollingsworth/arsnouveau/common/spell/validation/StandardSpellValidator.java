@@ -24,6 +24,7 @@ public class StandardSpellValidator implements ISpellValidator {
     private static final ISpellValidator GLYPH_OCCURRENCES_POLICY = new GlyphOccurrencesPolicyValidator();
     private static final ISpellValidator EFFECT_AUGMENTATION_POLICY = new ActionAugmentationPolicyValidator();
     private static final ISpellValidator AUGMENT_COMPATIBILITY = new AugmentCompatibilityValidator();
+    private static final ISpellValidator INVALID_COMBINATION_POLICY = new InvalidCombinationValidator();
 
     private final ISpellValidator combinedValidator;
 
@@ -46,7 +47,7 @@ public class StandardSpellValidator implements ISpellValidator {
             validators.add(AUGMENT_COMPATIBILITY);
             validators.add(EFFECT_AUGMENTATION_POLICY);
             validators.add(GLYPH_OCCURRENCES_POLICY);
-
+            validators.add(INVALID_COMBINATION_POLICY);
         }
 
         // Validators only applicable at casting time

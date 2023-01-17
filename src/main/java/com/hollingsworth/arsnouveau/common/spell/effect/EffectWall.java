@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
+import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,18 +14,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class EffectLinger extends AbstractEffect {
-    public static EffectLinger INSTANCE = new EffectLinger();
+public class EffectWall extends AbstractEffect {
+    public static EffectWall INSTANCE = new EffectWall();
 
-    private EffectLinger() {
-        super(GlyphLib.EffectLingerID, "Linger");
+    private EffectWall() {
+        super(GlyphLib.EffectWallId, "Wall");
+        invalidCombinations.add(EffectLinger.INSTANCE.getRegistryName());
     }
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
-        EntityLingeringSpell entityLingeringSpell = new EntityLingeringSpell(world, shooter);
+        EntityWallSpell entityLingeringSpell = new EntityWallSpell(world, shooter);
         spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
@@ -35,6 +36,7 @@ public class EffectLinger extends AbstractEffect {
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
         entityLingeringSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
+        entityLingeringSpell.setDirection(shooter.getDirection().getClockWise());
         SpellContext newContext = new SpellContext(world, newSpell, shooter, spellContext.getCaster()).withCastingTile(spellContext.castingTile).withType(spellContext.getType());
         entityLingeringSpell.spellResolver = new SpellResolver(newContext);
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
@@ -45,7 +47,7 @@ public class EffectLinger extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Creates a lingering field that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. AOE will expand the effective range, Accelerate will cast spells faster, Dampen will ignore gravity, and Extend Time will increase the duration.";
+        return "Creates a lingering wall that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. AOE will expand the effective range, Accelerate will cast spells faster, Dampen will ignore gravity, and Extend Time will increase the duration.";
     }
 
     @Override
@@ -58,7 +60,7 @@ public class EffectLinger extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE);
@@ -70,7 +72,7 @@ public class EffectLinger extends AbstractEffect {
         PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

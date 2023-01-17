@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CrushRecipeProvider implements DataProvider {
-    private final DataGenerator generator;
-    List<CrushRecipe> recipes = new ArrayList<>();
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger();
+    public final DataGenerator generator;
+    public List<CrushRecipe> recipes = new ArrayList<>();
+    public static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public CrushRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;

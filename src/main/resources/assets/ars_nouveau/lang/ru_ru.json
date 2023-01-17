@@ -613,7 +613,7 @@
   "tooltip.ars_nouveau.glyph_disabled": "Отключено. Не может быть использовано.",
   "tooltip.ars_nouveau.glyph_level": "Глиф уровня %s.",
   "tooltip.ars_nouveau.caster_level": "Может творить глифы уровня %s или ниже.",
-  "tooltip.ars_nouveau.hold_shift": "Зажмите SHIFT для инфо",
+  "tooltip.ars_nouveau.hold_shift": "Зажмите %s для инфо",
   "item.ars_nouveau.drygmy_shard": "Осколки Дрыгма",
   "item.ars_nouveau.drygmy_charm": "Талисман Дрыгма",
   "block.ars_nouveau.drygmy_stone": "Землянка Дрыгма",

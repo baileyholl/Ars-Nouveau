@@ -87,7 +87,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         super.tick();
         age++;
 
-        if (this.age > getExpirationTime() || (!level.isClientSide && spellResolver == null)) {
+        if ((!level.isClientSide && this.age > getExpirationTime()) || (!level.isClientSide && spellResolver == null)) {
             this.remove(RemovalReason.DISCARDED);
             return;
         }

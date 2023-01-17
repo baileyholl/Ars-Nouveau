@@ -30,15 +30,26 @@ public class CrushRecipe implements Recipe<Container> {
     public final Ingredient input;
     public final List<CrushOutput> outputs;
     public final ResourceLocation id;
+    private boolean skipBlockPlace;
 
-    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
+    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
         this.input = input;
         this.outputs = outputs;
         this.id = id;
+        this.skipBlockPlace = skipBlockPlace;
+    }
+
+    @Deprecated
+    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
+        this(id, input, outputs, false);
     }
 
     public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs) {
-        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs);
+        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, false);
+    }
+
+    public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
+        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, skipBlockPlace);
     }
 
     public CrushRecipe(String id, Ingredient input) {
@@ -64,6 +75,15 @@ public class CrushRecipe implements Recipe<Container> {
     public CrushRecipe withItems(ItemStack output) {
         this.outputs.add(new CrushOutput(output, 1.0f));
         return this;
+    }
+
+    public CrushRecipe skipBlockPlace() {
+        this.skipBlockPlace = true;
+        return this;
+    }
+
+    public Boolean shouldSkipBlockPlace() {
+        return this.skipBlockPlace;
     }
 
     @Override
@@ -121,6 +141,7 @@ public class CrushRecipe implements Recipe<Container> {
             array.add(element);
         }
         jsonobject.add("output", array);
+        jsonobject.addProperty("skip_block_place", skipBlockPlace);
         return jsonobject;
     }
 
@@ -155,8 +176,9 @@ public class CrushRecipe implements Recipe<Container> {
                 ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
                 parsedOutputs.add(new CrushOutput(output, chance));
             }
+            boolean skipBlockPlace = json.has("skip_block_place") && GsonHelper.getAsBoolean(json, "skip_block_place");
 
-            return new CrushRecipe(recipeId, input, parsedOutputs);
+            return new CrushRecipe(recipeId, input, parsedOutputs, skipBlockPlace);
         }
 
 
@@ -168,6 +190,7 @@ public class CrushRecipe implements Recipe<Container> {
                 buf.writeFloat(i.chance);
                 buf.writeItemStack(i.stack, false);
             }
+            buf.writeBoolean(recipe.skipBlockPlace);
         }
 
         @Nullable
@@ -187,7 +210,8 @@ public class CrushRecipe implements Recipe<Container> {
                     break;
                 }
             }
-            return new CrushRecipe(recipeId, input, stacks);
+            boolean skipBlockPlace = buffer.readBoolean();
+            return new CrushRecipe(recipeId, input, stacks, skipBlockPlace);
         }
     }
 }

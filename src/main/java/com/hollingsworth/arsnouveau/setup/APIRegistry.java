@@ -22,6 +22,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,6 +94,18 @@ public class APIRegistry {
         registerSpell(EffectFreeze.INSTANCE);
         registerSpell(EffectName.INSTANCE);
         registerSpell(EffectSummonUndead.INSTANCE);
+        registerSpell(EffectFirework.INSTANCE);
+        registerSpell(EffectToss.INSTANCE);
+        registerSpell(EffectBounce.INSTANCE);
+        registerSpell(AugmentSensitive.INSTANCE);
+        registerSpell(EffectWindshear.INSTANCE);
+        registerSpell(EffectEvaporate.INSTANCE);
+        registerSpell(EffectLinger.INSTANCE);
+        registerSpell(EffectSenseMagic.INSTANCE);
+        registerSpell(EffectInfuse.INSTANCE);
+        registerSpell(EffectRotate.INSTANCE);
+        registerSpell(EffectWall.INSTANCE);
+
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -117,15 +130,6 @@ public class APIRegistry {
 //        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliarHolder());
 
-        registerSpell(EffectFirework.INSTANCE);
-        registerSpell(EffectToss.INSTANCE);
-        registerSpell(EffectBounce.INSTANCE);
-        registerSpell(AugmentSensitive.INSTANCE);
-        registerSpell(EffectWindshear.INSTANCE);
-        registerSpell(EffectEvaporate.INSTANCE);
-        registerSpell(EffectLinger.INSTANCE);
-        registerSpell(EffectSenseMagic.INSTANCE);
-        registerSpell(EffectInfuse.INSTANCE);
 
         registerScryer(SingleBlockScryer.INSTANCE);
         registerScryer(CompoundScryer.INSTANCE);

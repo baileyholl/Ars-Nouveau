@@ -37,6 +37,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
+    /**
+     * A list of glyphs that cannot be used with this glyph.
+     */
+    public Set<ResourceLocation> invalidCombinations = ConcurrentHashMap.newKeySet();
+
     public AbstractSpellPart(String registryName, String name) {
         this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
     }

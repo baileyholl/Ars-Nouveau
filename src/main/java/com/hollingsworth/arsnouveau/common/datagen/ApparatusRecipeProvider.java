@@ -34,9 +34,9 @@ import java.util.List;
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class ApparatusRecipeProvider implements DataProvider {
-    protected final DataGenerator generator;
-    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger();
+    public final DataGenerator generator;
+    public static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public ApparatusRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;

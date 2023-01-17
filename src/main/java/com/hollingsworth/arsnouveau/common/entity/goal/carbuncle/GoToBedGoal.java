@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.block.Block;
 
 public class GoToBedGoal extends Goal {
 
@@ -26,7 +25,19 @@ public class GoToBedGoal extends Goal {
             starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
             return false;
         }
-        return !unreachable && canUse();
+
+        if(bedPos == null || starbuncle.data.bedPos == null)
+            return false;
+
+        boolean bedValid = true;
+        boolean isOnBed = false;
+        // Time defer these checks otherwise we will destroy TPS with blockstate lookups.
+        if(starbuncle.level.getGameTime() % 10 == 0){
+            bedValid = isBedValid();
+            isOnBed = isOnBed();
+        }
+
+        return !unreachable && bedValid && !isOnBed;
     }
 
     @Override
@@ -65,14 +76,22 @@ public class GoToBedGoal extends Goal {
     @Override
     public boolean canUse() {
         bedPos = starbuncle.data.bedPos;
-        if (starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || !behavior.canGoToBed()) {
+        if (starbuncle.getBackOff() > 0 || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || !behavior.canGoToBed()) {
             return false;
         }
-        Block onBlock = starbuncle.level.getBlockState(new BlockPos(bedPos)).getBlock();
-        if (!(onBlock instanceof SummonBed)) {
-            return false;
+        boolean canRun = isBedValid() && !isOnBed();
+        if(!canRun){
+            starbuncle.setBackOff(20 * 3);
         }
-        return !(starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).getBlock() instanceof SummonBed);
+        return canRun;
+    }
+
+    public boolean isBedValid(){
+        return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).getBlock() instanceof SummonBed;
+    }
+
+    public boolean isOnBed(){
+        return starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).getBlock() instanceof SummonBed;
     }
 
     @Override

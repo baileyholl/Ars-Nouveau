@@ -8,6 +8,7 @@ import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +19,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags() {
+        this.tag(Tags.EntityTypes.BOSSES).add(ModEntities.WILDEN_BOSS.get());
         this.tag(EntityTags.DISINTEGRATION_BLACKLIST);
         this.tag(EntityTags.DISINTEGRATION_WHITELIST);
         this.tag(EntityTags.DRYGMY_BLACKLIST).add(EntityType.IRON_GOLEM);
@@ -40,6 +42,10 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"))
                 .add(EntityType.ITEM).add(EntityType.END_CRYSTAL)
                 .add(EntityType.BOAT).add(EntityType.CHEST_BOAT);
+        this.tag(EntityTags.LINGERING_BLACKLIST)
+                .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
+        this.tag(EntityTags.BERRY_BLACKLIST)
+                .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.WHIRLISPRIG_TYPE.get(), EntityType.FOX, EntityType.BEE);
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {

@@ -686,7 +686,7 @@
 	"tooltip.ars_nouveau.glyph_disabled": "Deshabilitado. No puede ser usado.",
 	"tooltip.ars_nouveau.glyph_level": "Un glifo de nivel %s.",
 	"tooltip.ars_nouveau.caster_level": "Puede lanzar glifos de nivel %s o menor.",
-	"tooltip.ars_nouveau.hold_shift": "Mantén shift para más información.",
+	"tooltip.ars_nouveau.hold_shift": "Mantén %s para más información.",
 	"item.ars_nouveau.drygmy_shard": "Fragmento de Drygmy",
 	"item.ars_nouveau.drygmy_charm": "Aumeleto de Drygmy",
 	"block.ars_nouveau.drygmy_stone": "Henge de Drygmy",

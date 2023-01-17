@@ -687,7 +687,7 @@
 	"tooltip.ars_nouveau.glyph_disabled": "비활성화. 사용할수 없음.",
 	"tooltip.ars_nouveau.glyph_level": "%s티어 상형 문자.",
 	"tooltip.ars_nouveau.caster_level": "%s 등급 이하의 상형 문자를 시전할 수 있습니다.",
-	"tooltip.ars_nouveau.hold_shift": "shift를 눌러 더 많은 정보 보기.",
+	"tooltip.ars_nouveau.hold_shift": "%s 를 눌러 더 많은 정보 보기.",
 	"item.ars_nouveau.drygmy_shard": "드리그미 조각",
 	"item.ars_nouveau.drygmy_charm": "드리그미 부적",
 	"block.ars_nouveau.drygmy_stone": "드리그미 헨지",

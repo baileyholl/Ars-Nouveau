@@ -17,8 +17,6 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class RitualTablet extends ModItem {
     public AbstractRitual ritual;
 
@@ -55,7 +53,7 @@ public class RitualTablet extends ModItem {
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue())) {
             tooltip2.add(Component.translatable(ritual.getDescriptionKey()));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift").withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
         }
     }
 

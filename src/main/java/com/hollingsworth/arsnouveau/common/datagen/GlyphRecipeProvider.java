@@ -30,10 +30,10 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class GlyphRecipeProvider implements DataProvider {
 
-    protected final DataGenerator generator;
+    public final DataGenerator generator;
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
-    protected List<GlyphRecipe> recipes = new ArrayList<>();
+    public List<GlyphRecipe> recipes = new ArrayList<>();
 
     public GlyphRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
@@ -123,6 +123,10 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectName.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.NAME_TAG));
         add(get(EffectSenseMagic.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(ItemsRegistry.DOWSING_ROD).withItem(ItemsRegistry.STARBUNCLE_SHARD));
         add(get(EffectInfuse.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.GLASS_BOTTLE).withIngredient(Tags.Items.RODS_BLAZE, 1));
+        add(get(EffectWall.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
+                .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+        add(get(EffectRotate.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             DataProvider.saveStable(cache, recipe.asRecipe(), path);

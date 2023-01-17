@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiFamiliarScreen;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -36,7 +37,7 @@ public class FamiliarButton extends Button {
                     tip.add(familiarHolder.getLangDescription());
                 } else {
                     tip.add(familiarHolder.getLangName());
-                    tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
+                    tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
                 }
                 parent.tooltip = tip;
             }
