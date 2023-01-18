@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.data.event.GatherDataEvent;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -36,6 +38,13 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new JsonDatagen(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new Advancements(event.getGenerator(), event.getExistingFileHelper()));
         BiomeModifiersProvider.datagenModifiers(event);
+
+        System.out.println("sphinx ====");
+        System.out.println("CAST");
+        for(AbstractSpellPart glyph : ArsNouveauAPI.getInstance().getSpellpartMap().values()){
+            System.out.println(glyph.getName());
+        }
+        System.out.println("sphinx ====");
     }
 
 }

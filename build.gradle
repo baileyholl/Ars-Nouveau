@@ -8,6 +8,7 @@ buildscript {
             url "https://repo.spongepowered.org/repository/maven-public/"
         }
         maven { url = 'https://maven.parchmentmc.org' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
@@ -27,10 +28,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-
-
 version = '3.8.0'
-
 
 configurations {
     library
@@ -168,6 +166,7 @@ repositories {
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 dependencies {
 
@@ -207,6 +206,10 @@ dependencies {
 
     runtimeOnly fg.deobf("curse.maven:config-404468:4229140") // ftb teams
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    shade group: 'edu.cmu.sphinx', name: 'sphinx4-core', version:'5prealpha-SNAPSHOT'
+    shade group: 'edu.cmu.sphinx', name: 'sphinx4-data', version:'5prealpha-SNAPSHOT'
+    library group: 'edu.cmu.sphinx', name: 'sphinx4-core', version:'5prealpha-SNAPSHOT'
+    library group: 'edu.cmu.sphinx', name: 'sphinx4-data', version:'5prealpha-SNAPSHOT'
 
 }
 
