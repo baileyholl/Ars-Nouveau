@@ -39,8 +39,8 @@ public class Test {
     public static void main(String[] args) throws Exception {
         Configuration configuration = new Configuration();
         configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-        configuration.setDictionaryPath("resource:/test/3450.dic");
-        configuration.setLanguageModelPath("resource:/test/3450.lm");
+        configuration.setDictionaryPath("resource:/test/4793.dic");
+        configuration.setLanguageModelPath("resource:/test/4793.lm");
         configuration.setUseGrammar(false);
 
         LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
