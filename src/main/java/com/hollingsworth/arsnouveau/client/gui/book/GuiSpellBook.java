@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -44,37 +45,50 @@ import java.util.stream.Collectors;
 public class GuiSpellBook extends BaseBook {
 
     public int numLinks = 10;
-    public SpellBook spellBook;
-    public ArsNouveauAPI api;
+    public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
 
-    private int selectedSpellSlot;
+    public int selectedSpellSlot = 0;
     public EditBox spell_name;
     public NoShadowTextField searchBar;
     public GuiSpellSlot selected_slot;
-    List<CraftingButton> craftingCells;
-    public List<AbstractSpellPart> unlockedSpells = new ArrayList<>();
+    public List<CraftingButton> craftingCells = new ArrayList<>();
+    public List<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> displayedGlyphs;
 
     public List<GlyphButton> glyphButtons = new ArrayList<>();
     public int page = 0;
-    PageButton nextButton;
-    PageButton previousButton;
-    ISpellValidator spellValidator;
+    public PageButton nextButton;
+    public PageButton previousButton;
+    public ISpellValidator spellValidator;
     public String previousString = "";
     public ItemStack bookStack;
 
-    int formTextRow = 0;
-    int augmentTextRow = 0;
-    int effectTextRow = 0;
+    public int formTextRow = 0;
+    public int augmentTextRow = 0;
+    public int effectTextRow = 0;
     public int glyphsPerPage = 58;
+    public InteractionHand hand;
 
+    @Deprecated(forRemoval = true) // TODO: remove in 1.20
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
+        this(InteractionHand.MAIN_HAND);
+    }
+
+    public GuiSpellBook(InteractionHand hand){
         super();
-        this.bookStack = bookStack;
-        this.api = ArsNouveauAPI.getInstance();
-        this.selectedSpellSlot = 0;
-        craftingCells = new ArrayList<>();
-        this.unlockedSpells = unlockedSpells;
+        this.hand = hand;
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+        ItemStack heldStack = Minecraft.getInstance().player.getItemInHand(hand);
+        List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs());
+        parts.addAll(api.getDefaultStartingSpells());
+        if (heldStack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
+            parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
+        int tier = 1;
+        if(heldStack.getItem() instanceof SpellBook book){
+            tier = book.getTier().value;
+        }
+        this.bookStack = heldStack;
+        this.unlockedSpells = parts;
         this.displayedGlyphs = new ArrayList<>(this.unlockedSpells);
         this.validationErrors = new LinkedList<>();
         this.spellValidator = new CombinedSpellValidator(
@@ -361,12 +375,12 @@ public class GuiSpellBook extends BaseBook {
 
     public void onColorClick(Button button) {
         ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selectedSpellSlot).toWrapper();
-        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot));
+        Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selectedSpellSlot, this.hand));
     }
 
     public void onSoundsClick(Button button) {
         ConfiguredSpellSound spellSound = CasterUtil.getCaster(bookStack).getSound(selectedSpellSlot);
-        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot));
+        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selectedSpellSlot, this.hand));
     }
 
     public void onFamiliarClick(Button button) {
@@ -447,17 +461,17 @@ public class GuiSpellBook extends BaseBook {
                     spell.add(spellPart);
                 }
             }
-            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spell_name.getValue()));
+            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spell_name.getValue(), hand == InteractionHand.MAIN_HAND));
         }
     }
 
+    @Deprecated // todo: remove 1.20
     public static void open(ItemStack stack, int tier) {
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
-        List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs());
-        parts.addAll(ArsNouveauAPI.getInstance().getDefaultStartingSpells());
-        if (stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
-            parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
-        Minecraft.getInstance().setScreen(new GuiSpellBook(stack, tier, parts));
+        open(InteractionHand.MAIN_HAND);
+    }
+
+    public static void open(InteractionHand hand) {
+        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
     }
 
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
