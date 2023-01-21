@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -36,7 +37,10 @@ public class EffectWall extends AbstractEffect {
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
         entityLingeringSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
-        entityLingeringSpell.setDirection(shooter.getDirection().getClockWise());
+
+
+        Direction facingDirection = spellContext.getCaster().getFacingDirection();
+        entityLingeringSpell.setDirection(facingDirection.getClockWise());
         SpellContext newContext = new SpellContext(world, newSpell, shooter, spellContext.getCaster()).withCastingTile(spellContext.castingTile).withType(spellContext.getType());
         entityLingeringSpell.spellResolver = new SpellResolver(newContext);
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
