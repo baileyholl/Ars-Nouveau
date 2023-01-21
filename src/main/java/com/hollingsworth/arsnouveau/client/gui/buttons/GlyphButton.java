@@ -60,7 +60,7 @@ public class GlyphButton extends Button {
                         tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
                     }
                     if (Screen.hasShiftDown()) {
-                        tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                        tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                         tip.add(Component.translatable("ars_nouveau.schools"));
                         for (SpellSchool s : spellPart.spellSchools) {
                             tip.add(s.getTextComponent());
