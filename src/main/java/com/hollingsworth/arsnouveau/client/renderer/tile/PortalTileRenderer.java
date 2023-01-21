@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 
+import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,7 +30,7 @@ public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRend
     }
 
     public void render(PortalTile tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if (Config.ALTERNATE_PORTAL_RENDER.get() || tileEntityIn.isUseAlternateRender()) return;
+        if (Config.ALTERNATE_PORTAL_RENDER.get() || tileEntityIn.getBlockState().getValue(PortalBlock.ALTERNATE)) return;
         double d0 = 5d;
         int i = this.getPasses(d0);
         float f = this.getOffset();
