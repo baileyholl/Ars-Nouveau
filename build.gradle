@@ -193,7 +193,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:byg-247560:4027228") // BYG
     implementation fg.deobf("curse.maven:bop-220318:4034263") // BOP
-    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4077798") // ars elemental
+    implementation fg.deobf("curse.maven:ars_elemental-561470:4077798") // ars elemental
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
