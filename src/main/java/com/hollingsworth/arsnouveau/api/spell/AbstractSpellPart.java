@@ -67,7 +67,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public SpellTier getConfigTier(){
-        return GLYPH_TIER == null ? SpellTier.ONE : SpellTier.SPELL_TIER_MAP.get(GLYPH_TIER.get());
+        return GLYPH_TIER == null ? getTier() : SpellTier.SPELL_TIER_MAP.get(GLYPH_TIER.get());
     }
 
     @Deprecated() // TODO: 1.20 Rename to default tier
