@@ -76,7 +76,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 50);
+            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 25);
             return;
         }
 
@@ -200,8 +200,8 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
             }
             if (!ritual.getConsumedItems().isEmpty()) {
                 tooltips.add(Component.translatable("ars_nouveau.tooltip.consumed"));
-                for (ItemStack i : ritual.getConsumedItems()) {
-                    tooltips.add(i.getHoverName());
+                for (String i : ritual.getFormattedConsumedItems()) {
+                    tooltips.add(Component.literal( i));
                 }
             }
             if (ritual.needsSourceNow())
