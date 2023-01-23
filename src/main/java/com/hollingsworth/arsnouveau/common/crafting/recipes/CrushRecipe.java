@@ -60,7 +60,15 @@ public class CrushRecipe implements Recipe<Container> {
         List<ItemStack> finalOutputs = new ArrayList<>();
         for (CrushOutput crushRoll : outputs) {
             if (random.nextDouble() <= crushRoll.chance) {
-                finalOutputs.add(crushRoll.stack.copy());
+                if(crushRoll.maxRange > 1){
+                    // get a number between 1 and max
+                    int num = random.nextInt(crushRoll.maxRange) + 1;
+                    for(int i = 0; i < num; i++){
+                        finalOutputs.add(crushRoll.stack.copy());
+                    }
+                }else {
+                    finalOutputs.add(crushRoll.stack.copy());
+                }
             }
         }
 
@@ -138,6 +146,7 @@ public class CrushRecipe implements Recipe<Container> {
             element.addProperty("item", getRegistryName(output.stack.getItem()).toString());
             element.addProperty("chance", output.chance);
             element.addProperty("count", output.stack.getCount());
+            element.addProperty("maxRange", output.maxRange);
             array.add(element);
         }
         jsonobject.add("output", array);
@@ -148,10 +157,16 @@ public class CrushRecipe implements Recipe<Container> {
     public static class CrushOutput {
         public ItemStack stack;
         public float chance;
+        public int maxRange; // Can drop the stack multiple times if this is greater than 1
 
         public CrushOutput(ItemStack stack, float chance) {
+            this(stack, chance, 1);
+        }
+
+        public CrushOutput(ItemStack stack, float chance, int maxRange) {
             this.stack = stack;
             this.chance = chance;
+            this.maxRange = maxRange;
         }
     }
 
@@ -174,7 +189,8 @@ public class CrushRecipe implements Recipe<Container> {
                 String itemId = GsonHelper.getAsString(obj, "item");
                 int count = obj.has("count") ? GsonHelper.getAsInt(obj, "count") : 1;
                 ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
-                parsedOutputs.add(new CrushOutput(output, chance));
+                int maxRange = obj.has("maxRange") ? GsonHelper.getAsInt(obj, "maxRange") : 1;
+                parsedOutputs.add(new CrushOutput(output, chance, maxRange));
             }
             boolean skipBlockPlace = json.has("skip_block_place") && GsonHelper.getAsBoolean(json, "skip_block_place");
 
@@ -189,6 +205,7 @@ public class CrushRecipe implements Recipe<Container> {
             for (CrushOutput i : recipe.outputs) {
                 buf.writeFloat(i.chance);
                 buf.writeItemStack(i.stack, false);
+                buf.writeInt(i.maxRange);
             }
             buf.writeBoolean(recipe.skipBlockPlace);
         }
@@ -204,7 +221,8 @@ public class CrushRecipe implements Recipe<Container> {
                 try {
                     float chance = buffer.readFloat();
                     ItemStack outStack = buffer.readItem();
-                    stacks.add(new CrushOutput(outStack, chance));
+                    int maxRange = buffer.readInt();
+                    stacks.add(new CrushOutput(outStack, chance, maxRange));
                 } catch (Exception e) {
                     e.printStackTrace();
                     break;
