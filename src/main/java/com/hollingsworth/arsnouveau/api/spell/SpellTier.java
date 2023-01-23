@@ -30,10 +30,4 @@ public class SpellTier {
         SPELL_TIER_MAP.put(value, tier);
         return tier;
     }
-//    static {
-//        SPELL_TIER_MAP.put(ONE.value, ONE);
-//        SPELL_TIER_MAP.put(TWO.value, TWO);
-//        SPELL_TIER_MAP.put(THREE.value, THREE);
-//        SPELL_TIER_MAP.put(CREATIVE.value, CREATIVE);
-//    }
 }
