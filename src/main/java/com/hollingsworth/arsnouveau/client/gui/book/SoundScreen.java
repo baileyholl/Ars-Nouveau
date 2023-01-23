@@ -18,19 +18,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 
 import java.util.List;
 
 public class SoundScreen extends BaseBook {
 
     public int casterSlot;
+    public InteractionHand stackHand;
 
-    public SoundScreen(ConfiguredSpellSound configuredSpellSound, int slot) {
+    public SoundScreen(ConfiguredSpellSound configuredSpellSound, int slot, InteractionHand stackHand) {
         super();
         volume = configuredSpellSound.volume * 100;
         pitch = configuredSpellSound.pitch * 100;
         selectedSound = configuredSpellSound.sound;
         casterSlot = slot;
+        this.stackHand = stackHand;
     }
 
     public BookSlider volumeSlider;
@@ -113,7 +116,7 @@ public class SoundScreen extends BaseBook {
     }
 
     public void onSaveClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f)));
+        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float) volumeSlider.getValue() / 100f, (float) pitchSlider.getValue() / 100f), stackHand == InteractionHand.MAIN_HAND));
     }
 
     @Override

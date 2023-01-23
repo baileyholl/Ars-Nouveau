@@ -19,6 +19,17 @@ public class StackUtil {
         return book == null ? (playerEntity.getOffhandItem().getItem() instanceof SpellBook ? playerEntity.getOffhandItem() : ItemStack.EMPTY) : book;
     }
 
+    public static @Nullable InteractionHand getBookHand(Player playerEntity) {
+        ItemStack mainStack = playerEntity.getMainHandItem();
+        ItemStack offStack = playerEntity.getOffhandItem();
+        if (mainStack.getItem() instanceof SpellBook) {
+            return InteractionHand.MAIN_HAND;
+        } else if (offStack.getItem() instanceof SpellBook) {
+            return InteractionHand.OFF_HAND;
+        }
+        return null;
+    }
+
     public static @Nullable InteractionHand getHeldCasterTool(Player player) {
         InteractionHand casterTool = player.getMainHandItem().getItem() instanceof ICasterTool ? InteractionHand.MAIN_HAND : null;
         return casterTool == null ? (player.getOffhandItem().getItem() instanceof ICasterTool ? InteractionHand.OFF_HAND : null) : casterTool;

@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
+import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
+import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
@@ -179,6 +181,9 @@ public class ClientHandler {
     public static void registerOverlays(final RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("scry_camera", cameraOverlay.overlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "tooltip", GuiEntityInfoHUD.OVERLAY);
+        event.registerAboveAll("mana_hud", GuiManaHUD.OVERLAY);
+        event.registerAboveAll("spell_hud", GuiSpellHUD.OVERLAY);
+
     }
 
     @SubscribeEvent

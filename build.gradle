@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '3.8.0'
+version = '3.8.3'
 
 
 configurations {
@@ -193,13 +193,13 @@ dependencies {
 
     implementation fg.deobf("curse.maven:byg-247560:4027228") // BYG
     implementation fg.deobf("curse.maven:bop-220318:4034263") // BOP
-    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4077798") // ars elemental
+//    implementation fg.deobf("curse.maven:ars_elemental-561470:4077798") // ars elemental
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
     compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
     runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
-    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
-    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
-    implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
+//    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
+//    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
+//    implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
     runtimeOnly fg.deobf("curse.maven:config-443900:4064952")
     runtimeOnly fg.deobf("curse.maven:config-314906:4229131") // ftb chunks
     runtimeOnly fg.deobf("curse.maven:config-419699:4147353") // arch

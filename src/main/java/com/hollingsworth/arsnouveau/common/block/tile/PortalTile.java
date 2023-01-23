@@ -32,7 +32,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public String displayName;
     public boolean isHorizontal;
     public Set<Entity> entityQueue = new HashSet<>();
-    private boolean useAlternateRender;
 
     public PortalTile(BlockPos pos, BlockState state) {
         super(PORTAL_TILE_TYPE, pos, state);
@@ -59,7 +58,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         this.rotationVec = new Vec2(compound.getFloat("xRot"), compound.getFloat("yRot"));
         this.displayName = compound.getString("display");
         this.isHorizontal = compound.getBoolean("horizontal");
-        this.useAlternateRender = compound.getBoolean("alternate");
     }
 
     @Override
@@ -67,7 +65,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
-        compound.putString("dim", this.dimID);
+        if(this.dimID != null) {
+            compound.putString("dim", this.dimID);
+        }
         if (rotationVec != null) {
             compound.putFloat("xRot", rotationVec.x);
             compound.putFloat("yRot", rotationVec.y);
@@ -76,7 +76,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             compound.putString("display", displayName);
         }
         compound.putBoolean("horizontal", isHorizontal);
-        compound.putBoolean("alternate", useAlternateRender);
     }
 
     @Override
@@ -107,23 +106,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public void getTooltip(List<Component> tooltip) {
         if (this.displayName != null) {
             tooltip.add(Component.literal(this.displayName));
-        }
-    }
-
-    public boolean isUseAlternateRender() {
-        return useAlternateRender;
-    }
-
-    public void setUseAlternateRender(boolean useAlternateRender) {
-        if(this.useAlternateRender == useAlternateRender)
-            return;
-        this.useAlternateRender = useAlternateRender;
-        this.updateBlock();
-        // Set all nearby portals to use alternate render
-        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-1, -1, -1), worldPosition.offset(1, 1, 1))) {
-            if (level.getBlockEntity(pos) instanceof PortalTile tile) {
-                tile.setUseAlternateRender(useAlternateRender);
-            }
         }
     }
 }

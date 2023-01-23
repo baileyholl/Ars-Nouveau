@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell.wrapped_caster;
 
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -40,5 +41,10 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
         return filterableItemHandlers;
+    }
+
+    @Override
+    public Direction getFacingDirection() {
+        return livingEntity.getDirection();
     }
 }

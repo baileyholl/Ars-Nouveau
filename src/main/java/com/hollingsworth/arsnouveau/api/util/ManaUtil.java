@@ -77,7 +77,7 @@ public class ManaUtil {
         int tier = mana.getBookTier();
         double numGlyphs = mana.getGlyphBonus();
         regen += numGlyphs * ServerConfig.GLYPH_REGEN_BONUS.get();
-        regen += tier;
+        regen += tier * ServerConfig.TIER_REGEN_BONUS.get();
         if (e.hasEffect(ModPotions.MANA_REGEN_EFFECT.get()))
             regen += ServerConfig.MANA_REGEN_POTION.get() * (1 + e.getEffect(ModPotions.MANA_REGEN_EFFECT.get()).getAmplifier());
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);

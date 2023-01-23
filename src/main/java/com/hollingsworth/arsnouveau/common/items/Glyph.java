@@ -70,7 +70,7 @@ public class Glyph extends ModItem {
         if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
         } else if (spellPart != null) {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
             tooltip2.add(Component.translatable("ars_nouveau.schools"));
             for (SpellSchool s : spellPart.spellSchools) {
                 tooltip2.add(s.getTextComponent());

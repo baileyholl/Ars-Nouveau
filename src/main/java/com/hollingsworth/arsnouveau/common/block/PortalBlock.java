@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -40,6 +41,10 @@ import javax.annotation.Nullable;
 public class PortalBlock extends TickableModBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
 
+
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+    public static final BooleanProperty ALTERNATE = BooleanProperty.create("alternate");
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
@@ -47,7 +52,7 @@ public class PortalBlock extends TickableModBlock {
 
     public PortalBlock() {
         super(BlockBehaviour.Properties.of(Material.PORTAL).noCollission().strength(-1.0F, 3600000.0F).noLootTable());
-        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
+        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X).setValue(ALTERNATE, false));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -73,14 +78,25 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
+    public void setType(Level pLevel, BlockPos pPos,boolean alternate){
+        if(pLevel.getBlockState(pPos).getValue(ALTERNATE) == alternate)
+            return;
+        pLevel.setBlockAndUpdate(pPos, pLevel.getBlockState(pPos).setValue(ALTERNATE, alternate));
+        for (BlockPos pos : BlockPos.betweenClosed(pPos.offset(-1, -1, -1), pPos.offset(1, 1, 1))) {
+            if (pLevel.getBlockState(pos).getBlock() instanceof PortalBlock portalBlock && pLevel.getBlockState(pos).getValue(ALTERNATE) != alternate) {
+                setType(pLevel, pos, alternate);
+            }
+        }
+    }
+
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         if(pPlayer.getItemInHand(pHand).getItem() instanceof DominionWand){
-            if(pLevel.getBlockEntity(pPos) instanceof PortalTile tile){
-                tile.setUseAlternateRender(!tile.isUseAlternateRender());
-                tile.updateBlock();
+            if(pLevel.getBlockEntity(pPos) instanceof PortalTile){
+                boolean nextVal = !pLevel.getBlockState(pPos).getValue(ALTERNATE);
+                setType(pLevel, pPos, nextVal);
                 return InteractionResult.CONSUME;
             }
         }
@@ -154,8 +170,6 @@ public class PortalBlock extends TickableModBlock {
         };
     }
 
-    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
-
     /**
      * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
      * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
@@ -180,7 +194,7 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AXIS);
+        builder.add(AXIS).add(ALTERNATE);
     }
 
     @Nullable

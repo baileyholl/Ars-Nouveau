@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
@@ -160,7 +161,11 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
-        GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().value);
+        InteractionHand hand = StackUtil.getBookHand(player);
+        if(hand == null){
+            return;
+        }
+        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
     }
 
     @OnlyIn(Dist.CLIENT)
