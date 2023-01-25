@@ -32,7 +32,6 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
         pPoseStack.pushPose();
         renderBlock(tileEntityIn.getBlockPos(), renderState, pPoseStack, bufferIn, tileEntityIn.getLevel(), false, combinedOverlayIn);
         pPoseStack.popPose();
-
         ModelBlockRenderer.clearCache();
     }
 

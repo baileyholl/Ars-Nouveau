@@ -26,7 +26,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -140,8 +139,8 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
             ResourceLocation ritualID = new ResourceLocation(ritualIDString);
             ritual = ArsNouveauAPI.getInstance().getRitual(ritualID);
             if (ritual != null) {
-                ritual.read(tag);
                 ritual.tile = this;
+                ritual.read(tag);
             }
         } else {
             ritual = null;
