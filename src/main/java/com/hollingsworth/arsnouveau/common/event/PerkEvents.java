@@ -93,7 +93,7 @@ public class PerkEvents {
         for(Player p : event.getLevel().players()){
             IPerkHolder<ItemStack> holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, p);
             if(holder == null)
-                return;
+                continue;
             TotemPerk.Data perkData = new TotemPerk.Data(holder);
             perkData.setActive(true);
             PortUtil.sendMessage(p, Component.translatable("ars_nouveau.totem_perk.active"));
