@@ -236,6 +236,7 @@
   "key.ars_nouveau.open_book": "(Spell Book) Open Book",
   "key.ars_nouveau.selection_hud": "Toggle Selection HUD",
   "itemGroup.ars_nouveau": "Ars Nouveau",
+  "itemGroup.ars_glyphs": "Ars Nouveau Glyphs",
   "item.ars_nouveau.novice_spell_book": "Novice Spell Book",
   "item.ars_nouveau.apprentice_spell_book": "Mage's Spell Book",
   "item.ars_nouveau.archmage_spell_book": "Archmage Spell Book",

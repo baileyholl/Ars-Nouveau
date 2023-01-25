@@ -2,8 +2,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
@@ -36,20 +34,7 @@ public class BaseBook extends ModdedScreen {
         itemre = this.itemRenderer;
     }
 
-    public static Comparator<AbstractSpellPart> COMPARE_GLYPH_BY_TYPE = new Comparator<AbstractSpellPart>() {
-        @Override
-        public int compare(AbstractSpellPart o1, AbstractSpellPart o2) {
-            return fromType(o1) - fromType(o2);
-        }
-
-        public int fromType(AbstractSpellPart spellPart) {
-            if (spellPart instanceof AbstractCastMethod)
-                return 1;
-            if (spellPart instanceof AbstractAugment)
-                return 2;
-            return 3;
-        }
-    };
+    public static Comparator<AbstractSpellPart> COMPARE_GLYPH_BY_TYPE = Comparator.comparingInt(AbstractSpellPart::getTypeIndex);
 
     public static Comparator<AbstractSpellPart> COMPARE_TYPE_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparing(AbstractSpellPart::getLocaleName);
 

@@ -21,6 +21,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public String name;
     public Glyph glyphItem;
 
+    /**
+     * Used for item tab ordering
+     */
+    public abstract Integer getTypeIndex();
+
     /*ID for NBT data and SpellManager#spellList*/
     public ResourceLocation getRegistryName() {
         return this.registryName;
