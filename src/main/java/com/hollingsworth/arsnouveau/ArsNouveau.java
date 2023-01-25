@@ -4,18 +4,22 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.events.ClientHandler;
 import com.hollingsworth.arsnouveau.client.events.TextureEvent;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
+import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -37,7 +41,6 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 
-
 @Mod(ArsNouveau.MODID)
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
@@ -51,6 +54,25 @@ public class ArsNouveau {
         @Override
         public ItemStack makeIcon() {
             return ItemsRegistry.CREATIVE_SPELLBOOK.get().getDefaultInstance();
+        }
+    };
+    public static CreativeModeTab glyphGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), "ars_glyphs") {
+
+        @Override
+        public void fillItemList(NonNullList<ItemStack> pItems) {
+            super.fillItemList(pItems);
+            pItems.sort((ItemStack i1, ItemStack i2) -> {
+                if (i1.getItem() instanceof Glyph g1 && i2.getItem() instanceof Glyph g2) {
+                    return BaseBook.COMPARE_TYPE_THEN_NAME.compare(g1.spellPart, g2.spellPart);
+                } else {
+                    return -1;
+                }
+            });
+        }
+
+        @Override
+        public ItemStack makeIcon() {
+            return ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE).getDefaultInstance();
         }
     };
 

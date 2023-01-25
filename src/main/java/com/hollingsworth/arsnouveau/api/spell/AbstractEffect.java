@@ -53,7 +53,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super(tag, description);
     }
 
-    public void onResolve(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    @Override
+    public Integer getTypeIndex() {
+        return 10;
+    }
+
+    public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult instanceof BlockHitResult blockHitResult) {
             onResolveBlock(blockHitResult, world, shooter, spellStats, spellContext, resolver);
         } else if (rayTraceResult instanceof EntityHitResult entityHitResult) {
