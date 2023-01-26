@@ -1,0 +1,16 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 16718260,
+  "flavour_text": "A classic.",
+  "name": "Fireball!",
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_ignite",
+    "ars_nouveau:glyph_explosion",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

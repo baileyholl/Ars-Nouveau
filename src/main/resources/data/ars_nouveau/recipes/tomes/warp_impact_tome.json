@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 16718260,
+  "flavour_text": "Teleportation, with style!",
+  "name": "Warp Impact",
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_blink",
+    "ars_nouveau:glyph_explosion",
+    "ars_nouveau:glyph_aoe"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

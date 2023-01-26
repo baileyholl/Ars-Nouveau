@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 1703935,
+  "flavour_text": "Heroes are so straightforward, so easily befuddled...",
+  "name": "KirinDave's Sinister Switch",
+  "spell": [
+    "ars_nouveau:glyph_self",
+    "ars_nouveau:glyph_summon_decoy",
+    "ars_nouveau:glyph_blink",
+    "ars_nouveau:glyph_amplify"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 16718260,
+  "flavour_text": "Sometimes you just need to get over that wall.",
+  "name": "Vault",
+  "spell": [
+    "ars_nouveau:glyph_self",
+    "ars_nouveau:glyph_launch",
+    "ars_nouveau:glyph_delay",
+    "ars_nouveau:glyph_leap",
+    "ars_nouveau:glyph_slowfall"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}
