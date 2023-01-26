@@ -10,10 +10,12 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.datagen.CasterTomeProvider;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.GsonHelper;
@@ -55,6 +57,15 @@ public class CasterTomeData implements Recipe<Container> {
         this.particleColor = particleColor;
     }
 
+    public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
+        ItemStack stack = tome.getDefaultInstance();
+        ISpellCaster spellCaster = CasterUtil.getCaster(stack);
+        spellCaster.setSpell(spell);
+        stack.setHoverName(Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
+        spellCaster.setFlavorText(flavorText);
+        return stack;
+    }
+
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
         return false;
@@ -70,10 +81,6 @@ public class CasterTomeData implements Recipe<Container> {
         return false;
     }
 
-    /**
-     * Get the result of this recipe, usually for display purposes (e.g. recipe book). If your recipe has more than one
-     * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
-     */
     @Override
     public ItemStack getResultItem() {
         Item tomeType = ForgeRegistries.ITEMS.getValue(this.type);
@@ -87,7 +94,7 @@ public class CasterTomeData implements Recipe<Container> {
             if (part != null)
                 spell.recipe.add(part);
         }
-        return CasterTomeProvider.makeTome(tomeType, name, spell, flavorText);
+        return makeTome(tomeType, name, spell, flavorText);
     }
 
     @NotNull
@@ -111,7 +118,7 @@ public class CasterTomeData implements Recipe<Container> {
         return true;
     }
 
-    public JsonElement asRecipe() {
+    public JsonElement toJson() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:caster_tome");
         jsonobject.addProperty("tome_type", type.toString());
