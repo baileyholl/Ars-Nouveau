@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,6 +41,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
 
 
 @Mod(ArsNouveau.MODID)
@@ -107,6 +110,7 @@ public class ArsNouveau {
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
+        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeData.reloadCasterTomes(e.getServer()));
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event) {

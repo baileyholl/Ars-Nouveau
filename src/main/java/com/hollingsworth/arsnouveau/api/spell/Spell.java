@@ -225,6 +225,10 @@ public class Spell implements Cloneable {
         return this;
     }
 
+    public List<ResourceLocation> serializeRecipe(){
+        return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
+    }
+
     @Override
     public Spell clone() {
         try {
