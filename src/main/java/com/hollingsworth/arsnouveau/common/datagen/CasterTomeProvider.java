@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -45,7 +46,7 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectDelay.INSTANCE)
                         .add(EffectExplosion.INSTANCE)
                         .add(AugmentAmplify.INSTANCE)
-                , "")); //TODO FlavourText here?
+                , "To the MOOn")); //TODO FlavourText here?
 
         tomes.add(buildTome("arachne","Arachne's Weaving", new Spell()
                         .add(MethodProjectile.INSTANCE)
@@ -150,12 +151,12 @@ public class CasterTomeProvider implements DataProvider {
 
         tomes.add(buildTome("xacris_2","Xacris's Firework Display", new Spell()
                 .add(MethodProjectile.INSTANCE)
-                .add(EffectLinger.INSTANCE)
+                .add(EffectWall.INSTANCE)
                 .add(AugmentSensitive.INSTANCE)
                 .add(AugmentAOE.INSTANCE)
                 .add(EffectFirework.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE, 4)
-                .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(255, 255, 255)));
+                .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(25, 255, 255)));
 
         tomes.add(buildTome("othy","Othy's Death By 100 Pricks", new Spell()
                 .add(MethodProjectile.INSTANCE)
@@ -182,7 +183,7 @@ public class CasterTomeProvider implements DataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                ParticleColor.defaultParticleColor().getColor());
+                ParticleColor.defaultParticleColor().getColor(), ConfiguredSpellSound.DEFAULT);
     }
 
     public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {

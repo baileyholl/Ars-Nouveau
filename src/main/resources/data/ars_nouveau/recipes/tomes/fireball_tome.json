@@ -3,6 +3,11 @@
   "color": 16718260,
   "flavour_text": "A classic.",
   "name": "Fireball!",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
   "spell": [
     "ars_nouveau:glyph_projectile",
     "ars_nouveau:glyph_ignite",

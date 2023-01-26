@@ -3,6 +3,11 @@
   "color": 16718260,
   "flavour_text": "Summons orbiting projectiles that will launch nearby enemies.",
   "name": "Knocked out of Orbit",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
   "spell": [
     "ars_nouveau:glyph_orbit",
     "ars_nouveau:glyph_launch",

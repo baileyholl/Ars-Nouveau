@@ -3,6 +3,11 @@
   "color": 16718260,
   "flavour_text": "Builds a small hut around the user.",
   "name": "Xacris' Tiny Hut",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
   "spell": [
     "ars_nouveau:glyph_underfoot",
     "ars_nouveau:glyph_phantom_block",

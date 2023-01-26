@@ -3,6 +3,11 @@
   "color": 16718260,
   "flavour_text": "Sometimes you just need to get over that wall.",
   "name": "Vault",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
   "spell": [
     "ars_nouveau:glyph_self",
     "ars_nouveau:glyph_launch",

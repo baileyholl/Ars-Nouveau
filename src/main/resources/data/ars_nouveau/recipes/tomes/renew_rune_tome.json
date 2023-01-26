@@ -3,6 +3,11 @@
   "color": 16718260,
   "flavour_text": "Cures status effects and heals the user.",
   "name": "Rune of Renewing",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
   "spell": [
     "ars_nouveau:glyph_touch",
     "ars_nouveau:glyph_rune",

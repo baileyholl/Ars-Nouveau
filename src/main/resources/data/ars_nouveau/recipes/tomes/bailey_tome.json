@@ -1,8 +1,13 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": 16718260,
-  "flavour_text": "",
+  "flavour_text": "To the MOOn",
   "name": "Bailey's Bovine Rocket",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
   "spell": [
     "ars_nouveau:glyph_projectile",
     "ars_nouveau:glyph_launch",

@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -43,18 +45,21 @@ public class CasterTomeData implements Recipe<Container> {
     ResourceLocation type;
     String flavorText;
     public int particleColor;
+    ConfiguredSpellSound sound;
+
 
     public CasterTomeData(ResourceLocation id, String name,
                           List<ResourceLocation> spell,
                           ResourceLocation type,
                           String flavorText,
-                          int particleColor) {
+                          int particleColor, ConfiguredSpellSound sound) {
         this.name = name;
         this.spell = spell;
         this.id = id;
         this.type = type;
         this.flavorText = flavorText;
         this.particleColor = particleColor;
+        this.sound = sound;
     }
 
     public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
@@ -94,6 +99,7 @@ public class CasterTomeData implements Recipe<Container> {
             if (part != null)
                 spell.recipe.add(part);
         }
+        spell.sound = sound;
         return makeTome(tomeType, name, spell, flavorText);
     }
 
@@ -130,6 +136,11 @@ public class CasterTomeData implements Recipe<Container> {
             array.add(part.toString());
         }
         jsonobject.add("spell", array);
+        JsonObject object = new JsonObject();
+        object.addProperty("family", sound.sound == null ? "default" : sound.sound.getId().toString());
+        object.addProperty("pitch", sound.pitch);
+        object.addProperty("volume", sound.volume);
+        jsonobject.add("sound", object);
         return jsonobject;
     }
 
@@ -146,7 +157,13 @@ public class CasterTomeData implements Recipe<Container> {
                 ResourceLocation part = ResourceLocation.tryParse(e.getAsString());
                 parsedSpell.add(part);
             }
-            return new CasterTomeData(recipeId, name, parsedSpell, type, flavourText, color);
+            ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+            if (json.has("sound")){
+                JsonObject object = json.getAsJsonObject("sound");
+                SpellSound family = ArsNouveauAPI.getInstance().getSpellSoundsRegistry().get(ResourceLocation.tryParse(object.get("family").getAsString()));
+                sound = new ConfiguredSpellSound(family, object.get("volume").getAsFloat(), object.get("pitch").getAsFloat());
+            }
+            return new CasterTomeData(recipeId, name, parsedSpell, type, flavourText, color, sound);
         }
 
 
@@ -160,7 +177,7 @@ public class CasterTomeData implements Recipe<Container> {
         public CasterTomeData fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             ItemStack itemStack = buffer.readItem();
             ISpellCaster caster = CasterUtil.getCaster(itemStack);
-            return new CasterTomeData(recipeId, caster.getSpellName(), caster.getSpell().recipe.stream().map(AbstractSpellPart::getRegistryName).toList(), getRegistryName(itemStack.getItem()) ,caster.getFlavorText(), caster.getColor().getColor());
+            return new CasterTomeData(recipeId, caster.getSpellName(), caster.getSpell().recipe.stream().map(AbstractSpellPart::getRegistryName).toList(), getRegistryName(itemStack.getItem()) ,caster.getFlavorText(), caster.getColor().getColor(), caster.getCurrentSound());
         }
     }
     public static void reloadCasterTomes(MinecraftServer event){
