@@ -72,12 +72,20 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public SpellTier getConfigTier(){
-        return GLYPH_TIER == null ? getTier() : SpellTier.SPELL_TIER_MAP.get(GLYPH_TIER.get());
+        return GLYPH_TIER == null ? defaultTier() : SpellTier.SPELL_TIER_MAP.get(GLYPH_TIER.get());
     }
 
-    @Deprecated() // TODO: 1.20 Rename to default tier
+    /**
+     * Deprecated: Use {@link AbstractSpellPart#defaultTier()} or  {@link AbstractSpellPart#getConfigTier()}
+     * @return default tier
+     */
+    @Deprecated(forRemoval = true)
     public SpellTier getTier() {
         return SpellTier.ONE;
+    }
+
+    public SpellTier defaultTier() {
+        return getTier();
     }
 
     /**
@@ -141,7 +149,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
         STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
         PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
-        GLYPH_TIER = builder.comment("The tier of the glyph").defineInRange("glyph_tier", getTier().value, 1, 99);
+        GLYPH_TIER = builder.comment("The tier of the glyph").defineInRange("glyph_tier", defaultTier().value, 1, 99);
     }
 
     /**

@@ -224,6 +224,12 @@ public class ModEntities {
                     .setShouldReceiveVelocityUpdates(true)
                     .setUpdateInterval(120).setCustomClientFactory(EntityWallSpell::new));
 
+    public static final RegistryObject<EntityType<AnimBlockSummon>> ANIMATED_BLOCK = registerEntity(
+            "animated_block",
+            EntityType.Builder.<AnimBlockSummon>of(AnimBlockSummon::new, MobCategory.MISC)
+                    .sized(1.0f, 1.5f)
+                    .setTrackingRange(10));
+
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(GIFT_STARBY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -279,6 +285,7 @@ public class ModEntities {
             event.put(AMETHYST_GOLEM.get(), AmethystGolem.attributes().build());
             event.put(SUMMON_SKELETON.get(), SummonSkeleton.createAttributes().build());
             event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
+            event.put(ANIMATED_BLOCK.get(), Monster.createMonsterAttributes().build());
         }
     }
 

@@ -114,7 +114,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, new SummonSkeleton.CopyOwnerTargetGoal(this));
+        this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
                 (LivingEntity entity) ->
                         (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner))
@@ -292,28 +292,5 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     public void setOwnerID(UUID uuid) {
         this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
     }
-
-    class CopyOwnerTargetGoal extends TargetGoal {
-
-        public CopyOwnerTargetGoal(PathfinderMob creature) {
-            super(creature, false);
-        }
-
-        /**
-         * Returns whether the EntityAIBase should begin execution.
-         */
-        public boolean canUse() {
-            return SummonSkeleton.this.owner != null && SummonSkeleton.this.owner.getLastHurtMob() != null;
-        }
-
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
-        public void start() {
-            SummonSkeleton.this.setTarget(SummonSkeleton.this.owner.getLastHurtMob());
-            super.start();
-        }
-    }
-
 
 }

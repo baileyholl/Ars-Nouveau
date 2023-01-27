@@ -577,7 +577,7 @@ public class PatchouliProvider implements DataProvider {
     }
 
     public void addGlyphPage(AbstractSpellPart spellPart) {
-        ResourceLocation category = switch (spellPart.getTier().value) {
+        ResourceLocation category = switch (spellPart.defaultTier().value) {
             case 1 -> GLYPHS_1;
             case 2 -> GLYPHS_2;
             default -> GLYPHS_3;
