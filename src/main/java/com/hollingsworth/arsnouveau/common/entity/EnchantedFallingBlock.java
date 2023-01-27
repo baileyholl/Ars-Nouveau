@@ -92,14 +92,15 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
         this(world, pos.getX(), pos.getY(), pos.getZ(), blockState);
     }
 
+    public static boolean canFall(Level level, BlockPos pos, LivingEntity owner, SpellStats spellStats) {
+        if (level.isEmptyBlock(pos) || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile))) {
+            return false;
+        }
+        return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim(owner, level, pos);
+    }
+
     public static @Nullable EnchantedFallingBlock fall(Level level, BlockPos pos, LivingEntity owner, SpellContext context, SpellResolver resolver, SpellStats spellStats) {
-        if ((level.getBlockEntity(pos) != null &&
-             !(level.getBlockEntity(pos) instanceof MageBlockTile))) {
-            return null;
-        }
-        if (!BlockUtil.canBlockBeHarvested(spellStats, level, pos) || !BlockUtil.destroyRespectsClaim(owner, level, pos)) {
-            return null;
-        }
+        if (!canFall(level, pos, owner, spellStats)) return null;
         BlockState blockState = level.getBlockState(pos);
         EnchantedFallingBlock fallingblockentity;
         if (level.getBlockEntity(pos) instanceof MageBlockTile tile) {
@@ -177,22 +178,22 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
                     this.discard();
                 }
             } else { // on ground
-               this.groundBlock(false);
+                this.groundBlock(false);
             }
         }
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
     }
 
-    public BlockPos groundBlock(boolean ignoreAir){
+    public BlockPos groundBlock(boolean ignoreAir) {
         Block block = this.blockState.getBlock();
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level.getBlockState(blockpos);
         boolean isConcrete = this.blockState.getBlock() instanceof ConcretePowderBlock;
         boolean isConcreteInWater = isConcrete && this.level.getFluidState(blockpos).is(FluidTags.WATER);
         this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
-        if(blockstate.is(Blocks.MOVING_PISTON))
+        if (blockstate.is(Blocks.MOVING_PISTON))
             return null;
-        if (this.cancelDrop){
+        if (this.cancelDrop) {
             this.discard();
             this.callOnBrokenAfterFall(block, blockpos);
             return null;

@@ -285,7 +285,7 @@ public class ModEntities {
             event.put(AMETHYST_GOLEM.get(), AmethystGolem.attributes().build());
             event.put(SUMMON_SKELETON.get(), SummonSkeleton.createAttributes().build());
             event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
-            event.put(ANIMATED_BLOCK.get(), Monster.createMonsterAttributes().build());
+            event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
         }
     }
 

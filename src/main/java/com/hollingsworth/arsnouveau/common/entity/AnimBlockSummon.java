@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,10 +14,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -29,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -41,10 +40,12 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISummon {
+public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISummon, IDispellable {
 
-    private BlockState blockState;
+    public BlockState blockState;
+    public int color;
     private int ticksLeft;
+
     protected AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -64,16 +65,36 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.5D));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
+        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, AnimBlockSummon.class)).setAlertOthers(AnimBlockSummon.class));
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity pEntity) {
+        if (getOwner() != null && pEntity.isAlliedTo(getOwner())) return false;
+        boolean result = super.doHurtTarget(pEntity);
+        if (result) ticksLeft -= 100;
+        return result;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, (double)0.3F).add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.MAX_HEALTH, 4.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity pTarget) {
+        if (getOwnerID() != null) {
+            if (pTarget.getUUID().equals(getOwnerID()))
+                return false;
+            if (pTarget instanceof ISummon summon) {
+                return super.canAttack(pTarget) && !getOwnerID().equals(summon.getOwnerID());
+            }
+        }
+        return super.canAttack(pTarget);
     }
 
     @Override
@@ -83,17 +104,19 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
             ticksLeft--;
             if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove(RemovalReason.DISCARDED);
-                EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), getBlockState());
+                EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
                 fallingBlock.setOwner(this.getOwner());
-                this.remove(RemovalReason.DISCARDED);
+                if (blockState == BlockRegistry.MAGE_BLOCK.defaultBlockState())
+                    fallingBlock.setColor(ParticleColor.fromInt(color));
                 level.addFreshEntity(fallingBlock);
+                this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }
     }
 
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
 
     @Nullable
     @Override
@@ -105,6 +128,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
+        this.entityData.define(COLOR, ParticleColor.defaultParticleColor().getColor());
     }
 
     @Override
@@ -114,6 +138,12 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         fallingBlock.setOwner(this.getOwner());
         level.addFreshEntity(fallingBlock);
         onSummonDeath(level, cause, false);
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getOwner() {
+        return this.dead ? null : super.getOwner();
     }
 
     @Override
@@ -146,7 +176,6 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         this.ticksLeft = ticks;
     }
 
-
     @Nullable
     @Override
     public UUID getOwnerID() {
@@ -170,6 +199,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     }
 
     final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -181,7 +211,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     }
 
     public BlockState getBlockState() {
-        return blockState != null ? blockState : BlockRegistry.SPELL_PRISM.defaultBlockState();
+        return blockState != null ? blockState : BlockRegistry.MAGE_BLOCK.defaultBlockState();
     }
 
     @Override
@@ -194,18 +224,55 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         this.setPos(d0, d1, d2);
     }
 
+    public void setColor(int color){
+        this.color = color;
+        this.getEntityData().set(COLOR, color);
+    }
+
+    @Override
+    public boolean save(CompoundTag pCompound) {
+        pCompound.putInt("color", color);
+        return super.save(pCompound);
+    }
+
+    @Override
+    public void load(CompoundTag pCompound) {
+        super.load(pCompound);
+        this.getEntityData().set(COLOR, pCompound.getInt("color"));
+    }
+
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.blockState = NbtUtils.readBlockState(pCompound.getCompound("BlockState"));
         this.ticksLeft = pCompound.getInt("left");
-
+        this.color = pCompound.getInt("color");
+        this.blockState = Block.stateById(pCompound.getInt("blockState"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
-        pCompound.put("BlockState", NbtUtils.writeBlockState(blockState));
-        pCompound.putInt("left", ticksLeft);
         super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("left", ticksLeft);
+        pCompound.putInt("color", color);
+        pCompound.putInt("blockState", Block.getId(blockState));
+    }
+
+    public int getColor() {
+        if (color == 0){
+            color = entityData.get(COLOR);
+        }
+        return color;
+    }
+
+    /**
+     * When dispel hits a target
+     *
+     * @param caster The entity that cast this spell. This can be NULL in the case of runes and machines that cast spells.
+     * @return Returns true if dispel was successful.
+     */
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.setTicksLeft(0);
+        return true;
     }
 }
