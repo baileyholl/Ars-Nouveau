@@ -228,6 +228,7 @@ public class ModEntities {
             "animated_block",
             EntityType.Builder.<AnimBlockSummon>of(AnimBlockSummon::new, MobCategory.MISC)
                     .sized(1.0f, 1.5f)
+                    .noSave()
                     .setTrackingRange(10));
 
     public static void registerPlacements() {
