@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
@@ -131,7 +132,7 @@ public abstract class AbstractRitual {
     }
 
     public String getName() {
-        return Component.translatable(getRegistryName().getNamespace() + ".tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
+        return Component.translatable(ArsNouveau.MODID + ".tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
     public String getDescription() {
