@@ -77,7 +77,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     public boolean doHurtTarget(Entity pEntity) {
         if (getOwner() != null && pEntity.isAlliedTo(getOwner())) return false;
         boolean result = super.doHurtTarget(pEntity);
-        if (result) ticksLeft -= 100;
+        if (result) ticksLeft -= 20*20;
         return result;
     }
 
@@ -104,15 +104,22 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
             ticksLeft--;
             if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
-                fallingBlock.setOwner(this.getOwner());
-                if (blockState == BlockRegistry.MAGE_BLOCK.defaultBlockState())
-                    fallingBlock.setColor(ParticleColor.fromInt(color));
-                level.addFreshEntity(fallingBlock);
+                returnToFallingBlock(blockState);
                 this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }
+    }
+
+    public void returnToFallingBlock(BlockState blockState) {
+        EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
+        fallingBlock.setOwner(this.getOwner());
+        fallingBlock.setDeltaMovement(this.getDeltaMovement());
+        if (blockState.getBlock() == BlockRegistry.MAGE_BLOCK) {
+            fallingBlock.setColor(ParticleColor.fromInt(color));
+            fallingBlock.dropItem = false;
+        }
+        level.addFreshEntity(fallingBlock);
     }
 
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -134,9 +141,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     @Override
     public void die(DamageSource cause) {
         super.die(cause);
-        EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), getBlockState());
-        fallingBlock.setOwner(this.getOwner());
-        level.addFreshEntity(fallingBlock);
+        returnToFallingBlock(getBlockState());
         onSummonDeath(level, cause, false);
     }
 

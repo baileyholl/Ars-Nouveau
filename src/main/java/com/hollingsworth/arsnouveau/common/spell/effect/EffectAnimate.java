@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -21,7 +22,7 @@ public class EffectAnimate extends AbstractEffect {
     public static EffectAnimate INSTANCE = new EffectAnimate();
 
     public EffectAnimate() {
-        super("animate", "Animate Block");
+        super(GlyphLib.EffectAnimateID, "Animate Block");
     }
 
     @Override
@@ -35,7 +36,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock){
+        if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock && !fallingBlock.isRemoved()){
             AnimBlockSummon summon = animateBlock(rayTraceResult, fallingBlock.position, world, shooter, spellStats, spellContext, fallingBlock.getBlockState());
             summon.setDeltaMovement(fallingBlock.getDeltaMovement());
             summon.hurtMarked = true;
@@ -67,7 +68,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public int getDefaultManaCost() {
-        return 0;
+        return 100;
     }
 
     @Override

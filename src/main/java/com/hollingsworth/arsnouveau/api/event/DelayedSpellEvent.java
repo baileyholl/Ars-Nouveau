@@ -42,7 +42,7 @@ public class DelayedSpellEvent implements ITimedEvent {
     }
 
     public void resolveSpell() {
-        if (world == null)
+        if (world == null || result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved())
             return;
         SpellResolver resolver = new SpellResolver(context);
         resolver.onResolveEffect(world, result);

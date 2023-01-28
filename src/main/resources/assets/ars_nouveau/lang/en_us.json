@@ -12,6 +12,7 @@
   "ars_nouveau.glyph_desc.glyph_accelerate": "Increases the speed of projectile spells.",
   "ars_nouveau.glyph_desc.glyph_amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
   "ars_nouveau.glyph_desc.glyph_aoe": "Spells will affect a larger area around a targeted block.",
+  "ars_nouveau.glyph_desc.glyph_animate": "Animate a block to fight for you. The block will turn back on death, expiration or after dealing damage.",
   "ars_nouveau.glyph_desc.glyph_blink": "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward. Spell Turrets and Runes can warp entities using Warp Scrolls from adjacent inventories without consuming the scroll.",
   "ars_nouveau.glyph_desc.glyph_bounce": "Gives players the Bounce effect, causing them to bounce upwards upon falling. Amplification of Bounce will preserve additional forward facing motion per bounce.",
   "ars_nouveau.glyph_desc.glyph_break": "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.",
@@ -87,6 +88,7 @@
   "ars_nouveau.glyph_name.glyph_accelerate": "Accelerate",
   "ars_nouveau.glyph_name.glyph_amplify": "Amplify",
   "ars_nouveau.glyph_name.glyph_aoe": "AOE",
+  "ars_nouveau.glyph_name.glyph_animate": "Animate Block",
   "ars_nouveau.glyph_name.glyph_blink": "Blink",
   "ars_nouveau.glyph_name.glyph_bounce": "Bounce",
   "ars_nouveau.glyph_name.glyph_break": "Break",
@@ -1304,5 +1306,6 @@
   "ars_nouveau.tooltip.from_blank": "Created by scribing a Blank Parchment in the scribes table.",
   "ars_nouveau.manipulation_essence.tooltip": "Can be scribed onto a Spell Parchment or caster tool to permanently hide the spell.",
   "ars_nouveau.spell_hidden": "Spell is now hidden.",
-  "entity.minecraft.villager.ars_nouveau.shady_wizard": "Shady Wizard"
+  "entity.minecraft.villager.ars_nouveau.shady_wizard": "Shady Wizard",
+  "death.attack.an_enchantedBlock" : "%1$s was crushed by %2$s magic blocks"
 }

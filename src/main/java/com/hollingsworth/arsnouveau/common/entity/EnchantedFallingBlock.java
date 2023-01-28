@@ -226,6 +226,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
                         blockentity.setChanged();
                     }
                 }
+                if (this.level.getBlockEntity(blockpos) instanceof MageBlockTile mbt) {
+                    mbt.color = getParticleColor();
+                    mbt.setChanged();
+                }
+
                 return blockpos;
             } else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 this.discard();
