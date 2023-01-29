@@ -206,4 +206,11 @@ public abstract class AbstractRitual {
     public String getLangDescription() {
         return "";
     }
+
+    /**
+     * If this ritual can appear in villager trades
+     */
+    public boolean canBeTraded(){
+        return true;
+    }
 }

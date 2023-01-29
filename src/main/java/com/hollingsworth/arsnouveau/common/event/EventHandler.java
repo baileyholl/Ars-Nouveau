@@ -287,7 +287,9 @@ public class EventHandler {
 
             List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
             for(RitualTablet tablet : tablets){
-                level3.add((trader, rand) -> emerToItem(tablet, 4, 4, 12));
+                if(tablet.ritual.canBeTraded()) {
+                    level3.add((trader, rand) -> emerToItem(tablet, 4, 1, 12));
+                }
             }
 
             level4.add((trader, rand) -> emerToItem(ItemsRegistry.STARBUNCLE_SHARD, 20, 1, 20));
