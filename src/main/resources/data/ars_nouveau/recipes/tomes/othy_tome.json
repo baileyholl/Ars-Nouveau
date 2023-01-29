@@ -1,0 +1,21 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 16777215,
+  "flavour_text": "Swarm your enemies with bladed spirits.",
+  "name": "Othy's Death By 100 Pricks",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_linger",
+    "ars_nouveau:glyph_sensitive",
+    "ars_nouveau:glyph_summon_vex",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

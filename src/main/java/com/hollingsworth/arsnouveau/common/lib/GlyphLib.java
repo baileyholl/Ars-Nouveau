@@ -21,7 +21,7 @@ public class GlyphLib {
     public static final String EffectBlinkID = prependGlyph("blink");
     public static final String EffectNameID = prependGlyph("name");
 
-    public static final String EffectAquatic = prependGlyph("aquatic");
+    public static final String EffectAnimateID = prependGlyph("animate");
     public static final String EffectExplosionID = prependGlyph("explosion");
     public static final String EffectLightningID = prependGlyph("lightning");
     public static final String EffectSlowfallID = prependGlyph("slowfall");

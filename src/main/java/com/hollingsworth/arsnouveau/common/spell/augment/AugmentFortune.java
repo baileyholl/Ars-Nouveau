@@ -17,7 +17,7 @@ public class AugmentFortune extends AbstractAugment {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 

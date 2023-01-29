@@ -1,0 +1,25 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"walk": {
+			"animation_length": 60,
+			"bones": {
+				"left_leg": {
+					"rotation": {
+						"vector": ["Math.sin(query.anim_time * 300) * 65", 0, 0]
+					}
+				},
+				"right_leg": {
+					"rotation": {
+						"vector": ["Math.sin((query.anim_time - 45) * 300) * 65", 0, 0]
+					}
+				},
+				"master": {
+					"position": {
+						"vector": [0, "Math.sin(query.anim_time * 300) / 2", 0]
+					}
+				}
+			}
+		}
+	}
+}

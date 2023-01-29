@@ -105,6 +105,7 @@ public class APIRegistry {
         registerSpell(EffectInfuse.INSTANCE);
         registerSpell(EffectRotate.INSTANCE);
         registerSpell(EffectWall.INSTANCE);
+        registerSpell(EffectAnimate.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());

@@ -12,7 +12,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 public class EffectWall extends AbstractEffect {
@@ -27,25 +26,27 @@ public class EffectWall extends AbstractEffect {
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
-        EntityWallSpell entityLingeringSpell = new EntityWallSpell(world, shooter);
+        EntityWallSpell entityWallSpell = new EntityWallSpell(world, shooter);
         spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
-        entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
-        entityLingeringSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
-        entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
-        entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
-        entityLingeringSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
+
+        Spell newSpell = spellContext.getRemainingSpell();
+        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+
+        entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
+        entityWallSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
+        entityWallSpell.setAccelerates((int) spellStats.getAccMultiplier());
+        entityWallSpell.extendedTime = spellStats.getDurationMultiplier();
+        entityWallSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
 
 
         Direction facingDirection = spellContext.getCaster().getFacingDirection();
-        entityLingeringSpell.setDirection(facingDirection.getClockWise());
-        SpellContext newContext = new SpellContext(world, newSpell, shooter, spellContext.getCaster()).withCastingTile(spellContext.castingTile).withType(spellContext.getType());
-        entityLingeringSpell.spellResolver = new SpellResolver(newContext);
-        entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
-        entityLingeringSpell.setColor(spellContext.getColors());
-        world.addFreshEntity(entityLingeringSpell);
+        entityWallSpell.setDirection(facingDirection.getClockWise());
+        entityWallSpell.spellResolver = new SpellResolver(newContext);
+        entityWallSpell.setPos(hit.x, hit.y, hit.z);
+        entityWallSpell.setColor(spellContext.getColors());
+        world.addFreshEntity(entityWallSpell);
     }
 
 
@@ -60,7 +61,7 @@ public class EffectWall extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.THREE;
     }
 

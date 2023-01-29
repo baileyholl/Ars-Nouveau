@@ -55,7 +55,7 @@ public class EffectName extends AbstractEffect {
         }
     }
 
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 

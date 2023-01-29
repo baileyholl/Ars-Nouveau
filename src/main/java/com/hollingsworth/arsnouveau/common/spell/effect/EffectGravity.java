@@ -62,7 +62,7 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 
