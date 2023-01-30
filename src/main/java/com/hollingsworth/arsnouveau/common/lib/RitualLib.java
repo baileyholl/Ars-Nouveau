@@ -19,6 +19,10 @@ public class RitualLib {
     public static final String AWAKENING = prependRitual("awakening");
     public static final String HARVEST = prependRitual("harvest");
     public static final String CONTAINMENT = prependRitual("containment");
+    public static String FLOWERING = prependRitual("flowering");
+    public static String DESERT = prependRitual("conjure_island_desert");
+    public static String PLAINS = prependRitual("conjure_island_plains");
+    public static String FORESTATION = prependRitual("forestation");
     public static String prependRitual(String ritual) {
         return "ritual_" + ritual;
     }

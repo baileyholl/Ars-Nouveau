@@ -66,19 +66,24 @@ public class PatchouliProvider implements DataProvider {
             addEnchantmentPage(g);
         }
         for (AbstractRitual r : ArsNouveauAPI.getInstance().getRitualMap().values()) {
-            addRitualPage(r);
+            if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                addRitualPage(r);
         }
 
         for (AbstractFamiliarHolder r : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
-            addFamiliarPage(r);
+            if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                addFamiliarPage(r);
         }
 
         for (AbstractSpellPart s : ArsNouveauAPI.getInstance().getSpellpartMap().values()) {
-            addGlyphPage(s);
+            if(s.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+                addGlyphPage(s);
+            }
         }
 
         for (IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
-            addPerkPage(perk);
+            if(perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                addPerkPage(perk);
         }
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "spell_casting")

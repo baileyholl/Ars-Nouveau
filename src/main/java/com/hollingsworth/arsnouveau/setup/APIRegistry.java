@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.*;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
@@ -22,7 +22,6 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -124,6 +123,11 @@ public class APIRegistry {
         registerRitual(new RitualAwakening());
         registerRitual(new RitualHarvest());
         registerRitual(new RitualMobCapture());
+        registerRitual(new ConjurePlainsRitual());
+        registerRitual(new ForestationRitual());
+        registerRitual(new FloweringRitual());
+        registerRitual(new ConjureDesertRitual());
+
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());
         registerFamiliar(new WhirlisprigFamiliarHolder());

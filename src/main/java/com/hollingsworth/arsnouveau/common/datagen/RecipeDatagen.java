@@ -16,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
@@ -657,6 +658,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.CONJURATION_ESSENCE).save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.PLAINS)).requires(BlockRegistry.FLOURISHING_LOG).requires(Blocks.GRASS_BLOCK).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.FORESTATION)).requires(BlockRegistry.FLOURISHING_LOG).requires(BlockRegistry.MENDOSTEEN_POD).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.FLOWERING)).requires(BlockRegistry.FLOURISHING_LOG).requires(Items.POPPY, 3).requires(Items.DANDELION, 3).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.DESERT)).requires(BlockRegistry.BLAZING_LOG).requires(Blocks.SAND).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
         }
     }
 
