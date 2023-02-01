@@ -202,7 +202,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void updateInventories() {
         inventories = new ArrayList<>();
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.isLoaded(bPos) && level.getBlockEntity(bPos) instanceof Container) {
+            if (level.isLoaded(bPos) && level.getBlockEntity(bPos) instanceof Container container && !(container instanceof ArcanePedestalTile)) {
                 inventories.add(bPos.immutable());
             }
         }
