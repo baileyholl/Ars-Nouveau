@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.recipe.*;
@@ -24,12 +23,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.brewing.BrewingRecipe;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -44,7 +39,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public boolean isCraftingPotion;
     public boolean needsPotionStorage;
     public CraftingManager craftManager = new CraftingManager();
-    public static Map<Item, MultiRecipeWrapper> RECIPE_CACHE = new HashMap<>();
+
     public int craftingIndex;
     public WixieCauldronTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.WIXIE_CAULDRON_TYPE, pos, state);
@@ -162,42 +157,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     public MultiRecipeWrapper getRecipesForStack(ItemStack stack) {
-        MultiRecipeWrapper recipes;
-        if (stack.getItem() == Items.POTION) {
-            recipes = new PotionRecipeWrapper();
-            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()) {
-                if (ItemStack.matches(stack, r.getOutput())) {
-                    List<Ingredient> list = new ArrayList<>();
-                    list.add(new PotionIngredient(r.getInput().getItems()[0]));
-                    list.add(r.getIngredient());
-                    recipes.addRecipe(list, r.getOutput(), null);
-                }
-            }
-        } else {
-            if(RECIPE_CACHE.containsKey(stack.getItem())){
-                return RECIPE_CACHE.get(stack.getItem());
-            }
-            recipes = new MultiRecipeWrapper();
-            for (Recipe r : level.getServer().getRecipeManager().getRecipes()) {
-                if (r.getResultItem() == null || r.getResultItem().getItem() != stack.getItem())
-                    continue;
-
-                if (r instanceof ShapedRecipe) {
-                    ShapedHelper helper = new ShapedHelper((ShapedRecipe) r);
-                    for (List<Ingredient> iList : helper.getPossibleRecipes()) {
-                        recipes.addRecipe(iList, r.getResultItem(), r);
-                    }
-                }
-
-                if (r instanceof ShapelessRecipe)
-                    recipes.addRecipe(r.getIngredients(), r.getResultItem(), r);
-
-            }
-            RECIPE_CACHE.put(stack.getItem(), recipes);
-        }
-        return recipes;
+        return MultiRecipeWrapper.fromStack(stack, level);
     }
-
 
     public void updateInventories() {
         inventories = new ArrayList<>();
@@ -348,6 +309,9 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                     Component.translatable("ars_nouveau.wixie.crafting").getString() +
                             Component.translatable(stackBeingCrafted.getDescriptionId()).getString())
             );
+            if(stackBeingCrafted.getItem() == Items.POTION){
+                PotionUtils.addPotionTooltip(stackBeingCrafted, tooltip, 1.0F);
+            }
         } else if (this.craftManager instanceof PotionCraftingManager potionCraftingManager) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, potionCraftingManager.potionOut);
@@ -358,11 +322,15 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if (!hasSource) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana").withStyle(ChatFormatting.GOLD));
         }
-        if (this.craftManager != null && !this.craftManager.neededItems.isEmpty())
+        if (this.craftManager != null && !this.craftManager.neededItems.isEmpty()) {
+            ItemStack neededStack = this.craftManager.neededItems.get(0);
             tooltip.add(Component.literal(
                     Component.translatable("ars_nouveau.wixie.needs").getString() +
-                            Component.translatable(this.craftManager.neededItems.get(0).getDescriptionId()).getString()).withStyle(ChatFormatting.GOLD));
-
+                            Component.translatable(neededStack.getDescriptionId()).getString()).withStyle(ChatFormatting.GOLD));
+            if(neededStack.getItem() == Items.POTION){
+                PotionUtils.addPotionTooltip(neededStack, tooltip, 1.0F);
+            }
+        }
         if (this.craftManager instanceof PotionCraftingManager potionCraftingManager && potionCraftingManager.needsPotion()) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, potionCraftingManager.getPotionNeeded());
