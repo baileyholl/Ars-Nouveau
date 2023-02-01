@@ -29,7 +29,7 @@ public class PotionRecipeWrapper extends MultiRecipeWrapper{
                 // Return success if we could consume this potion as a liquid from a jar
                 if (stack.getItem() == Items.POTION) {
                     Potion potion = PotionUtils.getPotion(stack);
-                    if (potion == Potions.WATER || WixieCauldronTile.findNeededPotion(PotionUtils.getPotion(stack), 300, world, pos) != null) {
+                    if (potion == Potions.WATER || WixieCauldronTile.findNeededPotion(potion, 300, world, pos) != null) {
                         foundStack = true;
                         break;
                     }

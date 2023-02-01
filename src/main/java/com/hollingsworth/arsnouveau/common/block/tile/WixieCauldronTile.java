@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
-import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -19,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,14 +37,15 @@ import java.util.*;
 public class WixieCauldronTile extends SummoningTile implements ITooltipProvider {
 
     public List<BlockPos> inventories;
-    public ItemStack craftingItem;
+    private ItemStack setStack;
+    private ItemStack stackBeingCrafted;
     public int entityID;
     public boolean hasSource;
     public boolean isCraftingPotion;
     public boolean needsPotionStorage;
-    MultiRecipeWrapper recipeWrapper;
     public CraftingManager craftManager = new CraftingManager();
-
+    public static Map<Item, MultiRecipeWrapper> RECIPE_CACHE = new HashMap<>();
+    public int craftingIndex;
     public WixieCauldronTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.WIXIE_CAULDRON_TYPE, pos, state);
     }
@@ -65,18 +64,46 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         if (!hasSource) return;
 
-        if (this.recipeWrapper == null && craftingItem != null)
-            setRecipes(null, craftingItem);
-
         if (level.getGameTime() % 100 == 0) {
             updateInventories(); // Update the inventories available to use
         }
         if(!level.isClientSide() && level.getGameTime() % 20 == 0){
             if(craftManager.isCraftCompleted()){
-                setRecipes(null, craftingItem);
-                setNewCraft(recipeWrapper);
+                rotateCraft();
             }
         }
+    }
+
+    /**
+     * Picks the next recipe to craft collecting items from the pedestals and the cauldron
+     */
+    public void rotateCraft(){
+        BlockPos leftBound = worldPosition.below().south().east();
+        BlockPos rightBound = worldPosition.above().north().west();
+        List<ItemStack> itemStacks = new ArrayList<>();
+        if(this.setStack != null && !this.setStack.isEmpty()){
+            itemStacks.add(this.setStack);
+        }
+        for(BlockPos pos : BlockPos.betweenClosed(leftBound, rightBound)){
+            if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile
+                    && !pedestalTile.getStack().isEmpty()){
+                itemStacks.add(pedestalTile.getStack().copy());
+            }
+        }
+        if(itemStacks.isEmpty())
+            return;
+        // Get the next recipe to craft
+        if(this.craftingIndex >= itemStacks.size()){
+            this.craftingIndex = 0;
+        }
+        ItemStack nextStack = itemStacks.get(this.craftingIndex);
+        MultiRecipeWrapper recipeWrapper = getRecipesForStack(nextStack);
+        if(!recipeWrapper.isEmpty()){
+            setNewCraft(recipeWrapper);
+            stackBeingCrafted = nextStack.copy();
+            updateBlock();
+        }
+        craftingIndex++;
     }
 
     public boolean hasWixie() {
@@ -134,7 +161,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         }
     }
 
-    public void setRecipes(Player playerEntity, ItemStack stack) {
+    public MultiRecipeWrapper getRecipesForStack(ItemStack stack) {
         MultiRecipeWrapper recipes;
         if (stack.getItem() == Items.POTION) {
             recipes = new PotionRecipeWrapper();
@@ -147,6 +174,9 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                 }
             }
         } else {
+            if(RECIPE_CACHE.containsKey(stack.getItem())){
+                return RECIPE_CACHE.get(stack.getItem());
+            }
             recipes = new MultiRecipeWrapper();
             for (Recipe r : level.getServer().getRecipeManager().getRecipes()) {
                 if (r.getResultItem() == null || r.getResultItem().getItem() != stack.getItem())
@@ -163,26 +193,18 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                     recipes.addRecipe(r.getIngredients(), r.getResultItem(), r);
 
             }
+            RECIPE_CACHE.put(stack.getItem(), recipes);
         }
-        if (!recipes.isEmpty()) {
-            this.recipeWrapper = recipes;
-            this.craftingItem = stack.copy();
-        }
-
-        if ((recipes.isEmpty() || recipeWrapper == null || recipeWrapper.recipes.isEmpty()) && playerEntity != null) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.no_recipe"));
-        } else if (playerEntity != null) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.recipe_set"));
-        }
-        setChanged();
+        return recipes;
     }
 
 
     public void updateInventories() {
         inventories = new ArrayList<>();
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.getBlockEntity(bPos) instanceof Container)
+            if (level.isLoaded(bPos) && level.getBlockEntity(bPos) instanceof Container) {
                 inventories.add(bPos.immutable());
+            }
         }
         setChanged();
     }
@@ -274,24 +296,32 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void load(CompoundTag compound) {
         super.load(compound);
         if (compound.contains("crafting")) {
-            this.craftingItem = ItemStack.of(compound.getCompound("crafting"));
+            this.setStack = ItemStack.of(compound.getCompound("crafting"));
         }
-
+        if (compound.contains("currentCraft")) {
+            this.stackBeingCrafted = ItemStack.of(compound.getCompound("currentCraft"));
+        }
         craftManager = CraftingManager.fromTag(compound);
         this.entityID = compound.getInt("entityid");
         this.hasSource = compound.getBoolean("hasmana");
         this.isCraftingPotion = compound.getBoolean("isPotion");
         needsPotionStorage = compound.getBoolean("storage");
+        craftingIndex = compound.getInt("craftingIndex");
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
 
-        if (craftingItem != null) {
+        if (setStack != null) {
             CompoundTag itemTag = new CompoundTag();
-            craftingItem.save(itemTag);
+            setStack.save(itemTag);
             compound.put("crafting", itemTag);
+        }
+        if (stackBeingCrafted != null) {
+            CompoundTag itemTag = new CompoundTag();
+            stackBeingCrafted.save(itemTag);
+            compound.put("currentCraft", itemTag);
         }
         if (craftManager != null)
             craftManager.write(compound);
@@ -300,12 +330,13 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         compound.putBoolean("hasmana", hasSource);
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
+        compound.putInt("craftingIndex", craftingIndex);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
 
-        if (craftingItem == null)
+        if (stackBeingCrafted == null)
             return;
 
         if (isOff) {
@@ -315,7 +346,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if (this.craftManager != null && !(this.craftManager instanceof PotionCraftingManager)) {
             tooltip.add(Component.literal(
                     Component.translatable("ars_nouveau.wixie.crafting").getString() +
-                            Component.translatable(craftingItem.getDescriptionId()).getString())
+                            Component.translatable(stackBeingCrafted.getDescriptionId()).getString())
             );
         } else if (this.craftManager instanceof PotionCraftingManager potionCraftingManager) {
             ItemStack potionStack = new ItemStack(Items.POTION);
@@ -342,4 +373,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     }
 
+    public ItemStack getSetStack() {
+        return setStack;
+    }
+
+    public void setSetStack(ItemStack setStack) {
+        this.setStack = setStack;
+        updateBlock();
+    }
 }
