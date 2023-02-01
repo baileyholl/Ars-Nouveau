@@ -32,6 +32,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final VoxelShape shape = Block.box(1D, 0.0D, 1.0D, 15, 13, 15);
+
     public ArcanePedestal() {
         super(ModBlock.defaultProperties().noOcclusion());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -119,5 +120,14 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
         ArcanePedestalTile tile = (ArcanePedestalTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getStack().isEmpty()) return 0;
         return 15;
+    }
+
+    @Override
+    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
+        super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
+        if (pLevel.getBlockEntity(pPos) instanceof ArcanePedestalTile tile) {
+            tile.hasSignal = pLevel.hasNeighborSignal(pPos);
+            tile.setChanged();
+        }
     }
 }

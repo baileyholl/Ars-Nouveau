@@ -81,7 +81,8 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         }
         for(BlockPos pos : BlockPos.betweenClosed(leftBound, rightBound)){
             if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile
-                    && !pedestalTile.getStack().isEmpty()){
+                    && !pedestalTile.getStack().isEmpty()
+                    && !pedestalTile.hasSignal){
                 itemStacks.add(pedestalTile.getStack().copy());
             }
         }

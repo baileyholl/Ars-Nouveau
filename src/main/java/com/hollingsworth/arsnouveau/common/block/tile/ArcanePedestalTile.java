@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -11,6 +12,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class ArcanePedestalTile extends SingleItemTile implements Container, IAnimatable {
     public float frames;
+    public boolean hasSignal;
 
     public ArcanePedestalTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_PEDESTAL_TILE, pos, state);
@@ -29,5 +31,17 @@ public class ArcanePedestalTile extends SingleItemTile implements Container, IAn
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        hasSignal = tag.getBoolean("hasSignal");
+    }
+
+    @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        this.hasSignal = compound.getBoolean("hasSignal");
     }
 }
