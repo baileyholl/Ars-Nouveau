@@ -10,6 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * Stores a list of recipes and provides methods to check if a given inventory contains the items needed to craft any of the recipes.
+ * These recipes typically all correspond to the same output item.
+ */
 public class MultiRecipeWrapper implements IRecipeWrapper{
 
     public Set<SingleRecipe> recipes;
