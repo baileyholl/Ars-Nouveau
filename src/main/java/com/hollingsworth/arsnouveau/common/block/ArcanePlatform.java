@@ -92,19 +92,19 @@ public class ArcanePlatform extends ArcanePedestal{
     public static final VoxelShape NORTH = Stream.of(
             Block.box(2, 2, 11, 14, 14, 13),
             Block.box(5, 5, 13, 11, 11, 16),
-            Block.box(7, 7, 13, 9, 9, 16),
-            Block.box(7, 1, 13, 9, 5, 16),
             Block.box(11, 7, 13, 15, 9, 16),
-            Block.box(1, 11, 13, 5, 15, 16)
+            Block.box(7, 1, 13, 9, 5, 16),
+            Block.box(1, 7, 13, 5, 9, 16),
+            Block.box(7, 11, 13, 9, 15, 16)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public static final VoxelShape SOUTH = Stream.of(
             Block.box(2, 2, 3, 14, 14, 5),
             Block.box(5, 5, 0, 11, 11, 3),
-            Block.box(7, 7, 0, 9, 9, 3),
-            Block.box(7, 1, 0, 9, 5, 3),
             Block.box(1, 7, 0, 5, 9, 3),
-            Block.box(11, 11, 0, 15, 15, 3)
+            Block.box(7, 1, 0, 9, 5, 3),
+            Block.box(11, 7, 0, 15, 9, 3),
+            Block.box(7, 11, 0, 9, 15, 3)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override

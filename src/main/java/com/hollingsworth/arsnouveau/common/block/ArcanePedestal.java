@@ -23,14 +23,18 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWaterloggedBlock {
-    public static final VoxelShape shape = Block.box(1D, 0.0D, 1.0D, 15, 13, 15);
+
     public ArcanePedestal() {
         super(ModBlock.defaultProperties().noOcclusion());
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -114,4 +118,31 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
         if (tile == null || tile.getStack().isEmpty()) return 0;
         return 15;
     }
+
+    public static final VoxelShape shape = Stream.of(
+            Block.box(2, 11, 2, 14, 13, 14),
+            Block.box(5, 0, 5, 11, 3, 11),
+            Block.box(5, 8, 5, 11, 11, 11),
+            Block.box(6, 3, 6, 10, 8, 10),
+            Stream.of(
+                    Block.box(7, 8, 1, 9, 11, 5),
+                    Block.box(7, 3, 3, 9, 8, 5),
+                    Block.box(7, 0, 1, 9, 3, 5)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
+            Stream.of(
+                    Block.box(1, 8, 7, 5, 11, 9),
+                    Block.box(3, 3, 7, 5, 8, 9),
+                    Block.box(1, 0, 7, 5, 3, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
+            Stream.of(
+                    Block.box(7, 8, 11, 9, 11, 15),
+                    Block.box(7, 3, 11, 9, 8, 13),
+                    Block.box(7, 0, 11, 9, 3, 15)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
+            Stream.of(
+                    Block.box(11, 8, 7, 15, 11, 9),
+                    Block.box(11, 3, 7, 13, 8, 9),
+                    Block.box(11, 0, 7, 15, 3, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 }
