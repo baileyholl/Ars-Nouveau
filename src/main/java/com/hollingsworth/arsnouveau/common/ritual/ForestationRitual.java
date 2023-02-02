@@ -1,6 +1,7 @@
-package com.hollingsworth.arsnouveau.api.ritual;
+package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ritual.FeaturePlacementRitual;
 import com.hollingsworth.arsnouveau.api.ritual.features.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
@@ -19,7 +20,7 @@ public class ForestationRitual extends FeaturePlacementRitual {
 
 
     @Override
-    void addFeatures(List<IPlaceableFeature> features) {
+    public void addFeatures(List<IPlaceableFeature> features) {
         boolean isTaiga = getConsumedItems().stream().anyMatch(i -> i.getItem() == Items.BROWN_MUSHROOM);
         boolean isJungle = getConsumedItems().stream().anyMatch(i -> i.getItem() == Items.GLOW_BERRIES);
         if(isTaiga){

@@ -196,7 +196,7 @@ public abstract class AbstractRitual {
     }
 
     public int getParticleIntensity() {
-        return 20;
+        return 10;
     }
 
     public String getLangName() {

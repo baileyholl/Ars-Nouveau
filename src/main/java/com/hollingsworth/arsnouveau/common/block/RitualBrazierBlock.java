@@ -32,10 +32,14 @@ public class RitualBrazierBlock extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) || handIn != InteractionHand.MAIN_HAND || !player.getMainHandItem().isEmpty())
+        if (!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) || handIn != InteractionHand.MAIN_HAND)
             return super.use(state, worldIn, pos, player, handIn, hit);
-        if (tile.ritual != null && !tile.isRitualDone()) {
+        ItemStack heldStack = player.getMainHandItem();
+        if (heldStack.isEmpty() && tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual();
+        }
+        if(!heldStack.isEmpty()){
+            tile.tryBurnStack(heldStack);
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }

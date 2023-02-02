@@ -26,6 +26,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,7 +76,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 25);
+            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 10);
             return;
         }
 
@@ -95,12 +96,9 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                 updateBlock();
                 return;
             }
-            if (!ritual.isRunning() && !level.isClientSide) {
+            if (!ritual.isRunning() && !level.isClientSide && level.getGameTime() % 5 == 0) {
                 level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i -> {
-                    if (ritual.canConsumeItem(i.getItem())) {
-                        ritual.onItemConsumed(i.getItem());
-                        ParticleUtil.spawnPoof((ServerLevel) level, i.blockPosition());
-                    }
+                    tryBurnStack(i.getItem());
                 });
             }
             if (ritual.consumesSource() && ritual.needsSourceNow()) {
@@ -114,6 +112,16 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
             }
             ritual.tryTick();
         }
+    }
+
+    public boolean tryBurnStack(ItemStack stack){
+        if(ritual != null && !ritual.isRunning() && !level.isClientSide && ritual.canConsumeItem(stack)) {
+            ritual.onItemConsumed(stack);
+            ParticleUtil.spawnPoof((ServerLevel) level, getBlockPos());
+            level.playSound(null, getBlockPos(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 0.3f, 1.0f);
+            return true;
+        }
+        return false;
     }
 
     public boolean isRitualDone() {

@@ -28,7 +28,7 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     public BlockPos lowerOffset = BlockPos.ZERO;
     public BlockPos upperOffset = BlockPos.ZERO;
 
-    abstract void addFeatures(List<IPlaceableFeature> features);
+    public abstract void addFeatures(List<IPlaceableFeature> features);
 
     @Override
     public void onStart() {
@@ -70,7 +70,7 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
 
 
     @Override
-    protected void tick() {
+    public void tick() {
         if(getWorld().isClientSide){
             return;
         }

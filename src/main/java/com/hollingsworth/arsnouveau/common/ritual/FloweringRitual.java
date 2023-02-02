@@ -1,7 +1,8 @@
-package com.hollingsworth.arsnouveau.api.ritual;
+package com.hollingsworth.arsnouveau.common.ritual;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ritual.FeaturePlacementRitual;
 import com.hollingsworth.arsnouveau.api.ritual.features.BonemealFeature;
 import com.hollingsworth.arsnouveau.api.ritual.features.IPlaceableFeature;
 import com.hollingsworth.arsnouveau.api.ritual.features.PlaceBlockFeature;
@@ -28,7 +29,7 @@ public class FloweringRitual extends FeaturePlacementRitual {
     }
 
     @Override
-    void addFeatures(List<IPlaceableFeature> features) {
+    public void addFeatures(List<IPlaceableFeature> features) {
         boolean isDesert = getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.SAND));
         if(!isDesert) {
             features.add(new PlaceBlockFeature(1.5, 0.8, () -> flowers.get(getWorld().random.nextInt(flowers.size())).defaultBlockState()));

@@ -1,8 +1,10 @@
-package com.hollingsworth.arsnouveau.api.ritual;
+package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ritual.ConjureBiomeRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -10,9 +12,17 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ConjureDesertRitual extends ConjureBiomeRitual{
+public class ConjureDesertRitual extends ConjureBiomeRitual {
     public ConjureDesertRitual() {
         super(Biomes.DESERT);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA))){
+            biome = Biomes.BADLANDS;
+        }
     }
 
     @Override
@@ -51,5 +61,14 @@ public class ConjureDesertRitual extends ConjureBiomeRitual{
     @Override
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(ArsNouveau.MODID, RitualLib.DESERT);
+    }
+
+    @Override
+    public void read(CompoundTag tag) {
+        super.read(tag);
+        boolean isBadlands = getConsumedItems().stream().anyMatch(i -> i.is(ItemTags.TERRACOTTA));
+        if(isBadlands){
+            biome = Biomes.BADLANDS;
+        }
     }
 }
