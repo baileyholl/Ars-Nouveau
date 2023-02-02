@@ -22,6 +22,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,8 @@ import java.util.List;
 public class APIRegistry {
 
     public static void setup() {
+        if (!FMLEnvironment.production) //only in dev
+            registerWip();
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);
         registerSpell(MethodSelf.INSTANCE);
@@ -104,8 +107,6 @@ public class APIRegistry {
         registerSpell(EffectInfuse.INSTANCE);
         registerSpell(EffectRotate.INSTANCE);
         registerSpell(EffectWall.INSTANCE);
-        registerSpell(EffectAnimate.INSTANCE);
-
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -132,7 +133,6 @@ public class APIRegistry {
         registerFamiliar(new DrygmyFamiliarHolder());
         registerFamiliar(new WhirlisprigFamiliarHolder());
         registerFamiliar(new WixieFamiliarHolder());
-//        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliarHolder());
 
 
@@ -152,11 +152,17 @@ public class APIRegistry {
         registerPerk(RepairingPerk.INSTANCE);
         registerPerk(SaturationPerk.INSTANCE);
         registerPerk(SpellDamagePerk.INSTANCE);
-//        registerPerk(BondedPerk.INSTANCE);
         registerPerk(ChillingPerk.INSTANCE);
         registerPerk(IgnitePerk.INSTANCE);
         registerPerk(TotemPerk.INSTANCE);
         registerPerk(VampiricPerk.INSTANCE);
+    }
+
+    //register things only in dev, safe from production
+    private static void registerWip() {
+        registerSpell(EffectAnimate.INSTANCE);
+        //registerPerk(BondedPerk.INSTANCE);
+        //registerFamiliar(new JabberwogFamiliar());
     }
 
     public static void postInit() {
