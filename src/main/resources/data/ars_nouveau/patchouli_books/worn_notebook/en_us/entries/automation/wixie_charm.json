@@ -24,11 +24,16 @@
     {
       "type": "patchouli:text",
       "text": "ars_nouveau.page4.wixie_charm",
+      "title": "ars_nouveau.item_crafting_setting"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page5.wixie_charm",
       "title": "ars_nouveau.potion_crafting"
     },
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page5.wixie_charm"
+      "text": "ars_nouveau.page6.wixie_charm"
     }
   ]
 }
