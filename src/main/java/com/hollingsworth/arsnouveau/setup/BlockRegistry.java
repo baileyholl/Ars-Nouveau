@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
@@ -73,10 +74,7 @@ public class BlockRegistry {
     public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockRegistryKey)
     public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCANE_PEDESTAL, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCANE_PEDESTAL, registryName = BlockRegistryKey)
-    public static ArcanePedestal ARCANE_PEDESTAL;
+
     @ObjectHolder(value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockRegistryKey)
     public static SourceJar SOURCE_JAR;
     @ObjectHolder(value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockEntityRegistryKey)
@@ -389,7 +387,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new ImbuementBlock());
         registry.register(LibBlockNames.ENCHANTING_APPARATUS, new EnchantingApparatusBlock());
         registry.register(LibBlockNames.ARCANE_CORE, new ArcaneCore());
-        registry.register(LibBlockNames.ARCANE_PEDESTAL, new ArcanePedestal());
         registry.register(LibBlockNames.RITUAL_BRAZIER, new RitualBrazierBlock());
         registry.register(LibBlockNames.RUNE, new RuneBlock());
         registry.register(LibBlockNames.PORTAL, new PortalBlock());
@@ -513,7 +510,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.LIGHT_BLOCK, BlockEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null));
         registry.register(LibBlockNames.T_LIGHT_BLOCK, BlockEntityType.Builder.of(TempLightTile::new, BlockRegistry.T_LIGHT_BLOCK).build(null));
         registry.register(LibBlockNames.ENCHANTING_APPARATUS, BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null));
-        registry.register(LibBlockNames.ARCANE_PEDESTAL, BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null));
         registry.register(LibBlockNames.SCRIBES_BLOCK, BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null));
         registry.register(LibBlockNames.RELAY, BlockEntityType.Builder.of(RelayTile::new, BlockRegistry.RELAY).build(null));
         registry.register(LibBlockNames.RUNE, BlockEntityType.Builder.of(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null));
@@ -572,7 +568,7 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("enchanting_apparatus");
             }
         });
-        registry.register(LibBlockNames.ARCANE_PEDESTAL, getDefaultBlockItem(BlockRegistry.ARCANE_PEDESTAL));
+
         registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -788,15 +784,24 @@ public class BlockRegistry {
     }
 
     //Somebody need to start it
-    public static final RegistryObject<Block> ROTATING_TURRET;
+    public static final RegistryWrapper<Block> ROTATING_TURRET;
     public static final RegistryObject<BlockEntityType<?>> ROTATING_TURRET_TILE;
-    public static final RegistryObject<ArcanePlatform> MINI_PEDESTAL;
-    public static RegistryObject<BlockEntityType<ArcanePedestalTile>> ARCANE_PLATFORM_TILE = null;
-    public static final RegistryObject<Block> ARCANE_TORCH;
+    public static final RegistryWrapper<ArcanePlatform> ARCANE_PLATFORM;
+    public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH;
+    public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY;
+
+
+    public static RegistryObject<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE;
+    public static RegistryObject<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE;
+
+    public static RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL;
+
     static {
-        ROTATING_TURRET = BLOCKS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RotatingSpellTurret());
-        MINI_PEDESTAL = BLOCKS.register(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
-        ARCANE_TORCH = BLOCKS.register(LibBlockNames.ARCANE_TORCH, ArcaneTorch::new);
+        ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
+        ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
+        MAGELIGHT_TORCH = registerBlock(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
+        ARCANE_PEDESTAL = registerBlock(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
+        BRAZIER_RELAY = registerBlock(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -804,10 +809,19 @@ public class BlockRegistry {
             }
         });
 
-        ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> getDefaultBlockItem(MINI_PEDESTAL.get()));
-        ITEMS.register(LibBlockNames.ARCANE_TORCH, () ->getDefaultBlockItem(BlockRegistry.ARCANE_TORCH.get()));
+        ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
+
+        ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PLATFORM.get()));
+        ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () ->getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
+        ITEMS.register(LibBlockNames.BRAZIER_RELAY, () ->getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
-        ARCANE_PLATFORM_TILE = BLOCK_ENTITIES.register(LibBlockNames.MINI_PEDESTAL, () -> BlockEntityType.Builder.of((b, p) -> new ArcanePedestalTile(ARCANE_PLATFORM_TILE.get(),b,p), MINI_PEDESTAL.get()).build(null));
+        ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
+        MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));
+
+    }
+
+    static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
+        return new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
     }
 
     static RegistryObject<Block> addBlock(String name, Supplier<Block> blockSupp) {

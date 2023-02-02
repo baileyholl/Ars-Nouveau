@@ -48,7 +48,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.RELAY,
                 BlockRegistry.ARCANE_CORE_BLOCK,
                 BlockRegistry.ENCHANTING_APP_BLOCK,
-                BlockRegistry.ARCANE_PEDESTAL,
+                BlockRegistry.ARCANE_PEDESTAL.get(),
+                BlockRegistry.ARCANE_PLATFORM.get(),
+                BlockRegistry.MAGELIGHT_TORCH.get(),
                 BlockRegistry.CREATIVE_SOURCE_JAR,
                 BlockRegistry.RUNE_BLOCK,
                 BlockRegistry.IMBUEMENT_BLOCK,
@@ -76,7 +78,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.SCRYERS_OCULUS,
                 BlockRegistry.POTION_DIFFUSER,
                 BlockRegistry.MOB_JAR,
-                BlockRegistry.VOID_PRISM
+                BlockRegistry.VOID_PRISM,
+                BlockRegistry.BRAZIER_RELAY.get()
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(

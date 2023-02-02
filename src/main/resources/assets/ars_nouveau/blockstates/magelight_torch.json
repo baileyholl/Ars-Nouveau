@@ -1,0 +1,51 @@
+{
+  "variants": {
+    "facing=east,floor=false,roof=false": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "y": 90,
+      "x": 90
+    },
+    "facing=east,floor=false,roof=true": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "y": 90,
+      "x": 180
+    },
+    "facing=north,floor=false,roof=false": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "x": 90
+    },
+    "facing=north,floor=true,roof=false": {
+      "model": "ars_nouveau:block/magelight_torch"
+    },
+    "facing=north,floor=false,roof=true": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "x": 180
+    },
+    "facing=south,floor=false": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "x": -90
+    },
+    "facing=south,floor=true": {
+      "model": "ars_nouveau:block/magelight_torch"
+    },
+    "facing=west,floor=false": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "y": -90,
+      "x": 90
+    },
+    "facing=down": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "ars_nouveau:block/magelight_torch"
+    },
+    "floor=true,facing=east,roof=false": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "y": 90
+    },"floor=true,facing=west": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "y": 90
+    }
+  }
+}

@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -28,7 +29,11 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     public boolean lit;
 
     public SconceTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.SCONCE_TILE, pos, state);
+        this(BlockRegistry.SCONCE_TILE, pos, state);
+    }
+
+    public SconceTile(BlockEntityType type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
 
@@ -66,7 +71,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
         BlockPos pos = getBlockPos();
         double xzOffset = 0.15;
         BlockState state = getLevel().getBlockState(getBlockPos());
-        if (!(state.getBlock() instanceof SconceBlock))
+        if (!(state.hasProperty(ScribesBlock.FACING)))
             return;
 
         double xOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4);

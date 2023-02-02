@@ -55,7 +55,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
             }else if(facing == Direction.NORTH){
                 zOffset = 0.45f;
             }else if(facing == Direction.UP){
-                entityRenderer.render(entityItem, xOffset, yOffset, zOffset, entityItem.yRot, 2.0f, matrixStack, pBufferSource, pPackedLight);
+                entityRenderer.render(entityItem, xOffset, yOffset, zOffset, entityItem.yRot, 0, matrixStack, pBufferSource, pPackedLight);
                 matrixStack.popPose();
                 return;
             }
@@ -66,7 +66,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
             Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, pPackedLight, pPackedOverlay, matrixStack, pBufferSource, (int) tileEntityIn.getBlockPos().asLong());
         }else {
             entityRenderer.render(entityItem, 0.5, 1, 0.5,
-                    entityItem.yRot, 2.0f, matrixStack, pBufferSource, pPackedLight);
+                    entityItem.yRot, 0, matrixStack, pBufferSource, pPackedLight);
         }
         matrixStack.popPose();
     }
