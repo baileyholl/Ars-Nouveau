@@ -784,7 +784,7 @@
   "ars_nouveau.page1.decorative": "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.",
   "ars_nouveau.wilden": "Wilden",
   "ars_nouveau.page.decorative": "Decorative Blocks",
-  "ars_nouveau.page.sconce": "A decorative light. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color.",
+  "ars_nouveau.page1.magelight_torch": "Decorative lights. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color. The Magelight Torch on a wall can change the direction of its flames by interacting. Use Touch or Projectile Sensitive to target the sconce.",
   "ars_nouveau.page1.source_berry": "A Sourceberry Bush can be found in Taiga and Archwood Forest biomes, and produces Sourceberries. A Sourceberry can be used to craft a Potion of Mana Regeneration or consumed as food. Starbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Sourceberry foods will also grant Mana Regeneration.",
   "ars_nouveau.page.wilden": "Wilden",
   "ars_nouveau.page.weald_walker": "Weald Walkers",
@@ -1315,5 +1315,8 @@
   "ars_nouveau.manipulation_essence.tooltip": "Can be scribed onto a Spell Parchment or caster tool to permanently hide the spell.",
   "ars_nouveau.spell_hidden": "Spell is now hidden.",
   "entity.minecraft.villager.ars_nouveau.shady_wizard": "Shady Wizard",
-  "death.attack.an_enchantedBlock" : "%1$s was crushed by %2$s magic blocks"
+  "death.attack.an_enchantedBlock" : "%1$s was crushed by %2$s magic blocks",
+  "block.ars_nouveau.magelight_torch": "Magelight Torch",
+  "block.ars_nouveau.arcane_platform": "Arcane Platform",
+  "ars_nouveau.arcane_platform.tooltip": "Can be placed in any direction and can be used in place of a pedestal."
 }

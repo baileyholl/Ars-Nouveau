@@ -668,6 +668,9 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("   ")
                     .pattern("xyx")
                     .pattern(" x ").define('x', Tags.Items.NUGGETS_GOLD).define('y', SOURCE_GEM).save(consumer);
+
+            shapelessBuilder(BlockRegistry.ARCANE_PLATFORM).requires(BlockRegistry.ARCANE_PEDESTAL).save(consumer);
+            shapelessBuilder(BlockRegistry.ARCANE_PEDESTAL).requires(BlockRegistry.ARCANE_PLATFORM).save(consumer, new ResourceLocation(ArsNouveau.MODID, "platform_to_pedestal"));
         }
     }
 

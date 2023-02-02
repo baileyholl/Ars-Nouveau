@@ -811,7 +811,7 @@ public class BlockRegistry {
 
         ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
 
-        ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PLATFORM.get()));
+        ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> new ModBlockItem(BlockRegistry.ARCANE_PLATFORM.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
         ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () ->getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
         ITEMS.register(LibBlockNames.BRAZIER_RELAY, () ->getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
