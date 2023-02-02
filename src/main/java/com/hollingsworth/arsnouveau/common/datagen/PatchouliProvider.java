@@ -306,7 +306,10 @@ public class PatchouliProvider implements DataProvider {
 
         addBasicItem(ItemsRegistry.DOMINION_ROD, AUTOMATION, new ApparatusPage(ItemsRegistry.DOMINION_ROD));
         addBasicItem(BlockRegistry.SPELL_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.SPELL_PRISM));
-        addBasicItem(BlockRegistry.SCONCE_BLOCK, RESOURCES, new CraftingPage(BlockRegistry.SCONCE_BLOCK));
+
+        addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.SCONCE_BLOCK).withRecipe2(BlockRegistry.MAGELIGHT_TORCH)), getPath(RESOURCES, "magelighting"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
@@ -348,8 +351,8 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK))
-                .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
+                .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_PLATFORM))
+                .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
 
         addBasicItem(BlockRegistry.POTION_JAR, MACHINES, new CraftingPage(BlockRegistry.POTION_JAR));
         addBasicItem(BlockRegistry.POTION_MELDER, MACHINES, new ApparatusPage(BlockRegistry.POTION_MELDER));
