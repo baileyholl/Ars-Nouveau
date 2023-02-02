@@ -169,10 +169,6 @@ public class BlockRegistry {
     public static StrippableLog FLOURISHING_WOOD;
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_PLANK, registryName = BlockRegistryKey)
     public static ModBlock ARCHWOOD_PLANK;
-    @ObjectHolder(value = prepend + LibBlockNames.RITUAL_BRAZIER, registryName = BlockRegistryKey)
-    public static RitualBrazierBlock RITUAL_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.RITUAL_BRAZIER, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RitualBrazierTile> RITUAL_TILE;
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_BUTTON, registryName = BlockRegistryKey)
     public static WoodButtonBlock ARCHWOOD_BUTTON;
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_STAIRS, registryName = BlockRegistryKey)
@@ -387,7 +383,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new ImbuementBlock());
         registry.register(LibBlockNames.ENCHANTING_APPARATUS, new EnchantingApparatusBlock());
         registry.register(LibBlockNames.ARCANE_CORE, new ArcaneCore());
-        registry.register(LibBlockNames.RITUAL_BRAZIER, new RitualBrazierBlock());
         registry.register(LibBlockNames.RUNE, new RuneBlock());
         registry.register(LibBlockNames.PORTAL, new PortalBlock());
         registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
@@ -522,7 +517,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.VOLCANIC_SOURCELINK, BlockEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null));
         registry.register(LibBlockNames.WIXIE_CAULDRON, BlockEntityType.Builder.of(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null));
         registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, BlockEntityType.Builder.of(CreativeSourceJarTile::new, BlockRegistry.CREATIVE_SOURCE_JAR).build(null));
-        registry.register(LibBlockNames.RITUAL_BRAZIER, BlockEntityType.Builder.of(RitualBrazierTile::new, BlockRegistry.RITUAL_BLOCK).build(null));
         registry.register(LibBlockNames.POTION_JAR_BLOCK, BlockEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null));
         registry.register(LibBlockNames.POTION_MELDER_BLOCK, BlockEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null));
         registry.register(LibBlockNames.SCONCE, BlockEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null));
@@ -639,13 +633,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.BLAZING_SAPLING, getDefaultBlockItem(BlockRegistry.BLAZING_SAPLING));
         registry.register(LibBlockNames.BLAZING_WOOD, getDefaultBlockItem(BlockRegistry.BLAZING_WOOD));
         registry.register(LibBlockNames.ARCHWOOD_PLANK, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK));
-        registry.register(LibBlockNames.RITUAL_BRAZIER, new RendererBlockItem(BlockRegistry.RITUAL_BLOCK,
-                defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return RitualBrazierRenderer::getISTER;
-            }
-        });
 
         registry.register(LibBlockNames.ARCHWOOD_BUTTON, getDefaultBlockItem(BlockRegistry.ARCHWOOD_BUTTON));
         registry.register(LibBlockNames.ARCHWOOD_STAIRS, getDefaultBlockItem(BlockRegistry.ARCHWOOD_STAIRS));
@@ -796,12 +783,19 @@ public class BlockRegistry {
 
     public static RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL;
 
+    public static RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK;
+
+    public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
+    public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
+
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
         ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
         MAGELIGHT_TORCH = registerBlock(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
         ARCANE_PEDESTAL = registerBlock(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
         BRAZIER_RELAY = registerBlock(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
+        RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
+
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -814,10 +808,13 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> new ModBlockItem(BlockRegistry.ARCANE_PLATFORM.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
         ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () ->getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
         ITEMS.register(LibBlockNames.BRAZIER_RELAY, () ->getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
+        ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
+
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
         MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));
-
+        BRAZIER_RELAY_TILE = BLOCK_ENTITIES.register(LibBlockNames.BRAZIER_RELAY, () -> BlockEntityType.Builder.of(BrazierRelayTile::new, BRAZIER_RELAY.get()).build(null));
+        RITUAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.RITUAL_BRAZIER, () -> BlockEntityType.Builder.of(RitualBrazierTile::new, RITUAL_BLOCK.get()).build(null));
     }
 
     static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {

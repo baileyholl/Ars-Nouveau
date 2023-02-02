@@ -1,0 +1,92 @@
+package com.hollingsworth.arsnouveau.common.block.tile;
+
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
+
+public class BrazierRelayTile extends RitualBrazierTile{
+
+    int ticksToLightOff = 0;
+
+    public BrazierRelayTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
+    }
+
+    public BrazierRelayTile(BlockPos p, BlockState s) {
+        super(BlockRegistry.BRAZIER_RELAY_TILE.get(), p, s);
+    }
+
+    @Override
+    public void tick() {
+        if (isDecorative && level.isClientSide) {
+            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 10);
+        }
+
+        if(!level.isClientSide){
+            ticksToLightOff--;
+            if(ticksToLightOff <= 0){
+                ticksToLightOff = 0;
+                if(level.getBlockState(worldPosition).getValue(LIT)) {
+                    level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, false));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity) {
+        Level world = getLevel();
+        BlockPos pos = getBlockPos();
+        double xzOffset = 0.25;
+        for (int i = 0; i < intensity; i++) {
+            world.addParticle(
+                    GlowParticleData.createData(centerColor),
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 0.2 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
+                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+        }
+        for (int i = 0; i < intensity; i++) {
+            world.addParticle(
+                    GlowParticleData.createData(outerColor),
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 0.2 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
+                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+        }
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+
+    }
+
+    @Override
+    public void onWanded(Player playerEntity) {
+
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("ticksToLightOff", ticksToLightOff);
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        this.ticksToLightOff = tag.getInt("ticksToLightOff");
+    }
+}

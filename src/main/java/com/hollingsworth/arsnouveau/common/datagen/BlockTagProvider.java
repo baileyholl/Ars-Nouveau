@@ -61,7 +61,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.LAVA_LILY,
                 BlockRegistry.WIXIE_CAULDRON,
                 BlockRegistry.SOURCE_GEM_BLOCK,
-                BlockRegistry.RITUAL_BLOCK,
+                BlockRegistry.RITUAL_BLOCK.get(),
                 BlockRegistry.POTION_JAR,
                 BlockRegistry.POTION_MELDER,
                 BlockRegistry.SCONCE_BLOCK,

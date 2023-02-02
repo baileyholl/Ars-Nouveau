@@ -37,7 +37,7 @@ public class RitualDisintegration extends AbstractRitual {
         if (world.isClientSide) {
             BlockPos pos = getPos();
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(5, 5, 5));
                 world.addParticle(ParticleLineData.createData(getCenterColor()),

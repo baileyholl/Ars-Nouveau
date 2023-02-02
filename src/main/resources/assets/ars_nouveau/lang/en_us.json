@@ -1320,5 +1320,8 @@
   "death.attack.an_enchantedBlock" : "%1$s was crushed by %2$s magic blocks",
   "block.ars_nouveau.magelight_torch": "Magelight Torch",
   "block.ars_nouveau.arcane_platform": "Arcane Platform",
-  "ars_nouveau.arcane_platform.tooltip": "Can be placed in any direction and can be used in place of a pedestal."
+  "ars_nouveau.arcane_platform.tooltip": "Can be placed in any direction and can be used in place of a pedestal.",
+  "ars_nouveua.brazier_relay.connected": "Brazier connected.",
+  "blocks.ars_nouveau.brazier_relay": "Brazier Relay"
+
 }

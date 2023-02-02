@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IInvProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -15,6 +16,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -26,6 +28,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -40,19 +43,40 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable, IInvProvider, IDispellable {
+public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable, IInvProvider, IDispellable, IWandable {
     public AbstractRitual ritual;
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
     public boolean isDecorative;
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean isOff;
+    public BlockPos relayPos;
+
 
     public RitualBrazierTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
     public RitualBrazierTile(BlockPos p, BlockState s) {
-        super(BlockRegistry.RITUAL_TILE, p, s);
+        super(BlockRegistry.RITUAL_TILE.get(), p, s);
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        // check if position is a BrazierRelayTile
+        if(storedPos != null && level.getBlockEntity(storedPos) instanceof BrazierRelayTile relayTile){
+            relayPos = storedPos.immutable();
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.brazier_relay.connected"));
+            updateBlock();
+        }
+    }
+
+    @Override
+    public void onWanded(Player playerEntity) {
+        if(relayPos != null){
+            relayPos = null;
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
+            updateBlock();
+        }
     }
 
     public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity) {
@@ -70,6 +94,9 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                     GlowParticleData.createData(outerColor),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
+        }
+        if(relayPos != null && level.getBlockEntity(relayPos) instanceof BrazierRelayTile relayTile){
+            relayTile.makeParticle(centerColor, outerColor, intensity);
         }
     }
 
@@ -110,7 +137,12 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                     return;
                 }
             }
-            ritual.tryTick();
+            if(this.relayPos != null && level.getBlockEntity(this.relayPos) instanceof BrazierRelayTile relayTile){
+                ritual.tryTick(relayTile);
+                relayTile.ticksToLightOff = 2;
+            }else{
+                ritual.tryTick(this);
+            }
         }
     }
 
@@ -156,6 +188,10 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         color = ParticleColor.deserialize(tag.getCompound("color"));
         isDecorative = tag.getBoolean("decorative");
         isOff = tag.getBoolean("off");
+
+        if(tag.contains("relayPos")){
+            this.relayPos = BlockPos.of(tag.getLong("relayPos"));
+        }
     }
 
     @Override
@@ -169,6 +205,10 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         tag.put("color", color.serialize());
         tag.putBoolean("decorative", isDecorative);
         tag.putBoolean("off", isOff);
+        // store the relay position
+        if(this.relayPos != null){
+            tag.putLong("relayPos", this.relayPos.asLong());
+        }
     }
 
     public boolean canTakeAnotherRitual() {
