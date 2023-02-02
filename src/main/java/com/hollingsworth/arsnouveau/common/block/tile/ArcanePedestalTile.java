@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -11,6 +12,11 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class ArcanePedestalTile extends SingleItemTile implements Container, IAnimatable {
     public float frames;
+
+    public ArcanePedestalTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
+    }
+
 
     public ArcanePedestalTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_PEDESTAL_TILE, pos, state);
