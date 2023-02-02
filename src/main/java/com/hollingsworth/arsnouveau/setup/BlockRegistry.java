@@ -790,12 +790,12 @@ public class BlockRegistry {
     //Somebody need to start it
     public static final RegistryObject<Block> ROTATING_TURRET;
     public static final RegistryObject<BlockEntityType<?>> ROTATING_TURRET_TILE;
-    public static final RegistryObject<MiniPedestal> MINI_PEDESTAL;
-    public static RegistryObject<BlockEntityType<ArcanePedestalTile>> MINI_PEDESTAL_TILE = null;
+    public static final RegistryObject<ArcanePlatform> MINI_PEDESTAL;
+    public static RegistryObject<BlockEntityType<ArcanePedestalTile>> ARCANE_PLATFORM_TILE = null;
     public static final RegistryObject<Block> ARCANE_TORCH;
     static {
         ROTATING_TURRET = BLOCKS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RotatingSpellTurret());
-        MINI_PEDESTAL = BLOCKS.register(LibBlockNames.MINI_PEDESTAL, MiniPedestal::new);
+        MINI_PEDESTAL = BLOCKS.register(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
         ARCANE_TORCH = BLOCKS.register(LibBlockNames.ARCANE_TORCH, ArcaneTorch::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
@@ -807,7 +807,7 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> getDefaultBlockItem(MINI_PEDESTAL.get()));
         ITEMS.register(LibBlockNames.ARCANE_TORCH, () ->getDefaultBlockItem(BlockRegistry.ARCANE_TORCH.get()));
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
-        MINI_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.MINI_PEDESTAL, () -> BlockEntityType.Builder.of((b, p) -> new ArcanePedestalTile(MINI_PEDESTAL_TILE.get(),b,p), MINI_PEDESTAL.get()).build(null));
+        ARCANE_PLATFORM_TILE = BLOCK_ENTITIES.register(LibBlockNames.MINI_PEDESTAL, () -> BlockEntityType.Builder.of((b, p) -> new ArcanePedestalTile(ARCANE_PLATFORM_TILE.get(),b,p), MINI_PEDESTAL.get()).build(null));
     }
 
     static RegistryObject<Block> addBlock(String name, Supplier<Block> blockSupp) {

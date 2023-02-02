@@ -21,22 +21,22 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class MiniPedestal extends ArcanePedestal{
+public class ArcanePlatform extends ArcanePedestal{
 
-    public MiniPedestal() {
+    public ArcanePlatform() {
         super();
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false).setValue(BlockStateProperties.FACING, Direction.NORTH));
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ArcanePedestalTile(BlockRegistry.MINI_PEDESTAL_TILE.get(), pos, state);
+        return new ArcanePedestalTile(BlockRegistry.ARCANE_PLATFORM_TILE.get(), pos, state);
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getClickedFace());
     }
 
     @Override
