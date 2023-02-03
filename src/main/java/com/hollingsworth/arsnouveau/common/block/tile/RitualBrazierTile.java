@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -64,6 +65,10 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         // check if position is a BrazierRelayTile
         if(storedPos != null && level.getBlockEntity(storedPos) instanceof BrazierRelayTile relayTile){
+            if(BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16){
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
+                return;
+            }
             relayPos = storedPos.immutable();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.brazier_relay.connected"));
             updateBlock();
@@ -137,7 +142,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
                     return;
                 }
             }
-            if(this.relayPos != null && level.getBlockEntity(this.relayPos) instanceof BrazierRelayTile relayTile){
+            if(this.relayPos != null && level.isLoaded(this.relayPos) && level.getBlockEntity(this.relayPos) instanceof BrazierRelayTile relayTile){
                 ritual.tryTick(relayTile);
                 relayTile.ticksToLightOff = 2;
                 relayTile.isDecorative = false;
