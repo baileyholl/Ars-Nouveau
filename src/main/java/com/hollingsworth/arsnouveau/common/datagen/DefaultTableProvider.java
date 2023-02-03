@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +48,6 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         protected void addTables() {
-
-            registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
             registerDropSelf(BlockRegistry.ENCHANTED_SPELL_TURRET);
 
             registerDropSelf(BlockRegistry.BLAZING_LOG);
@@ -77,6 +77,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ARCHWOOD_BUTTON);
             registerDropSelf(BlockRegistry.ARCHWOOD_STAIRS);
             registerDropSelf(BlockRegistry.ARCHWOOD_SLABS);
+            registerDropSelf(BlockRegistry.MAGELIGHT_TORCH);
+
             // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
             registerDropSelf(BlockRegistry.ARCHWOOD_FENCE_GATE);
             registerDropSelf(BlockRegistry.ARCHWOOD_TRAPDOOR);
@@ -112,12 +114,14 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
             registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
+            registerDropSelf(BlockRegistry.ARCANE_PLATFORM);
             registerDropSelf(BlockRegistry.RELAY);
             registerDropSelf(BlockRegistry.RELAY_SPLITTER);
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
             registerDropSelf(BlockRegistry.IMBUEMENT_BLOCK);
             registerDropSelf(BlockRegistry.VOLCANIC_BLOCK);
             registerDropSelf(BlockRegistry.LAVA_LILY);
+            registerDropSelf(BlockRegistry.BRAZIER_RELAY);
 
             registerDropSelf(BlockRegistry.RELAY_WARP);
             registerDropSelf(BlockRegistry.RELAY_DEPOSIT);
@@ -160,11 +164,20 @@ public class DefaultTableProvider extends LootTableProvider {
             this.add(block, BlockLoot::createDoorTable);
         }
 
+        public void registerDropSelf(RegistryWrapper block) {
+            list.add((Block) block.get());
+            dropSelf((Block) block.get());
+        }
+
         public void registerDropSelf(Block block) {
             list.add(block);
             dropSelf(block);
         }
 
+        public void registerDropSelf(RegistryObject<Block> block) {
+            list.add(block.get());
+            dropSelf(block.get());
+        }
         public void registerDrop(Block input, ItemLike output) {
             list.add(input);
             dropOther(input, output);

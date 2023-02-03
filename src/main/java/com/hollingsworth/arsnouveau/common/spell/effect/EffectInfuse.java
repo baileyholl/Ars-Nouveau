@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,19 +17,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public class EffectInfuse extends AbstractEffect {
-    public static EffectInfuse INSTANCE = new EffectInfuse(GlyphLib.EffectInfuseID, "Infuse");
+    public static EffectInfuse INSTANCE = new EffectInfuse();
 
-    public EffectInfuse(String tag, String description) {
-        super(tag, description);
-    }
-
-    public EffectInfuse(ResourceLocation tag, String description) {
-        super(tag, description);
+    public EffectInfuse() {
+        super(GlyphLib.EffectInfuseID, "Infuse");
     }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         if (rayTraceResult.getEntity() instanceof LivingEntity livingEntity) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
             ExtractedStack extractedFlask = manager.extractItem(i -> {
@@ -67,7 +61,7 @@ public class EffectInfuse extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 

@@ -28,6 +28,7 @@ public class EffectSummonWolves extends AbstractEffect {
             return;
         Vec3 hit = rayTraceResult.getLocation();
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
+        if (ticks <= 0) return;
         for (int i = 0; i < 2; i++) {
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
             wolf.ticksLeft = ticks;
@@ -66,7 +67,7 @@ public class EffectSummonWolves extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.ONE;
     }
 

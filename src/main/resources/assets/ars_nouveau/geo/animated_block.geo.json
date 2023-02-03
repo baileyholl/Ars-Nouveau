@@ -1,0 +1,49 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "master",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "left_leg",
+					"parent": "master",
+					"pivot": [4, 15, 2],
+					"cubes": [
+						{"origin": [1, 0, -4], "size": [6, 4, 8], "uv": [0, 32]},
+						{"origin": [1, 4, 0], "size": [6, 3, 4], "uv": [0, 44]},
+						{"origin": [2.5, 7, 0.5], "size": [3, 8, 3], "uv": [40, 44]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "master",
+					"pivot": [-4, 15, 2],
+					"cubes": [
+						{"origin": [-5.5, 7, 0.5], "size": [3, 8, 3], "uv": [0, 0]},
+						{"origin": [-7, 4, 0], "size": [6, 3, 4], "uv": [20, 44]},
+						{"origin": [-7, 0, -4], "size": [6, 4, 8], "uv": [28, 32]}
+					]
+				},
+				{
+					"name": "block",
+					"parent": "master",
+					"pivot": [0, 22, 0],
+					"cubes": [
+						{"origin": [-8, 14, -8], "size": [16, 16, 16], "uv": [0, 0]}
+					]
+				}
+			]
+		}
+	]
+}

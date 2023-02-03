@@ -207,7 +207,7 @@ public class Networking {
                 PacketSetLauncher::toBytes,
                 PacketSetLauncher::new,
                 PacketSetLauncher::handle);
-
+        INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

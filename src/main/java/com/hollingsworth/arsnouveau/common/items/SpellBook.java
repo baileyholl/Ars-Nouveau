@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -73,16 +74,17 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-
-        CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
-            if (iMana.getBookTier() < this.tier.value) {
-                iMana.setBookTier(this.tier.value);
-            }
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
-            if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
-                iMana.setGlyphBonus(cap.getKnownGlyphs().size());
-            }
-        });
+        if(this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
+            CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
+                if (iMana.getBookTier() < this.tier.value) {
+                    iMana.setBookTier(this.tier.value);
+                }
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
+                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                }
+            });
+        }
         ISpellCaster caster = getSpellCaster(stack);
 
         return caster.castSpell(worldIn, (LivingEntity) playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));

@@ -39,12 +39,17 @@ public abstract class AbstractRitual {
         this.setContext(context);
     }
 
-
+    // TODO: remove 1.20
+    @Deprecated(forRemoval = true)
     public void tryTick() {
-        if (tile == null || !getContext().isStarted || getContext().isDone) {
+        tryTick(tile);
+    }
+
+    public void tryTick(RitualBrazierTile tickingTile){
+        if (tickingTile == null || !getContext().isStarted || getContext().isDone) {
             return;
         }
-
+        this.tile = tickingTile;
         tick();
     }
 
@@ -196,7 +201,7 @@ public abstract class AbstractRitual {
     }
 
     public int getParticleIntensity() {
-        return 20;
+        return 10;
     }
 
     public String getLangName() {
@@ -205,5 +210,12 @@ public abstract class AbstractRitual {
 
     public String getLangDescription() {
         return "";
+    }
+
+    /**
+     * If this ritual can appear in villager trades
+     */
+    public boolean canBeTraded(){
+        return true;
     }
 }

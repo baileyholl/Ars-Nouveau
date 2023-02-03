@@ -71,7 +71,7 @@ public class MethodOrbit extends AbstractCastMethod {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.THREE;
     }
 

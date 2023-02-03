@@ -82,7 +82,7 @@ public class SourceManager {
     @SubscribeEvent
     public static void serverTick(TickEvent.LevelTickEvent e) {
 
-        if (e.phase != TickEvent.Phase.END)
+        if (e.level.isClientSide || e.phase != TickEvent.Phase.END)
             return;
 
         INSTANCE.tick(e.level);

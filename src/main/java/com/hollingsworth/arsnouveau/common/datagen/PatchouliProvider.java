@@ -66,19 +66,24 @@ public class PatchouliProvider implements DataProvider {
             addEnchantmentPage(g);
         }
         for (AbstractRitual r : ArsNouveauAPI.getInstance().getRitualMap().values()) {
-            addRitualPage(r);
+            if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                addRitualPage(r);
         }
 
         for (AbstractFamiliarHolder r : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()) {
-            addFamiliarPage(r);
+            if(r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                addFamiliarPage(r);
         }
 
         for (AbstractSpellPart s : ArsNouveauAPI.getInstance().getSpellpartMap().values()) {
-            addGlyphPage(s);
+            if(s.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+                addGlyphPage(s);
+            }
         }
 
         for (IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
-            addPerkPage(perk);
+            if(perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                addPerkPage(perk);
         }
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "spell_casting")
@@ -240,8 +245,9 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_WIXIE_TYPE.get()).toString())
                         .withText(getLangPath("wixie_charm", 2)))
                 .withPage(new TextPage(getLangPath("wixie_charm", 3)).withTitle("ars_nouveau.item_crafting"))
-                .withPage(new TextPage(getLangPath("wixie_charm", 4)).withTitle("ars_nouveau.potion_crafting"))
-                .withPage(new TextPage(getLangPath("wixie_charm", 5))), getPath(AUTOMATION, "wixie_charm"));
+                .withPage(new TextPage(getLangPath("wixie_charm", 4)).withTitle("ars_nouveau.item_crafting_setting"))
+                .withPage(new TextPage(getLangPath("wixie_charm", 5)).withTitle("ars_nouveau.potion_crafting"))
+                .withPage(new TextPage(getLangPath("wixie_charm", 6))), getPath(AUTOMATION, "wixie_charm"));
 
         addPage(new PatchouliBuilder(RESOURCES, "archwood")
                 .withIcon(BlockRegistry.BOMBEGRANTE_POD)
@@ -300,7 +306,10 @@ public class PatchouliProvider implements DataProvider {
 
         addBasicItem(ItemsRegistry.DOMINION_ROD, AUTOMATION, new ApparatusPage(ItemsRegistry.DOMINION_ROD));
         addBasicItem(BlockRegistry.SPELL_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.SPELL_PRISM));
-        addBasicItem(BlockRegistry.SCONCE_BLOCK, RESOURCES, new CraftingPage(BlockRegistry.SCONCE_BLOCK));
+
+        addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.SCONCE_BLOCK).withRecipe2(BlockRegistry.MAGELIGHT_TORCH)), getPath(RESOURCES, "magelighting"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
@@ -342,13 +351,14 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK))
-                .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
+                .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_PLATFORM))
+                .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
 
         addBasicItem(BlockRegistry.POTION_JAR, MACHINES, new CraftingPage(BlockRegistry.POTION_JAR));
         addBasicItem(BlockRegistry.POTION_MELDER, MACHINES, new ApparatusPage(BlockRegistry.POTION_MELDER));
         addBasicItem(BlockRegistry.POTION_DIFFUSER, MACHINES, new ApparatusPage(BlockRegistry.POTION_DIFFUSER));
         addBasicItem(BlockRegistry.RITUAL_BLOCK, MACHINES, new CraftingPage(BlockRegistry.RITUAL_BLOCK));
+        addBasicItem(BlockRegistry.BRAZIER_RELAY, MACHINES, new ApparatusPage(BlockRegistry.BRAZIER_RELAY));
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.SCRIBES_BLOCK)
                 .withPage(new TextPage(getLangPath("scribes_table", 1)).withTitle("ars_nouveau.glyph_crafting"))
                 .withPage(new TextPage(getLangPath("scribes_table", 2)).withTitle("ars_nouveau.scribing"))
@@ -577,7 +587,7 @@ public class PatchouliProvider implements DataProvider {
     }
 
     public void addGlyphPage(AbstractSpellPart spellPart) {
-        ResourceLocation category = switch (spellPart.getTier().value) {
+        ResourceLocation category = switch (spellPart.defaultTier().value) {
             case 1 -> GLYPHS_1;
             case 2 -> GLYPHS_2;
             default -> GLYPHS_3;

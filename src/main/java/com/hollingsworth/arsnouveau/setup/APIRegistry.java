@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.*;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
@@ -30,6 +30,8 @@ import java.util.List;
 public class APIRegistry {
 
     public static void setup() {
+        if (!FMLEnvironment.production) //only in dev
+            registerWip();
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);
         registerSpell(MethodSelf.INSTANCE);
@@ -105,7 +107,6 @@ public class APIRegistry {
         registerSpell(EffectInfuse.INSTANCE);
         registerSpell(EffectRotate.INSTANCE);
         registerSpell(EffectWall.INSTANCE);
-
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -123,11 +124,15 @@ public class APIRegistry {
         registerRitual(new RitualAwakening());
         registerRitual(new RitualHarvest());
         registerRitual(new RitualMobCapture());
+        registerRitual(new ConjurePlainsRitual());
+        registerRitual(new ForestationRitual());
+        registerRitual(new FloweringRitual());
+        registerRitual(new ConjureDesertRitual());
+
         registerFamiliar(new StarbuncleFamiliarHolder());
         registerFamiliar(new DrygmyFamiliarHolder());
         registerFamiliar(new WhirlisprigFamiliarHolder());
         registerFamiliar(new WixieFamiliarHolder());
-//        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliarHolder());
 
 
@@ -147,11 +152,17 @@ public class APIRegistry {
         registerPerk(RepairingPerk.INSTANCE);
         registerPerk(SaturationPerk.INSTANCE);
         registerPerk(SpellDamagePerk.INSTANCE);
-//        registerPerk(BondedPerk.INSTANCE);
         registerPerk(ChillingPerk.INSTANCE);
         registerPerk(IgnitePerk.INSTANCE);
         registerPerk(TotemPerk.INSTANCE);
         registerPerk(VampiricPerk.INSTANCE);
+    }
+
+    //register things only in dev, safe from production
+    private static void registerWip() {
+        registerSpell(EffectAnimate.INSTANCE);
+        //registerPerk(BondedPerk.INSTANCE);
+        //registerFamiliar(new JabberwogFamiliar());
     }
 
     public static void postInit() {

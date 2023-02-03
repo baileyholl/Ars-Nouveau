@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -30,9 +33,16 @@ public class WixieCauldron extends SummonBlock {
         if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
             return InteractionResult.SUCCESS;
 
-        if (player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get() && !player.getMainHandItem().isEmpty()) {
-            ((WixieCauldronTile) worldIn.getBlockEntity(pos)).setRecipes(player, player.getMainHandItem());
-            worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+        if (player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get()
+                && !player.getMainHandItem().isEmpty()
+                && worldIn.getBlockEntity(pos) instanceof WixieCauldronTile cauldronTile) {
+            MultiRecipeWrapper wrapper = cauldronTile.getRecipesForStack(player.getMainHandItem());
+            if (wrapper.isEmpty()) {
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie.no_recipe"));
+            } else {
+                cauldronTile.setSetStack(player.getMainHandItem().copy());
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie.recipe_set"));
+            }
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;

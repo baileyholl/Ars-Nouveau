@@ -235,7 +235,9 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
         tag.put("familiarData", getPersistentFamiliarData().toTag(this, new CompoundTag()));
-        tag.putString("holderID", holderID.toString());
+        if(holderID != null) {
+            tag.putString("holderID", holderID.toString());
+        }
         tag.putString("color", this.entityData.get(COLOR));
         if (!this.entityData.get(COSMETIC).isEmpty()) {
             CompoundTag cosmeticTag = new CompoundTag();

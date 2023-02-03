@@ -52,6 +52,9 @@ public class SingleItemTile extends ModdedTile implements Container{
 
     @Override
     public ItemStack removeItemNoUpdate(int pSlot) {
+        ItemStack stack = this.stack.copy();
+        this.stack = ItemStack.EMPTY;
+        updateBlock();
         return stack;
     }
 

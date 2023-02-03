@@ -51,7 +51,7 @@ public class EffectSenseMagic extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 
