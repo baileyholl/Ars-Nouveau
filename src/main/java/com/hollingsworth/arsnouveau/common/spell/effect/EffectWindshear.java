@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -30,8 +31,8 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!rayTraceResult.getEntity().isOnGround()) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!rayTraceResult.getEntity().isOnGround() && !(rayTraceResult.getEntity() instanceof ItemEntity)) {
             int numBlocks = 0;
             BlockPos pos = rayTraceResult.getEntity().blockPosition();
             while (!world.getBlockState(pos.below()).getMaterial().blocksMotion() && numBlocks <= 10) {
@@ -75,7 +76,7 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
         return 50;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);
@@ -86,7 +87,7 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentDampen.INSTANCE, AugmentAmplify.INSTANCE);
