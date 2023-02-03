@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -47,8 +46,6 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
             return InteractionResult.PASS;
         if (!world.isClientSide && world.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
             if (tile.getStack() != null && player.getItemInHand(handIn).isEmpty()) {
-                if (world.getBlockState(pos.above()).getMaterial() != Material.AIR)
-                    return InteractionResult.SUCCESS;
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                 world.addFreshEntity(item);
                 tile.setStack(ItemStack.EMPTY);
