@@ -19,6 +19,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
 
     int ticksToLightOff = 0;
 
+
     public BrazierRelayTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
@@ -37,9 +38,12 @@ public class BrazierRelayTile extends RitualBrazierTile{
             ticksToLightOff--;
             if(ticksToLightOff <= 0){
                 ticksToLightOff = 0;
-                if(level.getBlockState(worldPosition).getValue(LIT)) {
+                if(!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
                     level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, false));
                 }
+            }
+            if( !level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0){
+                level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, true));
             }
         }
     }
@@ -77,6 +81,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
     public void onWanded(Player playerEntity) {
 
     }
+
 
     @Override
     public void saveAdditional(CompoundTag tag) {

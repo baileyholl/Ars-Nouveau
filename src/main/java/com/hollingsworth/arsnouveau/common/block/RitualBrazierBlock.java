@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,8 +19,43 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.stream.Stream;
 
 public class RitualBrazierBlock extends TickableModBlock {
+    public static VoxelShape shape = Stream.of(
+            Block.box(3, 12, 3, 13, 15, 13),
+            Block.box(6, 0, 6, 10, 12, 10),
+            Stream.of(
+                    Block.box(2, 14, 2, 11, 16, 5),
+                    Block.box(7, 11, 1, 9, 15, 6),
+                    Block.box(7, 0, 0, 9, 5, 4),
+                    Block.box(7, 0, 4, 9, 11, 6)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
+            Stream.of(
+                    Block.box(2, 14, 5, 5, 16, 14),
+                    Block.box(1, 11, 7, 6, 15, 9),
+                    Block.box(0, 0, 7, 4, 5, 9),
+                    Block.box(4, 0, 7, 6, 11, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
+            Stream.of(
+                    Block.box(5, 14, 11, 14, 16, 14),
+                    Block.box(7, 11, 10, 9, 15, 15),
+                    Block.box(7, 0, 12, 9, 5, 16),
+                    Block.box(7, 0, 10, 9, 11, 12)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
+            Stream.of(
+                    Block.box(11, 14, 2, 14, 16, 11),
+                    Block.box(10, 11, 7, 15, 15, 9),
+                    Block.box(12, 0, 7, 16, 5, 9),
+                    Block.box(10, 0, 7, 12, 11, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
     public RitualBrazierBlock() {
         super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
         registerDefaultState(defaultBlockState().setValue(LIT, false));
@@ -77,5 +113,10 @@ public class RitualBrazierBlock extends TickableModBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new RitualBrazierTile(pos, state);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return shape;
     }
 }

@@ -140,6 +140,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
             if(this.relayPos != null && level.getBlockEntity(this.relayPos) instanceof BrazierRelayTile relayTile){
                 ritual.tryTick(relayTile);
                 relayTile.ticksToLightOff = 2;
+                relayTile.isDecorative = false;
             }else{
                 ritual.tryTick(this);
             }
