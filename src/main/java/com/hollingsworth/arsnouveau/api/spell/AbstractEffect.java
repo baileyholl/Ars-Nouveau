@@ -148,6 +148,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return;
 
         if (!entity.hurt(source, totalDamage)) return;
+        shooter.setLastHurtMob(entity);
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, null);
         MinecraftForge.EVENT_BUS.post(postDamage);
