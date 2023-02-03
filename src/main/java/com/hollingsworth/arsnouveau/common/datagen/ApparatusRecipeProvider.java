@@ -1042,6 +1042,10 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(RecipeDatagen.SOURCE_GEM_BLOCK).build());
+
+        addRecipe(builder().withResult(BlockRegistry.BRAZIER_RELAY)
+                .withReagent(BlockRegistry.RITUAL_BLOCK)
+                .withPedestalItem(3, ItemsRegistry.MANIPULATION_ESSENCE).build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

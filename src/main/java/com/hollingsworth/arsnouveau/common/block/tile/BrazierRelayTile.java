@@ -31,7 +31,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 10);
+            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 5);
         }
 
         if(!level.isClientSide){
