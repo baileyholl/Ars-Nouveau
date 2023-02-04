@@ -1,0 +1,20 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 16718260,
+  "flavour_text": "Creates three snaring projectiles.",
+  "name": "Arachne's Weaving",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_split",
+    "ars_nouveau:glyph_split",
+    "ars_nouveau:glyph_snare",
+    "ars_nouveau:glyph_extend_time",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

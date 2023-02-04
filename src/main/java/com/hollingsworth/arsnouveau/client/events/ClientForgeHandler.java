@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
-import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -15,15 +13,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientForgeHandler {
-
-    private static final GuiSpellHUD spellHUD = new GuiSpellHUD();
-    private static final GuiManaHUD manaHUD = new GuiManaHUD();
-
-    @SubscribeEvent
-    public static void renderSpellHUD(final RenderGuiOverlayEvent.Post event) {
-        spellHUD.drawHUD(event.getPoseStack());
-        manaHUD.drawHUD(event.getPoseStack(), event.getPartialTick());
-    }
 
     @SubscribeEvent
     public static void overlayEvent(RenderGuiOverlayEvent.Pre event) {

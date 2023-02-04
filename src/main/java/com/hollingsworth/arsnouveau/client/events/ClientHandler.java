@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
+import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
+import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
@@ -68,7 +70,7 @@ import static com.hollingsworth.arsnouveau.client.events.ClientForgeHandler.loca
 public class ClientHandler {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE.get(), ArcanePedestalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
@@ -80,7 +82,6 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.IMBUEMENT_TILE, ImbuementRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
@@ -152,6 +153,8 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENCHANTED_FALLING_BLOCK.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), GiftStarbyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ANIMATED_BLOCK.get(), AnimBlockRenderer::new);
+
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
     }
@@ -180,6 +183,9 @@ public class ClientHandler {
     public static void registerOverlays(final RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("scry_camera", cameraOverlay.overlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "tooltip", GuiEntityInfoHUD.OVERLAY);
+        event.registerAboveAll("mana_hud", GuiManaHUD.OVERLAY);
+        event.registerAboveAll("spell_hud", GuiSpellHUD.OVERLAY);
+
     }
 
     @SubscribeEvent

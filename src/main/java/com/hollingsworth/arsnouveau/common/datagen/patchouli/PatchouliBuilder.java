@@ -81,6 +81,21 @@ public class PatchouliBuilder {
         return withTextPage("ars_nouveau.page" + textCounter + "." + id);
     }
 
+    public PatchouliBuilder withProperty(String key, String string) {
+        object.addProperty(key, string);
+        return this;
+    }
+
+    public PatchouliBuilder withProperty(String key, Number number) {
+        object.addProperty(key, number);
+        return this;
+    }
+
+    public PatchouliBuilder withProperty(String key, Boolean bool) {
+        object.addProperty(key, bool);
+        return this;
+    }
+
     public PatchouliBuilder withLocalizedText() {
         return withLocalizedText(this.name);
     }

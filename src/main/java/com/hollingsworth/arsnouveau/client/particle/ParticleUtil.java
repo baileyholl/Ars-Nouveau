@@ -118,7 +118,7 @@ public class ParticleUtil {
     }
 
     public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range) {
-        spawnRitualAreaEffect(pos, world, rand, color, range, 10, 10);
+        spawnRitualAreaEffect(pos, world, rand, color, range, 10, 2);
     }
 
     public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range, int chance, int numParticles) {

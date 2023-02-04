@@ -81,7 +81,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 3.0f));
-        this.targetSelector.addGoal(1, new EntityAllyVex.CopyOwnerTargetGoal(this));
+        this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
                 (entity) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
                         ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
@@ -308,28 +308,6 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
                 }
 
             }
-        }
-    }
-
-    class CopyOwnerTargetGoal extends TargetGoal {
-
-        public CopyOwnerTargetGoal(PathfinderMob creature) {
-            super(creature, false);
-        }
-
-        /**
-         * Returns whether the EntityAIBase should begin execution.
-         */
-        public boolean canUse() {
-            return EntityAllyVex.this.owner != null && EntityAllyVex.this.owner.getLastHurtMob() != null;
-        }
-
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
-        public void start() {
-            EntityAllyVex.this.setTarget(EntityAllyVex.this.owner.getLastHurtMob());
-            super.start();
         }
     }
 

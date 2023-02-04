@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
@@ -32,6 +33,9 @@ import com.hollingsworth.arsnouveau.setup.VillagerRegistry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
@@ -51,6 +55,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -64,11 +69,27 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void resourceLoadEvent(AddReloadListenerEvent event) {
+        event.addListener(new SimplePreparableReloadListener<>() {
+            @Override
+            protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+                return null;
+            }
+
+            @Override
+            protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+                MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
+            }
+        });
+    }
 
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -287,7 +308,9 @@ public class EventHandler {
 
             List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
             for(RitualTablet tablet : tablets){
-                level3.add((trader, rand) -> emerToItem(tablet, 4, 4, 12));
+                if(tablet.ritual.canBeTraded()) {
+                    level3.add((trader, rand) -> emerToItem(tablet, 4, 1, 12));
+                }
             }
 
             level4.add((trader, rand) -> emerToItem(ItemsRegistry.STARBUNCLE_SHARD, 20, 1, 20));

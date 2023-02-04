@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
@@ -14,6 +15,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -27,7 +29,7 @@ public class Glyph extends ModItem {
     public AbstractSpellPart spellPart;
 
     public Glyph(AbstractSpellPart part) {
-        super();
+        super(new Item.Properties().tab(ArsNouveau.glyphGroup));
         this.spellPart = part;
     }
 
@@ -68,7 +70,7 @@ public class Glyph extends ModItem {
         if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
         } else if (spellPart != null) {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
             tooltip2.add(Component.translatable("ars_nouveau.schools"));
             for (SpellSchool s : spellPart.spellSchools) {
                 tooltip2.add(s.getTextComponent());

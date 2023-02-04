@@ -21,6 +21,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public String name;
     public Glyph glyphItem;
 
+    /**
+     * Used for item tab ordering
+     */
+    public abstract Integer getTypeIndex();
+
     /*ID for NBT data and SpellManager#spellList*/
     public ResourceLocation getRegistryName() {
         return this.registryName;
@@ -66,8 +71,21 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return this.name;
     }
 
+    public SpellTier getConfigTier(){
+        return GLYPH_TIER == null ? defaultTier() : SpellTier.SPELL_TIER_MAP.get(GLYPH_TIER.get());
+    }
+
+    /**
+     * Deprecated: Use {@link AbstractSpellPart#defaultTier()} or  {@link AbstractSpellPart#getConfigTier()}
+     * @return default tier
+     */
+    @Deprecated(forRemoval = true)
     public SpellTier getTier() {
         return SpellTier.ONE;
+    }
+
+    public SpellTier defaultTier() {
+        return getTier();
     }
 
     /**
@@ -110,7 +128,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     @Override
     public int compareTo(AbstractSpellPart o) {
-        return this.getTier().value - o.getTier().value;
+        return this.getConfigTier().value - o.getConfigTier().value;
     }
 
     public Component getBookDescLang() {
@@ -122,6 +140,8 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public @Nullable ForgeConfigSpec.BooleanValue ENABLED;
     public @Nullable ForgeConfigSpec.BooleanValue STARTER_SPELL;
     public @Nullable ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
+    public @Nullable ForgeConfigSpec.IntValue GLYPH_TIER;
+
 
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("General settings").push("general");
@@ -129,6 +149,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
         STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
         PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
+        GLYPH_TIER = builder.comment("The tier of the glyph").defineInRange("glyph_tier", defaultTier().value, 1, 99);
     }
 
     /**

@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ForgeHooksClient;
 
 public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile> {
     private BlockRenderDispatcher blockRenderer;
@@ -32,12 +33,11 @@ public class MirrorweaveRenderer implements BlockEntityRenderer<MirrorWeaveTile>
         pPoseStack.pushPose();
         renderBlock(tileEntityIn.getBlockPos(), renderState, pPoseStack, bufferIn, tileEntityIn.getLevel(), false, combinedOverlayIn);
         pPoseStack.popPose();
-
         ModelBlockRenderer.clearCache();
     }
 
     private void renderBlock(BlockPos pPos, BlockState pState, PoseStack pPoseStack, MultiBufferSource pBufferSource, Level pLevel, boolean pExtended, int pPackedOverlay) {
-        net.minecraftforge.client.ForgeHooksClient.renderPistonMovedBlocks(pPos, pState, pPoseStack, pBufferSource, pLevel, pExtended, pPackedOverlay, blockRenderer == null ? blockRenderer = net.minecraft.client.Minecraft.getInstance().getBlockRenderer() : blockRenderer);
+        ForgeHooksClient.renderPistonMovedBlocks(pPos, pState, pPoseStack, pBufferSource, pLevel, pExtended, pPackedOverlay, blockRenderer == null ? blockRenderer = net.minecraft.client.Minecraft.getInstance().getBlockRenderer() : blockRenderer);
     }
 
     public int getViewDistance() {

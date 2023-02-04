@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
@@ -14,7 +15,10 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractRitual {
 
@@ -28,17 +32,24 @@ public abstract class AbstractRitual {
     public AbstractRitual() {
     }
 
+    @Deprecated(forRemoval = true) // TODO: Remove in 1.20
     public AbstractRitual(RitualBrazierTile tile, RitualContext context) {
+        super();
         this.tile = tile;
         this.setContext(context);
     }
 
-
+    // TODO: remove 1.20
+    @Deprecated(forRemoval = true)
     public void tryTick() {
-        if (tile == null || !getContext().isStarted || getContext().isDone) {
+        tryTick(tile);
+    }
+
+    public void tryTick(RitualBrazierTile tickingTile){
+        if (tickingTile == null || !getContext().isStarted || getContext().isDone) {
             return;
         }
-
+        this.tile = tickingTile;
         tick();
     }
 
@@ -63,8 +74,7 @@ public abstract class AbstractRitual {
     }
 
     public void onItemConsumed(ItemStack stack) {
-        this.getConsumedItems().add(stack.copy());
-        stack.shrink(1);
+        this.getConsumedItems().add(stack.split(1));
         BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
     }
 
@@ -74,6 +84,26 @@ public abstract class AbstractRitual {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the list of consumed items in Item x Num format. Because rituals can consume above the itemstack count, stacks are also stored as unique entries.
+     */
+    public List<String> getFormattedConsumedItems() {
+        Map<String, Integer> map = new HashMap<>();
+        for (ItemStack i : getConsumedItems()) {
+            String name = i.getHoverName().getString();
+            if (map.containsKey(name)) {
+                map.put(name, map.get(name) + 1);
+            } else {
+                map.put(name, 1);
+            }
+        }
+        List<String> list = new ArrayList<>();
+        for (String s : map.keySet()) {
+            list.add(s + " x " + map.get(s));
+        }
+        return list;
     }
 
     public void incrementProgress() {
@@ -107,7 +137,7 @@ public abstract class AbstractRitual {
     }
 
     public String getName() {
-        return Component.translatable(getRegistryName().getNamespace() + ".tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
+        return Component.translatable(ArsNouveau.MODID + ".tablet_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
     public String getDescription() {
@@ -171,7 +201,7 @@ public abstract class AbstractRitual {
     }
 
     public int getParticleIntensity() {
-        return 50;
+        return 10;
     }
 
     public String getLangName() {
@@ -180,5 +210,12 @@ public abstract class AbstractRitual {
 
     public String getLangDescription() {
         return "";
+    }
+
+    /**
+     * If this ritual can appear in villager trades
+     */
+    public boolean canBeTraded(){
+        return true;
     }
 }

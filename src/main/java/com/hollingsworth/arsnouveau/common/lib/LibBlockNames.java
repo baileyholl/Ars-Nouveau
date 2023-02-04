@@ -149,6 +149,9 @@ public class LibBlockNames {
     public static final String GHOST_WEAVE = "ghostweave";
     public static final String MIRROR_WEAVE = "mirrorweave";
     public static final String MAGEBLOOM_BLOCK = "magebloom_block";
+    public static final String MINI_PEDESTAL = "arcane_platform";
+    public static final String MAGELIGHT_TORCH = "magelight_torch";
+    public static final String BRAZIER_RELAY = "brazier_relay";
 
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{

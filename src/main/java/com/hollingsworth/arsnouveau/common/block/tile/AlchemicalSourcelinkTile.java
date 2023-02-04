@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.Level;
@@ -30,22 +31,23 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile {
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
+        if (level instanceof ServerLevel && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
             BlockPos potionPos = findNearbyPotion(level, worldPosition);
-            if (potionPos != null) {
-                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(potionPos);
-                int mana = 75;
+            if (potionPos != null && level.getBlockEntity(potionPos) instanceof PotionJarTile tile) {
+                int source = 75;
                 Set<MobEffect> effectTypes = new HashSet<>();
                 for (MobEffectInstance e : tile.getData().fullEffects()) {
-                    mana += (e.getDuration() / 50);
-                    mana += e.getAmplifier() * 250;
-                    mana += 150;
+                    source += (e.getDuration() / 50);
+                    source += e.getAmplifier() * 250;
+                    source += 150;
                     effectTypes.add(e.getEffect());
                 }
                 if (effectTypes.size() > 1)
-                    mana *= (1.5 * (effectTypes.size() - 1));
-                addSource(mana);
-                tile.remove(100);
+                    source *= (1.5 * (effectTypes.size() - 1));
+                if (source > 0 && canAcceptSource(source) || this.getSource() <= 0) {
+                    addSource(source);
+                    tile.remove(100);
+                }
             }
         }
     }

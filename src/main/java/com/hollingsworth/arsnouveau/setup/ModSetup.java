@@ -40,6 +40,7 @@ public class ModSetup {
     }
 
     public static void initGeckolib() {
+        GeckoLib.DISABLE_NETWORKING = true;
         GeckoLib.initialize();
     }
 

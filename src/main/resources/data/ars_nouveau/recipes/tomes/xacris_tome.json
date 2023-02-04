@@ -1,0 +1,22 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": 16718260,
+  "flavour_text": "Builds a small hut around the user.",
+  "name": "Xacris' Tiny Hut",
+  "sound": {
+    "family": "default",
+    "pitch": 1.0,
+    "volume": 1.0
+  },
+  "spell": [
+    "ars_nouveau:glyph_underfoot",
+    "ars_nouveau:glyph_phantom_block",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_pierce",
+    "ars_nouveau:glyph_pierce"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

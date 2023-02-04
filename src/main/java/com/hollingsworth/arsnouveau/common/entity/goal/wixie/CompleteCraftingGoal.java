@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CompleteCraftingGoal extends ExtendedRangeGoal {
@@ -41,13 +39,16 @@ public class CompleteCraftingGoal extends ExtendedRangeGoal {
         if (BlockUtil.distanceFrom(wixie.position(), wixie.cauldronPos.above()) < 1.5D + this.extendedRange) {
             ticksNearby++;
             if (!hasCast) {
-                Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
+//                Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
                 wixie.inventoryBackoff = 40;
             }
             if (ticksNearby >= 40) {
                 BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
-                if (tileEntity instanceof WixieCauldronTile && ((WixieCauldronTile) tileEntity).isCraftingDone()) {
-                    ((WixieCauldronTile) tileEntity).attemptFinish();
+                if (tileEntity instanceof WixieCauldronTile cauldronTile && cauldronTile.isCraftingDone()) {
+//                    if(cauldronTile.craftManager != null && (!cauldronTile.craftManager.outputStack.isEmpty() || cauldronTile.craftManager.potionOut != null)){
+//                        hasCast = true;
+//                    }
+                    cauldronTile.attemptFinish();
                 }
             }
             hasCast = true;

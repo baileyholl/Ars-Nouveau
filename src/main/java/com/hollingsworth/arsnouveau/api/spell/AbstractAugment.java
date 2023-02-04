@@ -16,6 +16,10 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
         super(tag, description);
     }
 
+    @Override
+    public Integer getTypeIndex() {
+        return 5;
+    }
 
    @NotNull
     @Override

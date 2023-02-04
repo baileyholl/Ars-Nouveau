@@ -1,13 +1,16 @@
 {
     "variants": {
-        "axis=x": {
+        "axis=x,alternate=true": {
             "model": "ars_nouveau:block/warp_portal_ns"
         },
-        "axis=z": {
+        "axis=z,alternate=true": {
             "model": "ars_nouveau:block/warp_portal_ew"
         },
-        "axis=y": {
+        "axis=y,alternate=true": {
             "model": "ars_nouveau:block/warp_portal_ud"
+        },
+        "alternate=false": {
+            "model": "minecraft:block/air"
         }
     }
 }

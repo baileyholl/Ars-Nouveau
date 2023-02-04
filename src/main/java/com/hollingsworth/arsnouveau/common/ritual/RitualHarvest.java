@@ -97,6 +97,7 @@ public class RitualHarvest extends AbstractRitual {
                 world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), d));
             }
         });
+        setNeedsSource(true);
         return true;
     }
 

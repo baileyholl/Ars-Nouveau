@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ars_nouveau:block/arcane_platform",
+      "y": 90,
+      "x": 90
+    },
+    "facing=north": {
+      "model": "ars_nouveau:block/arcane_platform",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "ars_nouveau:block/arcane_platform",
+      "x": -90
+    },
+    "facing=west": {
+      "model": "ars_nouveau:block/arcane_platform",
+      "y": -90,
+      "x": 90
+    },
+    "facing=down": {
+      "model": "ars_nouveau:block/arcane_platform",
+      "x": 180
+    }, "facing=up": {
+      "model": "ars_nouveau:block/arcane_platform"
+    }
+  }
+}

@@ -33,7 +33,7 @@ public class EffectSummonVex extends AbstractEffect {
         Vec3 vector3d = safelyGetHitPos(rayTraceResult);
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         BlockPos pos = new BlockPos(vector3d);
-
+        if (ticks <= 0) return;
         for (int i = 0; i < 3; ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
@@ -61,7 +61,7 @@ public class EffectSummonVex extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.THREE;
     }
 
