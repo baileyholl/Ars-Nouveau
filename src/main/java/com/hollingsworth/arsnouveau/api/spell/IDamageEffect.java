@@ -55,6 +55,7 @@ public interface IDamageEffect {
         if (!entity.hurt(source, totalDamage)) {
             return; //false;
         }
+        shooter.setLastHurtMob(entity);
 
         SpellDamageEvent.Post postDamage = new SpellDamageEvent.Post(source, shooter, entity, totalDamage, spellContext);
         MinecraftForge.EVENT_BUS.post(postDamage);
