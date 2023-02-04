@@ -40,8 +40,20 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get());
         this.tag(EntityTags.JAR_BLACKLIST).addTag(EntityTags.FAMILIAR);
         this.tag(EntityTags.JAR_WHITELIST).addOptional(new ResourceLocation("create:contraption"))
-                .add(EntityType.ITEM).add(EntityType.END_CRYSTAL)
-                .add(EntityType.BOAT).add(EntityType.CHEST_BOAT);
+                .add(EntityType.ITEM)
+                .add(EntityType.END_CRYSTAL)
+                .add(EntityType.BOAT)
+                .add(EntityType.CHEST_BOAT)
+                .add(EntityType.ARROW)
+                .add(EntityType.SNOWBALL)
+                .add(EntityType.EGG)
+                .add(EntityType.ENDER_PEARL)
+                .add(EntityType.EYE_OF_ENDER)
+                .add(EntityType.POTION)
+                .add(EntityType.ARMOR_STAND)
+                .add(EntityType.LIGHTNING_BOLT)
+                .add(ModEntities.LIGHTNING_ENTITY.get())
+                .add(EntityType.TRIDENT);
         this.tag(EntityTags.LINGERING_BLACKLIST)
                 .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
         this.tag(EntityTags.BERRY_BLACKLIST)

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,6 +33,11 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
 
         if ((double)f1 > 1.0d) {
             f /= f1 * 1.0;
+        }
+        if(entity instanceof LightningBolt bolt){
+            if(bolt.level.getGameTime() % 20 == 0)
+                bolt.seed = ClientInfo.ticksInGame;
+            f = 0.0075f;
         }
         AtomicReference<Vec3> adjustedScale = new AtomicReference<>(new Vec3(0, 0, 0));
         AtomicReference<Vec3> adjustedTranslation = new AtomicReference<>(new Vec3(0, 0, 0));

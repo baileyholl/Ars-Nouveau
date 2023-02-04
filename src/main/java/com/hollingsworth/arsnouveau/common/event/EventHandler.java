@@ -318,7 +318,7 @@ public class EventHandler {
             level4.add((trader, rand) -> emerToItem(ItemsRegistry.WIXIE_SHARD, 20, 1, 20));
             level4.add((trader, rand) -> emerToItem(ItemsRegistry.WHIRLISPRIG_SHARDS, 20, 1, 20));
 
-            level5.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 16, 2));
+            level5.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
             level5.add((trader, rand) -> new MerchantOffer(new ItemStack(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
 
         }

@@ -7,6 +7,16 @@
     "minecraft:item",
     "minecraft:end_crystal",
     "minecraft:boat",
-    "minecraft:chest_boat"
+    "minecraft:chest_boat",
+    "minecraft:arrow",
+    "minecraft:snowball",
+    "minecraft:egg",
+    "minecraft:ender_pearl",
+    "minecraft:eye_of_ender",
+    "minecraft:potion",
+    "minecraft:armor_stand",
+    "minecraft:lightning_bolt",
+    "ars_nouveau:an_lightning",
+    "minecraft:trident"
   ]
 }
