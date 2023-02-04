@@ -97,6 +97,7 @@ public class BlockRegistry {
     public static PortalBlock PORTAL_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.PORTAL, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
+
     @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockRegistryKey)
     public static ImbuementBlock IMBUEMENT_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockEntityRegistryKey)
@@ -784,10 +785,11 @@ public class BlockRegistry {
     public static RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL;
 
     public static RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK;
+    public static RegistryWrapper<SkyBlock> SKY_BLOCK;
 
     public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
     public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
-
+    public static RegistryObject<BlockEntityType<SkyBlockTile>> SKY_BLOCK_TILE;
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
         ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
@@ -795,7 +797,7 @@ public class BlockRegistry {
         ARCANE_PEDESTAL = registerBlock(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
         BRAZIER_RELAY = registerBlock(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
         RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
-
+        SKY_BLOCK = registerBlock(LibBlockNames.SKY_BLOCK, SkyBlock::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -809,12 +811,13 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () ->getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
         ITEMS.register(LibBlockNames.BRAZIER_RELAY, () ->getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
         ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
-
+        ITEMS.register(LibBlockNames.SKY_BLOCK, () ->getDefaultBlockItem(BlockRegistry.SKY_BLOCK.get()));
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
         MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));
         BRAZIER_RELAY_TILE = BLOCK_ENTITIES.register(LibBlockNames.BRAZIER_RELAY, () -> BlockEntityType.Builder.of(BrazierRelayTile::new, BRAZIER_RELAY.get()).build(null));
         RITUAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.RITUAL_BRAZIER, () -> BlockEntityType.Builder.of(RitualBrazierTile::new, RITUAL_BLOCK.get()).build(null));
+        SKY_BLOCK_TILE = BLOCK_ENTITIES.register(LibBlockNames.SKY_BLOCK, () -> BlockEntityType.Builder.of(SkyBlockTile::new, SKY_BLOCK.get()).build(null));
     }
 
     static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
