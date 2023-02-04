@@ -19,7 +19,6 @@ public class ClientForgeHandler {
     private static final GuiSpellHUD spellHUD = new GuiSpellHUD();
     private static final GuiManaHUD manaHUD = new GuiManaHUD();
 
-
     @SubscribeEvent
     public static void renderSpellHUD(final RenderGuiOverlayEvent.Post event) {
         spellHUD.drawHUD(event.getPoseStack());

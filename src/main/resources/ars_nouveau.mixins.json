@@ -5,6 +5,7 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
+    "GameRendererMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
@@ -15,6 +16,7 @@
     "light.LightEntityMixin"
   ],
   "mixins": [
+    "CrossbowMixin",
     "PotionRecipeMixin",
     "camera.ANServerPlayerMixin",
     "camera.ChunkMapMixin",
@@ -24,8 +26,7 @@
     "elytra.MixinLivingEntity",
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
-    "perks.PerkLivingEntity",
-    "CrossbowMixin"
+    "perks.PerkLivingEntity"
   ],
   "minVersion": "0.8"
 }

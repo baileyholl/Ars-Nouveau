@@ -99,6 +99,12 @@ public class BlockRegistry {
     public static PortalBlock PORTAL_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.PORTAL, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
+
+    @ObjectHolder(value = prepend + LibBlockNames.SKY_BLOCK, registryName = BlockRegistryKey)
+    public static SkyBlock SKY_BLOCK;
+    @ObjectHolder(value = prepend + LibBlockNames.SKY_BLOCK, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<SkyBlockTile> SKY_BLOCK_TILE_TYPE;
+
     @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockRegistryKey)
     public static ImbuementBlock IMBUEMENT_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockEntityRegistryKey)
@@ -393,6 +399,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.RITUAL_BRAZIER, new RitualBrazierBlock());
         registry.register(LibBlockNames.RUNE, new RuneBlock());
         registry.register(LibBlockNames.PORTAL, new PortalBlock());
+        registry.register(LibBlockNames.SKY_BLOCK, new SkyBlock());
         registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
 
         //Relay and turrets
@@ -518,6 +525,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.RELAY, BlockEntityType.Builder.of(RelayTile::new, BlockRegistry.RELAY).build(null));
         registry.register(LibBlockNames.RUNE, BlockEntityType.Builder.of(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null));
         registry.register(LibBlockNames.PORTAL, BlockEntityType.Builder.of(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null));
+        registry.register(LibBlockNames.SKY_BLOCK, BlockEntityType.Builder.of(SkyBlockTile::new, BlockRegistry.SKY_BLOCK).build(null));
         registry.register(LibBlockNames.RELAY_SPLITTER, BlockEntityType.Builder.of(RelaySplitterTile::new, BlockRegistry.RELAY_SPLITTER).build(null));
         registry.register(LibBlockNames.ARCANE_CORE, BlockEntityType.Builder.of(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null));
         registry.register(LibBlockNames.IMBUEMENT_CHAMBER, BlockEntityType.Builder.of(ImbuementTile::new, BlockRegistry.IMBUEMENT_BLOCK).build(null));
