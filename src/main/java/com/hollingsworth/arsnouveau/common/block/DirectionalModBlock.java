@@ -11,16 +11,19 @@ import static net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
 
 public class DirectionalModBlock extends ModBlock {
 
+    public DirectionalModBlock(Properties properties) {
+        super(properties);
+        this.registerDefaultState(this.defaultBlockState());
+    }
+
+    public DirectionalModBlock() {
+        this(defaultProperties());
+    }
+
     public BlockState rotate(BlockState pState, Rotation pRot) {
         return pState.setValue(FACING, pRot.rotate(pState.getValue(FACING)));
     }
 
-    /**
-     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     *
-     * @deprecated Implementing/overriding is fine.
-     */
     @Deprecated
     public BlockState mirror(BlockState pState, Mirror pMirror) {
         return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
@@ -31,7 +34,7 @@ public class DirectionalModBlock extends ModBlock {
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        super.createBlockStateDefinition(pBuilder);
         pBuilder.add(FACING);
     }
-
 }

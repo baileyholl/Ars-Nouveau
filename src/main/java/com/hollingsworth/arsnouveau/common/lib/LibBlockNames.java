@@ -152,7 +152,7 @@ public class LibBlockNames {
     public static final String MINI_PEDESTAL = "arcane_platform";
     public static final String MAGELIGHT_TORCH = "magelight_torch";
     public static final String BRAZIER_RELAY = "brazier_relay";
-
+    public static final String TEMPORARY_BLOCK = "temporary_block";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,

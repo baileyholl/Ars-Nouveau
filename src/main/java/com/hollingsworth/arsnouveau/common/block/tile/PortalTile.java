@@ -6,17 +6,24 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec2;
 
 import java.util.HashSet;
@@ -47,6 +54,12 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
+    }
+
+    public void setFromScroll(WarpScroll.WarpScrollData scrollData){
+        this.warpPos = scrollData.getPos();
+        this.dimID = scrollData.getDimension();
+        this.rotationVec = scrollData.getRotation();
     }
 
 
@@ -80,26 +93,46 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
     @Override
     public void tick() {
-        if (level != null && !level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+        if (level != null && level instanceof ServerLevel serverLevel && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
             Set<Entity> entities = entityQueue;
             if (!entities.isEmpty()) {
                 for (Entity e : entities) {
                     if (e instanceof EntityFollowProjectile || BlockUtil.distanceFrom(e.blockPosition(), worldPosition) > 2)
                         continue;
-                    level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                    e.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
-                    ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
-                            4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
-                    if (rotationVec != null) {
-                        e.setXRot(rotationVec.x);
-                        e.setYRot(rotationVec.y);
-                        Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, e.getXRot(), e.getYRot()));
-
+                    if(teleport(serverLevel, e)) {
+                        level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
+                       serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+                                4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+                        if (rotationVec != null) {
+                            e.setXRot(rotationVec.x);
+                            e.setYRot(rotationVec.y);
+                            Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, e.getXRot(), e.getYRot()));
+                        }
                     }
                 }
                 entityQueue.clear();
             }
         }
+    }
+
+    public boolean teleport(ServerLevel serverLevel, Entity e){
+        if(dimID != null && !dimID.equals(level.dimension().location().toString())){
+            if(e.canChangeDimensions()){
+                DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(dimID));
+                if(type != null) {
+                    ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimID));
+                    ServerLevel destination = serverLevel.getServer().getLevel(resourcekey);
+                    if(destination != null) {
+                        e.changeDimension(destination);
+                        e.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        e.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
+        return true;
     }
 
     @Override

@@ -120,13 +120,13 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.VEXING_LEAVES
         );
 
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
             this.tag(DECORATIVE_AN).add(block);
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
         }
 
-        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE,BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
+        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE, BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
@@ -173,10 +173,13 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.VEXING_SAPLING
         );
 
-        this.tag(MAGIC_PLANTS)
-                .addTag(MAGIC_SAPLINGS).add(
+        this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
                         BlockRegistry.SOURCEBERRY_BUSH,
-                        BlockRegistry.MAGE_BLOOM_CROP
+                        BlockRegistry.MAGE_BLOOM_CROP,
+                        BlockRegistry.FROSTAYA_POD,
+                        BlockRegistry.MENDOSTEEN_POD,
+                        BlockRegistry.BASTION_POD,
+                        BlockRegistry.BOMBEGRANTE_POD
                 );
 
         this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);

@@ -49,7 +49,7 @@ public class MagelightTorchTile extends SconceTile {
 
         xSpeedOffset = ParticleUtil.inRange(-0.01f, 0.01f);
         zSpeedOffset = ParticleUtil.inRange(-0.01f, 0.01f);
-        if(!onFloor && !onRoof && isHorizontalFire()){
+        if(!onFloor && !onRoof && isHorizontalFire() && state.hasProperty(BlockStateProperties.FACING)){
 
             Direction facing = state.getValue(BlockStateProperties.FACING);
             switch(facing){

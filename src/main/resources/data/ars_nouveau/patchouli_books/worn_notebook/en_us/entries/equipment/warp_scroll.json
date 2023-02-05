@@ -10,6 +10,13 @@
     {
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:warp_scroll"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:equipment/stable_warp_scroll",
+        "ars_nouveau:machines/warp_portal"
+      ]
     }
   ]
 }

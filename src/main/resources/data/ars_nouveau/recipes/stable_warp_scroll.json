@@ -1,0 +1,45 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": true,
+  "output": {
+    "item": "ars_nouveau:stable_warp_scroll"
+  },
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "minecraft:blaze_powder"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blaze_powder"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blaze_powder"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blaze_powder"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:warp_scroll"
+    }
+  ],
+  "sourceCost": 0
+}

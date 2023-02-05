@@ -1046,6 +1046,12 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder().withResult(BlockRegistry.BRAZIER_RELAY)
                 .withReagent(BlockRegistry.RITUAL_BLOCK)
                 .withPedestalItem(3, ItemsRegistry.MANIPULATION_ESSENCE).build());
+
+        addRecipe(builder().withResult(ItemsRegistry.STABLE_WARP_SCROLL)
+                .withReagent(ItemsRegistry.WARP_SCROLL)
+                .withPedestalItem(4, Items.BLAZE_POWDER)
+                .withPedestalItem(2, Tags.Items.ENDER_PEARLS)
+                .keepNbtOfReagent(true).build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

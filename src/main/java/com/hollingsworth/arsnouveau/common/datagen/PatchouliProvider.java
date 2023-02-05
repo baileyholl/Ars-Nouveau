@@ -27,6 +27,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -333,7 +334,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new ImbuementPage("ars_nouveau:imbuement_pierce_arrow"))
                 .withPage(new ImbuementPage("ars_nouveau:imbuement_split_arrow")), getPath(EQUIPMENT, "spell_crossbow"));
         addBasicItem(ItemsRegistry.RUNIC_CHALK, EQUIPMENT, new CraftingPage(ItemsRegistry.RUNIC_CHALK));
-        addBasicItem(ItemsRegistry.WARP_SCROLL, EQUIPMENT, new CraftingPage(ItemsRegistry.WARP_SCROLL));
+
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.IMBUEMENT_BLOCK)
                         .withLocalizedText()
                         .withPage(new CraftingPage(BlockRegistry.IMBUEMENT_BLOCK))
@@ -364,7 +365,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("scribes_table", 2)).withTitle("ars_nouveau.scribing"))
                 .withPage(new CraftingPage(ItemsRegistry.BLANK_PARCHMENT).withRecipe2(BlockRegistry.SCRIBES_BLOCK)), getPath(MACHINES, "scribes_block"));
 
-        addPage(new PatchouliBuilder(MACHINES, "warp_portal")
+        var portal = addPage(new PatchouliBuilder(MACHINES, "warp_portal")
                 .withIcon(ItemsRegistry.WARP_SCROLL)
                 .withLocalizedText()
                 .withLocalizedText()
@@ -376,6 +377,16 @@ public class PatchouliProvider implements DataProvider {
                         new String[]{" BB "}
                 }).withMapping("B", "ars_nouveau:sourcestone").withMapping("P", "ars_nouveau:portal")
                         .withMapping("0", "ars_nouveau:portal").withText(getLangPath("warp_portal", 4))), getPath(MACHINES, "warp_portal"));
+        var scroll = addBasicItem(ItemsRegistry.WARP_SCROLL, EQUIPMENT, new CraftingPage(ItemsRegistry.WARP_SCROLL));
+
+        var stableScroll = addBasicItem(ItemsRegistry.STABLE_WARP_SCROLL, EQUIPMENT, new ApparatusPage(ItemsRegistry.STABLE_WARP_SCROLL));
+        stableScroll.builder.withPage(new RelationsPage().withEntry(scroll.relationPath()).withEntry(portal.relationPath()));
+
+        scroll.builder.withPage(new RelationsPage()
+                .withEntry(stableScroll.relationPath())
+                .withEntry(portal.relationPath()));
+
+        portal.builder.withPage(new RelationsPage().withEntry(scroll.relationPath()).withEntry(stableScroll.relationPath()));
 
         addBasicItem(BlockRegistry.AGRONOMIC_SOURCELINK, SOURCE, new CraftingPage(BlockRegistry.AGRONOMIC_SOURCELINK));
         addBasicItem(BlockRegistry.ALCHEMICAL_BLOCK, SOURCE, new CraftingPage(BlockRegistry.ALCHEMICAL_BLOCK));
@@ -536,8 +547,13 @@ public class PatchouliProvider implements DataProvider {
         return "ars_nouveau.page." + name;
     }
 
-    public void addPage(PatchouliBuilder builder, Path path) {
-        this.pages.add(new PatchouliPage(builder, path));
+    public PatchouliPage addPage(PatchouliBuilder builder, Path path) {
+        return addPage(new PatchouliPage(builder, path));
+    }
+
+    public PatchouliPage addPage(PatchouliPage patchouliPage){
+        this.pages.add(patchouliPage);
+        return patchouliPage;
     }
 
     public PatchouliBuilder buildBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
@@ -550,9 +566,9 @@ public class PatchouliProvider implements DataProvider {
         return builder;
     }
 
-    public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+    public PatchouliPage addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = buildBasicItem(item, category, recipePage);
-        this.pages.add(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
+        return addPage(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
     }
 
     public void addBasicItem(RegistryObject<? extends ItemLike> item, ResourceLocation category, IPatchouliPage recipePage) {
@@ -583,6 +599,12 @@ public class PatchouliProvider implements DataProvider {
 
         public JsonObject build() {
             return builder.build();
+        }
+
+        public String relationPath(){
+            String fileName = path.getFileName().toString();
+            fileName = FilenameUtils.removeExtension(fileName);
+            return builder.category.toString() + "/" + fileName;
         }
     }
 

@@ -39,6 +39,13 @@
       },
       "name": "ars_nouveau.page3.warp_portal",
       "text": "ars_nouveau.page4.warp_portal"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:equipment/warp_scroll",
+        "ars_nouveau:equipment/stable_warp_scroll"
+      ]
     }
   ]
 }

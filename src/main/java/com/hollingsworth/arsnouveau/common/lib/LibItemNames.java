@@ -130,4 +130,5 @@ public class LibItemNames {
 
     public static final String STARBY_GIFT = "starby_gift";
     public static final String SPELL_CROSSBOW = "spell_crossbow";
+    public static final String STABLE_WARP_SCROLL = "stable_warp_scroll";
 }

@@ -131,6 +131,13 @@ public class WarpScroll extends ModItem {
             rotation = new Vec2(tag1.getFloat("xRot"), tag1.getFloat("yRot"));
         }
 
+        public static WarpScrollData get(ItemStack stack) {
+            if(stack.getItem() instanceof StableWarpScroll){
+                return new StableWarpScroll.StableScrollData(stack);
+            }
+            return new WarpScrollData(stack);
+        }
+
         public boolean isValid() {
             return pos != null && dimension != null && rotation != null;
         }
