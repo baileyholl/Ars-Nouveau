@@ -26,12 +26,15 @@ import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.VillagerRegistry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -150,17 +153,23 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if (e.getEntity().getCommandSenderWorld().isClientSide || !Config.SPAWN_BOOK.get())
+        if (e.getEntity().getCommandSenderWorld().isClientSide)
             return;
         CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
-        if (tag.getBoolean(book_tag))
-            return;
-
-        Player entity = e.getEntity();
-        ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
-        tag.putBoolean(book_tag, true);
-        e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+        String light_tag = "an_light_";
+        if (!tag.getBoolean(book_tag) && Config.SPAWN_BOOK.get()) {
+            Player entity = e.getEntity();
+            ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
+            tag.putBoolean(book_tag, true);
+            e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+        }
+        if(!tag.getBoolean(light_tag) && Config.INFORM_LIGHTS.get()){
+            Player entity = e.getEntity();
+            PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
+            tag.putBoolean(light_tag, true);
+            e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+        }
     }
 
 

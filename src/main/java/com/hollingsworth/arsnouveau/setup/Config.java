@@ -26,7 +26,7 @@ public class Config {
     public static ForgeConfigSpec CLIENT_CONFIG;
 
     public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
-
+    public static ForgeConfigSpec.BooleanValue INFORM_LIGHTS;
     public static Integer TREE_SPAWN_RATE = 100;
 
 
@@ -99,6 +99,7 @@ public class Config {
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(), (o) -> true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
+        INFORM_LIGHTS = SERVER_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
                 .defineInRange("whirlisprigProgress", 250, 0, 10000);
