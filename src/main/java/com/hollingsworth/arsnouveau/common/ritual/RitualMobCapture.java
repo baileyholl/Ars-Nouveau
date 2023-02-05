@@ -14,7 +14,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -54,6 +56,12 @@ public class RitualMobCapture extends AbstractRitual {
                             didWorkOnce = true;
                             if(e instanceof Starbuncle starbuncle){
                                 ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.SHRUNK_STARBY, (ServerLevel) level, starbuncle.blockPosition(), 10);
+                            }
+                            if(e instanceof LightningBolt bolt){
+                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CAUGHT_LIGHTNING, (ServerLevel) level, bolt.blockPosition(), 10);
+                            }
+                            if(e instanceof ItemEntity item && item.getItem().getItem() == Items.CLOCK){
+                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.TIME_IN_BOTTLE, (ServerLevel) level, item.blockPosition(), 10);
                             }
                             break;
                         }

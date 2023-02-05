@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
 public class ANCriteriaTriggers {
@@ -18,6 +17,8 @@ public class ANCriteriaTriggers {
     public static final PlayerTrigger CREATE_PORTAL = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "portals")));
     public static final PlayerTrigger PRISMATIC = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "prismatic")));
     public static final PlayerTrigger SHRUNK_STARBY = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "shrunk_starby")));
+    public static final PlayerTrigger CAUGHT_LIGHTNING = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "catch_lightning")));
+    public static final PlayerTrigger TIME_IN_BOTTLE = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "time_in_bottle")));
 
     public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
         AABB aabb = new AABB(pos).inflate(radius);

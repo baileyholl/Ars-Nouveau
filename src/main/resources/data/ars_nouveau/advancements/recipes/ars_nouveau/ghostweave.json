@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "ars_nouveau:spell_parchment"
+        "recipe": "ars_nouveau:ghostweave"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "ars_nouveau:spell_parchment"
+      "ars_nouveau:ghostweave"
     ]
   }
 }
