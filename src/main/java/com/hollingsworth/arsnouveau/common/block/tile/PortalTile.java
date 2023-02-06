@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
@@ -15,20 +14,30 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.ITeleporter;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;
 
@@ -97,17 +106,12 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             Set<Entity> entities = entityQueue;
             if (!entities.isEmpty()) {
                 for (Entity e : entities) {
-                    if (e instanceof EntityFollowProjectile || BlockUtil.distanceFrom(e.blockPosition(), worldPosition) > 2)
+                    if (e instanceof EntityFollowProjectile)
                         continue;
-                    if(teleport(serverLevel, e)) {
+                    if(dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID), this.warpPos, rotationVec) != null){
                         level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                       serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+                        serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                                 4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
-                        if (rotationVec != null) {
-                            e.setXRot(rotationVec.x);
-                            e.setYRot(rotationVec.y);
-                            Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, e.getXRot(), e.getYRot()));
-                        }
                     }
                 }
                 entityQueue.clear();
@@ -115,24 +119,103 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
     }
 
-    public boolean teleport(ServerLevel serverLevel, Entity e){
-        if(dimID != null && !dimID.equals(level.dimension().location().toString())){
-            if(e.canChangeDimensions()){
-                DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(dimID));
-                if(type != null) {
-                    ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimID));
-                    ServerLevel destination = serverLevel.getServer().getLevel(resourcekey);
-                    if(destination != null) {
-                        e.changeDimension(destination);
-                        e.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
-                        return true;
+    public @Nullable ServerLevel getServerLevel(String dimID){
+        if(dimID != null){
+            DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(dimID));
+            if(type != null) {
+                ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimID));
+                return level.getServer().getLevel(resourcekey);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Entity teleportEntityTo(Entity entity, Level targetWorld, BlockPos target, Vec2 rotationVec) {
+        if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
+            entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+            if (!entity.getPassengers().isEmpty()) {
+                //Force re-apply any passengers so that players don't get "stuck" outside what they may be riding
+                ((ServerChunkCache) entity.getCommandSenderWorld().getChunkSource()).broadcast(entity, new ClientboundSetPassengersPacket(entity));
+                Entity controller = entity.getControllingPassenger();
+                if (controller != entity && controller instanceof ServerPlayer player && !(controller instanceof FakePlayer)) {
+                    if (player.connection != null) {
+                        //Force sync the fact that the vehicle moved to the client that is controlling it
+                        // so that it makes sure to use the correct positions when sending move packets
+                        // back to the server instead of running into moved wrongly issues
+                        player.connection.send(new ClientboundMoveVehiclePacket(entity));
                     }
                 }
             }
-            return false;
+            return entity;
         }
-        e.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5);
-        return true;
+        Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+        //Note: We grab the passengers here instead of in placeEntity as changeDimension starts by removing any passengers
+        List<Entity> passengers = entity.getPassengers();
+        return entity.changeDimension((ServerLevel) targetWorld, new ITeleporter() {
+            @Override
+            public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+                Entity repositionedEntity = repositionEntity.apply(false);
+                if (repositionedEntity != null) {
+                    //Teleport all passengers to the other dimension and then make them start riding the entity again
+                    for (Entity passenger : passengers) {
+                        teleportPassenger(destWorld, destination, repositionedEntity, passenger);
+                    }
+                }
+                return repositionedEntity;
+            }
+
+            @Override
+            public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
+                return new PortalInfo(destination, entity.getDeltaMovement(), rotationVec.y, rotationVec.x);
+            }
+
+            @Override
+            public boolean playTeleportSound(ServerPlayer player, ServerLevel sourceWorld, ServerLevel destWorld) {
+                return false;
+            }
+        });
+    }
+
+    private static void teleportPassenger(ServerLevel destWorld, Vec3 destination, Entity repositionedEntity, Entity passenger) {
+        if (!passenger.canChangeDimensions()) {
+            //If the passenger can't change dimensions just let it peacefully stay after dismounting rather than trying to teleport it
+            return;
+        }
+        //Note: We grab the passengers here instead of in placeEntity as changeDimension starts by removing any passengers
+        List<Entity> passengers = passenger.getPassengers();
+        passenger.changeDimension(destWorld, new ITeleporter() {
+            @Override
+            public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+                boolean invulnerable = entity.isInvulnerable();
+                //Make the entity invulnerable so that when we teleport it, it doesn't take damage
+                // we revert this state to the previous state after teleporting
+                entity.setInvulnerable(true);
+                Entity repositionedPassenger = repositionEntity.apply(false);
+                if (repositionedPassenger != null) {
+                    //Force our passenger to start riding the new entity again
+                    repositionedPassenger.startRiding(repositionedEntity, true);
+                    //Teleport "nested" passengers
+                    for (Entity passenger : passengers) {
+                        teleportPassenger(destWorld, destination, repositionedPassenger, passenger);
+                    }
+                    repositionedPassenger.setInvulnerable(invulnerable);
+                }
+                entity.setInvulnerable(invulnerable);
+                return repositionedPassenger;
+            }
+
+            @Override
+            public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
+                //This is needed to ensure the passenger starts getting tracked after teleporting
+                return new PortalInfo(destination, entity.getDeltaMovement(), entity.getYRot(), entity.getXRot());
+            }
+
+            @Override
+            public boolean playTeleportSound(ServerPlayer player, ServerLevel sourceWorld, ServerLevel destWorld) {
+                return false;
+            }
+        });
     }
 
     @Override

@@ -11,7 +11,9 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 
@@ -92,6 +94,8 @@ public class BuildPortalEvent implements ITimedEvent {
                 return;
             }else{
                 destroyPortal = true;
+                ServerLevel serverLevel = (ServerLevel) level;
+                serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
             }
         }
         boolean placingPortal = !portalPos.isEmpty() && framePos.isEmpty() && !destroyPortal;
@@ -104,6 +108,8 @@ public class BuildPortalEvent implements ITimedEvent {
                 placedBlocks.add(pos);
             }else{
                 destroyPortal = true;
+                ServerLevel serverLevel = (ServerLevel) level;
+                serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
             }
         }
         if(destroyPortal){

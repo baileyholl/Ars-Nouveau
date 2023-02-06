@@ -66,6 +66,18 @@ public class SourceUtil {
 
     /**
      * Searches for nearby mana jars that have enough mana.
+     * Returns the position where the source was taken, or null if none were found.
+     */
+    public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int source) {
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() >= source);
+        if(loc.isPresent()){
+            return true;
+        }
+        return SourceManager.INSTANCE.hasSourceNearby(pos, world, range, source) != null;
+    }
+
+    /**
+     * Searches for nearby mana jars that have enough mana.
      * Returns the position where the mana was taken, or null if none were found.
      */
     @Nullable
@@ -86,20 +98,6 @@ public class SourceUtil {
             world.addFreshEntity(aoeProjectile);
         }
         return result;
-    }
-
-    /**
-     * Searches for nearby mana jars that have enough mana.
-     * Returns the position where the mana was taken, or null if none were found.
-     */
-    // TODO: Delete in 1.19.3
-    @Deprecated(forRemoval = true)
-    public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int mana) {
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() >= mana);
-        if(loc.isPresent()){
-            return true;
-        }
-        return SourceManager.INSTANCE.hasSourceNearby(pos, world, range, mana) != null;
     }
 
     @Nullable

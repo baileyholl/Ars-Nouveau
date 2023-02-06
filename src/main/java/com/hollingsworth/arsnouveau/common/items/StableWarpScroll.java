@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.event.timed.BuildPortalEvent;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,9 +28,14 @@ public class StableWarpScroll extends ModItem{
     }
 
     @Override
+    public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
+        return ItemsRegistry.WARP_SCROLL.get().onEntityItemUpdate(stack, entity);
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext context) {
         if (!context.getLevel().isClientSide) {
-            WarpScroll.WarpScrollData scrollData = new WarpScroll.WarpScrollData(context.getItemInHand());
+            WarpScroll.WarpScrollData scrollData = WarpScroll.WarpScrollData.get(context.getItemInHand());
             if(!scrollData.isValid())
                 return InteractionResult.FAIL;
             EventQueue.getServerInstance().addEvent(new BuildPortalEvent(context.getLevel(), context.getClickedPos(), context.getPlayer().getDirection().getClockWise(), scrollData));
@@ -38,16 +45,18 @@ public class StableWarpScroll extends ModItem{
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
+        if(pUsedHand != InteractionHand.MAIN_HAND)
+            return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(stack);
-        if (pUsedHand == InteractionHand.OFF_HAND)
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
 
         if (!(pLevel instanceof ServerLevel serverLevel))
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-        if (player.isShiftKeyDown()) {
+        if (player.isShiftKeyDown() && !data.isValid()) {
             data.setData(player.blockPosition(), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector());
             player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
+        }else if(player.isShiftKeyDown() && data.isValid()){
+            player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.already_recorded"));
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }

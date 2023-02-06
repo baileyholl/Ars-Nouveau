@@ -6,9 +6,13 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
@@ -36,7 +41,7 @@ public class WarpScroll extends ModItem {
             return false;
 
         String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
-        WarpScrollData data = new WarpScrollData(stack);
+        WarpScrollData data = WarpScrollData.get(stack);
         if (data.isValid()
             && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
             && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
@@ -121,6 +126,10 @@ public class WarpScroll extends ModItem {
         private String dimension;
         private Vec2 rotation;
 
+        /**
+         * Use static get method.
+         */
+        @Deprecated(forRemoval = false)
         public WarpScrollData(ItemStack stack) {
             super(stack);
             CompoundTag tag1 = getItemTag(stack);
@@ -155,6 +164,15 @@ public class WarpScroll extends ModItem {
             this.dimension = dimension;
             this.rotation = rotation;
             writeItem();
+        }
+
+        public @Nullable ServerLevel getDimension(ServerLevel serverLevel){
+            DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(this.dimension));
+            if(type != null) {
+                ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimension));
+                return serverLevel.getServer().getLevel(resourcekey);
+            }
+            return null;
         }
 
         @Override

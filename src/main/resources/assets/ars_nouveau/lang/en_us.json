@@ -1328,10 +1328,11 @@
   "overworld.minecraft.name": "Overworld",
   "the_nether.minecraft.name": "The Nether",
   "the_end.minecraft.name": "The End",
-  "ars_nouveau.page.stable_warp_scroll": "Creates a temporary Warp Portal when used on a block. This scroll is not consumed on use and can teleport between dimensions. Using a Stabilized Warp Scroll to create a Warp Portal will create a cross dimension warp portal, but consume the scroll.",
+  "ars_nouveau.page.stable_warp_scroll": "Creates a temporary Warp Portal when used on a block. This scroll is not consumed on use and can teleport between dimensions. Using a Stabilized Warp Scroll to create a Warp Portal will create a cross dimension warp portal, but consume the scroll. This scroll may only be bound to a location a single time.",
   "ars_nouveau.adv.title.catch_lightning": "Lightning in a Bottle",
   "ars_nouveau.adv.desc.catch_lightning": "Catch a lightning bolt in a containment jar.",
   "ars_nouveau.adv.title.time_in_a_bottle": "Time in a Bottle",
   "ars_nouveau.adv.desc.time_in_a_bottle": "Put a clock in a containment jar",
-  "ars_nouveau.light_message" : "Ars Nouveau adds built in dynamic lights. Enable with `/ars-light on`. This won't appear again!"
+  "ars_nouveau.light_message" : "Ars Nouveau adds built in dynamic lights. Enable with `/ars-light on`. This won't appear again!",
+  "ars_nouveau.warp_scroll.already_recorded": "This scroll is already bound to a location."
 }
