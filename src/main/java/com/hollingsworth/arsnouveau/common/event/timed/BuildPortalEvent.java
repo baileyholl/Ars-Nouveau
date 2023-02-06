@@ -71,11 +71,11 @@ public class BuildPortalEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         ticks++;
-        if(ticks < 15)
+        if(ticks < 5)
             return;
         if(!serverSide || level.getGameTime() % 3 != 0)
             return;
-        int blocksPlaced = 0;
+
         boolean destroyPortal = false;
         boolean placingFrame = !framePos.isEmpty();
         if(placingFrame){
@@ -100,17 +100,19 @@ public class BuildPortalEvent implements ITimedEvent {
         }
         boolean placingPortal = !portalPos.isEmpty() && framePos.isEmpty() && !destroyPortal;
         if(placingPortal){
-            BlockPos pos = portalPos.get(0);
-            portalPos.remove(pos);
-            if(level.getBlockState(pos).getMaterial().isReplaceable()) {
-                level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState(), 2);
-                level.playSound(null, pos,  BlockRegistry.PORTAL_BLOCK.getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
-                placedBlocks.add(pos);
-            }else{
-                destroyPortal = true;
-                ServerLevel serverLevel = (ServerLevel) level;
-                serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
+            for(BlockPos pos : portalPos) {
+                if (level.getBlockState(pos).getMaterial().isReplaceable()) {
+                    level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState(), 2);
+                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                    placedBlocks.add(pos);
+                } else {
+                    destroyPortal = true;
+                    ServerLevel serverLevel = (ServerLevel) level;
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
+                    break;
+                }
             }
+            portalPos.clear();
         }
         if(destroyPortal){
             for(BlockPos pos : placedBlocks){
