@@ -785,7 +785,7 @@ public class BlockRegistry {
     public static RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL;
 
     public static RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK;
-    public static RegistryWrapper<SkyBlock> SKY_BLOCK;
+    public static RegistryWrapper<SkyWeave> SKY_BLOCK;
     public static RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK;
 
     public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
@@ -799,7 +799,7 @@ public class BlockRegistry {
         ARCANE_PEDESTAL = registerBlock(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
         BRAZIER_RELAY = registerBlock(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
         RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
-        SKY_BLOCK = registerBlock(LibBlockNames.SKY_BLOCK, SkyBlock::new);
+        SKY_BLOCK = registerBlock(LibBlockNames.SKY_BLOCK, () -> new SkyWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override

@@ -18,10 +18,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
 
 import static com.hollingsworth.arsnouveau.client.ClientInfo.skyRenderTarget;
-import static org.lwjgl.opengl.GL11C.GL_SCISSOR_TEST;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class SkyTextureHandler {
