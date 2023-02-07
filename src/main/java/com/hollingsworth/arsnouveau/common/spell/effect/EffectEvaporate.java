@@ -48,7 +48,7 @@ public class EffectEvaporate extends AbstractEffect {
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
             ), world, shooter, context, resolver);
-        } else if (state.getBlock() instanceof SimpleWaterloggedBlock && state.getValue(BlockStateProperties.WATERLOGGED)) {
+        } else if (state.getBlock() instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED)) {
             world.setBlock(p, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE), 3);
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(p.getX(), p.getY(), p.getZ()), rayTraceResult.getDirection(), p, false
