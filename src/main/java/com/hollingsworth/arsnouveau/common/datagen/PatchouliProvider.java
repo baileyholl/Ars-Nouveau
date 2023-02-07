@@ -536,7 +536,9 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.FALSE_WEAVE))
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.GHOST_WEAVE)), getPath(RESOURCES, "illusion_blocks"));
+                .withPage(new CraftingPage(BlockRegistry.GHOST_WEAVE)
+                ).withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.SKY_WEAVE)), getPath(RESOURCES, "illusion_blocks"));
     }
 
     public String getLangPath(String name, int count) {

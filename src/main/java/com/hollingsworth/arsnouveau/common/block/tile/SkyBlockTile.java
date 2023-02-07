@@ -20,7 +20,7 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable, IDispell
     public int previousLight;
 
     public SkyBlockTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.SKY_BLOCK_TILE.get(), pos, state);
+        super(BlockRegistry.SKYWEAVE_TILE.get(), pos, state);
     }
 
     @Override

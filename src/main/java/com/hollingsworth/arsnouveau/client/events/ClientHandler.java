@@ -77,7 +77,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.T_LIGHT_TILE, LightRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.SKY_BLOCK_TILE.get(), SkyBlockRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.SKYWEAVE_TILE.get(), SkyBlockRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.IMBUEMENT_TILE, ImbuementRenderer::new);

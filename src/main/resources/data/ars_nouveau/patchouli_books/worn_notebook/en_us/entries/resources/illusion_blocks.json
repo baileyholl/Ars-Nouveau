@@ -26,6 +26,14 @@
     {
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:ghostweave"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page4.illusion_blocks"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:sky_block"
     }
   ]
 }

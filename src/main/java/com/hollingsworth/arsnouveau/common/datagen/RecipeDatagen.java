@@ -671,6 +671,11 @@ public class RecipeDatagen extends RecipeProvider {
 
             shapelessBuilder(BlockRegistry.ARCANE_PLATFORM).requires(BlockRegistry.ARCANE_PEDESTAL).save(consumer);
             shapelessBuilder(BlockRegistry.ARCANE_PEDESTAL).requires(BlockRegistry.ARCANE_PLATFORM).save(consumer, new ResourceLocation(ArsNouveau.MODID, "platform_to_pedestal"));
+
+            shapedBuilder(BlockRegistry.SKY_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.MANIPULATION_ESSENCE).save(consumer);
         }
     }
 

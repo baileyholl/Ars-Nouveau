@@ -19,7 +19,6 @@ public class LibBlockNames {
     public static final String RELAY_SPLITTER = "relay_splitter";
     public static final String RUNE = "rune";
     public static final String PORTAL = "portal";
-    public static final String SKY_BLOCK = "sky_block";
     public static final String IMBUEMENT_CHAMBER = "imbuement_chamber";
     public static final String ARCANE_CORE = "arcane_core";
     public static final String ENCHANTED_SPELL_TURRET = "spell_turret";
@@ -148,6 +147,7 @@ public class LibBlockNames {
     public static final String FALSE_WEAVE = "falseweave";
     public static final String GHOST_WEAVE = "ghostweave";
     public static final String MIRROR_WEAVE = "mirrorweave";
+    public static final String SKY_WEAVE = "sky_block";
     public static final String MAGEBLOOM_BLOCK = "magebloom_block";
     public static final String MINI_PEDESTAL = "arcane_platform";
     public static final String MAGELIGHT_TORCH = "magelight_torch";

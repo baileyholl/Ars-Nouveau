@@ -1334,5 +1334,7 @@
   "ars_nouveau.adv.title.time_in_a_bottle": "Time in a Bottle",
   "ars_nouveau.adv.desc.time_in_a_bottle": "Put a clock in a containment jar",
   "ars_nouveau.light_message" : "Ars Nouveau adds built in dynamic lights. Enable with `/ars-light on`. This won't appear again!",
-  "ars_nouveau.warp_scroll.already_recorded": "This scroll is already bound to a location."
+  "ars_nouveau.warp_scroll.already_recorded": "This scroll is already bound to a location.",
+  "ars_nouveau.page4.illusion_blocks": "Skyweave will display the skybox of the dimension it is placed in. To toggle the skybox and show the facade, cast Dispel on it. The facade may be set to another block like Mirrorweave.",
+  "block.ars_nouveau.sky_block": "Skyweave"
 }

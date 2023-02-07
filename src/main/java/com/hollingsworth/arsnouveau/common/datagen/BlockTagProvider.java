@@ -248,7 +248,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.SCONCE_BLOCK,
                 BlockRegistry.LIGHT_BLOCK,
                 BlockRegistry.GHOST_WEAVE,
-                BlockRegistry.SKY_BLOCK.get()
+                BlockRegistry.SKY_WEAVE.get()
         );
 
         this.tag(SUMMON_BED).add(
