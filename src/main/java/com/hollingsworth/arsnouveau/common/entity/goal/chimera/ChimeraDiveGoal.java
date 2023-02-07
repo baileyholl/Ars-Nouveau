@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -116,12 +117,13 @@ public class ChimeraDiveGoal extends Goal {
         boss.getNavigation().moveTo(this.boss.getTarget() != null ? this.boss.getTarget() : this.boss, 0.0f);
         finished = true;
         ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION, (ServerLevel) boss.level, new BlockPos(boss.position().x, boss.position.y, boss.position.z), 10);
-        System.out.println("trigger");
-
     }
 
     public void makeExplosion() {
         Explosion.BlockInteraction mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss) ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE;
+        if(!Config.CHIMERA_DIVE_DESTRUCTIVE.get()){
+            mode = Explosion.BlockInteraction.NONE;
+        }
         boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, mode);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }

@@ -41,6 +41,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
+    public static ForgeConfigSpec.BooleanValue CHIMERA_DIVE_DESTRUCTIVE;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
 
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
@@ -103,9 +104,11 @@ public class Config {
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana whirlisprigs consume per generation").defineInRange("sylphManaCost", 250, 0, 10000);
         WHIRLISPRIG_MAX_PROGRESS = SERVER_BUILDER.comment("How much progress whirlisprigs must accumulate before creating resources")
                 .defineInRange("whirlisprigProgress", 250, 0, 10000);
-        HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", true);
+        HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", false);
         STALKER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Stalker attack animals?").define("stalkerHuntsAnimals", false);
         GUARDIAN_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Defender attack animals?").define("defenderHuntsAnimals", false);
+        CHIMERA_DIVE_DESTRUCTIVE = SERVER_BUILDER.comment("Should the Wilden Chimera dive bomb destroy blocks?").define("destructiveDiveBomb", true);
+
         ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 2, 0, Integer.MAX_VALUE);
 
         SERVER_BUILDER.pop();
