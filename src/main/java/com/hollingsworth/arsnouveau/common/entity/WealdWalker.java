@@ -186,7 +186,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new GoBackHomeGoal(this, this::getHome, 10, () -> this.getTarget() == null || this.isBaby()));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, false, (entity) -> {
-            if (entity instanceof TamableAnimal) {
+            if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
                 return false;
             }
             return entity instanceof Enemy;
