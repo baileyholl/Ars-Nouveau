@@ -55,6 +55,7 @@ public class JarBehavior<T extends Entity> {
      * @return Light level the jar should give off
      */
     public int lightLevel(MobJarTile pBlockEntity){
+        if (pBlockEntity.getEntity().isOnFire()) return 15;
         return 0;
     }
 }
