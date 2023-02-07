@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
