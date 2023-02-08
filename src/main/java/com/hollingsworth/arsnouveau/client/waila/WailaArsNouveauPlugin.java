@@ -23,7 +23,7 @@ public class WailaArsNouveauPlugin implements IWailaPlugin {
                 if (target.getBlockEntity() instanceof GhostWeaveTile tile && tile.isInvisible()) {
                     return null;
                 }
-                if(target.getBlockEntity() instanceof SkyBlockTile skyWeave){
+                if(target.getBlockEntity() instanceof SkyBlockTile skyWeave && !skyWeave.showFacade()){
                     return null;
                 }
 
