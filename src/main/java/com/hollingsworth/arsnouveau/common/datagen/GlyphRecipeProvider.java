@@ -90,7 +90,7 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectHarvest.INSTANCE).withItem(ItemsRegistry.EARTH_ESSENCE).withItem(Items.IRON_HOE, 1));
         add(get(EffectHeal.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.GLISTERING_MELON_SLICE, 4).withItem(Items.GOLDEN_APPLE));
         add(get(EffectHex.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.FERMENTED_SPIDER_EYE).withItem(Items.BLAZE_ROD, 3).withItem(Items.WITHER_ROSE));
-        add(get(EffectIgnite.INSTANCE).withItem(Items.FLINT_AND_STEEL).withItem(Items.COAL, 3));
+        add(get(EffectIgnite.INSTANCE).withItem(Items.FLINT_AND_STEEL).withIngredient(ItemTags.COALS, 3));
         add(get(EffectIntangible.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.PHANTOM_MEMBRANE, 3).withIngredient(Ingredient.of(Tags.Items.ENDER_PEARLS), 2));
         add(get(EffectInteract.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.LEVER).withIngredient(Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES)).withIngredient(Ingredient.of(ItemTags.BUTTONS)));
         add(get(EffectInvisibility.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.FERMENTED_SPIDER_EYE).withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE)));

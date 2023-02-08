@@ -10,17 +10,17 @@
     },
     {
       "item": {
-        "item": "minecraft:coal"
+        "tag": "minecraft:coals"
       }
     },
     {
       "item": {
-        "item": "minecraft:coal"
+        "tag": "minecraft:coals"
       }
     },
     {
       "item": {
-        "item": "minecraft:coal"
+        "tag": "minecraft:coals"
       }
     }
   ],
