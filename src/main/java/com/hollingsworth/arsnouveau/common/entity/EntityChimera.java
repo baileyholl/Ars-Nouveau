@@ -402,8 +402,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
             this.setDefensiveMode(false);
             this.isRamming = false;
             this.dead = false;
-        }
-        if (!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() == 3) {
+            return false;
+        }else if (!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() == 3) {
             this.setPhase(4);
             super.die(source);
         }
