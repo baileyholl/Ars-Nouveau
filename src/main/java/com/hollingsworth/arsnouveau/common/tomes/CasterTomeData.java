@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -19,7 +18,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
@@ -180,10 +178,8 @@ public class CasterTomeData implements Recipe<Container> {
             return new CasterTomeData(recipeId, caster.getSpellName(), caster.getSpell().recipe.stream().map(AbstractSpellPart::getRegistryName).toList(), getRegistryName(itemStack.getItem()) ,caster.getFlavorText(), caster.getColor().getColor(), caster.getCurrentSound());
         }
     }
-    public static void reloadCasterTomes(MinecraftServer event){
-       var recipes = event.getRecipeManager().getAllRecipesFor(RecipeRegistry.CASTER_TOME_TYPE.get());
-       DungeonLootTables.CASTER_TOMES = new ArrayList<>();
-       recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(tome::getResultItem));
-    }
+
+    public static List<CasterTomeData> TOME_DATA = new ArrayList<>();
+
 
 }

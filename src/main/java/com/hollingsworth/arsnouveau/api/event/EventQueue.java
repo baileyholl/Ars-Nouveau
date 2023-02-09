@@ -16,7 +16,7 @@ import java.util.List;
 public class EventQueue {
     List<ITimedEvent> events;
 
-    public void tick(boolean serverSide) {
+    public void tick(TickEvent tickEvent) {
         if (events == null || events.isEmpty()) {
             return;
         }
@@ -28,7 +28,7 @@ public class EventQueue {
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                event.tick(serverSide);
+                event.tickEvent(tickEvent);
             }
         }
         this.events.removeAll(stale);
@@ -72,7 +72,7 @@ public class EventQueue {
         if (e.phase != TickEvent.Phase.END)
             return;
 
-        EventQueue.getServerInstance().tick(true);
+        EventQueue.getServerInstance().tick(e);
     }
 
     @SubscribeEvent
@@ -81,6 +81,6 @@ public class EventQueue {
         if (e.phase != TickEvent.Phase.END)
             return;
 
-        EventQueue.getClientQueue().tick(false);
+        EventQueue.getClientQueue().tick(e);
     }
 }
