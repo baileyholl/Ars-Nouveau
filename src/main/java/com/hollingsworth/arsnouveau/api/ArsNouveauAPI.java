@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
-import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
@@ -16,13 +15,15 @@ import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import com.hollingsworth.arsnouveau.common.mixin.PotionRecipeMixin;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
@@ -98,8 +99,6 @@ public class ArsNouveauAPI {
     private ISpellValidator castingSpellValidator;
 
     private List<IEnchantingRecipe> enchantingApparatusRecipes = new ArrayList<>();
-
-    public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
 
     private List<BrewingRecipe> brewingRecipes = new ArrayList<>();
 
@@ -209,16 +208,13 @@ public class ArsNouveauAPI {
                 if (ib instanceof BrewingRecipe brewingRecipe)
                     brewingRecipes.add(brewingRecipe);
             });
-
-            vanillaPotionRecipes.forEach(vanillaPotionRecipe -> {
-                BrewingRecipe recipe = new BrewingRecipe(
-                        PotionIngredient.fromPotion(vanillaPotionRecipe.potionIn),
-                        Ingredient.of(vanillaPotionRecipe.reagent),
-                        PotionIngredient.fromPotion(vanillaPotionRecipe.potionOut).getStack()
-                );
-                brewingRecipes.add(recipe);
-            });
-
+            for(PotionBrewing.Mix<Potion> mix : PotionRecipeMixin.mixList()){
+                brewingRecipes.add(new BrewingRecipe(
+                        PotionIngredient.fromPotion(mix.from.get()),
+                        mix.ingredient,
+                        PotionIngredient.fromPotion(mix.to.get()).getStack()
+                ));
+            }
         }
         return brewingRecipes;
     }
@@ -273,6 +269,10 @@ public class ArsNouveauAPI {
 
     public SpellSound registerSpellSound(SpellSound sound) {
         return this.spellSoundsRegistry.put(sound.getId(), sound);
+    }
+
+    public void onResourceReload(){
+        this.brewingRecipes = new ArrayList<>();
     }
 
     private ArsNouveauAPI() {

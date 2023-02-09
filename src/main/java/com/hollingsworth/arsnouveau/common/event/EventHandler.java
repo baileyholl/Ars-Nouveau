@@ -3,20 +3,20 @@ package com.hollingsworth.arsnouveau.common.event;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
+import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
+import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
-import com.hollingsworth.arsnouveau.common.command.DataDumpCommand;
-import com.hollingsworth.arsnouveau.common.command.PathCommand;
-import com.hollingsworth.arsnouveau.common.command.ResetCommand;
-import com.hollingsworth.arsnouveau.common.command.ToggleLightCommand;
+import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
@@ -90,6 +90,28 @@ public class EventHandler {
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
+                ArsNouveauAPI.getInstance().onResourceReload();
+                EventQueue.getServerInstance().addEvent(new ITimedEvent() {
+                    boolean expired;
+
+                    @Override
+                    public void tickEvent(TickEvent event) {
+                        if(event instanceof TickEvent.ServerTickEvent serverTickEvent){
+                            CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager());
+                        }
+                        expired = true;
+                    }
+
+                    @Override
+                    public void tick(boolean serverSide) {
+
+                    }
+
+                    @Override
+                    public boolean isExpired() {
+                        return expired;
+                    }
+                });
             }
         });
     }
@@ -284,6 +306,7 @@ public class EventHandler {
         DataDumpCommand.register(event.getDispatcher());
         PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
+        AddTomeCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
