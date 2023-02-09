@@ -11,6 +11,8 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static net.minecraft.world.level.Level.TICKS_PER_DAY;
+
 public class MathUtil {
 // https://github.com/Mithion/ArsMagica2/tree/6d6b68002363b2569c2f2300c8f9146ad800bbc6#readme
 
@@ -62,10 +64,9 @@ public class MathUtil {
     public static long DAY_TIME = 1000L;
 
     public static long getNextDaysTime(Level world, long timeOfDay) {
-        long lengthOfDay = 24000L;
         long dayTime = world.getDayTime();
-        long newTime = (dayTime + lengthOfDay);
-        newTime -= newTime % lengthOfDay;
+        long newTime = (dayTime + TICKS_PER_DAY);
+        newTime -= newTime % TICKS_PER_DAY;
         return newTime + timeOfDay;
     }
 }
