@@ -134,6 +134,8 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public static Entity teleportEntityTo(Entity entity, Level targetWorld, BlockPos target, Vec2 rotationVec) {
         if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
             entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+            entity.setXRot(rotationVec != null ? rotationVec.x : entity.getXRot());
+            entity.setYRot(rotationVec != null ? rotationVec.y : entity.getYRot());
             if (!entity.getPassengers().isEmpty()) {
                 //Force re-apply any passengers so that players don't get "stuck" outside what they may be riding
                 ((ServerChunkCache) entity.getCommandSenderWorld().getChunkSource()).broadcast(entity, new ClientboundSetPassengersPacket(entity));
