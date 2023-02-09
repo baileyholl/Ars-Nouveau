@@ -584,7 +584,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(RecipeDatagen.SOURCE_GEM).save(consumer);
 
             shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
-            shapelessBuilder(ItemsRegistry.SPELL_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
+            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
             shapedBuilder(ItemsRegistry.STARBUNCLE_SHADES)
                     .pattern("xyx")
                     .define('x', Items.TINTED_GLASS)
