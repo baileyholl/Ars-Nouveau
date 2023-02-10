@@ -119,7 +119,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.FLOURISHING_LEAVES,
                 BlockRegistry.VEXING_LEAVES
         );
-
+        this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST);
+        this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
             this.tag(DECORATIVE_AN).add(block);
