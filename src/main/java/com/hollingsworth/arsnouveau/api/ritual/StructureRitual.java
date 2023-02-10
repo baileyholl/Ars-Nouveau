@@ -70,7 +70,9 @@ public abstract class StructureRitual extends AbstractRitual {
                     BlockPos translatedPos = getPos().offset(entityInfo.blockPos.getX(), entityInfo.blockPos.getY(), entityInfo.blockPos.getZ()).offset(offset);
                     Optional<Entity> entity;
                     try{
-                        entity = EntityType.create(entityInfo.nbt, getWorld());
+                        CompoundTag entityTag = entityInfo.nbt;
+                        entityTag.remove("UUID");
+                        entity = EntityType.create(entityTag, getWorld());
                     }catch (Exception e){
                         continue;
                     }
