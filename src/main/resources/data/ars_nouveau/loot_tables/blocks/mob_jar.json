@@ -18,6 +18,11 @@
                   "op": "replace",
                   "source": "entityTag",
                   "target": "BlockEntityTag.entityTag"
+                },
+                {
+                  "op": "replace",
+                  "source": "entityId",
+                  "target": "entityId"
                 }
               ],
               "source": "block_entity"

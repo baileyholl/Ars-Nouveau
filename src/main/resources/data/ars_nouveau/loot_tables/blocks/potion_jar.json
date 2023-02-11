@@ -28,6 +28,16 @@
                   "op": "replace",
                   "source": "locked",
                   "target": "BlockEntityTag.locked"
+                },
+                {
+                  "op": "replace",
+                  "source": "potionNames",
+                  "target": "potionNames"
+                },
+                {
+                  "op": "replace",
+                  "source": "currentFill",
+                  "target": "fill"
                 }
               ],
               "source": "block_entity"
