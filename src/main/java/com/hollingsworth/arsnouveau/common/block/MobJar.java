@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PlayerRideable;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -67,7 +68,8 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 }
             }
         }
-        if(tile.getEntity() != null && !(tile.getEntity() instanceof PlayerRideable) && !JarBehaviorRegistry.containsEntity(tile.getEntity())){
+        if(tile.getEntity() != null && !(tile.getEntity() instanceof PlayerRideable) && !JarBehaviorRegistry.containsEntity(tile.getEntity())
+        && !(tile.getEntity() instanceof ContainerEntity)){
             pPlayer.interactOn(tile.getEntity(), pHand);
             tile.updateBlock();
         }
