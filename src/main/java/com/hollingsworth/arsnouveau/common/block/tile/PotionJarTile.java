@@ -81,12 +81,15 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public void add(PotionData other, int amount){
-        if(this.getAmount() == 0){
-            this.data = other;
+        if(this.currentFill == 0){
+            if(!this.data.equals(other) || (this.data.getPotion() == Potions.EMPTY)) {
+                this.data = other;
+            }
             currentFill += amount;
         }else{
             currentFill = Math.min(this.getAmount() + amount, this.getMaxFill());
         }
+        currentFill = Math.min(currentFill, this.getMaxFill());
         updateBlock();
     }
 

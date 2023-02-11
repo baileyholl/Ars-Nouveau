@@ -67,8 +67,9 @@ public class PotionData implements Cloneable{
         instance.setPotion(PotionUtils.getPotion(tag));
         instance.getCustomEffects().addAll(PotionUtils.getCustomEffects(tag));
         ListTag potionTagList = tag.getList("includedPotions", 8);
+        Set<Potion> potions = instance.includedPotions;
         for(int i = 0; i < potionTagList.size(); i++){
-            instance.getIncludedPotions().add(Potion.byName(potionTagList.getString(i)));
+            potions.add(Potion.byName(potionTagList.getString(i)));
         }
         return instance;
     }
@@ -184,6 +185,7 @@ public class PotionData implements Cloneable{
 
     public Set<Potion> getIncludedPotions() {
         includedPotions.add(getPotion());
+        includedPotions.removeIf(potion -> potion == Potions.EMPTY);
         return includedPotions;
     }
 
