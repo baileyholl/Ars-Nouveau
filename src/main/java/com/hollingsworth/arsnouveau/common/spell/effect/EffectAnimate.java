@@ -78,7 +78,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Animate a block to fight for you."; //TODO Are these actually even used?
+        return "Animate a block to fight for you.";
     }
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {

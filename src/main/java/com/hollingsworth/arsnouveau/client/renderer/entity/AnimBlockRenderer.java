@@ -26,6 +26,7 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib3.util.RenderUtils;
 
 public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
 
@@ -57,10 +58,11 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
             public void setCustomAnimations(AnimBlockSummon animatable, int instanceId, AnimationEvent customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
                 IBone head = this.getAnimationProcessor().getBone("block");
+                head.setHidden(true);
                 if (customPredicate == null) return;
                 EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-                head.setRotationX(extraData.headPitch * 0.017453292519943295F);
-                head.setRotationY(extraData.netHeadYaw * 0.017453292519943295F);
+//                head.setRotationX(extraData.headPitch * 0.017453292519943295F);
+//                head.setRotationY(extraData.netHeadYaw * 0.017453292519943295F);
             }
         });
         dispatcher = renderManager.getBlockRenderDispatcher();
@@ -94,13 +96,13 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
                     if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                         poseStack.pushPose();
                         BlockPos blockpos = animBlock.blockPosition().above();
-                        poseStack.translate(-0.5D, 0.85D, -0.5D);
+                        RenderUtils.translateToPivotPoint(poseStack, bone);
+                        poseStack.translate(-0.5D, -0.5, -0.5D);
                         var model = this.dispatcher.getBlockModel(blockstate);
                         for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
                             this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, poseStack, this.bufferSource.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(animBlock.getOnPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
                         poseStack.popPose();
                         buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
-                        return;
                     }
                 } catch (Exception e) {
                     // We typically don't render non-models like this, so catch our shenanigans.

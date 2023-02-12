@@ -45,6 +45,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     public BlockState blockState;
     public int color;
     private int ticksLeft;
+    protected static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
 
     protected AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -102,6 +104,10 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         super.tick();
         if (!level.isClientSide) {
             ticksLeft--;
+            this.entityData.set(AGE, this.entityData.get(AGE) + 1);
+            if(this.entityData.get(AGE) > 20) {
+                this.entityData.set(CAN_WALK, true);
+            }
             if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 returnToFallingBlock(blockState);
@@ -136,6 +142,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         super.defineSynchedData();
         this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
         this.entityData.define(COLOR, ParticleColor.defaultParticleColor().getColor());
+        this.entityData.define(AGE, 0);
+        this.entityData.define(CAN_WALK, false);
     }
 
     @Override
@@ -194,13 +202,21 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "walk", 20, (e) -> {
-            if (e.isMoving()) {
-                e.getController().setAnimation(new AnimationBuilder().addAnimation("walk"));
+        data.addAnimationController(new AnimationController<>(this, "spawn", 1, (e) -> {
+            if (!entityData.get(CAN_WALK)) {
+                e.getController().setAnimation(new AnimationBuilder().addAnimation("spawn"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
+        data.addAnimationController(new AnimationController<>(this, "run", 20, (e) -> {
+            if (e.isMoving() && entityData.get(CAN_WALK)) {
+                e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        data.setResetSpeedInTicks(0);
     }
 
     final AnimationFactory factory = GeckoLibUtil.createFactory(this);
@@ -252,6 +268,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         this.ticksLeft = pCompound.getInt("left");
         this.color = pCompound.getInt("color");
         this.blockState = Block.stateById(pCompound.getInt("blockState"));
+        this.getEntityData().set(AGE, pCompound.getInt("ticksAlive"));
+        this.getEntityData().set(CAN_WALK, pCompound.getBoolean("canWalk"));
     }
 
     @Override
@@ -260,6 +278,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         pCompound.putInt("left", ticksLeft);
         pCompound.putInt("color", color);
         pCompound.putInt("blockState", Block.getId(blockState));
+        pCompound.putInt("ticksAlive", this.getEntityData().get(AGE));
+        pCompound.putBoolean("canWalk", this.getEntityData().get(CAN_WALK));
     }
 
     public int getColor() {
