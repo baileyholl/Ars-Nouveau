@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.MageBlock;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -24,7 +23,6 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
@@ -59,10 +57,6 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
                 IBone head = this.getAnimationProcessor().getBone("block");
                 head.setHidden(true);
-                if (customPredicate == null) return;
-                EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-//                head.setRotationX(extraData.headPitch * 0.017453292519943295F);
-//                head.setRotationY(extraData.netHeadYaw * 0.017453292519943295F);
             }
         });
         dispatcher = renderManager.getBlockRenderDispatcher();
@@ -89,7 +83,7 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
             if (animBlock == null) return;
             BlockState blockstate = animatable.getBlockState();
             //don't override the block and color it
-            if (!(blockstate.getBlock() instanceof MageBlock)) {
+
                 //hide the block and render the blockstate
                 try {
                     Level level = animatable.getLevel();
@@ -107,7 +101,7 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
                 } catch (Exception e) {
                     // We typically don't render non-models like this, so catch our shenanigans.
                 }
-            }
+
         }
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }

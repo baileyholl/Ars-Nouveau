@@ -202,7 +202,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "spawn", 1, (e) -> {
+        data.setResetSpeedInTicks(0);
+        data.addAnimationController(new AnimationController<>(this, "spawn", 0, (e) -> {
             if (!entityData.get(CAN_WALK)) {
                 e.getController().setAnimation(new AnimationBuilder().addAnimation("spawn"));
                 return PlayState.CONTINUE;
@@ -216,7 +217,6 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
             }
             return PlayState.STOP;
         }));
-        data.setResetSpeedInTicks(0);
     }
 
     final AnimationFactory factory = GeckoLibUtil.createFactory(this);

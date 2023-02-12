@@ -53,7 +53,6 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class EnchantedFallingBlock extends ColoredProjectile implements IAnimatable {
-    public static final EntityDataAccessor<Boolean> SHOULD_COLOR = SynchedEntityData.defineId(EnchantedFallingBlock.class, EntityDataSerializers.BOOLEAN);
 
     private static final Logger LOGGER = LogUtils.getLogger();
     public BlockState blockState = Blocks.SAND.defaultBlockState();
@@ -107,7 +106,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
             fallingblockentity = new EnchantedMageblock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
             fallingblockentity.blockData = tile.saveWithoutMetadata();
             fallingblockentity.setColor(tile.color);
-            fallingblockentity.getEntityData().set(SHOULD_COLOR, true);
         } else {
             fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
         }
@@ -399,13 +397,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
         if (this.blockData != null) {
             pCompound.put("TileEntityData", this.blockData);
         }
-        pCompound.putBoolean("shouldColor", entityData.get(SHOULD_COLOR));
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        entityData.set(SHOULD_COLOR, compound.getBoolean("shouldColor"));
     }
 
 
@@ -466,7 +462,6 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
     public void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_START_POS, BlockPos.ZERO);
-        this.entityData.define(SHOULD_COLOR, false);
     }
 
     /**
