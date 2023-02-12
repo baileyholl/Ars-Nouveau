@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -96,7 +97,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
             this.pathNavigate.setSwimSpeedFactor(2.0);
             this.pathNavigate.getPathingOptions().setEnterDoors(true);
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
-            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler());
         }
         return pathNavigate;
     }
@@ -224,6 +225,11 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
         }
         super.die(source);
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     @Override

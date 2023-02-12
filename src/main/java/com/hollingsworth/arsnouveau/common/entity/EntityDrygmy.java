@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -97,6 +98,11 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         if (homePos == null || !(level.getBlockEntity(homePos) instanceof DrygmyTile))
             return null;
         return (DrygmyTile) level.getBlockEntity(homePos);
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     @Override

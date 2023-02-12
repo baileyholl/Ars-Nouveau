@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
@@ -134,10 +135,8 @@ public class GiftStarbuncle extends PathfinderMob implements IAnimatable {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
-            return false;
-        return super.hurt(source, amount);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     private PlayState dancePredicate(AnimationEvent<?> event) {

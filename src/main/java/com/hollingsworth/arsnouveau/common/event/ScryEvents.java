@@ -17,6 +17,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -31,8 +32,6 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.hollingsworth.arsnouveau.api.util.DropDistribution.rand;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ScryEvents {
@@ -86,6 +85,7 @@ public class ScryEvents {
         double yView = vector3d.y();
         if (Minecraft.getInstance().isPaused())
             return;
+        RandomSource rand = playerEntity.getRandom();
         for (BlockPos p : ClientInfo.scryingPositions) {
             ParticleColor color = new ParticleColor(
                     rand.nextInt(255),
