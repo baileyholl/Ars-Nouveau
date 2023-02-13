@@ -161,6 +161,7 @@ public class ScryCaster extends ModItem implements ICasterTool {
                     player,
                     position,
                     direction);
+            resolver.expendMana();
             playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
