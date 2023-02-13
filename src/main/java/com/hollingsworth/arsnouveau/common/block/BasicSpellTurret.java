@@ -75,12 +75,13 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     static {
         TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
+
             @Override
-            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel world, BlockPos pos, FakePlayer fakePlayer, Position iposition, Direction direction) {
+            public void onCast(SpellResolver resolver, ServerLevel world, BlockPos pos, Player fakePlayer, Position iposition, Direction direction) {
                 EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
                 spell.setPos(iposition.x(), iposition.y(), iposition.z());
-                if (tile instanceof RotatingTurretTile rotatingTurretTile) {
+                if (world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
                     spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
                 } else {
@@ -92,8 +93,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
         TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
             @Override
-            //TODO: Adapt and test for adjustable turrets, it's not 100% broken but they won't use the corners (will use one of the two close directions)
-            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
+            public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
                 BlockPos touchPos = pos.relative(facingDir);
                 List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(touchPos));
                 if (!entityList.isEmpty()) {

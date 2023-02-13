@@ -1336,5 +1336,8 @@
   "ars_nouveau.light_message" : "Ars Nouveau adds built in dynamic lights. Enable with `/ars-light on`. This won't appear again!",
   "ars_nouveau.warp_scroll.already_recorded": "This scroll is already bound to a location.",
   "ars_nouveau.page4.illusion_blocks": "Skyweave will display the skybox of the dimension it is placed in. To toggle the skybox and show the facade, cast Dispel on it. The facade may be set to another block like Mirrorweave.",
-  "block.ars_nouveau.sky_block": "Skyweave"
+  "block.ars_nouveau.sky_block": "Skyweave",
+  "ars_nouveau.scry_caster.not_crystal": "The bound crystal is no longer present.",
+  "ars_nouveau.scry_caster.no_pos": "No position set. Use this on a Scry Crystal or hold a Scryer's Scroll in the offhand.",
+  "ars_nouveau.scry_caster.invalid_behavior": "Invalid spell bound. Rebind a new valid spell."
 }

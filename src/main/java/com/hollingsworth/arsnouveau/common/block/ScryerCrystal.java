@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ScryerCrystalTile;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -23,8 +22,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ScryerCrystal extends TickableModBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
@@ -77,6 +74,20 @@ public class ScryerCrystal extends TickableModBlock {
 
         return EAST;
     }
+
+
+    /**
+     * Get the position where the dispenser at the given Coordinates should dispense to.
+     */
+    public static Position getDispensePosition(BlockSource coords, Direction direction) {
+        // Offset to get closer to the eye.
+        double negOffset = -0.49;
+        double d0 = coords.x() + negOffset * (double) direction.getStepX();
+        double d1 = coords.y() + negOffset * (double) direction.getStepY();
+        double d2 = coords.z() + negOffset * (double) direction.getStepZ();
+        return new PositionImpl(d0, d1, d2);
+    }
+
 
     @Nullable
     @Override
