@@ -79,7 +79,7 @@ public class GuiSpellBook extends BaseBook {
         this.hand = hand;
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
         ItemStack heldStack = Minecraft.getInstance().player.getItemInHand(hand);
-        List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs());
+        List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         parts.addAll(api.getDefaultStartingSpells());
         if (heldStack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
             parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());

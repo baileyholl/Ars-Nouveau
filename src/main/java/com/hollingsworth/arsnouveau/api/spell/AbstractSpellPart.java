@@ -152,6 +152,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         GLYPH_TIER = builder.comment("The tier of the glyph").defineInRange("glyph_tier", defaultTier().value, 1, 99);
     }
 
+    public boolean shouldShowInUnlock() {
+        return isEnabled();
+    }
+
+    public boolean shouldShowInSpellBook() {
+        return isEnabled();
+    }
+
+    public boolean isEnabled() {
+        return ENABLED == null || ENABLED.get();
+    }
+
     /**
      * Returns the number of times that this glyph may be modified by the given augment.
      */
