@@ -26,7 +26,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new LootTableProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new DungeonLootGenerator(event.getGenerator(), MODID));
+//        event.getGenerator().addProvider(event.includeServer(), new DungeonLootGenerator(event.getGenerator(), MODID));
         event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(event.getGenerator(), blocktagsprovider, MODID, event.getExistingFileHelper()));
