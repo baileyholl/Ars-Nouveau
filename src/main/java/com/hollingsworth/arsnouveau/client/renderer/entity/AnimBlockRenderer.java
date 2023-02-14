@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.block.MageBlock;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -56,7 +57,7 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
             public void setCustomAnimations(AnimBlockSummon animatable, int instanceId, AnimationEvent customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
                 IBone head = this.getAnimationProcessor().getBone("block");
-                head.setHidden(true);
+                head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));
             }
         });
         dispatcher = renderManager.getBlockRenderDispatcher();
@@ -83,24 +84,27 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
             if (animBlock == null) return;
             BlockState blockstate = animatable.getBlockState();
             //don't override the block and color it
-
-                //hide the block and render the blockstate
-                try {
-                    Level level = animatable.getLevel();
-                    if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
-                        poseStack.pushPose();
-                        BlockPos blockpos = animBlock.blockPosition().above();
-                        RenderUtils.translateToPivotPoint(poseStack, bone);
-                        poseStack.translate(-0.5D, -0.5, -0.5D);
-                        var model = this.dispatcher.getBlockModel(blockstate);
-                        for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
-                            this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, poseStack, this.bufferSource.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(animBlock.getOnPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-                        poseStack.popPose();
-                        buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
-                    }
-                } catch (Exception e) {
-                    // We typically don't render non-models like this, so catch our shenanigans.
+            if(blockstate.getBlock() instanceof MageBlock){
+                super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                return;
+            }
+            //hide the block and render the blockstate
+            try {
+                Level level = animatable.getLevel();
+                if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+                    poseStack.pushPose();
+                    BlockPos blockpos = animBlock.blockPosition().above();
+                    RenderUtils.translateToPivotPoint(poseStack, bone);
+                    poseStack.translate(-0.5D, -0.5, -0.5D);
+                    var model = this.dispatcher.getBlockModel(blockstate);
+                    for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
+                        this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, poseStack, this.bufferSource.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(animBlock.getOnPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
+                    poseStack.popPose();
+                    buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
                 }
+            } catch (Exception e) {
+                // We typically don't render non-models like this, so catch our shenanigans.
+            }
 
         }
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
