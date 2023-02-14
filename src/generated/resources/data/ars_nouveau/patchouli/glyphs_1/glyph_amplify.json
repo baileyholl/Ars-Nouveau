@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_amplify",
+  "name": "ars_nouveau.glyph_name.glyph_amplify",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_amplify"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_amplify"
+    }
+  ],
+  "sortnum": 3
+}

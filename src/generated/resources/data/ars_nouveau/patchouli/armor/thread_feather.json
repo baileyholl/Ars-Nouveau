@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:armor",
+  "icon": "ars_nouveau:thread_feather",
+  "name": "item.ars_nouveau.thread_feather",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.perk_desc.thread_feather"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:thread_feather"
+    }
+  ],
+  "sortnum": 99
+}

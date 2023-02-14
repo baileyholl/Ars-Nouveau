@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:armor",
+  "icon": "ars_nouveau:thread_spellpower",
+  "name": "item.ars_nouveau.thread_spellpower",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.perk_desc.thread_spellpower"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:thread_spellpower"
+    }
+  ],
+  "sortnum": 99
+}

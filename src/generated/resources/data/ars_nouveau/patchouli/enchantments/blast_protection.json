@@ -1,0 +1,23 @@
+{
+  "category": "ars_nouveau:enchantments",
+  "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.blast_protection",
+  "pages": [
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:blast_protection_1"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:blast_protection_2"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:blast_protection_3"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:blast_protection_4"
+    }
+  ]
+}

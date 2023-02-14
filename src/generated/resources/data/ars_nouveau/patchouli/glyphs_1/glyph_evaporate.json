@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_evaporate",
+  "name": "ars_nouveau.glyph_name.glyph_evaporate",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_evaporate"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_evaporate"
+    }
+  ],
+  "sortnum": 2
+}

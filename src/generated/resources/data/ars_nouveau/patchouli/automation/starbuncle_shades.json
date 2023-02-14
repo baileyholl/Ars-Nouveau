@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:starbuncle_shades",
+  "name": "item.ars_nouveau.starbuncle_shades",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.starbuncle_shades"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:starbuncle_shades"
+    }
+  ]
+}

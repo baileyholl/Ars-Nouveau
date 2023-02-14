@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_3",
+  "icon": "ars_nouveau:glyph_glide",
+  "name": "ars_nouveau.glyph_name.glyph_glide",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_glide"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_glide"
+    }
+  ],
+  "sortnum": 2
+}

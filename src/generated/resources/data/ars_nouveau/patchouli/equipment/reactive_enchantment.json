@@ -1,0 +1,39 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "minecraft:enchanted_book",
+  "name": "ars_nouveau.page.reactive_enchantment",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.reactive_enchantment"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:reactive_1"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.reactive_enchantment"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:reactive_2"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:reactive_3"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:reactive_4"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.reactive_enchantment"
+    },
+    {
+      "type": "ars_nouveau:no_output_apparatus_recipe",
+      "recipe": "ars_nouveau:spell_write"
+    }
+  ]
+}

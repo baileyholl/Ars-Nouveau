@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_duration_down",
+  "name": "ars_nouveau.glyph_name.glyph_duration_down",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_duration_down"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_duration_down"
+    }
+  ],
+  "sortnum": 3
+}

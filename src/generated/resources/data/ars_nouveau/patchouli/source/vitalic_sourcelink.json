@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:vitalic_sourcelink",
+  "name": "block.ars_nouveau.vitalic_sourcelink",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.vitalic_sourcelink"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:vitalic_sourcelink"
+    }
+  ]
+}

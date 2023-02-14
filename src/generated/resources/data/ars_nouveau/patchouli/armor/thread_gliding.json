@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:armor",
+  "icon": "ars_nouveau:thread_gliding",
+  "name": "item.ars_nouveau.thread_gliding",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.perk_desc.thread_gliding"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:thread_gliding"
+    }
+  ],
+  "sortnum": 99
+}

@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:belt_of_unstable_gifts",
+  "name": "item.ars_nouveau.belt_of_unstable_gifts",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.belt_of_unstable_gifts"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:belt_of_unstable_gifts"
+    }
+  ]
+}

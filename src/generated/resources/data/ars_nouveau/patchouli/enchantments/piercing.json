@@ -1,0 +1,23 @@
+{
+  "category": "ars_nouveau:enchantments",
+  "icon": "minecraft:enchanted_book",
+  "name": "enchantment.minecraft.piercing",
+  "pages": [
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:piercing_1"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:piercing_2"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:piercing_3"
+    },
+    {
+      "type": "ars_nouveau:enchanting_recipe",
+      "recipe": "ars_nouveau:piercing_4"
+    }
+  ]
+}

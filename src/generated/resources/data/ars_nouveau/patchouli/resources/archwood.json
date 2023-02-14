@@ -1,0 +1,35 @@
+{
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:bombegranate_pod",
+  "name": "ars_nouveau.page.archwood",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.archwood"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "ars_nouveau:bombegranate_pod",
+      "link_recipe": true,
+      "text": "ars_nouveau.page.bombegrante"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "ars_nouveau:mendosteen_pod",
+      "link_recipe": true,
+      "text": "ars_nouveau.page.mendosteen"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "ars_nouveau:frostaya_pod",
+      "link_recipe": true,
+      "text": "ars_nouveau.page.frostaya"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "ars_nouveau:bastion_pod",
+      "link_recipe": true,
+      "text": "ars_nouveau.page.bastion_fruit"
+    }
+  ]
+}

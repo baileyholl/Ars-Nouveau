@@ -1,0 +1,22 @@
+{
+  "category": "ars_nouveau:enchantments",
+  "icon": "ars_nouveau:enchanting_apparatus",
+  "name": "ars_nouveau.page.how_to_enchant",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.how_to_enchant"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.how_to_enchant"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/enchanting_apparatus"
+      ]
+    }
+  ],
+  "sortnum": -1
+}

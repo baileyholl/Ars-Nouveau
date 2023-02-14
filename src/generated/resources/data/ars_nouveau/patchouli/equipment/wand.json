@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:wand",
+  "name": "item.ars_nouveau.wand",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.wand"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:wand"
+    }
+  ]
+}

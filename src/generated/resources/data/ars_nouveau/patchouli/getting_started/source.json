@@ -1,0 +1,19 @@
+{
+  "category": "ars_nouveau:getting_started",
+  "icon": "ars_nouveau:source_jar",
+  "name": "ars_nouveau.page.source",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.source"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:source/source_jar",
+        "ars_nouveau:source/agronomic_sourcelink"
+      ]
+    }
+  ],
+  "sortnum": 5
+}

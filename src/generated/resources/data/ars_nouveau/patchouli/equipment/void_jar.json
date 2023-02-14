@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:void_jar",
+  "name": "item.ars_nouveau.void_jar",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.void_jar"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:void_jar"
+    }
+  ]
+}
