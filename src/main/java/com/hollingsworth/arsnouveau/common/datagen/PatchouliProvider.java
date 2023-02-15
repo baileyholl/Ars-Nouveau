@@ -448,8 +448,10 @@ public class PatchouliProvider implements DataProvider {
                         .withPage(new CraftingPage(BlockRegistry.GREEN_SBED).withRecipe2(BlockRegistry.YELLOW_SBED))
                         .withPage(new CraftingPage(BlockRegistry.RED_SBED).withRecipe2(BlockRegistry.PURPLE_SBED))
                 , getPath(AUTOMATION, "summon_bed"));
-
-        addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
+        var scryCaster = addBasicItem(ItemsRegistry.SCRY_CASTER, EQUIPMENT, new ApparatusPage(ItemsRegistry.SCRY_CASTER));
+        var scryCrystal = addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
+        scryCrystal.builder.withPage(new RelationsPage().withEntry(scryCaster.relationPath()));
+        scryCaster.builder.withPage(new RelationsPage().withEntry(scryCrystal.relationPath()));
         addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
         addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
         addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
@@ -539,6 +541,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(BlockRegistry.GHOST_WEAVE)
                 ).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.SKY_WEAVE)), getPath(RESOURCES, "illusion_blocks"));
+
     }
 
     public String getLangPath(String name, int count) {

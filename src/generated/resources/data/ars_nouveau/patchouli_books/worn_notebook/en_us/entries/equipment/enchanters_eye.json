@@ -1,0 +1,21 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:enchanters_eye",
+  "name": "item.ars_nouveau.enchanters_eye",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.enchanters_eye"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:enchanters_eye"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/scryers_crystal"
+      ]
+    }
+  ]
+}

@@ -7,10 +7,12 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
+import com.hollingsworth.arsnouveau.client.renderer.item.ScryCasterRenderer;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
@@ -29,12 +31,18 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class ScryCaster extends ModItem implements ICasterTool {
+public class ScryCaster extends ModItem implements ICasterTool, IAnimatable {
 
     public ScryCaster(Properties properties) {
         super(properties);
@@ -99,6 +107,27 @@ public class ScryCaster extends ModItem implements ICasterTool {
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", data.getScryPos().getX() + ", " + data.getScryPos().getY() + ", " + data.getScryPos().getZ()));
         }
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        super.initializeClient(consumer);
+        consumer.accept(new IClientItemExtensions() {
+            private final BlockEntityWithoutLevelRenderer renderer = new ScryCasterRenderer();
+
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return renderer;
+            }
+        });
+    }
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
+    @Override
+    public void registerControllers(AnimationData data) {}
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 
     public static class ScryCasterType extends SpellCaster{
