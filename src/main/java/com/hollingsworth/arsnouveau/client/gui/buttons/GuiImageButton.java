@@ -23,9 +23,9 @@ public class GuiImageButton extends Button {
 
     public String resourceIcon;
 
-    int u, v, image_width, image_height;
-    BaseBook parent;
-    Component toolTip;
+    public int u, v, image_width, image_height;
+    public BaseBook parent;
+    public Component toolTip;
     public boolean soundDisabled = false;
 
 
