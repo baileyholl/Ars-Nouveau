@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-29T21:37:47.2053391	Ars Nouveau Item Models
+// 1.19.2	2023-02-14T21:15:38.9033168	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -105,6 +105,7 @@ c556576b522dd93927e5ca14d62f6afb27005eb6 assets/ars_nouveau/models/item/potion_d
 b77d7daa65f5d4a3af491e82aeebe9c020df980c assets/ars_nouveau/models/item/red_sbed.json
 077b331868d6dbc277f5c88c9e28e8cb238ede0b assets/ars_nouveau/models/item/ritual_awakening.json
 d90469a4ed0b96cc136ffe79c75787c0e0834796 assets/ars_nouveau/models/item/ritual_binding.json
+89cdb7cb78037d809e061894a8f61a09e25e1915 assets/ars_nouveau/models/item/ritual_brazier.json
 e9eff5d2f306a13e59cfe4859fd62312243d1a9c assets/ars_nouveau/models/item/ritual_burrowing.json
 0f6d19af0ec20cb931ba7620cb339c206f5e0513 assets/ars_nouveau/models/item/ritual_challenge.json
 0246fab7e6b0ed90dd300c92cb61b7253e6ca672 assets/ars_nouveau/models/item/ritual_cloudshaping.json
