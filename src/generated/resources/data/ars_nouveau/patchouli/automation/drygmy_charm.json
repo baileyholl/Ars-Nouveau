@@ -1,0 +1,41 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:drygmy_charm",
+  "name": "item.ars_nouveau.drygmy_charm",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.drygmy_charm"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:drygmy_charm"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:drygmy",
+      "text": "ars_nouveau.page2.drygmy_charm"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.drygmy_charm",
+      "title": "ars_nouveau.summoning"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page4.drygmy_charm",
+      "title": "ars_nouveau.happiness"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page5.drygmy_charm",
+      "title": "ars_nouveau.production"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/mob_jar"
+      ]
+    }
+  ]
+}

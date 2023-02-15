@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_wilden_summon",
+  "name": "item.ars_nouveau.ritual_wilden_summon",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.ritual_desc.ritual_wilden_summon"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ritual_wilden_summon"
+    }
+  ]
+}

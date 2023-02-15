@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:relay",
+  "name": "block.ars_nouveau.relay",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.relay"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:relay",
+      "text": "ars_nouveau.page2.relay"
+    }
+  ]
+}

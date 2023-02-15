@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_3",
+  "icon": "ars_nouveau:glyph_lightning",
+  "name": "ars_nouveau.glyph_name.glyph_lightning",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_lightning"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_lightning"
+    }
+  ],
+  "sortnum": 2
+}

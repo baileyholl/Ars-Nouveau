@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:relay_warp",
+  "name": "block.ars_nouveau.relay_warp",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.relay_warp"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:relay_warp"
+    }
+  ]
+}

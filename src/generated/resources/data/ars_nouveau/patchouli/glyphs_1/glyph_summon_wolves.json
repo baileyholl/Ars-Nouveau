@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_summon_wolves",
+  "name": "ars_nouveau.glyph_name.glyph_summon_wolves",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_summon_wolves"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_summon_wolves"
+    }
+  ],
+  "sortnum": 2
+}

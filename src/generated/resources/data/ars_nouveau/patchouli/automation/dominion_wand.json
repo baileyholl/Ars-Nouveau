@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:dominion_wand",
+  "name": "item.ars_nouveau.dominion_wand",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.dominion_wand"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:dominion_wand"
+    }
+  ]
+}

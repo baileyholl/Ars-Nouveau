@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:agronomic_sourcelink",
+  "name": "block.ars_nouveau.agronomic_sourcelink",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.agronomic_sourcelink"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:agronomic_sourcelink"
+    }
+  ]
+}

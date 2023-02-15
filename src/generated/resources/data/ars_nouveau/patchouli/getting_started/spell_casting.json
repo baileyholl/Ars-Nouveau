@@ -1,0 +1,24 @@
+{
+  "category": "ars_nouveau:getting_started",
+  "icon": "ars_nouveau:novice_spell_book",
+  "name": "ars_nouveau.page.spell_casting",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.spell_casting"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.spell_casting"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.spell_casting"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:novice_spell_book"
+    }
+  ],
+  "sortnum": 1
+}

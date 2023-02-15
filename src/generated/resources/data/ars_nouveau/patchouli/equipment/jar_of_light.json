@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:jar_of_light",
+  "name": "item.ars_nouveau.jar_of_light",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.jar_of_light"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:jar_of_light"
+    }
+  ]
+}

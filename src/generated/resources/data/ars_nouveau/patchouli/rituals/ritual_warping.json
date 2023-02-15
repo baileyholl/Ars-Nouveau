@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_warping",
+  "name": "item.ars_nouveau.ritual_warping",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.ritual_desc.ritual_warping"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ritual_warping"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_ender_inventory",
+  "name": "ars_nouveau.glyph_name.glyph_ender_inventory",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_ender_inventory"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_ender_inventory"
+    }
+  ],
+  "sortnum": 2
+}

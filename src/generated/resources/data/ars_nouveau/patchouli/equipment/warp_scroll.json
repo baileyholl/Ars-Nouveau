@@ -1,0 +1,22 @@
+{
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:warp_scroll",
+  "name": "item.ars_nouveau.warp_scroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.warp_scroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:warp_scroll"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:equipment/stable_warp_scroll",
+        "ars_nouveau:machines/warp_portal"
+      ]
+    }
+  ]
+}

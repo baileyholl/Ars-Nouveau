@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_heal",
+  "name": "ars_nouveau.glyph_name.glyph_heal",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_heal"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_heal"
+    }
+  ],
+  "sortnum": 2
+}

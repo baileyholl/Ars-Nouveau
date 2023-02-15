@@ -1,0 +1,51 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:warp_scroll",
+  "name": "ars_nouveau.page.warp_portal",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.warp_portal"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.warp_portal"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "multiblock": {
+        "mapping": {
+          "0": "ars_nouveau:portal",
+          "B": "ars_nouveau:sourcestone",
+          "P": "ars_nouveau:portal"
+        },
+        "pattern": [
+          [
+            " BB "
+          ],
+          [
+            "BPPB"
+          ],
+          [
+            "B0PB"
+          ],
+          [
+            "BPPB"
+          ],
+          [
+            " BB "
+          ]
+        ]
+      },
+      "name": "ars_nouveau.page3.warp_portal",
+      "text": "ars_nouveau.page4.warp_portal"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:equipment/warp_scroll",
+        "ars_nouveau:equipment/stable_warp_scroll"
+      ]
+    }
+  ]
+}

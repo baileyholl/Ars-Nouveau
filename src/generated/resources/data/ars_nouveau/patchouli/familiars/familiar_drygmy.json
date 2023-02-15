@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:familiars",
+  "icon": "ars_nouveau:familiar_drygmy",
+  "name": "entity.ars_nouveau.familiar_drygmy",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.familiar_desc.familiar_drygmy"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:familiar_drygmy"
+    }
+  ]
+}

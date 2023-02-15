@@ -1,0 +1,20 @@
+{
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:magebloom_crop",
+  "name": "block.ars_nouveau.magebloom_crop",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.magebloom_crop"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:magebloom_crop"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:magebloom_fiber",
+      "recipe2": "ars_nouveau:magebloom_block"
+    }
+  ]
+}

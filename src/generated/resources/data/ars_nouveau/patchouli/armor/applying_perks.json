@@ -1,0 +1,22 @@
+{
+  "category": "ars_nouveau:armor",
+  "icon": "ars_nouveau:blank_thread",
+  "name": "ars_nouveau.page.applying_perks",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.applying_perks"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.applying_perks"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:armor/alteration_table"
+      ]
+    }
+  ],
+  "sortnum": 2
+}

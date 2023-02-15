@@ -1,0 +1,21 @@
+{
+  "category": "ars_nouveau:getting_started",
+  "icon": "ars_nouveau:warp_scroll",
+  "name": "ars_nouveau.page.trinkets",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.trinkets"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:equipment/ring_of_greater_discount",
+        "ars_nouveau:equipment/jar_of_light",
+        "ars_nouveau:equipment/void_jar",
+        "ars_nouveau:equipment/warp_scroll"
+      ]
+    }
+  ],
+  "sortnum": 11
+}

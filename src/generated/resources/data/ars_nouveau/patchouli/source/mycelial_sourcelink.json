@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:mycelial_sourcelink",
+  "name": "block.ars_nouveau.mycelial_sourcelink",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.mycelial_sourcelink"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:mycelial_sourcelink"
+    }
+  ]
+}
