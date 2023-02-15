@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -14,16 +17,20 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 //TODO: Restore dungeon loot
 public class DungeonLootGenerator extends GlobalLootModifierProvider {
+    private final DataGenerator gen;
+    private final String modid;
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public DungeonLootGenerator(DataGenerator gen, String modid) {
         super(gen, modid);
+        this.gen = gen;
+        this.modid = modid;
     }
 
-//    public static final DeferredRegister<LootModifier> GLM = DeferredRegister.create(new ResourceLocation("forge:loot_modifier_serializers"), ArsNouveau.MODID);
-//   public static final RegistryObject<DungeonLootEnhancerModifier> DUNGEON_LOOT = GLM.register("dungeon_loot", DungeonLootEnhancerModifier::new);
 
     @Override
     protected void start() {
@@ -35,6 +42,28 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
 //                        , "chests/woodland_mansion", "chests/underwater_ruin_big", "chests/underwater_ruin_small"
 //                })
 //        }));
+    }
+
+    @Override
+    public void run(CachedOutput cache) throws IOException {
+        super.run(cache);
+
+//        start();
+//
+//        Path forgePath = gen.getOutputFolder().resolve("data/forge/loot_modifiers/global_loot_modifiers.json");
+//        String modPath = "data/" + modid + "/loot_modifiers/";
+//        List<ResourceLocation> entries = new ArrayList<>();
+//
+//        entries.add(new ResourceLocation(modid, "dungeon_loot"));
+//        for(ResourceLocation  resourceLocation : entries) {
+//            Path modifierPath = gen.getOutputFolder().resolve(modPath + resourceLocation.getPath() + ".json");
+////            DataProvider.saveStable(cache, json, modifierPath);
+//        }
+//        JsonObject forgeJson = new JsonObject();
+//        forgeJson.addProperty("replace", false);
+//        forgeJson.add("entries", GSON.toJsonTree(entries.stream().map(ResourceLocation::toString).collect(Collectors.toList())));
+//
+//        DataProvider.saveStable(cache, forgeJson, forgePath);
     }
 
     public LootItemCondition getList(String[] chests) {

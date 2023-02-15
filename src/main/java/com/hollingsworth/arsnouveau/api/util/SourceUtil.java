@@ -85,6 +85,8 @@ public class SourceUtil {
     @Deprecated(forRemoval = true)
     public static BlockPos takeSourceNearby(BlockPos pos, Level world, int range, int mana) {
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).getSource() >= mana);
+        if(loc.isEmpty())
+            return null;
         if (world.getBlockEntity(loc.get()) instanceof SourceJarTile tile)
             tile.removeSource(mana);
         return loc.get();
