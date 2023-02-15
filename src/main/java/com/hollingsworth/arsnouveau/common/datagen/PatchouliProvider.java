@@ -657,7 +657,7 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(perkItem)
                 .withTextPage(perk.getDescriptionKey())
                 .withPage(new ApparatusPage(perkItem)).withSortNum(99);
-        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/" + perk.getRegistryName().getNamespace() + "patchouli_books/worn_notebook/en_us/entries/armor/" + perk.getRegistryName().getPath() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.generator.getOutputFolder().resolve("data/" + perk.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/armor/" + perk.getRegistryName().getPath() + ".json")));
     }
 
     List<Enchantment> enchants = Arrays.asList(
