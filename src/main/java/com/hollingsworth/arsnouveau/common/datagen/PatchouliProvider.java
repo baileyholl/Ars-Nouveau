@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
@@ -83,7 +84,7 @@ public class PatchouliProvider implements DataProvider {
         }
 
         for (IPerk perk : ArsNouveauAPI.getInstance().getPerkMap().values()) {
-            if(perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+            if(perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !(perk instanceof EmptyPerk))
                 addPerkPage(perk);
         }
 

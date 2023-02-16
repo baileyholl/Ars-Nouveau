@@ -140,6 +140,7 @@ public class APIRegistry {
         registerScryer(CompoundScryer.INSTANCE);
         registerScryer(TagScryer.INSTANCE);
 
+        registerPerk(EmptyPerk.INSTANCE);
         registerPerk(StarbunclePerk.INSTANCE);
         registerPerk(DepthsPerk.INSTANCE);
         registerPerk(FeatherPerk.INSTANCE);
