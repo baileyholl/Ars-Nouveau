@@ -64,6 +64,7 @@ public class LightManager {
         register(ModEntities.SPELL_PROJ.get(), (p -> 15));
         register(ModEntities.ORBIT_SPELL.get(), (p -> 15));
         register(ModEntities.LINGER_SPELL.get(), (p -> 15));
+        register(ModEntities.WALL_SPELL.get(), (p -> 15));
         register(ModEntities.STARBUNCLE_TYPE.get(), (p -> {
             if (p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6) {
                 return 10;
@@ -89,6 +90,7 @@ public class LightManager {
         register(EntityType.ITEM_FRAME, (p) -> DynamLightUtil.fromItemLike((p.getItem().getItem())));
         register(EntityType.GLOW_ITEM_FRAME, (p) -> Math.max(14, DynamLightUtil.fromItemLike((p.getItem().getItem()))));
         register(EntityType.GLOW_SQUID, (p) -> (int) Mth.clampedLerp(0.f, 12.f, 1.f - p.getDarkTicksRemaining() / 10.f));
+        register(ModEntities.ANIMATED_BLOCK.get(), (p) -> p.getBlockState().getLightEmission(p.level, p.blockPosition()));
     }
 
     public static < T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {

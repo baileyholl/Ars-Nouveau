@@ -787,6 +787,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withReagent(Items.SHIELD)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
