@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -59,6 +60,25 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     public AnimBlockSummon(Level pLevel, BlockState state){
         this(ModEntities.ANIMATED_BLOCK.get(), pLevel);
         this.blockState = state;
+    }
+
+    @Override
+    public double getAttributeValue(Attribute pAttribute) {
+        if(pAttribute == Attributes.ATTACK_DAMAGE){
+            return super.getAttributeValue(pAttribute) + getStateDamageBonus();
+        }
+        return super.getAttributeValue(pAttribute);
+    }
+
+    public float getStateDamageBonus() {
+        float destroySpeed = 1.0f;
+        try {
+            destroySpeed = this.blockState.getDestroySpeed(level, blockPosition());
+        } catch (Exception e) {
+            // Passing unexpected values here, catch any errors
+        }
+
+        return destroySpeed;
     }
 
     @Override
