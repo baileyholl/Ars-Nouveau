@@ -275,7 +275,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
     public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
-    public static PerkItem BLANK_THREAD = ArsNouveauAPI.getInstance().getPerkItemMap().get(EmptyPerk.INSTANCE.getRegistryName());
+    public static PerkItem BLANK_THREAD;
 
     public static RegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 240));
 
@@ -317,6 +317,9 @@ public class ItemsRegistry {
             PerkItem perkItem = new PerkItem(perk);
             api.getPerkItemMap().put(perk.getRegistryName(), perkItem);
             registry.register(perk.getRegistryName(), perkItem);
+            if(perk instanceof EmptyPerk){
+                BLANK_THREAD = perkItem;
+            }
         }
 
         registry.register(LibItemNames.DRYGMY_SE, new ForgeSpawnEggItem(ModEntities.ENTITY_DRYGMY, 10051392, 0xFFE633, defaultItemProperties()));
