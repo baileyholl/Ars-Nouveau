@@ -18,6 +18,7 @@ public class ServerConfig {
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
     public static ForgeConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
     public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
+    public static ForgeConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
 
     static {
         ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
@@ -41,6 +42,9 @@ public class ServerConfig {
                 .define("enforceGlyphLimitOnCast", true);
         SERVER_BUILDER.pop().push("item");
         CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);
+
+        SERVER_BUILDER.pop().push("warp_portals");
+        ENABLE_WARP_PORTALS = SERVER_BUILDER.comment("Enable warp portals?").define("enableWarpPortals", true);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
     }

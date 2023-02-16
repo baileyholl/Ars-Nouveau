@@ -38,6 +38,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
+import static com.hollingsworth.arsnouveau.setup.config.ServerConfig.ENABLE_WARP_PORTALS;
+
 public class PortalBlock extends TickableModBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
 
@@ -128,8 +130,13 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
+    public boolean trySpawnPortal(Level worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
+        if (!ENABLE_WARP_PORTALS.get()) return false;
+        return trySpawnVerticalPortal(worldIn, stackPos, data, displayName) || trySpawnHorizontalPortal(worldIn, stackPos, data, displayName);
+    }
 
-    public boolean trySpawnPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
+
+    public boolean trySpawnVerticalPortal(LevelAccessor worldIn, BlockPos stackPos, WarpScroll.WarpScrollData data, String displayName) {
         Size portalblock$size = this.isPortal(worldIn, stackPos);
         if (portalblock$size != null) {
             portalblock$size.placePortalBlocks(data, displayName);
