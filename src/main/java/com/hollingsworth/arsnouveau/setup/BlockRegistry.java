@@ -50,7 +50,7 @@ public class BlockRegistry {
     static final String BlockEntityRegistryKey = "minecraft:block_entity_type";
     static final String prepend = ArsNouveau.MODID + ":";
 
-    public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of(Material.WOOD).strength(2.0F).sound(SoundType.WOOD);
+    public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
 
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS);
 

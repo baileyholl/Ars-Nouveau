@@ -131,7 +131,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     @Nullable
-    public static Entity teleportEntityTo(Entity entity, Level targetWorld, BlockPos target, Vec2 rotationVec) {
+    public static Entity teleportEntityTo(Entity entity, @Nullable Level targetWorld, BlockPos target, Vec2 rotationVec) {
+        if(targetWorld == null){
+            return entity;
+        }
         if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
             entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
             entity.setXRot(rotationVec != null ? rotationVec.x : entity.getXRot());

@@ -70,7 +70,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public GlyphUnlockMenu(BlockPos pos) {
         super();
-        allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
+        allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInUnlock).toList());
         this.displayedGlyphs = new ArrayList<>(allParts);
         this.scribesPos = pos;
     }

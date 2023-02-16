@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,10 +11,26 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
     public SwordRenderer() {
-        super(new SwordModel());
+        super(new AnimatedGeoModel<EnchantersSword>() {
+            @Override
+            public ResourceLocation getModelResource(EnchantersSword wand) {
+                return new ResourceLocation(ArsNouveau.MODID, "geo/sword.geo.json");
+            }
+
+            @Override
+            public ResourceLocation getTextureResource(EnchantersSword wand) {
+                return new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_sword.png");
+            }
+
+            @Override
+            public ResourceLocation getAnimationResource(EnchantersSword wand) {
+                return new ResourceLocation(ArsNouveau.MODID, "animations/sword.json");
+            }
+        });
     }
 
     @Override

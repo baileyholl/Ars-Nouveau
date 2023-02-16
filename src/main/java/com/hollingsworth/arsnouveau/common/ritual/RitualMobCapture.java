@@ -49,7 +49,7 @@ public class RitualMobCapture extends AbstractRitual {
                             }
                         }
                         if(tile.setEntityData(e)){
-                            e.remove(Entity.RemovalReason.DISCARDED);
+                            e.remove(Entity.RemovalReason.UNLOADED_TO_CHUNK);
                             EntityFlyingItem followProjectile = new EntityFlyingItem(level, e.position, Vec3.atCenterOf(tile.getBlockPos()), 100, 50, 100);
                             level.addFreshEntity(followProjectile);
                             ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());

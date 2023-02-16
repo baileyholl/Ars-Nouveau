@@ -70,7 +70,7 @@ public class Config {
             throw new IllegalArgumentException("Spell Part with id " + tag + " does not exist in registry. Did you pass the right ID?");
         }
 
-        return spellPart.ENABLED == null || spellPart.ENABLED.get();
+        return spellPart.isEnabled();
     }
 
     public static boolean isGlyphEnabled(AbstractSpellPart tag) {

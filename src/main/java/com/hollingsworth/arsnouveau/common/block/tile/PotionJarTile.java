@@ -6,16 +6,20 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWandable {
 
@@ -77,12 +81,15 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public void add(PotionData other, int amount){
-        if(this.getAmount() == 0){
-            this.data = other;
+        if(this.currentFill == 0){
+            if(!this.data.equals(other) || (this.data.getPotion() == Potions.EMPTY)) {
+                this.data = other;
+            }
             currentFill += amount;
         }else{
             currentFill = Math.min(this.getAmount() + amount, this.getMaxFill());
         }
+        currentFill = Math.min(currentFill, this.getMaxFill());
         updateBlock();
     }
 
@@ -117,6 +124,13 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         tag.put("potionData", this.data.toTag());
         tag.putBoolean("locked", this.isLocked);
         tag.putInt("currentFill", this.currentFill);
+
+        // Include a sorted list of potion names so quests can check the jar's contents
+        Set<Potion> potionSet = this.data.getIncludedPotions();
+        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> Registry.POTION.getKey(potion).toString()).toList());
+        potionNames.sort(String::compareTo);
+        tag.putString("potionNames", String.join(",", potionNames));
+
     }
 
     public int getMaxFill() {

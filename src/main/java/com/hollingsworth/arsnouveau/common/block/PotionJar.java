@@ -125,8 +125,8 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (stack.getTag() == null)
             return;
-        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
-        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
+        int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
+        tooltip.add(Component.literal((fill * 100) / 10000 + "% full"));
         CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
         if(blockTag.contains("potionData")){
             PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));

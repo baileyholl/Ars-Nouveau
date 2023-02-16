@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +38,10 @@ public class EffectToss extends AbstractEffect {
 
     public void summonStack(LivingEntity shooter, SpellContext context, Level world, BlockPos pos, InventoryManager inventoryManager) {
         ExtractedStack casterStack = inventoryManager.extractItem((i) ->{
+            // Let tiles export items regardless of the shooter. Runes mimic the player as the shooter.
+            if(!i.isEmpty() && context.getCaster() instanceof TileCaster){
+                return true;
+            }
             if (!i.isEmpty() && shooter instanceof Player) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
             }

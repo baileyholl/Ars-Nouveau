@@ -26,7 +26,8 @@
     "elytra.MixinLivingEntity",
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
-    "perks.PerkLivingEntity"
+    "perks.PerkLivingEntity",
+    "structure.StructureTemplateMixin"
   ],
   "minVersion": "0.8"
 }

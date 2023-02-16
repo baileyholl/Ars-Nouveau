@@ -787,6 +787,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withReagent(Items.SHIELD)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
@@ -1051,6 +1052,12 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withReagent(ItemsRegistry.WARP_SCROLL)
                 .withPedestalItem(4, Items.BLAZE_POWDER)
                 .withPedestalItem(2, Tags.Items.ENDER_PEARLS)
+                .keepNbtOfReagent(true).build());
+
+        addRecipe(builder().withResult(ItemsRegistry.SCRY_CASTER)
+                .withReagent(BlockRegistry.SCRYERS_CRYSTAL)
+                .withPedestalItem(4, Items.BLAZE_POWDER)
+                .withPedestalItem(4, Tags.Items.ENDER_PEARLS)
                 .keepNbtOfReagent(true).build());
     }
 

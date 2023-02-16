@@ -1,10 +1,13 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
+import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateMixin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -13,11 +16,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class StructureRitual extends AbstractRitual {
     public ResourceLocation structure;
     public BlockPos offset;
     public List<StructureTemplate.StructureBlockInfo> blocks = new ArrayList<>();
+    public List<StructureTemplate.StructureEntityInfo> entityInfoList = new ArrayList<>();
     public int index;
     public int sourceRequired;
     public boolean hasConsumed;
@@ -47,6 +52,7 @@ public abstract class StructureRitual extends AbstractRitual {
         List<StructureTemplate.StructureBlockInfo> infoList = structureTemplate.palettes.get(0).blocks();
         blocks = new ArrayList<>(infoList.stream().filter(b -> !b.state.isAir()).toList());
         blocks.sort(new StructureComparator(getPos(), offset));
+        entityInfoList = new ArrayList<>(((StructureTemplateMixin) structureTemplate).getEntityInfoList());
     }
 
     @Override
@@ -60,6 +66,21 @@ public abstract class StructureRitual extends AbstractRitual {
         int placeCount = 0;
         while(placeCount < 5){
             if (index >= blocks.size()) {
+                for(StructureTemplate.StructureEntityInfo entityInfo : entityInfoList){
+                    BlockPos translatedPos = getPos().offset(entityInfo.blockPos.getX(), entityInfo.blockPos.getY(), entityInfo.blockPos.getZ()).offset(offset);
+                    Optional<Entity> entity;
+                    try{
+                        CompoundTag entityTag = entityInfo.nbt;
+                        entityTag.remove("UUID");
+                        entity = EntityType.create(entityTag, getWorld());
+                    }catch (Exception e){
+                        continue;
+                    }
+                    if(entity.isPresent()){
+                        entity.get().moveTo(translatedPos.getX(), translatedPos.getY(), translatedPos.getZ());
+                        getWorld().addFreshEntity(entity.get());
+                    }
+                }
                 setFinished();
                 return;
             }

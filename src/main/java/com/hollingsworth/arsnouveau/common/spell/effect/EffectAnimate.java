@@ -36,7 +36,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock && !fallingBlock.isRemoved()){
+        if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock && !fallingBlock.isRemoved()) {
             AnimBlockSummon summon = animateBlock(rayTraceResult, fallingBlock.position, world, shooter, spellStats, spellContext, fallingBlock.getBlockState());
             summon.setDeltaMovement(fallingBlock.getDeltaMovement());
             summon.hurtMarked = true;
@@ -68,7 +68,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public int getDefaultManaCost() {
-        return 100;
+        return 200;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Animate a block to fight for you."; //TODO Are these actually even used?
+        return "Animates a block to fight for you. The animated block will convert to a falling block when it dies. Costs a large amount of mana, but does not grant Summoning Sickness";
     }
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {

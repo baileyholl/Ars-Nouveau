@@ -183,5 +183,8 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.NOVICE_LEGGINGS.asItem(),
                 ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
                 ItemsRegistry.ARCHMAGE_LEGGINGS.asItem());
+
+        this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
+        this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
     }
 }

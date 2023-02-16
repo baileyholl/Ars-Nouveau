@@ -99,6 +99,9 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.MIRROR_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MIRROR_WEAVE));
         getBuilder(LibBlockNames.GHOST_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GHOST_WEAVE));
         getBuilder(LibBlockNames.MAGEBLOOM_BLOCK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MAGEBLOOM_BLOCK));
+
+        getBuilder(LibBlockNames.RITUAL_BRAZIER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.RITUAL_BRAZIER));
+
     }
 
     public void blockAsItem(String s){

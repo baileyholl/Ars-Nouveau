@@ -37,7 +37,9 @@ public class LootTableProvider extends BaseLootTableProvider {
                         .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                 .copy("potionData", "BlockEntityTag.potionData", CopyNbtFunction.MergeStrategy.REPLACE)
                                 .copy("currentFill", "BlockEntityTag.currentFill", CopyNbtFunction.MergeStrategy.REPLACE)
-                                .copy("locked", "BlockEntityTag.locked", CopyNbtFunction.MergeStrategy.REPLACE))
+                                .copy("locked", "BlockEntityTag.locked", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("potionNames", "potionNames", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("currentFill", "fill", CopyNbtFunction.MergeStrategy.REPLACE))
                         .apply(SetContainerContents.setContents(BlockRegistry.POTION_JAR_TYPE)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
@@ -73,7 +75,8 @@ public class LootTableProvider extends BaseLootTableProvider {
                 .add(LootItem.lootTableItem(BlockRegistry.MOB_JAR)
                         .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
                         .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                .copy("entityTag", "BlockEntityTag.entityTag", CopyNbtFunction.MergeStrategy.REPLACE))
+                                .copy("entityTag", "BlockEntityTag.entityTag", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("entityId", "entityId", CopyNbtFunction.MergeStrategy.REPLACE))
                         .apply(SetContainerContents.setContents(BlockRegistry.MOB_JAR_TILE)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );

@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
@@ -168,10 +169,8 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
-            return false;
-        return super.hurt(source, amount);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     private PlayState dancePredicate(AnimationEvent<?> event) {

@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLeapGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -45,13 +47,17 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     public BlockState blockState;
     public int color;
     private int ticksLeft;
+    protected static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
+    public boolean isAlternateSpawn;
 
-    protected AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        isAlternateSpawn = random.nextBoolean();
     }
 
     public AnimBlockSummon(Level pLevel, BlockState state){
-        super(ModEntities.ANIMATED_BLOCK.get(), pLevel);
+        this(ModEntities.ANIMATED_BLOCK.get(), pLevel);
         this.blockState = state;
     }
 
@@ -62,8 +68,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
 
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(4, new ConditionalLeapGoal(this, 0.4F, () -> entityData.get(CAN_WALK)));
+        this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.0D, true, () -> entityData.get(CAN_WALK)));
         this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -102,6 +108,10 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         super.tick();
         if (!level.isClientSide) {
             ticksLeft--;
+            this.entityData.set(AGE, this.entityData.get(AGE) + 1);
+            if(this.entityData.get(AGE) > 20) {
+                this.entityData.set(CAN_WALK, true);
+            }
             if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 returnToFallingBlock(blockState);
@@ -136,6 +146,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         super.defineSynchedData();
         this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
         this.entityData.define(COLOR, ParticleColor.defaultParticleColor().getColor());
+        this.entityData.define(AGE, 0);
+        this.entityData.define(CAN_WALK, false);
     }
 
     @Override
@@ -194,9 +206,18 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "walk", 20, (e) -> {
-            if (e.isMoving()) {
-                e.getController().setAnimation(new AnimationBuilder().addAnimation("walk"));
+        data.setResetSpeedInTicks(0);
+        String spawnAnim = "spawn";
+        data.addAnimationController(new AnimationController<>(this, spawnAnim, 0, (e) -> {
+            if (!entityData.get(CAN_WALK)) {
+                e.getController().setAnimation(new AnimationBuilder().addAnimation(spawnAnim));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        data.addAnimationController(new AnimationController<>(this, "run", 20, (e) -> {
+            if (e.isMoving() && entityData.get(CAN_WALK)) {
+                e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -252,6 +273,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         this.ticksLeft = pCompound.getInt("left");
         this.color = pCompound.getInt("color");
         this.blockState = Block.stateById(pCompound.getInt("blockState"));
+        this.getEntityData().set(AGE, pCompound.getInt("ticksAlive"));
+        this.getEntityData().set(CAN_WALK, pCompound.getBoolean("canWalk"));
     }
 
     @Override
@@ -260,6 +283,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
         pCompound.putInt("left", ticksLeft);
         pCompound.putInt("color", color);
         pCompound.putInt("blockState", Block.getId(blockState));
+        pCompound.putInt("ticksAlive", this.getEntityData().get(AGE));
+        pCompound.putBoolean("canWalk", this.getEntityData().get(CAN_WALK));
     }
 
     public int getColor() {

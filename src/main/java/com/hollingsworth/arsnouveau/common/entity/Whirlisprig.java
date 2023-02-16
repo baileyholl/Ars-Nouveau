@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
@@ -296,10 +297,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
-            return false;
-        return super.hurt(source, amount);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     @Override

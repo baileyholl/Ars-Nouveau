@@ -17,12 +17,15 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -76,7 +79,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.ARCHWOOD_BUTTON);
             registerDropSelf(BlockRegistry.ARCHWOOD_STAIRS);
-            registerDropSelf(BlockRegistry.ARCHWOOD_SLABS);
+            registerSlabItemTable(BlockRegistry.ARCHWOOD_SLABS);
             registerDropSelf(BlockRegistry.MAGELIGHT_TORCH);
 
             // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
@@ -145,6 +148,14 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.GHOST_WEAVE);
             registerDropSelf(BlockRegistry.FALSE_WEAVE);
             registerDropSelf(BlockRegistry.MIRROR_WEAVE);
+
+        }
+
+        protected void registerSlabItemTable(Block p_124291_) {
+            list.add(p_124291_);
+            this.add(p_124291_,LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
+                    .add(applyExplosionDecay(p_124291_, LootItem.lootTableItem(p_124291_).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2.0F))
+                            .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(p_124291_).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE))))))));
 
         }
 
