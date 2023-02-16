@@ -294,7 +294,7 @@
 				}
 			}
 		},
-		"spawn2": {
+		"spawn_old": {
 			"animation_length": 1.33333,
 			"bones": {
 				"left_boot": {

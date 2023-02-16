@@ -127,6 +127,7 @@ public class GlyphRecipeProvider implements DataProvider {
                 .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
         add(get(EffectRotate.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE));
+        add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIAN, 3));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             DataProvider.saveStable(cache, recipe.asRecipe(), path);

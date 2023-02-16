@@ -1149,5 +1149,6 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.animated_block", "Animated Block");
         add("item.ars_nouveau.enchanters_eye", "Enchanter's Eye");
         add("ars_nouveau.page.enchanters_eye", "A caster tool that can cast inscribed spells remotely through a Scry Crystal. Use the eye on a Scry Crystal to bind the location, or hold a bound Scry Parchment in the offhand. Spells will be cast through the eye similar to a Spell Turret, but you are considered the caster for all effects. Useful for remote teleportation or item movement.");
+        add("ars_nouveau.warp_scroll.disabled_warp_portal", "Permanent warp portals are currently disabled");
     }
 }

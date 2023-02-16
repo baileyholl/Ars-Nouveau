@@ -1,6 +1,7 @@
-// 1.19.2	2023-02-07T21:31:22.1335012	Glyph Recipes
+// 1.19.2	2023-02-15T19:45:46.1783281	Glyph Recipes
 9350ccacd4478fc29cbb997b18a01b45d14c0bde data/ars_nouveau/recipes/glyph_accelerate.json
 3c24bcec44204ae8e60321ee54866cf60dc7dd87 data/ars_nouveau/recipes/glyph_amplify.json
+1e14184172ba9754528e2ff8884591cfd0431ca8 data/ars_nouveau/recipes/glyph_animate_block.json
 ea9c60e7a04292b2aee53af1b379a29e073d5dbe data/ars_nouveau/recipes/glyph_aoe.json
 8387464470ea15598614a66e5ca7ebcf32ef4499 data/ars_nouveau/recipes/glyph_blink.json
 9341d4522a5542067046cbcdcbf1df90fcd6c852 data/ars_nouveau/recipes/glyph_bounce.json
