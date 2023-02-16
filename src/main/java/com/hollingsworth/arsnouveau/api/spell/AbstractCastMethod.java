@@ -23,6 +23,11 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
         super(tag, description);
     }
 
+    @Override
+    public Integer getTypeIndex() {
+        return 1;
+    }
+
 
     /**
      * Called when the spell is cast on nothing. In context of items, this is called when the player right clicks air.

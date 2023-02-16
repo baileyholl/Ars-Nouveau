@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.item.ISpellModifier;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 public abstract class AbstractAugment extends AbstractSpellPart implements ISpellModifier {
@@ -16,8 +16,12 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
         super(tag, description);
     }
 
+    @Override
+    public Integer getTypeIndex() {
+        return 5;
+    }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();

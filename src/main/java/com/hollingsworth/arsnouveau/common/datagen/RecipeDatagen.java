@@ -16,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
@@ -66,7 +67,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("x x")
                     .pattern("yyy").define('x', Tags.Items.GLASS).define('y', BlockRegistry.ARCHWOOD_SLABS).save(consumer);
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_PEDESTAL).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+            ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_PEDESTAL.get()).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xzx")
                     .pattern("yxy")
                     .pattern("yxy").define('x', SOURCESTONE).define('y', Tags.Items.NUGGETS_GOLD).define('z', SOURCE_GEM).save(consumer);
@@ -126,11 +127,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("yyy")
                     .pattern("yxy")
                     .pattern("yyy").define('x', Items.PAPER).define('y', ItemsRegistry.MAGE_FIBER).save(consumer);
-
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.SPELL_PARCHMENT, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.BLANK_PARCHMENT, 1)
-                    .requires(SOURCE_GEM, 4)
-                    .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.ALLOW_ITEM_SCROLL, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(ItemsRegistry.BLANK_PARCHMENT, 1)
@@ -200,7 +196,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .save(consumer);
 
             shapelessBuilder(BlockRegistry.RITUAL_BLOCK)
-                    .requires(BlockRegistry.ARCANE_PEDESTAL)
+                    .requires(BlockRegistry.ARCANE_PEDESTAL.get())
                     .requires(SOURCE_GEM_BLOCK)
                     .requires(Ingredient.of(Tags.Items.INGOTS_GOLD), 3)
                     .save(consumer);
@@ -445,7 +441,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('a', BlockRegistry.ARCHWOOD_PLANK)
                     .save(consumer);
 
-            shapelessBuilder(ItemsRegistry.ANNOTATED_CODEX).requires(ItemsRegistry.SPELL_PARCHMENT).requires(Items.LEATHER).save(consumer);
+            shapelessBuilder(ItemsRegistry.ANNOTATED_CODEX).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.LEATHER).save(consumer);
             shapelessBuilder(Items.POWDER_SNOW_BUCKET).requires(ItemsRegistry.AIR_ESSENCE).requires(Items.BUCKET).requires(Items.SNOW_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "air_essence_to_snow_bucket"));
             shapedBuilder(Items.SOUL_SAND, 8)
                     .pattern("xxx")
@@ -588,7 +584,7 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(RecipeDatagen.SOURCE_GEM).save(consumer);
 
             shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SCRYER_SCROLL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "scry_to_blank_parchment"));
-            shapelessBuilder(ItemsRegistry.SPELL_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
+            shapelessBuilder(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.SPELL_PARCHMENT).save(consumer, new ResourceLocation(ArsNouveau.MODID, "wipe_spell_parchment"));
             shapedBuilder(ItemsRegistry.STARBUNCLE_SHADES)
                     .pattern("xyx")
                     .define('x', Items.TINTED_GLASS)
@@ -640,6 +636,46 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx").define('y', BlockRegistry.SPELL_PRISM).define('x', Ingredient.of(Tags.Items.OBSIDIAN)).save(consumer);
+
+            shapedBuilder(BlockRegistry.MAGEBLOOM_BLOCK)
+                    .pattern("xx ")
+                    .pattern("xx ")
+                    .define('x', ItemsRegistry.MAGE_FIBER).save(consumer);
+
+            shapelessBuilder(ItemsRegistry.MAGE_FIBER, 4).requires(BlockRegistry.MAGEBLOOM_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID,"magebloom_block_to_magebloom"));
+
+            shapedBuilder(BlockRegistry.FALSE_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.AIR_ESSENCE).save(consumer);
+
+            shapedBuilder(BlockRegistry.GHOST_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.ABJURATION_ESSENCE).save(consumer);
+
+            shapedBuilder(BlockRegistry.MIRROR_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.CONJURATION_ESSENCE).save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.PLAINS)).requires(BlockRegistry.FLOURISHING_LOG).requires(Blocks.GRASS_BLOCK).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.FORESTATION)).requires(BlockRegistry.FLOURISHING_LOG).requires(BlockRegistry.MENDOSTEEN_POD).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.FLOWERING)).requires(BlockRegistry.FLOURISHING_LOG).requires(Items.POPPY, 3).requires(Items.DANDELION, 3).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.DESERT)).requires(BlockRegistry.BLAZING_LOG).requires(Blocks.SAND).requires(ItemsRegistry.EARTH_ESSENCE).save(consumer);
+
+            shapedBuilder(BlockRegistry.MAGELIGHT_TORCH, 1)
+                    .pattern("   ")
+                    .pattern("xyx")
+                    .pattern(" x ").define('x', Tags.Items.NUGGETS_GOLD).define('y', SOURCE_GEM).save(consumer);
+
+            shapelessBuilder(BlockRegistry.ARCANE_PLATFORM).requires(BlockRegistry.ARCANE_PEDESTAL).save(consumer);
+            shapelessBuilder(BlockRegistry.ARCANE_PEDESTAL).requires(BlockRegistry.ARCANE_PLATFORM).save(consumer, new ResourceLocation(ArsNouveau.MODID, "platform_to_pedestal"));
+
+            shapedBuilder(BlockRegistry.SKY_WEAVE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.MANIPULATION_ESSENCE).save(consumer);
         }
     }
 

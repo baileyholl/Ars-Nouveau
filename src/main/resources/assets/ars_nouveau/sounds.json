@@ -38,5 +38,13 @@
   },
   "fire_family_2": {
     "sounds": ["ars_nouveau:pyro_1","ars_nouveau:pyro_2","ars_nouveau:pyro_3","ars_nouveau:pyro_4" ]
+  },
+  "aria_biblio": {
+    "sounds": [
+      {
+        "name":"ars_nouveau:aria_biblio",
+        "stream": true
+      }
+    ]
   }
 }

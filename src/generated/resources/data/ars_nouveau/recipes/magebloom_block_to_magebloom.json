@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:magebloom_block"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "ars_nouveau:magebloom_fiber"
+  }
+}

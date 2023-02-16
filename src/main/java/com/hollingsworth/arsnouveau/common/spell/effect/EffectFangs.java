@@ -18,8 +18,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
@@ -126,11 +126,11 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.THREE;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -145,7 +145,7 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
         return "Summons Evoker Fangs in the direction where the spell was targeted. Using fangs on your self will spawn them in an area around you.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

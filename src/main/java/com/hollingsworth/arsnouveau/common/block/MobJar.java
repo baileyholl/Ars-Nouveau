@@ -10,7 +10,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PlayerRideable;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,9 +34,9 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -57,7 +59,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         if(tile.getEntity() == null && !pLevel.isClientSide){
             ItemStack stack = pPlayer.getItemInHand(pHand);
             if(stack.getItem() instanceof SpawnEggItem spawnEggItem){
-                EntityType type = spawnEggItem.getType(null);
+                EntityType<?> type = spawnEggItem.getType(null);
                 Entity entity = type.create(pLevel);
                 if(entity != null) {
                     tile.setEntityData(entity);
@@ -66,7 +68,8 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 }
             }
         }
-        if(tile.getEntity() != null && !JarBehaviorRegistry.containsEntity(tile.getEntity())){
+        if(tile.getEntity() != null && !(tile.getEntity() instanceof PlayerRideable) && !JarBehaviorRegistry.containsEntity(tile.getEntity())
+        && !(tile.getEntity() instanceof ContainerEntity)){
             pPlayer.interactOn(tile.getEntity(), pHand);
             tile.updateBlock();
         }
@@ -81,7 +84,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());

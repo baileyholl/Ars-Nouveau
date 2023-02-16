@@ -1,0 +1,22 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:scribes_table",
+  "name": "block.ars_nouveau.scribes_table",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.scribes_table",
+      "title": "ars_nouveau.glyph_crafting"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.scribes_table",
+      "title": "ars_nouveau.scribing"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:blank_parchment",
+      "recipe2": "ars_nouveau:scribes_table"
+    }
+  ]
+}

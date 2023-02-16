@@ -21,16 +21,15 @@ public class ReactiveEvents {
     @SubscribeEvent
     public static void livingHitEvent(LivingHurtEvent e) {
         LivingEntity entity = e.getEntity();
-        if (entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
+        if (entity.getCommandSenderWorld().isClientSide)
             return;
 
         for (ItemStack s : entity.getArmorSlots()) {
-            castSpell((Player) entity, s);
+            castSpell(entity, s);
         }
     }
 
-    public static void castSpell(Player playerIn, ItemStack s) {
-
+    public static void castSpell(LivingEntity playerIn, ItemStack s) {
         if (s.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get()) * .25 >= Math.random() && new ReactiveCaster(s).getSpell().isValid()) {
             ReactiveCaster reactiveCaster = new ReactiveCaster(s);
             reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
@@ -49,12 +48,12 @@ public class ReactiveEvents {
 
     @SubscribeEvent
     public static void playerAttackEntity(AttackEntityEvent e) {
-        LivingEntity entity = e.getEntity();
+        Player entity = e.getEntity();
 
-        if (entity == null || entity.getCommandSenderWorld().isClientSide || !(entity instanceof Player))
+        if (entity == null || entity.getCommandSenderWorld().isClientSide)
             return;
         ItemStack s = e.getEntity().getMainHandItem();
-        castSpell((Player) entity, s);
+        castSpell(entity, s);
     }
 
 

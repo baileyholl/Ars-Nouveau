@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.function.Supplier;
 
@@ -56,10 +56,9 @@ public class PickupAmethystGoal extends Goal {
     }
 
     public void collectStacks() {
-
-
-        for (ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))) {
-            if (!i.getItem().is(SHARD_TAG))
+        if (golem.getHome() == null) return;
+        for (ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), i -> i.getItem().is(SHARD_TAG))) {
+            if (!golem.getHeldStack().isEmpty() && i.getItem().getItem() != golem.getHeldStack().getItem())
                 continue;
             int maxTake = golem.getHeldStack().getMaxStackSize() - golem.getHeldStack().getCount();
             if (golem.getHeldStack().isEmpty()) {
@@ -87,12 +86,10 @@ public class PickupAmethystGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 80;
-        for (ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10))) {
-            if (entity.getItem().is(SHARD_TAG)) {
-                golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
-                targetEntity = entity;
-                break;
-            }
+        for (ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), entity -> entity.getItem().is(SHARD_TAG))) {
+            golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
+            targetEntity = entity;
+            break;
         }
         if (targetEntity == null)
             isDone = true;
@@ -109,6 +106,6 @@ public class PickupAmethystGoal extends Goal {
         if (golem.getHome() == null)
             return false;
         BlockEntity entity = golem.getLevel().getBlockEntity(golem.getHome());
-        return canUse.get() && golem.pickupCooldown <= 0 && entity != null && entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
+        return canUse.get() && golem.pickupCooldown <= 0 && entity != null && entity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent();
     }
 }

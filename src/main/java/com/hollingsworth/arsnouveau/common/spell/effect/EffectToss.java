@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,8 +17,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -37,6 +38,10 @@ public class EffectToss extends AbstractEffect {
 
     public void summonStack(LivingEntity shooter, SpellContext context, Level world, BlockPos pos, InventoryManager inventoryManager) {
         ExtractedStack casterStack = inventoryManager.extractItem((i) ->{
+            // Let tiles export items regardless of the shooter. Runes mimic the player as the shooter.
+            if(!i.isEmpty() && context.getCaster() instanceof TileCaster){
+                return true;
+            }
             if (!i.isEmpty() && shooter instanceof Player) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
             }
@@ -86,7 +91,7 @@ public class EffectToss extends AbstractEffect {
         casterStack.returnOrDrop(world, pos);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
@@ -102,7 +107,7 @@ public class EffectToss extends AbstractEffect {
         return "Causes the caster to place an item from their inventory to a location. If this glyph is used on an inventory, the item will attempt to be inserted into it.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();

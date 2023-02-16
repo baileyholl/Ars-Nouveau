@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
@@ -22,13 +23,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -36,13 +39,14 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable, ITooltipProvider {
+
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable, ITooltipProvider, IPedestalMachine {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -63,7 +67,17 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
+    public void lightPedestal(Level level) {
+        if (level != null) {
+            for (BlockPos pos : pedestalList(getBlockPos(), 1, level)) {
+                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.above(), 300);
+            }
+        }
+    }
+
+    @Override
     public void tick() {
+        if (level == null) return;
         if (level.isClientSide) {
 
             int baseAge = draining ? 20 : 40;
@@ -174,7 +188,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public int getMaxSource() {
-        return Integer.MAX_VALUE;
+        return 10000000;
     }
 
     @Override
@@ -209,10 +223,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public ItemStack removeItem(int index, int count) {
-        ItemStack copy = stack.copy().split(count);
-        stack.shrink(count);
+        ItemStack split = stack.split(count);
         updateBlock();
-        return copy;
+        return split;
     }
 
     @Override
@@ -241,10 +254,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         updateBlock();
     }
 
-    @Nonnull
+   @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandler.cast();
         }
         return super.getCapability(cap, side);
@@ -258,21 +271,21 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1, this::idlePredicate));
-        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 1, this::slowCraftPredicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 1, this::idlePredicate));
+        data.addAnimationController(new AnimationController<>(this, "slowcraft_controller", 1, this::slowCraftPredicate));
     }
 
-    private PlayState slowCraftPredicate(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow", true));
+    private PlayState slowCraftPredicate(AnimationEvent<?> animationEvent) {
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow"));
         return PlayState.CONTINUE;
     }
 
-    private PlayState idlePredicate(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("float", true));
+    private PlayState idlePredicate(AnimationEvent<?> animationEvent) {
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("float"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -281,7 +294,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public List<ItemStack> getPedestalItems() {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        for (BlockPos p : BlockPos.betweenClosed(this.getBlockPos().offset(1, -1, 1), this.getBlockPos().offset(-1, 1, -1))) {
+        for (BlockPos p : pedestalList(getBlockPos(), 1, getLevel())) {
             if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && !pedestalTile.getStack().isEmpty()) {
                 pedestalItems.add(pedestalTile.getStack());
             }

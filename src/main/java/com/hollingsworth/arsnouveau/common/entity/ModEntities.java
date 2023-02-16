@@ -159,14 +159,15 @@ public class ModEntities {
             .sized(0.5f, 0.5f).setTrackingRange(10));
     public static final RegistryObject<EntityType<FamiliarWhirlisprig>> ENTITY_FAMILIAR_SYLPH = registerEntity(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
             .sized(0.5f, 0.5f).setTrackingRange(10));
-    public static final RegistryObject<EntityType<FamiliarJabberwog>> ENTITY_FAMILIAR_JABBERWOG = registerEntity(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
-            .sized(0.5f, 0.5f).setTrackingRange(10));
+//    public static final RegistryObject<EntityType<FamiliarJabberwog>> ENTITY_FAMILIAR_JABBERWOG = registerEntity(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
+//            .sized(0.5f, 0.5f).setTrackingRange(10));
     public static final RegistryObject<EntityType<EntityLingeringSpell>> LINGER_SPELL = registerEntity(
             LibEntityNames.LINGER,
             EntityType.Builder.<EntityLingeringSpell>of(EntityLingeringSpell::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f)
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
+                    .noSave()
                     .setUpdateInterval(120).setCustomClientFactory(EntityLingeringSpell::new));
     public static final RegistryObject<EntityType<WealdWalker>> ENTITY_CASCADING_WEALD = registerEntity(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                 WealdWalker walker = new WealdWalker(type, world);
@@ -202,14 +203,37 @@ public class ModEntities {
             .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
 
     public static final RegistryObject<EntityType<EnchantedFallingBlock>> ENCHANTED_FALLING_BLOCK = registerEntity(
-            "enchanted_falling_block", (
-                    EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
-                            .setShouldReceiveVelocityUpdates(true)
-                            .setTrackingRange(256)));
+            "enchanted_falling_block", EntityType.Builder.<EnchantedFallingBlock>of(EnchantedFallingBlock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
+    public static final RegistryObject<EntityType<EnchantedMageblock>> ENCHANTED_MAGE_BLOCK = registerEntity(
+            "enchanted_mage_block", EntityType.Builder.<EnchantedMageblock>of(EnchantedMageblock::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
 
+    public static final RegistryObject<EntityType<GiftStarbuncle>> GIFT_STARBY = registerEntity(LibEntityNames.GIFT_STARBY, EntityType.Builder.of(GiftStarbuncle::new, MobCategory.CREATURE)
+            .sized(0.6F, 0.63F).setTrackingRange(10)
+            .setShouldReceiveVelocityUpdates(true));
+
+    public static final RegistryObject<EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
+            LibEntityNames.WALL,
+            EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .setTrackingRange(20)
+                    .noSave()
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setUpdateInterval(120).setCustomClientFactory(EntityWallSpell::new));
+
+    public static final RegistryObject<EntityType<AnimBlockSummon>> ANIMATED_BLOCK = registerEntity(
+            "animated_block",
+            EntityType.Builder.<AnimBlockSummon>of(AnimBlockSummon::new, MobCategory.MISC)
+                    .sized(1.0f, 1.5f)
+                    .noSave()
+                    .setTrackingRange(10));
 
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
+        SpawnPlacements.register(GIFT_STARBY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_DRYGMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
 
@@ -251,7 +275,7 @@ public class ModEntities {
             event.put(WILDEN_BOSS.get(), EntityChimera.getModdedAttributes().build());
             event.put(ENTITY_FAMILIAR_STARBUNCLE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarEntity.attributes().build());
-            event.put(ENTITY_FAMILIAR_JABBERWOG.get(), FamiliarEntity.attributes().build());
+//            event.put(ENTITY_FAMILIAR_JABBERWOG.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_WIXIE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_SYLPH.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_DRYGMY.get(), FamiliarEntity.attributes().build());
@@ -261,6 +285,8 @@ public class ModEntities {
             event.put(ENTITY_VEXING_WEALD.get(), WealdWalker.attributes().build());
             event.put(AMETHYST_GOLEM.get(), AmethystGolem.attributes().build());
             event.put(SUMMON_SKELETON.get(), SummonSkeleton.createAttributes().build());
+            event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
+            event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
         }
     }
 

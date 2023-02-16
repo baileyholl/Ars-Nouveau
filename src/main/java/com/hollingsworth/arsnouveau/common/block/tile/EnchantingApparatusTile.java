@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
@@ -34,12 +35,14 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends SingleItemTile implements Container, ITickable, IAnimatable, IAnimationListener {
+public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, IAnimatable, IAnimationListener {
+
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     private int counter;
@@ -48,6 +51,15 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     public EnchantingApparatusTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ENCHANTING_APP_TILE, pos, state);
+    }
+
+    @Override
+    public void lightPedestal(Level level) {
+        if (level != null) {
+            for (BlockPos pos : pedestalList()) {
+                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.above(), 300);
+            }
+        }
     }
 
     @Override
@@ -118,16 +130,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         }
     }
 
-    // Used for rendering on the client
     public List<BlockPos> pedestalList() {
-        int offset = 3;
-        ArrayList<BlockPos> posList = new ArrayList<>();
-        for (BlockPos b : BlockPos.betweenClosed(this.getBlockPos().offset(offset, -offset, offset), this.getBlockPos().offset(-offset, offset, -offset))) {
-            if (level.getBlockEntity(b) instanceof ArcanePedestalTile tile) {
-                posList.add(b.immutable());
-            }
-        }
-        return posList;
+        return pedestalList(getBlockPos(), 3, getLevel());
     }
 
     public List<ItemStack> getPedestalItems() {
@@ -218,19 +222,19 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         attemptCraft(stack, null);
     }
 
-    AnimationController craftController;
-    AnimationController idleController;
+    AnimationController<EnchantingApparatusTile> craftController;
+    AnimationController<EnchantingApparatusTile> idleController;
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        idleController = new AnimationController(this, "controller", 0, this::idlePredicate);
+        idleController = new AnimationController<>(this, "controller", 0, this::idlePredicate);
         animationData.addAnimationController(idleController);
-        craftController = new AnimationController(this, "craft_controller", 0, this::craftPredicate);
+        craftController = new AnimationController<>(this, "craft_controller", 0, this::craftPredicate);
         animationData.addAnimationController(craftController);
         animationData.setResetSpeedInTicks(0.0);
     }
 
-    AnimationFactory manager = new AnimationFactory(this);
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -238,7 +242,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
         return PlayState.CONTINUE;
     }
 
@@ -253,7 +257,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         try {
             if (craftController != null) {
                 craftController.markNeedsReload();
-                craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
+                craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting"));
             }
         }catch (Exception e){
             e.printStackTrace();

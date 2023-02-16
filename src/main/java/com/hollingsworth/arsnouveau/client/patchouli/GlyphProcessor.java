@@ -22,7 +22,7 @@ public class GlyphProcessor implements IComponentProcessor {
         String recipeID = variables.get("recipe").asString();
         try {
             recipe = (GlyphRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -32,7 +32,7 @@ public class GlyphProcessor implements IComponentProcessor {
             return null;
 
         if (s.equals("tier"))
-            return IVariable.wrap(Component.translatable("ars_nouveau.tier").getString() + ": " + Component.translatable("ars_nouveau.spell_tier." + recipe.getSpellPart().getTier().value).getString());
+            return IVariable.wrap(Component.translatable("ars_nouveau.tier").getString() + ": " + Component.translatable("ars_nouveau.spell_tier." + recipe.getSpellPart().getConfigTier().value).getString());
         if (s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder(Component.translatable("ars_nouveau.spell_schools").getString() + ": ");

@@ -16,8 +16,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class EffectDelay extends AbstractEffect {
         Spell newSpell = spellContext.getRemainingSpell();
         SpellContext newContext = spellContext.clone().withSpell(newSpell).withCaster(shooter);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
-        int decreasedTime = (int) (20.0 * ((double) EXTEND_TIME.get() - (double) EXTEND_TIME.get() / 2.0));
+        int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);
         duration -= decreasedTime;
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration, newSpell, rayTraceResult, world, shooter, newContext));
@@ -66,7 +66,7 @@ public class EffectDelay extends AbstractEffect {
         return 0;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
@@ -78,11 +78,11 @@ public class EffectDelay extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.ONE;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

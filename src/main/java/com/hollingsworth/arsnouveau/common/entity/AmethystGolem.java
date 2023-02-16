@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -48,14 +49,13 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.BUDDING_BLOCKS;
-
-import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
@@ -97,7 +97,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
             this.pathNavigate.setSwimSpeedFactor(2.0);
             this.pathNavigate.getPathingOptions().setEnterDoors(true);
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
-            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler());
         }
         return pathNavigate;
     }
@@ -228,6 +228,11 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     }
 
     @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    }
+
+    @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         if (this.isRemoved())
             return false;
@@ -280,11 +285,11 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         data.addAnimationController(new AnimationController<>(this, "attack_controller", 5f, this::attackController));
     }
 
-    private PlayState attackController(AnimationEvent animationEvent) {
+    private PlayState attackController(AnimationEvent<?> animationEvent) {
         return PlayState.CONTINUE;
     }
 
-    private PlayState runController(AnimationEvent animationEvent) {
+    private PlayState runController(AnimationEvent<?> animationEvent) {
         if (isStomping()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("harvest2"));
             return PlayState.CONTINUE;
@@ -334,7 +339,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
         return 0;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

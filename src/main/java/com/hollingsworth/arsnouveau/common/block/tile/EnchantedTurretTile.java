@@ -27,7 +27,7 @@ public class EnchantedTurretTile extends BasicSpellTurretTile {
     }
 
     public PlayState spinPredicate(AnimationEvent event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("gem_rotation", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("gem_rotation"));
         return PlayState.CONTINUE;
     }
 }

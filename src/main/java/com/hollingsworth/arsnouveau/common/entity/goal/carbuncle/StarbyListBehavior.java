@@ -40,6 +40,11 @@ public class StarbyListBehavior extends StarbyBehavior{
     }
 
     @Override
+    public boolean clearOrRemove() {
+        return FROM_LIST.isEmpty() && TO_LIST.isEmpty();
+    }
+
+    @Override
     public void onWanded(Player playerEntity) {
         super.onWanded(playerEntity);
         FROM_LIST = new ArrayList<>();

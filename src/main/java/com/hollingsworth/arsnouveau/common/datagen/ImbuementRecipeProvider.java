@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImbuementRecipeProvider implements DataProvider {
-    protected final DataGenerator generator;
-    protected List<ImbuementRecipe> recipes = new ArrayList<>();
+    public final DataGenerator generator;
+    public List<ImbuementRecipe> recipes = new ArrayList<>();
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -65,6 +65,21 @@ public class ImbuementRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.STONE_BUTTON)
                 .withPedestalItem(Items.REDSTONE)
                 .withPedestalItem(Items.CLOCK));
+
+        recipes.add(new ImbuementRecipe("pierce_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.PIERCE_ARROW.get()), 100)
+                .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
+                .withPedestalItem(ItemsRegistry.WILDEN_SPIKE.get()));
+
+        recipes.add(new ImbuementRecipe("amplify_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get()), 100)
+                .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND)));
+
+        recipes.add(new ImbuementRecipe("split_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.SPLIT_ARROW.get()), 100)
+                .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
+                .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
+                .withPedestalItem(ItemsRegistry.WILDEN_HORN.get()));
 
         Path output = this.generator.getOutputFolder();
         for (ImbuementRecipe g : recipes) {

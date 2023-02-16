@@ -19,11 +19,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Custom movement handler for minecolonies citizens (avoid jumping so much).
  * Note that the "speed" variable of the super is a speedFactor to our attributes base speed.
  */
-
-/**
- * Custom movement handler for minecolonies citizens (avoid jumping so much).
- * Note that the "speed" variable of the super is a speedFactor to our attributes base speed.
- */
 public class MovementHandler extends MoveControl {
 
     /**

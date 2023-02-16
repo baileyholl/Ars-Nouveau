@@ -12,8 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
@@ -48,7 +48,7 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
             return;
         if (world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable dispellable) {
@@ -65,7 +65,7 @@ public class EffectDispel extends AbstractEffect {
         return 30;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // Augments were sent with the DispelEvent, but there's no use of its augments field.
@@ -77,7 +77,7 @@ public class EffectDispel extends AbstractEffect {
         return "Removes any potion effects on the target. When used on a witch at half health, the witch will vanish in return for a Wixie shard. Will also dispel tamed summons back into their charm.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);

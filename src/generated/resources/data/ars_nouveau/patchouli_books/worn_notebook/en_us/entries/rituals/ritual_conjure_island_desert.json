@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_conjure_island_desert",
+  "name": "item.ars_nouveau.ritual_conjure_island_desert",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.ritual_desc.ritual_conjure_island_desert"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ritual_conjure_island_desert"
+    }
+  ]
+}

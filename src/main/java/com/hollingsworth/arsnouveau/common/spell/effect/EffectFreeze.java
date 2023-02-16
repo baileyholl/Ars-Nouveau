@@ -23,14 +23,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectFreeze extends AbstractEffect {
+public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     public static EffectFreeze INSTANCE = new EffectFreeze();
 
     private EffectFreeze() {
@@ -38,7 +38,7 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             BlockPos affectedPos = extinguishOrFreeze(world, p, spellStats);
@@ -61,10 +61,10 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!(rayTraceResult.getEntity() instanceof LivingEntity))
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), MobEffects.MOVEMENT_SLOWDOWN, spellStats);
+        ((IPotionEffect)this).applyConfigPotion(living, MobEffects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
     /**
@@ -121,7 +121,7 @@ public class EffectFreeze extends AbstractEffect {
         return defaults;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         Set<AbstractAugment> augments = new HashSet<>(getPotionAugments());
@@ -136,9 +136,19 @@ public class EffectFreeze extends AbstractEffect {
         return "Freezes water or lava in a small area or slows a target for a short time. Freeze on Ice will turn it into Packed Ice, and Packed Ice into Blue Ice. Sensitive will turn water into Frosted Ice and will vanish after a short time.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_WATER);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

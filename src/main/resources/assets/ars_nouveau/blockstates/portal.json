@@ -1,5 +1,16 @@
 {
     "variants": {
-        "": { "model": "block/end_portal" }
+        "axis=x,alternate=true": {
+            "model": "ars_nouveau:block/warp_portal_ns"
+        },
+        "axis=z,alternate=true": {
+            "model": "ars_nouveau:block/warp_portal_ew"
+        },
+        "axis=y,alternate=true": {
+            "model": "ars_nouveau:block/warp_portal_ud"
+        },
+        "alternate=false": {
+            "model": "minecraft:block/air"
+        }
     }
 }

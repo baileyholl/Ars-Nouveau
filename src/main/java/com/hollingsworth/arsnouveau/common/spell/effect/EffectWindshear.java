@@ -9,19 +9,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectWindshear extends AbstractEffect {
+public class EffectWindshear extends AbstractEffect implements IDamageEffect {
 
     public static EffectWindshear INSTANCE = new EffectWindshear();
 
@@ -31,20 +32,25 @@ public class EffectWindshear extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!rayTraceResult.getEntity().isOnGround()) {
+        if (!rayTraceResult.getEntity().isOnGround() && !(rayTraceResult.getEntity() instanceof ItemEntity)) {
             int numBlocks = 0;
             BlockPos pos = rayTraceResult.getEntity().blockPosition();
             while (!world.getBlockState(pos.below()).getMaterial().blocksMotion() && numBlocks <= 10) {
                 pos = pos.below();
                 numBlocks++;
             }
-            dealDamage(world, shooter, (float) (DAMAGE.get() + numBlocks), spellStats, rayTraceResult.getEntity(), new EntityDamageSource("fall", getPlayer(shooter, (ServerLevel) world)).bypassArmor().setIsFall()); //converted DamageSource FALL into playerAttack
+            attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(world, shooter), (float) (DAMAGE.get() + numBlocks)); //converted DamageSource FALL into playerAttack
             Vec3 vec = rayTraceResult.getEntity().position;
             for (int i = 0; i < 10; i++) {
                 ((ServerLevel) world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y + 0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2), 30,
                         ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), 0.3);
             }
         }
+    }
+
+    @Override
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
+        return new EntityDamageSource("fall", getPlayer(shooter, (ServerLevel) world)).bypassArmor().setIsFall();
     }
 
     @Override
@@ -70,18 +76,18 @@ public class EffectWindshear extends AbstractEffect {
         return 50;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentDampen.INSTANCE, AugmentAmplify.INSTANCE);

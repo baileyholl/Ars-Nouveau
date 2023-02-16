@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
-import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -55,6 +55,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider {
+public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider<EntityDrygmy> {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -97,6 +98,11 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         if (homePos == null || !(level.getBlockEntity(homePos) instanceof DrygmyTile))
             return null;
         return (DrygmyTile) level.getBlockEntity(homePos);
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -172,7 +178,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return false;
     }
 
-    private PlayState animationPredicate(AnimationEvent event) {
+    private PlayState animationPredicate(AnimationEvent<?> event) {
         if (isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("channel"));
             return PlayState.CONTINUE;
@@ -299,11 +305,11 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return this.isTamed();
     }
 
-    private PlayState idlePredicate(AnimationEvent event) {
+    private PlayState idlePredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -345,20 +351,20 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     }
 
     @Override
-    public ResourceLocation getTexture(LivingEntity entity) {
-        String color = getColor().toLowerCase();
+    public ResourceLocation getTexture(EntityDrygmy entity) {
+        String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "brown";
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
     }
 
     @Override
-    public String getColor() {
+    public String getColor(EntityDrygmy entity) {
         return getEntityData().get(COLOR);
     }
 
     @Override
-    public void setColor(String color) {
+    public void setColor(String color, EntityDrygmy entity) {
         getEntityData().set(COLOR, color);
     }
 }

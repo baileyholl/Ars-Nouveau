@@ -25,8 +25,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.level.BlockEvent;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +38,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos1 : posList) {
@@ -50,7 +50,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         }
     }
 
-    public void place(BlockHitResult resolveResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, FakePlayer fakePlayer){
+    public void place(BlockHitResult resolveResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, FakePlayer fakePlayer){
         InventoryManager manager = spellContext.getCaster().getInvManager();
         ExtractedStack extractItem = manager.extractItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1);
         if(extractItem.isEmpty())
@@ -73,7 +73,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         return 10;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
@@ -84,7 +84,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         return "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

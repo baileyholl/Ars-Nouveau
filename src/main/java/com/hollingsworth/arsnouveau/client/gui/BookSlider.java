@@ -26,7 +26,7 @@ public class BookSlider extends ForgeSlider {
     protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_bar_knob.png"));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.blit(pPoseStack, this.x + (int) (this.value * (double) (this.width - 8)), this.y, 0, 0, 8, 20, 8, 20);
+        blit(pPoseStack, this.x + (int) (this.value * (double) (this.width - 8)), this.y, 0, 0, 8, 20, 8, 20);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BookSlider extends ForgeSlider {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(pPoseStack, this.x, this.y, 0, 0, 100, 20, this.width, this.height);
+        blit(pPoseStack, this.x, this.y, 0, 0, 100, 20, this.width, this.height);
         this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
         int j = 10526880;
 

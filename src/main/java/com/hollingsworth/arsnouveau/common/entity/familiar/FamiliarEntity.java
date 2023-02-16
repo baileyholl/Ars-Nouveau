@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.api.client.IVariantTextureProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
@@ -39,11 +40,12 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable, IDecoratable {
+public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable, IDecoratable, IVariantTextureProvider<FamiliarEntity> {
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -121,10 +123,11 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
 
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
-    public AnimationController controller;
+
+    public AnimationController<?> controller;
 
     @Override
     public void registerControllers(AnimationData data) {
@@ -144,7 +147,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         return (LivingEntity) ((ServerLevel) level).getEntity(getOwnerID());
     }
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -232,7 +235,9 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             tag.putUUID("ownerID", getOwnerID());
         tag.putBoolean("terminated", terminatedFamiliar);
         tag.put("familiarData", getPersistentFamiliarData().toTag(this, new CompoundTag()));
-        tag.putString("holderID", holderID.toString());
+        if(holderID != null) {
+            tag.putString("holderID", holderID.toString());
+        }
         tag.putString("color", this.entityData.get(COLOR));
         if (!this.entityData.get(COSMETIC).isEmpty()) {
             CompoundTag cosmeticTag = new CompoundTag();

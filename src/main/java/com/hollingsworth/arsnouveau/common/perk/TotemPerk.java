@@ -36,7 +36,7 @@ public class TotemPerk extends Perk {
             super(perkHolder, INSTANCE);
             CompoundTag initTag = getInitTag();
             if(initTag != null) {
-                // Set to true if the field is missing, because its the first time to be used.
+                // Set to true if the field is missing, because it's the first time to be used.
                 this.isActive = !initTag.contains("isActive") || initTag.getBoolean("isActive");
             }
         }

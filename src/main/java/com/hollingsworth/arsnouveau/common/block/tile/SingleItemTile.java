@@ -10,12 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SingleItemTile extends ModdedTile implements Container{
@@ -44,7 +44,6 @@ public class SingleItemTile extends ModdedTile implements Container{
 
     @Override
     public ItemStack removeItem(int pSlot, int pAmount) {
-
         ItemStack copyStack = stack.copy().split(pAmount);
         stack.shrink(pAmount);
         updateBlock();
@@ -53,6 +52,9 @@ public class SingleItemTile extends ModdedTile implements Container{
 
     @Override
     public ItemStack removeItemNoUpdate(int pSlot) {
+        ItemStack stack = this.stack.copy();
+        this.stack = ItemStack.EMPTY;
+        updateBlock();
         return stack;
     }
 
@@ -92,10 +94,10 @@ public class SingleItemTile extends ModdedTile implements Container{
         updateBlock();
     }
 
-    @Nonnull
+   @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandler.cast();
         }
         return super.getCapability(cap, side);

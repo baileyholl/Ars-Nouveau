@@ -48,9 +48,6 @@ public class Debug extends ModItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (!context.getLevel().isClientSide) {
-
-        }
         return super.useOn(context);
     }
 

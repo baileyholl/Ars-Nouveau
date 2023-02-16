@@ -3,9 +3,10 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.items.Wand;
+import com.hollingsworth.arsnouveau.common.items.SpellBow;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -17,13 +18,35 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.core.util.Color;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 import javax.annotation.Nullable;
 
-public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
+public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     public SpellBowRenderer() {
         super(new SpellBowModel());
+    }
+
+    @Override
+    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        //we override the color getter for a specific bone, this means the other ones need to use the neutral color
+        if (bone.getName().equals("gem")) {
+            //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
+            super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        } else {
+            super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
+        }
+    }
+
+    @Override
+    public Color getRenderColor(Object animatable, float partialTick, PoseStack poseStack, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, int packedLight) {
+        ParticleColor color = ParticleColor.defaultParticleColor();
+        if (currentItemStack.hasTag()) {
+            color = ((SpellBow) animatable).getSpellCaster(currentItemStack).getColor();
+        }
+        return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);
     }
 
     @Override
@@ -60,7 +83,6 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
             }
         }
         super.renderByItem(itemStack, transformType, stack, bufferIn, combinedLightIn, p_239207_6_);
-
     }
 
     @Override

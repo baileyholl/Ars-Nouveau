@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +30,26 @@ public class CrushRecipe implements Recipe<Container> {
     public final Ingredient input;
     public final List<CrushOutput> outputs;
     public final ResourceLocation id;
+    private boolean skipBlockPlace;
 
-    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
+    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
         this.input = input;
         this.outputs = outputs;
         this.id = id;
+        this.skipBlockPlace = skipBlockPlace;
+    }
+
+    @Deprecated
+    public CrushRecipe(ResourceLocation id, Ingredient input, List<CrushOutput> outputs) {
+        this(id, input, outputs, false);
     }
 
     public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs) {
-        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs);
+        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, false);
+    }
+
+    public CrushRecipe(String id, Ingredient input, List<CrushOutput> outputs, boolean skipBlockPlace) {
+        this(new ResourceLocation(ArsNouveau.MODID, "crush_" + id), input, outputs, skipBlockPlace);
     }
 
     public CrushRecipe(String id, Ingredient input) {
@@ -49,7 +60,15 @@ public class CrushRecipe implements Recipe<Container> {
         List<ItemStack> finalOutputs = new ArrayList<>();
         for (CrushOutput crushRoll : outputs) {
             if (random.nextDouble() <= crushRoll.chance) {
-                finalOutputs.add(crushRoll.stack.copy());
+                if(crushRoll.maxRange > 1){
+                    // get a number between 1 and max
+                    int num = random.nextInt(crushRoll.maxRange) + 1;
+                    for(int i = 0; i < num; i++){
+                        finalOutputs.add(crushRoll.stack.copy());
+                    }
+                }else {
+                    finalOutputs.add(crushRoll.stack.copy());
+                }
             }
         }
 
@@ -66,6 +85,15 @@ public class CrushRecipe implements Recipe<Container> {
         return this;
     }
 
+    public CrushRecipe skipBlockPlace() {
+        this.skipBlockPlace = true;
+        return this;
+    }
+
+    public Boolean shouldSkipBlockPlace() {
+        return this.skipBlockPlace;
+    }
+
     @Override
     public boolean matches(Container inventory, Level world) {
         return this.input.test(inventory.getItem(0));
@@ -75,7 +103,7 @@ public class CrushRecipe implements Recipe<Container> {
         return this.input.test(i);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ItemStack assemble(Container inventory) {
         return ItemStack.EMPTY;
@@ -86,13 +114,13 @@ public class CrushRecipe implements Recipe<Container> {
         return true;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ItemStack getResultItem() {
         return ItemStack.EMPTY;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ResourceLocation getId() {
         return id;
@@ -118,19 +146,27 @@ public class CrushRecipe implements Recipe<Container> {
             element.addProperty("item", getRegistryName(output.stack.getItem()).toString());
             element.addProperty("chance", output.chance);
             element.addProperty("count", output.stack.getCount());
+            element.addProperty("maxRange", output.maxRange);
             array.add(element);
         }
         jsonobject.add("output", array);
+        jsonobject.addProperty("skip_block_place", skipBlockPlace);
         return jsonobject;
     }
 
     public static class CrushOutput {
         public ItemStack stack;
         public float chance;
+        public int maxRange; // Can drop the stack multiple times if this is greater than 1
 
         public CrushOutput(ItemStack stack, float chance) {
+            this(stack, chance, 1);
+        }
+
+        public CrushOutput(ItemStack stack, float chance, int maxRange) {
             this.stack = stack;
             this.chance = chance;
+            this.maxRange = maxRange;
         }
     }
 
@@ -153,10 +189,12 @@ public class CrushRecipe implements Recipe<Container> {
                 String itemId = GsonHelper.getAsString(obj, "item");
                 int count = obj.has("count") ? GsonHelper.getAsInt(obj, "count") : 1;
                 ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
-                parsedOutputs.add(new CrushOutput(output, chance));
+                int maxRange = obj.has("maxRange") ? GsonHelper.getAsInt(obj, "maxRange") : 1;
+                parsedOutputs.add(new CrushOutput(output, chance, maxRange));
             }
+            boolean skipBlockPlace = json.has("skip_block_place") && GsonHelper.getAsBoolean(json, "skip_block_place");
 
-            return new CrushRecipe(recipeId, input, parsedOutputs);
+            return new CrushRecipe(recipeId, input, parsedOutputs, skipBlockPlace);
         }
 
 
@@ -167,7 +205,9 @@ public class CrushRecipe implements Recipe<Container> {
             for (CrushOutput i : recipe.outputs) {
                 buf.writeFloat(i.chance);
                 buf.writeItemStack(i.stack, false);
+                buf.writeInt(i.maxRange);
             }
+            buf.writeBoolean(recipe.skipBlockPlace);
         }
 
         @Nullable
@@ -181,13 +221,15 @@ public class CrushRecipe implements Recipe<Container> {
                 try {
                     float chance = buffer.readFloat();
                     ItemStack outStack = buffer.readItem();
-                    stacks.add(new CrushOutput(outStack, chance));
+                    int maxRange = buffer.readInt();
+                    stacks.add(new CrushOutput(outStack, chance, maxRange));
                 } catch (Exception e) {
                     e.printStackTrace();
                     break;
                 }
             }
-            return new CrushRecipe(recipeId, input, stacks);
+            boolean skipBlockPlace = buffer.readBoolean();
+            return new CrushRecipe(recipeId, input, stacks, skipBlockPlace);
         }
     }
 }

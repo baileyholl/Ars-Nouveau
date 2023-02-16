@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -59,14 +60,14 @@ public class GlyphButton extends Button {
                         tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
                     }
                     if (Screen.hasShiftDown()) {
-                        tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                        tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                         tip.add(Component.translatable("ars_nouveau.schools"));
                         for (SpellSchool s : spellPart.spellSchools) {
                             tip.add(s.getTextComponent());
                         }
                         tip.add(spellPart.getBookDescLang());
                     } else {
-                        tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
+                        tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
                     }
 
                     parent.tooltip = tip;

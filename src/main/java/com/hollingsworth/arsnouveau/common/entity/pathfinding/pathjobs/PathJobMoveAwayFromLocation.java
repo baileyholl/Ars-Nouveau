@@ -59,7 +59,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
     }
 
     /**
-     * Checks if the destination has been reached. Meaning that the avoid distance has been reached.
+     * Checks if the destination has been reached. Meaning that the "avoid distance" has been reached.
      *
      * @param n Node to test.
      * @return true if so.

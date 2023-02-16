@@ -49,8 +49,6 @@ public class PerkEvents {
             for(IPerk equippedPerks : playerPerks){
                 if(itemPerks.contains(equippedPerks)){
                     PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.perks.duplicated"));
-                    System.out.println(itemPerks.size());
-                    System.out.println(playerPerks.size());
                     return;
                 }
             }
@@ -95,7 +93,7 @@ public class PerkEvents {
         for(Player p : event.getLevel().players()){
             IPerkHolder<ItemStack> holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, p);
             if(holder == null)
-                return;
+                continue;
             TotemPerk.Data perkData = new TotemPerk.Data(holder);
             perkData.setActive(true);
             PortUtil.sendMessage(p, Component.translatable("ars_nouveau.totem_perk.active"));

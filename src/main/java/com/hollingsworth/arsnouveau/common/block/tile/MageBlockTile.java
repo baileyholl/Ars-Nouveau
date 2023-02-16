@@ -1,18 +1,22 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable {
+public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable, IDispellable {
 
     int age;
     public boolean isPermanent;
@@ -58,7 +62,7 @@ public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable 
     public void registerControllers(AnimationData data) {
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {
@@ -68,5 +72,12 @@ public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable 
     @Override
     public AABB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        level.destroyBlock(this.getBlockPos(), false);
+        level.removeBlockEntity(this.getBlockPos());
+        return true;
     }
 }

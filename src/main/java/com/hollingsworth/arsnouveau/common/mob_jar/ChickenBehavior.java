@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.mob_jar;
 
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.item.Items;

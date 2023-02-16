@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
+import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -27,8 +28,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.eventbus.api.Event;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 public class EffectBlink extends AbstractEffect {
@@ -39,7 +40,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
@@ -48,9 +49,9 @@ public class EffectBlink extends AbstractEffect {
             SlotReference reference = manager.findItem(i -> i.getItem() == ItemsRegistry.WARP_SCROLL.asItem(), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
-                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(stack);
+                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
                 if (data.isValid() && data.canTeleportWithDim(world)) {
-                    warpEntity(rayTraceResult.getEntity(), data.getPos());
+                    warpEntity(rayTraceResult.getEntity(), data);
                     return;
                 }
             }
@@ -62,10 +63,11 @@ public class EffectBlink extends AbstractEffect {
         }
 
         if (isRealPlayer(shooter)) {
-            if (shooter.getOffhandItem().getItem() instanceof WarpScroll) {
-                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(shooter.getOffhandItem());
+            WarpScroll.WarpScrollData scrollData = WarpScroll.WarpScrollData.get(shooter.getOffhandItem());
+            if (scrollData.isValid()) {
+                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(shooter.getOffhandItem());
                 if (data.isValid() && data.canTeleportWithDim(world)) {
-                    warpEntity(rayTraceResult.getEntity(), data.getPos());
+                    warpEntity(rayTraceResult.getEntity(), data);
                 }
             } else {
                 shooter.teleportTo(vec.x(), vec.y(), vec.z());
@@ -73,6 +75,20 @@ public class EffectBlink extends AbstractEffect {
         } else if (spellContext.getType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
             blinkForward(world, living, distance);
         }
+    }
+
+    public static void warpEntity(Entity entity, WarpScroll.WarpScrollData warpScrollData){
+        if (entity == null) return;
+
+        if (entity instanceof LivingEntity living){
+            Event event = ForgeEventFactory.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
+            if (event.isCanceled()) return;
+        }
+        ServerLevel dimension = warpScrollData.getDimension((ServerLevel) entity.level);
+        if(dimension == null)
+            return;
+        PortalTile.teleportEntityTo(entity, dimension, warpScrollData.getPos(), warpScrollData.getRotation());
+
     }
 
     public static void warpEntity(Entity entity, BlockPos warpPos) {
@@ -93,7 +109,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = rayTraceResult.getLocation();
         if (isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
             warpEntity(shooter, new BlockPos(vec));
@@ -153,11 +169,11 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.THREE;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
@@ -168,7 +184,7 @@ public class EffectBlink extends AbstractEffect {
         return "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward. Spell Turrets and Runes can warp entities using Warp Scrolls from adjacent inventories without consuming the scroll.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

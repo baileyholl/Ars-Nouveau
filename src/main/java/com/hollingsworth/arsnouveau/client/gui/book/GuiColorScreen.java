@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 
 public class GuiColorScreen extends BaseBook {
     // Cache color values from constructor because we can only create widgets during init
@@ -22,13 +23,15 @@ public class GuiColorScreen extends BaseBook {
     public BookSlider redW;
     public BookSlider greenW;
     public BookSlider blueW;
+    public InteractionHand stackHand;
 
-    protected GuiColorScreen(double startRed, double startGreen, double startBlue, int forSpellSlot) {
+    protected GuiColorScreen(double startRed, double startGreen, double startBlue, int forSpellSlot, InteractionHand stackHand) {
         super();
         this.startRed = startRed;
         this.startGreen = startGreen;
         this.startBlue = startBlue;
         this.slot = forSpellSlot;
+        this.stackHand = stackHand;
     }
 
     @Override
@@ -87,7 +90,7 @@ public class GuiColorScreen extends BaseBook {
     }
 
     public void onSaveClick(Button button) {
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue())));
+        Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     @Override

@@ -19,8 +19,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class InspectPlantGoal extends DistanceRestrictedGoal {
     Whirlisprig entity;
     BlockPos pos;
@@ -65,8 +63,15 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
 
     @Override
     public boolean canUse() {
-        return (entity.timeSinceGen > 300 && entity.getTile() != null) ||
-                (entity.getCommandSenderWorld().random.nextInt(100) <= 2 && entity.level.getGameTime() % 10 == 0 && entity.getTile() != null);
+        WhirlisprigTile tile = entity.getTile();
+        if (tile != null && !tile.isOff) {
+            if (entity.timeSinceGen > 300) {
+                return true;
+            } else if (entity.getCommandSenderWorld().random.nextInt(100) <= 2) {
+                return entity.level.getGameTime() % 10 == 0;
+            }
+        }
+        return false;
     }
 
     @Override

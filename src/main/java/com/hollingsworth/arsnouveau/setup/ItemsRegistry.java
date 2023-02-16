@@ -17,6 +17,7 @@ import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -29,16 +30,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -168,7 +166,7 @@ public class ItemsRegistry {
     public static RegistryWrapper<ModItem> WILDEN_WING = register(LibItemNames.WILDEN_WING, () -> new ModItem().withTooltip(Component.translatable("tooltip.wilden_wing")));
 
     public static RegistryWrapper<PotionFlask> POTION_FLASK = register(LibItemNames.POTION_FLASK, () -> new PotionFlask() {
-        @Nonnull
+       @NotNull
         @Override
         public MobEffectInstance getEffectInstance(MobEffectInstance effectInstance) {
             return effectInstance;
@@ -264,7 +262,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<FireEssence> FIRE_ESSENCE = register(LibItemNames.FIRE_ESSENCE, () -> new FireEssence().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
-    public static RegistryWrapper<ModItem> MANIPULATION_ESSENCE = register(LibItemNames.MANIPULATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+    public static RegistryWrapper<ModItem> MANIPULATION_ESSENCE = register(LibItemNames.MANIPULATION_ESSENCE, () -> new ManipulationEssence().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
     public static RegistryWrapper<ModItem> WATER_ESSENCE = register(LibItemNames.WATER_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
 
@@ -277,7 +275,15 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<ModItem> SPLASH_LAUNCHER = register(LibItemNames.SPLASH_LAUNCHER, () -> new FlaskCannon.SplashLauncher(defaultItemProperties().stacksTo(1)));
     public static RegistryWrapper<ModItem> LINGERING_LAUNCHER = register(LibItemNames.LINGERING_LAUNCHER, () -> new FlaskCannon.LingeringLauncher(defaultItemProperties().stacksTo(1)));
-    public static RegistryWrapper<ModItem> BLANK_THREAD = register(LibItemNames.BLANK_THREAD, () -> new ModItem().withTooltip("tooltip.ars_nouveau.blank_thread"));
+    public static PerkItem BLANK_THREAD;
+
+    public static RegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 240));
+
+    public static RegistryWrapper<Item> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
+
+    public static RegistryWrapper<Item> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1)));
+    public static RegistryWrapper<Item> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
+    public static RegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1)));
 
     public static RegistryWrapper register(String name, Supplier<? extends Item> item) {
         return new RegistryWrapper<>(ITEMS.register(name, item));
@@ -311,8 +317,12 @@ public class ItemsRegistry {
             PerkItem perkItem = new PerkItem(perk);
             api.getPerkItemMap().put(perk.getRegistryName(), perkItem);
             registry.register(perk.getRegistryName(), perkItem);
+            if(perk instanceof EmptyPerk){
+                BLANK_THREAD = perkItem;
+            }
         }
 
+        registry.register(LibItemNames.DRYGMY_SE, new ForgeSpawnEggItem(ModEntities.ENTITY_DRYGMY, 10051392, 0xFFE633, defaultItemProperties()));
         registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
         registry.register(LibItemNames.SYLPH_SE, new ForgeSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
         registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));

@@ -18,8 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
         return super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player) && !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty();
     }
 
-    public static @Nonnull ItemStack getParchment(List<ItemStack> pedestalItems) {
+    public static@NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {
         for (ItemStack stack : pedestalItems) {
             if (stack.getItem() instanceof SpellParchment) {
                 return stack;
@@ -47,7 +47,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return RecipeRegistry.ENCHANTMENT_TYPE.get();
+        return RecipeRegistry.REACTIVE_TYPE.get();
     }
 
     @Override

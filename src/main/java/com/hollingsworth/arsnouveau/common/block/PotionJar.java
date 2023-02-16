@@ -37,8 +37,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
@@ -84,15 +84,22 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
                 }
             }
             return super.use(state, worldIn, pos, player, handIn, hit);
-        }
-
-        if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
+        }else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, tile.getData().getPotion());
             PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
-            player.addItem(potionStack);
-            player.getItemInHand(handIn).shrink(1);
-            tile.remove(100);
+            if(player.addItem(potionStack)) {
+                player.getItemInHand(handIn).shrink(1);
+                tile.remove(100);
+            }
+        }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
+            ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
+            PotionUtils.setPotion(potionStack, tile.getData().getPotion());
+            PotionUtils.setCustomEffects(potionStack, tile.getData().getCustomEffects());
+            if(player.addItem(potionStack)) {
+                player.getItemInHand(handIn).shrink(1);
+                tile.remove(10);
+            }
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
@@ -118,8 +125,8 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (stack.getTag() == null)
             return;
-        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
-        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
+        int fill = stack.getTag().getCompound("BlockEntityTag").getInt("currentFill");
+        tooltip.add(Component.literal((fill * 100) / 10000 + "% full"));
         CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
         if(blockTag.contains("potionData")){
             PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
@@ -132,7 +139,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());

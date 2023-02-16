@@ -21,8 +21,8 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     }
 
     @Override
-    public void setLivingAnimations(SpellBook entity, Integer uniqueID, @org.jetbrains.annotations.Nullable AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(SpellBook entity, int uniqueID, @org.jetbrains.annotations.Nullable AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         this.getBone("tier3").setHidden(entity.tier.value < 3);
         this.getBone("tier1").setHidden(entity.tier.value != 1);
         this.getBone("tier2").setHidden(entity.tier.value != 2);

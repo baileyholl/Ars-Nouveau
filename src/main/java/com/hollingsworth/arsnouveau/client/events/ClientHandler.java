@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
+import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
+import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
 import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
@@ -19,6 +21,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.armor.HeavyArmor;
 import com.hollingsworth.arsnouveau.common.armor.LightArmor;
 import com.hollingsworth.arsnouveau.common.armor.MediumArmor;
+import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
@@ -61,23 +64,24 @@ import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientForgeHandler.localize;
 
+@SuppressWarnings("unchecked")
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @OnlyIn(Dist.CLIENT)
 public class ClientHandler {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE.get(), ArcanePedestalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.T_LIGHT_TILE, LightRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.SKYWEAVE_TILE.get(), SkyBlockRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.IMBUEMENT_TILE, ImbuementRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
@@ -86,17 +90,22 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ROTATING_TURRET_TILE.get(), RotatingTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.MAGE_BLOCK_TILE, MageBlockRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.WHIRLISPRIG_TILE, WhirlisprigFlowerRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
         event.registerBlockEntityRenderer(BlockRegistry.SCRYERS_OCULUS_TILE, (t) -> new ScryerEyeRenderer(t, new ScryersEyeModel()));
         event.registerBlockEntityRenderer(BlockRegistry.ARMOR_TILE, AlterationTableRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.MOB_JAR_TILE, MobJarRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MIRROR_WEAVE_TILE, MirrorweaveRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.GHOST_WEAVE_TILE, GhostweaveRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.FALSE_WEAVE_TILE, FalseweaveRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.TEMPORARY_TILE.get(), MirrorweaveRenderer::new);
+
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),
@@ -133,7 +142,6 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), (t) -> new GenericFamiliarRenderer<>(t, new WixieModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), BookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarBookwyrmRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_JABBERWOG.get(), (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>())); //avoid REI crash
         event.registerEntityRenderer(ModEntities.LINGER_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD.get(), (v) -> new WealdWalkerRenderer<>(v, "cascading_weald"));
@@ -144,13 +152,19 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
         event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENCHANTED_FALLING_BLOCK.get(), EnchantedFallingBlockRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
+        event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), GiftStarbyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ANIMATED_BLOCK.get(), AnimBlockRenderer::new);
 
+        event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
+                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
     }
+
     public static NamedGuiOverlay cameraOverlay = new NamedGuiOverlay(new ResourceLocation(ArsNouveau.MODID, "scry_camera"), (gui, pose, partialTick, width, height) -> {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
         BlockPos pos = mc.cameraEntity.blockPosition();
-        if(!CameraUtil.isPlayerMountedOnCamera(mc.player)) {
+        if (!CameraUtil.isPlayerMountedOnCamera(mc.player)) {
             return;
         }
         if (!mc.options.renderDebug) {
@@ -165,10 +179,14 @@ public class ClientHandler {
             }
         }
     });
+
     @SubscribeEvent
     public static void registerOverlays(final RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("scry_camera", cameraOverlay.overlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "tooltip", GuiEntityInfoHUD.OVERLAY);
+        event.registerAboveAll("mana_hud", GuiManaHUD.OVERLAY);
+        event.registerAboveAll("spell_hud", GuiSpellHUD.OVERLAY);
+
     }
 
     @SubscribeEvent
@@ -195,94 +213,100 @@ public class ClientHandler {
             });
             ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
                 CompoundTag tag = stack.getTag();
-                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F; 
+                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F;
             });
         });
     }
 
     @SubscribeEvent
-    public static void registerLayers(EntityRenderersEvent.AddLayers addLayers){
+    public static void registerLayers(EntityRenderersEvent.AddLayers addLayers) {
         GeoArmorRenderer.registerArmorRenderer(LightArmor.class, () -> new ArmorRenderer(new GenericModel<>("light_armor", "items/light_armor").withEmptyAnim()));
-        GeoArmorRenderer.registerArmorRenderer(MediumArmor.class,() ->  new ArmorRenderer(new GenericModel<>("medium_armor","items/medium_armor").withEmptyAnim()));
-        GeoArmorRenderer.registerArmorRenderer(HeavyArmor.class, () -> new ArmorRenderer(new GenericModel<>("heavy_armor","items/heavy_armor").withEmptyAnim()));
+        GeoArmorRenderer.registerArmorRenderer(MediumArmor.class, () -> new ArmorRenderer(new GenericModel<>("medium_armor", "items/medium_armor").withEmptyAnim()));
+        GeoArmorRenderer.registerArmorRenderer(HeavyArmor.class, () -> new ArmorRenderer(new GenericModel<>("heavy_armor", "items/heavy_armor").withEmptyAnim()));
 
     }
 
-
     @SubscribeEvent
-    public static void initColors(final RegisterColorHandlersEvent.Item event) {
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
-                ItemsRegistry.POTION_FLASK);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
-                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
-                ItemsRegistry.POTION_FLASK_AMPLIFY);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        new ParticleColor(200, 0, 200).getColor(),
-                ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.NOVICE_ROBES);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.NOVICE_BOOTS);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.NOVICE_HOOD);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.NOVICE_LEGGINGS);
-
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_ROBES);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_BOOTS);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_HOOD);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_LEGGINGS);
-
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_ROBES);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_BOOTS);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_HOOD);
-
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_LEGGINGS);
-        event.getBlockColors().register((state, reader, pos, tIndex) ->
+    public static void initBlockColors(final RegisterColorHandlersEvent.Block event) {
+        event.register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
                         ? jarTile.getColor()
                         : -1, BlockRegistry.POTION_JAR);
 
-
-        event.getBlockColors().register((state, reader, pos, tIndex) ->
+        event.register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
                         ? melderTile.getColor()
                         : -1, BlockRegistry.POTION_MELDER);
+
+        event.register((state, reader, pos, tIndex) ->
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof MageBlockTile mageBlockTile
+                        ? mageBlockTile.color.getColor() : -1, BlockRegistry.MAGE_BLOCK);
+    }
+
+    @SubscribeEvent
+    public static void initItemColors(final RegisterColorHandlersEvent.Item event) {
+        event.register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
+                ItemsRegistry.POTION_FLASK);
+
+        event.register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
+                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
+
+        event.register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
+                ItemsRegistry.POTION_FLASK_AMPLIFY);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        new ParticleColor(200, 0, 200).getColor(),
+                ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.POTION_MELDER_BLOCK)));
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_ROBES);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_BOOTS);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_HOOD);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.NOVICE_LEGGINGS);
+
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_ROBES);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_BOOTS);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_HOOD);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.APPRENTICE_LEGGINGS);
+
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_ROBES);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_BOOTS);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_HOOD);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.ARCHMAGE_LEGGINGS);
 
 
         event.getItemColors().register((stack, color) -> {
@@ -290,7 +314,7 @@ public class ClientHandler {
                 return -1;
             }
             CompoundTag blockTag = stack.getTag().getCompound("BlockEntityTag");
-            if(blockTag.contains("potionData")){
+            if (blockTag.contains("potionData")) {
                 PotionData data = PotionData.fromTag(blockTag.getCompound("potionData"));
                 return PotionUtils.getColor(data.fullEffects());
             }
@@ -299,9 +323,9 @@ public class ClientHandler {
 
     }
 
-    public static int colorFromArmor(ItemStack stack){
+    public static int colorFromArmor(ItemStack stack) {
         IPerkHolder<ItemStack> holder = PerkUtil.getPerkHolder(stack);
-        if(!(holder instanceof ArmorPerkHolder armorPerkHolder))
+        if (!(holder instanceof ArmorPerkHolder armorPerkHolder))
             return DyeColor.PURPLE.getTextColor();
         return DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor();
     }

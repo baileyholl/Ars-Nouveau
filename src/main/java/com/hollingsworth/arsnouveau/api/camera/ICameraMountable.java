@@ -32,16 +32,15 @@ public interface ICameraMountable {
 
             level.addFreshEntity(dummyEntity);
 
-            for (int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; ++x) {
-                for (int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; ++z) {
+            for (int x = chunkPos.getX() - viewDistance; x <= chunkPos.getX() + viewDistance; x++) {
+                for (int z = chunkPos.getZ() - viewDistance; z <= chunkPos.getZ() + viewDistance; z++) {
                     ForgeChunkManager.forceChunk(serverLevel, ArsNouveau.MODID, dummyEntity, x, z, true, false);
                 }
             }
 
+
             serverPlayer.camera = dummyEntity;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> {
-                return serverPlayer;
-            }), new PacketSetCameraView(dummyEntity));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new PacketSetCameraView(dummyEntity));
             startViewing();
         }
     }

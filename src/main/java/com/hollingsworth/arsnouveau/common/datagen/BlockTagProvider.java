@@ -26,6 +26,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/foliage"));
     public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
     public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
+    public static TagKey<Block> GRAVITY_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "gravity_blacklist"));
     public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
     public static TagKey<Block> FELLABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
     public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
@@ -47,7 +48,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.RELAY,
                 BlockRegistry.ARCANE_CORE_BLOCK,
                 BlockRegistry.ENCHANTING_APP_BLOCK,
-                BlockRegistry.ARCANE_PEDESTAL,
+                BlockRegistry.ARCANE_PEDESTAL.get(),
+                BlockRegistry.ARCANE_PLATFORM.get(),
+                BlockRegistry.MAGELIGHT_TORCH.get(),
                 BlockRegistry.CREATIVE_SOURCE_JAR,
                 BlockRegistry.RUNE_BLOCK,
                 BlockRegistry.IMBUEMENT_BLOCK,
@@ -58,7 +61,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.LAVA_LILY,
                 BlockRegistry.WIXIE_CAULDRON,
                 BlockRegistry.SOURCE_GEM_BLOCK,
-                BlockRegistry.RITUAL_BLOCK,
+                BlockRegistry.RITUAL_BLOCK.get(),
                 BlockRegistry.POTION_JAR,
                 BlockRegistry.POTION_MELDER,
                 BlockRegistry.SCONCE_BLOCK,
@@ -75,7 +78,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.SCRYERS_OCULUS,
                 BlockRegistry.POTION_DIFFUSER,
                 BlockRegistry.MOB_JAR,
-                BlockRegistry.VOID_PRISM
+                BlockRegistry.VOID_PRISM,
+                BlockRegistry.BRAZIER_RELAY.get()
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
@@ -115,12 +119,15 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.FLOURISHING_LEAVES,
                 BlockRegistry.VEXING_LEAVES
         );
-
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST);
+        this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST);
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
             this.tag(DECORATIVE_AN).add(block);
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
         }
+
+        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE, BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
@@ -167,10 +174,13 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.VEXING_SAPLING
         );
 
-        this.tag(MAGIC_PLANTS)
-                .addTag(MAGIC_SAPLINGS).add(
+        this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
                         BlockRegistry.SOURCEBERRY_BUSH,
-                        BlockRegistry.MAGE_BLOOM_CROP
+                        BlockRegistry.MAGE_BLOOM_CROP,
+                        BlockRegistry.FROSTAYA_POD,
+                        BlockRegistry.MENDOSTEEN_POD,
+                        BlockRegistry.BASTION_POD,
+                        BlockRegistry.BOMBEGRANTE_POD
                 );
 
         this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
@@ -237,7 +247,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.REDSTONE_AIR,
                 BlockRegistry.MAGE_BLOCK,
                 BlockRegistry.SCONCE_BLOCK,
-                BlockRegistry.LIGHT_BLOCK
+                BlockRegistry.LIGHT_BLOCK,
+                BlockRegistry.GHOST_WEAVE,
+                BlockRegistry.SKY_WEAVE.get()
         );
 
         this.tag(SUMMON_BED).add(
@@ -250,7 +262,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         );
         this.tag(BREAK_BLACKLIST);
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
-
+        this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK);
 
     }
 

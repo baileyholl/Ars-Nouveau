@@ -1,16 +1,25 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
+import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Set;
 
 public class EffectLeap extends AbstractEffect {
@@ -21,15 +30,37 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof LivingEntity e) {
-            double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
-            e.setDeltaMovement(e.getLookAngle().x * bonus, e.getLookAngle().y * bonus, e.getLookAngle().z * bonus);
-            e.fallDistance = 0;
-            e.hurtMarked = true;
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Entity entity = rayTraceResult.getEntity();
+        double bonus;
+        Vec3 vector;
+        if (entity instanceof LivingEntity) {
+            vector = entity.getLookAngle();
+            bonus = Math.max(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+        } else {
+            vector = shooter.getLookAngle();
+            bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         }
+        entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
+        entity.fallDistance = 0.0f;
+        entity.hurtMarked = true;
     }
 
+    @Override
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+        for (BlockPos pos1 : posList) {
+            EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
+            if (entity != null) {
+                Vec3 vector = shooter.getLookAngle();
+                double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
+                entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
+                entity.hurtMarked = true;
+                entity.fallDistance = 0.0f;
+                ShapersFocus.tryPropagateEntitySpell(entity, world, shooter, spellContext, resolver);
+            }
+        }
+    }
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -38,10 +69,10 @@ public class EffectLeap extends AbstractEffect {
         addAmpConfig(builder, 1.0);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
@@ -54,7 +85,7 @@ public class EffectLeap extends AbstractEffect {
         return 25;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

@@ -24,7 +24,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.network.NetworkHooks;
@@ -33,9 +33,6 @@ import net.minecraftforge.network.PlayMessages;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
-// Copy of LightningBoltEntity
-import net.minecraft.world.entity.Entity.RemovalReason;
 
 public class LightningEntity extends LightningBolt {
     private int lightningState;
@@ -152,16 +149,16 @@ public class LightningEntity extends LightningBolt {
         float baseDamage = getDamage() + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
         int multiplier = 1;
         for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = i.getCapability(ForgeCapabilities.ENERGY).orElse(null);
             if (energyStorage != null) {
                 multiplier++;
             }
         }
         if (entity instanceof LivingEntity) {
-            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(ForgeCapabilities.ENERGY).orElse(null);
             if (energyStorage != null)
                 multiplier++;
-            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(ForgeCapabilities.ENERGY).orElse(null);
             if (energyStorage != null)
                 multiplier++;
         }

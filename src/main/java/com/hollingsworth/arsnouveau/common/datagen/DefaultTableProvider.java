@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -16,16 +17,20 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +51,6 @@ public class DefaultTableProvider extends LootTableProvider {
 
         @Override
         protected void addTables() {
-
-            registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
             registerDropSelf(BlockRegistry.ENCHANTED_SPELL_TURRET);
 
             registerDropSelf(BlockRegistry.BLAZING_LOG);
@@ -76,7 +79,9 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.ARCHWOOD_BUTTON);
             registerDropSelf(BlockRegistry.ARCHWOOD_STAIRS);
-            registerDropSelf(BlockRegistry.ARCHWOOD_SLABS);
+            registerSlabItemTable(BlockRegistry.ARCHWOOD_SLABS);
+            registerDropSelf(BlockRegistry.MAGELIGHT_TORCH);
+
             // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
             registerDropSelf(BlockRegistry.ARCHWOOD_FENCE_GATE);
             registerDropSelf(BlockRegistry.ARCHWOOD_TRAPDOOR);
@@ -112,12 +117,14 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
             registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
+            registerDropSelf(BlockRegistry.ARCANE_PLATFORM);
             registerDropSelf(BlockRegistry.RELAY);
             registerDropSelf(BlockRegistry.RELAY_SPLITTER);
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
             registerDropSelf(BlockRegistry.IMBUEMENT_BLOCK);
             registerDropSelf(BlockRegistry.VOLCANIC_BLOCK);
             registerDropSelf(BlockRegistry.LAVA_LILY);
+            registerDropSelf(BlockRegistry.BRAZIER_RELAY);
 
             registerDropSelf(BlockRegistry.RELAY_WARP);
             registerDropSelf(BlockRegistry.RELAY_DEPOSIT);
@@ -137,6 +144,19 @@ public class DefaultTableProvider extends LootTableProvider {
             }
             registerBedCondition(BlockRegistry.ALTERATION_TABLE, AlterationTable.PART, ThreePartBlock.HEAD);
             registerDropSelf(BlockRegistry.VOID_PRISM);
+            registerDropSelf(BlockRegistry.MAGEBLOOM_BLOCK);
+            registerDropSelf(BlockRegistry.GHOST_WEAVE);
+            registerDropSelf(BlockRegistry.FALSE_WEAVE);
+            registerDropSelf(BlockRegistry.MIRROR_WEAVE);
+
+        }
+
+        protected void registerSlabItemTable(Block p_124291_) {
+            list.add(p_124291_);
+            this.add(p_124291_,LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
+                    .add(applyExplosionDecay(p_124291_, LootItem.lootTableItem(p_124291_).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2.0F))
+                            .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(p_124291_).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE))))))));
+
         }
 
         protected <T extends Comparable<T> & StringRepresentable> void registerBedCondition(Block block, Property<T> prop, T isValue) {
@@ -155,11 +175,20 @@ public class DefaultTableProvider extends LootTableProvider {
             this.add(block, BlockLoot::createDoorTable);
         }
 
+        public void registerDropSelf(RegistryWrapper block) {
+            list.add((Block) block.get());
+            dropSelf((Block) block.get());
+        }
+
         public void registerDropSelf(Block block) {
             list.add(block);
             dropSelf(block);
         }
 
+        public void registerDropSelf(RegistryObject<Block> block) {
+            list.add(block.get());
+            dropSelf(block.get());
+        }
         public void registerDrop(Block input, ItemLike output) {
             list.add(input);
             dropOther(input, output);

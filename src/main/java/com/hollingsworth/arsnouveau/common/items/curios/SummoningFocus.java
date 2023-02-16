@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
@@ -82,7 +83,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
             if (event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())) {
                 for (LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntity().blockPosition()).inflate(30), (l) -> l instanceof ISummon)) {
                     if (event.getEntity().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))) {
-                        EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.getWorld(), event.spell, i).withColors(event.context.getColors()));
+                        EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.getWorld(), event.spell, i, new LivingCaster(i)).withColors(event.context.getColors()));
                         spellResolver.onCast(ItemStack.EMPTY, i.level);
                     }
                 }

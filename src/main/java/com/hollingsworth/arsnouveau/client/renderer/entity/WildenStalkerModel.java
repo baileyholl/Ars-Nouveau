@@ -14,8 +14,8 @@ import javax.annotation.Nullable;
 public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
 
     @Override
-    public void setLivingAnimations(WildenStalker entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(WildenStalker entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         if (entity.isFlying())
             return;
         IBone head = this.getAnimationProcessor().getBone("head");

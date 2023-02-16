@@ -15,8 +15,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 public class MethodTouch extends AbstractCastMethod {
@@ -67,7 +67,7 @@ public class MethodTouch extends AbstractCastMethod {
         Networking.sendToNearby(level, new BlockPos(x, y, z), new PacketAddFadingLight(x, y, z));
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentSensitive.INSTANCE);

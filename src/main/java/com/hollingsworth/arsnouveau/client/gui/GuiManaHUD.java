@@ -13,11 +13,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class GuiManaHUD extends GuiComponent {
+    public static final IGuiOverlay OVERLAY = GuiManaHUD::renderOverlay;
+
     private static final Minecraft minecraft = Minecraft.getInstance();
 
-    public boolean shouldDisplayBar() {
+    public static boolean shouldDisplayBar() {
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
         return (mainHand.getItem() instanceof IDisplayMana iDisplayMana && iDisplayMana.shouldDisplay(mainHand))
@@ -25,7 +29,8 @@ public class GuiManaHUD extends GuiComponent {
                 || (ManaUtil.getMaxMana(minecraft.player) > ManaUtil.getCurrentMana(minecraft.player));
     }
 
-    public void drawHUD(PoseStack ms, float pt) {
+    public static void renderOverlay(ForgeGui gui, PoseStack ms, float pt, int width,
+                                     int height) {
         if (!shouldDisplayBar())
             return;
 

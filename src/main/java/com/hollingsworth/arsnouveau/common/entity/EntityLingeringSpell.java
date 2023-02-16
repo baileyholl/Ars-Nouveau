@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +10,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,14 +18,13 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.entity.Entity.RemovalReason;
-
 public class EntityLingeringSpell extends EntityProjectileSpell {
 
     public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> SHOULD_FALL = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public double extendedTime;
     public int maxProcs = 100;
     public int totalProcs;
@@ -63,6 +62,8 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
 
     @Override
     public void tickNextPosition() {
+        if(!shouldFall())
+            return;
         if (!getLanded()) {
             this.setDeltaMovement(0, -0.2, 0);
         } else {
@@ -83,7 +84,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
             } else {
                 int i = 0;
                 for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
-                    if (entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt)
+                    if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST))
                         continue;
                     spellResolver.onResolveEffect(level, new EntityHitResult(entity));
                     i++;
@@ -164,6 +165,14 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         return entityData.get(SENSITIVE);
     }
 
+    public void setShouldFall(boolean shouldFall) {
+        entityData.set(SHOULD_FALL, shouldFall);
+    }
+
+    public boolean shouldFall() {
+        return entityData.get(SHOULD_FALL);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -171,17 +180,20 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
         entityData.define(AOE, 0f);
         entityData.define(LANDED, false);
         entityData.define(SENSITIVE, false);
+        entityData.define(SHOULD_FALL, true);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sensitive", isSensitive());
+        tag.putBoolean("shouldFall", shouldFall());
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
         setSensitive(compound.getBoolean("sensitive"));
+        setShouldFall(compound.getBoolean("shouldFall"));
     }
 }

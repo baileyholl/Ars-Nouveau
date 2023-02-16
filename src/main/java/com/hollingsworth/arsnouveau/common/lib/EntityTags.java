@@ -17,4 +17,7 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> JAR_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_blacklist"));
     public static final TagKey<EntityType<?>> JAR_WHITELIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_whitelist"));
     public static final TagKey<EntityType<?>> FAMILIAR = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "familiar"));
+    public static final TagKey<EntityType<?>> LINGERING_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "lingering_blacklist"));
+    public static final TagKey<EntityType<?>> BERRY_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "berry_blacklist"));
+    public static final TagKey<EntityType<?>> JAR_RELEASE_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_release_blacklist"));
 }

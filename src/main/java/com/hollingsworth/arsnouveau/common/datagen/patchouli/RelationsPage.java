@@ -15,7 +15,11 @@ public class RelationsPage extends AbstractPage {
     }
 
     public RelationsPage withEntry(ResourceLocation category, String fileName) {
-        entries.add(category.toString() + "/" + fileName);
+        return withEntry(category.toString() + "/" + fileName);
+    }
+
+    public RelationsPage withEntry(String path){
+        entries.add(path);
         return this;
     }
 

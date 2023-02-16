@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -29,9 +28,10 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class WildenHunter extends Monster implements IAnimatable, IAnimationListener {
-    AnimationFactory manager = new AnimationFactory(this);
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public WildenHunter(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
@@ -144,15 +144,15 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
 
     }
 
-    private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
+    private PlayState attackPredicate(AnimationEvent<?> event) {
         return PlayState.CONTINUE;
     }
 
-    AnimationController controller;
+    AnimationController<WildenHunter> controller;
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        controller = new AnimationController(this, "attackController", 1, this::attackPredicate);
+        controller = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
         animationData.addAnimationController(controller);
     }
 

@@ -1,49 +1,30 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
-import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
-import com.hollingsworth.arsnouveau.api.recipe.RecipeWrapper;
-import com.hollingsworth.arsnouveau.api.recipe.ShapedHelper;
-import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.recipe.*;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
-import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.brewing.BrewingRecipe;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -51,15 +32,15 @@ import java.util.*;
 public class WixieCauldronTile extends SummoningTile implements ITooltipProvider {
 
     public List<BlockPos> inventories;
-    public ItemStack craftingItem;
+    private ItemStack setStack;
+    private ItemStack stackBeingCrafted;
     public int entityID;
     public boolean hasSource;
-    public boolean isOff;
     public boolean isCraftingPotion;
     public boolean needsPotionStorage;
-    RecipeWrapper recipeWrapper;
-    public CraftingProgress craftManager = new CraftingProgress();
+    public CraftingManager craftManager = new CraftingManager();
 
+    public int craftingIndex;
     public WixieCauldronTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.WIXIE_CAULDRON_TYPE, pos, state);
     }
@@ -67,7 +48,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide)
+        if (level == null || level.isClientSide())
             return;
 
         if (!hasSource && level.getGameTime() % 5 == 0 && SourceUtil.takeSourceWithParticles(worldPosition, level, 6, 50) != null) {
@@ -76,15 +57,49 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             setChanged();
         }
 
-        if (!hasSource)
-            return;
-
-        if (this.recipeWrapper == null && craftingItem != null)
-            setRecipes(null, craftingItem);
+        if (!hasSource) return;
 
         if (level.getGameTime() % 100 == 0) {
             updateInventories(); // Update the inventories available to use
         }
+        if(!level.isClientSide() && level.getGameTime() % 20 == 0){
+            if(craftManager.isCraftCompleted()){
+                rotateCraft();
+            }
+        }
+    }
+
+    /**
+     * Picks the next recipe to craft collecting items from the pedestals and the cauldron
+     */
+    public void rotateCraft(){
+        BlockPos leftBound = worldPosition.below().south().east();
+        BlockPos rightBound = worldPosition.above().north().west();
+        List<ItemStack> itemStacks = new ArrayList<>();
+        if(this.setStack != null && !this.setStack.isEmpty()){
+            itemStacks.add(this.setStack);
+        }
+        for(BlockPos pos : BlockPos.betweenClosed(leftBound, rightBound)){
+            if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile
+                    && !pedestalTile.getStack().isEmpty()
+                    && !pedestalTile.hasSignal){
+                itemStacks.add(pedestalTile.getStack().copy());
+            }
+        }
+        if(itemStacks.isEmpty())
+            return;
+        // Get the next recipe to craft
+        if(this.craftingIndex >= itemStacks.size()){
+            this.craftingIndex = 0;
+        }
+        ItemStack nextStack = itemStacks.get(this.craftingIndex);
+        MultiRecipeWrapper recipeWrapper = getRecipesForStack(nextStack);
+        if(!recipeWrapper.isEmpty()){
+            setNewCraft(recipeWrapper);
+            stackBeingCrafted = nextStack.copy();
+            updateBlock();
+        }
+        craftingIndex++;
     }
 
     public boolean hasWixie() {
@@ -92,20 +107,22 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     public boolean isCraftingDone() {
-        return craftManager.isDone();
+        return craftManager.canBeCompleted();
     }
 
     public boolean needsPotion() {
-        return craftManager.isPotionCrafting && !craftManager.hasObtainedPotion();
+        return craftManager instanceof PotionCraftingManager potionCraftingManager && potionCraftingManager.needsPotion();
     }
 
     public Potion getNeededPotion() {
-        return craftManager.getPotionNeeded();
+        return craftManager instanceof PotionCraftingManager potionCraftingManager ? potionCraftingManager.getPotionNeeded() : null;
     }
 
     public void givePotion() {
-        craftManager.setHasObtainedPotion(true);
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        if(craftManager instanceof PotionCraftingManager potionCraftingManager) {
+            potionCraftingManager.setObtainedPotion(true);
+            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        }
     }
 
     public boolean giveItem(ItemStack stack) {
@@ -115,142 +132,46 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     public void attemptFinish() {
-        if(!craftManager.isDone())
+        if(!craftManager.canBeCompleted() || craftManager.isCraftCompleted())
             return;
-
-        if (!isCraftingPotion) {
-            if (!craftManager.outputStack.isEmpty()) {
-                level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1.0, worldPosition.getZ(), craftManager.outputStack.copy()));
-                this.hasSource = false;
-                level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
-                level.playSound(null, getBlockPos(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.BLOCKS, 0.15f, 0.6f);
-            }
-            for (ItemStack i : craftManager.remainingItems) {
-                level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1.0, worldPosition.getZ(), i.copy()));
-            }
-            craftManager = new CraftingProgress();
-            setNewCraft();
-        } else {
-
-            if (craftManager.potionOut == null) {
-                setNewCraft();
-                return;
-            }
-
-
-            BlockPos jarPos = findPotionStorage(craftManager.potionOut);
-            if (jarPos == null) {
-                if (!needsPotionStorage) {
-                    needsPotionStorage = true;
-                    level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-                }
-                return;
-            }
-
-            if (level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
-                needsPotionStorage = false;
-                jar.add(new PotionData(craftManager.potionOut),300);
-                ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
-                EntityFlyingItem flying = new EntityFlyingItem(level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
-                        new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
-                        Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
-                        .withNoTouch();
-                level.addFreshEntity(flying);
-                this.hasSource = false;
-                level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
-                craftManager = new CraftingProgress();
-                setNewCraft();
-            }
-        }
+        craftManager.completeCraft(this);
+        setChanged();
     }
 
-    public void setNewCraft() {
+    public void setNewCraft(MultiRecipeWrapper recipeWrapper) {
         if (recipeWrapper == null)
             return;
         Map<Item, Integer> count = getInventoryCount();
 
-        if (isCraftingPotion && !recipeWrapper.recipes.isEmpty()) {
+        IRecipeWrapper.InstructionsForRecipe instructions = recipeWrapper.canCraft(count, level, worldPosition);
+        if (instructions != null && !recipeWrapper.isEmpty() && (instructions.recipe().recipeIngredients.get(0) instanceof PotionIngredient potionIngred)) {
 
-            RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftPotionFromInventory(count, level, worldPosition);
-            if (recipe == null)
-                return;
-            if (!(recipe.recipe.get(0) instanceof PotionIngredient)) {
-                isCraftingPotion = false;
-                return;
-            }
-
-            PotionIngredient potionIngred = (PotionIngredient) recipe.recipe.get(0);
-            Ingredient itemIngred = recipe.recipe.get(1);
+            Ingredient itemIngred = instructions.recipe().recipeIngredients.get(1);
             List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
-            craftManager = new CraftingProgress(PotionUtils.getPotion(potionIngred.getStack()), needed, PotionUtils.getPotion(recipe.outputStack));
+            craftManager = new PotionCraftingManager(PotionUtils.getPotion(potionIngred.getStack()), needed, PotionUtils.getPotion(instructions.recipe().outputStack));
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             //BrewingRecipe
-        } else {
-
-            RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftFromInventory(count);
-            if (recipe != null) {
-                craftManager = new CraftingProgress(recipe.outputStack.copy(), recipe.canCraftFromInventory(count), recipe.iRecipe);
-                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-            }
+        } else if (instructions != null) {
+            craftManager = new CraftingManager(instructions.recipe().outputStack.copy(), instructions.itemsNeeded());
+            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
-
     }
 
-    public void setRecipes(Player playerEntity, ItemStack stack) {
-        RecipeWrapper recipes = new RecipeWrapper();
-        if (stack.getItem() == Items.POTION) {
-            for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()) {
-                if (ItemStack.matches(stack, r.getOutput())) {
-                    isCraftingPotion = true;
-                    List<Ingredient> list = new ArrayList<>();
-                    list.add(new PotionIngredient(r.getInput().getItems()[0]));
-                    list.add(r.getIngredient());
-                    recipes.addRecipe(list, r.getOutput(), null);
-                }
-            }
-        } else {
-            for (Recipe r : level.getServer().getRecipeManager().getRecipes()) {
-                if (r.getResultItem() == null || r.getResultItem().getItem() != stack.getItem())
-                    continue;
-
-                if (r instanceof ShapedRecipe) {
-                    ShapedHelper helper = new ShapedHelper((ShapedRecipe) r);
-                    for (List<Ingredient> iList : helper.getPossibleRecipes()) {
-                        recipes.addRecipe(iList, r.getResultItem(), r);
-                    }
-                }
-
-                if (r instanceof ShapelessRecipe)
-                    recipes.addRecipe(r.getIngredients(), r.getResultItem(), r);
-
-            }
-            if (!recipes.recipes.isEmpty())
-                isCraftingPotion = false;
-        }
-        if (!recipes.recipes.isEmpty()) {
-            this.recipeWrapper = recipes;
-            this.craftingItem = stack.copy();
-        }
-
-        if ((recipes.recipes.isEmpty() || recipeWrapper == null || recipeWrapper.recipes.isEmpty()) && playerEntity != null) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.no_recipe"));
-        } else if (playerEntity != null) {
-            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie.recipe_set"));
-        }
-        setChanged();
+    public MultiRecipeWrapper getRecipesForStack(ItemStack stack) {
+        return MultiRecipeWrapper.fromStack(stack, level);
     }
-
 
     public void updateInventories() {
         inventories = new ArrayList<>();
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.getBlockEntity(bPos) instanceof Container)
+            if (level.isLoaded(bPos) && level.getBlockEntity(bPos) instanceof Container container && !(container instanceof ArcanePedestalTile)) {
                 inventories.add(bPos.immutable());
+            }
         }
         setChanged();
     }
 
-    public @Nullable BlockPos findPotionStorage(Potion passedPot) {
+    public static @Nullable BlockPos findPotionStorage(Level level, BlockPos worldPosition, Potion passedPot) {
         for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
             if (level.getBlockEntity(bPos) instanceof PotionJarTile tile && tile.canAccept(new PotionData(passedPot), 300)) {
                 return bPos.immutable();
@@ -337,54 +258,64 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void load(CompoundTag compound) {
         super.load(compound);
         if (compound.contains("crafting")) {
-            this.craftingItem = ItemStack.of(compound.getCompound("crafting"));
+            this.setStack = ItemStack.of(compound.getCompound("crafting"));
         }
-
-        craftManager = CraftingProgress.read(compound);
+        if (compound.contains("currentCraft")) {
+            this.stackBeingCrafted = ItemStack.of(compound.getCompound("currentCraft"));
+        }
+        craftManager = CraftingManager.fromTag(compound);
         this.entityID = compound.getInt("entityid");
         this.hasSource = compound.getBoolean("hasmana");
-        this.isOff = compound.getBoolean("off");
         this.isCraftingPotion = compound.getBoolean("isPotion");
         needsPotionStorage = compound.getBoolean("storage");
+        craftingIndex = compound.getInt("craftingIndex");
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
 
-        if (craftingItem != null) {
+        if (setStack != null) {
             CompoundTag itemTag = new CompoundTag();
-            craftingItem.save(itemTag);
+            setStack.save(itemTag);
             compound.put("crafting", itemTag);
+        }
+        if (stackBeingCrafted != null) {
+            CompoundTag itemTag = new CompoundTag();
+            stackBeingCrafted.save(itemTag);
+            compound.put("currentCraft", itemTag);
         }
         if (craftManager != null)
             craftManager.write(compound);
 
         compound.putInt("entityid", entityID);
         compound.putBoolean("hasmana", hasSource);
-        compound.putBoolean("off", isOff);
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
+        compound.putInt("craftingIndex", craftingIndex);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
 
-        if (craftingItem == null)
+        if (stackBeingCrafted == null)
             return;
 
         if (isOff) {
             tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
         }
 
-        if (!isCraftingPotion) {
+        if (this.craftManager != null && !(this.craftManager instanceof PotionCraftingManager)) {
             tooltip.add(Component.literal(
                     Component.translatable("ars_nouveau.wixie.crafting").getString() +
-                            Component.translatable(craftingItem.getDescriptionId()).getString())
+                            Component.translatable(stackBeingCrafted.getDescriptionId()).getString())
             );
-        } else if (this.craftManager != null && this.craftManager.isPotionCrafting()) {
+            if(stackBeingCrafted.getItem() == Items.POTION){
+                PotionUtils.addPotionTooltip(stackBeingCrafted, tooltip, 1.0F);
+            }
+        } else if (this.craftManager instanceof PotionCraftingManager potionCraftingManager) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, this.craftManager.potionOut);
+            PotionUtils.setPotion(potionStack, potionCraftingManager.potionOut);
             tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName().getString()));
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
@@ -392,14 +323,18 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if (!hasSource) {
             tooltip.add(Component.translatable("ars_nouveau.wixie.need_mana").withStyle(ChatFormatting.GOLD));
         }
-        if (this.craftManager != null && !this.craftManager.neededItems.isEmpty())
+        if (this.craftManager != null && !this.craftManager.neededItems.isEmpty()) {
+            ItemStack neededStack = this.craftManager.neededItems.get(0);
             tooltip.add(Component.literal(
                     Component.translatable("ars_nouveau.wixie.needs").getString() +
-                            Component.translatable(this.craftManager.neededItems.get(0).getDescriptionId()).getString()).withStyle(ChatFormatting.GOLD));
-
-        if (this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()) {
+                            Component.translatable(neededStack.getDescriptionId()).getString()).withStyle(ChatFormatting.GOLD));
+            if(neededStack.getItem() == Items.POTION){
+                PotionUtils.addPotionTooltip(neededStack, tooltip, 1.0F);
+            }
+        }
+        if (this.craftManager instanceof PotionCraftingManager potionCraftingManager && potionCraftingManager.needsPotion()) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potionStack, this.craftManager.getPotionNeeded());
+            PotionUtils.setPotion(potionStack, potionCraftingManager.getPotionNeeded());
             tooltip.add(Component.literal(Component.translatable("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
         }
         if (this.needsPotionStorage)
@@ -407,120 +342,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     }
 
-    public static class CraftingProgress {
-        public ItemStack outputStack;
-        public List<ItemStack> neededItems;
-        public List<ItemStack> remainingItems;
-        private Potion potionNeeded;
-        public Potion potionOut;
-        public boolean isPotionCrafting;
-        private boolean hasObtainedPotion;
+    public ItemStack getSetStack() {
+        return setStack;
+    }
 
-        public CraftingProgress() {
-            outputStack = ItemStack.EMPTY;
-            neededItems = new ArrayList<>();
-            remainingItems = new ArrayList<>();
-        }
-
-        public CraftingProgress(Potion potionNeeded, List<ItemStack> itemsNeeded, Potion potionOut) {
-            this.setPotionNeeded(potionNeeded);
-            this.potionOut = potionOut;
-            neededItems = itemsNeeded;
-            remainingItems = itemsNeeded;
-            isPotionCrafting = true;
-            setHasObtainedPotion(false);
-            outputStack = ItemStack.EMPTY;
-        }
-
-        public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems, Recipe recipe) {
-            CraftingContainer inventory = new CraftingContainer(new AbstractContainerMenu(null, -1) {
-                @Override
-                public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-                    return ItemStack.EMPTY;
-                }
-
-                public boolean stillValid(Player playerIn) {
-                    return false;
-                }
-            }, 3, 3);
-            for (int i = 0; i < neededItems.size(); i++) {
-                inventory.setItem(i, neededItems.get(i).copy());
-            }
-            this.remainingItems = recipe.getRemainingItems(inventory);
-            this.outputStack = outputStack;
-            this.neededItems = neededItems;
-        }
-
-        public ItemStack getNextItem() {
-            return !neededItems.isEmpty() ? neededItems.get(0) : ItemStack.EMPTY;
-        }
-
-        public boolean giveItem(Item i) {
-            if (isDone())
-                return false;
-
-            ItemStack stackToRemove = ItemStack.EMPTY;
-            for (ItemStack stack : neededItems) {
-                if (stack.getItem() == i) {
-                    stackToRemove = stack;
-                    break;
-                }
-            }
-            return neededItems.remove(stackToRemove);
-        }
-
-        public boolean isDone() {
-            return !isPotionCrafting ? neededItems.isEmpty() : hasObtainedPotion() && neededItems.isEmpty();
-        }
-
-        public boolean isPotionCrafting() {
-            return isPotionCrafting || (potionOut != Potions.EMPTY && potionOut != null);
-        }
-
-
-        public void write(CompoundTag tag) {
-            CompoundTag stack = new CompoundTag();
-            outputStack.save(stack);
-            tag.put("output_stack", stack);
-            NBTUtil.writeItems(tag, "progress", neededItems);
-            NBTUtil.writeItems(tag, "refund", remainingItems);
-            CompoundTag outputTag = new CompoundTag();
-            PotionUtil.addPotionToTag(potionOut, outputTag);
-            tag.put("potionout", outputTag);
-
-            CompoundTag neededTag = new CompoundTag();
-            PotionUtil.addPotionToTag(getPotionNeeded(), neededTag);
-            tag.put("potionNeeded", neededTag);
-            tag.putBoolean("gotPotion", hasObtainedPotion());
-            tag.putBoolean("isPotionCraft", isPotionCrafting);
-        }
-
-        public static CraftingProgress read(CompoundTag tag) {
-            CraftingProgress progress = new CraftingProgress();
-            progress.outputStack = ItemStack.of(tag.getCompound("output_stack"));
-            progress.neededItems = NBTUtil.readItems(tag, "progress");
-            progress.remainingItems = NBTUtil.readItems(tag, "refund");
-            progress.potionOut = PotionUtils.getPotion(tag.getCompound("potionout"));
-            progress.setPotionNeeded(PotionUtils.getPotion(tag.getCompound("potionNeeded")));
-            progress.setHasObtainedPotion(tag.getBoolean("gotPotion"));
-            progress.isPotionCrafting = tag.getBoolean("isPotionCraft");
-            return progress;
-        }
-
-        public Potion getPotionNeeded() {
-            return potionNeeded;
-        }
-
-        public void setPotionNeeded(Potion potionNeeded) {
-            this.potionNeeded = potionNeeded;
-        }
-
-        public boolean hasObtainedPotion() {
-            return hasObtainedPotion || potionNeeded == Potions.WATER || potionNeeded == Potions.EMPTY;
-        }
-
-        public void setHasObtainedPotion(boolean hasObtainedPotion) {
-            this.hasObtainedPotion = hasObtainedPotion;
-        }
+    public void setSetStack(ItemStack setStack) {
+        this.setStack = setStack;
+        updateBlock();
     }
 }

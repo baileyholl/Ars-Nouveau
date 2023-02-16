@@ -15,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -31,8 +31,20 @@ public class EffectGrow extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         for (BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
             ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
-            if (BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel) {
-                BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer((ServerLevel) world));
+            if (BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel serverLevel) {
+                if (BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer(serverLevel))) {
+                    if (!world.isClientSide) {
+                        world.levelEvent(1505, blockpos, 0); //particles
+                    }
+                } else {
+                    BlockPos relative = blockpos.relative(rayTraceResult.getDirection());
+                    boolean flag = world.getBlockState(blockpos).isFaceSturdy(world, blockpos, rayTraceResult.getDirection());
+                    if (flag && BoneMealItem.growWaterPlant(stack, world, relative, rayTraceResult.getDirection())) {
+                        if (!world.isClientSide) {
+                            world.levelEvent(1505, relative, 0); //particles
+                        }
+                    }
+                }
             }
         }
     }
@@ -43,11 +55,11 @@ public class EffectGrow extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
@@ -58,7 +70,7 @@ public class EffectGrow extends AbstractEffect {
         return "Causes plants to accelerate in growth as if they were bonemealed.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);

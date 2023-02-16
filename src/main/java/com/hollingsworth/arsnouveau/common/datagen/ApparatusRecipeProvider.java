@@ -34,9 +34,9 @@ import java.util.List;
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class ApparatusRecipeProvider implements DataProvider {
-    protected final DataGenerator generator;
-    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger();
+    public final DataGenerator generator;
+    public static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public ApparatusRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
@@ -187,30 +187,6 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
                 .keepNbtOfReagent(true)
-                .build());
-
-        addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get(), 32))
-                .withReagent(Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
-                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
-                .build());
-
-
-        addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW.get(), 32))
-                .withReagent(Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(1, ItemsRegistry.WILDEN_HORN.get())
-                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
-                .build());
-        addRecipe(builder()
-                .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 32))
-                .withReagent(Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(1, RecipeDatagen.SOURCE_GEM_BLOCK)
-                .withPedestalItem(ItemsRegistry.WILDEN_SPIKE)
-                .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
                 .build());
 
         addRecipe(builder()
@@ -811,6 +787,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withReagent(Items.SHIELD)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
                 .build());
 
         addRecipe(builder()
@@ -1061,6 +1038,27 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(2, ItemsRegistry.ABJURATION_ESSENCE)
                 .build());
 
+        addRecipe(builder().withResult(ItemsRegistry.SPELL_CROSSBOW)
+                .withReagent(Items.CROSSBOW)
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                .withPedestalItem(RecipeDatagen.SOURCE_GEM_BLOCK).build());
+
+        addRecipe(builder().withResult(BlockRegistry.BRAZIER_RELAY)
+                .withReagent(BlockRegistry.RITUAL_BLOCK)
+                .withPedestalItem(3, ItemsRegistry.MANIPULATION_ESSENCE).build());
+
+        addRecipe(builder().withResult(ItemsRegistry.STABLE_WARP_SCROLL)
+                .withReagent(ItemsRegistry.WARP_SCROLL)
+                .withPedestalItem(4, Items.BLAZE_POWDER)
+                .withPedestalItem(2, Tags.Items.ENDER_PEARLS)
+                .keepNbtOfReagent(true).build());
+
+        addRecipe(builder().withResult(ItemsRegistry.SCRY_CASTER)
+                .withReagent(BlockRegistry.SCRYERS_CRYSTAL)
+                .withPedestalItem(4, Items.BLAZE_POWDER)
+                .withPedestalItem(4, Tags.Items.ENDER_PEARLS)
+                .keepNbtOfReagent(true).build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

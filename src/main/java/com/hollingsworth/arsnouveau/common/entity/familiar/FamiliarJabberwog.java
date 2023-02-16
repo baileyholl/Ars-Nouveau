@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
@@ -24,7 +23,7 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent event) {
+    public PlayState walkPredicate(AnimationEvent<?> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
             return PlayState.CONTINUE;
@@ -34,6 +33,7 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_JABBERWOG.get();
+        return null;
+//        return ModEntities.ENTITY_FAMILIAR_JABBERWOG.get();
     }
 }

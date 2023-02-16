@@ -44,7 +44,7 @@ public class PacketTimedEvent {
         ctx.get().setPacketHandled(true);
     }
 
-    public static Map<String, Function<CompoundTag, Void>> methodMap = new HashMap();
+    public static Map<String, Function<CompoundTag, Void>> methodMap = new HashMap<>();
 
     static {
         methodMap.put(ChimeraSummonEvent.ID, (nbt) -> ChimeraSummonEvent.get(nbt).onPacketHandled());

@@ -100,7 +100,7 @@ public class ParticleUtil {
     }
 
     public static void spawnTouch(ClientLevel world, BlockPos loc, ParticleColor particleColor) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             double d0 = loc.getX() + 0.5;
             double d1 = loc.getY() + 1.0;
             double d2 = loc.getZ() + .5;
@@ -118,7 +118,7 @@ public class ParticleUtil {
     }
 
     public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range) {
-        spawnRitualAreaEffect(pos, world, rand, color, range, 10, 10);
+        spawnRitualAreaEffect(pos, world, rand, color, range, 10, 2);
     }
 
     public static void spawnRitualAreaEffect(BlockPos pos, Level world, RandomSource rand, ParticleColor color, int range, int chance, int numParticles) {
@@ -219,6 +219,16 @@ public class ParticleUtil {
                     GlowParticleData.createData(color),
                     vec.x() + ParticleUtil.inRange(-0.1, 0.1), vec.y() + ParticleUtil.inRange(-0.1, 0.1), vec.z() + ParticleUtil.inRange(-0.1, 0.1),
                     0, 0, 0);
+        }
+    }
+
+    public static void spawnOrb(Level level, ParticleColor color, BlockPos pos, int lifetime) {
+        if (level instanceof ServerLevel server) {
+            for (int i = 0; i <= 10; i++)
+                server.sendParticles(
+                        GlowParticleData.createData(color, 0.4f, 0.5f, lifetime),
+                        pos.getX() + ParticleUtil.inRange(0.3, 0.7), pos.getY() + ParticleUtil.inRange(-0.2, 0.2), pos.getZ() + ParticleUtil.inRange(0.3, 0.7), 1,
+                        0d, 0d, 0, 0);
         }
     }
 }

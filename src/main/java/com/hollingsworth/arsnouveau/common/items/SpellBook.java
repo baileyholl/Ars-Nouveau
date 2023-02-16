@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
@@ -16,6 +18,7 @@ import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -26,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -40,16 +44,17 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDyeable {
+public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDyeable, IRadialProvider {
 
     public SpellTier tier;
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public SpellBook(SpellTier tier) {
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
@@ -69,19 +74,20 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-
-        CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
-            if (iMana.getBookTier() < this.tier.value) {
-                iMana.setBookTier(this.tier.value);
-            }
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
-            if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
-                iMana.setGlyphBonus(cap.getKnownGlyphs().size());
-            }
-        });
+        if(this != ItemsRegistry.CREATIVE_SPELLBOOK.get()) {
+            CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
+                if (iMana.getBookTier() < this.tier.value) {
+                    iMana.setBookTier(this.tier.value);
+                }
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
+                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                }
+            });
+        }
         ISpellCaster caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
+        return caster.castSpell(worldIn, (LivingEntity) playerIn, handIn, Component.translatable("ars_nouveau.invalid_spell"));
     }
 
     /**
@@ -132,6 +138,16 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     }
 
     @Override
+    public ISpellCaster getSpellCaster() {
+        return new BookCaster(new CompoundTag());
+    }
+
+    @Override
+    public ISpellCaster getSpellCaster(CompoundTag tag) {
+        return new BookCaster(tag);
+    }
+
+    @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
@@ -147,7 +163,11 @@ public class SpellBook extends ModItem implements IAnimatable, ICasterTool, IDye
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
-        GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().value);
+        InteractionHand hand = StackUtil.getBookHand(player);
+        if(hand == null){
+            return;
+        }
+        Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
     }
 
     @OnlyIn(Dist.CLIENT)

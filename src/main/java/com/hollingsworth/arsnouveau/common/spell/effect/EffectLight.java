@@ -24,15 +24,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class EffectLight extends AbstractEffect {
+public class EffectLight extends AbstractEffect implements IPotionEffect {
     public static EffectLight INSTANCE = new EffectLight();
 
     private EffectLight() {
@@ -48,9 +48,9 @@ public class EffectLight extends AbstractEffect {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
         if (shooter == null || !shooter.equals(living)) {
-            applyConfigPotion(living, MobEffects.GLOWING, spellStats);
+            ((IPotionEffect)this).applyConfigPotion(living, MobEffects.GLOWING, spellStats);
         }
-        applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
+        ((IPotionEffect)this).applyConfigPotion(living, MobEffects.NIGHT_VISION, spellStats);
     }
 
     @Override
@@ -72,7 +72,8 @@ public class EffectLight extends AbstractEffect {
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
                 tile.color = spellContext.getColors();
-                if (tile instanceof TempLightTile) ((TempLightTile) tile).lengthModifier = spellStats.getDurationMultiplier();
+                if (tile instanceof TempLightTile tempLightTile)
+                    tempLightTile.lengthModifier = spellStats.getDurationMultiplier();
             }
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
 
@@ -97,7 +98,7 @@ public class EffectLight extends AbstractEffect {
         return 25;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE);
@@ -108,9 +109,19 @@ public class EffectLight extends AbstractEffect {
         return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities, they will receive Night Vision and Glowing.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

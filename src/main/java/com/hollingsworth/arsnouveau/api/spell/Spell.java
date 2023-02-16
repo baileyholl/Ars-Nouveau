@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ public class Spell implements Cloneable {
     public String name = "";
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
+
     /**
      * The discount removed from the casting cost of the spell.
      * This value is not saved, but is set to 0 after each cast.
@@ -56,12 +57,12 @@ public class Spell implements Cloneable {
         return this;
     }
 
-    public Spell setRecipe(@Nonnull List<AbstractSpellPart> recipe) {
+    public Spell setRecipe(@NotNull List<AbstractSpellPart> recipe) {
         this.recipe = recipe;
         return this;
     }
 
-    public Spell withColor(@Nonnull ParticleColor color) {
+    public Spell withColor(@NotNull ParticleColor color) {
         this.color = color;
         return this;
     }
@@ -222,6 +223,10 @@ public class Spell implements Cloneable {
         for (int i = 0; i < count; i++)
             recipe.add(index, spellPart);
         return this;
+    }
+
+    public List<ResourceLocation> serializeRecipe(){
+        return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
 
     @Override

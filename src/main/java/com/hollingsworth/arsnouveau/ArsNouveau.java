@@ -1,28 +1,33 @@
 package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.events.ClientHandler;
 import com.hollingsworth.arsnouveau.client.events.TextureEvent;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
+import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,7 +48,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
-    // Has to be runForDist, SafeRunForDist will throw a sided crash
+    @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
@@ -52,6 +57,25 @@ public class ArsNouveau {
         @Override
         public ItemStack makeIcon() {
             return ItemsRegistry.CREATIVE_SPELLBOOK.get().getDefaultInstance();
+        }
+    };
+    public static CreativeModeTab glyphGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), "ars_glyphs") {
+
+        @Override
+        public void fillItemList(NonNullList<ItemStack> pItems) {
+            super.fillItemList(pItems);
+            pItems.sort((ItemStack i1, ItemStack i2) -> {
+                if (i1.getItem() instanceof Glyph g1 && i2.getItem() instanceof Glyph g2) {
+                    return BaseBook.COMPARE_TYPE_THEN_NAME.compare(g1.spellPart, g2.spellPart);
+                } else {
+                    return -1;
+                }
+            });
+        }
+
+        @Override
+        public ItemStack makeIcon() {
+            return ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE).getDefaultInstance();
         }
     };
 
@@ -86,6 +110,7 @@ public class ArsNouveau {
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
+        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager()));
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event) {
@@ -101,6 +126,11 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MENDOSTEEN_POD.asItem(),0.65f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FROSTAYA_POD.asItem(),0.65f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BASTION_POD.asItem(),0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_LEAVES.asItem(),0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_LEAVES.asItem(),0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_LEAVE.asItem(),0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_LEAVES.asItem(),0.3f);
+
             for (RitualTablet tablet : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
                 DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
             }

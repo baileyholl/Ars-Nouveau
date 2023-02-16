@@ -1,0 +1,15 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:terracotta"
+  },
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "minecraft:red_sand",
+      "maxRange": 1
+    }
+  ],
+  "skip_block_place": false
+}

@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.api.spell.wrapped_caster;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -37,5 +39,13 @@ public class TileCaster implements IWrappedCaster{
 
     public BlockEntity getTile(){
         return tile;
+    }
+
+    @Override
+    public Direction getFacingDirection() {
+        if(tile.getBlockState().hasProperty(BlockStateProperties.FACING)){
+            return tile.getBlockState().getValue(BlockStateProperties.FACING);
+        }
+        return Direction.NORTH;
     }
 }

@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,20 +18,22 @@ public class SpellCaster implements ISpellCaster {
     private int slot;
     public ItemStack stack = ItemStack.EMPTY;
     public String flavorText = "";
+    public boolean isHidden;
+    public String hiddenText = "";
 
     public SpellCaster(ItemStack stack) {
         this(stack.getOrCreateTag());
         this.stack = stack;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Spell getSpell() {
         return spells.getOrDefault(getCurrentSlot(), new Spell());
     }
 
     @Override
-    public @Nonnull Spell getSpell(int slot) {
+    public@NotNull Spell getSpell(int slot) {
         return spells.getOrDefault(slot, new Spell());
     }
 
@@ -105,6 +107,28 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
+    public void setSpellHidden(boolean hidden) {
+        this.isHidden = hidden;
+        writeItem(stack);
+    }
+
+    @Override
+    public boolean isSpellHidden() {
+        return isHidden;
+    }
+
+    @Override
+    public void setHiddenRecipe(String recipe) {
+        this.hiddenText = recipe;
+        writeItem(stack);
+    }
+
+    @Override
+    public String getHiddenRecipe() {
+        return hiddenText;
+    }
+
+    @Override
     public String getFlavorText() {
         return flavorText == null ? "" : flavorText;
     }
@@ -120,10 +144,15 @@ public class SpellCaster implements ISpellCaster {
         writeItem(stack);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ConfiguredSpellSound getSound(int slot) {
         return this.getSpell(slot).sound;
+    }
+
+    @Override
+    public void setSound(ConfiguredSpellSound sound) {
+        this.setSound(sound, getCurrentSlot());
     }
 
     @Override
@@ -132,7 +161,7 @@ public class SpellCaster implements ISpellCaster {
         writeItem(stack);
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public ParticleColor getColor() {
         return this.getSpell().color;
@@ -154,6 +183,8 @@ public class SpellCaster implements ISpellCaster {
         }
         tag.put("spells", spellTag);
         tag.putInt("spell_count", getSpells().size());
+        tag.putBoolean("is_hidden", isSpellHidden());
+        tag.putString("hidden_recipe", getHiddenRecipe());
         return tag;
     }
 
@@ -162,6 +193,8 @@ public class SpellCaster implements ISpellCaster {
 
         this.slot = tag.getInt("current_slot");
         this.flavorText = tag.getString("flavor");
+        this.isHidden = tag.getBoolean("is_hidden");
+        this.hiddenText = tag.getString("hidden_recipe");
         CompoundTag spellTag = tag.getCompound("spells");
         for (int i = 0; i < getMaxSlots(); i++) {
             if (spellTag.contains("spell" + i)) {

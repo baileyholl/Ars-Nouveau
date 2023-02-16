@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     int tier;
-    public boolean isOff;
     int taskIndex;
 
     public BookwyrmLecternTile(BlockPos pos, BlockState state) {

@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
+import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -16,10 +16,10 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class MobJarItem extends BlockItem implements IAnimatable {
     public MobJarItem(Block pBlock, Properties pProperties) {
@@ -42,7 +42,8 @@ public class MobJarItem extends BlockItem implements IAnimatable {
     public void registerControllers(AnimationData data) {
 
     }
-    AnimationFactory factory = new AnimationFactory(this);
+
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -66,6 +67,6 @@ public class MobJarItem extends BlockItem implements IAnimatable {
         CompoundTag entityTag = blockTag.getCompound("entityTag");
         if(entityTag.isEmpty())
             return null;
-        return EntityType.loadEntityRecursive(entityTag, level, Function.identity());
+        return MobJarTile.loadEntityFromTag(level, entityTag);
     }
 }

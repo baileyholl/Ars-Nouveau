@@ -70,7 +70,7 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public GlyphUnlockMenu(BlockPos pos) {
         super();
-        allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
+        allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values().stream().filter(AbstractSpellPart::shouldShowInUnlock).toList());
         this.displayedGlyphs = new ArrayList<>(allParts);
         this.scribesPos = pos;
     }
@@ -210,7 +210,7 @@ public class GlyphUnlockMenu extends BaseBook {
         layoutAllGlyphs(page);
     }
 
-    public static Comparator<AbstractSpellPart> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.getTier().value).thenComparing(AbstractSpellPart::getLocaleName);
+    public static Comparator<AbstractSpellPart> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.getConfigTier().value).thenComparing(AbstractSpellPart::getLocaleName);
 
 
     public void layoutAllGlyphs(int page) {
@@ -267,12 +267,12 @@ public class GlyphUnlockMenu extends BaseBook {
         if (filterSelected == Filter.ALL)
             return spellParts;
         if (filterSelected == Filter.TIER1) {
-            return spellParts.stream().filter(a -> a.getTier().value == 1).collect(Collectors.toList());
+            return spellParts.stream().filter(a -> a.getConfigTier().value == 1).collect(Collectors.toList());
         }
         if (filterSelected == Filter.TIER2) {
-            return spellParts.stream().filter(a -> a.getTier().value == 2).collect(Collectors.toList());
+            return spellParts.stream().filter(a -> a.getConfigTier().value == 2).collect(Collectors.toList());
         }
-        return spellParts.stream().filter(a -> a.getTier().value == 3).collect(Collectors.toList());
+        return spellParts.stream().filter(a -> a.getConfigTier().value == 3).collect(Collectors.toList());
     }
 
     public void onGlyphClick(Button button) {

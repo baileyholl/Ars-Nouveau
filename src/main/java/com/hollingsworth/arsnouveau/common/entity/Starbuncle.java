@@ -1,12 +1,15 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
@@ -27,7 +30,6 @@ import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -60,6 +62,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -67,11 +70,14 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
+
 import javax.annotation.Nullable;
 import java.util.*;
+
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
 
     public enum StarbuncleGoalState {
@@ -102,7 +108,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public StarbuncleData data = new StarbuncleData(new CompoundTag());
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
 
-    AnimationFactory manager = new AnimationFactory(this);
+    AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public Starbuncle(EntityType<Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
@@ -163,13 +169,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
-            return false;
-        return super.hurt(source, amount);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
-    private PlayState dancePredicate(AnimationEvent event) {
+    private PlayState dancePredicate(AnimationEvent<?> event) {
         if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master"));
             return PlayState.CONTINUE;
@@ -177,7 +181,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         return PlayState.STOP;
     }
 
-    private PlayState animationPredicate(AnimationEvent event) {
+    private PlayState animationPredicate(AnimationEvent<?> event) {
         if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
@@ -267,14 +271,15 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void onWanded(Player playerEntity) {
+        boolean removeAcc = this.dynamicBehavior.clearOrRemove();
         this.dynamicBehavior.onWanded(playerEntity);
         data.pathBlock = null;
         data.bedPos = null;
-        if(!getCosmeticItem().isEmpty()){
+        if(!getCosmeticItem().isEmpty() && removeAcc){
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), getCosmeticItem().split(1)));
             if(!(dynamicBehavior instanceof StarbyTransportBehavior)){
                 dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-                PortUtil.sendMessage(playerEntity, "ars_nouveau.starbuncle.default_behavior");
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.default_behavior"));
                 syncBehavior();
             }
             this.setCosmeticItem(ItemStack.EMPTY);
@@ -551,8 +556,26 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         this.entityData.set(COLOR, data.color);
     }
 
+    @Override
+    public void setColor(String color, Starbuncle object) {
+        setColor(color);
+    }
+
+    @Override
+    public String getColor(Starbuncle object) {
+        return this.entityData.get(COLOR);
+    }
+
     public String getColor() {
         return this.entityData.get(COLOR);
+    }
+
+    @Override
+    public ResourceLocation getTexture(Starbuncle entity) {
+        String color = getColor(entity);
+        if (color.isEmpty()) color = COLORS.ORANGE.name();
+
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color.toLowerCase() + ".png");
     }
 
     public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};
@@ -600,7 +623,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             super(tag);
 
             if (tag.contains("path")) {
-                pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
+                pathBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("path")));
             }
             bedPos = NBTUtil.getBlockPos(tag, "bed_");
             if (bedPos.equals(BlockPos.ZERO))

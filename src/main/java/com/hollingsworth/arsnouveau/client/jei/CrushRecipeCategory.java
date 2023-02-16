@@ -20,8 +20,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
@@ -64,12 +63,16 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void draw(CrushRecipe recipe, @Nonnull IRecipeSlotsView slotsView, @Nonnull PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(CrushRecipe recipe,@NotNull IRecipeSlotsView slotsView,@NotNull PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw(matrixStack, 30, 6);
+        arrow.draw(matrixStack, 22, 6);
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs.size(); i++) {
-            renderer.draw(matrixStack, Math.round(100 * recipe.outputs.get(i).chance - 0.5f) + "%", 85f, 11f + 17f * i, 10);
+            CrushRecipe.CrushOutput output = recipe.outputs.get(i);
+            renderer.draw(matrixStack, Math.round(100 * output.chance - 0.5f) + "%", 98f, 11f + 17f * i, 10);
+            if(output.maxRange > 1) {
+                renderer.draw(matrixStack, "1-" + output.maxRange, 75f, 11f + 17f * i, 10);
+            }
         }
     }
 
@@ -78,7 +81,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input);
         for (int i = 0; i < recipe.outputs.size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs.get(i);
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 5 + 16 * i).addItemStack(output.stack);
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 5 + 16 * i).addItemStack(output.stack);
         }
     }
 }

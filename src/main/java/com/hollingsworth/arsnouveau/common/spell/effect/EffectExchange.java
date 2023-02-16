@@ -33,8 +33,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +48,7 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         Vec3 origLoc = shooter.position;
         if (!ForgeEventFactory.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
@@ -59,7 +59,7 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult result, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult result, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE));
         BlockState origState = world.getBlockState(result.getBlockPos());
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
@@ -116,11 +116,11 @@ public class EffectExchange extends AbstractEffect {
 
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -141,7 +141,7 @@ public class EffectExchange extends AbstractEffect {
         return 50;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

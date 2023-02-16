@@ -30,10 +30,10 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class GlyphRecipeProvider implements DataProvider {
 
-    protected final DataGenerator generator;
+    public final DataGenerator generator;
     protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
-    protected List<GlyphRecipe> recipes = new ArrayList<>();
+    public List<GlyphRecipe> recipes = new ArrayList<>();
 
     public GlyphRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
@@ -90,7 +90,7 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectHarvest.INSTANCE).withItem(ItemsRegistry.EARTH_ESSENCE).withItem(Items.IRON_HOE, 1));
         add(get(EffectHeal.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.GLISTERING_MELON_SLICE, 4).withItem(Items.GOLDEN_APPLE));
         add(get(EffectHex.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.FERMENTED_SPIDER_EYE).withItem(Items.BLAZE_ROD, 3).withItem(Items.WITHER_ROSE));
-        add(get(EffectIgnite.INSTANCE).withItem(Items.FLINT_AND_STEEL).withItem(Items.COAL, 3));
+        add(get(EffectIgnite.INSTANCE).withItem(Items.FLINT_AND_STEEL).withIngredient(ItemTags.COALS, 3));
         add(get(EffectIntangible.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.PHANTOM_MEMBRANE, 3).withIngredient(Ingredient.of(Tags.Items.ENDER_PEARLS), 2));
         add(get(EffectInteract.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.LEVER).withIngredient(Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES)).withIngredient(Ingredient.of(ItemTags.BUTTONS)));
         add(get(EffectInvisibility.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.FERMENTED_SPIDER_EYE).withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE)));
@@ -123,6 +123,11 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectName.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.NAME_TAG));
         add(get(EffectSenseMagic.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(ItemsRegistry.DOWSING_ROD).withItem(ItemsRegistry.STARBUNCLE_SHARD));
         add(get(EffectInfuse.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.GLASS_BOTTLE).withIngredient(Tags.Items.RODS_BLAZE, 1));
+        add(get(EffectWall.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
+                .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+        add(get(EffectRotate.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE));
+        add(get(EffectAnimate.INSTANCE).withItem(ItemsRegistry.CONJURATION_ESSENCE).withIngredient(Tags.Items.OBSIDIAN, 3));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             DataProvider.saveStable(cache, recipe.asRecipe(), path);
@@ -140,7 +145,7 @@ public class GlyphRecipeProvider implements DataProvider {
 
     public int getExpFromTier(AbstractSpellPart spellPart) {
 
-        return switch (spellPart.getTier().value) {
+        return switch (spellPart.defaultTier().value) {
             case (1):
                 yield 27;
             case (2):

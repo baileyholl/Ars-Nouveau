@@ -12,12 +12,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
-public class EffectHarm extends AbstractEffect implements IDamageEffect {
+public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotionEffect {
     public static EffectHarm INSTANCE = new EffectHarm();
 
     private EffectHarm() {
@@ -25,12 +25,12 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nonnull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof ItemEntity)) {
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
             int time = (int) spellStats.getDurationMultiplier();
             if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
-                applyConfigPotion(entity, MobEffects.POISON, spellStats);
+                ((IPotionEffect)this).applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
                 attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), DamageSource.playerAttack(getPlayer(shooter, (ServerLevel) world)), (float) damage);
             }
@@ -57,7 +57,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect {
         return 15;
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -77,9 +77,19 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect {
         return "A spell you start with. Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
     }
 
-    @Nonnull
+   @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 30 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 8 : EXTEND_TIME.get();
     }
 }

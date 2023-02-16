@@ -5,10 +5,16 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
@@ -36,13 +43,12 @@ public class WarpScroll extends ModItem {
             return false;
 
         String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
-        WarpScrollData data = new WarpScrollData(stack);
+        WarpScrollData data = WarpScrollData.get(stack);
         if (data.isValid()
-                && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
-                && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
-                && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-                || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName))
-                && SourceUtil.takeSourceWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+            && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
+            && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+            && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
+            && SourceUtil.takeSourceWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
@@ -113,6 +119,9 @@ public class WarpScroll extends ModItem {
         }
         BlockPos pos = data.pos;
         tooltip.add(Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
+        if (!ServerConfig.ENABLE_WARP_PORTALS.get()) {
+            tooltip.add(Component.translatable("ars_nouveau.warp_scroll.disabled_warp_portal").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+        }
     }
 
     public static class WarpScrollData extends ItemstackData {
@@ -121,6 +130,10 @@ public class WarpScroll extends ModItem {
         private String dimension;
         private Vec2 rotation;
 
+        /**
+         * Use static get method.
+         */
+        @Deprecated(forRemoval = false)
         public WarpScrollData(ItemStack stack) {
             super(stack);
             CompoundTag tag1 = getItemTag(stack);
@@ -129,6 +142,13 @@ public class WarpScroll extends ModItem {
             pos = tag1.contains("x") ? new BlockPos(tag1.getInt("x"), tag1.getInt("y"), tag1.getInt("z")) : null;
             dimension = tag1.getString("dim");
             rotation = new Vec2(tag1.getFloat("xRot"), tag1.getFloat("yRot"));
+        }
+
+        public static WarpScrollData get(ItemStack stack) {
+            if(stack.getItem() instanceof StableWarpScroll){
+                return new StableWarpScroll.StableScrollData(stack);
+            }
+            return new WarpScrollData(stack);
         }
 
         public boolean isValid() {
@@ -148,6 +168,15 @@ public class WarpScroll extends ModItem {
             this.dimension = dimension;
             this.rotation = rotation;
             writeItem();
+        }
+
+        public @Nullable ServerLevel getDimension(ServerLevel serverLevel){
+            DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(this.dimension));
+            if(type != null) {
+                ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimension));
+                return serverLevel.getServer().getLevel(resourcekey);
+            }
+            return null;
         }
 
         @Override

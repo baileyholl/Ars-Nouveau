@@ -24,6 +24,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -174,6 +175,9 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        this.toPos = null;
+        this.fromPos = null;
+        
         if (NBTUtil.hasBlockPos(tag, TO)) {
             this.toPos = NBTUtil.getBlockPos(tag, TO);
         }
@@ -218,21 +222,21 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         }
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
-        data.addAnimationController(new AnimationController(this, "float_controller", 0, this::floatPredicate));
+        data.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        data.addAnimationController(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
     }
 
     private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
         return PlayState.CONTINUE;
     }
 
     private <P extends IAnimatable> PlayState floatPredicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation"));
         return PlayState.CONTINUE;
     }
 

@@ -67,8 +67,8 @@ public class UnlockGlyphButton extends Button {
                     if (Screen.hasShiftDown()) {
                         tip.add(spellPart.getBookDescLang());
                     } else {
-                        tip.add(Component.translatable("ars_nouveau.tier", spellPart.getTier().value).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-                        tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift"));
+                        tip.add(Component.translatable("ars_nouveau.tier", spellPart.getConfigTier().value).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                        tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
                     }
                     parent.tooltip = tip;
                     parent.hoveredRecipe = recipe;

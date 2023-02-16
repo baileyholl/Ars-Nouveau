@@ -38,7 +38,7 @@ public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingAppa
                 tile.renderEntity = new ItemEntity(tile.getLevel(), x, y, z, tile.getStack());
             }
             stack.pushPose();
-            RenderUtils.translate(bone, stack);
+            RenderUtils.translateMatrixToBone(stack, bone);
             stack.translate(0, +0.4, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = tile.renderEntity.getItem();

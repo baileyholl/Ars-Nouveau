@@ -12,6 +12,7 @@ public class SummoningTile extends ModdedTile implements ITickable {
     public boolean converted;
 
     public static final BooleanProperty CONVERTED = BooleanProperty.create("converted");
+    public boolean isOff;
 
     public SummoningTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -35,11 +36,13 @@ public class SummoningTile extends ModdedTile implements ITickable {
     public void load(CompoundTag compound) {
         super.load(compound);
         this.converted = compound.getBoolean("converted");
+        this.isOff = compound.getBoolean("off");
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         tag.putBoolean("converted", converted);
+        tag.putBoolean("off", isOff);
     }
 
 }

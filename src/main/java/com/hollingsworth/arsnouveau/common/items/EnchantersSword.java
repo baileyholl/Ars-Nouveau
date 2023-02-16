@@ -2,6 +2,9 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.client.renderer.item.SwordRenderer;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -24,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProper
 public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
-        super(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
+        this(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
     }
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
@@ -70,12 +74,14 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity entity) {
         ISpellCaster caster = getSpellCaster(stack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(player.level, caster.modifySpellBeforeCasting(target.level, player, InteractionHand.MAIN_HAND, caster.getSpell()), player));
+        IWrappedCaster wrappedCaster = entity instanceof  Player player ? new PlayerCaster(player) : new LivingCaster(entity);
+        SpellContext context = new SpellContext(entity.level, caster.modifySpellBeforeCasting(target.level, entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster);
+        SpellResolver resolver = entity instanceof Player ? new SpellResolver(context) : new EntitySpellResolver(context);
         EntityHitResult entityRes = new EntityHitResult(target);
         resolver.onCastOnEntity(stack, entityRes.getEntity(), InteractionHand.MAIN_HAND);
-        return super.hurtEnemy(stack, target, player);
+        return super.hurtEnemy(stack, target, entity);
     }
 
     @Override
@@ -88,7 +94,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     public void registerControllers(AnimationData animationData) {
     }
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

@@ -22,6 +22,8 @@ public class LibBlockNames {
     public static final String IMBUEMENT_CHAMBER = "imbuement_chamber";
     public static final String ARCANE_CORE = "arcane_core";
     public static final String ENCHANTED_SPELL_TURRET = "spell_turret";
+    public static final String ROTATING_SPELL_TURRET = "rotating_spell_turret";
+
     public static final String REDSTONE_AIR = "redstone_air";
     public static final String INTANGIBLE_AIR = "intangible_air";
     public static final String VOLCANIC_SOURCELINK = "volcanic_sourcelink";
@@ -143,6 +145,16 @@ public class LibBlockNames {
     public static final String MOB_JAR = "mob_jar";
     public static final String VOID_PRISM = "void_prism";
     public static final String REPOSITORY = "repository";
+
+    public static final String FALSE_WEAVE = "falseweave";
+    public static final String GHOST_WEAVE = "ghostweave";
+    public static final String MIRROR_WEAVE = "mirrorweave";
+    public static final String SKY_WEAVE = "sky_block";
+    public static final String MAGEBLOOM_BLOCK = "magebloom_block";
+    public static final String MINI_PEDESTAL = "arcane_platform";
+    public static final String MAGELIGHT_TORCH = "magelight_torch";
+    public static final String BRAZIER_RELAY = "brazier_relay";
+    public static final String TEMPORARY_BLOCK = "temporary_block";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
