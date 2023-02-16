@@ -829,6 +829,7 @@
   "ars_nouveau.wand.invalid": "Invalid spell. Wands accept Effects and Augments only.",
   "ars_nouveau.wand.spell_invalid": "Invalid Spell.",
   "ars_nouveau.warp_scroll.already_recorded": "This scroll is already bound to a location.",
+  "ars_nouveau.warp_scroll.disabled_warp_portal": "Permanent warp portals are currently disabled",
   "ars_nouveau.warp_scroll.inv_full": "There is no room in your inventory.",
   "ars_nouveau.warp_scroll.no_location": "Use while sneaking to set a location.",
   "ars_nouveau.warp_scroll.recorded": "You record your location to your Warp Scroll.",
