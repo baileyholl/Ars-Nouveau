@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-04T14:34:44.5845639	Tags for minecraft:entity_type
+// 1.19.2	2023-02-15T20:33:45.9052556	Tags for minecraft:entity_type
 a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_types/an_hostile.json
 290c285b1e334d322b8d070b2c6a071114b1d70c data/ars_nouveau/tags/entity_types/berry_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_types/disintegration_blacklist.json
@@ -6,6 +6,7 @@ a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_types/an_h
 29671cfa11d074462c259806e9d60468451e3cdb data/ars_nouveau/tags/entity_types/drygmy_blacklist.json
 37c0c70962a460e0c2d62b6dafe0ee563c8773d4 data/ars_nouveau/tags/entity_types/familiar.json
 d845fe0d8c60d85668664fdf64a9c87ca2176e4c data/ars_nouveau/tags/entity_types/jar_blacklist.json
+e00f2931577049b9a4400a87ed9c249373be376c data/ars_nouveau/tags/entity_types/jar_release_blacklist.json
 e30b9bd45b9c841fb9fb122c492d2dfa1768ff22 data/ars_nouveau/tags/entity_types/jar_whitelist.json
 6ea663c420f871864a11d18e9448d602520eeff9 data/ars_nouveau/tags/entity_types/lingering_blacklist.json
 813db9126b6a9139e251e112ccc1802ac0bc92a5 data/ars_nouveau/tags/entity_types/magic_find.json

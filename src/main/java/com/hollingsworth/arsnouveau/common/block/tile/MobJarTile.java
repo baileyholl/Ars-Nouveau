@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -120,7 +121,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
         if(entityTag == null)
             return false;
         Entity entity = loadEntityFromTag(level, entityTag);
-        if(entity == null)
+        if(entity == null || entity.getType().is(EntityTags.JAR_RELEASE_BLACKLIST))
             return false;
         entity.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 1.0, getBlockPos().getZ() + 0.5);
         level.addFreshEntity(entity);

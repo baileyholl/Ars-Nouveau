@@ -58,6 +58,8 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
         this.tag(EntityTags.BERRY_BLACKLIST)
                 .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.WHIRLISPRIG_TYPE.get(), EntityType.FOX, EntityType.BEE);
+
+        this.tag(EntityTags.JAR_RELEASE_BLACKLIST).add(EntityType.ENDER_DRAGON);
     }
 
     private static TagKey<EntityType<?>> create(ResourceLocation pName) {
