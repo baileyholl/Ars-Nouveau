@@ -41,7 +41,7 @@ public class LangDatagen extends LanguageProvider {
         }
 
         for (PerkItem i : arsNouveauAPI.getPerkItemMap().values()) {
-            if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+            if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());
             }
