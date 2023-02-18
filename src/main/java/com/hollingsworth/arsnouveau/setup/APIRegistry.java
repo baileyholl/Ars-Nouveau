@@ -107,6 +107,7 @@ public class APIRegistry {
         registerSpell(EffectInfuse.INSTANCE);
         registerSpell(EffectRotate.INSTANCE);
         registerSpell(EffectWall.INSTANCE);
+        registerSpell(EffectAnimate.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -157,11 +158,11 @@ public class APIRegistry {
         registerPerk(IgnitePerk.INSTANCE);
         registerPerk(TotemPerk.INSTANCE);
         registerPerk(VampiricPerk.INSTANCE);
+
     }
 
     //register things only in dev, safe from production
     private static void registerWip() {
-        registerSpell(EffectAnimate.INSTANCE);
         //registerPerk(BondedPerk.INSTANCE);
         //registerFamiliar(new JabberwogFamiliar());
     }
