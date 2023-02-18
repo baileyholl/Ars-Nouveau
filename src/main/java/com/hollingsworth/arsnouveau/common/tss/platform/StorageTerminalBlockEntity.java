@@ -1,15 +1,19 @@
 package com.hollingsworth.arsnouveau.common.tss.platform;
 
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,20 +24,25 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
 
-public class StorageTerminalBlockEntity extends BlockEntity implements MenuProvider, ITickable {
+public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvider, ITickable, IWandable {
 	private IItemHandler itemHandler;
 	private Map<StoredItemStack, Long> items = new HashMap<>();
 	private int sort;
 	private String lastSearch = "";
 	private boolean updateItems;
-	private int beaconLevel;
+	private List<BlockPos> connectedInventories = new ArrayList<>();
 
 	public StorageTerminalBlockEntity(BlockPos pos, BlockState state) {
 		super(BlockRegistry.STORAGE_TERMINAL_TILE.get(), pos, state);
@@ -104,25 +113,42 @@ public class StorageTerminalBlockEntity extends BlockEntity implements MenuProvi
 	}
 
 	@Override
+	public void onWanded(Player playerEntity) {
+		this.connectedInventories = new ArrayList<>();
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
+		updateBlock();
+	}
+
+	@Override
+	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+		if(storedPos != null) {
+			this.connectedInventories.add(storedPos);
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.melder.from_set", connectedInventories.size()));
+			updateBlock();
+		}
+	}
+
+	@Override
 	public void tick() {
 		if(level.isClientSide)
 			return;
 		if(updateItems) {
-			BlockState st = level.getBlockState(worldPosition);
-			Direction d = st.getValue(AbstractStorageTerminalBlock.FACING);
-			AbstractStorageTerminalBlock.TerminalPos p = st.getValue(AbstractStorageTerminalBlock.TERMINAL_POS);
-			if(p == AbstractStorageTerminalBlock.TerminalPos.UP)d = Direction.UP;
-			if(p == AbstractStorageTerminalBlock.TerminalPos.DOWN)d = Direction.DOWN;
-			BlockEntity invTile = level.getBlockEntity(worldPosition.relative(d));
 			items.clear();
-			if(invTile != null) {
-				LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, d.getOpposite());
-				itemHandler = lih.orElse(null);
-				if(itemHandler != null) {
-					IntStream.range(0, itemHandler.getSlots()).mapToObj(itemHandler::getStackInSlot).filter(s -> !s.isEmpty()).
-					map(StoredItemStack::new).forEach(s -> items.merge(s, s.getQuantity(), (a, b) -> a + b));
+			List<IItemHandlerModifiable> handlers = new ArrayList<>();
+			for(BlockPos pos : connectedInventories) {
+				BlockEntity invTile = level.getBlockEntity(pos);
+				if(invTile != null) {
+					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+					lih.ifPresent(i -> {
+						if(i instanceof IItemHandlerModifiable) {
+							handlers.add((IItemHandlerModifiable) i);
+						}
+					});
 				}
 			}
+			itemHandler = new CombinedInvWrapper(handlers.toArray(new IItemHandlerModifiable[0]));
+			IntStream.range(0, itemHandler.getSlots()).mapToObj(itemHandler::getStackInSlot).filter(s -> !s.isEmpty()).map(StoredItemStack::new).forEach(s -> items.merge(s, s.getQuantity(), Long::sum));
+
 			updateItems = false;
 		}
 	}
@@ -142,11 +168,26 @@ public class StorageTerminalBlockEntity extends BlockEntity implements MenuProvi
 	@Override
 	public void saveAdditional(CompoundTag compound) {
 		compound.putInt("sort", sort);
+		ListTag list = new ListTag();
+		for (BlockPos pos : connectedInventories) {
+			CompoundTag c = new CompoundTag();
+			c.putInt("x", pos.getX());
+			c.putInt("y", pos.getY());
+			c.putInt("z", pos.getZ());
+			list.add(c);
+		}
+		compound.put("invs", list);
 	}
 
 	@Override
 	public void load(CompoundTag compound) {
 		sort = compound.getInt("sort");
+		ListTag list = compound.getList("invs", 10);
+		connectedInventories.clear();
+		for (int i = 0; i < list.size(); i++) {
+			CompoundTag c = list.getCompound(i);
+			connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
+		}
 		super.load(compound);
 	}
 
@@ -158,7 +199,4 @@ public class StorageTerminalBlockEntity extends BlockEntity implements MenuProvi
 		lastSearch = string;
 	}
 
-	public int getBeaconLevel() {
-		return beaconLevel;
-	}
 }

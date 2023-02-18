@@ -74,7 +74,7 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity {
 			ItemStack itemstack = craftMatrix.getItem(i);
 			if (!itemstack.isEmpty()) {
 				CompoundTag compoundnbt = new CompoundTag();
-				compoundnbt.putByte("Slot", (byte)i);
+				compoundnbt.putInt("Slot", i);
 				itemstack.save(compoundnbt);
 				listnbt.add(compoundnbt);
 			}
@@ -92,7 +92,7 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity {
 
 		for(int i = 0; i < listnbt.size(); ++i) {
 			CompoundTag compoundnbt = listnbt.getCompound(i);
-			int j = compoundnbt.getByte("Slot") & 255;
+			int j = compoundnbt.getInt("Slot");
 			if (j >= 0 && j < craftMatrix.getContainerSize()) {
 				craftMatrix.setItem(j, ItemStack.of(compoundnbt));
 			}

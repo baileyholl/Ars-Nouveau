@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -15,6 +16,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Collections;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -38,6 +41,8 @@ public class PlayerEvent {
             Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(Component.literal(spell.getDisplayString()));
         }
+
+        Collections.addAll(event.getToolTip(), ClientInfo.storageTooltip);
     }
 
     @SubscribeEvent

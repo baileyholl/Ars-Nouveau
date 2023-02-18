@@ -33,7 +33,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 	private int lines;
 	protected Inventory pinv;
 	public Runnable onPacket;
-	public int terminalData, beaconLvl;
+	public int terminalData;
 	public String search;
 	public boolean noSort;
 
@@ -52,7 +52,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 			if(onPacket != null)
 				onPacket.run();
 		}, () -> te != null ? te.getSorting() : 0));
-		addDataSlot(DataSlots.create(v -> beaconLvl = v, () -> te != null ? te.getBeaconLevel() : 0));
 	}
 
 	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv) {
@@ -172,7 +171,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		return storageSlotList.get(id);
 	}
 
-	public static enum SlotAction {
+	public enum SlotAction {
 		PULL_OR_PUSH_STACK, PULL_ONE, SPACE_CLICK, SHIFT_PULL, GET_HALF, GET_QUARTER;//CRAFT
 		public static final SlotAction[] VALUES = values();
 	}

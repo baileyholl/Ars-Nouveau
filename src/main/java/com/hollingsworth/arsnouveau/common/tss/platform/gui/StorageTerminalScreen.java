@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
@@ -8,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class StorageTerminalScreen extends AbstractStorageTerminalScreen<StorageTerminalMenu> {
-	private static final ResourceLocation gui = new ResourceLocation("toms_storage", "textures/gui/storage_terminal.png");
+	private static final ResourceLocation gui = new ResourceLocation(ArsNouveau.MODID, "textures/gui/storage_terminal.png");
 
 	public StorageTerminalScreen(StorageTerminalMenu screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);

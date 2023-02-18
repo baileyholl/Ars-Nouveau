@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.tss.platform.PlatformContainerScreen;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IDataReceiver;
@@ -28,7 +29,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
@@ -307,27 +307,15 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		k = j1;
 		this.blit(st, i, j + (int) ((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
 
-		if(menu.beaconLvl > 0) {
-			this.itemRenderer.renderAndDecorateItem(this.minecraft.player, new ItemStack(Items.BEACON), leftPos - 18, topPos - 16, 0);
-
-//			if(isHovering(-18, -16, 16, 16, mouseX, mouseY)) {
-//				String info;
-//				if(menu.beaconLvl >= Config.get().wirelessTermBeaconLvlDim)info = "\\" + I18n.get("tooltip.toms_storage.terminal_beacon.anywhere");
-//				else if(menu.beaconLvl >= Config.get().wirelessTermBeaconLvl)info = "\\" + I18n.get("tooltip.toms_storage.terminal_beacon.sameDim");
-//				else info = "";
-//				renderComponentTooltip(st, Arrays.stream(I18n.get("tooltip.toms_storage.terminal_beacon", menu.beaconLvl, info).split("\\\\")).map(Component::literal).collect(Collectors.toList()), mouseX, mouseY);
-//			}
-		}
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
 			StorageTerminalMenu.SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
 			if(slot.stack != null) {
-				//TODO: Fix tooltip
-//				if (slot.stack.getQuantity() > 9999) {
-//					StorageModClient.setTooltip(Component.translatable("tooltip.toms_storage.amount", slot.stack.getQuantity()));
-//				}
-//				renderTooltip(st, slot.stack.getActualStack(), mouseX, mouseY);
-//				StorageModClient.setTooltip();
+				if (slot.stack.getQuantity() > 9999) {
+					ClientInfo.setTooltip(Component.translatable("tooltip.toms_storage.amount", slot.stack.getQuantity()));
+				}
+				renderTooltip(st, slot.stack.getActualStack(), mouseX, mouseY);
+				ClientInfo.setTooltip();
 			}
 		} else
 			this.renderTooltip(st, mouseX, mouseY);
@@ -453,53 +441,34 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	public boolean isPullOne(int mouseButton) {
-		switch (ctrlm()) {
-		case AE:
-			return mouseButton == 1 && hasShiftDown();
-		case RS:
-			return mouseButton == 2;
-		case DEF:
-			return mouseButton == 1 && !menu.getCarried().isEmpty();
-		default:
-			return false;
-		}
+		return switch (ctrlm()) {
+			case AE -> mouseButton == 1 && hasShiftDown();
+			case RS -> mouseButton == 2;
+			case DEF -> mouseButton == 1 && !menu.getCarried().isEmpty();
+		};
 	}
 
 	public boolean isTransferOne(int mouseButton) {
-		switch (ctrlm()) {
-		case AE:
-			return hasShiftDown() && hasControlDown();//not in AE
-		case RS:
-			return hasShiftDown() && mouseButton == 2;
-		case DEF:
-			return mouseButton == 1 && hasShiftDown();
-		default:
-			return false;
-		}
+		return switch (ctrlm()) {
+			case AE -> hasShiftDown() && hasControlDown();//not in AE
+			case RS -> hasShiftDown() && mouseButton == 2;
+			case DEF -> mouseButton == 1 && hasShiftDown();
+		};
 	}
 
 	public boolean pullHalf(int mouseButton) {
-		switch (ctrlm()) {
-		case AE:
-			return mouseButton == 1;
-		case RS:
-			return mouseButton == 1;
-		case DEF:
-			return mouseButton == 1 && menu.getCarried().isEmpty();
-		default:
-			return false;
-		}
+		return switch (ctrlm()) {
+			case AE -> mouseButton == 1;
+			case RS -> mouseButton == 1;
+			case DEF -> mouseButton == 1 && menu.getCarried().isEmpty();
+		};
 	}
 
 	public boolean pullNormal(int mouseButton) {
-		switch (ctrlm()) {
-		case AE:
-		case RS:
-		case DEF:
-			return mouseButton == 0;
-		default:
-			return false;
-		}
+		return switch (ctrlm()) {
+			case AE, RS, DEF -> mouseButton == 0;
+			default -> false;
+		};
 	}
 
 	private ControllMode ctrlm() {
@@ -516,7 +485,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			this.onClose();
 			return true;
 		}
-		return !this.searchField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) && !this.searchField.canConsumeInput() ? super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) : true;
+		return this.searchField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.searchField.canConsumeInput() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
 	@Override

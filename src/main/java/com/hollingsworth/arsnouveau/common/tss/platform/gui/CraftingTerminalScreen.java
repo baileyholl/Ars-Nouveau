@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -19,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<CraftingTerminalMenu> implements RecipeUpdateListener {
-	private static final ResourceLocation gui = new ResourceLocation("toms_storage", "textures/gui/crafting_terminal.png");
+	private static final ResourceLocation gui = new ResourceLocation(ArsNouveau.MODID, "textures/gui/crafting_terminal.png");
 	private final RecipeBookComponent recipeBookGui;
 	private boolean widthTooNarrow;
 	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
