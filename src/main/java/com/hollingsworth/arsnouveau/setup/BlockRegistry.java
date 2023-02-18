@@ -351,6 +351,13 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.VOID_PRISM, registryName = BlockRegistryKey)
     public static VoidPrism VOID_PRISM;
 
+
+    @ObjectHolder(value = prepend + LibBlockNames.REPOSITORY, registryName = BlockRegistryKey)
+    public static RepositoryBlock REPOSITORY;
+
+    @ObjectHolder(value = prepend + LibBlockNames.REPOSITORY, registryName = BlockEntityRegistryKey)
+    public static BlockEntityType<RepositoryTile> REPOSITORY_TILE;
+
     @ObjectHolder(value = prepend + LibBlockNames.FALSE_WEAVE, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<FalseWeaveTile> FALSE_WEAVE_TILE;
 
@@ -488,6 +495,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
 
+        registry.register(LibBlockNames.REPOSITORY, new RepositoryBlock());
         registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
@@ -541,6 +549,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
         registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
         registry.register(LibBlockNames.MOB_JAR, BlockEntityType.Builder.of(MobJarTile::new, BlockRegistry.MOB_JAR).build(null));
+        registry.register(LibBlockNames.REPOSITORY, BlockEntityType.Builder.of(RepositoryTile::new, BlockRegistry.REPOSITORY).build(null));
         registry.register(LibBlockNames.FALSE_WEAVE, BlockEntityType.Builder.of(FalseWeaveTile::new, BlockRegistry.FALSE_WEAVE).build(null));
         registry.register(LibBlockNames.MIRROR_WEAVE, BlockEntityType.Builder.of(MirrorWeaveTile::new, BlockRegistry.MIRROR_WEAVE).build(null));
         registry.register(LibBlockNames.GHOST_WEAVE, BlockEntityType.Builder.of(GhostWeaveTile::new, BlockRegistry.GHOST_WEAVE).build(null));
@@ -746,6 +755,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
         registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
 
+        registry.register(LibBlockNames.REPOSITORY, getDefaultBlockItem(BlockRegistry.REPOSITORY));
         registry.register(LibBlockNames.GHOST_WEAVE, getDefaultBlockItem(BlockRegistry.GHOST_WEAVE));
         registry.register(LibBlockNames.FALSE_WEAVE, getDefaultBlockItem(BlockRegistry.FALSE_WEAVE));
         registry.register(LibBlockNames.MIRROR_WEAVE, getDefaultBlockItem(BlockRegistry.MIRROR_WEAVE));
@@ -792,13 +802,11 @@ public class BlockRegistry {
     public static RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK;
     public static RegistryWrapper<SkyWeave> SKY_WEAVE;
     public static RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK;
-    public static RegistryWrapper<RepositoryBlock> LECTERN_BLOCK;
 
     public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
     public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
     public static RegistryObject<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE;
     public static RegistryObject<BlockEntityType<TemporaryTile>> TEMPORARY_TILE;
-    public static RegistryObject<BlockEntityType<StorageControllerBlockEntity>> LECTERN_TILE;
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
         ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
@@ -808,7 +816,6 @@ public class BlockRegistry {
         RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
         SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
-        LECTERN_BLOCK = registerBlock(LibBlockNames.LECTERN, RepositoryBlock::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -824,7 +831,6 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
         ITEMS.register(LibBlockNames.SKY_WEAVE, () ->getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
         ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () ->getDefaultBlockItem(BlockRegistry.TEMPORARY_BLOCK.get()));
-        ITEMS.register(LibBlockNames.LECTERN, () ->getDefaultBlockItem(BlockRegistry.LECTERN_BLOCK.get()));
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
         MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));
@@ -832,7 +838,6 @@ public class BlockRegistry {
         RITUAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.RITUAL_BRAZIER, () -> BlockEntityType.Builder.of(RitualBrazierTile::new, RITUAL_BLOCK.get()).build(null));
         SKYWEAVE_TILE = BLOCK_ENTITIES.register(LibBlockNames.SKY_WEAVE, () -> BlockEntityType.Builder.of(SkyBlockTile::new, SKY_WEAVE.get()).build(null));
         TEMPORARY_TILE = BLOCK_ENTITIES.register(LibBlockNames.TEMPORARY_BLOCK, () -> BlockEntityType.Builder.of(TemporaryTile::new, TEMPORARY_BLOCK.get()).build(null));
-        LECTERN_TILE = BLOCK_ENTITIES.register(LibBlockNames.LECTERN, () -> BlockEntityType.Builder.of(StorageControllerBlockEntity::new, BlockRegistry.LECTERN_BLOCK.get()).build(null));
     }
 
     static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {

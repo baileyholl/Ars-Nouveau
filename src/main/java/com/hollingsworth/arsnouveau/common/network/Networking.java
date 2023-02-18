@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.network.util.PacketSplitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -9,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
@@ -19,8 +17,7 @@ import java.util.Optional;
 
 public class Networking {
     public static SimpleChannel INSTANCE;
-    public static final ResourceLocation CHANNEL = new ResourceLocation(ArsNouveau.MODID, "network");
-    public static final PacketSplitter SPLITTER = new PacketSplitter(5, INSTANCE, CHANNEL);
+
     private static int ID = 0;
 
     public static int nextID() {
@@ -28,7 +25,7 @@ public class Networking {
     }
 
     public static void registerMessages() {
-        INSTANCE = NetworkRegistry.newSimpleChannel(CHANNEL, () -> "1.0", s -> true, s -> true);
+        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ArsNouveau.MODID, "network"), () -> "1.0", s -> true, s -> true);
 
         INSTANCE.registerMessage(nextID(),
                 PacketOpenSpellBook.class,
@@ -210,17 +207,6 @@ public class Networking {
                 PacketSetLauncher::toBytes,
                 PacketSetLauncher::new,
                 PacketSetLauncher::handle);
-        INSTANCE.registerMessage(nextID(),
-                MessageUpdateStacks.class,
-                MessageUpdateStacks::encode,
-                MessageUpdateStacks::new,
-                MessageUpdateStacks::handle);
-        INSTANCE.registerMessage(nextID(),
-            MessageUpdateLinkedMachines.class,
-            MessageUpdateLinkedMachines::encode,
-            MessageUpdateLinkedMachines::new,
-            MessageUpdateLinkedMachines::handle);
-
         INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
     }
 
@@ -232,34 +218,11 @@ public class Networking {
         }
     }
 
-    public static <MSG> void sendToServer(MSG message) {
-        if (SPLITTER.shouldMessageBeSplit(message.getClass())) {
-            SPLITTER.sendToServer(message);
-        } else {
-            INSTANCE.send(PacketDistributor.SERVER.noArg(), message);
-        }
-    }
-
     public static void sendToNearby(Level world, Entity e, Object toSend) {
         sendToNearby(world, e.blockPosition(), toSend);
     }
 
     public static void sendToPlayer(Object msg, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
-    }
-
-
-    public static <MSG> void sendTo(ServerPlayer player, MSG message) {
-        if (!(player instanceof FakePlayer)) {
-            if (SPLITTER.shouldMessageBeSplit(message.getClass())) {
-                SPLITTER.sendToPlayer(player, message);
-            } else {
-                INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
-            }
-        }
-    }
-
-    public static void addPackagePart(int communicationId, int packetIndex, byte[] payload) {
-        SPLITTER.addPackagePart(communicationId, packetIndex, payload);
     }
 }

@@ -1,11 +1,14 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageControllerBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.*;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,7 +16,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class RepositoryBlock extends ModBlock implements EntityBlock {
@@ -34,19 +36,20 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
 
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
-                                 InteractionHand handIn, BlockHitResult rayTraceResult) {
-        if (!level.isClientSide) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof MenuProvider provider) {
-                NetworkHooks.openScreen((ServerPlayer) player, provider, pos);
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else {
+            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+            if (blockentity instanceof RepositoryTile tile) {
+                pPlayer.openMenu(tile);
+                pPlayer.awardStat(Stats.OPEN_BARREL);
+                PiglinAi.angerNearbyPiglins(pPlayer, true);
             }
-        }
-        return InteractionResult.SUCCESS;
-    }
 
+            return InteractionResult.CONSUME;
+        }
+    }
 
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
@@ -63,6 +66,6 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new StorageControllerBlockEntity(pPos, pState);
+        return new RepositoryTile(pPos, pState);
     }
 }
