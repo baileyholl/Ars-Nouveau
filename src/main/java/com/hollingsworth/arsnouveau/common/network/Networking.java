@@ -208,6 +208,7 @@ public class Networking {
                 PacketSetLauncher::new,
                 PacketSetLauncher::handle);
         INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
+        INSTANCE.registerMessage(nextID(), DataPacket.class, DataPacket::toBytes, DataPacket::new, DataPacket.Handler::onMessage);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
@@ -224,5 +225,9 @@ public class Networking {
 
     public static void sendToPlayer(Object msg, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+    }
+
+    public static void sendToServer(Object msg) {
+        INSTANCE.sendToServer(msg);
     }
 }

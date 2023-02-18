@@ -11,6 +11,9 @@ import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.tss.platform.CraftingTerminalBlock;
+import com.hollingsworth.arsnouveau.common.tss.platform.CraftingTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.tss.platform.StorageTerminalBlock;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
@@ -793,7 +796,7 @@ public class BlockRegistry {
     public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH;
     public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY;
 
-
+    public static final RegistryWrapper<CraftingTerminalBlock> STORAGE_TERMINAL;
     public static RegistryObject<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE;
     public static RegistryObject<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE;
 
@@ -807,6 +810,7 @@ public class BlockRegistry {
     public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
     public static RegistryObject<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE;
     public static RegistryObject<BlockEntityType<TemporaryTile>> TEMPORARY_TILE;
+    public static RegistryObject<BlockEntityType<CraftingTerminalBlockEntity>> STORAGE_TERMINAL_TILE;
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
         ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
@@ -816,6 +820,7 @@ public class BlockRegistry {
         RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
         SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        STORAGE_TERMINAL = registerBlock(LibBlockNames.STORAGE_TERMINAL, StorageTerminalBlock::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -831,6 +836,7 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
         ITEMS.register(LibBlockNames.SKY_WEAVE, () ->getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
         ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () ->getDefaultBlockItem(BlockRegistry.TEMPORARY_BLOCK.get()));
+        ITEMS.register(LibBlockNames.STORAGE_TERMINAL, () ->getDefaultBlockItem(BlockRegistry.STORAGE_TERMINAL.get()));
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
         MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));
@@ -838,6 +844,7 @@ public class BlockRegistry {
         RITUAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.RITUAL_BRAZIER, () -> BlockEntityType.Builder.of(RitualBrazierTile::new, RITUAL_BLOCK.get()).build(null));
         SKYWEAVE_TILE = BLOCK_ENTITIES.register(LibBlockNames.SKY_WEAVE, () -> BlockEntityType.Builder.of(SkyBlockTile::new, SKY_WEAVE.get()).build(null));
         TEMPORARY_TILE = BLOCK_ENTITIES.register(LibBlockNames.TEMPORARY_BLOCK, () -> BlockEntityType.Builder.of(TemporaryTile::new, TEMPORARY_BLOCK.get()).build(null));
+        STORAGE_TERMINAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.STORAGE_TERMINAL, () -> BlockEntityType.Builder.of(CraftingTerminalBlockEntity::new, STORAGE_TERMINAL.get()).build(null));
     }
 
     static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {

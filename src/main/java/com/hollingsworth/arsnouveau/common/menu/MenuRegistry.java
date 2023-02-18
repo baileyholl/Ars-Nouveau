@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.menu;
 
+import com.hollingsworth.arsnouveau.common.tss.platform.gui.CraftingTerminalMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -10,5 +11,5 @@ import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 public class MenuRegistry {
     public static final DeferredRegister<MenuType<?>> MENU_REG = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
 
-    public static final RegistryObject<MenuType<StorageLecternMenu>> STORAGE = MENU_REG.register("storage_lectern", StorageLecternMenu::createContainerType);
+    public static final RegistryObject<MenuType<CraftingTerminalMenu>> STORAGE = MENU_REG.register("storage_lectern", () -> new MenuType<>(CraftingTerminalMenu::new));
 }
