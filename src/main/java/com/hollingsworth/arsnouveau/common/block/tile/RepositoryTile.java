@@ -47,7 +47,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity {
     };
 
     public RepositoryTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.REPOSITORY_TILE, pos, state);
+        super(BlockRegistry.SCONCE_TILE, pos, state);
     }
 
     @Override
