@@ -125,7 +125,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	@Override
 	protected int updateData() {
 		int d = super.updateData();
-		d |= (pullFromInv ? 1 : 0) << 8;
 		return d;
 	}
 
@@ -150,10 +149,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 		this.renderTooltip(st, mouseX, mouseY);
 		this.recipeBookGui.renderTooltip(st, this.leftPos, this.topPos, mouseX, mouseY);
 		this.setInitialFocus(this.recipeBookGui);
-
-		if (buttonPullFromInv.isHoveredOrFocused()) {
-			renderTooltip(st, Component.translatable("tooltip.toms_storage.pull_" + buttonPullFromInv.state), mouseX, mouseY);
-		}
 	}
 
 	@Override

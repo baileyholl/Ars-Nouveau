@@ -62,7 +62,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	private boolean refreshItemList;
 	protected boolean wasClicking;
 	protected PlatformEditBox searchField;
-	protected int slotIDUnderMouse = -1, controllMode, rowCount, searchType;
+	protected int slotIDUnderMouse = -1;
+	protected int controllMode;
+	protected int rowCount;
+	protected int searchType;
 	private String searchLast = "";
 	protected boolean loadedSearch = false;
 	private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
@@ -119,7 +122,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		clearWidgets();
 		inventoryLabelY = imageHeight - 92;
 		super.init();
-		this.searchField = new PlatformEditBox(getFont(), this.leftPos + 82, this.topPos + 6, 89, this.getFont().lineHeight, Component.translatable("narrator.toms_storage.terminal_search"));
+		this.searchField = new PlatformEditBox(getFont(), this.leftPos + 82, this.topPos + 6, 89, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
 		this.searchField.setMaxLength(100);
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);
@@ -312,7 +315,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			StorageTerminalMenu.SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
 			if(slot.stack != null) {
 				if (slot.stack.getQuantity() > 9999) {
-					ClientInfo.setTooltip(Component.translatable("tooltip.toms_storage.amount", slot.stack.getQuantity()));
+					ClientInfo.setTooltip(Component.translatable("tooltip.ars_nouveau.amount", slot.stack.getQuantity()));
 				}
 				renderTooltip(st, slot.stack.getActualStack(), mouseX, mouseY);
 				ClientInfo.setTooltip();
@@ -321,13 +324,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			this.renderTooltip(st, mouseX, mouseY);
 
 		if (buttonSortingType.isHoveredOrFocused()) {
-			renderTooltip(st, Component.translatable("tooltip.toms_storage.sorting_" + buttonSortingType.state), mouseX, mouseY);
+			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
 		}
 		if (buttonSearchType.isHoveredOrFocused()) {
-			renderTooltip(st, Component.translatable("tooltip.toms_storage.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
 		if (buttonCtrlMode.isHoveredOrFocused()) {
-			renderComponentTooltip(st, Arrays.stream(I18n.get("tooltip.toms_storage.ctrlMode_" + buttonCtrlMode.state).split("\\\\")).map(Component::literal).collect(Collectors.toList()), mouseX, mouseY);
+			renderComponentTooltip(st, Arrays.stream(I18n.get("tooltip.ars_nouveau.ctrlMode_" + buttonCtrlMode.state).split("\\\\")).map(Component::literal).collect(Collectors.toList()), mouseX, mouseY);
 		}
 	}
 
@@ -343,7 +346,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		StorageTerminalMenu term = getMenu();
 		int slotHover = -1;
 		for (int i = 0;i < term.storageSlotList.size();i++) {
-			if(drawSlot(st, term.storageSlotList.get(i), mouseX, mouseY))slotHover = i;
+			if(drawSlot(st, term.storageSlotList.get(i), mouseX, mouseY)){
+				slotHover = i;
+			}
 		}
 		return slotHover;
 	}

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -7,7 +8,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class GuiButton extends PlatformButton {
-	public static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("toms_storage", "textures/gui/filter_buttons.png");
+	public static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_buttons.png");
 
 	public ResourceLocation texture;
 	public int tile;

@@ -116,7 +116,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 			}
 
 			if(!missing.isEmpty()) {
-				return new TransferWarning(helper.createUserErrorForMissingSlots(Component.translatable("tooltip.toms_storage.items_missing"), missing));
+				return new TransferWarning(helper.createUserErrorForMissingSlots(Component.translatable("tooltip.ars_nouveau.items_missing"), missing));
 			}
 		} else {
 			return ERROR_INSTANCE;
