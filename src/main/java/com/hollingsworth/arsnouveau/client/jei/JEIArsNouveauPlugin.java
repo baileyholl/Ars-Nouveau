@@ -9,14 +9,16 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
+import com.hollingsworth.arsnouveau.common.tss.platform.gui.CraftingTerminalScreen;
+import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -94,5 +96,51 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE);
 
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addRecipeClickArea(CraftingTerminalScreen.class, 83, 125, 28, 23, new RecipeType[] { RecipeTypes.CRAFTING });
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        CraftingTerminalTransferHandler.registerTransferHandlers(registration);
+    }
+
+    private static IJeiRuntime jeiRuntime;
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        JEIArsNouveauPlugin.jeiRuntime = jeiRuntime;
+    }
+
+    static {
+        IAutoFillTerminal.updateSearch.add(new IAutoFillTerminal.ISearchHandler() {
+
+            @Override
+            public void setSearch(String text) {
+                if (jeiRuntime != null) {
+                    if (jeiRuntime.getIngredientFilter() != null) {
+                        jeiRuntime.getIngredientFilter().setFilterText(text);
+                    }
+                }
+            }
+
+            @Override
+            public String getSearch() {
+                if (jeiRuntime != null) {
+                    if (jeiRuntime.getIngredientFilter() != null) {
+                        return jeiRuntime.getIngredientFilter().getFilterText();
+                    }
+                }
+                return "";
+            }
+
+            @Override
+            public String getName() {
+                return "JEI";
+            }
+        });
     }
 }

@@ -365,9 +365,8 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 				} else {
 					if (clicked == null)return;
 					long maxCount = 64;
-					for (int i = 0; i < itemList.size(); i++) {
-						StoredItemStack e = itemList.get(i);
-						if(e.equals((Object)clicked))maxCount = e.getQuantity();
+					for (StoredItemStack e : itemList) {
+						if (e.equals(clicked)) maxCount = e.getQuantity();
 					}
 					StoredItemStack pulled = te.pullStack(clicked, Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 4, 1));
 					if(pulled != null) {
