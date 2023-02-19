@@ -23,10 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -312,7 +309,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
-			StorageTerminalMenu.SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
+			SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
 			if(slot.stack != null) {
 				if (slot.stack.getQuantity() > 9999) {
 					ClientInfo.setTooltip(Component.translatable("tooltip.ars_nouveau.amount", slot.stack.getQuantity()));
@@ -353,7 +350,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		return slotHover;
 	}
 
-	protected boolean drawSlot(PoseStack st, StorageTerminalMenu.SlotStorage slot, int mouseX, int mouseY) {
+	protected boolean drawSlot(PoseStack st, SlotStorage slot, int mouseX, int mouseY) {
 		if (slot.stack != null) {
 			this.setBlitOffset(100);
 			this.itemRenderer.blitOffset = 100.0F;
@@ -472,7 +469,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public boolean pullNormal(int mouseButton) {
 		return switch (ctrlm()) {
 			case AE, RS, DEF -> mouseButton == 0;
-			default -> false;
 		};
 	}
 
@@ -538,26 +534,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	private FakeSlot fakeSlotUnderMouse = new FakeSlot();
-	private static class FakeSlot extends Slot {
-		private static final Container DUMMY = new SimpleContainer(1);
-
-		public FakeSlot() {
-			super(DUMMY, 0, Integer.MIN_VALUE, Integer.MIN_VALUE);
-		}
-
-		@Override
-		public boolean allowModification(Player p_150652_) {
-			return false;
-		}
-
-		@Override
-		public void set(ItemStack p_40240_) {}
-
-		@Override
-		public ItemStack remove(int p_40227_) {
-			return ItemStack.EMPTY;
-		}
-	}
 
 	@Override
 	public Slot getSlotUnderMouse() {

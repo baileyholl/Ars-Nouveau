@@ -1156,6 +1156,9 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.amount", "Total: %s");
         add("tooltip.ars_nouveau.sorting_1", "Sorting Alphabetically");
         add("tooltip.ars_nouveau.sorting_0", "Sorting by Amount");
-//        add("tooltip.ars_nouveau.search_1", "Search by")
+        add("ars_nouveau.storage.from_set", "Inventory added.");
+        add("ars_nouveau.storage.too_many", "Maximum number of inventories reached. Add more Bookwyrms to increase the limit.");
+        add("ars_nouveau.storage.num_connected", "%s connected inventories");
+        add("ars_nouveau.storage_lectern", "Storage Lectern");
     }
 }

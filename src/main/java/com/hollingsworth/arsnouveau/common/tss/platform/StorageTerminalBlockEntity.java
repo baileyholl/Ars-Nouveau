@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.tss.platform;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
@@ -36,13 +37,14 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 
-public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvider, ITickable, IWandable {
+public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider {
 	private IItemHandler itemHandler;
 	private Map<StoredItemStack, Long> items = new HashMap<>();
 	private int sort;
 	private String lastSearch = "";
 	private boolean updateItems;
 	private List<BlockPos> connectedInventories = new ArrayList<>();
+	private int numBookwyrms;
 
 	public StorageTerminalBlockEntity(BlockPos pos, BlockState state) {
 		super(BlockRegistry.STORAGE_TERMINAL_TILE.get(), pos, state);
@@ -59,7 +61,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 
 	@Override
 	public Component getDisplayName() {
-		return Component.translatable("ts.storage_terminal");
+		return Component.translatable("ars_nouveau.storage_lectern");
 	}
 
 	public Map<StoredItemStack, Long> getStacks() {
@@ -121,9 +123,12 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 
 	@Override
 	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-		if(storedPos != null) {
+		if(storedPos != null && this.getMaxConnectedInventories() < this.connectedInventories.size()) {
+			if( this.getMaxConnectedInventories() >= this.connectedInventories.size()){
+				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
+			}
 			this.connectedInventories.add(storedPos);
-			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.melder.from_set", connectedInventories.size()));
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
 			updateBlock();
 		}
 	}
@@ -154,7 +159,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	}
 
 	public boolean canInteractWith(Player player) {
-		return level.getBlockEntity(worldPosition) == this;
+		return true;
 	}
 
 	public int getSorting() {
@@ -163,6 +168,10 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 
 	public void setSorting(int newC) {
 		sort = newC;
+	}
+
+	public int getMaxConnectedInventories() {
+		return numBookwyrms * 4;
 	}
 
 	@Override
@@ -177,6 +186,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 			list.add(c);
 		}
 		compound.put("invs", list);
+		compound.putInt("numBookwyrms", numBookwyrms);
 	}
 
 	@Override
@@ -188,6 +198,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 			CompoundTag c = list.getCompound(i);
 			connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
 		}
+		numBookwyrms = compound.getInt("numBookwyrms");
 		super.load(compound);
 	}
 
@@ -199,4 +210,8 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 		lastSearch = string;
 	}
 
+	@Override
+	public void getTooltip(List<Component> tooltip) {
+		tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+	}
 }

@@ -32,7 +32,7 @@ public class TerminalSyncManager {
 	private int lastId = 1;
 	private FriendlyByteBuf workBuf = new FriendlyByteBuf(Unpooled.buffer());
 
-	private void write(FriendlyByteBuf buf, StoredItemStack stack) {
+	private void writeStack(FriendlyByteBuf buf, StoredItemStack stack) {
 		ItemStack st = stack.getStack();
 		Item item = st.getItem();
 		CompoundTag compoundtag = getSyncTag(st);
@@ -96,7 +96,7 @@ public class TerminalSyncManager {
 			for (int i = 0; i < toWrite.size(); i++, j++) {
 				StoredItemStack stack = toWrite.get(i);
 				int li = workBuf.writerIndex();
-				write(workBuf, stack);
+				writeStack(workBuf, stack);
 				int s = workBuf.writerIndex();
 				if((s > MAX_PACKET_SIZE || j > 32000) && j > 1) {
 					CompoundTag t = writeBuf("d", workBuf, li);

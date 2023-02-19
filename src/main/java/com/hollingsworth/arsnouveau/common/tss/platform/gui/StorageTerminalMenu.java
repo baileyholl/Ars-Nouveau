@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 
-import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.DataPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -26,9 +25,9 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 	protected StorageTerminalBlockEntity te;
 	protected int playerSlotsStart;
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
-	public List<StoredItemStack> itemList = Lists.<StoredItemStack>newArrayList();
-	public List<StoredItemStack> itemListClient = Lists.<StoredItemStack>newArrayList();
-	public List<StoredItemStack> itemListClientSorted = Lists.<StoredItemStack>newArrayList();
+	public List<StoredItemStack> itemList = new ArrayList<>();
+	public List<StoredItemStack> itemListClient = new ArrayList<>();
+	public List<StoredItemStack> itemListClientSorted = new ArrayList<>();
 	public TerminalSyncManager sync = new TerminalSyncManager();
 	private int lines;
 	protected Inventory pinv;
@@ -62,11 +61,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		addStorageSlots(5, 8, 18);
 	}
 
-	public StorageTerminalMenu(int id, Inventory inv) {
-		this(MenuRegistry.STORAGE.get(), id, inv);
-		this.addPlayerSlots(inv, 8, 120);
-	}
-
 	protected void addPlayerSlots(Inventory playerInventory, int x, int y) {
 		this.playerSlotsStart = slots.size() - 1;
 		for (int i = 0;i < 3;++i) {
@@ -85,7 +79,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		this.lines = lines;
 		for (int i = 0;i < lines;++i) {
 			for (int j = 0;j < 9;++j) {
-				this.addSlotToContainer(new SlotStorage(this.te, i * 9 + j, x + j * 18, y + i * 18));
+				this.addSlotToContainer(new SlotStorage(this.te,  x + j * 18, y + i * 18));
 			}
 		}
 		scrollTo(0.0F);
@@ -95,51 +89,9 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		storageSlotList.add(slotStorage);
 	}
 
-	public static class SlotStorage {
-		/** display position of the inventory slot on the screen x axis */
-		public int xDisplayPosition;
-		/** display position of the inventory slot on the screen y axis */
-		public int yDisplayPosition;
-		/** The index of the slot in the inventory. */
-		private final int slotIndex;
-		/** The inventory we want to extract a slot from. */
-		public final StorageTerminalBlockEntity inventory;
-		public StoredItemStack stack;
-
-		public SlotStorage(StorageTerminalBlockEntity inventory, int slotIndex, int xPosition, int yPosition) {
-			this.xDisplayPosition = xPosition;
-			this.yDisplayPosition = yPosition;
-			this.slotIndex = slotIndex;
-			this.inventory = inventory;
-		}
-
-		public ItemStack pullFromSlot(long max) {
-			if (stack == null || max < 1 || inventory == null)
-				return ItemStack.EMPTY;
-			StoredItemStack r = inventory.pullStack(stack, max);
-			if (r != null) {
-				return r.getActualStack();
-			} else
-				return ItemStack.EMPTY;
-		}
-
-		public ItemStack pushStack(ItemStack pushStack) {
-			if(inventory == null)return pushStack;
-			StoredItemStack r = inventory.pushStack(new StoredItemStack(pushStack, pushStack.getCount()));
-			if (r != null) {
-				return r.getActualStack();
-			} else
-				return ItemStack.EMPTY;
-		}
-
-		public int getSlotIndex() {
-			return slotIndex;
-		}
-	}
-
 	@Override
 	public boolean stillValid(Player playerIn) {
-		return te == null || te.canInteractWith(playerIn);
+		return te != null && te.canInteractWith(playerIn);
 	}
 
 	public final void scrollTo(float p_148329_1_) {
@@ -173,7 +125,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 
 	public enum SlotAction {
 		PULL_OR_PUSH_STACK, PULL_ONE, SPACE_CLICK, SHIFT_PULL, GET_HALF, GET_QUARTER;//CRAFT
-		public static final SlotAction[] VALUES = values();
 	}
 
 	@Override
@@ -187,38 +138,25 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		super.broadcastChanges();
 	}
 
-	public final void receiveClientNBTPacket(CompoundTag message) {
-		if(sync.receiveUpdate(message)) {
-			itemList = sync.getAsList();
-			if(noSort) {
-				itemListClient.forEach(s -> s.setCount(sync.getAmount(s)));
-			} else {
-				itemListClient = new ArrayList<>(itemList);
-			}
-			pinv.setChanged();
-		}
-		if(message.contains("s"))
-			search = message.getString("s");
-		if(onPacket != null)onPacket.run();
-	}
-
 	@Override
 	public final ItemStack quickMoveStack(Player playerIn, int index) {
-		if (slots.size() > index) {
-			if (index > playerSlotsStart && te != null) {
-				if (slots.get(index) != null && slots.get(index).hasItem()) {
-					Slot slot = slots.get(index);
-					ItemStack slotStack = slot.getItem();
-					StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()));
-					ItemStack itemstack = c != null ? c.getActualStack() : ItemStack.EMPTY;
-					slot.set(itemstack);
-					if (!playerIn.level.isClientSide)
-						broadcastChanges();
-				}
-			} else {
-				return shiftClickItems(playerIn, index);
+		if(slots.size() <= index)
+			return ItemStack.EMPTY;
+
+		if (index > playerSlotsStart && te != null) {
+			if (slots.get(index) != null && slots.get(index).hasItem()) {
+				Slot slot = slots.get(index);
+				ItemStack slotStack = slot.getItem();
+				StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()));
+				ItemStack itemstack = c != null ? c.getActualStack() : ItemStack.EMPTY;
+				slot.set(itemstack);
+				if (!playerIn.level.isClientSide)
+					broadcastChanges();
 			}
+		} else {
+			return shiftClickItems(playerIn, index);
 		}
+
 		return ItemStack.EMPTY;
 	}
 
@@ -261,6 +199,21 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 
 	public void sendMessage(CompoundTag compound) {
 		Networking.sendToServer(new DataPacket(compound));
+	}
+
+	public final void receiveClientNBTPacket(CompoundTag message) {
+		if(sync.receiveUpdate(message)) {
+			itemList = sync.getAsList();
+			if(noSort) {
+				itemListClient.forEach(s -> s.setCount(sync.getAmount(s)));
+			} else {
+				itemListClient = new ArrayList<>(itemList);
+			}
+			pinv.setChanged();
+		}
+		if(message.contains("s"))
+			search = message.getString("s");
+		if(onPacket != null)onPacket.run();
 	}
 
 	@Override
@@ -343,12 +296,14 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 					stack.grow(!itemstack.isEmpty() ? itemstack.getCount() : 0);
 					setCarried(stack);
 				} else {
-					if (clicked == null)return;
+					if (clicked == null) {
+						return;
+					}
 					long maxCount = 64;
-					for (int i = 0; i < itemList.size(); i++) {
-						StoredItemStack e = itemList.get(i);
-						if(e.equals((Object)clicked))
+					for (StoredItemStack e : itemList) {
+						if (e.equals(clicked)) {
 							maxCount = e.getQuantity();
+						}
 					}
 					StoredItemStack pulled = te.pullStack(clicked, Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 2, 1));
 					if(pulled != null) {
