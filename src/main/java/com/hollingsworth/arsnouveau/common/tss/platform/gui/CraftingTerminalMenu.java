@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.tss.platform.CraftingTerminalBlockEntity;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.IDataReceiver;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +21,7 @@ import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
 
-public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFillTerminal, IDataReceiver {
+public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFillTerminal {
 	public static class SlotCrafting extends Slot {
 		public SlotCrafting(Container inventoryIn, int index, int xPosition, int yPosition) {
 			super(inventoryIn, index, xPosition, yPosition);

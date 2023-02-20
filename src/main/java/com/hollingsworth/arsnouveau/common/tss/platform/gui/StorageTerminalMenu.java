@@ -1,11 +1,10 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
-import com.hollingsworth.arsnouveau.common.network.DataPacket;
+import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.tss.platform.SortSettings;
 import com.hollingsworth.arsnouveau.common.tss.platform.StorageTerminalBlockEntity;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.DataSlots;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.IDataReceiver;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.TerminalSyncManager;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> implements IDataReceiver, TerminalSyncManager.InteractHandler {
+public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> implements TerminalSyncManager.InteractHandler {
 	protected StorageTerminalBlockEntity te;
 	protected int playerSlotsStart;
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
@@ -32,7 +31,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 	private int lines;
 	protected Inventory pinv;
 	public Runnable onPacket;
-	public int terminalData;
+	public SortSettings terminalData;
 	public String search;
 	public boolean noSort;
 
@@ -46,11 +45,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		this.te = te;
 		this.pinv = inv;
 		addStorageSlots();
-		addDataSlot(DataSlots.create(v -> {
-			terminalData = v;
-			if(onPacket != null)
-				onPacket.run();
-		}, () -> te != null ? te.getSorting() : 0));
 	}
 
 	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv) {
@@ -131,10 +125,13 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 	public void broadcastChanges() {
 		if(te == null)return;
 		Map<StoredItemStack, Long> itemsCount = te.getStacks();
-		sync.update(itemsCount, (ServerPlayer) pinv.player, !te.getLastSearch().equals(search) ? tag -> {
-			search = te.getLastSearch();
-			tag.putString("s", search);
-		} : null);
+		sync.update(itemsCount, (ServerPlayer) pinv.player, tag -> {
+			if(!te.getLastSearch().equals(search)) {
+				search = te.getLastSearch();
+				tag.putString("search", search);
+			}
+			tag.put("sortSettings", te.sortSettings.toTag());
+		});
 		super.broadcastChanges();
 	}
 
@@ -198,7 +195,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 	}
 
 	public void sendMessage(CompoundTag compound) {
-		Networking.sendToServer(new DataPacket(compound));
+		Networking.sendToServer(new ClientToServerStoragePacket(compound));
 	}
 
 	public final void receiveClientNBTPacket(CompoundTag message) {
@@ -211,21 +208,22 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 			}
 			pinv.setChanged();
 		}
-		if(message.contains("s"))
-			search = message.getString("s");
+		if(message.contains("search"))
+			search = message.getString("search");
+		if(message.contains("sortSettings"))
+			terminalData = SortSettings.fromTag(message.getCompound("sortSettings"));
 		if(onPacket != null)onPacket.run();
 	}
 
-	@Override
 	public void receive(CompoundTag message) {
 		if(pinv.player.isSpectator())return;
-		if(message.contains("s")) {
-			te.setLastSearch(message.getString("s"));
+		if(message.contains("search")) {
+			te.setLastSearch(message.getString("search"));
 		}
 		sync.receiveInteract(message, this);
 		if(message.contains("c")) {
 			CompoundTag d = message.getCompound("c");
-			te.setSorting(d.getInt("d"));
+			te.setSorting(SortSettings.fromTag(d.getCompound("sortSettings")));
 		}
 	}
 

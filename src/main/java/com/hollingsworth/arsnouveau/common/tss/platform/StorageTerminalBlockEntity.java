@@ -46,6 +46,8 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	private List<BlockPos> connectedInventories = new ArrayList<>();
 	private int numBookwyrms;
 
+	public SortSettings sortSettings = new SortSettings();
+
 	public StorageTerminalBlockEntity(BlockPos pos, BlockState state) {
 		super(BlockRegistry.STORAGE_TERMINAL_TILE.get(), pos, state);
 	}
@@ -123,9 +125,10 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 
 	@Override
 	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-		if(storedPos != null && this.getMaxConnectedInventories() < this.connectedInventories.size()) {
-			if( this.getMaxConnectedInventories() >= this.connectedInventories.size()){
+		if(storedPos != null) {
+			if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
 				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
+				return;
 			}
 			this.connectedInventories.add(storedPos);
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
@@ -162,21 +165,18 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 		return true;
 	}
 
-	public int getSorting() {
-		return sort;
-	}
-
-	public void setSorting(int newC) {
-		sort = newC;
+	public void setSorting(SortSettings sortSettings) {
+		this.sortSettings = sortSettings;
+		updateBlock();
 	}
 
 	public int getMaxConnectedInventories() {
-		return numBookwyrms * 4;
+		return 4 + numBookwyrms * 4;
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag compound) {
-		compound.putInt("sort", sort);
+		compound.put("sortSettings", sortSettings.toTag());
 		ListTag list = new ListTag();
 		for (BlockPos pos : connectedInventories) {
 			CompoundTag c = new CompoundTag();
@@ -191,7 +191,9 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 
 	@Override
 	public void load(CompoundTag compound) {
-		sort = compound.getInt("sort");
+		if(compound.contains("sortSettings")) {
+			sortSettings = SortSettings.fromTag(compound.getCompound("sortSettings"));
+		}
 		ListTag list = compound.getList("invs", 10);
 		connectedInventories.clear();
 		for (int i = 0; i < list.size(); i++) {

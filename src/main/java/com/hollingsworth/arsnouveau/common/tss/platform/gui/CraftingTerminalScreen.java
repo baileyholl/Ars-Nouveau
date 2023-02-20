@@ -115,20 +115,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	}
 
 	@Override
-	protected void onPacket() {
-		super.onPacket();
-		int s = menu.terminalData;
-		pullFromInv = (s & (1 << 8)) != 0;
-		buttonPullFromInv.state = pullFromInv ? 1 : 0;
-	}
-
-	@Override
-	protected int updateData() {
-		int d = super.updateData();
-		return d;
-	}
-
-	@Override
 	public void containerTick() {
 		super.containerTick();
 		this.recipeBookGui.tick();

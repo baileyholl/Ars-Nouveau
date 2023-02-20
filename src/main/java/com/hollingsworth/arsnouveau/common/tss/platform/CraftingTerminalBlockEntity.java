@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,11 +56,6 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity {
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory plInv, Player arg2) {
 		return new CraftingTerminalMenu(id, plInv, this);
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("ts.crafting_terminal");
 	}
 
 	@Override
@@ -145,7 +139,7 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity {
 				}
 				if(slot.isEmpty() && !oldItem.isEmpty()) {
 					StoredItemStack is = pullStack(new StoredItemStack(oldItem), 1);
-					if(is == null && (getSorting() & (1 << 8)) != 0) {
+					if(is == null) {
 						for(int j = 0;j<thePlayer.getInventory().getContainerSize();j++) {
 							ItemStack st = thePlayer.getInventory().getItem(j);
 							if(ItemStack.isSame(oldItem, st) && ItemStack.tagMatches(oldItem, st)) {

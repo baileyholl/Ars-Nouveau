@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.util;
 
 
-import com.hollingsworth.arsnouveau.common.network.DataPacket;
+import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
 import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
@@ -101,7 +102,7 @@ public class TerminalSyncManager {
 				if((s > MAX_PACKET_SIZE || j > 32000) && j > 1) {
 					CompoundTag t = writeBuf("d", workBuf, li);
 					t.putShort("l", (short) j);
-					Networking.sendToPlayer(new DataPacket(t), player);
+					Networking.sendToPlayerClient(new ServerToClientStoragePacket(t), player);
 					j = 0;
 					workBuf.writerIndex(0);
 					workBuf.writeBytes(workBuf, li, s - li);
@@ -114,12 +115,12 @@ public class TerminalSyncManager {
 					t.putShort("l", (short) j);
 				} else t = new CompoundTag();
 				if(extraSync != null)extraSync.accept(t);
-				Networking.sendToPlayer(new DataPacket(t), player);
+				Networking.sendToPlayerClient(new ServerToClientStoragePacket(t), player);
 			}
 		} else if(extraSync != null) {
 			CompoundTag t = new CompoundTag();
 			extraSync.accept(t);
-			Networking.sendToPlayer(new DataPacket(t), player);
+			Networking.sendToPlayerClient(new ServerToClientStoragePacket(t), player);
 		}
 	}
 
@@ -143,9 +144,11 @@ public class TerminalSyncManager {
 		return false;
 	}
 
-	public void sendInteract(StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean mod) {
+	public void sendClientInteract(StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean mod) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 		int flags = mod ? 1 : 0;
+		System.out.println(mod);
+		System.out.println(flags);
 		if(intStack == null) {
 			buf.writeByte(flags | 2);
 		} else {
@@ -154,7 +157,7 @@ public class TerminalSyncManager {
 			buf.writeVarLong(intStack.getQuantity());
 		}
 		buf.writeEnum(action);
-		Networking.sendToServer(new DataPacket(writeBuf("a", buf, buf.writerIndex())));
+		Networking.sendToServer(new ClientToServerStoragePacket(writeBuf("a", buf, buf.writerIndex())));
 	}
 
 	private CompoundTag writeBuf(String id, FriendlyByteBuf buf, int len) {

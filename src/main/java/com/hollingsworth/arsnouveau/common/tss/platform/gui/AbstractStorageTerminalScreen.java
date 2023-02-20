@@ -5,8 +5,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.tss.platform.PlatformContainerScreen;
+import com.hollingsworth.arsnouveau.common.tss.platform.SortSettings;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.IDataReceiver;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.NumberFormatUtil;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -37,8 +37,8 @@ import java.util.stream.Collectors;
 import static com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu.SlotAction.*;
 import static com.hollingsworth.arsnouveau.common.tss.platform.util.TerminalSyncManager.getItemId;
 
-public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends PlatformContainerScreen<T> implements IDataReceiver {
-	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<StoredItemStack, List<String>>() {
+public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends PlatformContainerScreen<T> {
+	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<>() {
 
 		@Override
 		public List<String> load(StoredItemStack key) throws Exception {
@@ -76,17 +76,18 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void onPacket() {
-		int s = menu.terminalData;
-		controllMode = (s & 0b000_00_0_11) % ControllMode.VALUES.length;
-		boolean rev = (s & 0b000_00_1_00) > 0;
-		int type = (s & 0b000_11_0_00) >> 3;
-		comparator = StoredItemStack.SortingTypes.VALUES[type % StoredItemStack.SortingTypes.VALUES.length].create(rev);
-		searchType = (s & 0b111_00_0_00) >> 5;
-		if(!searchField.isFocused() && (searchType & 1) > 0) {
+		SortSettings s = menu.terminalData;
+		if(s == null) {
+			return;
+		}
+		controllMode = s.controlMode;
+		comparator = StoredItemStack.SortingTypes.VALUES[s.sortType % StoredItemStack.SortingTypes.VALUES.length].create(s.reverseSort);
+		searchType = s.searchType;
+		if(!searchField.isFocused() && (s.searchType & 1) > 0) {
 			searchField.setFocus(true);
 		}
-		buttonSortingType.state = type;
-		buttonDirection.state = rev ? 1 : 0;
+		buttonSortingType.state = s.sortType;
+		buttonDirection.state = s.reverseSort ? 1 : 0;
 		buttonSearchType.state = searchType;
 		buttonCtrlMode.state = controllMode;
 
@@ -99,19 +100,19 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void sendUpdate() {
 		CompoundTag c = new CompoundTag();
-		c.putInt("d", updateData());
+		c.put("sortSettings", getSortSettings().toTag());
 		CompoundTag msg = new CompoundTag();
 		msg.put("c", c);
 		menu.sendMessage(msg);
 	}
 
-	protected int updateData() {
-		int d = 0;
-		d |= (controllMode & 0b000_0_11);
-		d |= ((comparator.isReversed() ? 1 : 0) << 2);
-		d |= (comparator.type() << 3);
-		d |= ((searchType & 0b111) << 5);
-		return d;
+	public SortSettings getSortSettings() {
+		return new SortSettings(
+				controllMode,
+				comparator.isReversed(),
+				comparator.type(),
+				searchType
+		);
 	}
 
 	@Override
@@ -439,7 +440,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean mod) {
-		menu.sync.sendInteract(slotStack, act, mod);
+		menu.sync.sendClientInteract(slotStack, act, mod);
 	}
 
 	public boolean isPullOne(int mouseButton) {
@@ -527,7 +528,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void onUpdateSearch(String text) {}
 
-	@Override
 	public void receive(CompoundTag tag) {
 		menu.receiveClientNBTPacket(tag);
 		refreshItemList = true;

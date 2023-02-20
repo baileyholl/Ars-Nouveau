@@ -114,7 +114,7 @@ public class RitualFlight extends AbstractRitual {
                     e.getEntity().addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT.get(), 60 * 20));
                     e.getEntity().abilities.mayfly = true;
                     e.getEntity().abilities.flying = wasFlying;
-                    Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), (ServerPlayer) e.getEntity());
+                    Networking.sendToPlayerClient(new PacketUpdateFlight(true, wasFlying), (ServerPlayer) e.getEntity());
                     BlockEntity tile = e.getEntity().level.getBlockEntity(validPos);
                     if (tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight) {
                         ((RitualBrazierTile) tile).ritual.setNeedsSource(true);
