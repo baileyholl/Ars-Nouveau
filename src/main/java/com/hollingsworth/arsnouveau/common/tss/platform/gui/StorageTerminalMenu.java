@@ -221,8 +221,8 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 			te.setLastSearch(message.getString("search"));
 		}
 		sync.receiveInteract(message, this);
-		if(message.contains("c")) {
-			CompoundTag d = message.getCompound("c");
+		if(message.contains("termData")) {
+			CompoundTag d = message.getCompound("termData");
 			te.setSorting(SortSettings.fromTag(d.getCompound("sortSettings")));
 		}
 	}
@@ -238,7 +238,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 	}
 
 	@Override
-	public void onInteract(StoredItemStack clicked, SlotAction act, boolean mod) {
+	public void onInteract(StoredItemStack clicked, SlotAction act, boolean pullOne) {
 		ServerPlayer player = (ServerPlayer) pinv.player;
 		player.resetLastActionTime();
 		if(act == SlotAction.SPACE_CLICK) {
@@ -262,7 +262,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 			} else if (act == SlotAction.PULL_ONE) {
 				ItemStack stack = getCarried();
 				if (clicked == null)return;
-				if (mod) {
+				if (pullOne) {
 					StoredItemStack pulled = te.pullStack(clicked, 1);
 					if(pulled != null) {
 						ItemStack itemstack = pulled.getActualStack();

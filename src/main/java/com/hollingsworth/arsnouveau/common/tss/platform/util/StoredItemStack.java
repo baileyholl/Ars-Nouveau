@@ -37,16 +37,18 @@ public class StoredItemStack {
 		return s;
 	}
 
-	public void writeToNBT(CompoundTag tag) {
+	public CompoundTag writeToNBT(CompoundTag tag) {
 		tag.putLong(ITEM_COUNT_NAME, getQuantity());
 		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
 		tag.getCompound(ITEMSTACK_NAME).remove("Count");
+		return tag;
 	}
 
-	public void writeToNBT(CompoundTag tag, long q) {
+	public CompoundTag writeToNBT(CompoundTag tag, long q) {
 		tag.putLong(ITEM_COUNT_NAME, q);
 		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
 		tag.getCompound(ITEMSTACK_NAME).remove("Count");
+		return tag;
 	}
 
 	public static StoredItemStack readFromNBT(CompoundTag tag) {

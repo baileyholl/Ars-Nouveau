@@ -102,7 +102,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		CompoundTag c = new CompoundTag();
 		c.put("sortSettings", getSortSettings().toTag());
 		CompoundTag msg = new CompoundTag();
-		msg.put("c", c);
+		msg.put("termData", c);
 		menu.sendMessage(msg);
 	}
 
@@ -198,7 +198,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 					return;
 				}
 			}
-			boolean notDone = false;
+			boolean notDone;
 			try {
 				for (int i = 0;i < getMenu().itemListClient.size();i++) {
 					StoredItemStack is = getMenu().itemListClient.get(i);
@@ -213,7 +213,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 							for (String lp : tooltipCache.get(is)) {
 								if (m.matcher(lp).find()) {
 									addStackToClientList(is);
-									notDone = false;
 									break;
 								}
 							}
@@ -231,7 +230,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				}
 				if ((searchType & 2) > 0) {
 					CompoundTag nbt = new CompoundTag();
-					nbt.putString("s", searchString);
+					nbt.putString("search", searchString);
 					menu.sendMessage(nbt);
 				}
 				onUpdateSearch(searchString);
@@ -439,8 +438,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		return true;
 	}
 
-	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean mod) {
-		menu.sync.sendClientInteract(slotStack, act, mod);
+	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
+		menu.sync.sendClientInteract(slotStack, act, pullOne);
 	}
 
 	public boolean isPullOne(int mouseButton) {
@@ -461,8 +460,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	public boolean pullHalf(int mouseButton) {
 		return switch (ctrlm()) {
-			case AE -> mouseButton == 1;
-			case RS -> mouseButton == 1;
+			case AE, RS -> mouseButton == 1;
 			case DEF -> mouseButton == 1 && menu.getCarried().isEmpty();
 		};
 	}

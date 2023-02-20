@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -144,20 +145,17 @@ public class TerminalSyncManager {
 		return false;
 	}
 
-	public void sendClientInteract(StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean mod) {
-		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-		int flags = mod ? 1 : 0;
-		System.out.println(mod);
-		System.out.println(flags);
-		if(intStack == null) {
-			buf.writeByte(flags | 2);
-		} else {
-			buf.writeByte(flags);
-			buf.writeVarInt(idMap.getInt(intStack));
-			buf.writeVarLong(intStack.getQuantity());
+	public void sendClientInteract(StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean pullOne) {
+		CompoundTag interactTag = new CompoundTag();
+		interactTag.putBoolean("pullOne", pullOne);
+		interactTag.putInt("action", action.ordinal());
+		if(intStack != null){
+			interactTag.putInt("id", idMap.getInt(intStack));
+			interactTag.putLong("qty",  intStack.getQuantity());
 		}
-		buf.writeEnum(action);
-		Networking.sendToServer(new ClientToServerStoragePacket(writeBuf("a", buf, buf.writerIndex())));
+		CompoundTag dataTag = new CompoundTag();
+		dataTag.put("interaction", interactTag);
+		Networking.sendToServer(new ClientToServerStoragePacket(dataTag));
 	}
 
 	private CompoundTag writeBuf(String id, FriendlyByteBuf buf, int len) {
@@ -169,19 +167,18 @@ public class TerminalSyncManager {
 	}
 
 	public void receiveInteract(CompoundTag tag, InteractHandler handler) {
-		if(tag.contains("a")) {
-			FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(tag.getByteArray("a")));
-			byte flags = buf.readByte();
-			StoredItemStack stack;
-			if((flags & 2) != 0) {
-				stack = null;
-			} else {
-				stack = new StoredItemStack(idMap2.get(buf.readVarInt()).getStack());
-				long count = buf.readVarLong();
-				stack.setCount(count);
-			}
-			handler.onInteract(stack, buf.readEnum(StorageTerminalMenu.SlotAction.class), (flags & 1) != 0);
+		if(!tag.contains("interaction"))
+			return;
+
+		CompoundTag interactTag = tag.getCompound("interaction");
+		boolean pullOne = interactTag.getBoolean("pullOne");
+		StoredItemStack stack = null;
+		if(interactTag.contains("id")){
+			stack = new StoredItemStack(idMap2.get(interactTag.getInt("id")).getStack());
+			stack.setCount(interactTag.getLong("qty"));
 		}
+		StorageTerminalMenu.SlotAction action = StorageTerminalMenu.SlotAction.values()[interactTag.getInt("action")];
+		handler.onInteract(stack, action, pullOne);
 	}
 
 	public List<StoredItemStack> getAsList() {
@@ -193,8 +190,8 @@ public class TerminalSyncManager {
 		return s != null ? s.getQuantity() : 0L;
 	}
 
-	public static interface InteractHandler {
-		void onInteract(StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean mod);
+	public interface InteractHandler {
+		void onInteract(@Nullable StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean pullOne);
 	}
 
 	public static ResourceLocation getItemId(Item item) {
