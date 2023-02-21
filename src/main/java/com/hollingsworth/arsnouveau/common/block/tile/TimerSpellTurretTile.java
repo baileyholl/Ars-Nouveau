@@ -27,6 +27,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     public boolean isLocked;
     public boolean isOff;
     public int ticksElapsed;
+
     public TimerSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
     }

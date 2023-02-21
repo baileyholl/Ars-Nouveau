@@ -29,7 +29,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
@@ -136,8 +135,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     @Override
-    public List<ColorPos> getWandHighlight() {
-        List<ColorPos> list = new ArrayList<>();
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         if (toPos != null) {
             list.add(ColorPos.centered(toPos, ParticleColor.RED));
         }

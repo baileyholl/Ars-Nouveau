@@ -56,8 +56,7 @@ public class StarbyListBehavior extends StarbyBehavior{
     }
 
     @Override
-    public List<ColorPos> getWandHighlight() {
-        List<ColorPos> list = new ArrayList<>();
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         for(BlockPos toPos : TO_LIST){
             list.add(ColorPos.centered(toPos, ParticleColor.RED));
         }
