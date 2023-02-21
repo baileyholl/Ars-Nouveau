@@ -274,7 +274,7 @@ public class EventHandler {
         }
 
         if (entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT.get())) {
-            e.setAmount(1.0f + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
+            e.setAmount(e.getAmount() + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
         }
     }
 

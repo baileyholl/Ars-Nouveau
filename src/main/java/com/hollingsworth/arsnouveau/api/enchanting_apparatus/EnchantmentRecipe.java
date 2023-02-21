@@ -73,6 +73,11 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
         return true;
     }
 
+    @Override
+    public boolean excludeJei() {
+        return true;
+    }
+
     // Override and move reagent match to the end, so we can give feedback
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
