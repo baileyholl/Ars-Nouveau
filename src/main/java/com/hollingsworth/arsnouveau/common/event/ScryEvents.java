@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -72,15 +73,44 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderWorldLast(final RenderLevelStageEvent event) {
+    public static void onRenderHighlights(final RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
+        ClientLevel world = Minecraft.getInstance().level;
+
+        if(ClientInfo.highlightTicks > 0){
+            ClientInfo.highlightTicks--;
+            for(ColorPos pos : ClientInfo.highlightPositions){
+                double xzOffset = 0.15;
+                double xOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4) + 0.5;
+                double zOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4) + 0.5;
+                double centerX = pos.pos.x + xOffset;
+                double centerZ = pos.pos.x + zOffset;
+
+                double xSpeedOffset = 0;
+                double ySpeedOffset = ParticleUtil.inRange(0.0, 0.03f);
+                double zSpeedOffset = 0;
+
+                xSpeedOffset = ParticleUtil.inRange(-0.01f, 0.01f);
+                zSpeedOffset = ParticleUtil.inRange(-0.01f, 0.01f);
+                Vec3 renderPos = pos.pos;
+                ParticleColor color = pos.color;
+                world.addParticle(
+                        GlowParticleData.createData(color, true),
+                        renderPos.x, renderPos.y  + ParticleUtil.inRange(-0.00, 0.1), renderPos.z,
+                        xSpeedOffset, ySpeedOffset, zSpeedOffset);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderScry(final RenderLevelStageEvent event) {
 
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
+        ClientLevel world = Minecraft.getInstance().level;
         final Player playerEntity = Minecraft.getInstance().player;
-
         if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT.get()) == null)
             return;
         Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        ClientLevel world = Minecraft.getInstance().level;
 
         double yView = vector3d.y();
         if (Minecraft.getInstance().isPaused())

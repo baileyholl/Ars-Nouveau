@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
@@ -285,6 +286,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.setCosmeticItem(ItemStack.EMPTY);
         }
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.cleared"));
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        return this.dynamicBehavior == null ? new ArrayList<>() : this.dynamicBehavior.getWandHighlight(list);
     }
 
     public void syncBehavior(){

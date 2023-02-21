@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client;
 
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
@@ -17,7 +18,15 @@ public class ClientInfo {
     public static float partialTicks = 0.0f;
     public static List<BlockPos> scryingPositions = new ArrayList<>();
 
+    public static List<ColorPos> highlightPositions = new ArrayList<>();
+    public static int highlightTicks;
+
     public static TextureTarget skyRenderTarget;
     public static ShaderInstance skyShader;
 
+
+    public static void highlightPosition(List<ColorPos> colorPos, int ticks){
+        highlightPositions = colorPos;
+        highlightTicks = ticks;
+    }
 }

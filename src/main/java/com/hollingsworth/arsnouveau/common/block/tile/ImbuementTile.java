@@ -294,12 +294,16 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public List<ItemStack> getPedestalItems() {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        for (BlockPos p : pedestalList(getBlockPos(), 1, getLevel())) {
+        for (BlockPos p : getNearbyPedestals()) {
             if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && !pedestalTile.getStack().isEmpty()) {
                 pedestalItems.add(pedestalTile.getStack());
             }
         }
         return pedestalItems;
+    }
+
+    public List<BlockPos> getNearbyPedestals() {
+        return pedestalList(getBlockPos(), 1, getLevel());
     }
 
     public @Nullable ImbuementRecipe getRecipeNow(){

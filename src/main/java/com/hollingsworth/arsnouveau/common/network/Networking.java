@@ -208,6 +208,7 @@ public class Networking {
                 PacketSetLauncher::new,
                 PacketSetLauncher::handle);
         INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
+        INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
