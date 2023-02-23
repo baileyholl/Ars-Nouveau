@@ -42,10 +42,10 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         for(BlockPos toPos : toList){
-            list.add(ColorPos.centered(toPos, ParticleColor.RED));
+            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
         }
         for(BlockPos fromPos : fromList){
-            list.add(ColorPos.centered(fromPos, ParticleColor.CYAN));
+            list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
     }

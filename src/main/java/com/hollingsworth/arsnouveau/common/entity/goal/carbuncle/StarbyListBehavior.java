@@ -58,10 +58,10 @@ public class StarbyListBehavior extends StarbyBehavior{
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         for(BlockPos toPos : TO_LIST){
-            list.add(ColorPos.centered(toPos, ParticleColor.RED));
+            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
         }
         for(BlockPos fromPos : FROM_LIST){
-            list.add(ColorPos.centered(fromPos, ParticleColor.CYAN));
+            list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
     }

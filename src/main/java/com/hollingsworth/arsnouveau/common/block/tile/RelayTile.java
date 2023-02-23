@@ -137,10 +137,10 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         if (toPos != null) {
-            list.add(ColorPos.centered(toPos, ParticleColor.RED));
+            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
         }
         if(fromPos != null){
-            list.add(ColorPos.centered(fromPos, ParticleColor.CYAN));
+            list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
     }

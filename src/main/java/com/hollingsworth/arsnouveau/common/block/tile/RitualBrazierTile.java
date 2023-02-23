@@ -88,7 +88,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         if(relayPos != null){
-            list.add(ColorPos.centered(relayPos));
+            list.add(ColorPos.centered(relayPos, ParticleColor.TO_HIGHLIGHT));
         }
         return list;
     }

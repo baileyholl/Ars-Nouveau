@@ -16,6 +16,8 @@ public class ParticleColor implements Cloneable {
     public static final ParticleColor PURPLE = new ParticleColor(255, 50, 255);
     public static final ParticleColor CYAN = new ParticleColor(50, 255, 255);
     public static final ParticleColor ORANGE = new ParticleColor(255, 128, 0);
+    public static final ParticleColor TO_HIGHLIGHT = RED;
+    public static final ParticleColor FROM_HIGHLIGHT = CYAN;
 
 
     private final float r;
