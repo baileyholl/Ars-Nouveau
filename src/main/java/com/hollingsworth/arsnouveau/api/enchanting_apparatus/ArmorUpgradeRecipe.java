@@ -39,6 +39,11 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
+    public boolean excludeJei() {
+        return true;
+    }
+
+    @Override
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:" + RecipeRegistry.ARMOR_RECIPE_ID);
