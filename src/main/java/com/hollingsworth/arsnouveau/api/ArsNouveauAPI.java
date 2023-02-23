@@ -34,12 +34,10 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -261,6 +259,15 @@ public class ArsNouveauAPI {
 
     public @Nullable IPerkProvider<ItemStack> getPerkProvider(Item item){
         return itemPerkProviderMap.get(item);
+    }
+
+    public @NotNull List<Item> getPerkProviderItems(){
+        List<Item> list = new ArrayList<>();
+        for (Iterator<Item> it = itemPerkProviderMap.keys().asIterator(); it.hasNext(); ) {
+            Item i = it.next();
+            list.add(i);
+        }
+        return list;
     }
 
     public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry() {
