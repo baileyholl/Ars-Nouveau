@@ -66,6 +66,10 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         this.id = new ResourceLocation(ArsNouveau.MODID, "empty");
     }
 
+    public boolean excludeJei(){
+        return false;
+    }
+
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());

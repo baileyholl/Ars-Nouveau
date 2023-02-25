@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
@@ -51,6 +53,17 @@ public class StarbyListBehavior extends StarbyBehavior{
         TO_LIST = new ArrayList<>();
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
         syncTag();
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        for(BlockPos toPos : TO_LIST){
+            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
+        }
+        for(BlockPos fromPos : FROM_LIST){
+            list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
+        }
+        return list;
     }
 
     public void addFromPos(BlockPos fromPos) {

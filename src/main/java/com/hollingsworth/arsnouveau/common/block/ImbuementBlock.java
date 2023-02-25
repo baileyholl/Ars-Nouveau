@@ -1,7 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
+import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
+import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
+import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,6 +20,9 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImbuementBlock extends TickableModBlock {
     public ImbuementBlock() {
@@ -46,6 +53,13 @@ public class ImbuementBlock extends TickableModBlock {
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if (recipe == null) {
+                List<ColorPos> colorPos = new ArrayList<>();
+                for(BlockPos pedPos : tile.getNearbyPedestals()){
+                    if(worldIn.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile){
+                        colorPos.add(ColorPos.centeredAbove(pedPos));
+                    }
+                }
+                Networking.sendToNearby(worldIn, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.imbuement.norecipe"));
                 tile.stack = ItemStack.EMPTY;
             } else {

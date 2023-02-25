@@ -61,7 +61,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void pickUpItem(ItemEntity itemEntity) {
         super.pickUpItem(itemEntity);
-        if (getValidStorePos(itemEntity.getItem()) == null)
+        if (getValidStorePos(itemEntity.getItem()) == null || isPickupDisabled())
             return;
         starbuncle.setHeldStack(itemEntity.getItem());
         itemEntity.remove(Entity.RemovalReason.DISCARDED);

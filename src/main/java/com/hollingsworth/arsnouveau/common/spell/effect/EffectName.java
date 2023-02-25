@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
@@ -9,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -17,10 +16,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 public class EffectName extends AbstractEffect {
@@ -32,7 +32,22 @@ public class EffectName extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Component newName = getName(world, shooter, spellStats, spellContext, resolver);
+        rayTraceResult.getEntity().setCustomName(newName);
+        if (rayTraceResult.getEntity() instanceof Mob mob) {
+            mob.setPersistenceRequired();
+        } else if (rayTraceResult.getEntity() instanceof ItemEntity item) {
+            item.getItem().setHoverName(newName);
+        }
+
+        if(shooter instanceof Player player && isRealPlayer(shooter) && player.equals(rayTraceResult.getEntity())){
+            ItemStack offhand = player.getOffhandItem();
+            offhand.setHoverName(newName);
+        }
+    }
+
+    public Component getName(Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         Component newName = null;
         InventoryManager manager = spellContext.getCaster().getInvManager();
         SlotReference slotRef = manager.findItem(i -> i.getItem() == Items.NAME_TAG, InteractType.EXTRACT);
@@ -47,11 +62,19 @@ public class EffectName extends AbstractEffect {
                 newName = Component.literal(caster.getSpellName());
             }
         }
-        rayTraceResult.getEntity().setCustomName(newName);
-        if (rayTraceResult.getEntity() instanceof Mob mob) {
-            mob.setPersistenceRequired();
-        } else if (rayTraceResult.getEntity() instanceof ItemEntity item) {
-            item.getItem().setHoverName(newName);
+        return newName;
+    }
+
+    @Override
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Component name = getName(world, shooter, spellStats, spellContext, resolver);
+        for(Entity entity : world.getEntities(null, new AABB(rayTraceResult.getBlockPos()).inflate(0.08))){
+            entity.setCustomName(name);
+            if (entity instanceof Mob mob) {
+                mob.setPersistenceRequired();
+            } else if (entity instanceof ItemEntity item) {
+                item.getItem().setHoverName(name);
+            }
         }
     }
 
@@ -78,6 +101,6 @@ public class EffectName extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Names an entity after the set Spell Name. Can be overridden with a name tag in the hotbar.";
+        return "Names an entity after the set Spell Name. Targeting a block will name nearby entities. Targeting with Self will name the held offhand item. Can be overridden with a name tag in the hotbar.";
     }
 }

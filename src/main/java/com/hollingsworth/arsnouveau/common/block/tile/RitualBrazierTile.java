@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -82,6 +83,14 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
             updateBlock();
         }
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        if(relayPos != null){
+            list.add(ColorPos.centered(relayPos, ParticleColor.TO_HIGHLIGHT));
+        }
+        return list;
     }
 
     public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity) {

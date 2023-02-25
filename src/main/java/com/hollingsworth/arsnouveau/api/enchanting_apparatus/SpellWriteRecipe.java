@@ -40,6 +40,10 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
         this.id = new ResourceLocation(ArsNouveau.MODID, "spell_write");
     }
 
+    @Override
+    public boolean excludeJei() {
+        return true;
+    }
 
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {

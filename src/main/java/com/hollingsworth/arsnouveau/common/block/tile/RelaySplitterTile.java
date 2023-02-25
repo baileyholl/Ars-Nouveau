@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.IMultiSourceTargetProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -35,6 +37,17 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     @Override
     public boolean setSendTo(BlockPos pos) {
         return closeEnough(pos) && toList.add(pos) && updateBlock();
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        for(BlockPos toPos : toList){
+            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
+        }
+        for(BlockPos fromPos : fromList){
+            list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
+        }
+        return list;
     }
 
     @Override

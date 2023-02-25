@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -123,5 +124,13 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
         if(lastConsumedPotion != null){
             lastConsumedPotion.appendHoverText(tooltip);
         }
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> colorPos) {
+        if(boundPos != null){
+            colorPos.add(ColorPos.centered(boundPos));
+        }
+        return colorPos;
     }
 }

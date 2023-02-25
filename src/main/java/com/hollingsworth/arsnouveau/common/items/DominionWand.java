@@ -4,12 +4,16 @@ import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
+import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,11 +23,31 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DominionWand extends ModItem {
     public DominionWand() {
         super();
+    }
+
+    @Override
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+        if(!pIsSelected || pLevel.isClientSide || pLevel.getGameTime() % 5 != 0){
+            return;
+        }
+        DominionData data = new DominionData(pStack);
+        BlockPos pos = data.storedPos;
+        if(pos != null){
+            if(pLevel.getBlockEntity(pos) instanceof IWandable wandable){
+                Networking.sendToPlayer(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
+            }
+            return;
+        }
+        if(data.getEntity(pLevel) instanceof IWandable wandable){
+            Networking.sendToPlayer(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
+        }
     }
 
     @Override
@@ -154,6 +178,10 @@ public class DominionWand extends ModItem {
 
         public int getStoredEntityID() {
             return storedEntityID == 0 ? -1 : storedEntityID;
+        }
+
+        public @Nullable Entity getEntity(Level world) {
+            return world.getEntity(storedEntityID);
         }
 
         public void setStoredPos(@Nullable BlockPos pos) {

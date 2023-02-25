@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.api.item;
 
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public interface IWandable {
     /**
@@ -25,5 +27,12 @@ public interface IWandable {
      * Called on the time of wanding.
      */
     default void onWanded(Player playerEntity) {
+    }
+
+    /**
+     * Return the list of positions to highlight when the wand is held and this entity or block is selected.
+     */
+    default List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        return list;
     }
 }

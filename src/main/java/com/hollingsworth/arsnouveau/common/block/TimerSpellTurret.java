@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
-import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TimerSpellTurret extends BasicSpellTurret {
 
@@ -35,7 +33,7 @@ public class TimerSpellTurret extends BasicSpellTurret {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         if (handIn == InteractionHand.MAIN_HAND) {
-            if ((stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
+            if ((stack.getItem() instanceof ICasterTool) || worldIn.isClientSide)
                 return super.use(state, worldIn, pos, player, handIn, hit);
             if (worldIn.getBlockEntity(pos) instanceof TimerSpellTurretTile timerSpellTurretTile) {
                 if (timerSpellTurretTile.isLocked)

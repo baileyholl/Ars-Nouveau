@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -202,6 +203,16 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.melder.from_set", fromJars.size()));
             updateBlock();
         }
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        if(toPos != null)
+            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
+        for(BlockPos p : fromJars){
+            list.add(ColorPos.centered(p, ParticleColor.FROM_HIGHLIGHT));
+        }
+        return list;
     }
 
     public boolean closeEnough(BlockPos pos1, BlockPos pos2){

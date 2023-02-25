@@ -8,7 +8,9 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -169,6 +171,16 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         if (isCrafting || stack.isEmpty())
             return false;
         IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
+        if(recipe == null && playerEntity != null){
+            List<ColorPos> colorPos = new ArrayList<>();
+            for(BlockPos pos : pedestalList()){
+                if(level.getBlockEntity(pos) instanceof ArcanePedestalTile tile){
+                    colorPos.add(ColorPos.centeredAbove(tile.getBlockPos()));
+                }
+            }
+            Networking.sendToNearby(level, worldPosition, new HighlightAreaPacket(colorPos, 60));
+        }
+
         return recipe != null && (!recipe.consumesSource() || (recipe.consumesSource() && SourceUtil.hasSourceNearby(worldPosition, level, 10, recipe.getSourceCost())));
     }
 

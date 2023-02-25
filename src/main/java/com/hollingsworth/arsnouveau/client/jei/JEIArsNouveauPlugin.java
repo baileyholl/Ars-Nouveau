@@ -72,7 +72,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                 enchantments.add(enchantmentRecipe);
             } else if (i instanceof ArmorUpgradeRecipe upgradeRecipe) {
                 armorUpgrades.add(upgradeRecipe);
-            } else if (i instanceof EnchantingApparatusRecipe enchantingApparatusRecipe && !(i instanceof SpellWriteRecipe)) {
+            } else if (i instanceof EnchantingApparatusRecipe enchantingApparatusRecipe && !enchantingApparatusRecipe.excludeJei()) {
                 apparatus.add(enchantingApparatusRecipe);
             }
             if (i instanceof CrushRecipe crushRecipe) {

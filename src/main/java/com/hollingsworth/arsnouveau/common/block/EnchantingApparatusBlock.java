@@ -2,7 +2,11 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
+import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
+import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -20,6 +24,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnchantingApparatusBlock extends TickableModBlock {
 
@@ -52,6 +59,13 @@ public class EnchantingApparatusBlock extends TickableModBlock {
         if (tile.getStack() == null || tile.getStack().isEmpty()) {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if (recipe == null) {
+                List<ColorPos> colorPos = new ArrayList<>();
+                for(BlockPos pedPos : tile.pedestalList()){
+                    if(world.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile){
+                        colorPos.add(ColorPos.centeredAbove(pedPos));
+                    }
+                }
+                Networking.sendToNearby(world, tile.getBlockPos(), new HighlightAreaPacket(colorPos, 60));
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.norecipe"));
             } else if (recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));

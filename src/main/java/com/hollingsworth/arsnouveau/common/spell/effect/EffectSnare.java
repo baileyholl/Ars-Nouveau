@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectSnare extends AbstractEffect {
+public class EffectSnare extends AbstractEffect implements IPotionEffect {
     public static EffectSnare INSTANCE = new EffectSnare();
 
     private EffectSnare() {
@@ -30,12 +29,10 @@ public class EffectSnare extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            living.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), (int) (POTION_TIME.get() * 20 + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
+            ((IPotionEffect)this).applyConfigPotion(living, ModPotions.SNARE_EFFECT.get(), spellStats);
             living.setDeltaMovement(0, 0, 0);
             living.hurtMarked = true;
-        }
-
-        if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock) {
+        }else if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock) {
             BlockPos resultPos = fallingBlock.groundBlock(true);
             if(resultPos != null) {
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(resultPos.getX(), resultPos.getY(), resultPos.getZ()), rayTraceResult.getEntity().getMotionDirection(), resultPos, false), world, shooter, spellContext, resolver);
@@ -72,5 +69,15 @@ public class EffectSnare extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);
+    }
+
+    @Override
+    public int getBaseDuration() {
+        return POTION_TIME == null ? 8 : POTION_TIME.get();
+    }
+
+    @Override
+    public int getExtendTimeDuration() {
+        return EXTEND_TIME == null ? 1 : EXTEND_TIME.get();
     }
 }

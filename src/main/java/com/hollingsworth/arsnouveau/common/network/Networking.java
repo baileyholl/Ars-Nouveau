@@ -210,6 +210,8 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
         INSTANCE.registerMessage(nextID(), ServerToClientStoragePacket.class, ServerToClientStoragePacket::toBytes, ServerToClientStoragePacket::new, ServerToClientStoragePacket.Handler::onMessage);
         INSTANCE.registerMessage(nextID(), ClientToServerStoragePacket.class, ClientToServerStoragePacket::toBytes, ClientToServerStoragePacket::new, ClientToServerStoragePacket.Handler::onMessage);
+        INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
+
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
