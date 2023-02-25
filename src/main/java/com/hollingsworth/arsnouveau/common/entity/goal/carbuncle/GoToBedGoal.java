@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 
+import java.util.EnumSet;
+
 public class GoToBedGoal extends Goal {
 
     boolean unreachable;
@@ -16,6 +18,7 @@ public class GoToBedGoal extends Goal {
     public GoToBedGoal(Starbuncle starbuncle, StarbyBehavior behavior) {
         this.starbuncle = starbuncle;
         this.behavior = behavior;
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
