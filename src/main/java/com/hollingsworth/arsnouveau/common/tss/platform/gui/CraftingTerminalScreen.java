@@ -56,8 +56,8 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 
 	@Override
 	protected void init() {
-		imageWidth = 194;
-		imageHeight = 256;
+		imageWidth = 218;
+		imageHeight = 269;
 		rowCount = 5;
 		super.init();
 		this.widthTooNarrow = this.width < 379;

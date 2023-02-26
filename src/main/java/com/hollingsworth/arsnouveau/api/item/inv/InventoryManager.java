@@ -50,10 +50,18 @@ public class InventoryManager {
         return this;
     }
 
+    public boolean addFilterable(FilterableItemHandler filterable){
+        return this.filterables.add(filterable);
+    }
+
     public List<FilterableItemHandler> getInventory(){
         return filterables;
     }
 
+    /**
+     * Inserts a stack into all valid inventories, sorted by preference.
+     * Drops the remainder on the ground at the given position.
+     */
     public void insertOrDrop(ItemStack stack, Level level, BlockPos pos){
         ItemStack remainder = insertStack(stack);
         if(!remainder.isEmpty()){
@@ -62,6 +70,10 @@ public class InventoryManager {
         }
     }
 
+    /**
+     * Inserts a stack into all valid inventories, sorted by preference.
+     * @return Remaining or empty stack.
+     */
     public ItemStack insertStack(ItemStack stack){
         for(FilterableItemHandler filterable : preferredForStack(stack)){
             stack = ItemHandlerHelper.insertItemStacked(filterable.getHandler(), stack, false);
@@ -123,6 +135,28 @@ public class InventoryManager {
     public ExtractedStack extractItem(FilterableItemHandler filteredHandler, Predicate<ItemStack> stackPredicate, int count){
         SlotReference slotRef = findItem(filteredHandler, stackPredicate, InteractType.EXTRACT);
         return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count);
+    }
+
+    public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count){
+        ItemStack merged = ItemStack.EMPTY;
+        int remaining = count;
+        List<FilterableItemHandler> preferred = preferredForStack(desiredStack);
+        List<ExtractedStack> extracted = new ArrayList<>();
+        for(FilterableItemHandler filterable : preferred){
+            if(remaining <= 0)
+                return new MultiExtractedReference(merged, extracted);
+            ExtractedStack extractedFromHandler = extractItem(filterable, stack ->ItemStack.isSame(stack, desiredStack) && ItemStack.tagMatches(stack, desiredStack), remaining);
+            if(extractedFromHandler.isEmpty())
+                continue;
+            remaining -= extractedFromHandler.getStack().getCount();
+            if(merged.isEmpty()){
+                merged = extractedFromHandler.getStack();
+            }else{
+                merged.grow(extractedFromHandler.getStack().getCount());
+            }
+            extracted.add(extractedFromHandler);
+        }
+        return new MultiExtractedReference(merged, extracted);
     }
 
     /**

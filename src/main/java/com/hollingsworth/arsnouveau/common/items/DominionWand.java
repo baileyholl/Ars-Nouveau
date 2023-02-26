@@ -41,12 +41,12 @@ public class DominionWand extends ModItem {
         BlockPos pos = data.storedPos;
         if(pos != null){
             if(pLevel.getBlockEntity(pos) instanceof IWandable wandable){
-                Networking.sendToPlayer(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
+                Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
             }
             return;
         }
         if(data.getEntity(pLevel) instanceof IWandable wandable){
-            Networking.sendToPlayer(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
+            Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
         }
     }
 

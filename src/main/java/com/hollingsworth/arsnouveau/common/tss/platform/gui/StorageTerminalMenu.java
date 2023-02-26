@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> implements TerminalSyncManager.InteractHandler {
+public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	protected StorageTerminalBlockEntity te;
 	protected int playerSlotsStart;
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
@@ -237,7 +237,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 		return false;
 	}
 
-	@Override
 	public void onInteract(StoredItemStack clicked, SlotAction act, boolean pullOne) {
 		ServerPlayer player = (ServerPlayer) pinv.player;
 		player.resetLastActionTime();
@@ -303,7 +302,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 							maxCount = e.getQuantity();
 						}
 					}
-					StoredItemStack pulled = te.pullStack(clicked, Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 2, 1));
+					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 2, 1));
 					if(pulled != null) {
 						setCarried(pulled.getActualStack());
 					}
@@ -321,7 +320,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> imple
 					for (StoredItemStack e : itemList) {
 						if (e.equals(clicked)) maxCount = e.getQuantity();
 					}
-					StoredItemStack pulled = te.pullStack(clicked, Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 4, 1));
+					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 4, 1));
 					if(pulled != null) {
 						setCarried(pulled.getActualStack());
 					}

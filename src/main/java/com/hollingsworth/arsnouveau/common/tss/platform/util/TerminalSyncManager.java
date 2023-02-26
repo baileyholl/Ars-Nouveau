@@ -21,7 +21,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -166,7 +165,7 @@ public class TerminalSyncManager {
 		return tag;
 	}
 
-	public void receiveInteract(CompoundTag tag, InteractHandler handler) {
+	public void receiveInteract(CompoundTag tag, StorageTerminalMenu handler) {
 		if(!tag.contains("interaction"))
 			return;
 
@@ -188,10 +187,6 @@ public class TerminalSyncManager {
 	public long getAmount(StoredItemStack stack) {
 		StoredItemStack s = itemList.get(stack);
 		return s != null ? s.getQuantity() : 0L;
-	}
-
-	public interface InteractHandler {
-		void onInteract(@Nullable StoredItemStack intStack, StorageTerminalMenu.SlotAction action, boolean pullOne);
 	}
 
 	public static ResourceLocation getItemId(Item item) {

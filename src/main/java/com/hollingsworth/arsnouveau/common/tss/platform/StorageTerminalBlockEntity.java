@@ -2,6 +2,10 @@ package com.hollingsworth.arsnouveau.common.tss.platform;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.MultiExtractedReference;
+import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
@@ -19,6 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +31,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,9 +42,8 @@ import java.util.stream.IntStream;
 
 
 public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider {
-	private IItemHandler itemHandler;
+	private InventoryManager invManager = new InventoryManager(new ArrayList<>());
 	private Map<StoredItemStack, Long> items = new HashMap<>();
-	private int sort;
 	private String lastSearch = "";
 	private boolean updateItems;
 	private List<BlockPos> connectedInventories = new ArrayList<>();
@@ -71,36 +74,28 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 		return items;
 	}
 
-	public StoredItemStack pullStack(StoredItemStack stack, long max) {
-		if(stack != null && itemHandler != null && max > 0) {
-			ItemStack st = stack.getStack();
-			StoredItemStack ret = null;
-			for (int i = itemHandler.getSlots() - 1; i >= 0; i--) {
-				ItemStack s = itemHandler.getStackInSlot(i);
-				if(ItemStack.isSame(s, st) && ItemStack.tagMatches(s, st)) {
-					ItemStack pulled = itemHandler.extractItem(i, (int) max, false);
-					if(!pulled.isEmpty()) {
-						if(ret == null)ret = new StoredItemStack(pulled);
-						else ret.grow(pulled.getCount());
-						max -= pulled.getCount();
-						if(max < 1)break;
-					}
-				}
-			}
-			return ret;
+	public StoredItemStack pullStack(StoredItemStack stack, int max) {
+		if (stack == null || max <= 0) {
+			return null;
 		}
-		return null;
+		ItemStack st = stack.getStack();
+		MultiExtractedReference pulled = invManager.extractItemFromAll(st, max);
+		if(pulled.getExtracted().isEmpty()) {
+			return null;
+		}
+
+		return new StoredItemStack(pulled.getExtracted());
 	}
 
 	public StoredItemStack pushStack(StoredItemStack stack) {
-		if(stack != null && itemHandler != null) {
-			ItemStack is = ItemHandlerHelper.insertItemStacked(itemHandler, stack.getActualStack(), false);
-			if(is.isEmpty())return null;
-			else {
-				return new StoredItemStack(is);
-			}
+		if(stack == null){
+			return null;
 		}
-		return stack;
+		ItemStack remaining = invManager.insertStack(stack.getActualStack());
+		if(remaining.isEmpty()){
+			return null;
+		}
+		return new StoredItemStack(remaining);
 	}
 
 	public ItemStack pushStack(ItemStack itemstack) {
@@ -121,18 +116,30 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 		this.connectedInventories = new ArrayList<>();
 		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
 		updateBlock();
+		updateItems = true;
 	}
 
 	@Override
 	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
 		if(storedPos != null) {
+			BlockEntity tile = level.getBlockEntity(storedPos);
+			if(tile == null){
+				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
+				return;
+			}
+			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+			if(handler == null){
+				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
+				return;
+			}
 			if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
 				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
 				return;
 			}
-			this.connectedInventories.add(storedPos);
+			this.connectedInventories.add(storedPos.immutable());
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
 			updateBlock();
+			updateItems = true;
 		}
 	}
 
@@ -142,21 +149,27 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 			return;
 		if(updateItems) {
 			items.clear();
-			List<IItemHandlerModifiable> handlers = new ArrayList<>();
+			List<FilterableItemHandler> handlers = new ArrayList<>();
+			List<IItemHandlerModifiable> modifiables = new ArrayList<>();
 			for(BlockPos pos : connectedInventories) {
 				BlockEntity invTile = level.getBlockEntity(pos);
 				if(invTile != null) {
 					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
 					lih.ifPresent(i -> {
-						if(i instanceof IItemHandlerModifiable) {
-							handlers.add((IItemHandlerModifiable) i);
+						if(i instanceof IItemHandlerModifiable handlerModifiable) {
+							handlers.add(InvUtil.getFilteredHandler(invTile));
+							modifiables.add(handlerModifiable);
 						}
 					});
 				}
 			}
-			itemHandler = new CombinedInvWrapper(handlers.toArray(new IItemHandlerModifiable[0]));
-			IntStream.range(0, itemHandler.getSlots()).mapToObj(itemHandler::getStackInSlot).filter(s -> !s.isEmpty()).map(StoredItemStack::new).forEach(s -> items.merge(s, s.getQuantity(), Long::sum));
-
+			invManager = new InventoryManager(handlers);
+			CombinedInvWrapper itemHandler = new CombinedInvWrapper(modifiables.toArray(new IItemHandlerModifiable[0]));
+			IntStream.range(0, itemHandler.getSlots())
+					.mapToObj(itemHandler::getStackInSlot)
+					.filter(s -> !s.isEmpty())
+					.map(StoredItemStack::new)
+					.forEach(s -> items.merge(s, s.getQuantity(), Long::sum));
 			updateItems = false;
 		}
 	}
@@ -215,5 +228,19 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	@Override
 	public void getTooltip(List<Component> tooltip) {
 		tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+	}
+
+	public record HandlerPos(BlockPos pos, IItemHandler handler){
+		public static @Nullable HandlerPos fromLevel(Level level, BlockPos pos){
+			BlockEntity tile = level.getBlockEntity(pos);
+			if(tile == null){
+				return null;
+			}
+			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+			if(handler == null){
+				return null;
+			}
+			return new HandlerPos(pos, handler);
+		}
 	}
 }
