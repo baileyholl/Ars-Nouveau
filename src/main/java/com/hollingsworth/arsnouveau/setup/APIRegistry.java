@@ -121,6 +121,7 @@ public class APIRegistry {
         registerRitual(new RitualScrying());
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
+        registerRitual(new RitualAnimalSummoning());
         registerRitual(new RitualBinding());
         registerRitual(new RitualAwakening());
         registerRitual(new RitualHarvest());
