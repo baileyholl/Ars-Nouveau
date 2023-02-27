@@ -2,12 +2,14 @@ package com.hollingsworth.arsnouveau.common.tss.platform;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.MultiExtractedReference;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -47,6 +49,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	private String lastSearch = "";
 	private boolean updateItems;
 	private List<BlockPos> connectedInventories = new ArrayList<>();
+	private List<HandlerPos> handlerPosList = new ArrayList<>();
 	private int numBookwyrms;
 
 	public SortSettings sortSettings = new SortSettings();
@@ -83,8 +86,24 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 		if(pulled.getExtracted().isEmpty()) {
 			return null;
 		}
-
+		spawnEffects(pulled);
 		return new StoredItemStack(pulled.getExtracted());
+	}
+
+	private void spawnEffects(MultiExtractedReference multiSlotReference){
+		if(multiSlotReference.getExtracted().isEmpty()){
+			return;
+		}
+		for(ExtractedStack extractedStack : multiSlotReference.getSlots()){
+			BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+			if(pos != null){
+				EntityFlyingItem entityFlyingItem = new EntityFlyingItem(level,
+						pos,
+						getBlockPos().above()).setStack(extractedStack.stack);
+				level.addFreshEntity(entityFlyingItem);
+			}
+		}
+
 	}
 
 	public StoredItemStack pushStack(StoredItemStack stack) {
@@ -151,6 +170,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 			items.clear();
 			List<FilterableItemHandler> handlers = new ArrayList<>();
 			List<IItemHandlerModifiable> modifiables = new ArrayList<>();
+			this.handlerPosList = new ArrayList<>();
 			for(BlockPos pos : connectedInventories) {
 				BlockEntity invTile = level.getBlockEntity(pos);
 				if(invTile != null) {
@@ -159,6 +179,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 						if(i instanceof IItemHandlerModifiable handlerModifiable) {
 							handlers.add(InvUtil.getFilteredHandler(invTile));
 							modifiables.add(handlerModifiable);
+							handlerPosList.add(new HandlerPos(pos, i));
 						}
 					});
 				}

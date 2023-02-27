@@ -22,9 +22,6 @@ import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib3.core.easing.EasingManager;
 import software.bernie.geckolib3.core.easing.EasingType;
 
-
-import net.minecraft.world.entity.Entity.RemovalReason;
-
 public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BLOCK_POS);
     public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BLOCK_POS);
@@ -61,8 +58,9 @@ public class EntityFlyingItem extends ColoredProjectile {
         super(entityAOEProjectileEntityType, world);
     }
 
-    public void setStack(ItemStack stack) {
+    public EntityFlyingItem setStack(ItemStack stack) {
         this.entityData.set(HELD_ITEM, stack.copy());
+        return this;
     }
 
     /**
