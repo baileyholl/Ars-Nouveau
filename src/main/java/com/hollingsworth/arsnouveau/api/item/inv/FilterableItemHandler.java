@@ -28,21 +28,23 @@ public class FilterableItemHandler {
     /**
      * If this inventory supports insertion of the given stack.
      */
-    public boolean canInsert(ItemStack stack){
-        return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
+    public InteractResult canInsert(ItemStack stack){
+        ItemScroll.SortPref pref = getHighestPreference(stack);
+        return new InteractResult(pref, pref != ItemScroll.SortPref.INVALID);
     }
 
     /**
      * If this inventory supports extraction of the given stack.
      */
-    public boolean canExtract(ItemStack stack){
-        return getHighestPreference(stack) != ItemScroll.SortPref.INVALID;
+    public InteractResult canExtract(ItemStack stack){
+        ItemScroll.SortPref pref = getHighestPreference(stack);
+        return new InteractResult(pref, pref != ItemScroll.SortPref.INVALID);
     }
 
     /**
      * If this inventory supports extraction or insertion of the given stack.
      */
-    public boolean canInteractFor(ItemStack stack, InteractType type){
+    public InteractResult canInteractFor(ItemStack stack, InteractType type){
         return type == InteractType.EXTRACT ? canExtract(stack) : canInsert(stack);
     }
 
@@ -70,4 +72,5 @@ public class FilterableItemHandler {
     public List<Function<ItemStack, ItemScroll.SortPref>> getFilters() {
         return filters;
     }
+
 }

@@ -2,10 +2,7 @@ package com.hollingsworth.arsnouveau.common.tss.platform;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
-import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
-import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
-import com.hollingsworth.arsnouveau.api.item.inv.MultiExtractedReference;
+import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
@@ -82,7 +79,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 			return null;
 		}
 		ItemStack st = stack.getStack();
-		MultiExtractedReference pulled = invManager.extractItemFromAll(st, max);
+		MultiExtractedReference pulled = invManager.extractItemFromAll(st, max, true);
 		if(pulled.getExtracted().isEmpty()) {
 			return null;
 		}
@@ -177,7 +174,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
 					lih.ifPresent(i -> {
 						if(i instanceof IItemHandlerModifiable handlerModifiable) {
-							handlers.add(InvUtil.getFilteredHandler(invTile));
+							handlers.add(new StorageItemHandler(handlerModifiable, InvUtil.filtersOnTile(invTile)));
 							modifiables.add(handlerModifiable);
 							handlerPosList.add(new HandlerPos(pos, i));
 						}

@@ -75,7 +75,7 @@ public class InventoryManager {
      * @return Remaining or empty stack.
      */
     public ItemStack insertStack(ItemStack stack){
-        for(FilterableItemHandler filterable : preferredForStack(stack)){
+        for(FilterableItemHandler filterable : preferredForStack(stack, false)){
             stack = ItemHandlerHelper.insertItemStacked(filterable.getHandler(), stack, false);
             if(stack.isEmpty())
                 return ItemStack.EMPTY;
@@ -137,10 +137,10 @@ public class InventoryManager {
         return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count);
     }
 
-    public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count){
+    public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count, boolean includeInvalidInvs){
         ItemStack merged = ItemStack.EMPTY;
         int remaining = count;
-        List<FilterableItemHandler> preferred = preferredForStack(desiredStack);
+        List<FilterableItemHandler> preferred = preferredForStack(desiredStack, includeInvalidInvs);
         List<ExtractedStack> extracted = new ArrayList<>();
         for(FilterableItemHandler filterable : preferred){
             if(remaining <= 0)
@@ -176,7 +176,7 @@ public class InventoryManager {
     public SlotReference findItem(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type){
         for(int slot = 0; slot < maxSlotForType(itemHandler, type); slot++){
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()){
                 return new SlotReference(itemHandler.getHandler(), slot);
             }
         }
@@ -191,7 +191,7 @@ public class InventoryManager {
         int numSlots = Math.min(maxSlotForType(itemHandler, type), maxSlots);
         for(int slot = 0; slot < numSlots; slot++){
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()){
                 slots.add(new SlotReference(itemHandler.getHandler(), slot));
             }
         }
@@ -202,9 +202,11 @@ public class InventoryManager {
      * Returns the sorted list of highest preferred inventories for a given stack based on their list of filters.
      * @return The list of inventories sorted by highest preference.
      */
-    public List<FilterableItemHandler> preferredForStack(ItemStack stack){
+    public List<FilterableItemHandler> preferredForStack(ItemStack stack, boolean includeInvalid){
         List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
-        filtered = filtered.stream().filter(filterableItemHandler -> filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID).collect(Collectors.toCollection(ArrayList::new));
+        filtered = filtered.stream()
+                .filter(filterableItemHandler -> includeInvalid || filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID)
+                .collect(Collectors.toCollection(ArrayList::new));
         /// Sort by highest pref first
         filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
         return filtered;
@@ -220,8 +222,9 @@ public class InventoryManager {
                 ItemStack stack = wrapper.getHandler().getStackInSlot(i);
                 if(stack.isEmpty() || !predicate.test(stack))
                     continue;
-                ItemScroll.SortPref foundPref = wrapper.getHighestPreference(stack);
-                if(foundPref == ItemScroll.SortPref.INVALID){
+                InteractResult result = wrapper.canInteractFor(stack, type);
+                ItemScroll.SortPref foundPref = result.sortPref();
+                if(!result.valid()){
                     continue;
                 }
                 if(foundPref.ordinal() > pref.ordinal()){

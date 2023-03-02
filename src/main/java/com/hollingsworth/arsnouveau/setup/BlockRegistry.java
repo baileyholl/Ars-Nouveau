@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.tss.platform.CraftingTerminalBlock;
 import com.hollingsworth.arsnouveau.common.tss.platform.CraftingTerminalBlockEntity;
-import com.hollingsworth.arsnouveau.common.tss.platform.StorageTerminalBlock;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
@@ -820,7 +819,7 @@ public class BlockRegistry {
         RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
         SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
-        STORAGE_TERMINAL = registerBlock(LibBlockNames.STORAGE_TERMINAL, StorageTerminalBlock::new);
+        STORAGE_TERMINAL = registerBlock(LibBlockNames.STORAGE_TERMINAL, CraftingTerminalBlock::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
