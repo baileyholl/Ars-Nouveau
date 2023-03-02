@@ -18,6 +18,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.common.datagen.RecipeDatagen;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -51,8 +53,10 @@ import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -345,10 +349,9 @@ public class EventHandler {
                 }
             }
 
-            level4.add((trader, rand) -> emerToItem(ItemsRegistry.STARBUNCLE_SHARD, 20, 1, 20));
-            level4.add((trader, rand) -> emerToItem(ItemsRegistry.DRYGMY_SHARD, 20, 1, 20));
-            level4.add((trader, rand) -> emerToItem(ItemsRegistry.WIXIE_SHARD, 20, 1, 20));
-            level4.add((trader, rand) -> emerToItem(ItemsRegistry.WHIRLISPRIG_SHARDS, 20, 1, 20));
+            for (ItemStack shard : Ingredient.of(ItemTagProvider.SUMMON_SHARDS_TAG).getItems()) {
+                level4.add((trader, rand) -> emerToItem(shard.getItem(), 20, 1, 20));
+            }
 
             level5.add((trader, rand) -> emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
             level5.add((trader, rand) -> new MerchantOffer(new ItemStack(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
