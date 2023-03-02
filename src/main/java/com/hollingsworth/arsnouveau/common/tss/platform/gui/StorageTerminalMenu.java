@@ -47,6 +47,11 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		addStorageSlots();
 	}
 
+	public StorageTerminalMenu(int id, Inventory inv) {
+		this(MenuRegistry.STORAGE.get(), id, inv);
+		this.addPlayerSlots(inv, 8, 120);
+	}
+
 	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv) {
 		this(type, id, inv, null);
 	}
@@ -73,7 +78,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		this.lines = lines;
 		for (int i = 0;i < lines;++i) {
 			for (int j = 0;j < 9;++j) {
-				this.addSlotToContainer(new SlotStorage(this.te,  x + j * 18, y + i * 18));
+				this.addSlotToContainer(new SlotStorage(this.te, i * 9 + j, x + j * 18, y + i * 18));
 			}
 		}
 		scrollTo(0.0F);

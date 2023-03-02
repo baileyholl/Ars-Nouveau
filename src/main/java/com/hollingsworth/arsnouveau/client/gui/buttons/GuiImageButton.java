@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiImageButton extends Button {
+public class GuiImageButton extends ANButton {
     public ResourceLocation image;
 
     public String resourceIcon;
@@ -28,20 +28,21 @@ public class GuiImageButton extends Button {
     public Component toolTip;
     public boolean soundDisabled = false;
 
-
+    // TODO: Remove string resource image
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
+        this(x, y, u, v, w, h, image_width, image_height, new ResourceLocation(ArsNouveau.MODID, resource_image), onPress);
+    }
+
+    public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, Button.OnPress onPress) {
         super(x, y, w, h, Component.literal(""), onPress);
         this.x = x;
         this.y = y;
-        this.resourceIcon = resource_image;
-
+        this.resourceIcon = image.getPath();
         this.u = u;
         this.v = v;
         this.image_height = image_height;
         this.image_width = image_width;
-        //System.out.println(width);
-        image = new ResourceLocation(ArsNouveau.MODID, resource_image);
-
+        this.image = image;
     }
 
     public GuiImageButton withTooltip(BaseBook parent, Component toolTip) {
@@ -76,5 +77,10 @@ public class GuiImageButton extends Button {
         if (soundDisabled)
             return;
         super.playDownSound(pHandler);
+    }
+
+    public void setPosition(int pX, int pY) {
+        this.x = pX;
+        this.y = pY;
     }
 }

@@ -1,16 +1,13 @@
 package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,8 +20,9 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	private static final ResourceLocation gui = new ResourceLocation(ArsNouveau.MODID, "textures/gui/crafting_terminal.png");
 	private final RecipeBookComponent recipeBookGui;
 	private boolean widthTooNarrow;
-	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
-	private EditBox searchField;
+	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/gui/recipe_book.png");
+	private static final ResourceLocation CLEAR_CRAFT_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/gui/craft_clear.png");
+	private EditBox recipeBookSearch;
 	private GhostRecipe ghostRecipe;
 	private GuiButton buttonPullFromInv;
 	private boolean pullFromInv;
@@ -49,42 +47,45 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	@Override
 	protected void onUpdateSearch(String text) {
 		if(IAutoFillTerminal.hasSync() || (searchType & 4) > 0) {
-			if(searchField != null)searchField.setValue(text);
+			if(recipeBookSearch != null) recipeBookSearch.setValue(text);
 			recipeBookGui.recipesUpdated();
 		}
 	}
 
 	@Override
 	protected void init() {
-		imageWidth = 218;
-		imageHeight = 269;
-		rowCount = 5;
+		imageWidth = 202;
+		imageHeight = 248;
+		rowCount = 3;
 		super.init();
 		this.widthTooNarrow = this.width < 379;
 		this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.menu);
 		this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
 		addRenderableWidget(recipeBookGui);
 		this.setInitialFocus(this.recipeBookGui);
-		GuiButtonClear btnClr = new GuiButtonClear(leftPos + 80, topPos + 110, b -> clearGrid());
+		int recipeButtonY = this.height / 2 - 34;
+		GuiImageButton btnClr = new GuiImageButton(leftPos + 86, recipeButtonY, 0,0,9,9,9,9, CLEAR_CRAFT_TEXTURE, b -> clearGrid());
 		addRenderableWidget(btnClr);
 		buttonPullFromInv = addRenderableWidget(makeButton(leftPos - 18, topPos + 5 + 18*4, 4, b -> {
 			pullFromInv = !pullFromInv;
 			buttonPullFromInv.state = pullFromInv ? 1 : 0;
 			sendUpdate();
 		}));
-		addRenderableWidget(new ImageButton(this.leftPos + 4, this.height / 2, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214076_1_) -> {
+
+		addRenderableWidget(new GuiImageButton( this.leftPos + 98, recipeButtonY , 0, 0, 9, 9, 9,9, RECIPE_BUTTON_TEXTURE, (thisButton) -> {
 			this.recipeBookGui.initVisuals();
-			searchField = recipeBookGui.searchBox;
+			recipeBookSearch = recipeBookGui.searchBox;
 
 			this.recipeBookGui.toggleVisibility();
 			this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
-			((ImageButton)p_214076_1_).setPosition(this.leftPos + 4, this.height / 2);
-			super.searchField.setX(this.leftPos + 82);
-			btnClr.setX(this.leftPos + 80);
+			((GuiImageButton)thisButton).setPosition(this.leftPos + 98, recipeButtonY);
+
+			super.searchField.setX(this.leftPos + 114);
+			btnClr.setX(this.leftPos + 86);
 			buttonSortingType.setX(leftPos - 18);
 			buttonDirection.setX(leftPos - 18);
 			if(recipeBookGui.isVisible()) {
-				buttonSearchType.setX(leftPos - 36);
+				buttonSearchType.setX(leftPos - 86);
 				buttonCtrlMode.setX(leftPos - 36);
 				buttonPullFromInv.setX(leftPos - 54);
 				buttonSearchType.setY(topPos + 5);
@@ -108,8 +109,8 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 			buttonSearchType.setY(topPos + 5);
 			buttonCtrlMode.setY(topPos + 5 + 18);
 			buttonPullFromInv.setY(topPos + 5 + 18);
-			super.searchField.setX(this.leftPos + 82);
-			searchField = recipeBookGui.searchBox;
+			super.searchField.setX(this.leftPos + 114);
+			recipeBookSearch = recipeBookGui.searchBox;
 		}
 		onPacket();
 	}
@@ -122,7 +123,9 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 
 	@Override
 	public void render(PoseStack st, int mouseX, int mouseY, float partialTicks) {
+
 		this.renderBackground(st);
+
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
 			this.renderBg(st, partialTicks, mouseX, mouseY);
 			this.recipeBookGui.render(st, mouseX, mouseY, partialTicks);
@@ -131,7 +134,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 			super.render(st, mouseX, mouseY, partialTicks);
 			this.recipeBookGui.renderGhostRecipe(st, this.leftPos, this.topPos, true, partialTicks);
 		}
-
 		this.renderTooltip(st, mouseX, mouseY);
 		this.recipeBookGui.renderTooltip(st, this.leftPos, this.topPos, mouseX, mouseY);
 		this.setInitialFocus(this.recipeBookGui);
@@ -200,31 +202,5 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 			}
 		}
 		return super.keyPressed(code, p_231046_2_, p_231046_3_);
-	}
-
-	public class GuiButtonClear extends PlatformButton {
-
-		public GuiButtonClear(int x, int y, OnPress pressable) {
-			super(x, y, 11, 11, null, pressable);
-		}
-
-		/**
-		 * Draws this button to the screen.
-		 */
-		@Override
-		public void renderButton(PoseStack st, int mouseX, int mouseY, float pt) {
-			if (this.visible) {
-				int x = getX();
-				int y = getY();
-				RenderSystem.setShader(GameRenderer::getPositionTexShader);
-				RenderSystem.setShaderTexture(0, getGui());
-				this.isHovered = mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
-				int i = this.getYImage(this.isHovered);
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
-				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-				this.blit(st, x, y, 194 + i * 11, 10, this.width, this.height);
-			}
-		}
 	}
 }

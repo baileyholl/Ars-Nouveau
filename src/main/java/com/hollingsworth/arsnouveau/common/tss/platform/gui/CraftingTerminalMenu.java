@@ -19,6 +19,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFillTerminal {
@@ -50,7 +51,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		craftMatrix = te.getCraftingInv();
 		craftResult = te.getCraftResult();
 		init();
-		this.addPlayerSlots(inv, 8, 174);
+		this.addPlayerSlots(inv, 13, 157);
 		te.registerCrafting(this);
 	}
 
@@ -59,7 +60,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		craftMatrix = new CraftingContainer(this, 3, 3);
 		craftResult = new ResultContainer();
 		init();
-		this.addPlayerSlots(inv, 8, 174);
+		this.addPlayerSlots(inv, 13, 157);
 	}
 
 	@Override
@@ -71,8 +72,8 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 	private void init() {
 		int x = -4;
-		int y = 94;
-		this.addSlot(craftingResultSlot = new ResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 124, y + 35) {
+		int y = 70;
+		this.addSlot(craftingResultSlot = new ResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
 			@Override
 			public void onTake(Player thePlayer, ItemStack stack) {
 				if (thePlayer.level.isClientSide)
@@ -86,14 +87,14 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 		for(int i = 0; i < 3; ++i) {
 			for(int j = 0; j < 3; ++j) {
-				this.addSlot(new SlotCrafting(craftMatrix, j + i * 3, x + 30 + j * 18, y + 17 + i * 18));
+				this.addSlot(new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18,  89 + i * 18));
 			}
 		}
 	}
 
 	@Override
 	protected void addStorageSlots() {
-		addStorageSlots(5, 8, 18);
+		addStorageSlots(3, 13, 21);
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				return ItemStack.EMPTY;
 			} else if (index > 0 && index < 10) {
 				if(te == null)return ItemStack.EMPTY;
-				ItemStack stack = ((CraftingTerminalBlockEntity) te).pushStack(itemstack);
+				ItemStack stack = te.pushStack(itemstack);
 				slot.set(stack);
 				if (!playerIn.level.isClientSide)
 					broadcastChanges();
@@ -205,6 +206,19 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		(new ServerPlaceRecipe(this) {
 			{
 				stackedContents = new TerminalRecipeItemHelper();
+			}
+
+
+
+			@Override
+			public void addItemToSlot(Iterator pIngredients, int pSlot, int pMaxAmount, int pY, int pX) {
+				Slot slot = this.menu.getSlot(pSlot);
+				ItemStack itemstack = StackedContents.fromStackingIndex((Integer) pIngredients.next());
+				if (!itemstack.isEmpty()) {
+					for(int i = 0; i < pMaxAmount; ++i) {
+						this.moveItemToGrid(slot, itemstack);
+					}
+				}
 			}
 
 			@Override

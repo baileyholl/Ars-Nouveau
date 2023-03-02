@@ -3,13 +3,17 @@ package com.hollingsworth.arsnouveau.common.tss.platform.gui;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
+import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.common.tss.platform.PlatformContainerScreen;
 import com.hollingsworth.arsnouveau.common.tss.platform.SortSettings;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.NumberFormatUtil;
 import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -58,7 +62,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	 */
 	private boolean refreshItemList;
 	protected boolean wasClicking;
-	protected PlatformEditBox searchField;
+	protected NoShadowTextField searchField;
 	protected int slotIDUnderMouse = -1;
 	protected int controllMode;
 	protected int rowCount;
@@ -66,8 +70,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	private String searchLast = "";
 	protected boolean loadedSearch = false;
 	private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
-	protected static final ResourceLocation creativeInventoryTabs = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
-	protected GuiButton buttonSortingType, buttonDirection, buttonSearchType, buttonCtrlMode;
+	protected static final ResourceLocation scrollBall = new ResourceLocation(ArsNouveau.MODID, "textures/gui/scroll_ball.png");
+	protected StateButton buttonSortingType;
+	protected StateButton buttonDirection;
+	protected StateButton buttonSearchType;
+	protected GuiButton buttonCtrlMode;
 	private Comparator<StoredItemStack> sortComp;
 
 	public AbstractStorageTerminalScreen(T screenContainer, Inventory inv, Component titleIn) {
@@ -120,7 +127,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		clearWidgets();
 		inventoryLabelY = imageHeight - 92;
 		super.init();
-		this.searchField = new PlatformEditBox(getFont(), this.leftPos + 82, this.topPos + 6, 89, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
+
+		this.searchField = new NoShadowTextField(getFont(), this.leftPos + 114, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
 		this.searchField.setMaxLength(100);
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);
@@ -128,48 +136,25 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		this.searchField.setValue(searchLast);
 		searchLast = "";
 		addRenderableWidget(searchField);
-		buttonSortingType = addRenderableWidget(makeButton(leftPos - 18, topPos + 5, 0, b -> {
+
+		buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 21, 12, 256, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_tabs.png"), b -> {
 			comparator = StoredItemStack.SortingTypes.VALUES[(comparator.type() + 1) % StoredItemStack.SortingTypes.VALUES.length].create(comparator.isReversed());
 			buttonSortingType.state = comparator.type();
 			sendUpdate();
 			refreshItemList = true;
 		}));
-		buttonDirection = addRenderableWidget(makeButton(leftPos - 18, topPos + 5 + 18, 1, b -> {
+
+		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 21, 12, 256, 13, 1, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_tabs.png"), b -> {
 			comparator.setReversed(!comparator.isReversed());
 			buttonDirection.state = comparator.isReversed() ? 1 : 0;
 			sendUpdate();
 			refreshItemList = true;
 		}));
-		buttonSearchType = addRenderableWidget(new GuiButton(leftPos - 18, topPos + 5 + 18*2, 2, b -> {
+		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 21, 12, 256, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_tabs.png"), b -> {
 			searchType = (searchType + 1) & ((IAutoFillTerminal.hasSync() || this instanceof CraftingTerminalScreen) ? 0b111 : 0b011);
 			buttonSearchType.state = searchType;
 			sendUpdate();
-		}) {
-
-			{
-				this.texX = 194;
-				this.texY = 30;
-			}
-
-			@Override
-			public void renderButton(PoseStack st, int mouseX, int mouseY, float pt) {
-				if (this.visible) {
-					int x = getX();
-					int y = getY();
-					RenderSystem.setShader(GameRenderer::getPositionTexShader);
-					RenderSystem.setShaderTexture(0, getGui());
-					this.isHovered = mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
-					//int i = this.getYImage(this.isHovered);
-					RenderSystem.enableBlend();
-					RenderSystem.defaultBlendFunc();
-					RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-					this.blit(st, x, y, texX, texY + tile * 16, this.width, this.height);
-					if((state & 1) > 0)this.blit(st, x+1, y+1, texX + 16, texY + tile * 16, this.width-2, this.height-2);
-					if((state & 2) > 0)this.blit(st, x+1, y+1, texX + 16+14, texY + tile * 16, this.width-2, this.height-2);
-					if((state & 4) > 0)this.blit(st, x+1, y+1, texX + 16+14*2, texY + tile * 16, this.width-2, this.height-2);
-				}
-			}
-		});
+		}));
 		buttonCtrlMode = addRenderableWidget(makeButton(leftPos - 18, topPos + 5 + 18*3, 3, b -> {
 			controllMode = (controllMode + 1) % ControllMode.VALUES.length;
 			buttonCtrlMode.state = controllMode;
@@ -301,11 +286,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, creativeInventoryTabs);
+		RenderSystem.setShaderTexture(0, scrollBall);
 		i = k;
 		j = l;
 		k = j1;
-		this.blit(st, i, j + (int) ((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
+		this.blit(st, i + 13, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
 
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
@@ -333,7 +318,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	@Override
 	protected void renderLabels(PoseStack st, int mouseX, int mouseY) {
-		super.renderLabels(st, mouseX, mouseY);
 		st.pushPose();
 		slotIDUnderMouse = drawSlots(st, mouseX, mouseY);
 		st.popPose();
@@ -514,6 +498,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, getGui());
 		this.blit(st, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+		BaseBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15, st);
+
 	}
 
 	public GuiButton makeButton(int x, int y, int tile, OnPress pressable) {

@@ -39,32 +39,4 @@ public class GuiButton extends PlatformButton {
 			this.blit(st, x, y, texX + state * 16, texY + tile * 16, this.width, this.height);
 		}
 	}
-
-	public static class CompositeButton extends GuiButton {
-		public int texY_button = 16;
-		public CompositeButton(int x, int y, int tile, OnPress pressable) {
-			super(x, y, tile, pressable);
-		}
-
-		/**
-		 * Draws this button to the screen.
-		 */
-		@Override
-		public void renderButton(PoseStack st, int mouseX, int mouseY, float pt) {
-			if (this.visible) {
-				int x = getX();
-				int y = getY();
-				RenderSystem.setShader(GameRenderer::getPositionTexShader);
-				RenderSystem.setShaderTexture(0, texture);
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
-				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-				this.isHovered = mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
-				int i = this.getYImage(this.isHoveredOrFocused());
-				this.blit(st, x, y, texX + i * 16, this.texY_button, this.width, this.height);
-				this.blit(st, x, y, texX + tile * 16 + state * 16, texY, this.width, this.height);
-			}
-		}
-	}
 }
