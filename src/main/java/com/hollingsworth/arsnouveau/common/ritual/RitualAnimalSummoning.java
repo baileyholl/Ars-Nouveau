@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,13 +15,14 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RitualAnimalSummoning extends AbstractRitual {
     private MobCategory category = MobCategory.CREATURE;
     private WeightedRandomList<MobSpawnSettings.SpawnerData> mobs;
 
     private WeightedRandomList<MobSpawnSettings.SpawnerData> getMobs() {
-        return getWorld().getBiome(getPos()).get().getMobSettings().getMobs(category);
+        return WeightedRandomList.create(getWorld().getBiome(getPos()).get().getMobSettings().getMobs(category).unwrap().stream().filter(mob -> mob.type.is(EntityTags.ANIMAL_SUMMON_BLACKLIST)).collect(Collectors.toList()));
     }
 
     @Override
