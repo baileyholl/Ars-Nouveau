@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * Combined spell validator that runs the validations of all its children.
  */
 public class CombinedSpellValidator implements ISpellValidator {
-    private final List<ISpellValidator> validators;
+    public final List<ISpellValidator> validators;
 
     /**
      * Create a combined spell validator from the given list of validators.

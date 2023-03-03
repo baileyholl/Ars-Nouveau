@@ -144,7 +144,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			refreshItemList = true;
 		}));
 
-		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 21, 12, 256, 13, 1, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_tabs.png"), b -> {
+		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 21, 12, 256, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_tabs.png"), b -> {
 			comparator.setReversed(!comparator.isReversed());
 			buttonDirection.state = comparator.isReversed() ? 1 : 0;
 			sendUpdate();
