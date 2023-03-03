@@ -1,5 +1,6 @@
-// 1.19.2	2023-02-15T20:33:45.9052556	Tags for minecraft:entity_type
+// 1.19.2	2023-03-03T15:17:44.921291964	Tags for minecraft:entity_type
 a958530eef4b0d5ac2f1c7bd552b60e23cb66d9a data/ars_nouveau/tags/entity_types/an_hostile.json
+4d0235b95823f5d315aae7e9f9e484cbde8294a0 data/ars_nouveau/tags/entity_types/animal_summon_blacklist.json
 290c285b1e334d322b8d070b2c6a071114b1d70c data/ars_nouveau/tags/entity_types/berry_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_types/disintegration_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/entity_types/disintegration_whitelist.json

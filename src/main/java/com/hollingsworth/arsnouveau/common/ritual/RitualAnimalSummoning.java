@@ -22,7 +22,7 @@ public class RitualAnimalSummoning extends AbstractRitual {
     private WeightedRandomList<MobSpawnSettings.SpawnerData> mobs;
 
     private WeightedRandomList<MobSpawnSettings.SpawnerData> getMobs() {
-        return WeightedRandomList.create(getWorld().getBiome(getPos()).get().getMobSettings().getMobs(category).unwrap().stream().filter(mob -> mob.type.is(EntityTags.ANIMAL_SUMMON_BLACKLIST)).collect(Collectors.toList()));
+        return WeightedRandomList.create(getWorld().getBiome(getPos()).get().getMobSettings().getMobs(category).unwrap().stream().filter(mob -> !mob.type.is(EntityTags.ANIMAL_SUMMON_BLACKLIST)).collect(Collectors.toList()));
     }
 
     @Override
