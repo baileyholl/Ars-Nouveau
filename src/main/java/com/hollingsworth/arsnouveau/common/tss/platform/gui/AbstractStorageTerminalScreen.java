@@ -22,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button.OnPress;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +32,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -74,7 +76,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	protected StateButton buttonSortingType;
 	protected StateButton buttonDirection;
 	protected StateButton buttonSearchType;
-	protected GuiButton buttonCtrlMode;
 	private Comparator<StoredItemStack> sortComp;
 
 	public AbstractStorageTerminalScreen(T screenContainer, Inventory inv, Component titleIn) {
@@ -96,7 +97,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		buttonSortingType.state = s.sortType;
 		buttonDirection.state = s.reverseSort ? 1 : 0;
 		buttonSearchType.state = searchType;
-		buttonCtrlMode.state = controllMode;
 
 		if(!loadedSearch && menu.search != null) {
 			loadedSearch = true;
@@ -153,11 +153,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 18, topPos + 44, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_sync.png"), b -> {
 			searchType = (searchType + 1) & ((IAutoFillTerminal.hasSync() || this instanceof CraftingTerminalScreen) ? 0b111 : 0b011);
 			buttonSearchType.state = searchType;
-			sendUpdate();
-		}));
-		buttonCtrlMode = addRenderableWidget(makeButton(leftPos - 18, topPos + 5 + 18*3, 3, b -> {
-			controllMode = (controllMode + 1) % ControllMode.VALUES.length;
-			buttonCtrlMode.state = controllMode;
 			sendUpdate();
 		}));
 		updateSearch();
@@ -310,9 +305,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		}
 		if (buttonSearchType.isHoveredOrFocused()) {
 			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
-		}
-		if (buttonCtrlMode.isHoveredOrFocused()) {
-			renderComponentTooltip(st, Arrays.stream(I18n.get("tooltip.ars_nouveau.ctrlMode_" + buttonCtrlMode.state).split("\\\\")).map(Component::literal).collect(Collectors.toList()), mouseX, mouseY);
 		}
 	}
 
