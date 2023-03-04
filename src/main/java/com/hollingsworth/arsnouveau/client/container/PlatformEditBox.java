@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;

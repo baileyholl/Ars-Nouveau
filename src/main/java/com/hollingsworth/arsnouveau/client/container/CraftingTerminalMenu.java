@@ -1,10 +1,8 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
-import com.hollingsworth.arsnouveau.common.tss.platform.CraftingTerminalBlockEntity;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingTerminalBlockEntity;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

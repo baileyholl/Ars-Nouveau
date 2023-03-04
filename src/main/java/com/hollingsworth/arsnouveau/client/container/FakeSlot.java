@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;

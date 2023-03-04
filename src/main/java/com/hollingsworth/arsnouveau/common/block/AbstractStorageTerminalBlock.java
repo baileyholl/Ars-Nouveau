@@ -1,6 +1,6 @@
-package com.hollingsworth.arsnouveau.common.tss.platform;
+package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.TickableModBlock;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

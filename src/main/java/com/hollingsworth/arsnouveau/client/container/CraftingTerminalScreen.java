@@ -1,8 +1,7 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;

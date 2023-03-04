@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -9,11 +9,6 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
-import com.hollingsworth.arsnouveau.common.tss.platform.PlatformContainerScreen;
-import com.hollingsworth.arsnouveau.common.tss.platform.SortSettings;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.IAutoFillTerminal;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.NumberFormatUtil;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -40,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu.SlotAction.*;
-import static com.hollingsworth.arsnouveau.common.tss.platform.util.TerminalSyncManager.getItemId;
+import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
+import static com.hollingsworth.arsnouveau.client.container.TerminalSyncManager.getItemId;
 
 public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends PlatformContainerScreen<T> {
 	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<>() {

@@ -1,7 +1,6 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
-import com.hollingsworth.arsnouveau.common.tss.platform.StorageTerminalBlockEntity;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
 
 public class SlotStorage {
 

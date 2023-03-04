@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.mojang.blaze3d.platform.GlStateManager;

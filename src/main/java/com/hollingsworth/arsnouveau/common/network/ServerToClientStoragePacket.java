@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.common.tss.platform.gui.AbstractStorageTerminalScreen;
+import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

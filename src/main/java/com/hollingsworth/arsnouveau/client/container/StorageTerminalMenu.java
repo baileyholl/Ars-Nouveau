@@ -1,12 +1,9 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.gui;
+package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.tss.platform.SortSettings;
-import com.hollingsworth.arsnouveau.common.tss.platform.StorageTerminalBlockEntity;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.TerminalSyncManager;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;

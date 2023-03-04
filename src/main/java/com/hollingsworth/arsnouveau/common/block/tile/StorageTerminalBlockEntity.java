@@ -1,14 +1,14 @@
-package com.hollingsworth.arsnouveau.common.tss.platform;
+package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
-import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
-import com.hollingsworth.arsnouveau.common.tss.platform.util.StoredItemStack;
+import com.hollingsworth.arsnouveau.client.container.SortSettings;
+import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;

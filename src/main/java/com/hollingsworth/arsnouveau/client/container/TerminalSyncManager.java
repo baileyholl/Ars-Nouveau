@@ -1,10 +1,9 @@
-package com.hollingsworth.arsnouveau.common.tss.platform.util;
+package com.hollingsworth.arsnouveau.client.container;
 
 
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
-import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.tss.platform;
+package com.hollingsworth.arsnouveau.client.container;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
