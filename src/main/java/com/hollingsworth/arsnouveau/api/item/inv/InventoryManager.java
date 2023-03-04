@@ -8,6 +8,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
@@ -137,6 +138,37 @@ public class InventoryManager {
         return slotRef.isEmpty() ? ExtractedStack.empty() : ExtractedStack.from(slotRef, count);
     }
 
+    /**
+     * Continuously extracts from the handler until the desired stack and size is extracted or the handler is empty.
+     */
+    public MultiExtractedReference extractAllFromHandler(FilterableItemHandler filterableItemHandler, ItemStack desiredStack, int count){
+        ItemStack merged = ItemStack.EMPTY;
+        int remaining = Math.min(desiredStack.getMaxStackSize(), count);
+        List<ExtractedStack> extractedStacks = new ArrayList<>();
+        IItemHandler itemHandler = filterableItemHandler.getHandler();
+        for(int i = 0; i < itemHandler.getSlots(); i++){
+            ItemStack stack = itemHandler.getStackInSlot(i);
+            if (!ItemStack.isSame(stack, desiredStack) || !ItemStack.tagMatches(stack, desiredStack)) {
+                continue;
+            }
+            int toExtract = Math.min(stack.getCount(), remaining);
+            remaining -= toExtract;
+            if(merged.isEmpty()){
+                merged = stack.copy();
+                merged.setCount(toExtract);
+            }else{
+                merged.grow(toExtract);
+            }
+            extractedStacks.add(ExtractedStack.from(filterableItemHandler.getHandler(), i, toExtract));
+            if(remaining <= 0)
+                break;
+        }
+        return new MultiExtractedReference(merged, extractedStacks);
+    }
+
+    /**
+     * Checks all inventories for the desired stack and extracts the desired amount from all of them until the desired amount is reached.
+     */
     public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count, boolean includeInvalidInvs){
         ItemStack merged = ItemStack.EMPTY;
         int remaining = count;
@@ -145,16 +177,16 @@ public class InventoryManager {
         for(FilterableItemHandler filterable : preferred){
             if(remaining <= 0)
                 return new MultiExtractedReference(merged, extracted);
-            ExtractedStack extractedFromHandler = extractItem(filterable, stack ->ItemStack.isSame(stack, desiredStack) && ItemStack.tagMatches(stack, desiredStack), remaining);
-            if(extractedFromHandler.isEmpty())
-                continue;
-            remaining -= extractedFromHandler.getStack().getCount();
-            if(merged.isEmpty()){
-                merged = extractedFromHandler.getStack();
-            }else{
-                merged.grow(extractedFromHandler.getStack().getCount());
+            MultiExtractedReference extractedFromHandler = extractAllFromHandler(filterable, desiredStack, remaining);
+            if(!extractedFromHandler.isEmpty()) {
+                remaining -= extractedFromHandler.extracted.getCount();
+                if (merged.isEmpty()) {
+                    merged = extractedFromHandler.extracted;
+                } else {
+                    merged.grow(extractedFromHandler.extracted.getCount());
+                }
+                extracted.addAll(extractedFromHandler.slots);
             }
-            extracted.add(extractedFromHandler);
         }
         return new MultiExtractedReference(merged, extracted);
     }

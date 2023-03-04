@@ -16,5 +16,7 @@ public class MultiExtractedReference extends MultiSlotReference<ExtractedStack>{
         return extracted;
     }
 
-
+    public boolean isEmpty(){
+        return extracted.isEmpty();
+    }
 }
