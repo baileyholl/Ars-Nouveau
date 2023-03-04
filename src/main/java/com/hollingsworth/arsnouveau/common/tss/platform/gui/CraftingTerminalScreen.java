@@ -44,8 +44,10 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 
 	@Override
 	protected void onUpdateSearch(String text) {
-		if(IAutoFillTerminal.hasSync() || (searchType & 4) > 0) {
-			if(recipeBookSearch != null) recipeBookSearch.setValue(text);
+		if(IAutoFillTerminal.hasSync() || searchType == 1) {
+			if(recipeBookSearch != null) {
+				recipeBookSearch.setValue(text);
+			}
 			recipeBookGui.recipesUpdated();
 		}
 	}

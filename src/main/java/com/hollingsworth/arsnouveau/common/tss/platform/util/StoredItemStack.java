@@ -116,19 +116,19 @@ public class StoredItemStack {
 		}
 	}
 
-	public static interface IStoredItemStackComparator extends Comparator<StoredItemStack> {
+	public interface IStoredItemStackComparator extends Comparator<StoredItemStack> {
 		boolean isReversed();
 		void setReversed(boolean rev);
 		int type();
 	}
 
-	public static enum SortingTypes {
+	public enum SortingTypes {
 		AMOUNT(ComparatorAmount::new),
 		NAME(ComparatorName::new)
 		;
 		public static final SortingTypes[] VALUES = values();
 		private final Function<Boolean, IStoredItemStackComparator> factory;
-		private SortingTypes(Function<Boolean, IStoredItemStackComparator> factory) {
+		SortingTypes(Function<Boolean, IStoredItemStackComparator> factory) {
 			this.factory = factory;
 		}
 
@@ -160,11 +160,9 @@ public class StoredItemStack {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		StoredItemStack other = (StoredItemStack) obj;
-		//if (count != other.count) return false;
 		if (stack == null) {
-			if (other.stack != null) return false;
-		} else if (!ItemStack.isSame(stack, other.stack) || !ItemStack.tagMatches(stack, other.stack)) return false;
-		return true;
+			return other.stack == null;
+		} else return ItemStack.isSame(stack, other.stack) && ItemStack.tagMatches(stack, other.stack);
 	}
 
 	public boolean equals(StoredItemStack other) {
@@ -172,9 +170,8 @@ public class StoredItemStack {
 		if (other == null) return false;
 		if (count != other.count) return false;
 		if (stack == null) {
-			if (other.stack != null) return false;
-		} else if (!ItemStack.isSame(stack, other.stack) || !ItemStack.tagMatches(stack, other.stack)) return false;
-		return true;
+			return other.stack == null;
+		} else return ItemStack.isSame(stack, other.stack) && ItemStack.tagMatches(stack, other.stack);
 	}
 
 	public void grow(long c) {

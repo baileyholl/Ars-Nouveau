@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class DominionWand extends ModItem {
     public DominionWand() {
-        super();
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
     @Override

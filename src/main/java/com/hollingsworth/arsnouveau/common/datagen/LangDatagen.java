@@ -1160,5 +1160,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.too_many", "Maximum number of inventories reached. Add more Bookwyrms to increase the limit.");
         add("ars_nouveau.storage.num_connected", "%s connected inventories");
         add("ars_nouveau.storage_lectern", "Storage Lectern");
+        add("tooltip.ars_nouveau.search_1", "Standard Search");
+        add("tooltip.ars_nouveau.search_0", "JEI Synced Search");
     }
 }

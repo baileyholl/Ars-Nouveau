@@ -91,7 +91,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		controllMode = s.controlMode;
 		comparator = StoredItemStack.SortingTypes.VALUES[s.sortType % StoredItemStack.SortingTypes.VALUES.length].create(s.reverseSort);
 		searchType = s.searchType;
-		if(!searchField.isFocused() && (s.searchType & 1) > 0) {
+		if(!searchField.isFocused()) {
 			searchField.setFocus(true);
 		}
 		buttonSortingType.state = s.sortType;
@@ -100,8 +100,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 		if(!loadedSearch && menu.search != null) {
 			loadedSearch = true;
-			if((searchType & 2) > 0)
-				searchField.setValue(menu.search);
+			searchField.setValue(menu.search);
 		}
 	}
 
@@ -151,7 +150,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			refreshItemList = true;
 		}));
 		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 18, topPos + 44, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_sync.png"), b -> {
-			searchType = (searchType + 1) & ((IAutoFillTerminal.hasSync() || this instanceof CraftingTerminalScreen) ? 0b111 : 0b011);
+			searchType = searchType == 0 ? 1 : 0;
 			buttonSearchType.state = searchType;
 			sendUpdate();
 		}));
@@ -205,14 +204,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			if(!searchLast.equals(searchString)) {
 				getMenu().scrollTo(0);
 				this.currentScroll = 0;
-				if ((searchType & 4) > 0) {
+				if (searchType == 1) {
 					IAutoFillTerminal.sync(searchString);
 				}
-				if ((searchType & 2) > 0) {
-					CompoundTag nbt = new CompoundTag();
-					nbt.putString("search", searchString);
-					menu.sendMessage(nbt);
-				}
+				CompoundTag nbt = new CompoundTag();
+				nbt.putString("search", searchString);
+				menu.sendMessage(nbt);
+
 				onUpdateSearch(searchString);
 			} else {
 				getMenu().scrollTo(this.currentScroll);
@@ -285,7 +283,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		i = k;
 		j = l;
 		k = j1;
-		this.blit(st, i + 13, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
+		blit(st, i + 13, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
 
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
@@ -419,37 +417,21 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	public boolean isPullOne(int mouseButton) {
-		return switch (ctrlm()) {
-			case AE -> mouseButton == 1 && hasShiftDown();
-			case RS -> mouseButton == 2;
-			case DEF -> mouseButton == 1 && !menu.getCarried().isEmpty();
-		};
+		return mouseButton == 1 && hasShiftDown();
 	}
 
 	public boolean isTransferOne(int mouseButton) {
-		return switch (ctrlm()) {
-			case AE -> hasShiftDown() && hasControlDown();//not in AE
-			case RS -> hasShiftDown() && mouseButton == 2;
-			case DEF -> mouseButton == 1 && hasShiftDown();
-		};
+		return hasShiftDown() && hasControlDown();
 	}
 
 	public boolean pullHalf(int mouseButton) {
-		return switch (ctrlm()) {
-			case AE, RS -> mouseButton == 1;
-			case DEF -> mouseButton == 1 && menu.getCarried().isEmpty();
-		};
+		return mouseButton == 1;
 	}
 
 	public boolean pullNormal(int mouseButton) {
-		return switch (ctrlm()) {
-			case AE, RS, DEF -> mouseButton == 0;
-		};
+		return mouseButton == 0;
 	}
 
-	private ControllMode ctrlm() {
-		return ControllMode.VALUES[controllMode];
-	}
 
 	public Font getFont() {
 		return font;

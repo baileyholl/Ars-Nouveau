@@ -47,11 +47,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		addStorageSlots();
 	}
 
-	public StorageTerminalMenu(int id, Inventory inv) {
-		this(MenuRegistry.STORAGE.get(), id, inv);
-		this.addPlayerSlots(inv, 8, 120);
-	}
-
 	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv) {
 		this(type, id, inv, null);
 	}
@@ -128,7 +123,9 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 
 	@Override
 	public void broadcastChanges() {
-		if(te == null)return;
+		if(te == null){
+			return;
+		}
 		Map<StoredItemStack, Long> itemsCount = te.getStacks();
 		sync.update(itemsCount, (ServerPlayer) pinv.player, tag -> {
 			if(!te.getLastSearch().equals(search)) {
@@ -301,13 +298,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 					if (clicked == null) {
 						return;
 					}
-					long maxCount = 64;
-					for (StoredItemStack e : itemList) {
-						if (e.equals(clicked)) {
-							maxCount = e.getQuantity();
-						}
-					}
-					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 2, 1));
+					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(clicked.getQuantity() / 2, clicked.getMaxStackSize() / 2), 1));
 					if(pulled != null) {
 						setCarried(pulled.getActualStack());
 					}
