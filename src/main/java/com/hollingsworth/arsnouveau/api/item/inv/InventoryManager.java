@@ -176,17 +176,19 @@ public class InventoryManager {
         List<ExtractedStack> extracted = new ArrayList<>();
         for(FilterableItemHandler filterable : preferred){
             if(remaining <= 0)
-                return new MultiExtractedReference(merged, extracted);
+                break;
             MultiExtractedReference extractedFromHandler = extractAllFromHandler(filterable, desiredStack, remaining);
-            if(!extractedFromHandler.isEmpty()) {
-                remaining -= extractedFromHandler.extracted.getCount();
-                if (merged.isEmpty()) {
-                    merged = extractedFromHandler.extracted;
-                } else {
-                    merged.grow(extractedFromHandler.extracted.getCount());
-                }
-                extracted.addAll(extractedFromHandler.slots);
+            if(extractedFromHandler.isEmpty())
+                continue;
+
+            remaining -= extractedFromHandler.extracted.getCount();
+            if (merged.isEmpty()) {
+                merged = extractedFromHandler.extracted;
+            } else {
+                merged.grow(extractedFromHandler.extracted.getCount());
             }
+            extracted.addAll(extractedFromHandler.slots);
+
         }
         return new MultiExtractedReference(merged, extracted);
     }
