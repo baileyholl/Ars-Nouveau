@@ -15,7 +15,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
 import static com.hollingsworth.arsnouveau.client.container.TerminalSyncManager.getItemId;
 
-public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends PlatformContainerScreen<T> {
+public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMenu> extends AbstractContainerScreen<T> {
 	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<>() {
 
 		@Override
@@ -469,14 +469,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		this.blit(st, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 		BaseBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15, st);
 
-	}
-
-	public GuiButton makeButton(int x, int y, int tile, OnPress pressable) {
-		GuiButton btn = new GuiButton(x, y, tile, pressable);
-		btn.texX = 194;
-		btn.texY = 30;
-		btn.texture = getGui();
-		return btn;
 	}
 
 	protected void onUpdateSearch(String text) {}

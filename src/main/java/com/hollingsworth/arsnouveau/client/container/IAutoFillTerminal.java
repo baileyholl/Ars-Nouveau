@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public interface IAutoFillTerminal {
-	public static List<ISearchHandler> updateSearch = new ArrayList<>();
+	List<ISearchHandler> updateSearch = new ArrayList<>();
 
 	void sendMessage(CompoundTag compound);
 	List<StoredItemStack> getStoredItems();
@@ -24,7 +24,7 @@ public interface IAutoFillTerminal {
 		return updateSearch.stream().map(ISearchHandler::getName).collect(Collectors.joining(", "));
 	}
 
-	public interface ISearchHandler {
+	interface ISearchHandler {
 		void setSearch(String set);
 		String getName();
 		String getSearch();
