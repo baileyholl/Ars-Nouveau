@@ -158,7 +158,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	protected void updateSearch() {
-		String searchString = searchField.getValue();
+		String searchString = searchField.getValue().trim();
 		if (refreshItemList || !searchLast.equals(searchString)) {
 			getMenu().itemListClientSorted.clear();
 			boolean searchMod = false;
