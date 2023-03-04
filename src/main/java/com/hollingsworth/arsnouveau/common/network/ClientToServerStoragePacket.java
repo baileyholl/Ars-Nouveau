@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.common.tss.platform.gui.StorageTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
