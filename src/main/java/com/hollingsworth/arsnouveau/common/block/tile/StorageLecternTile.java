@@ -4,19 +4,26 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
-import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
 import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -33,10 +40,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 
@@ -47,10 +51,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	private boolean updateItems;
 	private List<BlockPos> connectedInventories = new ArrayList<>();
 	private List<HandlerPos> handlerPosList = new ArrayList<>();
-	private int numBookwyrms;
 
 	public SortSettings sortSettings = new SortSettings();
 	public BlockPos mainLecternPos;
+	public List<UUID> bookwyrmUUIDs = new ArrayList<>();
 
 	public StorageLecternTile(BlockPos pos, BlockState state) {
 		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
@@ -182,6 +186,21 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	@Override
+	public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+		if(mainLecternPos != null){
+			list.add(ColorPos.centered(mainLecternPos, ParticleColor.TO_HIGHLIGHT));
+			return list;
+		}
+		for(BlockPos pos : connectedInventories){
+			list.add(ColorPos.centered(pos, ParticleColor.FROM_HIGHLIGHT));
+		}
+		for(EntityBookwyrm bookwyrm : getBookwyrmEntities()){
+			list.add(ColorPos.centered(bookwyrm.blockPosition(), ParticleColor.GREEN));
+		}
+		return list;
+	}
+
+	@Override
 	public void tick() {
 		if(level.isClientSide)
 			return;
@@ -214,6 +233,28 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		}
 	}
 
+	public List<EntityBookwyrm> getBookwyrmEntities(){
+		List<EntityBookwyrm> bookwyrmEntities = new ArrayList<>();
+		List<UUID> staleUUIDs = new ArrayList<>();
+		for(UUID uuid : bookwyrmUUIDs){
+			if(level instanceof ServerLevel serverLevel) {
+				Entity entity = serverLevel.getEntity(uuid);
+				if (entity instanceof EntityBookwyrm bookwyrm) {
+					bookwyrmEntities.add(bookwyrm);
+				}else{
+					staleUUIDs.add(uuid);
+				}
+			}
+		}
+		bookwyrmUUIDs.removeAll(staleUUIDs);
+		return bookwyrmEntities;
+	}
+
+	public void removeBookwyrm(EntityBookwyrm bookwyrm){
+		bookwyrmUUIDs.remove(bookwyrm.getUUID());
+		updateBlock();
+	}
+
 	public boolean canInteractWith(Player player) {
 		return !this.isRemoved();
 	}
@@ -240,7 +281,18 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	public int getMaxConnectedInventories() {
-		return 4 + numBookwyrms * 4;
+		return getBookwyrmEntities().size() * 6;
+	}
+
+	public boolean addBookwyrm(){
+		if(level.isClientSide)
+			return false;
+		EntityBookwyrm bookwyrm = new EntityBookwyrm(level, this.getBlockPos());
+		bookwyrm.setPos(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 1, this.getBlockPos().getZ() + 0.5);
+		level.addFreshEntity(bookwyrm);
+		bookwyrmUUIDs.add(bookwyrm.getUUID());
+		updateBlock();
+		return true;
 	}
 
 	@Override
@@ -255,10 +307,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			list.add(c);
 		}
 		compound.put("invs", list);
-		compound.putInt("numBookwyrms", numBookwyrms);
 		if(mainLecternPos != null){
 			compound.putLong("mainLecternPos", mainLecternPos.asLong());
 		}
+		ListTag bookwyrmList = new ListTag();
+		for(UUID uuid : bookwyrmUUIDs){
+			bookwyrmList.add(NbtUtils.createUUID(uuid));
+		}
+		compound.put("bookwyrmUUIDs", bookwyrmList);
 	}
 
 	@Override
@@ -272,9 +328,15 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			CompoundTag c = list.getCompound(i);
 			connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
 		}
-		numBookwyrms = compound.getInt("numBookwyrms");
 		if(compound.contains("mainLecternPos")){
 			mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
+		}
+		if(compound.contains("bookwyrmUUIDs")){
+			bookwyrmUUIDs.clear();
+			ListTag bookwyrmList = compound.getList("bookwyrmUUIDs", 11);
+			for (Tag tag : bookwyrmList) {
+				bookwyrmUUIDs.add(NbtUtils.loadUUID(tag));
+			}
 		}
 		super.load(compound);
 	}
@@ -293,6 +355,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			tooltip.add(Component.translatable("ars_nouveau.storage.lectern_chained", mainLecternPos.getX(), mainLecternPos.getY(), mainLecternPos.getZ()));
 		}else {
 			tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+			tooltip.add(Component.translatable("ars_nouveau.storage.num_bookwyrms", bookwyrmUUIDs.size()));
 		}
 	}
 

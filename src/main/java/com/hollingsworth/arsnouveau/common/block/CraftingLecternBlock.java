@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
+import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
@@ -56,7 +57,11 @@ public class CraftingLecternBlock extends TickableModBlock {
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos,
 								 Player player, InteractionHand hand, BlockHitResult rtr) {
-		if (world.isClientSide || player.getItemInHand(hand).getItem() instanceof DominionWand || hand != InteractionHand.MAIN_HAND) {
+		ItemStack heldStack = player.getItemInHand(hand);
+		if (world.isClientSide
+				|| heldStack.getItem() instanceof DominionWand
+				|| hand != InteractionHand.MAIN_HAND
+				|| heldStack.getItem() instanceof BookwyrmCharm) {
 			return InteractionResult.PASS;
 		}
 

@@ -129,7 +129,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.RELAY_WARP);
             registerDropSelf(BlockRegistry.RELAY_DEPOSIT);
             registerDropSelf(BlockRegistry.RELAY_COLLECTOR);
-            registerDrop(BlockRegistry.BOOKWYRM_LECTERN, Items.LECTERN);
+            registerDropSelf(BlockRegistry.CRAFTING_LECTERN.get());
             registerDropSelf(BlockRegistry.RED_SBED);
             registerDropSelf(BlockRegistry.YELLOW_SBED);
             registerDropSelf(BlockRegistry.GREEN_SBED);

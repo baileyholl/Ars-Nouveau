@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:lectern"
+          "name": "ars_nouveau:storage_terminal"
         }
       ],
       "rolls": 1.0

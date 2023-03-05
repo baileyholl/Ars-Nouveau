@@ -250,11 +250,7 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<RelayWarpTile> RELAY_WARP_TILE;
 
-    @ObjectHolder(value = prepend + LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockRegistryKey)
-    public static BookwyrmLectern BOOKWYRM_LECTERN;
 
-    @ObjectHolder(value = prepend + LibBlockNames.BOOKWYRM_LECTERN, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<BookwyrmLecternTile> BOOKWYRM_LECTERN_TILE;
 
     @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockRegistryKey)
     public static BasicSpellTurret BASIC_SPELL_TURRET;
@@ -467,7 +463,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new VolcanicSourcelinkBlock());
 
         //SummonBlocks
-        registry.register(LibBlockNames.BOOKWYRM_LECTERN, new BookwyrmLectern(ModBlock.defaultProperties().noOcclusion()));
         registry.register(LibBlockNames.WIXIE_CAULDRON, new WixieCauldron());
         registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
         registry.register(LibBlockNames.SCONCE, new SconceBlock());
@@ -540,7 +535,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MYCELIAL_SOURCELINK, BlockEntityType.Builder.of(MycelialSourcelinkTile::new, BlockRegistry.MYCELIAL_BLOCK).build(null));
         registry.register(LibBlockNames.RELAY_DEPOSIT, BlockEntityType.Builder.of(RelayDepositTile::new, BlockRegistry.RELAY_DEPOSIT).build(null));
         registry.register(LibBlockNames.RELAY_WARP, BlockEntityType.Builder.of(RelayWarpTile::new, BlockRegistry.RELAY_WARP).build(null));
-        registry.register(LibBlockNames.BOOKWYRM_LECTERN, BlockEntityType.Builder.of(BookwyrmLecternTile::new, BlockRegistry.BOOKWYRM_LECTERN).build(null));
         registry.register(LibBlockNames.BASIC_SPELL_TURRET, BlockEntityType.Builder.of(BasicSpellTurretTile::new, BlockRegistry.BASIC_SPELL_TURRET).build(null));
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, BlockEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null));
         registry.register(LibBlockNames.ARCHWOOD_CHEST, BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null));
@@ -692,7 +686,6 @@ public class BlockRegistry {
                 return MycelialRenderer::getISTER;
             }
         });
-        registry.register(LibBlockNames.BOOKWYRM_LECTERN, getDefaultBlockItem(BlockRegistry.BOOKWYRM_LECTERN));
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, new RendererBlockItem(BlockRegistry.TIMER_SPELL_TURRET, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
