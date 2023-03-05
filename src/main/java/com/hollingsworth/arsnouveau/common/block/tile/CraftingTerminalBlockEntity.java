@@ -56,6 +56,8 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity impl
 	private final CraftingContainer craftMatrix = new CraftingContainer(craftingContainer, 3, 3);
 	private ResultContainer craftResult = new ResultContainer();
 	private HashSet<CraftingTerminalMenu> craftingListeners = new HashSet<>();
+
+
 	public CraftingTerminalBlockEntity(BlockPos pos, BlockState state) {
 		super(BlockRegistry.STORAGE_TERMINAL_TILE.get(), pos, state);
 	}

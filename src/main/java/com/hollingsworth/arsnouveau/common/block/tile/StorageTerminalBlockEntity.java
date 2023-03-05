@@ -50,6 +50,7 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	private int numBookwyrms;
 
 	public SortSettings sortSettings = new SortSettings();
+	public BlockPos mainLecternPos;
 
 	public StorageTerminalBlockEntity(BlockPos pos, BlockState state) {
 		super(BlockRegistry.STORAGE_TERMINAL_TILE.get(), pos, state);
@@ -131,32 +132,53 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	public void onWanded(Player playerEntity) {
 		this.connectedInventories = new ArrayList<>();
 		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
+		updateItems = true;
+		mainLecternPos = null;
+		updateBlock();
+	}
+
+	@Override
+	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+		if(storedPos == null) {
+			return;
+		}
+		BlockEntity tile = level.getBlockEntity(storedPos);
+		if(tile instanceof StorageTerminalBlockEntity){
+			return;
+		}
+		if(tile == null){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
+			return;
+		}
+		IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+		if(handler == null){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
+			return;
+		}
+		if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
+			return;
+		}
+		this.connectedInventories.add(storedPos.immutable());
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
 		updateBlock();
 		updateItems = true;
 	}
 
 	@Override
-	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-		if(storedPos != null) {
-			BlockEntity tile = level.getBlockEntity(storedPos);
-			if(tile == null){
-				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
-				return;
-			}
-			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-			if(handler == null){
-				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
-				return;
-			}
-			if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
-				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
-				return;
-			}
-			this.connectedInventories.add(storedPos.immutable());
-			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
-			updateBlock();
-			updateItems = true;
+	public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+		if(storedPos == null){
+			return;
 		}
+		BlockEntity tile = level.getBlockEntity(storedPos);
+		if(!(tile instanceof StorageTerminalBlockEntity storageTerminalBlockEntity)){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.not_lectern"));
+			return;
+		}
+		this.mainLecternPos = storedPos.immutable();
+		this.connectedInventories = new ArrayList<>();
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained"));
+		updateBlock();
 	}
 
 	@Override
@@ -193,7 +215,23 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 	}
 
 	public boolean canInteractWith(Player player) {
-		return true;
+		return !this.isRemoved();
+	}
+
+	public boolean openMenu(Player player, List<BlockPos> visitedPos){
+		if(mainLecternPos == null){
+			player.openMenu(this);
+			return true;
+		}else {
+			if (visitedPos.contains(mainLecternPos))
+				return false;
+			BlockEntity blockEntity = level.getBlockEntity(mainLecternPos);
+			if (blockEntity instanceof StorageTerminalBlockEntity storageTerminalBlockEntity) {
+				visitedPos.add(mainLecternPos);
+				return storageTerminalBlockEntity.openMenu(player, visitedPos);
+			}
+		}
+		return false;
 	}
 
 	public void setSorting(SortSettings sortSettings) {
@@ -218,6 +256,9 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 		}
 		compound.put("invs", list);
 		compound.putInt("numBookwyrms", numBookwyrms);
+		if(mainLecternPos != null){
+			compound.putLong("mainLecternPos", mainLecternPos.asLong());
+		}
 	}
 
 	@Override
@@ -232,6 +273,9 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 			connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
 		}
 		numBookwyrms = compound.getInt("numBookwyrms");
+		if(compound.contains("mainLecternPos")){
+			mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
+		}
 		super.load(compound);
 	}
 
@@ -245,7 +289,11 @@ public class StorageTerminalBlockEntity extends ModdedTile implements MenuProvid
 
 	@Override
 	public void getTooltip(List<Component> tooltip) {
-		tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+		if(mainLecternPos != null){
+			tooltip.add(Component.translatable("ars_nouveau.storage.lectern_chained", mainLecternPos.getX(), mainLecternPos.getY(), mainLecternPos.getZ()));
+		}else {
+			tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+		}
 	}
 
 	public record HandlerPos(BlockPos pos, IItemHandler handler){

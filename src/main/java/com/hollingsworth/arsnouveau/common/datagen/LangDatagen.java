@@ -1162,5 +1162,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage_lectern", "Storage Lectern");
         add("tooltip.ars_nouveau.search_1", "Standard Search");
         add("tooltip.ars_nouveau.search_0", "JEI Synced Search");
+        add("ars_nouveau.invalid_lectern", "Invalid lectern connected.");
+        add("ars_nouveau.storage.lectern_chained", "Linked to x: %s y: %s z: %s ");
     }
 }

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingTerminalBlockEntity;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingTerminalBlock extends TickableModBlock {
@@ -54,16 +56,14 @@ public class CraftingTerminalBlock extends TickableModBlock {
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos,
 								 Player player, InteractionHand hand, BlockHitResult rtr) {
-		if (world.isClientSide) {
-			return InteractionResult.SUCCESS;
+		if (world.isClientSide || player.getItemInHand(hand).getItem() instanceof DominionWand || hand != InteractionHand.MAIN_HAND) {
+			return InteractionResult.PASS;
 		}
 
 		BlockEntity blockEntity_1 = world.getBlockEntity(pos);
 		if (blockEntity_1 instanceof StorageTerminalBlockEntity term) {
-			if(term.canInteractWith(player)) {
-				player.openMenu(term);
-			} else {
-				player.displayClientMessage(Component.translatable("ars_nouveau.lectern_out_of_range"), true);
+			if(!term.openMenu(player, new ArrayList<>())){
+				player.displayClientMessage(Component.translatable("ars_nouveau.invalid_lectern"), true);
 			}
 		}
 		return InteractionResult.SUCCESS;
