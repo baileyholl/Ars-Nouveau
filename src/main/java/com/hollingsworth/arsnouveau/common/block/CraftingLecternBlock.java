@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.tile.CraftingTerminalBlockEntity;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -26,15 +26,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CraftingTerminalBlock extends TickableModBlock {
+public class CraftingLecternBlock extends TickableModBlock {
 
-	public CraftingTerminalBlock() {
+	public CraftingLecternBlock() {
 		super(Properties.of(Material.WOOD).strength(3).noOcclusion());
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new CraftingTerminalBlockEntity(pos, state);
+		return new CraftingLecternTile(pos, state);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class CraftingTerminalBlock extends TickableModBlock {
 		}
 
 		BlockEntity blockEntity_1 = world.getBlockEntity(pos);
-		if (blockEntity_1 instanceof StorageTerminalBlockEntity term) {
+		if (blockEntity_1 instanceof StorageLecternTile term) {
 			if(!term.openMenu(player, new ArrayList<>())){
 				player.displayClientMessage(Component.translatable("ars_nouveau.invalid_lectern"), true);
 			}
@@ -74,7 +74,7 @@ public class CraftingTerminalBlock extends TickableModBlock {
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState state2, boolean flag) {
 		if (!state.is(state2.getBlock())) {
 			BlockEntity blockentity = world.getBlockEntity(pos);
-			if (blockentity instanceof CraftingTerminalBlockEntity te) {
+			if (blockentity instanceof CraftingLecternTile te) {
 				Containers.dropContents(world, pos, te.getCraftingInv());
 				world.updateNeighbourForOutputSignal(pos, this);
 			}

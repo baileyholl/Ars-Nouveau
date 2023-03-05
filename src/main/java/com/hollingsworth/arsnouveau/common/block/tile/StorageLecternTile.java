@@ -1,119 +1,312 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.item.inv.*;
+import com.hollingsworth.arsnouveau.api.util.InvUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
+import com.hollingsworth.arsnouveau.client.container.SortSettings;
+import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
-public class StorageLecternTile extends BlockEntity implements Container, MenuProvider {
-    private NonNullList<ItemStack> items = NonNullList.withSize(Integer.MAX_VALUE, ItemStack.EMPTY);
-    public StorageLecternTile(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
-        super(pType, pPos, pBlockState);
-    }
-
-    @Override
-    public int getContainerSize() {
-        return 0;
-    }
-
-    public boolean isEmpty() {
-        return this.getItems().stream().allMatch(ItemStack::isEmpty);
-    }
-
-    /**
-     * Returns the stack in the given slot.
-     */
-    public ItemStack getItem(int pIndex) {
-        return this.getItems().get(pIndex);
-    }
-
-    /**
-     * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
-     */
-    public ItemStack removeItem(int pIndex, int pCount) {
-        ItemStack itemstack = ContainerHelper.removeItem(this.getItems(), pIndex, pCount);
-        if (!itemstack.isEmpty()) {
-            this.setChanged();
-        }
-
-        return itemstack;
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        return ContainerHelper.takeItem(this.getItems(), pSlot);
-    }
-
-    @Override
-    public void setItem(int pSlot, ItemStack pStack) {
-        this.getItems().set(pSlot, pStack);
-        if (pStack.getCount() > this.getMaxStackSize()) {
-            pStack.setCount(this.getMaxStackSize());
-        }
-
-        this.setChanged();
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return false;
-    }
-
-    @Override
-    public void clearContent() {
-        this.getItems().clear();
-    }
-
-    protected NonNullList<ItemStack> getItems(){
-        return items;
-    }
-
-    protected void setItems(NonNullList<ItemStack> pItemStacks){
-
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return null;
-    }
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 
-    private net.minecraftforge.common.util.LazyOptional<?> itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> createUnSidedHandler());
-    protected net.minecraftforge.items.IItemHandler createUnSidedHandler() {
-        return new net.minecraftforge.items.wrapper.InvWrapper(this);
-    }
+public class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider {
+	private InventoryManager invManager = new InventoryManager(new ArrayList<>());
+	private Map<StoredItemStack, Long> items = new HashMap<>();
+	private String lastSearch = "";
+	private boolean updateItems;
+	private List<BlockPos> connectedInventories = new ArrayList<>();
+	private List<HandlerPos> handlerPosList = new ArrayList<>();
+	private int numBookwyrms;
 
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, @org.jetbrains.annotations.Nullable net.minecraft.core.Direction side) {
-        if (!this.remove && cap == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER)
-            return itemHandler.cast();
-        return super.getCapability(cap, side);
-    }
+	public SortSettings sortSettings = new SortSettings();
+	public BlockPos mainLecternPos;
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        itemHandler.invalidate();
-    }
+	public StorageLecternTile(BlockPos pos, BlockState state) {
+		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
+	}
 
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> createUnSidedHandler());
-    }
+	public StorageLecternTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+		super(tileEntityTypeIn, pos, state);
+	}
+
+	@Override
+	public AbstractContainerMenu createMenu(int id, Inventory plInv, Player arg2) {
+		return new StorageTerminalMenu(id, plInv, this);
+	}
+
+	@Override
+	public Component getDisplayName() {
+		return Component.translatable("ars_nouveau.storage_lectern");
+	}
+
+	public Map<StoredItemStack, Long> getStacks() {
+		updateItems = true;
+		return items;
+	}
+
+	public StoredItemStack pullStack(StoredItemStack stack, int max) {
+		if (stack == null || max <= 0) {
+			return null;
+		}
+		ItemStack st = stack.getStack();
+		MultiExtractedReference pulled = invManager.extractItemFromAll(st, max, true);
+		if(pulled.getExtracted().isEmpty()) {
+			return null;
+		}
+		spawnEffects(pulled);
+		return new StoredItemStack(pulled.getExtracted());
+	}
+
+	private void spawnEffects(MultiExtractedReference multiSlotReference){
+		if(multiSlotReference.getExtracted().isEmpty()){
+			return;
+		}
+		for(ExtractedStack extractedStack : multiSlotReference.getSlots()){
+			BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+			if(pos != null){
+				EntityFlyingItem entityFlyingItem = new EntityFlyingItem(level,
+						pos,
+						getBlockPos().above()).setStack(extractedStack.stack);
+				level.addFreshEntity(entityFlyingItem);
+			}
+		}
+
+	}
+
+	public StoredItemStack pushStack(StoredItemStack stack) {
+		if(stack == null){
+			return null;
+		}
+		ItemStack remaining = invManager.insertStack(stack.getActualStack());
+		if(remaining.isEmpty()){
+			return null;
+		}
+		return new StoredItemStack(remaining);
+	}
+
+	public ItemStack pushStack(ItemStack itemstack) {
+		StoredItemStack is = pushStack(new StoredItemStack(itemstack));
+		return is == null ? ItemStack.EMPTY : is.getActualStack();
+	}
+
+	public void pushOrDrop(ItemStack st) {
+		if(st.isEmpty())return;
+		StoredItemStack st0 = pushStack(new StoredItemStack(st));
+		if(st0 != null) {
+			Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, st0.getActualStack());
+		}
+	}
+
+	@Override
+	public void onWanded(Player playerEntity) {
+		this.connectedInventories = new ArrayList<>();
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
+		updateItems = true;
+		mainLecternPos = null;
+		updateBlock();
+	}
+
+	@Override
+	public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+		if(storedPos == null) {
+			return;
+		}
+		BlockEntity tile = level.getBlockEntity(storedPos);
+		if(tile instanceof StorageLecternTile){
+			return;
+		}
+		if(tile == null){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
+			return;
+		}
+		IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+		if(handler == null){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
+			return;
+		}
+		if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
+			return;
+		}
+		this.connectedInventories.add(storedPos.immutable());
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
+		updateBlock();
+		updateItems = true;
+	}
+
+	@Override
+	public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+		if(storedPos == null){
+			return;
+		}
+		BlockEntity tile = level.getBlockEntity(storedPos);
+		if(!(tile instanceof StorageLecternTile storageTerminalBlockEntity)){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.not_lectern"));
+			return;
+		}
+		this.mainLecternPos = storedPos.immutable();
+		this.connectedInventories = new ArrayList<>();
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained"));
+		updateBlock();
+	}
+
+	@Override
+	public void tick() {
+		if(level.isClientSide)
+			return;
+		if(updateItems) {
+			items.clear();
+			List<FilterableItemHandler> handlers = new ArrayList<>();
+			List<IItemHandlerModifiable> modifiables = new ArrayList<>();
+			this.handlerPosList = new ArrayList<>();
+			for(BlockPos pos : connectedInventories) {
+				BlockEntity invTile = level.getBlockEntity(pos);
+				if(invTile != null) {
+					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+					lih.ifPresent(i -> {
+						if(i instanceof IItemHandlerModifiable handlerModifiable) {
+							handlers.add(new StorageItemHandler(handlerModifiable, InvUtil.filtersOnTile(invTile)));
+							modifiables.add(handlerModifiable);
+							handlerPosList.add(new HandlerPos(pos, i));
+						}
+					});
+				}
+			}
+			invManager = new InventoryManager(handlers);
+			CombinedInvWrapper itemHandler = new CombinedInvWrapper(modifiables.toArray(new IItemHandlerModifiable[0]));
+			IntStream.range(0, itemHandler.getSlots())
+					.mapToObj(itemHandler::getStackInSlot)
+					.filter(s -> !s.isEmpty())
+					.map(StoredItemStack::new)
+					.forEach(s -> items.merge(s, s.getQuantity(), Long::sum));
+			updateItems = false;
+		}
+	}
+
+	public boolean canInteractWith(Player player) {
+		return !this.isRemoved();
+	}
+
+	public boolean openMenu(Player player, List<BlockPos> visitedPos){
+		if(mainLecternPos == null){
+			player.openMenu(this);
+			return true;
+		}else {
+			if (visitedPos.contains(mainLecternPos))
+				return false;
+			BlockEntity blockEntity = level.getBlockEntity(mainLecternPos);
+			if (blockEntity instanceof StorageLecternTile storageTerminalBlockEntity) {
+				visitedPos.add(mainLecternPos);
+				return storageTerminalBlockEntity.openMenu(player, visitedPos);
+			}
+		}
+		return false;
+	}
+
+	public void setSorting(SortSettings sortSettings) {
+		this.sortSettings = sortSettings;
+		updateBlock();
+	}
+
+	public int getMaxConnectedInventories() {
+		return 4 + numBookwyrms * 4;
+	}
+
+	@Override
+	public void saveAdditional(CompoundTag compound) {
+		compound.put("sortSettings", sortSettings.toTag());
+		ListTag list = new ListTag();
+		for (BlockPos pos : connectedInventories) {
+			CompoundTag c = new CompoundTag();
+			c.putInt("x", pos.getX());
+			c.putInt("y", pos.getY());
+			c.putInt("z", pos.getZ());
+			list.add(c);
+		}
+		compound.put("invs", list);
+		compound.putInt("numBookwyrms", numBookwyrms);
+		if(mainLecternPos != null){
+			compound.putLong("mainLecternPos", mainLecternPos.asLong());
+		}
+	}
+
+	@Override
+	public void load(CompoundTag compound) {
+		if(compound.contains("sortSettings")) {
+			sortSettings = SortSettings.fromTag(compound.getCompound("sortSettings"));
+		}
+		ListTag list = compound.getList("invs", 10);
+		connectedInventories.clear();
+		for (int i = 0; i < list.size(); i++) {
+			CompoundTag c = list.getCompound(i);
+			connectedInventories.add(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")));
+		}
+		numBookwyrms = compound.getInt("numBookwyrms");
+		if(compound.contains("mainLecternPos")){
+			mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
+		}
+		super.load(compound);
+	}
+
+	public String getLastSearch() {
+		return lastSearch;
+	}
+
+	public void setLastSearch(String string) {
+		lastSearch = string;
+	}
+
+	@Override
+	public void getTooltip(List<Component> tooltip) {
+		if(mainLecternPos != null){
+			tooltip.add(Component.translatable("ars_nouveau.storage.lectern_chained", mainLecternPos.getX(), mainLecternPos.getY(), mainLecternPos.getZ()));
+		}else {
+			tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+		}
+	}
+
+	public record HandlerPos(BlockPos pos, IItemHandler handler){
+		public static @Nullable HandlerPos fromLevel(Level level, BlockPos pos){
+			BlockEntity tile = level.getBlockEntity(pos);
+			if(tile == null){
+				return null;
+			}
+			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+			if(handler == null){
+				return null;
+			}
+			return new HandlerPos(pos, handler);
+		}
+	}
 }

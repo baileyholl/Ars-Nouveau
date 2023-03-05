@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.container;
 
-import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 
 public class SlotStorage {
 
@@ -11,10 +11,10 @@ public class SlotStorage {
     /** The index of the slot in the inventory. */
     private final int slotIndex;
     /** The inventory we want to extract a slot from. */
-    public final StorageTerminalBlockEntity inventory;
+    public final StorageLecternTile inventory;
     public StoredItemStack stack;
 
-    public SlotStorage(StorageTerminalBlockEntity inventory, int slotIndex, int xPosition, int yPosition) {
+    public SlotStorage(StorageLecternTile inventory, int slotIndex, int xPosition, int yPosition) {
         this.xDisplayPosition = xPosition;
         this.yDisplayPosition = yPosition;
         this.slotIndex = slotIndex;

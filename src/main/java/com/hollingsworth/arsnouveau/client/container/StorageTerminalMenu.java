@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.container;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
-	protected StorageTerminalBlockEntity te;
+	protected StorageLecternTile te;
 	protected int playerSlotsStart;
 	protected List<SlotStorage> storageSlotList = new ArrayList<>();
 	public List<StoredItemStack> itemList = new ArrayList<>();
@@ -32,12 +32,12 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	public String search;
 	public boolean noSort;
 
-	public StorageTerminalMenu(int id, Inventory inv, StorageTerminalBlockEntity te) {
+	public StorageTerminalMenu(int id, Inventory inv, StorageLecternTile te) {
 		this(MenuRegistry.STORAGE.get(), id, inv, te);
 		this.addPlayerSlots(inv, 8, 120);
 	}
 
-	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv, StorageTerminalBlockEntity te) {
+	public StorageTerminalMenu(MenuType<?> type, int id, Inventory inv, StorageLecternTile te) {
 		super(type, id);
 		this.te = te;
 		this.pinv = inv;

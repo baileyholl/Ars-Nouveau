@@ -1,19 +1,19 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
-import com.hollingsworth.arsnouveau.common.block.tile.CraftingTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-public class LecternRenderer extends GeoBlockRenderer<CraftingTerminalBlockEntity> {
+public class LecternRenderer extends GeoBlockRenderer<CraftingLecternTile> {
     public static AnimatedGeoModel model = new GenericModel<>("book_wyrm_lectern");
 
     public LecternRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
     }
 
-    public LecternRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, AnimatedGeoModel<CraftingTerminalBlockEntity> modelProvider) {
+    public LecternRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, AnimatedGeoModel<CraftingLecternTile> modelProvider) {
         super(rendererDispatcherIn, modelProvider);
     }
 

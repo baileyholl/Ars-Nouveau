@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.container;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
-import com.hollingsworth.arsnouveau.common.block.tile.CraftingTerminalBlockEntity;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -44,7 +44,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		listeners.remove(listener);
 	}
 
-	public CraftingTerminalMenu(int id, Inventory inv, CraftingTerminalBlockEntity te) {
+	public CraftingTerminalMenu(int id, Inventory inv, CraftingLecternTile te) {
 		super(MenuRegistry.STORAGE.get(), id, inv, te);
 		craftMatrix = te.getCraftingInv();
 		craftResult = te.getCraftResult();
@@ -65,7 +65,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	public void removed(Player playerIn) {
 		super.removed(playerIn);
 		if(te != null)
-			((CraftingTerminalBlockEntity) te).unregisterCrafting(this);
+			((CraftingLecternTile) te).unregisterCrafting(this);
 	}
 
 	private void init() {
@@ -78,7 +78,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					return;
 				this.checkTakeAchievements(stack);
 				if (!pinv.player.getCommandSenderWorld().isClientSide) {
-					((CraftingTerminalBlockEntity) te).craft(thePlayer);
+					((CraftingLecternTile) te).craft(thePlayer);
 				}
 			}
 		});
@@ -109,7 +109,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			itemstack = itemstack1.copy();
 			if (index == 0) {
 				if(te == null)return ItemStack.EMPTY;
-				((CraftingTerminalBlockEntity) te).craftShift(playerIn);
+				((CraftingLecternTile) te).craftShift(playerIn);
 				if (!playerIn.level.isClientSide)
 					broadcastChanges();
 				return ItemStack.EMPTY;
@@ -142,7 +142,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	@Override
 	public boolean clickMenuButton(Player playerIn, int id) {
 		if(te != null && id == 0)
-			((CraftingTerminalBlockEntity) te).clear();
+			((CraftingLecternTile) te).clear();
 		else super.clickMenuButton(playerIn, id);
 		return false;
 	}
@@ -253,7 +253,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 			@Override
 			protected void clearGrid(boolean bool) {
-				((CraftingTerminalBlockEntity) te).clear();
+				((CraftingLecternTile) te).clear();
 				this.menu.clearCraftingContent();
 			}
 		}).recipeClicked(p_217056_3_, p_217056_2_, p_217056_1_);
@@ -275,7 +275,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					stacks[slot][j] = ItemStack.of(tag);
 				}
 			}
-			((CraftingTerminalBlockEntity) te).handlerItemTransfer(pinv.player, stacks);
+			((CraftingLecternTile) te).handlerItemTransfer(pinv.player, stacks);
 		}
 	}
 

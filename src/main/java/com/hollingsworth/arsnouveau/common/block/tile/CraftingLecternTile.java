@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity implements IAnimatable {
+public class CraftingLecternTile extends StorageLecternTile implements IAnimatable {
 	private AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
 		@Override
 		public boolean stillValid(Player player) {
@@ -58,8 +58,8 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity impl
 	private HashSet<CraftingTerminalMenu> craftingListeners = new HashSet<>();
 
 
-	public CraftingTerminalBlockEntity(BlockPos pos, BlockState state) {
-		super(BlockRegistry.STORAGE_TERMINAL_TILE.get(), pos, state);
+	public CraftingLecternTile(BlockPos pos, BlockState state) {
+		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
 	}
 
 	@Override
