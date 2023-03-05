@@ -105,6 +105,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.GHOST_WEAVE_TILE, GhostweaveRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.FALSE_WEAVE_TILE, FalseweaveRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TEMPORARY_TILE.get(), MirrorweaveRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.STORAGE_TERMINAL_TILE.get(), LecternRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));

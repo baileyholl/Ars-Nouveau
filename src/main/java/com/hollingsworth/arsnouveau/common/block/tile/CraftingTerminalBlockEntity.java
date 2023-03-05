@@ -21,12 +21,19 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity {
+public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity implements IAnimatable {
 	private AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
 		@Override
 		public boolean stillValid(Player player) {
@@ -253,5 +260,18 @@ public class CraftingTerminalBlockEntity extends StorageTerminalBlockEntity {
 		StoredItemStack is = pullStack(new StoredItemStack(itemStack), 1);
 		if(is == null)return ItemStack.EMPTY;
 		else return is.getActualStack();
+	}
+
+	@Override
+	public void registerControllers(AnimationData data) {
+		data.addAnimationController(new AnimationController<>(this, "controller", 1, (event -> {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("ledger_float"));
+			return PlayState.CONTINUE;
+		})));
+	}
+	AnimationFactory animationFactory = GeckoLibUtil.createFactory(this);
+	@Override
+	public AnimationFactory getFactory() {
+		return animationFactory;
 	}
 }
