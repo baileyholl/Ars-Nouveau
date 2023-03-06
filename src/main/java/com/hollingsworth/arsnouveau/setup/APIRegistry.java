@@ -255,7 +255,6 @@ public class APIRegistry {
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
         ArsNouveauAPI.getInstance().registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
 
-        JarBehaviorRegistry.register(EntityType.COW, new CowBehavior());
         JarBehaviorRegistry.register(EntityType.CHICKEN, new ChickenBehavior());
         JarBehaviorRegistry.register(EntityType.VILLAGER, new VillagerBehavior());
         JarBehaviorRegistry.register(EntityType.SHEEP, new SheepBehavior());
@@ -266,7 +265,6 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.GLOW_SQUID, new GlowSquidBehavior());
         JarBehaviorRegistry.register(EntityType.BLAZE, new BlazeBehavior());
         JarBehaviorRegistry.register(EntityType.PANDA, new PandaBehavior());
-        JarBehaviorRegistry.register(EntityType.GOAT, new GoatBehavior());
         JarBehaviorRegistry.register(EntityType.MOOSHROOM, new MooshroomBehavior());
         JarBehaviorRegistry.register(EntityType.ENDER_DRAGON, new DragonBehavior());
     }

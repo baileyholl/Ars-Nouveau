@@ -980,6 +980,7 @@
   "block.ars_nouveau.whirlisprig_flower": "Whirlisprig Blossom",
   "block.ars_nouveau.wixie_cauldron": "Wixie Cauldron",
   "block.ars_nouveau.yellow_sbed": "Yellow Magebloom Bed",
+  "config.jade.plugin_ars_nouveau.mob_jar": "Mob Jar",
   "curios.identifier.an_focus": "Spell Focus",
   "death.attack.an_enchantedBlock": "%1$s was crushed by %2$s magic blocks",
   "effect.ars_nouveau.blasting": "Blasting",
