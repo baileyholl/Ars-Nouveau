@@ -84,4 +84,11 @@ public class JarBehavior<T extends Entity> {
     public int lightLevel(MobJarTile pBlockEntity){
         return 0;
     }
+
+    public void onRedstonePower(MobJarTile tile) {
+        T entity = entityFromJar(tile);
+        if (entity instanceof Mob mob) {
+            mob.playAmbientSound();
+        }
+    }
 }
