@@ -6,14 +6,17 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,7 +45,15 @@ public class EffectInteract extends AbstractEffect {
                 manager.insertOrDrop(i, world, e.blockPosition());
             }
         }else {
-            player.interactOn(e, InteractionHand.MAIN_HAND);
+            if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+                ItemStack item = shooter.getOffhandItem();
+                InteractionResult res = item.interactLivingEntity(player, (LivingEntity) e, InteractionHand.OFF_HAND);
+                if (res != InteractionResult.SUCCESS) {
+                    e.interact(player, InteractionHand.OFF_HAND);
+                }
+            } else {
+                player.interactOn(e, InteractionHand.MAIN_HAND);
+            }
         }
     }
 
@@ -54,7 +65,13 @@ public class EffectInteract extends AbstractEffect {
             return;
         Player player = getPlayer(shooter, (ServerLevel) world);
         if(isRealPlayer(shooter)){
-            blockState.use(world, player, InteractionHand.MAIN_HAND, rayTraceResult);
+            if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+                ItemStack item = shooter.getOffhandItem();
+                UseOnContext context = new UseOnContext(player, InteractionHand.OFF_HAND, rayTraceResult);
+                item.useOn(context);
+            } else {
+                blockState.use(world, player, InteractionHand.MAIN_HAND, rayTraceResult);
+            }
         }else{
             InventoryManager manager = spellContext.getCaster().getInvManager();
             player = setupFakeInventory(spellContext, world);
@@ -81,12 +98,12 @@ public class EffectInteract extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf();
+        return augmentSetOf(AugmentSensitive.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals.";
+        return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity.";
     }
 
     @Override
