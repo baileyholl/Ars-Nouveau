@@ -284,15 +284,15 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		return getBookwyrmEntities().size() * 6;
 	}
 
-	public boolean addBookwyrm(){
+	public @Nullable EntityBookwyrm addBookwyrm(){
 		if(level.isClientSide)
-			return false;
+			return null;
 		EntityBookwyrm bookwyrm = new EntityBookwyrm(level, this.getBlockPos());
 		bookwyrm.setPos(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 1, this.getBlockPos().getZ() + 0.5);
 		level.addFreshEntity(bookwyrm);
 		bookwyrmUUIDs.add(bookwyrm.getUUID());
 		updateBlock();
-		return true;
+		return bookwyrm;
 	}
 
 	@Override

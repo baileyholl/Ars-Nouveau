@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
+import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,7 +27,9 @@ public class BookwyrmCharm extends ModItem {
         BlockPos pos = pContext.getClickedPos();
         if (world.isClientSide) return InteractionResult.SUCCESS;
         if (world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
-            if(tile.addBookwyrm()){
+            EntityBookwyrm bookwyrm = tile.addBookwyrm();
+            if(bookwyrm != null){
+                bookwyrm.readCharm(pContext.getItemInHand());
                 pContext.getItemInHand().shrink(1);
                 return InteractionResult.SUCCESS;
             }
@@ -36,5 +40,12 @@ public class BookwyrmCharm extends ModItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        if(stack.hasTag()){
+            PersistentFamiliarData data = new PersistentFamiliarData(stack.getOrCreateTag());
+            if(data.name != null){
+                tooltip2.add(data.name);
+            }
+        }
     }
+
 }

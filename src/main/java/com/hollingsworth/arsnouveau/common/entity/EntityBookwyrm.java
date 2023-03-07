@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -149,8 +150,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             return false;
 
         if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove(RemovalReason.DISCARDED);
         }
@@ -169,6 +169,23 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_BOOKWYRM_TYPE.get();
+    }
+
+    public ItemStack toCharm(){
+        ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
+        PersistentFamiliarData<EntityBookwyrm> data = new PersistentFamiliarData<>(new CompoundTag());
+        data.color = getColor(this);
+        data.name = getCustomName();
+        stack.setTag(data.toTag(this, new CompoundTag()));
+        return stack;
+    }
+
+    public void readCharm(ItemStack stack){
+        if(stack.hasTag()) {
+            PersistentFamiliarData<EntityBookwyrm> data = new PersistentFamiliarData<>(stack.getOrCreateTag());
+            setColor(data.color, this);
+            setCustomName(data.name);
+        }
     }
 
     @Override
@@ -245,8 +262,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
-            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), toCharm()));
         }
 
         super.die(source);
