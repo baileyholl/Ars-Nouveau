@@ -4,6 +4,7 @@ import com.google.common.collect.EvictingQueue;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
 import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
@@ -58,6 +59,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public BlockPos mainLecternPos;
 	public List<UUID> bookwyrmUUIDs = new ArrayList<>();
 	public int backoffTicks;
+	public int checkPlayerRangeTicks;
+	public boolean canCreateTasks = false;
 
 	public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
 
@@ -122,6 +125,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	public void addTransferTask(TransferTask task){
+		if(!canCreateTasks){
+			return;
+		}
 		transferTasks.add(task);
 	}
 
@@ -199,12 +205,21 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
 			return;
 		}
+		if(BlockUtil.distanceFrom(storedPos, worldPosition) > 20){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
+			return;
+		}
 		if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
 			return;
 		}
-		this.connectedInventories.add(storedPos.immutable());
-		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
+		if(this.connectedInventories.contains(storedPos)){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
+			this.connectedInventories.remove(storedPos);
+		}else {
+			this.connectedInventories.add(storedPos.immutable());
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
+		}
 		this.mainLecternPos = null;
 		updateBlock();
 		updateItems = true;
@@ -218,6 +233,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		BlockEntity tile = level.getBlockEntity(storedPos);
 		if(!(tile instanceof StorageLecternTile storageTerminalBlockEntity)){
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.not_lectern"));
+			return;
+		}else if(BlockUtil.distanceFrom(storedPos, worldPosition) > 20){
+			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far"));
 			return;
 		}
 		this.mainLecternPos = storedPos.immutable();
@@ -250,6 +268,16 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		}
 		if(backoffTicks <= 0 && level.getGameTime() % 20 == 0){
 			insertNearbyItems();
+		}
+		if(checkPlayerRangeTicks > 0){
+			checkPlayerRangeTicks--;
+		}
+		if(checkPlayerRangeTicks <= 0){
+			// Turn off bookwyrm tasks if no player is nearby
+			checkPlayerRangeTicks = 60 + level.random.nextInt(5);
+			ServerLevel serverLevel = (ServerLevel) level;
+			Player player = serverLevel.getNearestPlayer(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), 60, false);
+			canCreateTasks = player != null;
 		}
 		if(updateItems) {
 			items.clear();
@@ -427,7 +455,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		if(mainLecternPos != null){
 			tooltip.add(Component.translatable("ars_nouveau.storage.lectern_chained", mainLecternPos.getX(), mainLecternPos.getY(), mainLecternPos.getZ()));
 		}else {
-			tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size(), getMaxConnectedInventories()));
+			tooltip.add(Component.translatable("ars_nouveau.storage.num_connected", connectedInventories.size()));
 			tooltip.add(Component.translatable("ars_nouveau.storage.num_bookwyrms", bookwyrmUUIDs.size()));
 		}
 	}

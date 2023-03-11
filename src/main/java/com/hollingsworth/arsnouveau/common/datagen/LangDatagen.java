@@ -1165,5 +1165,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.invalid_lectern", "Invalid lectern connected.");
         add("ars_nouveau.storage.lectern_chained", "Linked to x: %s y: %s z: %s");
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
+        add("ars_nouveau.storage.removed", "Inventory removed.");
+        add("ars_nouveau.storage.not_lectern", "Connect to another Lectern to connect the views.");
+        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 20 blocks.");
+        add("ars_nouveau.storage.inv_too_far", "Inventory must be within 20 blocks.");
+        add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
     }
 }

@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
@@ -67,11 +66,6 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     protected EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveControl = new FlyingMoveControl(this, 10, true);
-    }
-
-
-    public EntityBookwyrm setRecipe(Spell spell) {
-        return this;
     }
 
     public EntityBookwyrm(Level p_i50190_2_) {
@@ -288,7 +282,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         return false;
     }
 
-    public@NotNull ItemStack getHeldStack() {
+    public @NotNull ItemStack getHeldStack() {
         return this.entityData.get(HELD_ITEM);
     }
 
