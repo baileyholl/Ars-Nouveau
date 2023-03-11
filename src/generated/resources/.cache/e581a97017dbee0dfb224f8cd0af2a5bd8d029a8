@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-15T19:45:46.1818367	Apparatus
+// 1.19.2	2023-03-11T13:20:29.3608666	Apparatus
 023dfd35158f0c4e9fd53eb4e698277a699a5957 data/ars_nouveau/recipes/alchemists_crown.json
 1b86b22b8f194d31775063c4353dd310d4cacca4 data/ars_nouveau/recipes/amulet_of_mana_boost.json
 6bd2a63bccc839fe75e4356e3d8d6efd484c8750 data/ars_nouveau/recipes/amulet_of_mana_regen.json
@@ -134,6 +134,7 @@ d838045b9e960e29b0ee40bc8ca504efe2c37510 data/ars_nouveau/recipes/spell_write.js
 3fcc756923ceced05d3676be14b2f3f267d51003 data/ars_nouveau/recipes/splash_flask_cannon.json
 505d56eddd29c4aa598fcf03d27b6f8483baebd7 data/ars_nouveau/recipes/stable_warp_scroll.json
 f3afeba4c5cf16a3666f43e7af4d540434f3abd0 data/ars_nouveau/recipes/starbuncle_charm.json
+0f3f79ca7f8be9a9399c08b5cc59b7a577e1ec7e data/ars_nouveau/recipes/storage_lectern.json
 ed6bad532ad705a2e1348a5bf8f3a518a7b69f5d data/ars_nouveau/recipes/summon_focus.json
 b05f2a39b87dab025c1c7759ffbd8cc26ebdf2e6 data/ars_nouveau/recipes/sweeping_1.json
 f147aa1c0269cca5634737f4c1ddabccb682aa08 data/ars_nouveau/recipes/sweeping_2.json

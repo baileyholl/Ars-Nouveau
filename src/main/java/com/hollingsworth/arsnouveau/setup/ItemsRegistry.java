@@ -98,7 +98,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<SpellParchment> SPELL_PARCHMENT = register(LibItemNames.SPELL_PARCHMENT, () -> new SpellParchment());
 
-    public static RegistryWrapper<BookwyrmCharm> BOOKWYRM_CHARM = register(LibItemNames.BOOKWYRM_CHARM, () -> new BookwyrmCharm());
+    public static RegistryWrapper<BookwyrmCharm> BOOKWYRM_CHARM = register(LibItemNames.BOOKWYRM_CHARM, () -> new BookwyrmCharm().withTooltip("ars_nouveau.tooltip.bookwyrm"));
 
     public static RegistryWrapper<DominionWand> DOMINION_ROD = register(LibItemNames.DOMINION_WAND, () -> new DominionWand());
 

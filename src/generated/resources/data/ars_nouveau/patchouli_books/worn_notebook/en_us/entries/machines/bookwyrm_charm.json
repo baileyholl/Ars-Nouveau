@@ -1,0 +1,22 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:bookwyrm_charm",
+  "name": "item.ars_nouveau.bookwyrm_charm",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.bookwyrm_charm"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:bookwyrm",
+      "text": "ars_nouveau.page2.bookwyrm_charm"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/storage_lectern"
+      ]
+    }
+  ]
+}

@@ -10,21 +10,25 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.WritableBookItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class RitualAwakening extends AbstractRitual {
-    List<BlockPos> treePos = new ArrayList<>();
+
     EntityType<? extends LivingEntity> entity = null;
     BlockPos foundPos;
 
@@ -90,18 +94,43 @@ public class RitualAwakening extends AbstractRitual {
             }
         }
         if (!world.isClientSide && world.getGameTime() % 20 == 0) {
-            incrementProgress();
-            if (getProgress() > 5) {
-                findTargets(world);
-                if (entity != null) {
-                    ParticleUtil.spawnPoof((ServerLevel) world, foundPos);
-                    LivingEntity walker = entity.create(world);
-                    walker.setPos(foundPos.getX() + 0.5, foundPos.getY(), foundPos.getZ() + 0.5);
-                    world.addFreshEntity(walker);
+            if(isBookwyrms()){
+                int progress = getProgress();
+                int numBookwyrms = getConsumedItems().stream().filter(i -> i.getItem() instanceof WritableBookItem).mapToInt(ItemStack::getCount).sum();
+                if(progress < numBookwyrms){
+                    ItemStack charm = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
+                    ItemEntity itemEntity = new ItemEntity(world, getPos().getX() + 0.5, getPos().getY() + 1, getPos().getZ() + 0.5, charm);
+                    float range = 0.1f;
+                    itemEntity.setDeltaMovement(ParticleUtil.inRange(-range, range),  ParticleUtil.inRange(0.4, 0.8), ParticleUtil.inRange(-range, range));
+                    getWorld().playSound(null, getPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    world.addFreshEntity(itemEntity);
+                }else{
                     setFinished();
+                }
+                incrementProgress();
+            }else {
+
+                if (getProgress() > 5) {
+                    findTargets(world);
+                    if (entity != null) {
+                        ParticleUtil.spawnPoof((ServerLevel) world, foundPos);
+                        LivingEntity walker = entity.create(world);
+                        walker.setPos(foundPos.getX() + 0.5, foundPos.getY(), foundPos.getZ() + 0.5);
+                        world.addFreshEntity(walker);
+                        setFinished();
+                    }
                 }
             }
         }
+    }
+
+    public boolean isBookwyrms(){
+        return getConsumedItems().stream().anyMatch(i -> i.getItem() instanceof WritableBookItem);
+    }
+
+    @Override
+    public boolean canConsumeItem(ItemStack stack) {
+        return super.canConsumeItem(stack) || stack.getItem() instanceof WritableBookItem;
     }
 
     @Override
@@ -116,7 +145,7 @@ public class RitualAwakening extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Awakens nearby Archwood trees into Weald Walkers and Budding Amethyst into Amethyst Golems. Weald Walkers can be given a position in the world to guard against hostile mobs. They will heal over time, and turn into Weald Waddlers if they die. To create a Weald Walker, perform this ritual near the base of an Archwood Tree.";
+        return "Awakens nearby Archwood trees into Weald Walkers and Budding Amethyst into Amethyst Golems. Weald Walkers can be given a position in the world to guard against hostile mobs. They will heal over time, and turn into Weald Waddlers if they die. To create a Weald Walker, perform this ritual near the base of an Archwood Tree. Augmenting with Book and Quills will create Bookwyrm Charms.";
     }
 
     @Override

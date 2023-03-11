@@ -335,16 +335,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.starbuncle.blacklist", "Ignoring: ");
         add("ars_nouveau.starbuncle.storing", "Storing items at %d locations");
         add("ars_nouveau.starbuncle.taking", "Taking items from %d locations");
-        add("ars_nouveau.bookwyrm.spell_set", "Spell set.");
-        add("ars_nouveau.bookwyrm.invalid", "A Bookwyrm cannot cast an invalid spell.");
-        add("ars_nouveau.bookwyrm.desc", "Give this Bookwyrm a spell by giving it some inscribed Spell Parchment. ");
-        add("ars_nouveau.bookwyrm.casting", "This Bookwyrm is casting %s");
-        add("ars_nouveau.bookwyrm.spell_item", "This Bookwyrm will use %s in spells if this item is in a Lectern chest.");
-        add("ars_nouveau.bookwyrm.no_item", "Nothing.");
-        add("ars_nouveau.bookwyrm.placing", "Placing: ");
-        add("ars_nouveau.bookwyrm.using", "Using: ");
-        add("ars_nouveau.bookwyrm.spell", "Casting: ");
-        add("ars_nouveau.bookwyrm.strict", "Strict mode: ");
         add("ars_nouveau.whirlisprig.ignore", "Whirlisprig will ignore these items");
         add("ars_nouveau.whirlisprig.ignore_list", "Ignoring: ");
         add("ars_nouveau.whirlisprig.tooltip_extremely_happy", "Extremely happy");
@@ -354,10 +344,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.whirlisprig.tooltip_unhappy", "Very unhappy");
         add("ars_nouveau.whirlisprig.tooltip_mood", "Mood: ");
         add("ars_nouveau.source_jar.fullness", "%d%% full");
-        add("ars_nouveau.bookwyrm_lectern.set", "Set area to %s");
-        add("ars_nouveau.bookwyrm_lectern.5x5", "Set area to 5 x 5");
-        add("ars_nouveau.bookwyrm_lectern.9x9", "Set area to 9 x 9");
-        add("ars_nouveau.bookwyrm_lectern.adjacent", "Set area to adjacent blocks only.");
         add("ars_nouveau.spell_turret.casting", "Casting: ");
         add("ars_nouveau.wixie.crafting", "Crafting: ");
         add("ars_nouveau.wixie.need_mana", "Source needed.");
@@ -578,7 +564,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page1.spell_mana", "Spell Mana is used to cast spells with a $(thing)Spellbook$(). The maximum amount of mana, and the speed at which it regenerates, may be increased by wearing special $(item)Mage Armor$() or by applying the $(item)Mana Boost$() or $(item)Mana Regen$() enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spellbook.");
         add("ars_nouveau.page2.spell_mana", "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book.");
         add("ars_nouveau.page.starting_automation", "Starting Automation");
-        add("ars_nouveau.page1.starting_automation", "Spells may be used in Automation through casters like the Bookwyrm or Spell Turret. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.");
+        add("ars_nouveau.page1.starting_automation", "Spells may be used in Automation using Spell Turrets. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.");
         add("ars_nouveau.page.trinkets", "Trinkets");
         add("ars_nouveau.page1.trinkets", "Items and curios can expand your casting and can provide unique buffs. For more casting, you may want to craft a Ring of Discount or an Amulet of Mana Regen. For travel, see the Belt of Levitation, or improve your mining efficiency with the Jar of Voiding.");
         add("ars_nouveau.page.upgrades", "Upgrades");
@@ -626,11 +612,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page2.basic_spell_turret", "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.");
         add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, and Redstone for free.");
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
-        add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrms are helpful creatures with the ability to cast spells using source from source jars. Given a spell inscribed on Spell Parchment, Bookwyrms will cast spells in the area surrounding their Lectern. To summon a Bookwyrm, use a Bookwyrm Charm on a Lectern. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
+        add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
         add("ars_nouveau.page2.bookwyrm_charm", "In the event that they die or are dispelled, they will drop their charm.");
-        add("ars_nouveau.page3.bookwyrm_charm", "Bookwyrms can cast spells that begin with Touch or Projectile. You may give them a spell that is written on Spell Parchment. Currently, Bookwyrms will only target blocks surrounding their lectern. Spell casting will consume source from jars that are within 7 blocks of their Lectern. By default, Bookwyrms will only cast a spell if EVERY spell effect will do something. Harvest will only be cast on trees or fully grown crops, or Grow on crops that are not full grown.");
-        add("ars_nouveau.page4.bookwyrm_charm", "To disable this strict mode, use a Dominion Wand, however using multiple specialized Bookwyrms is recommended. While Bookwyrms cannot pickup blocks on their own, they may store items in chests that are next to the Lectern using the Item Pickup spell. Conversely, Bookwyrms may place blocks and interact with the world using Items. You may give an item or block to the Bookwyrm, and it will use the item directly from the chests adjacent to the lectern.");
-        add("ars_nouveau.page5.bookwyrm_charm", "The range of the Bookwyrm can be extended by using a Dominion Wand on the lectern while sneaking.");
         add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay.");
         add("ars_nouveau.page1.drygmy_charm", "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.");
         add("ars_nouveau.page2.drygmy_charm", "A Drygmy can also produce experience gems!");
@@ -1171,5 +1154,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.inv_too_far", "Inventory must be within 20 blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
+        add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 20 blocks away.");
+        add("ars_nouveau.storage", "Advanced Usage");
+        add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 20 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
+        add("ars_nouveau.tooltip.bookwyrm", "Obtained by augmenting a Ritual of Awakening with Book and Quills.");
     }
 }

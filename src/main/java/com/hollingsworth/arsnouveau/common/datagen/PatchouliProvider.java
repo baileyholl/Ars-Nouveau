@@ -149,7 +149,7 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(AUTOMATION, "spell_turret")
-                        .withEntry(AUTOMATION, "spell_prism").withEntry(AUTOMATION, "bookwyrm_charm").withEntry(AUTOMATION, "starbuncle_charm")
+                        .withEntry(AUTOMATION, "spell_prism").withEntry(AUTOMATION, "starbuncle_charm")
                         .withEntry(AUTOMATION, "wixie_charm")), getPath(GETTING_STARTED, "starting_automation"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "trinkets")
@@ -543,6 +543,18 @@ public class PatchouliProvider implements DataProvider {
                 ).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.SKY_WEAVE)), getPath(RESOURCES, "illusion_blocks"));
 
+        var bookwyrm = addPage(new PatchouliBuilder(MACHINES, ItemsRegistry.BOOKWYRM_CHARM)
+                .withLocalizedText()
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BOOKWYRM_TYPE.get()).toString())
+                        .withText(getLangPath("bookwyrm_charm", 2))), getPath(MACHINES, "bookwyrm_charm"));
+
+        var storageLectern = addPage(new PatchouliBuilder(MACHINES, BlockRegistry.CRAFTING_LECTERN)
+                        .withLocalizedText()
+                        .withPage(new TextPage(getLangPath("storage", 2)).withTitle("ars_nouveau.storage"))
+                        .withPage(new ApparatusPage(BlockRegistry.CRAFTING_LECTERN))
+                , getPath(MACHINES, "storage_lectern"));
+        storageLectern.builder.withPage(new RelationsPage().withEntry(bookwyrm.relationPath()));
+        bookwyrm.builder.withPage(new RelationsPage().withEntry(storageLectern.relationPath()));
     }
 
     public String getLangPath(String name, int count) {
