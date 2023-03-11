@@ -828,7 +828,13 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
         ITEMS.register(LibBlockNames.SKY_WEAVE, () ->getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
         ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () ->getDefaultBlockItem(BlockRegistry.TEMPORARY_BLOCK.get()));
-        ITEMS.register(LibBlockNames.STORAGE_LECTERN, () ->getDefaultBlockItem(BlockRegistry.CRAFTING_LECTERN.get()));
+        ITEMS.register(LibBlockNames.STORAGE_LECTERN, () -> new RendererBlockItem((BlockRegistry.CRAFTING_LECTERN.get()), defaultItemProperties()){
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return LecternRenderer::getISTER;
+            }
+        });
+
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
         MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));

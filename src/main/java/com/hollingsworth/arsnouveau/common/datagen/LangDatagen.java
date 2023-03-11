@@ -1170,5 +1170,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 20 blocks.");
         add("ars_nouveau.storage.inv_too_far", "Inventory must be within 20 blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
+        add("block.ars_nouveau.storage_lectern", "Storage Lectern");
     }
 }

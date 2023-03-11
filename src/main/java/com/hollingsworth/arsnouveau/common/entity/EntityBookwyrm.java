@@ -157,7 +157,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             }
             List<BlockPos> targets = new ArrayList<>(tile.connectedInventories);
             targets.add(tile.getBlockPos());
-            return targets.get(level.random.nextInt(targets.size())).above();
+            return targets.get(level.random.nextInt(targets.size()));
         }));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));

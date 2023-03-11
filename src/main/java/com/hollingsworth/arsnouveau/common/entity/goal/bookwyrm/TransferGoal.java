@@ -1,7 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
+import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +62,11 @@ public class TransferGoal extends Goal {
                     bookwyrm.setHeldStack(task.stack);
                     bookwyrm.level.playSound(null, bookwyrm.getX(), bookwyrm.getY(), bookwyrm.getZ(),
                             SoundEvents.ITEM_PICKUP, bookwyrm.getSoundSource(), 1.0F, 1.0F);
+                    if (bookwyrm.level instanceof ServerLevel serverLevel) {
+                        OpenChestEvent event = new OpenChestEvent(serverLevel, new BlockPos(task.from.subtract(0, 1, 0)), 20);
+                        event.open();
+                        EventQueue.getServerInstance().addEvent(event);
+                    }
                 }
             } else {
                 bookwyrm.getNavigation().moveTo(task.from.x(), task.from.y(), task.from.z(), 1.3d);
@@ -66,6 +75,11 @@ public class TransferGoal extends Goal {
             if (BlockUtil.distanceFrom(bookwyrm.position(), new Vec3(task.to.x(), task.to.y(), task.to.z())) <= 1.5) {
                 isDone = true;
                 bookwyrm.setHeldStack(ItemStack.EMPTY);
+                if (bookwyrm.level instanceof ServerLevel serverLevel) {
+                    OpenChestEvent event = new OpenChestEvent(serverLevel, new BlockPos(task.to.subtract(0, 1, 0)), 20);
+                    event.open();
+                    EventQueue.getServerInstance().addEvent(event);
+                }
             } else {
                 bookwyrm.getNavigation().moveTo(task.to.x(), task.to.y(), task.to.z(), 1.3d);
             }
