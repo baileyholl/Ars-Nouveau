@@ -56,7 +56,7 @@ public class ModEntities {
                     .sized(0.5F, 0.8F)
                     .setUpdateInterval(60));
     public static final RegistryObject<EntityType<EntityBookwyrm>> ENTITY_BOOKWYRM_TYPE = registerEntity(LibEntityNames.BOOKWYRM, EntityType.Builder.<EntityBookwyrm>of(EntityBookwyrm::new, MobCategory.MISC)
-            .sized(0.7f, 0.9f).setTrackingRange(10)
+            .sized(0.4f, 0.6f).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<Starbuncle>> STARBUNCLE_TYPE = registerEntity(LibEntityNames.STARBUNCLE, EntityType.Builder.<Starbuncle>of(Starbuncle::new, MobCategory.CREATURE)
             .sized(0.6F, 0.63F).setTrackingRange(10)

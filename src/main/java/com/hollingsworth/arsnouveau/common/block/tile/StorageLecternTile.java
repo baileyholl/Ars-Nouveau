@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.google.common.collect.EvictingQueue;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
@@ -11,10 +12,11 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
-import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
+import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -55,6 +57,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public SortSettings sortSettings = new SortSettings();
 	public BlockPos mainLecternPos;
 	public List<UUID> bookwyrmUUIDs = new ArrayList<>();
+	public int backoffTicks;
+
+	Queue<TransferTask> transferTasks = EvictingQueue.create(2);
 
 	public StorageLecternTile(BlockPos pos, BlockState state) {
 		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
@@ -99,13 +104,28 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		for(ExtractedStack extractedStack : multiSlotReference.getSlots()){
 			BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
 			if(pos != null){
-				EntityFlyingItem entityFlyingItem = new EntityFlyingItem(level,
-						pos,
-						getBlockPos().above()).setStack(extractedStack.stack);
-				level.addFreshEntity(entityFlyingItem);
+				transferTasks.add(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
 			}
 		}
 
+	}
+
+
+
+	public @Nullable TransferTask getTransferTask(){
+		List<TransferTask> staleTasks = new ArrayList<>();
+		TransferTask task = null;
+		for(TransferTask transferTask : transferTasks){
+			// Remove tasks older than 10 seconds
+			if(level.getGameTime() - transferTask.gameTime > 200){
+				staleTasks.add(transferTask);
+			}
+			task = transferTask;
+			staleTasks.add(transferTask);
+			break;
+		}
+		transferTasks.removeAll(staleTasks);
+		return task;
 	}
 
 	public StoredItemStack pushStack(StoredItemStack stack) {
@@ -165,13 +185,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		}
 		this.connectedInventories.add(storedPos.immutable());
 		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
+		this.mainLecternPos = null;
 		updateBlock();
 		updateItems = true;
 	}
 
 	@Override
 	public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-		if(storedPos == null){
+		if(storedPos == null || storedPos.equals(worldPosition)){
 			return;
 		}
 		BlockEntity tile = level.getBlockEntity(storedPos);
@@ -204,6 +225,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public void tick() {
 		if(level.isClientSide)
 			return;
+		if(backoffTicks > 0){
+			backoffTicks--;
+		}
+		if(backoffTicks <= 0 && level.getGameTime() % 20 == 0){
+			insertNearbyItems();
+		}
 		if(updateItems) {
 			items.clear();
 			List<FilterableItemHandler> handlers = new ArrayList<>();
@@ -248,6 +275,32 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		}
 		bookwyrmUUIDs.removeAll(staleUUIDs);
 		return bookwyrmEntities;
+	}
+
+	public void insertNearbyItems(){
+		// Get adjacent inventories
+		for(Direction dir : Direction.values()){
+			BlockPos pos = worldPosition.relative(dir);
+			BlockEntity tile = level.getBlockEntity(pos);
+			if(tile == null || connectedInventories.contains(pos))
+				continue;
+			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+			if(handler == null)
+				continue;
+			for(int i = 0; i < handler.getSlots(); i++){
+				ItemStack stack = handler.getStackInSlot(i);
+				if(stack.isEmpty())
+					continue;
+				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
+				ItemStack remaining = this.pushStack(extractedStack);
+				if(!remaining.isEmpty()){
+					handler.insertItem(i, remaining, false);
+				}
+				return;
+			}
+
+		}
+		backoffTicks = 100 + level.random.nextInt(20);
 	}
 
 	public void removeBookwyrm(EntityBookwyrm bookwyrm){
