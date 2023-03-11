@@ -23,7 +23,6 @@ public class TransferGoal extends Goal {
 
     @Override
     public void start() {
-        this.task = bookwyrm.getTransferTask();
         isDone = false;
         time = 0;
         reachedFrom = false;
@@ -36,7 +35,13 @@ public class TransferGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return true;
+        this.task = bookwyrm.getTransferTask();
+        return task != null;
+    }
+
+    @Override
+    public boolean isInterruptable() {
+        return false;
     }
 
     @Override

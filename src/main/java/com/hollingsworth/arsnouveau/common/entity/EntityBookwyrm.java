@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
+import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.RandomStorageVisitGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -51,6 +52,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
 
     public BlockPos lecternPos;
-    private int backoffTicks;
+    public int backoffTicks;
 
     protected EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
@@ -132,9 +134,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    protected void pushEntities() {
-
-    }
+    protected void pushEntities() {}
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float p_70097_2_) {
@@ -156,6 +156,15 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new TransferGoal(this));
+        this.goalSelector.addGoal(4, new RandomStorageVisitGoal(this, () ->{
+            StorageLecternTile tile = getTile();
+            if(tile == null){
+                return null;
+            }
+            List<BlockPos> targets = new ArrayList<>(tile.connectedInventories);
+            targets.add(tile.getBlockPos());
+            return targets.get(level.random.nextInt(targets.size())).above();
+        }));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }

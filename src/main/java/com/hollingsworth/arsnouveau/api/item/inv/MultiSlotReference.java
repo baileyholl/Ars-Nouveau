@@ -23,4 +23,8 @@ public class MultiSlotReference<SReference extends SlotReference>{
     public List<SReference> getSlots(){
         return slots;
     }
+
+    public boolean isEmpty(){
+        return slots.isEmpty();
+    }
 }

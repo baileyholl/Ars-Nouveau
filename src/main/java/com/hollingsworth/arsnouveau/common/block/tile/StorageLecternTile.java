@@ -50,16 +50,16 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	private InventoryManager invManager = new InventoryManager(new ArrayList<>());
 	private Map<StoredItemStack, Long> items = new HashMap<>();
 	private String lastSearch = "";
-	private boolean updateItems;
-	private List<BlockPos> connectedInventories = new ArrayList<>();
-	private List<HandlerPos> handlerPosList = new ArrayList<>();
+	public boolean updateItems;
+	public List<BlockPos> connectedInventories = new ArrayList<>();
+	public List<HandlerPos> handlerPosList = new ArrayList<>();
 
 	public SortSettings sortSettings = new SortSettings();
 	public BlockPos mainLecternPos;
 	public List<UUID> bookwyrmUUIDs = new ArrayList<>();
 	public int backoffTicks;
 
-	Queue<TransferTask> transferTasks = EvictingQueue.create(2);
+	public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
 
 	public StorageLecternTile(BlockPos pos, BlockState state) {
 		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
@@ -93,23 +93,37 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		if(pulled.getExtracted().isEmpty()) {
 			return null;
 		}
-		spawnEffects(pulled);
+		addExtractTasks(pulled);
 		return new StoredItemStack(pulled.getExtracted());
 	}
 
-	private void spawnEffects(MultiExtractedReference multiSlotReference){
+	private void addExtractTasks(MultiExtractedReference multiSlotReference){
 		if(multiSlotReference.getExtracted().isEmpty()){
 			return;
 		}
 		for(ExtractedStack extractedStack : multiSlotReference.getSlots()){
 			BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
 			if(pos != null){
-				transferTasks.add(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
+				addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
 			}
 		}
-
 	}
 
+	private void addInsertTasks(ItemStack stack, MultiInsertReference reference){
+		if(reference.isEmpty() || stack.isEmpty()){
+			return;
+		}
+		for(SlotReference extractedStack : reference.getSlots()){
+			BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
+			if(pos != null){
+				addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime()));
+			}
+		}
+	}
+
+	public void addTransferTask(TransferTask task){
+		transferTasks.add(task);
+	}
 
 
 	public @Nullable TransferTask getTransferTask(){
@@ -128,11 +142,17 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		return task;
 	}
 
+
 	public StoredItemStack pushStack(StoredItemStack stack) {
 		if(stack == null){
 			return null;
 		}
-		ItemStack remaining = invManager.insertStack(stack.getActualStack());
+		ItemStack copyStack = stack.getActualStack().copy();
+		MultiInsertReference reference = invManager.insertStackWithReference(stack.getActualStack());
+		ItemStack remaining = reference.getRemainder();
+		if(!reference.isEmpty()){
+			addInsertTasks(copyStack, reference);
+		}
 		if(remaining.isEmpty()){
 			return null;
 		}
