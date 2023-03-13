@@ -12,8 +12,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -40,7 +42,7 @@ public class EffectIgnite extends AbstractEffect {
         if (spellStats.hasBuff(AugmentSensitive.INSTANCE))
             return;
         BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
-        if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState)) {
+        if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState) || hitState.getBlock() instanceof CampfireBlock && CampfireBlock.canLight(hitState)) {
             AbstractCandleBlock.setLit(world, hitState, rayTraceResult.getBlockPos(), true);
             return;
         }
