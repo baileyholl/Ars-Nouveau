@@ -382,7 +382,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	public int getMaxConnectedInventories() {
-		return getBookwyrmEntities().size() * 6;
+		return getBookwyrmEntities().size() * 8;
 	}
 
 	public @Nullable EntityBookwyrm addBookwyrm(){

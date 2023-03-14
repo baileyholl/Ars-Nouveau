@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -50,16 +51,21 @@ public class CraftingLecternBlock extends TickableModBlock {
 
 	@NotNull
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING,  context.getNearestLookingDirection().getOpposite());
+	public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
+		Direction direction = p_196258_1_.getHorizontalDirection().getOpposite();
+		BlockPos blockpos = p_196258_1_.getClickedPos();
+		BlockPos blockpos1 = blockpos.relative(direction);
+		return p_196258_1_.getLevel().getBlockState(blockpos1).canBeReplaced(p_196258_1_) ? this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, direction) : this.defaultBlockState();
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos,
 								 Player player, InteractionHand hand, BlockHitResult rtr) {
 		ItemStack heldStack = player.getItemInHand(hand);
-		if (world.isClientSide
-				|| heldStack.getItem() instanceof DominionWand
+		if(world.isClientSide){
+			return InteractionResult.SUCCESS;
+		}
+		if (heldStack.getItem() instanceof DominionWand
 				|| hand != InteractionHand.MAIN_HAND
 				|| heldStack.getItem() instanceof BookwyrmCharm) {
 			return InteractionResult.PASS;
