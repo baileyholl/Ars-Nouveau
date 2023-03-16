@@ -240,7 +240,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		}
 		this.mainLecternPos = storedPos.immutable();
 		this.connectedInventories = new ArrayList<>();
-		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained"));
+		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_chained", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
 		updateBlock();
 	}
 
@@ -327,6 +327,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
 	public void insertNearbyItems(){
 		// Get adjacent inventories
+		StorageLecternTile mainLectern = getMainLectern();
+		if(mainLectern == null)
+			return;
 		for(Direction dir : Direction.values()){
 			BlockPos pos = worldPosition.relative(dir);
 			BlockEntity tile = level.getBlockEntity(pos);
@@ -340,7 +343,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				if(stack.isEmpty())
 					continue;
 				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
-				ItemStack remaining = this.pushStack(extractedStack);
+				ItemStack remaining = mainLectern.pushStack(extractedStack);
 				if(!remaining.isEmpty()){
 					handler.insertItem(i, remaining, false);
 				}
@@ -360,20 +363,30 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		return !this.isRemoved();
 	}
 
-	public boolean openMenu(Player player, List<BlockPos> visitedPos){
-		if(mainLecternPos == null){
-			player.openMenu(this);
-			return true;
-		}else {
-			if (visitedPos.contains(mainLecternPos))
-				return false;
-			BlockEntity blockEntity = level.getBlockEntity(mainLecternPos);
-			if (blockEntity instanceof StorageLecternTile storageTerminalBlockEntity) {
-				visitedPos.add(mainLecternPos);
-				return storageTerminalBlockEntity.openMenu(player, visitedPos);
-			}
+	public boolean openMenu(Player player){
+		StorageLecternTile mainLectern = getMainLectern();
+		if(mainLectern == null)
+			return false;
+		player.openMenu(mainLectern);
+		return true;
+	}
+
+	public @Nullable StorageLecternTile getMainLectern(){
+		return getMainLectern(new ArrayList<>());
+	}
+
+	public @Nullable StorageLecternTile getMainLectern(List<BlockPos> visitedPos){
+
+		if(mainLecternPos == null)
+			return this;
+		if (visitedPos.contains(mainLecternPos))
+			return null;
+		visitedPos.add(mainLecternPos);
+		if(level.isLoaded(mainLecternPos) &&
+				level.getBlockEntity(mainLecternPos) instanceof StorageLecternTile storageTerminalBlockEntity) {
+			return storageTerminalBlockEntity.getMainLectern(visitedPos);
 		}
-		return false;
+		return null;
 	}
 
 	public void setSorting(SortSettings sortSettings) {

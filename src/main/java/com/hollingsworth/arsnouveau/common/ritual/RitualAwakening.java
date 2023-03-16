@@ -101,15 +101,13 @@ public class RitualAwakening extends AbstractRitual {
                     ItemStack charm = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
                     ItemEntity itemEntity = new ItemEntity(world, getPos().getX() + 0.5, getPos().getY() + 1, getPos().getZ() + 0.5, charm);
                     float range = 0.1f;
-                    itemEntity.setDeltaMovement(ParticleUtil.inRange(-range, range),  ParticleUtil.inRange(0.4, 0.8), ParticleUtil.inRange(-range, range));
+                    itemEntity.setDeltaMovement(ParticleUtil.inRange(-range, range),  ParticleUtil.inRange(0.4, 0.6), ParticleUtil.inRange(-range, range));
                     getWorld().playSound(null, getPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.0F);
                     world.addFreshEntity(itemEntity);
                 }else{
                     setFinished();
                 }
-                incrementProgress();
             }else {
-
                 if (getProgress() > 5) {
                     findTargets(world);
                     if (entity != null) {
@@ -121,6 +119,7 @@ public class RitualAwakening extends AbstractRitual {
                     }
                 }
             }
+            incrementProgress();
         }
     }
 

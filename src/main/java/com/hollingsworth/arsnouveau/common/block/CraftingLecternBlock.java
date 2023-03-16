@@ -25,7 +25,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingLecternBlock extends TickableModBlock {
@@ -73,7 +72,7 @@ public class CraftingLecternBlock extends TickableModBlock {
 
 		BlockEntity blockEntity_1 = world.getBlockEntity(pos);
 		if (blockEntity_1 instanceof StorageLecternTile term) {
-			if(!term.openMenu(player, new ArrayList<>())){
+			if(!term.openMenu(player)){
 				player.displayClientMessage(Component.translatable("ars_nouveau.invalid_lectern"), true);
 			}
 		}
