@@ -37,7 +37,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
-            return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+            return InteractionResult.SUCCESS;
         }
 
         MirrorWeaveTile tile = (MirrorWeaveTile) pLevel.getBlockEntity(pPos);

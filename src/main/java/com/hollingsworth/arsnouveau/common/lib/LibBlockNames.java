@@ -156,6 +156,7 @@ public class LibBlockNames {
     public static final String BRAZIER_RELAY = "brazier_relay";
     public static final String TEMPORARY_BLOCK = "temporary_block";
     public static final String STORAGE_LECTERN = "storage_lectern";
+    public static final String ITEM_DETECTOR = "item_detector";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,

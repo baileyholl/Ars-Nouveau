@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '3.13.0-beta2'
+version = '3.13.0-beta3'
 
 
 configurations {

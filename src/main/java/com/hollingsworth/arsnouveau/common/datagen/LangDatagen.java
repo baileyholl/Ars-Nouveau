@@ -1158,5 +1158,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage", "Advanced Usage");
         add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 20 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
         add("ars_nouveau.tooltip.bookwyrm", "Obtained by augmenting a Ritual of Awakening with Book and Quills.");
+        add("ars_nouveau.item_detector.count", "Emit at %s");
+        add("block.ars_nouveau.item_detector", "Display Case");
+        add("ars_nouveau.item_detector.item", "%s");
+        add("ars_nouveau.item_detector.powered", "Powered: %s");
     }
 }

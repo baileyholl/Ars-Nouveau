@@ -797,12 +797,14 @@ public class BlockRegistry {
     public static RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK;
     public static RegistryWrapper<SkyWeave> SKY_WEAVE;
     public static RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK;
+    public static RegistryWrapper<ItemDetector> ITEM_DETECTOR;
 
     public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
     public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
     public static RegistryObject<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE;
     public static RegistryObject<BlockEntityType<TemporaryTile>> TEMPORARY_TILE;
     public static RegistryObject<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE;
+    public static RegistryObject<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE;
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
         ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
@@ -813,6 +815,7 @@ public class BlockRegistry {
         SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
         CRAFTING_LECTERN = registerBlock(LibBlockNames.STORAGE_LECTERN, CraftingLecternBlock::new);
+        ITEM_DETECTOR = registerBlock(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -834,6 +837,7 @@ public class BlockRegistry {
                 return LecternRenderer::getISTER;
             }
         });
+        ITEMS.register(LibBlockNames.ITEM_DETECTOR, () ->getDefaultBlockItem(BlockRegistry.ITEM_DETECTOR.get()));
 
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
@@ -843,6 +847,7 @@ public class BlockRegistry {
         SKYWEAVE_TILE = BLOCK_ENTITIES.register(LibBlockNames.SKY_WEAVE, () -> BlockEntityType.Builder.of(SkyBlockTile::new, SKY_WEAVE.get()).build(null));
         TEMPORARY_TILE = BLOCK_ENTITIES.register(LibBlockNames.TEMPORARY_BLOCK, () -> BlockEntityType.Builder.of(TemporaryTile::new, TEMPORARY_BLOCK.get()).build(null));
         CRAFTING_LECTERN_TILE = BLOCK_ENTITIES.register(LibBlockNames.STORAGE_LECTERN, () -> BlockEntityType.Builder.of(CraftingLecternTile::new, CRAFTING_LECTERN.get()).build(null));
+        ITEM_DETECTOR_TILE = BLOCK_ENTITIES.register(LibBlockNames.ITEM_DETECTOR, () -> BlockEntityType.Builder.of(ItemDetectorTile::new, ITEM_DETECTOR.get()).build(null));
     }
 
     static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
