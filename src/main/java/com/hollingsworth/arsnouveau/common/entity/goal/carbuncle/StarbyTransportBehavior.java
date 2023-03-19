@@ -42,8 +42,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
         goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
         goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new NewStoreItemGoal<>(starbuncle, this)));
-        goals.add(new WrappedGoal(3, new NewTakeItemGoal<>(starbuncle, this)));
+        goals.add(new WrappedGoal(3, new StoreItemGoal<>(starbuncle, this)));
+        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
     }
 
     @Override

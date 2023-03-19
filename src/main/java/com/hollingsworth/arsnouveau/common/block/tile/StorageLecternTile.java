@@ -36,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -63,6 +64,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public boolean canCreateTasks = false;
 
 	public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
+	LazyOptional<IItemHandler> lecternInvWrapper;
 
 	public StorageLecternTile(BlockPos pos, BlockState state) {
 		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
@@ -70,6 +72,44 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
 	public StorageLecternTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
+	}
+
+	public InventoryManager getInvManager(){
+		return invManager;
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (!this.remove && cap == ForgeCapabilities.ITEM_HANDLER) {
+			StorageLecternTile lecternTile = getMainLectern();
+			if(lecternTile == null) {
+				this.lecternInvWrapper = LazyOptional.of(() -> new LecternInvWrapper(this));
+				return this.lecternInvWrapper.cast();
+			}
+			List<IItemHandlerModifiable> modifiables = new ArrayList<>();
+			for(BlockPos pos : lecternTile.connectedInventories) {
+				BlockEntity invTile = lecternTile.level.getBlockEntity(pos);
+				if(invTile != null) {
+					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+					lih.ifPresent(i -> {
+						if(i instanceof IItemHandlerModifiable handlerModifiable) {
+							modifiables.add(handlerModifiable);
+						}
+					});
+				}
+			}
+			lecternTile.lecternInvWrapper = LazyOptional.of(() -> new LecternInvWrapper(this, modifiables.toArray(new IItemHandlerModifiable[0])));
+			return lecternTile.lecternInvWrapper.cast();
+		}
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		if(lecternInvWrapper != null) {
+			lecternInvWrapper.invalidate();
+		}
 	}
 
 	@Override
@@ -231,10 +271,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			return;
 		}
 		BlockEntity tile = level.getBlockEntity(storedPos);
-		if(!(tile instanceof StorageLecternTile storageTerminalBlockEntity)){
-			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.not_lectern"));
+		if(!(tile instanceof StorageLecternTile)){
 			return;
-		}else if(BlockUtil.distanceFrom(storedPos, worldPosition) > 20){
+		}
+		if(BlockUtil.distanceFrom(storedPos, worldPosition) > 30){
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far"));
 			return;
 		}
@@ -331,9 +371,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		if(mainLectern == null)
 			return;
 		for(Direction dir : Direction.values()){
-			BlockPos pos = worldPosition.relative(dir);
-			BlockEntity tile = level.getBlockEntity(pos);
-			if(tile == null || connectedInventories.contains(pos))
+			BlockPos pos = mainLectern.worldPosition.relative(dir);
+			BlockEntity tile = mainLectern.level.getBlockEntity(pos);
+			if(tile == null || mainLectern.connectedInventories.contains(pos))
 				continue;
 			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 			if(handler == null)

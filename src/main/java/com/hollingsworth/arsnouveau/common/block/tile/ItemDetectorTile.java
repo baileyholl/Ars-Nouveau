@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -44,6 +45,9 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
             return;
         }
         BlockEntity tile = level.getBlockEntity(connectedPos);
+        if(tile == null){
+            return;
+        }
         IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if(handler == null){
             return;
@@ -87,8 +91,16 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
+            if(level.getBlockEntity(storedPos) == null || !level.getBlockEntity(storedPos).getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()){
+                return;
+            }
+            if(BlockUtil.distanceFrom(storedPos, worldPosition) > 30){
+                PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
+                return;
+            }
             connectedPos = storedPos.immutable();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.item_detector.connected", storedPos.getX(), storedPos.getY(), storedPos.getZ()));
+            updateBlock();
         }
     }
 

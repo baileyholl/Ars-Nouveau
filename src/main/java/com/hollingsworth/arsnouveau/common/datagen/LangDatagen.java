@@ -1150,17 +1150,18 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
         add("ars_nouveau.storage.removed", "Inventory removed.");
         add("ars_nouveau.storage.not_lectern", "Connect to another Lectern to connect the views.");
-        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 20 blocks.");
-        add("ars_nouveau.storage.inv_too_far", "Inventory must be within 20 blocks.");
+        add("ars_nouveau.storage.lectern_too_far", "Lectern must be within 30 blocks.");
+        add("ars_nouveau.storage.inv_too_far", "Inventory must be within 30 blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
         add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 20 blocks away.");
         add("ars_nouveau.storage", "Advanced Usage");
-        add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 20 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
+        add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 30 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
         add("ars_nouveau.tooltip.bookwyrm", "Obtained by augmenting a Ritual of Awakening with Book and Quills.");
         add("ars_nouveau.item_detector.count", "Emit at %s");
         add("block.ars_nouveau.item_detector", "Display Case");
         add("ars_nouveau.item_detector.item", "%s");
         add("ars_nouveau.item_detector.powered", "Powered: %s");
+        add("ars_nouveau.item_detector.connected", "Detecting items at x: %s y: %s z: %s");
     }
 }
