@@ -553,8 +553,14 @@ public class PatchouliProvider implements DataProvider {
                         .withPage(new TextPage(getLangPath("storage", 2)).withTitle("ars_nouveau.storage"))
                         .withPage(new ApparatusPage(BlockRegistry.CRAFTING_LECTERN))
                 , getPath(MACHINES, "storage_lectern"));
-        storageLectern.builder.withPage(new RelationsPage().withEntry(bookwyrm.relationPath()));
         bookwyrm.builder.withPage(new RelationsPage().withEntry(storageLectern.relationPath()));
+
+        var displayCase = addPage(new PatchouliBuilder(MACHINES, BlockRegistry.ITEM_DETECTOR)
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.ITEM_DETECTOR)), getPath(MACHINES, "item_detector"));
+        storageLectern.builder.withPage(new RelationsPage().withEntry(bookwyrm.relationPath()).withEntry(displayCase.relationPath()));
+
+        displayCase.builder.withPage(new RelationsPage().withEntry(bookwyrm.relationPath()));
     }
 
     public String getLangPath(String name, int count) {

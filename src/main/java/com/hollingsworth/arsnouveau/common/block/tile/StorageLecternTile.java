@@ -220,9 +220,6 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
 	@Override
 	public void onWanded(Player playerEntity) {
-		this.connectedInventories = new ArrayList<>();
-		PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
-		updateItems = true;
 		mainLecternPos = null;
 		updateBlock();
 	}

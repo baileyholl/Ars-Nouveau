@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-08T20:48:57.3272229	Recipes
+// 1.19.2	2023-03-18T20:42:00.3100514	Recipes
 2f8defc056cb514d0403c026bd216faabe8c59b5 data/ars_nouveau/advancements/recipes/ars_nouveau/agronomic_sourcelink.json
 5b27f030ed9411ac9c3b4a160363aee9e4fd7454 data/ars_nouveau/advancements/recipes/ars_nouveau/alchemical_sourcelink.json
 24b2148fcda9c3b3704f9625a7d00338b764f512 data/ars_nouveau/advancements/recipes/ars_nouveau/allow_scroll.json
@@ -43,6 +43,7 @@ af405a8a4c15a71bcd915c0ff689ec9af26fb7b5 data/ars_nouveau/advancements/recipes/a
 e51955e468865ffd5ad65057dc29e22e9f5eb7ac data/ars_nouveau/advancements/recipes/ars_nouveau/green_archwood_wood.json
 2d9d404288f29e1318a48dac453daff9ef65680a data/ars_nouveau/advancements/recipes/ars_nouveau/green_sbed.json
 539b309015212224ab196da32e00b7a13d29d81a data/ars_nouveau/advancements/recipes/ars_nouveau/imbuement_chamber.json
+b5b95c68cdeb4475e798b6d5097859c3a2439280 data/ars_nouveau/advancements/recipes/ars_nouveau/item_detector.json
 f28ebf6409e12fa9e8734b6b41b06da7bec33b28 data/ars_nouveau/advancements/recipes/ars_nouveau/lava_lily.json
 5c311c0798e07dce990e0c9fe3dd708da800fcd8 data/ars_nouveau/advancements/recipes/ars_nouveau/magebloom_block.json
 67bbe6b2b08753ca85b9ae796f5483763de5d58b data/ars_nouveau/advancements/recipes/ars_nouveau/magebloom_block_to_magebloom.json
@@ -229,6 +230,7 @@ a9f0212faea16b816ba1dd747f7e789a21261a9b data/ars_nouveau/recipes/greater_experi
 c39702e1907789ab724eb8cbda89d54c84021c40 data/ars_nouveau/recipes/green_sbed.json
 b7c9dff14152a84a50c2415d48d997491bffefe9 data/ars_nouveau/recipes/horn_to_bonemeal.json
 5b75fdb92631edfed3bbe0df584c105861cfc0f1 data/ars_nouveau/recipes/imbuement_chamber.json
+de6808e545dee8f4aa40b094d3635dde0b4e8bb1 data/ars_nouveau/recipes/item_detector.json
 3cba10abb231d832e0970f8e4382bae9b37fa4e6 data/ars_nouveau/recipes/lava_lily.json
 92711248cd69e0a154f468b2a2191a3ae48f03ac data/ars_nouveau/recipes/magebloom_block.json
 fa29caaec5e46c45a07ad6e83f632aa49c326cc7 data/ars_nouveau/recipes/magebloom_block_to_magebloom.json

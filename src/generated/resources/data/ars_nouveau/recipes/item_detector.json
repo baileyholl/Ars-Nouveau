@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "x": {
+      "tag": "forge:glass"
+    },
+    "y": {
+      "item": "minecraft:observer"
+    },
+    "z": {
+      "item": "ars_nouveau:archwood_planks"
+    }
+  },
+  "pattern": [
+    "xxx",
+    "xyx",
+    "zzz"
+  ],
+  "result": {
+    "item": "ars_nouveau:item_detector"
+  }
+}

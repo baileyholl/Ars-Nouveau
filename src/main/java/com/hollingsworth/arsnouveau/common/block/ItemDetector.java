@@ -10,12 +10,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemDetector extends TickableModBlock{
+
+    public static final VoxelShape shape = Shapes.join(Block.box(3, 0, 3, 13, 2, 13), Block.box(4, 2, 4, 12, 14, 12), BooleanOp.OR);
 
     public ItemDetector(Properties properties) {
         super(properties);
@@ -50,6 +57,11 @@ public class ItemDetector extends TickableModBlock{
     }
 
     @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return shape;
+    }
+
+    @Override
     public void attack(BlockState state, Level level, BlockPos pos, Player player) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof ItemDetectorTile tile) {
             tile.addCount(player.isShiftKeyDown() ? -8 : -1);
@@ -58,7 +70,7 @@ public class ItemDetector extends TickableModBlock{
 
     public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
         if(pBlockAccess.getBlockEntity(pPos) instanceof ItemDetectorTile detectorTile){
-            return detectorTile.isPowered ? 15 : 0;
+            return detectorTile.getPoweredState() ? 15 : 0;
         }
         return 0;
     }

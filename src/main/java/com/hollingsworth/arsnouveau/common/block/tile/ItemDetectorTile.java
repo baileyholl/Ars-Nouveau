@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,6 +32,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     public boolean isPowered;
     public int neededCount;
     public ItemStack filterStack = ItemStack.EMPTY;
+    public boolean inverted;
 
 
     public ItemDetectorTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
@@ -55,24 +59,39 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
         int found = 0;
         for(int i = 0; i < handler.getSlots(); i++){
             ItemStack stack = handler.getStackInSlot(i);
-            if (!ItemStack.isSame(stack, filterStack) || !ItemStack.tagMatches(stack, filterStack)) {
-                continue;
-            }
-            found += stack.getCount();
+            found += getCountForStack(stack);
             if(found > neededCount){
-                if(!isPowered){
-                    isPowered = true;
-                    updateBlock();
-                    level.updateNeighborsAt(worldPosition, BlockRegistry.ITEM_DETECTOR.get());
-                }
+                setReachedCount(true);
                 return;
             }
         }
-        if(isPowered){
-            isPowered = false;
+        setReachedCount(false);
+    }
+
+    public int getCountForStack(ItemStack stack){
+        if(filterStack.getItem() instanceof ItemScroll scroll){
+            ItemScroll.SortPref pref = scroll.getSortPref(stack, filterStack, new CombinedInvWrapper());
+            if(pref != ItemScroll.SortPref.INVALID){
+                return stack.getCount();
+            }
+        }
+        if (!ItemStack.isSame(stack, filterStack) || !ItemStack.tagMatches(stack, filterStack)) {
+            return 0;
+        }
+        return (filterStack.isEmpty() && stack.isEmpty()) ? 1 : stack.getCount();
+    }
+
+    public void setReachedCount(boolean reachedCount){
+        boolean old = isPowered;
+        isPowered = reachedCount;
+        if(old != isPowered){
             updateBlock();
             level.updateNeighborsAt(worldPosition, BlockRegistry.ITEM_DETECTOR.get());
         }
+    }
+
+    public boolean getPoweredState(){
+        return inverted != isPowered;
     }
 
     public void addCount(int count){
@@ -105,6 +124,14 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
+    public void onWanded(Player playerEntity) {
+        inverted = !inverted;
+        PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.item_detector.inverted", inverted));
+        updateBlock();
+        level.updateNeighborsAt(worldPosition, BlockRegistry.ITEM_DETECTOR.get());
+    }
+
+    @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         if(connectedPos != null){
             list.add(ColorPos.centered(connectedPos, ParticleColor.FROM_HIGHLIGHT));
@@ -123,6 +150,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
             tag.put("filterStack", filterStack.save(new CompoundTag()));
         }
         tag.putBoolean("isPowered", isPowered);
+        tag.putBoolean("inverted", inverted);
     }
 
     @Override
@@ -136,12 +164,20 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
             filterStack = ItemStack.of(pTag.getCompound("filterStack"));
         }
         isPowered = pTag.getBoolean("isPowered");
+        inverted = pTag.getBoolean("inverted");
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(Component.translatable("ars_nouveau.item_detector.count", neededCount));
-        tooltip.add(Component.translatable("ars_nouveau.item_detector.item", filterStack.getHoverName().getString()));
-        tooltip.add(Component.translatable("ars_nouveau.item_detector.powered", isPowered));
+        tooltip.add(Component.translatable("ars_nouveau.item_detector.count", (inverted ? "< " : "> ") + neededCount));
+        if(filterStack.getItem() instanceof ItemScroll && filterStack.hasTag()){
+            ItemScroll.ItemScrollData scrollData = new ItemScroll.ItemScrollData(filterStack);
+            for (ItemStack s : scrollData.getItems()) {
+                tooltip.add(Component.literal(s.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
+            }
+        }else {
+            tooltip.add(Component.translatable("ars_nouveau.item_detector.item", filterStack.getHoverName().getString()).withStyle(ChatFormatting.GOLD));
+        }
+        tooltip.add(Component.translatable("ars_nouveau.item_detector.powered", getPoweredState()));
     }
 }

@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-11T12:57:41.3870272	Patchouli
+// 1.19.2	2023-03-18T20:42:00.3040452	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -173,6 +173,7 @@ b6ce8c4962d9de6fc0a3194007ea8516046d5a6c data/ars_nouveau/patchouli_books/worn_n
 1a25ac02c68a2ba58342ed551f59c60f5f8832d8 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/brazier_relay.json
 730a6bdae91b4a8239778753105a2b36e23e06b4 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/enchanting_apparatus.json
 26e32ff5fc343058cd9974fb3372606463380065 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/imbuement_chamber.json
+d58b7fb7e59a874e27fe9e27a80bedf01414d50c data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/item_detector.json
 ab52c8342e0123253dfca390e43f5aa8f667a62f data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/mob_jar.json
 35a98207bbff5b7b8ba477175bf6b90600df0b7a data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/potion_diffuser.json
 dcd5dd1941c32d9af1f6e63ab2f502964f327ed2 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/potion_jar.json
@@ -182,7 +183,7 @@ dcd5dd1941c32d9af1f6e63ab2f502964f327ed2 data/ars_nouveau/patchouli_books/worn_n
 02d70255928701b52db6815f2312859eb7ab65f2 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryers_crystal.json
 66de7aa93cf335fc5774875d83e9064feb4e6418 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryers_oculus.json
 d56b90fe0dc4c04013610b8b7336cf22b0d219f4 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/scryer_scroll.json
-d51633bbe4e28b3dfd2bd976aaffecc11c7408a7 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/storage_lectern.json
+8d03991612db61d6850ccbff79b32455dd261dc3 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/storage_lectern.json
 e797ff6d4a79504b65178376196d5442fed62f42 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/machines/warp_portal.json
 9b4e79632022441481188de75ca691f0bdba400f data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mana_boost.json
 9504291ac23aa6afa832b57f78e357ced8776711 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mana_regen.json

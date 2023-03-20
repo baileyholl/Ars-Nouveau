@@ -676,6 +676,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xxx")
                     .pattern("xyx")
                     .pattern("xxx").define('x', BlockRegistry.MAGEBLOOM_BLOCK).define('y', ItemsRegistry.MANIPULATION_ESSENCE).save(consumer);
+
+            shapedBuilder(BlockRegistry.ITEM_DETECTOR)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("zzz").define('x', Tags.Items.GLASS).define('y', Blocks.OBSERVER).define('z', BlockRegistry.ARCHWOOD_PLANK).save(consumer);
         }
     }
 
