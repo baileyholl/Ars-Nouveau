@@ -750,7 +750,12 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
         registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
 
-        registry.register(LibBlockNames.REPOSITORY, getDefaultBlockItem(BlockRegistry.REPOSITORY));
+        registry.register(LibBlockNames.REPOSITORY, new RendererBlockItem(BlockRegistry.REPOSITORY, defaultItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return RepositoryRenderer::getISTER;
+            }
+        });
         registry.register(LibBlockNames.GHOST_WEAVE, getDefaultBlockItem(BlockRegistry.GHOST_WEAVE));
         registry.register(LibBlockNames.FALSE_WEAVE, getDefaultBlockItem(BlockRegistry.FALSE_WEAVE));
         registry.register(LibBlockNames.MIRROR_WEAVE, getDefaultBlockItem(BlockRegistry.MIRROR_WEAVE));

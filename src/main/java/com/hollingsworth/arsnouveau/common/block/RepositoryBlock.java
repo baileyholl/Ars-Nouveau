@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RepositoryBlock extends ModBlock implements EntityBlock {
     public RepositoryBlock() {
-        super(ModBlock.defaultProperties());
+        super(ModBlock.defaultProperties().noOcclusion());
     }
 
     /**
@@ -43,7 +44,7 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
             if (blockentity instanceof RepositoryTile tile) {
                 pPlayer.openMenu(tile);
-                pPlayer.awardStat(Stats.OPEN_BARREL);
+                pPlayer.awardStat(Stats.OPEN_CHEST);
                 PiglinAi.angerNearbyPiglins(pPlayer, true);
             }
 
@@ -61,6 +62,11 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
 
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
         }
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable

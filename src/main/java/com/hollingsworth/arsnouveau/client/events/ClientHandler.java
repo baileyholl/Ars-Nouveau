@@ -107,6 +107,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.TEMPORARY_TILE.get(), MirrorweaveRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.CRAFTING_LECTERN_TILE.get(), LecternRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ITEM_DETECTOR_TILE.get(), ItemDetectorRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_TILE, RepositoryRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
