@@ -1,13 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TempLightTile extends LightTile implements ITickable{
+public class TempLightTile extends LightTile{
 
     int age;
     public double lengthModifier;
@@ -32,6 +31,7 @@ public class TempLightTile extends LightTile implements ITickable{
 
     @Override
     public void tick() {
+        super.tick();
         if (level != null && !level.isClientSide) {
             age++;
             //15 seconds
