@@ -835,7 +835,7 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.BRAZIER_RELAY, () ->getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
         ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
         ITEMS.register(LibBlockNames.SKY_WEAVE, () ->getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
-        ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () ->getDefaultBlockItem(BlockRegistry.TEMPORARY_BLOCK.get()));
+        ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () -> new ModBlockItem(BlockRegistry.TEMPORARY_BLOCK.get(), new Item.Properties()));
         ITEMS.register(LibBlockNames.STORAGE_LECTERN, () -> new RendererBlockItem((BlockRegistry.CRAFTING_LECTERN.get()), defaultItemProperties()){
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
