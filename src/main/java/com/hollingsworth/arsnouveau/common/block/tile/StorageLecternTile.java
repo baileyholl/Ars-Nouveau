@@ -368,8 +368,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		if(mainLectern == null)
 			return;
 		for(Direction dir : Direction.values()){
-			BlockPos pos = mainLectern.worldPosition.relative(dir);
-			BlockEntity tile = mainLectern.level.getBlockEntity(pos);
+			BlockPos pos = this.worldPosition.relative(dir);
+			BlockEntity tile = this.level.getBlockEntity(pos);
 			if(tile == null || mainLectern.connectedInventories.contains(pos))
 				continue;
 			IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
