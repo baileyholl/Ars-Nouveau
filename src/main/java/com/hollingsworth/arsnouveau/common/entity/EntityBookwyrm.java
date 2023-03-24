@@ -96,11 +96,13 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         return super.mobInteract(player, hand);
     }
 
+
     @Override
     public void tick() {
         super.tick();
         if (level == null || this.dead || lecternPos == null)
             return;
+        SummonUtil.healOverTime(this);
         if (!level.isClientSide) {
             if (backoffTicks >= 0)
                 backoffTicks--;
