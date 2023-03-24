@@ -59,6 +59,7 @@ public class FamiliarEvents {
                 return;
             if (entity.getOwner() != null && entity.getOwner().equals(event.getEntity())) {
                 event.setMax((int) (event.getMax() - event.getMax() * entity.getManaReserveModifier()));
+                return;
             }
         }
     }

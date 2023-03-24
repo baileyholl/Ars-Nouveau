@@ -26,7 +26,7 @@ public class ModKeyBindings {
     public static final KeyMapping HEAD_CURIO_HOTKEY = new KeyMapping("key.ars_nouveau.head_curio_hotkey",
             GLFW.GLFW_KEY_G,
             CATEGORY);
-
+    public static final KeyMapping FAMILIAR_TOGGLE = new KeyMapping("key.ars_nouveau.familiar_toggle", -1, CATEGORY);
     public static final KeyMapping QC_1 = new KeyMapping("key.ars_nouveau.qc1", -1, CATEGORY);
     public static final KeyMapping QC_2 = new KeyMapping("key.ars_nouveau.qc2", -1, CATEGORY);
     public static final KeyMapping QC_3 = new KeyMapping("key.ars_nouveau.qc3", -1, CATEGORY);
@@ -64,6 +64,7 @@ public class ModKeyBindings {
         event.register(QC_8);
         event.register(QC_9);
         event.register(QC_10);
+        event.register(FAMILIAR_TOGGLE);
     }
 
     public record QuickSlot(int slot, KeyMapping key) {

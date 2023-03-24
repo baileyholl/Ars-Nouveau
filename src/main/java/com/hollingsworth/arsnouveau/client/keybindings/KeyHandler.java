@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
 import com.hollingsworth.arsnouveau.common.network.PacketQuickCast;
+import com.hollingsworth.arsnouveau.common.network.PacketToggleFamiliar;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -31,6 +32,9 @@ public class KeyHandler {
     };
     public static void checkKeysPressed(int key) {
         checkCurioHotkey(key);
+        if(key == ModKeyBindings.FAMILIAR_TOGGLE.getKey().getValue()){
+            Networking.sendToServer(new PacketToggleFamiliar());
+        }
         if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
             if (MINECRAFT.screen instanceof GuiRadialMenu) {
                 MINECRAFT.player.closeContainer();

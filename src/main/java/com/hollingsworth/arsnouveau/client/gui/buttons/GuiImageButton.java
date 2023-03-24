@@ -21,6 +21,7 @@ import java.util.List;
 public class GuiImageButton extends ANButton {
     public ResourceLocation image;
 
+    // TODO: Remove this in favor of image
     public String resourceIcon;
 
     public int u, v, image_width, image_height;
@@ -28,7 +29,6 @@ public class GuiImageButton extends ANButton {
     public Component toolTip;
     public boolean soundDisabled = false;
 
-    // TODO: Remove string resource image
     public GuiImageButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
         this(x, y, u, v, w, h, image_width, image_height, new ResourceLocation(ArsNouveau.MODID, resource_image), onPress);
     }
