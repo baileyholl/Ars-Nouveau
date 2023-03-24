@@ -74,4 +74,12 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new RepositoryTile(pPos, pState);
     }
+
+    public boolean hasAnalogOutputSignal(BlockState pState) {
+        return true;
+    }
+
+    public int getAnalogOutputSignal(BlockState pBlockState, Level pLevel, BlockPos pPos) {
+        return pLevel.getBlockEntity(pPos) instanceof RepositoryTile tile ? tile.fillLevel : 0;
+    }
 }

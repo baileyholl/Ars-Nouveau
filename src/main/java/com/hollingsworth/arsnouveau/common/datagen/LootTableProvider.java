@@ -81,6 +81,13 @@ public class LootTableProvider extends BaseLootTableProvider {
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
         blockTables.put(BlockRegistry.MOB_JAR, LootTable.lootTable().withPool(mobJarBuilder));
+        //CustomName
+        LootPool.Builder repository = LootPool.lootPool()
+                .name("repository")
+                .setRolls(ConstantValue.exactly(1))
+                .add(LootItem.lootTableItem(BlockRegistry.REPOSITORY)
+                        .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+        blockTables.put(BlockRegistry.REPOSITORY, LootTable.lootTable().withPool(repository));
     }
 
     public LootPool.Builder POD_BUILDER(Item item, Block block){
