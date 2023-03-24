@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "y": {
+      "tag": "forge:nuggets/gold"
+    },
+    "z": {
+      "item": "ars_nouveau:archwood_slab"
+    }
+  },
+  "pattern": [
+    "yzy",
+    "zzz",
+    "yzy"
+  ],
+  "result": {
+    "item": "ars_nouveau:repository"
+  }
+}
