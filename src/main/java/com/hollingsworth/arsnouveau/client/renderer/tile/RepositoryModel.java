@@ -8,7 +8,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/repository.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/repository.png");
     public static final ResourceLocation MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/repository.geo.json");
     public static final ResourceLocation ANIMATION = new ResourceLocation(ArsNouveau.MODID, "animations/empty.geo.json");
 
