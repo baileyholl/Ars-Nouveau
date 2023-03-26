@@ -7,7 +7,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 public class RepositoryRenderer extends GeoBlockRenderer<RepositoryTile> {
-    public static AnimatedGeoModel model = new GenericModel<>("repository");
+    public static AnimatedGeoModel model = new RepositoryModel();
     public RepositoryRenderer(BlockEntityRendererProvider.Context rendererProvider) {
         super(rendererProvider, model);
     }

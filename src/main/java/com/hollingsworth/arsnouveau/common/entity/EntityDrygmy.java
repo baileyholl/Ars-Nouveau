@@ -134,6 +134,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     @Override
     public void tick() {
         super.tick();
+        SummonUtil.healOverTime(this);
         if (!level.isClientSide && channelCooldown > 0) {
             channelCooldown--;
         }

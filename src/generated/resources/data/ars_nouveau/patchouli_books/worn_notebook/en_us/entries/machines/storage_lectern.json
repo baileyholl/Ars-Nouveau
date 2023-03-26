@@ -22,6 +22,12 @@
         "ars_nouveau:machines/bookwyrm_charm",
         "ars_nouveau:machines/item_detector"
       ]
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/repository"
+      ]
     }
   ]
 }

@@ -211,6 +211,8 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), ServerToClientStoragePacket.class, ServerToClientStoragePacket::toBytes, ServerToClientStoragePacket::new, ServerToClientStoragePacket.Handler::onMessage);
         INSTANCE.registerMessage(nextID(), ClientToServerStoragePacket.class, ClientToServerStoragePacket::toBytes, ClientToServerStoragePacket::new, ClientToServerStoragePacket.Handler::onMessage);
         INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
+        INSTANCE.registerMessage(nextID(), PacketToggleFamiliar.class, PacketToggleFamiliar::toBytes, PacketToggleFamiliar::new, PacketToggleFamiliar::handle);
+        INSTANCE.registerMessage(nextID(), PacketDispelFamiliars.class, PacketDispelFamiliars::toBytes, PacketDispelFamiliars::new, PacketDispelFamiliars::handle);
 
     }
 

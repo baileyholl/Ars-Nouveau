@@ -206,7 +206,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	public ItemStack pushStack(ItemStack itemstack) {
-		StoredItemStack is = pushStack(new StoredItemStack(itemstack));
+		StorageLecternTile mainLectern = getMainLectern();
+		if(mainLectern == null){
+			return itemstack;
+		}
+		StoredItemStack is = mainLectern.pushStack(new StoredItemStack(itemstack));
 		return is == null ? ItemStack.EMPTY : is.getActualStack();
 	}
 
