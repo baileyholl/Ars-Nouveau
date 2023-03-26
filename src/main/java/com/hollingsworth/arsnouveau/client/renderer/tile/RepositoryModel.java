@@ -12,14 +12,13 @@ public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
     public static final ResourceLocation MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/repository.geo.json");
     public static final ResourceLocation ANIMATION = new ResourceLocation(ArsNouveau.MODID, "animations/empty.geo.json");
 
-    @Override
-    public void setCustomAnimations(RepositoryTile animatable, int instanceId) {
-        super.setCustomAnimations(animatable, instanceId);
+    public RepositoryModel(){
     }
 
+
     @Override
-    public void setCustomAnimations(RepositoryTile repo, int instanceId, AnimationEvent animationEvent) {
-        super.setCustomAnimations(repo, instanceId, animationEvent);
+    public void setCustomAnimations(RepositoryTile repo, int instanceId) {
+        super.setCustomAnimations(repo, instanceId);
         this.getBone("1").setHidden(repo.fillLevel == 0);
         this.getBone("2_3").setHidden(repo.fillLevel < 3);
         this.getBone("4_6").setHidden(repo.fillLevel < 5);
@@ -30,6 +29,11 @@ public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
         this.getBone("19_21").setHidden(repo.fillLevel < 13);
         this.getBone("22_24").setHidden(repo.fillLevel < 14);
         this.getBone("25_27").setHidden(repo.fillLevel < 15);
+    }
+
+    @Override
+    public void setCustomAnimations(RepositoryTile repo, int instanceId, AnimationEvent animationEvent) {
+        super.setCustomAnimations(repo, instanceId, animationEvent);
     }
 
     @Override
