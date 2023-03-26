@@ -113,19 +113,15 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     public Starbuncle(EntityType<Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
-        maxUpStep = 1.2f;
+        maxUpStep = 1.1f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         reloadGoals();
         this.moveControl = new MovementHandler(this);
     }
 
     public Starbuncle(Level world, boolean tamed) {
-        super(ModEntities.STARBUNCLE_TYPE.get(), world);
+        this(ModEntities.STARBUNCLE_TYPE.get(), world);
         this.setTamed(tamed);
-        maxUpStep = 1.2f;
-        this.moveControl = new MovementHandler(this);
-        dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-        reloadGoals();
     }
 
     @Override
@@ -245,7 +241,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             System.out.println(this);
             return;
         }
-
+        SummonUtil.healOverTime(this);
         if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }
@@ -308,9 +304,25 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D)
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2d);
     }
+
+
+    @Override
+    public boolean canCollideWith(Entity pEntity) {
+        if(pEntity instanceof Player)
+            return false;
+        return super.canCollideWith(pEntity);
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    protected void pushEntities() {}
 
     @Override
     protected void pickUpItem(ItemEntity itemEntity) {
@@ -550,11 +562,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public int getExperienceReward() {
         return 0;
-    }
-
-    @Override
-    public boolean canCollideWith(Entity p_241849_1_) {
-        return true;
     }
 
     public void setColor(String color) {

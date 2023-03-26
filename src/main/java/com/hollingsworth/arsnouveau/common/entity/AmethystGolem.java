@@ -120,6 +120,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     @Override
     public void tick() {
         super.tick();
+        SummonUtil.healOverTime(this);
         if (harvestCooldown > 0)
             harvestCooldown--;
         if (growCooldown > 0)
@@ -347,7 +348,7 @@ public class AmethystGolem extends PathfinderMob implements IAnimatable, IDispel
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D)
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2d);
     }
 

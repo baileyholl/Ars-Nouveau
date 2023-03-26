@@ -18,6 +18,8 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     public Set<FamiliarData> familiars = new HashSet<>();
 
+    public ResourceLocation lastSummonedFamiliar;
+
     public ANPlayerDataCap() {
     }
 
@@ -62,6 +64,16 @@ public class ANPlayerDataCap implements IPlayerCap {
         return this.familiars.stream().filter(f -> f.familiarHolder.getRegistryName().equals(id)).findFirst().orElse(null);
     }
 
+    @Nullable
+    @Override
+    public FamiliarData getLastSummonedFamiliar() {
+        return lastSummonedFamiliar == null ? null : getFamiliarData(lastSummonedFamiliar);
+    }
+
+    public void setLastSummonedFamiliar(ResourceLocation lastSummonedFamiliar) {
+        this.lastSummonedFamiliar = lastSummonedFamiliar;
+    }
+
     @Override
     public void setUnlockedFamiliars(Collection<FamiliarData> familiars) {
         this.familiars = new HashSet<>(familiars);
@@ -91,6 +103,9 @@ public class ANPlayerDataCap implements IPlayerCap {
         }
         familiarsTag.putInt("size", familiarsList.size());
         tag.put("familiars", familiarsTag);
+        if(lastSummonedFamiliar != null){
+            tag.putString("lastSummonedFamiliar", lastSummonedFamiliar.toString());
+        }
         return tag;
     }
 
@@ -108,6 +123,9 @@ public class ANPlayerDataCap implements IPlayerCap {
         CompoundTag familiarsTag = nbt.getCompound("familiars");
         for (int i = 0; i < familiarsTag.getInt("size"); i++) {
             familiars.add(new FamiliarData(familiarsTag.getCompound("familiar" + i)));
+        }
+        if(nbt.contains("lastSummonedFamiliar")){
+            lastSummonedFamiliar = new ResourceLocation(nbt.getString("lastSummonedFamiliar"));
         }
     }
 }

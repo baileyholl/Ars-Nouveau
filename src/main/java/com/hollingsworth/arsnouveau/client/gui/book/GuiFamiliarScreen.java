@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.client.gui.buttons.FamiliarButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketDispelFamiliars;
 import com.hollingsworth.arsnouveau.common.network.PacketSummonFamiliar;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -49,19 +50,25 @@ public class GuiFamiliarScreen extends BaseBook {
             Minecraft.getInstance().setScreen(parent);
         }));
 
+        addRenderableWidget(new GuiImageButton(bookRight - 131, bookBottom - 13, 0, 0, 41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {
+            Networking.sendToServer(new PacketDispelFamiliars());
+        }));
+
     }
 
     @Override
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, stack);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 156, 179, 0, 0, 56, 15, 56, 15, stack);
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 232, 183, -8355712);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.dispel"), 172, 183, -8355712);
     }
 
     public void onGlyphClick(Button button) {
         FamiliarButton button1 = (FamiliarButton) button;
-        Networking.INSTANCE.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.getRegistryName(), Minecraft.getInstance().player.getId()));
+        Networking.INSTANCE.sendToServer(new PacketSummonFamiliar(button1.familiarHolder.getRegistryName()));
         Minecraft.getInstance().setScreen(null);
     }
 }

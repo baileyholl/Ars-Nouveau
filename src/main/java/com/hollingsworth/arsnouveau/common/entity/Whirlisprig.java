@@ -238,6 +238,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void tick() {
         super.tick();
+        SummonUtil.healOverTime(this);
         if (!this.level.isClientSide) {
             if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
                 this.remove(RemovalReason.DISCARDED);
@@ -374,7 +375,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
-                .add(Attributes.MAX_HEALTH, 6.0D)
+                .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
 

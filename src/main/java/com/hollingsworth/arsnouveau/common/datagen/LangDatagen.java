@@ -1166,5 +1166,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page1.item_detector", "A Display Case can be configured to output a redstone signal when a certain level of inventory is reached. To set the item for tracking, use an item on the case. Interact with the block to increase the count, and punch to decrease. To link to an inventory, Dominion Wand an inventory to the display case. Wanding while sneaking will invert if the signal outputs below or greater than the set count.");
         add("ars_nouveau.item_detector.inverted", "Signal Inverted: %s");
         add("block.ars_nouveau.repository", "Repository");
+        add("ars_nouveau.removed_familiars", "Dispelled Familiars");
+        add("key.ars_nouveau.familiar_toggle", "Summon/Dispel Familiar");
+        add("ars_nouveau.spell_book_gui.dispel", "Dispel");
     }
 }

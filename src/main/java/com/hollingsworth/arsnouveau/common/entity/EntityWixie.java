@@ -139,6 +139,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     @Override
     public void tick() {
         super.tick();
+        SummonUtil.healOverTime(this);
         if (!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
             this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
         if (!level.isClientSide && inventoryBackoff > 0) {
@@ -204,7 +205,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     public static AttributeSupplier.Builder attributes() {
         return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
-                .add(Attributes.MAX_HEALTH, 6.0D)
+                .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
 
