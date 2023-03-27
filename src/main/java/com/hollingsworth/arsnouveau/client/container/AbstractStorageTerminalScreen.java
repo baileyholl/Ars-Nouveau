@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -68,10 +69,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	protected boolean loadedSearch = false;
 	private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
 	protected static final ResourceLocation scrollBall = new ResourceLocation(ArsNouveau.MODID, "textures/gui/scroll_ball.png");
+	protected static final ResourceLocation tabImages = new ResourceLocation(ArsNouveau.MODID, "textures/gui/bookwyrm_storage_tabs.png");
 	protected StateButton buttonSortingType;
 	protected StateButton buttonDirection;
 	protected StateButton buttonSearchType;
 	private Comparator<StoredItemStack> sortComp;
+	List<String> tabNames = new ArrayList<>();
+	public List<StorageTabButton> tabButtons = new ArrayList<>();
 
 	public AbstractStorageTerminalScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
@@ -80,18 +84,28 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void onPacket() {
 		SortSettings s = menu.terminalData;
-		if(s == null) {
-			return;
+		if(s != null) {
+			controllMode = s.controlMode;
+			comparator = StoredItemStack.SortingTypes.VALUES[s.sortType % StoredItemStack.SortingTypes.VALUES.length].create(s.reverseSort);
+			searchType = s.searchType;
+			if(!searchField.isFocused()) {
+				searchField.setFocus(true);
+			}
+			buttonSortingType.state = s.sortType;
+			buttonDirection.state = s.reverseSort ? 1 : 0;
+			buttonSearchType.state = searchType;
 		}
-		controllMode = s.controlMode;
-		comparator = StoredItemStack.SortingTypes.VALUES[s.sortType % StoredItemStack.SortingTypes.VALUES.length].create(s.reverseSort);
-		searchType = s.searchType;
-		if(!searchField.isFocused()) {
-			searchField.setFocus(true);
+		if(menu.tabNames != null && !menu.tabNames.isEmpty()){
+			for(StorageTabButton tabButton : tabButtons){
+				tabButton.visible = false;
+			}
+			// Set isAll tab visible
+			tabButtons.get(0).visible = true;
+			for(int i = 0; i < menu.tabNames.size() && i < tabButtons.size(); i++){
+				tabButtons.get(i+1).visible = true;
+				tabButtons.get(i+1).highlightText = menu.tabNames.get(i);
+			}
 		}
-		buttonSortingType.state = s.sortType;
-		buttonDirection.state = s.reverseSort ? 1 : 0;
-		buttonSearchType.state = searchType;
 
 		if(!loadedSearch && menu.search != null) {
 			loadedSearch = true;
@@ -149,7 +163,26 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			buttonSearchType.state = searchType;
 			sendUpdate();
 		}));
+		for(int i = 0; i < 12; i++){
+			var button = addRenderableWidget(new StorageTabButton(leftPos - 13, topPos + 59 + i * 15, 18, 12, 256, 13, i, 0, tabImages, b -> {
+				StorageTabButton tabButton = (StorageTabButton) b;
+				setSelectedTab(tabButton.state);
+				sendUpdate();
+			}));
+			button.visible = false;
+			if(i == 0){
+				button.isAll = true;
+				button.isSelected = true;
+			}
+			this.tabButtons.add(button);
+		}
 		updateSearch();
+	}
+
+	public void setSelectedTab(int index){
+		for(int i = 0; i < tabButtons.size(); i++){
+			tabButtons.get(i).isSelected = i == index;
+		}
 	}
 
 	protected void updateSearch() {
@@ -298,6 +331,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		}
 		if (buttonSearchType.isHoveredOrFocused()) {
 			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+		}
+		for(StorageTabButton tabButton : tabButtons) {
+			if(tabButton.isHoveredOrFocused() && tabButton.isAll){
+				renderTooltip(st, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
+			}else if (tabButton.isHoveredOrFocused() && tabButton.highlightText != null) {
+				renderTooltip(st, Component.literal(tabButton.highlightText), mouseX, mouseY);
+			}
 		}
 	}
 

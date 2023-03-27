@@ -26,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,6 +55,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	private String lastSearch = "";
 	public boolean updateItems;
 	public List<BlockPos> connectedInventories = new ArrayList<>();
+	public List<String> tabNames = new ArrayList<>();
 	public List<HandlerPos> handlerPosList = new ArrayList<>();
 
 	public SortSettings sortSettings = new SortSettings();
@@ -125,6 +127,17 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public Map<StoredItemStack, Long> getStacks() {
 		updateItems = true;
 		return items;
+	}
+
+	public List<String> getTabNames() {
+		tabNames = new ArrayList<>();
+		for(BlockPos pos : connectedInventories) {
+			BlockEntity tile = level.getBlockEntity(pos);
+			if(tile instanceof Nameable provider && provider.hasCustomName()) {
+				tabNames.add(provider.getDisplayName().getString());
+			}
+		}
+		return tabNames;
 	}
 
 	public StoredItemStack pullStack(StoredItemStack stack, int max) {
