@@ -1,10 +1,11 @@
 package com.hollingsworth.arsnouveau.client.container;
 
+import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +32,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	public SortSettings terminalData;
 	public String search;
 	public boolean noSort;
-
+	public List<String> tabNames = new ArrayList<>();
 	public StorageTerminalMenu(int id, Inventory inv, StorageLecternTile te) {
 		this(MenuRegistry.STORAGE.get(), id, inv, te);
 		this.addPlayerSlots(inv, 8, 120);
@@ -129,6 +130,13 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 				search = te.getLastSearch();
 				tag.putString("search", search);
 			}
+			ListTag tabs = new ListTag();
+			for(String s : te.getTabNames()){
+				CompoundTag nameTag = new CompoundTag();
+				nameTag.putString("name", s);
+				tabs.add(nameTag);
+			}
+			tag.put("tabs", tabs);
 			tag.put("sortSettings", te.sortSettings.toTag());
 		});
 		super.broadcastChanges();
@@ -211,6 +219,13 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 			search = message.getString("search");
 		if(message.contains("sortSettings"))
 			terminalData = SortSettings.fromTag(message.getCompound("sortSettings"));
+		if(message.contains("tabs")){
+			ListTag tabs = message.getList("tabs", 10);
+			tabNames = new ArrayList<>();
+			for(int i = 0;i < tabs.size();i++){
+				tabNames.add(tabs.getCompound(i).getString("name"));
+			}
+		}
 		if(onPacket != null)onPacket.run();
 	}
 
