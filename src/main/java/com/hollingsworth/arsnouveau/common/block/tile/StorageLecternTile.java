@@ -51,7 +51,8 @@ import java.util.stream.IntStream;
 
 public class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider {
 	private InventoryManager invManager = new InventoryManager(new ArrayList<>());
-	private Map<StoredItemStack, Long> items = new HashMap<>();
+	private Map<StoredItemStack, Long> allItems = new HashMap<>();
+	protected Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
 	private String lastSearch = "";
 	public boolean updateItems;
 	public List<BlockPos> connectedInventories = new ArrayList<>();
@@ -124,9 +125,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		return Component.translatable("ars_nouveau.storage_lectern");
 	}
 
-	public Map<StoredItemStack, Long> getStacks() {
+	public Map<StoredItemStack, Long> getStacks(@Nullable String tabName) {
 		updateItems = true;
-		return items;
+		if(tabName == null || tabName.isEmpty()) {
+			return allItems;
+		}
+		return itemsByTab.getOrDefault(tabName, allItems);
 	}
 
 	public List<String> getTabNames() {
@@ -334,31 +338,53 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			canCreateTasks = player != null;
 		}
 		if(updateItems) {
-			items.clear();
-			List<FilterableItemHandler> handlers = new ArrayList<>();
-			List<IItemHandlerModifiable> modifiables = new ArrayList<>();
-			this.handlerPosList = new ArrayList<>();
-			for(BlockPos pos : connectedInventories) {
-				BlockEntity invTile = level.getBlockEntity(pos);
-				if(invTile != null) {
-					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-					lih.ifPresent(i -> {
-						if(i instanceof IItemHandlerModifiable handlerModifiable) {
-							handlers.add(new StorageItemHandler(handlerModifiable, InvUtil.filtersOnTile(invTile)));
-							modifiables.add(handlerModifiable);
-							handlerPosList.add(new HandlerPos(pos, i));
+			updateItems();
+			updateItems = false;
+		}
+	}
+
+	public void updateItems(){
+		allItems.clear();
+		itemsByTab.clear();
+		List<FilterableItemHandler> handlers = new ArrayList<>();
+		List<IItemHandlerModifiable> modifiables = new ArrayList<>();
+		Map<String, List<IItemHandlerModifiable>> tabMap = new HashMap<>();
+		this.handlerPosList = new ArrayList<>();
+		for(BlockPos pos : connectedInventories) {
+			BlockEntity invTile = level.getBlockEntity(pos);
+			if(invTile != null) {
+				LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+				lih.ifPresent(i -> {
+					if(i instanceof IItemHandlerModifiable handlerModifiable) {
+						handlers.add(new StorageItemHandler(handlerModifiable, InvUtil.filtersOnTile(invTile)));
+						modifiables.add(handlerModifiable);
+						handlerPosList.add(new HandlerPos(pos, i));
+						if(invTile instanceof Nameable nameable && nameable.hasCustomName()){
+							String tabName = nameable.getCustomName().getString();
+							tabMap.computeIfAbsent(tabName, s -> new ArrayList<>()).add(handlerModifiable);
 						}
-					});
+					}
+				});
+			}
+		}
+		invManager = new InventoryManager(handlers);
+		CombinedInvWrapper itemHandler = new CombinedInvWrapper(modifiables.toArray(new IItemHandlerModifiable[0]));
+		IntStream.range(0, itemHandler.getSlots())
+				.mapToObj(itemHandler::getStackInSlot)
+				.filter(s -> !s.isEmpty())
+				.map(StoredItemStack::new)
+				.forEach(s -> allItems.merge(s, s.getQuantity(), Long::sum));
+		for(String tabName : tabMap.keySet()){
+			itemsByTab.put(tabName, new HashMap<>());
+			for(IItemHandlerModifiable handler : tabMap.get(tabName)){
+				for(int i = 0; i < handler.getSlots(); i++){
+					ItemStack stack = handler.getStackInSlot(i);
+					if(stack.isEmpty())
+						continue;
+					StoredItemStack storedItemStack = new StoredItemStack(stack);
+					itemsByTab.get(tabName).merge(storedItemStack, storedItemStack.getQuantity(), Long::sum);
 				}
 			}
-			invManager = new InventoryManager(handlers);
-			CombinedInvWrapper itemHandler = new CombinedInvWrapper(modifiables.toArray(new IItemHandlerModifiable[0]));
-			IntStream.range(0, itemHandler.getSlots())
-					.mapToObj(itemHandler::getStackInSlot)
-					.filter(s -> !s.isEmpty())
-					.map(StoredItemStack::new)
-					.forEach(s -> items.merge(s, s.getQuantity(), Long::sum));
-			updateItems = false;
 		}
 	}
 
