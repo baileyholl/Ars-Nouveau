@@ -273,7 +273,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		boolean flag = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_RELEASE;
 		int i = this.leftPos;
 		int j = this.topPos;
-		int k = i + 174;
+		int k = i + 187;
 		int l = j + 18;
 		int i1 = k + 14;
 		int j1 = l + rowCount * 18;
@@ -318,7 +318,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		i = k;
 		j = l;
 		k = j1;
-		blit(st, i + 13, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
+		blit(st, i, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
 
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
