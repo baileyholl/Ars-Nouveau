@@ -21,6 +21,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -111,19 +112,19 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 		return craftResult;
 	}
 
-	public void craftShift(Player player) {
+	public void craftShift(Player player, @Nullable String tab) {
 		List<ItemStack> craftedItemsList = new ArrayList<>();
 		int amountCrafted = 0;
 		ItemStack crafted = craftResult.getItem(0);
 		do {
-			craft(player);
+			craft(player, tab);
 			craftedItemsList.add(crafted.copy());
 			amountCrafted += crafted.getCount();
 		} while(ItemStack.isSame(crafted, craftResult.getItem(0)) && (amountCrafted+crafted.getCount()) <= crafted.getMaxStackSize());
 
 		for (ItemStack craftedItem : craftedItemsList) {
 			if (!player.getInventory().add(craftedItem.copy())) {
-				ItemStack is = pushStack(craftedItem);
+				ItemStack is = pushStack(craftedItem, tab);
 				if(!is.isEmpty()) {
 					Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), is);
 				}
@@ -134,7 +135,7 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 		ForgeEventFactory.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), craftMatrix);
 	}
 
-	public void craft(Player thePlayer) {
+	public void craft(Player thePlayer, @Nullable String tab) {
 		if(currentRecipe != null) {
 			NonNullList<ItemStack> remainder = currentRecipe.getRemainingItems(craftMatrix);
 			boolean playerInvUpdate = false;
@@ -147,7 +148,7 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 					slot = craftMatrix.getItem(i);
 				}
 				if(slot.isEmpty() && !oldItem.isEmpty()) {
-					StoredItemStack is = pullStack(new StoredItemStack(oldItem), 1);
+					StoredItemStack is = pullStack(new StoredItemStack(oldItem), 1, tab);
 					if(is == null) {
 						for(int j = 0;j<thePlayer.getInventory().getContainerSize();j++) {
 							ItemStack st = thePlayer.getInventory().getItem(j);
@@ -178,7 +179,7 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 					craftMatrix.setItem(i, rem);
 					continue;
 				}
-				rem = pushStack(rem);
+				rem = pushStack(rem, tab);
 				if(rem.isEmpty())continue;
 				if (thePlayer.getInventory().add(rem)) continue;
 				thePlayer.drop(rem, false);
@@ -214,23 +215,23 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 		}
 	}
 
-	public void clear() {
+	public void clear(@Nullable String tab) {
 		for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
 			ItemStack st = craftMatrix.removeItemNoUpdate(i);
 			if(!st.isEmpty()) {
-				pushOrDrop(st);
+				pushOrDrop(st, tab);
 			}
 		}
 		onCraftingMatrixChanged();
 	}
 
-	public void handlerItemTransfer(Player player, ItemStack[][] items) {
-		clear();
+	public void handlerItemTransfer(Player player, ItemStack[][] items, @Nullable String tab) {
+		clear(tab);
 		for (int i = 0;i < 9;i++) {
 			if (items[i] != null) {
 				ItemStack stack = ItemStack.EMPTY;
 				for (int j = 0;j < items[i].length;j++) {
-					ItemStack pulled = pullStack(items[i][j]);
+					ItemStack pulled = pullStack(items[i][j], tab);
 					if (!pulled.isEmpty()) {
 						stack = pulled;
 						break;
@@ -258,8 +259,8 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 		onCraftingMatrixChanged();
 	}
 
-	private ItemStack pullStack(ItemStack itemStack) {
-		StoredItemStack is = pullStack(new StoredItemStack(itemStack), 1);
+	private ItemStack pullStack(ItemStack itemStack, @Nullable String tab) {
+		StoredItemStack is = pullStack(new StoredItemStack(itemStack), 1, tab);
 		if(is == null)return ItemStack.EMPTY;
 		else return is.getActualStack();
 	}

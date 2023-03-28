@@ -29,6 +29,10 @@ public class InventoryManager {
 
     private int insertSlotMax = -1;
 
+    public InventoryManager(){
+        this(new ArrayList<>());
+    }
+
     public InventoryManager(List<FilterableItemHandler> filterables){
         this.filterables = filterables;
     }

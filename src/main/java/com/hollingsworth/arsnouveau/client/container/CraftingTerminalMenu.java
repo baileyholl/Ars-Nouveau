@@ -78,7 +78,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					return;
 				this.checkTakeAchievements(stack);
 				if (!pinv.player.getCommandSenderWorld().isClientSide) {
-					((CraftingLecternTile) te).craft(thePlayer);
+					((CraftingLecternTile) te).craft(thePlayer, selectedTab);
 				}
 			}
 		});
@@ -109,13 +109,13 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			itemstack = itemstack1.copy();
 			if (index == 0) {
 				if(te == null)return ItemStack.EMPTY;
-				((CraftingLecternTile) te).craftShift(playerIn);
+				((CraftingLecternTile) te).craftShift(playerIn, selectedTab);
 				if (!playerIn.level.isClientSide)
 					broadcastChanges();
 				return ItemStack.EMPTY;
 			} else if (index > 0 && index < 10) {
 				if(te == null)return ItemStack.EMPTY;
-				ItemStack stack = te.pushStack(itemstack);
+				ItemStack stack = te.pushStack(itemstack, selectedTab);
 				slot.set(stack);
 				if (!playerIn.level.isClientSide)
 					broadcastChanges();
@@ -142,7 +142,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	@Override
 	public boolean clickMenuButton(Player playerIn, int id) {
 		if(te != null && id == 0)
-			((CraftingLecternTile) te).clear();
+			((CraftingLecternTile) te).clear(selectedTab);
 		else super.clickMenuButton(playerIn, id);
 		return false;
 	}
@@ -240,7 +240,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 					}
 				} else if(te != null) {
-					StoredItemStack st = te.pullStack(new StoredItemStack(ingredientIn), 1);
+					StoredItemStack st = te.pullStack(new StoredItemStack(ingredientIn), 1, selectedTab);
 					if(st != null) {
 						if (slotToFill.getItem().isEmpty()) {
 							slotToFill.set(st.getActualStack());
@@ -253,7 +253,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 			@Override
 			protected void clearGrid(boolean bool) {
-				((CraftingLecternTile) te).clear();
+				((CraftingLecternTile) te).clear(selectedTab);
 				this.menu.clearCraftingContent();
 			}
 		}).recipeClicked(p_217056_3_, p_217056_2_, p_217056_1_);
@@ -275,7 +275,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					stacks[slot][j] = ItemStack.of(tag);
 				}
 			}
-			((CraftingLecternTile) te).handlerItemTransfer(pinv.player, stacks);
+			((CraftingLecternTile) te).handlerItemTransfer(pinv.player, stacks, selectedTab);
 		}
 	}
 

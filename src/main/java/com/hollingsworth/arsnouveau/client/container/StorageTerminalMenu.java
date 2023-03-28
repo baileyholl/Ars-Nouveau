@@ -151,7 +151,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 			if (slots.get(index) != null && slots.get(index).hasItem()) {
 				Slot slot = slots.get(index);
 				ItemStack slotStack = slot.getItem();
-				StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()));
+				StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()), selectedTab);
 				ItemStack itemstack = c != null ? c.getActualStack() : ItemStack.EMPTY;
 				slot.set(itemstack);
 				if (!playerIn.level.isClientSide)
@@ -213,7 +213,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 			} else {
 				itemListClient = new ArrayList<>(itemList);
 			}
-			System.out.println("go list");
 			pinv.setChanged();
 		}
 		if(message.contains("search"))
@@ -268,12 +267,12 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 			if (act == SlotAction.PULL_OR_PUSH_STACK) {
 				ItemStack stack = getCarried();
 				if (!stack.isEmpty()) {
-					StoredItemStack rem = te.pushStack(new StoredItemStack(stack));
+					StoredItemStack rem = te.pushStack(new StoredItemStack(stack), selectedTab);
 					ItemStack itemstack = rem == null ? ItemStack.EMPTY : rem.getActualStack();
 					setCarried(itemstack);
 				} else {
 					if (clicked == null)return;
-					StoredItemStack pulled = te.pullStack(clicked, clicked.getMaxStackSize());
+					StoredItemStack pulled = te.pullStack(clicked, clicked.getMaxStackSize(), selectedTab);
 					if(pulled != null) {
 						setCarried(pulled.getActualStack());
 					}
@@ -282,24 +281,24 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 				ItemStack stack = getCarried();
 				if (clicked == null)return;
 				if (pullOne) {
-					StoredItemStack pulled = te.pullStack(clicked, 1);
+					StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
 					if(pulled != null) {
 						ItemStack itemstack = pulled.getActualStack();
 						this.moveItemStackTo(itemstack, playerSlotsStart + 1, this.slots.size(), true);
 						if (itemstack.getCount() > 0)
-							te.pushOrDrop(itemstack);
+							te.pushOrDrop(itemstack, selectedTab);
 						player.getInventory().setChanged();
 					}
 				} else {
 					if (!stack.isEmpty()) {
 						if (ItemStack.isSameItemSameTags(stack, clicked.getStack()) && stack.getCount() + 1 <= stack.getMaxStackSize()) {
-							StoredItemStack pulled = te.pullStack(clicked, 1);
+							StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
 							if (pulled != null) {
 								stack.grow(1);
 							}
 						}
 					} else {
-						StoredItemStack pulled = te.pullStack(clicked, 1);
+						StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
 						if (pulled != null) {
 							setCarried(pulled.getActualStack());
 						}
@@ -309,14 +308,14 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 				ItemStack stack = getCarried();
 				if (!stack.isEmpty()) {
 					ItemStack stack1 = stack.split(Math.max(Math.min(stack.getCount(), stack.getMaxStackSize()) / 2, 1));
-					ItemStack itemstack = te.pushStack(stack1);
+					ItemStack itemstack = te.pushStack(stack1, selectedTab);
 					stack.grow(!itemstack.isEmpty() ? itemstack.getCount() : 0);
 					setCarried(stack);
 				} else {
 					if (clicked == null) {
 						return;
 					}
-					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(clicked.getQuantity() / 2, clicked.getMaxStackSize() / 2), 1));
+					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(clicked.getQuantity() / 2, clicked.getMaxStackSize() / 2), 1), selectedTab);
 					if(pulled != null) {
 						setCarried(pulled.getActualStack());
 					}
@@ -325,7 +324,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 				ItemStack stack = getCarried();
 				if (!stack.isEmpty()) {
 					ItemStack stack1 = stack.split(Math.max(Math.min(stack.getCount(), stack.getMaxStackSize()) / 4, 1));
-					ItemStack itemstack = te.pushStack(stack1);
+					ItemStack itemstack = te.pushStack(stack1, selectedTab);
 					stack.grow(!itemstack.isEmpty() ? itemstack.getCount() : 0);
 					setCarried(stack);
 				} else {
@@ -334,19 +333,20 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 					for (StoredItemStack e : itemList) {
 						if (e.equals(clicked)) maxCount = e.getQuantity();
 					}
-					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 4, 1));
+					StoredItemStack pulled = te.pullStack(clicked, (int) Math.max(Math.min(maxCount, clicked.getMaxStackSize()) / 4, 1), selectedTab);
 					if(pulled != null) {
 						setCarried(pulled.getActualStack());
 					}
 				}
 			} else {
 				if (clicked == null)return;
-				StoredItemStack pulled = te.pullStack(clicked, clicked.getMaxStackSize());
+				StoredItemStack pulled = te.pullStack(clicked, clicked.getMaxStackSize(), selectedTab);
 				if(pulled != null) {
 					ItemStack itemstack = pulled.getActualStack();
 					this.moveItemStackTo(itemstack, playerSlotsStart + 1, this.slots.size(), true);
-					if (itemstack.getCount() > 0)
-						te.pushOrDrop(itemstack);
+					if (itemstack.getCount() > 0) {
+						te.pushOrDrop(itemstack, selectedTab);
+					}
 					player.getInventory().setChanged();
 				}
 			}

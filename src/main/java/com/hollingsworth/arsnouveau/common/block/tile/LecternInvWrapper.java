@@ -21,6 +21,6 @@ public class LecternInvWrapper extends CombinedInvWrapper {
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return !simulate ? lecternTile.pushStack(stack) : super.insertItem(slot, stack, simulate);
+        return !simulate ? lecternTile.pushStack(stack, null) : super.insertItem(slot, stack, simulate);
     }
 }

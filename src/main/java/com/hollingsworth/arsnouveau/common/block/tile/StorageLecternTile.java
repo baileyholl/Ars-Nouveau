@@ -42,16 +42,13 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 
 public class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider {
-	private InventoryManager invManager = new InventoryManager(new ArrayList<>());
-	private Map<StoredItemStack, Long> allItems = new HashMap<>();
+	private Map<String, InventoryManager> tabManagerMap = new HashMap<>();
 	protected Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
 	private String lastSearch = "";
 	public boolean updateItems;
@@ -65,9 +62,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public int backoffTicks;
 	public int checkPlayerRangeTicks;
 	public boolean canCreateTasks = false;
+	public static final String TAB_ALL = "8f6fe318-4ca6-4b29-ab63-15ec5289f5c9";
 
 	public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
 	LazyOptional<IItemHandler> lecternInvWrapper;
+
 
 	public StorageLecternTile(BlockPos pos, BlockState state) {
 		super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
@@ -77,8 +76,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		super(tileEntityTypeIn, pos, state);
 	}
 
-	public InventoryManager getInvManager(){
-		return invManager;
+	public InventoryManager getInvManager(@Nullable String tab){
+		if(tab == null || tab.isEmpty())
+			return tabManagerMap.getOrDefault(TAB_ALL, new InventoryManager());
+		return tabManagerMap.getOrDefault(tab, tabManagerMap.getOrDefault(TAB_ALL, new InventoryManager()));
 	}
 
 	@Override
@@ -128,9 +129,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	public Map<StoredItemStack, Long> getStacks(@Nullable String tabName) {
 		updateItems = true;
 		if(tabName == null || tabName.isEmpty()) {
-			return allItems;
+			return itemsByTab.getOrDefault(TAB_ALL, new HashMap<>());
 		}
-		return itemsByTab.getOrDefault(tabName, allItems);
+		return itemsByTab.getOrDefault(tabName, itemsByTab.getOrDefault(TAB_ALL, new HashMap<>()));
 	}
 
 	public List<String> getTabNames() {
@@ -144,12 +145,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		return tabNames;
 	}
 
-	public StoredItemStack pullStack(StoredItemStack stack, int max) {
+	public StoredItemStack pullStack(StoredItemStack stack, int max, @Nullable String tabName) {
 		if (stack == null || max <= 0) {
 			return null;
 		}
 		ItemStack st = stack.getStack();
-		MultiExtractedReference pulled = invManager.extractItemFromAll(st, max, true);
+		MultiExtractedReference pulled = getInvManager(tabName).extractItemFromAll(st, max, true);
 		if(pulled.getExtracted().isEmpty()) {
 			return null;
 		}
@@ -206,12 +207,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 
-	public StoredItemStack pushStack(StoredItemStack stack) {
+	public StoredItemStack pushStack(StoredItemStack stack, @Nullable String tab) {
 		if(stack == null){
 			return null;
 		}
 		ItemStack copyStack = stack.getActualStack().copy();
-		MultiInsertReference reference = invManager.insertStackWithReference(stack.getActualStack());
+		MultiInsertReference reference = getInvManager(tab).insertStackWithReference(stack.getActualStack());
 		ItemStack remaining = reference.getRemainder();
 		if(!reference.isEmpty()){
 			addInsertTasks(copyStack, reference);
@@ -222,18 +223,18 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		return new StoredItemStack(remaining);
 	}
 
-	public ItemStack pushStack(ItemStack itemstack) {
+	public ItemStack pushStack(ItemStack itemstack, @Nullable String tab) {
 		StorageLecternTile mainLectern = getMainLectern();
 		if(mainLectern == null){
 			return itemstack;
 		}
-		StoredItemStack is = mainLectern.pushStack(new StoredItemStack(itemstack));
+		StoredItemStack is = mainLectern.pushStack(new StoredItemStack(itemstack), tab);
 		return is == null ? ItemStack.EMPTY : is.getActualStack();
 	}
 
-	public void pushOrDrop(ItemStack st) {
+	public void pushOrDrop(ItemStack st, @Nullable String tabName) {
 		if(st.isEmpty())return;
-		StoredItemStack st0 = pushStack(new StoredItemStack(st));
+		StoredItemStack st0 = pushStack(new StoredItemStack(st), tabName);
 		if(st0 != null) {
 			Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, st0.getActualStack());
 		}
@@ -344,39 +345,32 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	public void updateItems(){
-		allItems.clear();
 		itemsByTab.clear();
-		List<FilterableItemHandler> handlers = new ArrayList<>();
-		List<IItemHandlerModifiable> modifiables = new ArrayList<>();
-		Map<String, List<IItemHandlerModifiable>> tabMap = new HashMap<>();
+		tabManagerMap.clear();
 		this.handlerPosList = new ArrayList<>();
+		Map<String, List<FilterableItemHandler>> mappedFilterables = new HashMap<>();
+		itemsByTab.put(TAB_ALL, new HashMap<>());
 		for(BlockPos pos : connectedInventories) {
 			BlockEntity invTile = level.getBlockEntity(pos);
-			if(invTile != null) {
-				LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-				lih.ifPresent(i -> {
-					if(i instanceof IItemHandlerModifiable handlerModifiable) {
-						handlers.add(new StorageItemHandler(handlerModifiable, InvUtil.filtersOnTile(invTile)));
-						modifiables.add(handlerModifiable);
-						handlerPosList.add(new HandlerPos(pos, i));
-						if(invTile instanceof Nameable nameable && nameable.hasCustomName()){
-							String tabName = nameable.getCustomName().getString();
-							tabMap.computeIfAbsent(tabName, s -> new ArrayList<>()).add(handlerModifiable);
-						}
-					}
-				});
+			if(invTile == null){
+				continue;
+			}
+			IItemHandler handler = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
+			if(handler == null){
+				continue;
+			}
+			StorageItemHandler storageItemHandler = new StorageItemHandler(handler, InvUtil.filtersOnTile(invTile));
+			mappedFilterables.computeIfAbsent(TAB_ALL, s -> new ArrayList<>()).add(storageItemHandler);
+			handlerPosList.add(new HandlerPos(pos, handler));
+			if(invTile instanceof Nameable nameable && nameable.hasCustomName()){
+				String tabName = nameable.getCustomName().getString();
+				mappedFilterables.computeIfAbsent(tabName, s -> new ArrayList<>()).add(storageItemHandler);
 			}
 		}
-		invManager = new InventoryManager(handlers);
-		CombinedInvWrapper itemHandler = new CombinedInvWrapper(modifiables.toArray(new IItemHandlerModifiable[0]));
-		IntStream.range(0, itemHandler.getSlots())
-				.mapToObj(itemHandler::getStackInSlot)
-				.filter(s -> !s.isEmpty())
-				.map(StoredItemStack::new)
-				.forEach(s -> allItems.merge(s, s.getQuantity(), Long::sum));
-		for(String tabName : tabMap.keySet()){
+		for(String tabName : mappedFilterables.keySet()){
 			itemsByTab.put(tabName, new HashMap<>());
-			for(IItemHandlerModifiable handler : tabMap.get(tabName)){
+			for(FilterableItemHandler filterableItemHandler : mappedFilterables.get(tabName)){
+				IItemHandler handler = filterableItemHandler.getHandler();
 				for(int i = 0; i < handler.getSlots(); i++){
 					ItemStack stack = handler.getStackInSlot(i);
 					if(stack.isEmpty())
@@ -385,6 +379,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 					itemsByTab.get(tabName).merge(storedItemStack, storedItemStack.getQuantity(), Long::sum);
 				}
 			}
+			tabManagerMap.put(tabName, new InventoryManager(mappedFilterables.get(tabName)));
 		}
 	}
 
@@ -423,13 +418,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				if(stack.isEmpty())
 					continue;
 				ItemStack extractedStack = handler.extractItem(i, stack.getMaxStackSize(), false);
-				ItemStack remaining = mainLectern.pushStack(extractedStack);
+				ItemStack remaining = mainLectern.pushStack(extractedStack, null);
 				if(!remaining.isEmpty()){
 					handler.insertItem(i, remaining, false);
 				}
 				return;
 			}
-
 		}
 		backoffTicks = 100 + level.random.nextInt(20);
 	}
