@@ -58,7 +58,7 @@ public class SpellContext implements Cloneable {
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster, ItemStack casterTool) {
         this(level, spell, caster, wrappedCaster);
-        this.casterTool = casterTool;
+        this.casterTool = casterTool.copy();
     }
 
     public @Nullable AbstractSpellPart nextPart() {
@@ -186,7 +186,7 @@ public class SpellContext implements Cloneable {
             clone.tag = this.tag.copy();
             clone.caster = this.caster;
             clone.castingTile = this.castingTile;
-            clone.casterTool = this.casterTool;
+            clone.casterTool = this.casterTool.copy();
             clone.type = this.type;
             clone.level = this.level;
             return clone;
@@ -208,7 +208,7 @@ public class SpellContext implements Cloneable {
     }
 
     public void setCasterTool(ItemStack stack) {
-        this.casterTool = stack;
+        this.casterTool = stack.copy();
     }
 
     /**
