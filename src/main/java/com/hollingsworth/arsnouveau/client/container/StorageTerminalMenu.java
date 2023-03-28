@@ -14,9 +14,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	protected StorageLecternTile te;
@@ -33,6 +31,8 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	public String search;
 	public boolean noSort;
 	public List<String> tabNames = new ArrayList<>();
+	public String selectedTab = null;
+
 	public StorageTerminalMenu(int id, Inventory inv, StorageLecternTile te) {
 		this(MenuRegistry.STORAGE.get(), id, inv, te);
 		this.addPlayerSlots(inv, 8, 120);
@@ -124,7 +124,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		if(te == null){
 			return;
 		}
-		Map<StoredItemStack, Long> itemsCount = te.getStacks();
+		Map<StoredItemStack, Long> itemsCount = te.getStacks(selectedTab);
 		sync.update(itemsCount, (ServerPlayer) pinv.player, tag -> {
 			if(!te.getLastSearch().equals(search)) {
 				search = te.getLastSearch();
@@ -213,6 +213,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 			} else {
 				itemListClient = new ArrayList<>(itemList);
 			}
+			System.out.println("go list");
 			pinv.setChanged();
 		}
 		if(message.contains("search"))
@@ -225,6 +226,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 			for(int i = 0;i < tabs.size();i++){
 				tabNames.add(tabs.getCompound(i).getString("name"));
 			}
+			Collections.sort(tabNames);
 		}
 		if(onPacket != null)onPacket.run();
 	}
@@ -238,6 +240,10 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		if(message.contains("termData")) {
 			CompoundTag d = message.getCompound("termData");
 			te.setSorting(SortSettings.fromTag(d.getCompound("sortSettings")));
+			selectedTab = null;
+			if(d.contains("selectedTab")){
+				selectedTab = d.getString("selectedTab");
+			}
 		}
 	}
 

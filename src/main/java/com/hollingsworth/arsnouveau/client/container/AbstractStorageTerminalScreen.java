@@ -76,6 +76,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	private Comparator<StoredItemStack> sortComp;
 	List<String> tabNames = new ArrayList<>();
 	public List<StorageTabButton> tabButtons = new ArrayList<>();
+	public String selectedTab = null;
 
 	public AbstractStorageTerminalScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
@@ -101,9 +102,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			}
 			// Set isAll tab visible
 			tabButtons.get(0).visible = true;
-			for(int i = 0; i < menu.tabNames.size() && i < tabButtons.size(); i++){
+			List<String> names = new ArrayList<>(menu.tabNames);
+			names.sort(String::compareToIgnoreCase);
+			for(int i = 0; i < names.size() && i < tabButtons.size(); i++){
 				tabButtons.get(i+1).visible = true;
-				tabButtons.get(i+1).highlightText = menu.tabNames.get(i);
+				tabButtons.get(i+1).highlightText = names.get(i);
 			}
 		}
 
@@ -116,6 +119,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	protected void sendUpdate() {
 		CompoundTag c = new CompoundTag();
 		c.put("sortSettings", getSortSettings().toTag());
+		StorageTabButton selectedTabButton = tabButtons.stream().filter(i -> i.visible && i.isSelected).findFirst().orElse(null);
+		if(selectedTabButton != null && selectedTabButton.highlightText != null){
+			c.putString("selectedTab", selectedTabButton.highlightText);
+		}
 		CompoundTag msg = new CompoundTag();
 		msg.put("termData", c);
 		menu.sendMessage(msg);
