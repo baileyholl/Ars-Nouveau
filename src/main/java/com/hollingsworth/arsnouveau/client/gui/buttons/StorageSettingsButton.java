@@ -21,7 +21,7 @@ public class StorageSettingsButton extends StateButton{
         if(this.visible){
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/storage_tab1.png"));
-            blit(st, x + 1, y, 0, 0, 22, 13, 22, 13);
+            blit(st, x, y, 0, 0, 22, 13, 22, 13);
         }
         super.renderButton(st, mouseX, mouseY, pt);
     }

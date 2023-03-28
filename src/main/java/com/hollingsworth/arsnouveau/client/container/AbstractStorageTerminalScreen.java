@@ -152,20 +152,20 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		searchLast = "";
 		addRenderableWidget(searchField);
 
-		buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 18, topPos + 14, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_type.png"), b -> {
+		buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_type.png"), b -> {
 			comparator = StoredItemStack.SortingTypes.VALUES[(comparator.type() + 1) % StoredItemStack.SortingTypes.VALUES.length].create(comparator.isReversed());
 			buttonSortingType.state = comparator.type();
 			sendUpdate();
 			refreshItemList = true;
 		}));
 
-		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 18, topPos + 29, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_order.png"), b -> {
+		buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/sort_order.png"), b -> {
 			comparator.setReversed(!comparator.isReversed());
 			buttonDirection.state = comparator.isReversed() ? 1 : 0;
 			sendUpdate();
 			refreshItemList = true;
 		}));
-		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 18, topPos + 44, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_sync.png"), b -> {
+		buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 44, 13, 0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_sync.png"), b -> {
 			searchType = searchType == 0 ? 1 : 0;
 			buttonSearchType.state = searchType;
 			sendUpdate();
