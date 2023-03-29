@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.waila;
 
+import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
@@ -14,9 +15,11 @@ import snownee.jade.api.WailaPlugin;
 public class WailaArsNouveauPlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
+        registration.registerBlockComponent(MobJarComponent.INSTANCE, MobJar.class);
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
             if (accessor instanceof BlockAccessor target) {
                 Player player = accessor.getPlayer();
+
                 if (player.isCreative() || player.isSpectator() || player.hasEffect(ModPotions.MAGIC_FIND_EFFECT.get()))
                     return accessor;
 

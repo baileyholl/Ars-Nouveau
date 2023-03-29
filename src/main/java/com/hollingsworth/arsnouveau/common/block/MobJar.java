@@ -44,10 +44,13 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class MobJar extends TickableModBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final Property<Integer> LIGHT_LEVEL = IntegerProperty.create("level", 0, 15);
+    public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
+
+    private static Properties props = defaultProperties().noOcclusion().lightLevel(state -> state.getValue(LIGHT_LEVEL));
 
     public MobJar() {
-        super(defaultProperties().noOcclusion().lightLevel((state) -> state.getValue(LIGHT_LEVEL)));
-        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIGHT_LEVEL, 0));
+        super(props);
+        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIGHT_LEVEL, 0).setValue(POWERED, false));
     }
 
     @Override
@@ -89,7 +92,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         context.getLevel().scheduleTick(context.getClickedPos(), this, 1);
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER).setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos())));
     }
 
     @Override
@@ -112,6 +115,22 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         }
     }
 
+    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
+        if (!pLevel.isClientSide) {
+            boolean flag = pState.getValue(POWERED);
+            if (flag != pLevel.hasNeighborSignal(pPos)) {
+                if (!flag) {
+                    MobJarTile tile = (MobJarTile) pLevel.getBlockEntity(pPos);
+                    tile.dispatchBehavior((behavior) -> {
+                        behavior.onRedstonePower(tile);
+                    });
+                }
+                pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
+            }
+
+        }
+    }
+
     @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
@@ -126,7 +145,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, LIGHT_LEVEL);
+        builder.add(FACING, WATERLOGGED, LIGHT_LEVEL, POWERED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
