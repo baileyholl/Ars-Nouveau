@@ -111,11 +111,6 @@ public class SpellContext implements Cloneable {
         return this;
     }
 
-    public SpellContext withWCaster(IWrappedCaster caster) {
-        this.wrappedCaster = caster;
-        return this;
-    }
-
     public SpellContext withSpell(Spell spell) {
         this.spell = spell;
         return this;
@@ -188,6 +183,7 @@ public class SpellContext implements Cloneable {
             clone.casterTool = this.casterTool.copy();
             clone.type = this.type;
             clone.level = this.level;
+            clone.wrappedCaster = this.wrappedCaster;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
