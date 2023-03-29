@@ -26,6 +26,7 @@
     "elytra.MixinLivingEntity",
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
+    "jar.RidingMixin",
     "perks.PerkLivingEntity",
     "structure.StructureTemplateMixin"
   ],

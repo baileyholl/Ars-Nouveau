@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +60,11 @@ public class MobJarItem extends BlockItem implements IAnimatable {
         if(entity == null)
             return;
         pTooltip.add(entity.getDisplayName());
+        if (entity.hasCustomName()) {
+            MutableComponent name = entity.getType().getDescription().copy();
+            name.withStyle(ChatFormatting.GRAY);
+            pTooltip.add(name);
+        }
     }
 
     public static Entity fromItem(ItemStack stack, Level level){
