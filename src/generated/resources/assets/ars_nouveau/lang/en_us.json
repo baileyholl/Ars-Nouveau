@@ -240,7 +240,7 @@
   "ars_nouveau.glyph_desc.glyph_ignite": "Sets blocks and mobs on fire for a short time. Sensitive will stop this spell from igniting blocks.",
   "ars_nouveau.glyph_desc.glyph_infuse": "Infuses a target with a potion from your flask or held potions. Consumes the potion.",
   "ars_nouveau.glyph_desc.glyph_intangible": "Causes blocks to temporarily turn into air. Can be modified with Amplify for blocks of higher hardness, AOE, Duration Down, and Extend Time.",
-  "ars_nouveau.glyph_desc.glyph_interact": "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals.",
+  "ars_nouveau.glyph_desc.glyph_interact": "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity.",
   "ars_nouveau.glyph_desc.glyph_invisibility": "Causes the target to turn invisible for a short time.",
   "ars_nouveau.glyph_desc.glyph_launch": "Launches an entity or block into the air. Can be used for large jumps or for scaling mountains!",
   "ars_nouveau.glyph_desc.glyph_leap": "Launches the target in the direction they are looking. Amplification will increase the distance moved.",

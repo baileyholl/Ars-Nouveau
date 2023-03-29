@@ -89,7 +89,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         if (toList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
-        int ratePer = getTransferRate() / toList.size();
+        int ratePer = getSource() / toList.size();
         for (BlockPos toPos : toList) {
             if (!level.isLoaded(toPos))
                 continue;
