@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-17T13:13:25.324057	Ars Nouveau Item Models
+// 1.19.2	2023-03-29T10:48:28.540412	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -6,6 +6,7 @@ a81ea25c1312389ff436100c29d1ae20d35b0a40 assets/ars_nouveau/models/item/blue_sbe
 da0aadfa5d42c0daa4da0dbeff1177110928c7b4 assets/ars_nouveau/models/item/bombegranate_pod.json
 4af86c8ff67cf572b5ea18f4dca4dfff97af3f1e assets/ars_nouveau/models/item/experience_gem.json
 70d392c53a05ad554f3f3b1d3faa5fd1445e2a77 assets/ars_nouveau/models/item/falseweave.json
+93bd672531959f8b0215c53c30b552f3f0b4ec68 assets/ars_nouveau/models/item/familiar_amethyst_golem.json
 ae002abcf26e621204a56c58633ac527b78dafc0 assets/ars_nouveau/models/item/familiar_bookwyrm.json
 171689b60a6024caa046b0003fc362abdfa9395d assets/ars_nouveau/models/item/familiar_drygmy.json
 86470f55b241f9757924a412dd5ae3ec3add5b02 assets/ars_nouveau/models/item/familiar_starbuncle.json

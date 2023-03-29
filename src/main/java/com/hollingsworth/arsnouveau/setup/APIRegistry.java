@@ -135,7 +135,7 @@ public class APIRegistry {
         registerFamiliar(new WhirlisprigFamiliarHolder());
         registerFamiliar(new WixieFamiliarHolder());
         registerFamiliar(new BookwyrmFamiliarHolder());
-
+        registerFamiliar(new AmethystFamiliarHolder());
 
         registerScryer(SingleBlockScryer.INSTANCE);
         registerScryer(CompoundScryer.INSTANCE);
