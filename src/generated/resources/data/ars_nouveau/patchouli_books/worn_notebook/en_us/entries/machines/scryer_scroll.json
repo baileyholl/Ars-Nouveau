@@ -6,6 +6,14 @@
     {
       "type": "patchouli:text",
       "text": "ars_nouveau.page.scryer_scroll"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:equipment/enchanters_eye",
+        "ars_nouveau:machines/scryers_oculus",
+        "ars_nouveau:machines/scryers_crystal"
+      ]
     }
   ]
 }

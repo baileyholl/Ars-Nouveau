@@ -114,6 +114,6 @@ public class EffectName extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Names an entity after the set Spell Name. Targeting a block will name nearby entities. Targeting with Self will name the held offhand item. Can be overridden with a name tag in the hotbar.";
+        return "Names an entity after the set Spell Name. Targeting a block will name nearby entities or name inventory blocks directly if possible. Targeting with Self will name the held offhand item. Can be overridden with a name tag in the hotbar.";
     }
 }

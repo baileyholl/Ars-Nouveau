@@ -1154,7 +1154,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.inv_too_far", "Inventory must be within 30 blocks.");
         add("ars_nouveau.storage.no_tile", "Not a valid inventory.");
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
-        add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 20 blocks away.");
+        add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.");
         add("ars_nouveau.storage", "Advanced Usage");
         add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 30 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
         add("ars_nouveau.tooltip.bookwyrm", "Obtained by augmenting a Ritual of Awakening with Book and Quills.");
@@ -1170,5 +1170,9 @@ public class LangDatagen extends LanguageProvider {
         add("key.ars_nouveau.familiar_toggle", "Summon/Dispel Familiar");
         add("ars_nouveau.spell_book_gui.dispel", "Dispel");
         add("tooltip.ars_nouveau.master_tab", "All Items");
+        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern.");
+        add("ars_nouveau.storage_tabs", "Storage Tabs");
+        add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
+        add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
     }
 }

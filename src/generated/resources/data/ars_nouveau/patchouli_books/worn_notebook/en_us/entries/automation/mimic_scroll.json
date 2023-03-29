@@ -11,6 +11,17 @@
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:blank_parchment",
       "recipe2": "ars_nouveau:mimic_scroll"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:automation/deny_scroll",
+        "ars_nouveau:automation/allow_scroll",
+        "ars_nouveau:automation/dominion_wand",
+        "ars_nouveau:automation/starbuncle_charm",
+        "ars_nouveau:machines/storage_lectern",
+        "ars_nouveau:machines/item_detector"
+      ]
     }
   ]
 }

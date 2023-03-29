@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.common.datagen.PatchouliProvider;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -22,6 +23,17 @@ public class RelationsPage extends AbstractPage {
         entries.add(path);
         return this;
     }
+
+    public RelationsPage withEntry(PatchouliProvider.PatchouliPage page) {
+        return withEntry(page.relationPath());
+    }
+
+    public RelationsPage withEntries(List<PatchouliProvider.PatchouliPage> pages) {
+        for(PatchouliProvider.PatchouliPage page : pages)
+            withEntry(page);
+        return this;
+    }
+
 
     public RelationsPage withTitle(String title) {
         object.addProperty("title", title);

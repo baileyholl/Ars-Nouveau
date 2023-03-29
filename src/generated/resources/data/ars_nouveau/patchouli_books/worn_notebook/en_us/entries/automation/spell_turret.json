@@ -30,6 +30,13 @@
     {
       "type": "patchouli:text",
       "text": "ars_nouveau.page4.basic_spell_turret"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:automation/spell_prism",
+        "ars_nouveau:automation/void_prism"
+      ]
     }
   ]
 }

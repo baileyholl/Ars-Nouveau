@@ -11,6 +11,12 @@
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:repository",
       "recipe2": "ars_nouveau:archwood_chest"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/storage_lectern"
+      ]
     }
   ]
 }

@@ -10,6 +10,14 @@
     {
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:potion_diffuser"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/potion_jar",
+        "ars_nouveau:machines/potion_melder",
+        "ars_nouveau:automation/wixie_charm"
+      ]
     }
   ]
 }

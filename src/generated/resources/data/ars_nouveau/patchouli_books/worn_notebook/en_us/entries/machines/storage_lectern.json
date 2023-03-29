@@ -13,6 +13,11 @@
       "title": "ars_nouveau.storage"
     },
     {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page3.storage",
+      "title": "ars_nouveau.storage_tabs"
+    },
+    {
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:storage_lectern"
     },
@@ -20,12 +25,7 @@
       "type": "patchouli:relations",
       "entries": [
         "ars_nouveau:machines/bookwyrm_charm",
-        "ars_nouveau:machines/item_detector"
-      ]
-    },
-    {
-      "type": "patchouli:relations",
-      "entries": [
+        "ars_nouveau:machines/item_detector",
         "ars_nouveau:machines/repository"
       ]
     }

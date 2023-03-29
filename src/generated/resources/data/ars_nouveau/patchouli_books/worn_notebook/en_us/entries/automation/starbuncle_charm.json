@@ -40,6 +40,19 @@
       "type": "patchouli:text",
       "text": "ars_nouveau.page7.starbuncle_charm",
       "title": "ars_nouveau.starbuncle_bed"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:automation/deny_scroll",
+        "ars_nouveau:automation/mimic_scroll",
+        "ars_nouveau:automation/allow_scroll",
+        "ars_nouveau:automation/dominion_wand",
+        "ars_nouveau:machines/storage_lectern",
+        "ars_nouveau:automation/starbuncle_shades",
+        "ars_nouveau:automation/wixie_hat",
+        "ars_nouveau:automation/summon_bed"
+      ]
     }
   ]
 }

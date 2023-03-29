@@ -10,6 +10,13 @@
     {
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:scryers_oculus"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/scryer_scroll",
+        "ars_nouveau:machines/scryers_crystal"
+      ]
     }
   ]
 }

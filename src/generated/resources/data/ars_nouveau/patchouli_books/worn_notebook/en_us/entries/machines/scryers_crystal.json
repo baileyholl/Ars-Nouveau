@@ -14,7 +14,9 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "ars_nouveau:equipment/enchanters_eye"
+        "ars_nouveau:equipment/enchanters_eye",
+        "ars_nouveau:machines/scryer_scroll",
+        "ars_nouveau:machines/scryers_oculus"
       ]
     }
   ]
