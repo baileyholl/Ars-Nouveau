@@ -164,7 +164,7 @@
   "ars_nouveau.familiar.script": "Used for obtaining familiars. Obtained from the Ritual of Binding.",
   "ars_nouveau.familiar.sickness": "You must wait before summoning another familiar.",
   "ars_nouveau.familiar.unlocked": "Familiar unlocked.",
-  "ars_nouveau.familiar_desc.familiar_bookwyrm": "A Bookwyrm will reduce the cost of all spells cast, and increases any spell damage by 1. Obtained by performing the Ritual of Binding near a Bookwyrm.",
+  "ars_nouveau.familiar_desc.familiar_bookwyrm": "A Bookwyrm will automatically pickup nearby items and exp orbs within 5 blocks of the player. Thrown items will not be picked up. Use of the familiar hotkey is recommended to turn the magnet on and off as needed. Obtained by performing the Ritual of Binding near a Bookwyrm.",
   "ars_nouveau.familiar_desc.familiar_drygmy": "A Drygmy familiar will increase the damage of Earth spells by 2, and has a chance to increase the amount of looting when slaying enemies. Obtained by performing the Ritual of Binding near a Drygmy.",
   "ars_nouveau.familiar_desc.familiar_starbuncle": "A Starbuncle familiar that will grant you Speed 2. Additionally, using a Golden Nugget on the starbuncle will consume it and grant the owner a short duration of Scrying for Gold Ore. Obtained by performing the Ritual of Binding near a Starbuncle.",
   "ars_nouveau.familiar_desc.familiar_whirlisprig": "Whirlisprigs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food. Obtained by performing the Ritual of Binding near a Whirlisprig.",
