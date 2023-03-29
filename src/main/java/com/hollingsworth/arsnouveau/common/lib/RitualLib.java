@@ -15,6 +15,7 @@ public class RitualLib {
     public static final String SCRYING = prependRitual("scrying");
     public static final String FLIGHT = prependRitual("flight");
     public static final String WILDEN_SUMMON = prependRitual("wilden_summon");
+    public static final String ANIMAL_SUMMON = prependRitual("animal_summon");
     public static final String BINDING = prependRitual("binding");
     public static final String AWAKENING = prependRitual("awakening");
     public static final String HARVEST = prependRitual("harvest");

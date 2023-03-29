@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_animal_summon",
+  "name": "item.ars_nouveau.ritual_animal_summon",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.ritual_desc.ritual_animal_summon"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ritual_animal_summon"
+    }
+  ]
+}
