@@ -113,7 +113,6 @@ public class SpellContext implements Cloneable {
 
     public SpellContext withWCaster(IWrappedCaster caster) {
         this.wrappedCaster = caster;
-        if (caster instanceof LivingEntity le) this.caster = le;
         return this;
     }
 
