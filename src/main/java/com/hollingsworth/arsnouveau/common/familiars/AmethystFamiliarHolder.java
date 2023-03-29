@@ -37,6 +37,6 @@ public class AmethystFamiliarHolder extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "";
+        return "Reduces knockback taken by half.";
     }
 }

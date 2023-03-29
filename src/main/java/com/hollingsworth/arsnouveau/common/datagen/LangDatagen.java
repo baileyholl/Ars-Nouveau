@@ -510,6 +510,7 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.familiar_whirlisprig", "Whirlisprig Familiar");
         add("entity.ars_nouveau.familiar_wixie", "Wixie Familiar");
         add("entity.ars_nouveau.familiar_drygmy", "Drygmy Familiar");
+        add("entity.ars_nouveau.familiar_amethyst_golem", "Amethyst Golem Familiar");
         add("ars_nouveau.mirror.invalid", "Invalid spell. Mirrors accept Effects and Augments only.");
         add("item.ars_nouveau.enchanters_mirror", "Enchanter's Mirror");
         add("ars_nouveau.page.enchanters_mirror", "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Strength -> Heal.");
