@@ -8,7 +8,6 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
@@ -28,14 +27,6 @@ public class JarBehavior<T extends Entity> {
         ItemStack handItem = player.getItemInHand(handIn);
         if (entity instanceof IForgeShearable shearable && handItem.getItem() instanceof ShearsItem shearsItem) {
             shearsItem.interactLivingEntity(handItem, player, (LivingEntity) shearable, handIn);
-            syncClient(tile);
-            return;
-        }
-        if (entity instanceof Animal animal) {
-            animal.mobInteract(player, handIn);
-            if (animal.isBaby() && animal.getAge() > -200 && !world.isClientSide) {
-                animal.setAge(0);
-            }
             syncClient(tile);
             return;
         }
