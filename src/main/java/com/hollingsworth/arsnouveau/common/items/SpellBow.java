@@ -37,17 +37,17 @@ import java.util.function.Predicate;
 
 public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
 
-    public SpellBow(Properties p_40660_) {
-        super(p_40660_);
+    public SpellBow(Properties properties) {
+        super(properties);
     }
 
     public SpellBow() {
-        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
     public boolean canPlayerCastSpell(ItemStack bow, Player playerentity) {
         ISpellCaster caster = getSpellCaster(bow);
-        return new SpellResolver(new SpellContext(playerentity.level, caster.getSpell(), playerentity, new PlayerCaster(playerentity))).withSilent(true).canCast(playerentity);
+        return new SpellResolver(new SpellContext(playerentity.level, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bow)).withSilent(true).canCast(playerentity);
     }
 
     public ItemStack findAmmo(Player playerEntity, ItemStack shootable) {
@@ -85,7 +85,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
         if (ret != null) return ret;
 
-        if (hasAmmo || (caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerIn, new PlayerCaster(playerIn))).withSilent(true).canCast(playerIn))) {
+        if (hasAmmo || (caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerIn, new PlayerCaster(playerIn), itemstack)).withSilent(true).canCast(playerIn))) {
             playerIn.startUsingItem(handIn);
             return InteractionResultHolder.consume(itemstack);
         }
@@ -98,9 +98,9 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         }
     }
 
-    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, ISpellCaster caster, boolean isSpellArrow) {
+    public EntitySpellArrow buildSpellArrow(Level worldIn, Player playerentity, ISpellCaster caster, boolean isSpellArrow, ItemStack bowStack) {
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity))).withSilent(true);
+        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).withSilent(true);
         spellArrow.setColors(caster.getColor());
         if (isSpellArrow)
             spellArrow.setBaseDamage(0);
@@ -127,7 +127,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         }
         ISpellCaster caster = getSpellCaster(bowStack);
         boolean isSpellArrow = false;
-        if (arrowStack.isEmpty() && caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity))).canCast(playerentity)) {
+        if (arrowStack.isEmpty() && caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, new PlayerCaster(playerentity), bowStack)).canCast(playerentity)) {
             canFire = true;
             isSpellArrow = true;
         }
@@ -145,9 +145,9 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                 abstractarrowentity = customArrow(abstractarrowentity);
 
                 List<AbstractArrow> arrows = new ArrayList<>();
-                SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity)));
+                SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
                 if (arrowitem == Items.ARROW && resolver.withSilent(true).canCast(playerentity)) {
-                    abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow);
+                    abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack);
                     resolver.expendMana();
                     didCastSpell = true;
                 } else if (arrowitem instanceof SpellArrow) {
@@ -166,7 +166,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     }
 
                     for (int i = 0; i < numSplits; i++) {
-                        EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow);
+                        EntitySpellArrow spellArrow = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow, bowStack);
                         arrows.add(spellArrow);
                     }
                 }

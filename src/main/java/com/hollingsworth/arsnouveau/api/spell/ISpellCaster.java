@@ -145,7 +145,7 @@ public interface ISpellCaster {
         }
         Player player = entity instanceof Player thisPlayer ? thisPlayer : ANFakePlayer.getPlayer((ServerLevel) worldIn);
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
-        SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster), worldIn, player, handIn);
+        SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, entity, AugmentSensitive.INSTANCE) > 0;
         HitResult result = SpellUtil.rayTrace(entity, 5, 0, isSensitive);
         if (result instanceof BlockHitResult blockHit) {

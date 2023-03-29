@@ -98,7 +98,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
         ItemStack ammoCopy = ammoStack.copy();
 
         ISpellCaster caster = getSpellCaster(pCrossbowStack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting(pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter)));
+        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting(pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack));
         boolean consumedMana = false;
 
         if(!(pShooter instanceof Player) || resolver.withSilent(true).canCast(pShooter)){
@@ -207,7 +207,7 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
             }
             LivingCaster livingCaster = pShooter instanceof Player ? new PlayerCaster((Player)pShooter) : new LivingCaster(pShooter);
             ISpellCaster caster = getSpellCaster(pCrossbowStack);
-            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster));
+            SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting(worldIn, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, livingCaster, pCrossbowStack));
             if (pAmmoStack.getItem() == Items.ARROW && isSpell) {
                 projectile = buildSpellArrow(worldIn, pShooter, caster);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, pCrossbowStack);
