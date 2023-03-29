@@ -52,15 +52,20 @@ public class MagicTrunkPlacer extends TrunkPlacer {
                             Codec.STRING.fieldOf("podID").forGetter(placer -> placer.podID.toString()))
                     .apply(builder, MagicTrunkPlacer::new));
 
+    protected static void setDirtAt(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, RandomSource pRandom, BlockPos pPos, TreeConfiguration pConfig, boolean isTreeOrigin) {
+        if (isTreeOrigin || pLevel.isStateAtPosition(pPos, (state) -> state.is(BlockTags.DIRT) || state.is(Blocks.FARMLAND))) {
+            TrunkPlacer.setDirtAt(pLevel, pBlockSetter, pRandom, pPos, pConfig);
+        }
+    }
 
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> consumer, RandomSource rand, int foliageHeight, BlockPos pos, TreeConfiguration baseTreeFeatureConfig) {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos blockpos = pos.below();
-        setDirtAt(world, consumer, rand, blockpos, baseTreeFeatureConfig);
-        setDirtAt(world, consumer, rand, blockpos.east(), baseTreeFeatureConfig);
-        setDirtAt(world, consumer, rand, blockpos.south(), baseTreeFeatureConfig);
-        setDirtAt(world, consumer, rand, blockpos.south().east(), baseTreeFeatureConfig);
+        setDirtAt(world, consumer, rand, blockpos, baseTreeFeatureConfig, true);
+        setDirtAt(world, consumer, rand, blockpos.east(), baseTreeFeatureConfig, false);
+        setDirtAt(world, consumer, rand, blockpos.south(), baseTreeFeatureConfig, false);
+        setDirtAt(world, consumer, rand, blockpos.south().east(), baseTreeFeatureConfig, false);
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
