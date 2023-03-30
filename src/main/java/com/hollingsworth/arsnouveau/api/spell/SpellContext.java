@@ -61,6 +61,11 @@ public class SpellContext implements Cloneable {
         this.casterTool = casterTool.copy();
     }
 
+    public SpellContext withWrappedCaster(IWrappedCaster caster){
+        this.wrappedCaster = caster;
+        return this;
+    }
+
     public @Nullable AbstractSpellPart nextPart() {
         this.currentIndex++;
         AbstractSpellPart part = null;
