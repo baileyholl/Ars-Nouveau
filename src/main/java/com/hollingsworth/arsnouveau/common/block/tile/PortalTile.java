@@ -102,7 +102,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
     @Override
     public void tick() {
-        if (level != null && level instanceof ServerLevel serverLevel && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+        if (level != null && level instanceof ServerLevel serverLevel && warpPos != null) {
             Set<Entity> entities = entityQueue;
             if (!entities.isEmpty()) {
                 for (Entity e : entities) {
@@ -136,6 +136,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             return entity;
         }
         if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
+            // Check if the target block is a portal, if so, don't teleport
+            if((targetWorld.getBlockState(target).getBlock() instanceof PortalBlock)){
+                return entity;
+            }
             entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
             entity.setXRot(rotationVec != null ? rotationVec.x : entity.getXRot());
             entity.setYRot(rotationVec != null ? rotationVec.y : entity.getYRot());
