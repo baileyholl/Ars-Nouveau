@@ -166,4 +166,8 @@ public class LibBlockNames {
     };
 
     public static final List<String> DIRECTIONAL_SOURCESTONE = List.of(GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS);
+
+    public static String Pot(String plant) {
+        return "potted_" + plant;
+    }
 }

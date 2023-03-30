@@ -29,6 +29,9 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerOnlyState(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
         registerOnlyState(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
         registerOnlyState(BlockRegistry.POTION_DIFFUSER, LibBlockNames.POTION_DIFFUSER);
+        for (var pot : BlockRegistry.flowerPots.entrySet()){
+            registerOnlyState(pot.getValue(), "pots/" + LibBlockNames.Pot(pot.getKey().get().getPath()));
+        }
         registerDoor(BlockRegistry.ARCHWOOD_DOOR, LibBlockNames.ARCHWOOD_DOOR);
 
         registerNormalCube(BlockRegistry.VOID_PRISM, LibBlockNames.VOID_PRISM);

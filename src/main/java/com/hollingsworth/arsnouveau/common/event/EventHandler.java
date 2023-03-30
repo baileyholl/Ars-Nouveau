@@ -136,16 +136,18 @@ public class EventHandler {
         VoidJar.tryVoiding(player, pickingUp);
     }
 
+    @SubscribeEvent
+    public static void shieldEvent(ShieldBlockEvent e){
+        if (!e.getEntity().level.isClientSide && e.getEntity() instanceof Player player && player.isBlocking()) {
+            if ( player.getUseItem().getItem() == ItemsRegistry.ENCHANTERS_SHIELD.asItem()) {
+                player.addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
+                player.addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void livingHurtEvent(LivingHurtEvent e) {
-        if (!e.getEntity().level.isClientSide && e.getEntity() instanceof Player && e.getEntity().isBlocking()) {
-            if (e.getEntity().isHolding(ItemsRegistry.ENCHANTERS_SHIELD.asItem())) {
-                e.getEntity().addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT.get(), 200, 1));
-                e.getEntity().addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT.get(), 200, 1));
-            }
-        }
-
         if(e.getEntity().level.isClientSide)
             return;
         if(e.getSource().getEntity() instanceof LivingEntity livingUser){
@@ -278,7 +280,7 @@ public class EventHandler {
         }
 
         if (entity != null && entity.hasEffect(ModPotions.RECOVERY_EFFECT.get())) {
-            e.setAmount(e.getAmount() + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
+            e.setAmount(e.getAmount() + 1 + entity.getEffect(ModPotions.RECOVERY_EFFECT.get()).getAmplifier());
         }
     }
 

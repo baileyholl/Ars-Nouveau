@@ -17,6 +17,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
@@ -65,6 +66,10 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ARCHWOOD_PLANK);
 
             registerDrop(BlockRegistry.WIXIE_CAULDRON, Items.CAULDRON);
+            for (FlowerPotBlock pot : BlockRegistry.flowerPots.values()){
+                list.add(pot);
+                dropPottedContents(pot);
+            }
 
             registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES, BlockRegistry.BLAZING_SAPLING);
             registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE, BlockRegistry.CASCADING_SAPLING);
