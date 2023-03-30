@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-22T10:19:48.6214872	Recipes
+// 1.19.2	2023-03-30T09:17:13.7122671	Recipes
 2f8defc056cb514d0403c026bd216faabe8c59b5 data/ars_nouveau/advancements/recipes/ars_nouveau/agronomic_sourcelink.json
 5b27f030ed9411ac9c3b4a160363aee9e4fd7454 data/ars_nouveau/advancements/recipes/ars_nouveau/alchemical_sourcelink.json
 24b2148fcda9c3b3704f9625a7d00338b764f512 data/ars_nouveau/advancements/recipes/ars_nouveau/allow_scroll.json
@@ -70,6 +70,7 @@ d0a79e95647bf80ac724abc298b4d5318b568154 data/ars_nouveau/advancements/recipes/a
 e7d7ca983f4c71f3c9ae4d74f7aa47e11d5a4489 data/ars_nouveau/advancements/recipes/ars_nouveau/relay.json
 2acdecec79b05ef70309d222eeff3a5739b85af8 data/ars_nouveau/advancements/recipes/ars_nouveau/repository.json
 0336834b66282c810032dbd18f8604054861e2d8 data/ars_nouveau/advancements/recipes/ars_nouveau/ring_of_potential.json
+e41bc857b4cf8f510bdf72205a09feed6e68c08f data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_animal_summon.json
 b8b1c7a24c08b66a429df812a71bfcaabb20ba37 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_awakening.json
 d0c3ba2654cb47412e8d5d69d7a76816b95d73d3 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_binding.json
 23e090c71248db5ae326882e4a329d344e8a43e8 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_brazier.json
@@ -268,6 +269,7 @@ badba223d8002324908a62d3070eed01f8a1eb07 data/ars_nouveau/recipes/red_archwood_w
 6440bd871d37cbb26e0afc535a0291ab9f0ce9f9 data/ars_nouveau/recipes/relay.json
 756b519667143627fbcb28d22537c2989fd23395 data/ars_nouveau/recipes/repository.json
 c46c33e17844d006b5e38da4219b46e63b539d34 data/ars_nouveau/recipes/ring_of_potential.json
+ea3fd492469a77e3a9501e608abd85c6c27eb9f4 data/ars_nouveau/recipes/ritual_animal_summon.json
 dc1cf338be0124ce5af676f221d35f0f22440973 data/ars_nouveau/recipes/ritual_awakening.json
 35edb0e0f597e7a18bcec4c78f8cdcd1df96dceb data/ars_nouveau/recipes/ritual_binding.json
 996ef87d843fc1f5d927e4e3f12ccc3a6af7ff9c data/ars_nouveau/recipes/ritual_brazier.json

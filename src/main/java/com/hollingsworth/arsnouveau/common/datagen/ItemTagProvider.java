@@ -25,6 +25,8 @@ public class ItemTagProvider extends ItemTagsProvider {
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
     public static TagKey<Item> SHARD_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/shard"));
     public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "fruits/berry"));
+    public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_shards"));
+
 
     public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_126530_, p_126531_, modId, existingFileHelper);
@@ -32,6 +34,12 @@ public class ItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags() {
+
+        this.tag(SUMMON_SHARDS_TAG)
+                .add(ItemsRegistry.DRYGMY_SHARD.get(),
+                        ItemsRegistry.STARBUNCLE_SHARD.get(),
+                        ItemsRegistry.WIXIE_SHARD.get(),
+                        ItemsRegistry.WHIRLISPRIG_SHARDS.get());
 
         this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
 

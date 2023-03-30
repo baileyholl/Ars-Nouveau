@@ -30,6 +30,7 @@ public class RecipeDatagen extends RecipeProvider {
     public static Ingredient SOURCE_GEM_BLOCK = Ingredient.of(ItemTagProvider.SOURCE_GEM_BLOCK_TAG);
     public static Ingredient ARCHWOOD_LOG = Ingredient.of(ItemTagProvider.ARCHWOOD_LOG_TAG);
     public static Ingredient WILDEN_DROP = Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG);
+    public static Ingredient SUMMON_SHARDS = Ingredient.of(ItemTagProvider.SUMMON_SHARDS_TAG);
 
     public Consumer<FinishedRecipe> consumer;
     @Override
@@ -330,6 +331,12 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(Items.BOW, 1)
                     .requires(Items.LAPIS_BLOCK)
                     .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_alt"));
+
+            shapelessBuilder(getRitualItem(RitualLib.ANIMAL_SUMMON))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(SUMMON_SHARDS, 3)
+                    .requires(Items.LAPIS_BLOCK)
+                    .save(consumer);
 
 
             STONECUTTER_COUNTER = 1;

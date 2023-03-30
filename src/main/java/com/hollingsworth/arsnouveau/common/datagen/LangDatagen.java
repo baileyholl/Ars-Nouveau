@@ -1175,5 +1175,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage_tabs", "Storage Tabs");
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
+        add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
     }
 }

@@ -15,9 +15,11 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> MAGIC_FIND = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "magic_find"));
     public static final TagKey<EntityType<?>> SPELL_CAN_HIT = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "spell_can_hit"));
     public static final TagKey<EntityType<?>> JAR_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_blacklist"));
+    public static final TagKey<EntityType<?>> INTERACT_JAR_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "interact_jar_blacklist"));
     public static final TagKey<EntityType<?>> JAR_WHITELIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_whitelist"));
     public static final TagKey<EntityType<?>> FAMILIAR = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "familiar"));
     public static final TagKey<EntityType<?>> LINGERING_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "lingering_blacklist"));
     public static final TagKey<EntityType<?>> BERRY_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "berry_blacklist"));
     public static final TagKey<EntityType<?>> JAR_RELEASE_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "jar_release_blacklist"));
+    public static final TagKey<EntityType<?>> ANIMAL_SUMMON_BLACKLIST = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "animal_summon_blacklist"));
 }
