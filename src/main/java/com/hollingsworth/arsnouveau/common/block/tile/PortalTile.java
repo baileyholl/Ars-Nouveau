@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket;
@@ -26,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -120,12 +118,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     public @Nullable ServerLevel getServerLevel(String dimID){
-        if(dimID != null){
-            DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(dimID));
-            if(type != null) {
-                ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimID));
-                return level.getServer().getLevel(resourcekey);
-            }
+        if(dimID != null && level != null){
+            ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimID));
+            return level.getServer().getLevel(resourcekey);
         }
         return null;
     }
