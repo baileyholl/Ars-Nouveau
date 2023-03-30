@@ -758,7 +758,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sounds.title", "Spell Sound");
         add("ars_nouveau.sound.empty", "No Sound");
         add("ars_nouveau.earth_essence.tooltip", "Can be used on Dirt to turn it into Grass.");
-        add("ars_nouveau.fire_essence.tooltip", "Can be used a a fuel source.");
+        add("ars_nouveau.fire_essence.tooltip", "Can be used as a fuel source.");
         add("tooltip.ars_nouveau.glyph_known", "You have unlocked this glyph.");
         add("tooltip.ars_nouveau.glyph_unknown", "You have not unlocked this glyph.");
         add("ars_nouveau.sounds.test", "Test");
