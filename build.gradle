@@ -209,7 +209,6 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:config-419699:4147353") // arch
     runtimeOnly fg.deobf("curse.maven:config-404465:4210870") // ftb library
     runtimeOnly fg.deobf("curse.maven:config-404468:4229140") // ftb teams
-    runtimeOnly fg.deobf("curse.maven:config-227639:4389567") // twilight forest
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
 }
