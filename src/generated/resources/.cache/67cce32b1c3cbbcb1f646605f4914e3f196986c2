@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-23T11:07:18.407894	LootTables
+// 1.19.2	2023-03-30T19:08:26.2219657	LootTables
 d2e03e3c4f0549450774454a6592cf602f65d58e data/ars_nouveau/loot_tables/blocks/agronomic_sourcelink.json
 3c10d96f7ca01306c8b28d77f99cc15aa555f0b7 data/ars_nouveau/loot_tables/blocks/alchemical_sourcelink.json
 5989e056e242a821281ec28bc1fb6225f84ecbe1 data/ars_nouveau/loot_tables/blocks/alteration_table.json
@@ -46,6 +46,11 @@ c823e415056a1a31c6066ac46d7cb00e4ebe584a data/ars_nouveau/loot_tables/blocks/myc
 7cb64ed7a6afee78f4e1b32aac21e34e7a534f6e data/ars_nouveau/loot_tables/blocks/orange_sbed.json
 dc7c9b0a7cae12f53d8136aab3199637544a3668 data/ars_nouveau/loot_tables/blocks/potion_diffuser.json
 6d30771372987cc08e27e2da4a54da2416ccc93b data/ars_nouveau/loot_tables/blocks/potion_melder.json
+3cbdf221a4a8c1f339618f21b044460ac1a1017b data/ars_nouveau/loot_tables/blocks/potted_blue_archwood_sapling.json
+cafb3dd2bd7b8e1dd634900985ae92d0f14929c6 data/ars_nouveau/loot_tables/blocks/potted_green_archwood_sapling.json
+5733cc2600a52ed90715594c3f34a450a35fe6bb data/ars_nouveau/loot_tables/blocks/potted_magebloom_crop.json
+d8c6e2586e891b29513c8137ee483b40c89940ed data/ars_nouveau/loot_tables/blocks/potted_purple_archwood_sapling.json
+1462e8eae7307f5da2ddc5e59998025507b5228b data/ars_nouveau/loot_tables/blocks/potted_red_archwood_sapling.json
 e5c7b7a7f457ae33b65fb1bb9532ab61f4ba481b data/ars_nouveau/loot_tables/blocks/purple_archwood_leaves.json
 201993c9ac805bd73e0f95b6e5ccecae2f2db162 data/ars_nouveau/loot_tables/blocks/purple_archwood_log.json
 7e35a4e393cef06e98c765adcdc238175e8ec24f data/ars_nouveau/loot_tables/blocks/purple_archwood_sapling.json

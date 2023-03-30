@@ -37,6 +37,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.ITEMS;
@@ -481,7 +483,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG));
         registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG));
         registry.register(LibBlockNames.POTION_DIFFUSER, new PotionDiffuserBlock());
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
                 registry.register(s, new DirectionalModBlock());
             } else {
@@ -497,6 +499,12 @@ public class BlockRegistry {
         registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
         registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, MaterialColor.COLOR_PINK).strength(0.1F).sound(SoundType.WOOL)));
+
+        registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP));
+        registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING));
+        registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING));
+        registry.register(LibBlockNames.Pot(LibBlockNames.FLOURISHING_SAPLING), createPottedBlock(() -> FLOURISHING_SAPLING));
+        registry.register(LibBlockNames.Pot(LibBlockNames.VEXING_SAPLING), createPottedBlock(() -> VEXING_SAPLING));
 
     }
 
@@ -666,7 +674,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_JAR_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_JAR));
         registry.register(LibBlockNames.POTION_MELDER_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_MELDER));
 
-         registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
+        registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
         registry.register(LibBlockNames.DRYGMY_STONE, getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK));
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new RendererBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, defaultItemProperties()) {
             @Override
@@ -738,9 +746,9 @@ public class BlockRegistry {
         registry.register(LibBlockNames.BOMBEGRANATE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
         registry.register(LibBlockNames.FROSTAYA_POD, new ItemNameBlockItem(BlockRegistry.FROSTAYA_POD, defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
 
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-           registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
-       }
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
+            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+        }
         registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_TABLE, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -831,18 +839,18 @@ public class BlockRegistry {
         ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
 
         ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> new ModBlockItem(BlockRegistry.ARCANE_PLATFORM.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
-        ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () ->getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
-        ITEMS.register(LibBlockNames.BRAZIER_RELAY, () ->getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
-        ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () ->getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
-        ITEMS.register(LibBlockNames.SKY_WEAVE, () ->getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
+        ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () -> getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
+        ITEMS.register(LibBlockNames.BRAZIER_RELAY, () -> getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
+        ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () -> getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
+        ITEMS.register(LibBlockNames.SKY_WEAVE, () -> getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
         ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () -> new ModBlockItem(BlockRegistry.TEMPORARY_BLOCK.get(), new Item.Properties()));
-        ITEMS.register(LibBlockNames.STORAGE_LECTERN, () -> new RendererBlockItem((BlockRegistry.CRAFTING_LECTERN.get()), defaultItemProperties()){
+        ITEMS.register(LibBlockNames.STORAGE_LECTERN, () -> new RendererBlockItem((BlockRegistry.CRAFTING_LECTERN.get()), defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                 return LecternRenderer::getISTER;
             }
         });
-        ITEMS.register(LibBlockNames.ITEM_DETECTOR, () ->getDefaultBlockItem(BlockRegistry.ITEM_DETECTOR.get()));
+        ITEMS.register(LibBlockNames.ITEM_DETECTOR, () -> getDefaultBlockItem(BlockRegistry.ITEM_DETECTOR.get()));
 
         ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
         ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
@@ -857,5 +865,13 @@ public class BlockRegistry {
 
     static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
         return new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
+    }
+
+    public static final Map<Supplier<ResourceLocation>, FlowerPotBlock> flowerPots = new HashMap<>();
+
+    public static FlowerPotBlock createPottedBlock(Supplier<? extends Block> block) {
+        FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock)Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion());
+        flowerPots.put(() -> ForgeRegistries.BLOCKS.getKey(block.get()), pot);
+        return pot;
     }
 }

@@ -26,8 +26,10 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -133,6 +135,11 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_LEAVES.asItem(),0.3f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_LEAVE.asItem(),0.3f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_LEAVES.asItem(),0.3f);
+
+            FlowerPotBlock flowerPot = (FlowerPotBlock) Blocks.FLOWER_POT;
+            for (var pot : BlockRegistry.flowerPots.entrySet()){
+                flowerPot.addPlant(pot.getKey().get(), pot::getValue);
+            }
 
             for (RitualTablet tablet : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
                 DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
