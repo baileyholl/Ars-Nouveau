@@ -5,14 +5,10 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -21,23 +17,25 @@ import java.util.function.Supplier;
 public class PacketSummonFamiliar {
 
     ResourceLocation familiarID;
-    int entityID;
 
+    // TODO: 1.20 remove entityID
+    @Deprecated(forRemoval = true)
     public PacketSummonFamiliar(ResourceLocation id, int entityID) {
         this.familiarID = id;
-        this.entityID = entityID;
+    }
+
+    public PacketSummonFamiliar(ResourceLocation id) {
+        this.familiarID = id;
     }
 
     //Decoder
     public PacketSummonFamiliar(FriendlyByteBuf buf) {
         familiarID = buf.readResourceLocation();
-        entityID = buf.readInt();
     }
 
     //Encoder
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(familiarID);
-        buf.writeInt(entityID);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -46,14 +44,9 @@ public class PacketSummonFamiliar {
                 IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ctx.get().getSender()).orElse(null);
                 if (cap == null)
                     return;
-
-
-                Entity owner = ctx.get().getSender().level.getEntity(entityID);
-
-                if (owner instanceof LivingEntity && ((LivingEntity) owner).hasEffect(ModPotions.FAMILIAR_SICKNESS_EFFECT.get())) {
-                    PortUtil.sendMessage(owner, Component.translatable("ars_nouveau.familiar.sickness"));
+                Entity owner = ctx.get().getSender();
+                if(owner == null)
                     return;
-                }
 
                 IFamiliar familiarEntity = cap.getFamiliarData(familiarID).getEntity(ctx.get().getSender().level);
                 familiarEntity.setOwnerID(owner.getUUID());
@@ -65,6 +58,7 @@ public class PacketSummonFamiliar {
                 if (!summonEvent.isCanceled()) {
                     owner.level.addFreshEntity(familiarEntity.getThisEntity());
                     ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
+                    cap.setLastSummonedFamiliar(familiarID);
                 }
             }
         });

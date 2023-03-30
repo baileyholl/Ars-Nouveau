@@ -77,7 +77,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity entity) {
         ISpellCaster caster = getSpellCaster(stack);
         IWrappedCaster wrappedCaster = entity instanceof  Player player ? new PlayerCaster(player) : new LivingCaster(entity);
-        SpellContext context = new SpellContext(entity.level, caster.modifySpellBeforeCasting(target.level, entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster);
+        SpellContext context = new SpellContext(entity.level, caster.modifySpellBeforeCasting(target.level, entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster, stack);
         SpellResolver resolver = entity instanceof Player ? new SpellResolver(context) : new EntitySpellResolver(context);
         EntityHitResult entityRes = new EntityHitResult(target);
         resolver.onCastOnEntity(stack, entityRes.getEntity(), InteractionHand.MAIN_HAND);

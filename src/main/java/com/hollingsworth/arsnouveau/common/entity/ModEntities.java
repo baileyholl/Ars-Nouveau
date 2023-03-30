@@ -56,7 +56,7 @@ public class ModEntities {
                     .sized(0.5F, 0.8F)
                     .setUpdateInterval(60));
     public static final RegistryObject<EntityType<EntityBookwyrm>> ENTITY_BOOKWYRM_TYPE = registerEntity(LibEntityNames.BOOKWYRM, EntityType.Builder.<EntityBookwyrm>of(EntityBookwyrm::new, MobCategory.MISC)
-            .sized(0.7f, 0.9f).setTrackingRange(10)
+            .sized(0.4f, 0.6f).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<Starbuncle>> STARBUNCLE_TYPE = registerEntity(LibEntityNames.STARBUNCLE, EntityType.Builder.<Starbuncle>of(Starbuncle::new, MobCategory.CREATURE)
             .sized(0.6F, 0.63F).setTrackingRange(10)
@@ -159,6 +159,9 @@ public class ModEntities {
             .sized(0.5f, 0.5f).setTrackingRange(10));
     public static final RegistryObject<EntityType<FamiliarWhirlisprig>> ENTITY_FAMILIAR_SYLPH = registerEntity(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
             .sized(0.5f, 0.5f).setTrackingRange(10));
+
+    public static final RegistryObject<EntityType<FamiliarAmethystGolem>> FAMILIAR_AMETHYST_GOLEM = registerEntity(LibEntityNames.FAMILIAR_AMETHYST_GOLEM, EntityType.Builder.of(FamiliarAmethystGolem::new, MobCategory.CREATURE)
+            .sized(1.0f, 1.0f).setTrackingRange(10));
 //    public static final RegistryObject<EntityType<FamiliarJabberwog>> ENTITY_FAMILIAR_JABBERWOG = registerEntity(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
 //            .sized(0.5f, 0.5f).setTrackingRange(10));
     public static final RegistryObject<EntityType<EntityLingeringSpell>> LINGER_SPELL = registerEntity(
@@ -279,6 +282,7 @@ public class ModEntities {
             event.put(ENTITY_FAMILIAR_WIXIE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_SYLPH.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_DRYGMY.get(), FamiliarEntity.attributes().build());
+            event.put(FAMILIAR_AMETHYST_GOLEM.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_CASCADING_WEALD.get(), WealdWalker.attributes().build());
             event.put(ENTITY_BLAZING_WEALD.get(), WealdWalker.attributes().build());
             event.put(ENTITY_FLOURISHING_WEALD.get(), WealdWalker.attributes().build());

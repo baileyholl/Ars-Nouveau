@@ -8,6 +8,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class InventoryManager {
     private int extractSlotMax = -1;
 
     private int insertSlotMax = -1;
+
+    public InventoryManager(){
+        this(new ArrayList<>());
+    }
 
     public InventoryManager(List<FilterableItemHandler> filterables){
         this.filterables = filterables;
@@ -50,10 +55,18 @@ public class InventoryManager {
         return this;
     }
 
+    public boolean addFilterable(FilterableItemHandler filterable){
+        return this.filterables.add(filterable);
+    }
+
     public List<FilterableItemHandler> getInventory(){
         return filterables;
     }
 
+    /**
+     * Inserts a stack into all valid inventories, sorted by preference.
+     * Drops the remainder on the ground at the given position.
+     */
     public void insertOrDrop(ItemStack stack, Level level, BlockPos pos){
         ItemStack remainder = insertStack(stack);
         if(!remainder.isEmpty()){
@@ -62,13 +75,27 @@ public class InventoryManager {
         }
     }
 
+    /**
+     * Inserts a stack into all valid inventories, sorted by preference.
+     * @return Remaining or empty stack.
+     */
     public ItemStack insertStack(ItemStack stack){
-        for(FilterableItemHandler filterable : preferredForStack(stack)){
+        return insertStackWithReference(stack).getRemainder();
+    }
+
+    public MultiInsertReference insertStackWithReference(ItemStack stack){
+        List<SlotReference> references = new ArrayList<>();
+        for(FilterableItemHandler filterable : preferredForStack(stack, false)){
+            int count = stack.getCount();
             stack = ItemHandlerHelper.insertItemStacked(filterable.getHandler(), stack, false);
-            if(stack.isEmpty())
-                return ItemStack.EMPTY;
+            if(count != stack.getCount()) {
+                references.add(new SlotReference(filterable.getHandler(), filterable.getHandler().getSlots()));
+            }
+            if(stack.isEmpty()){
+                break;
+            }
         }
-        return stack;
+        return new MultiInsertReference(stack, references);
     }
 
     public ExtractedStack extractByAmount(ToIntFunction<ItemStack> getExtractAmount){
@@ -126,6 +153,61 @@ public class InventoryManager {
     }
 
     /**
+     * Continuously extracts from the handler until the desired stack and size is extracted or the handler is empty.
+     */
+    public MultiExtractedReference extractAllFromHandler(FilterableItemHandler filterableItemHandler, ItemStack desiredStack, int count){
+        ItemStack merged = ItemStack.EMPTY;
+        int remaining = Math.min(desiredStack.getMaxStackSize(), count);
+        List<ExtractedStack> extractedStacks = new ArrayList<>();
+        IItemHandler itemHandler = filterableItemHandler.getHandler();
+        for(int i = 0; i < itemHandler.getSlots(); i++){
+            ItemStack stack = itemHandler.getStackInSlot(i);
+            if (!ItemStack.isSame(stack, desiredStack) || !ItemStack.tagMatches(stack, desiredStack)) {
+                continue;
+            }
+            int toExtract = Math.min(stack.getCount(), remaining);
+            remaining -= toExtract;
+            if(merged.isEmpty()){
+                merged = stack.copy();
+                merged.setCount(toExtract);
+            }else{
+                merged.grow(toExtract);
+            }
+            extractedStacks.add(ExtractedStack.from(filterableItemHandler.getHandler(), i, toExtract));
+            if(remaining <= 0)
+                break;
+        }
+        return new MultiExtractedReference(merged, extractedStacks);
+    }
+
+    /**
+     * Checks all inventories for the desired stack and extracts the desired amount from all of them until the desired amount is reached.
+     */
+    public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count, boolean includeInvalidInvs){
+        ItemStack merged = ItemStack.EMPTY;
+        int remaining = count;
+        List<FilterableItemHandler> preferred = preferredForStack(desiredStack, includeInvalidInvs);
+        List<ExtractedStack> extracted = new ArrayList<>();
+        for(FilterableItemHandler filterable : preferred){
+            if(remaining <= 0)
+                break;
+            MultiExtractedReference extractedFromHandler = extractAllFromHandler(filterable, desiredStack, remaining);
+            if(extractedFromHandler.isEmpty())
+                continue;
+
+            remaining -= extractedFromHandler.extracted.getCount();
+            if (merged.isEmpty()) {
+                merged = extractedFromHandler.extracted;
+            } else {
+                merged.grow(extractedFromHandler.extracted.getCount());
+            }
+            extracted.addAll(extractedFromHandler.slots);
+
+        }
+        return new MultiExtractedReference(merged, extracted);
+    }
+
+    /**
      * Returns a reference to a matching stack, if any. Does not modify the inventory.
      */
     public SlotReference findItem(Predicate<ItemStack> predicate, InteractType type){
@@ -142,7 +224,7 @@ public class InventoryManager {
     public SlotReference findItem(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type){
         for(int slot = 0; slot < maxSlotForType(itemHandler, type); slot++){
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()){
                 return new SlotReference(itemHandler.getHandler(), slot);
             }
         }
@@ -157,7 +239,7 @@ public class InventoryManager {
         int numSlots = Math.min(maxSlotForType(itemHandler, type), maxSlots);
         for(int slot = 0; slot < numSlots; slot++){
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()){
                 slots.add(new SlotReference(itemHandler.getHandler(), slot));
             }
         }
@@ -168,9 +250,11 @@ public class InventoryManager {
      * Returns the sorted list of highest preferred inventories for a given stack based on their list of filters.
      * @return The list of inventories sorted by highest preference.
      */
-    public List<FilterableItemHandler> preferredForStack(ItemStack stack){
+    public List<FilterableItemHandler> preferredForStack(ItemStack stack, boolean includeInvalid){
         List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
-        filtered = filtered.stream().filter(filterableItemHandler -> filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID).collect(Collectors.toCollection(ArrayList::new));
+        filtered = filtered.stream()
+                .filter(filterableItemHandler -> includeInvalid || filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID)
+                .collect(Collectors.toCollection(ArrayList::new));
         /// Sort by highest pref first
         filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
         return filtered;
@@ -186,8 +270,9 @@ public class InventoryManager {
                 ItemStack stack = wrapper.getHandler().getStackInSlot(i);
                 if(stack.isEmpty() || !predicate.test(stack))
                     continue;
-                ItemScroll.SortPref foundPref = wrapper.getHighestPreference(stack);
-                if(foundPref == ItemScroll.SortPref.INVALID){
+                InteractResult result = wrapper.canInteractFor(stack, type);
+                ItemScroll.SortPref foundPref = result.sortPref();
+                if(!result.valid()){
                     continue;
                 }
                 if(foundPref.ordinal() > pref.ordinal()){

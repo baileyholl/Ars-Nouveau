@@ -33,7 +33,7 @@ public class LibEntityNames {
     public static final String WILDEN_GUARDIAN = "wilden_guardian";
 
     public static final String WILDEN_CHIMERA = "wilden_boss";
-
+    public static final String AMETHYST_GOLEM = "amethyst_golem";
 
     public static final String FAMILIAR_STARBUNCLE = appendFamiliar(STARBUNCLE);
     public static final String FAMILIAR_WHIRLISPRIG = appendFamiliar(WHIRLISPRIG);
@@ -41,12 +41,12 @@ public class LibEntityNames {
     public static final String FAMILIAR_DRYGMY = appendFamiliar(DRYGMY);
     public static final String FAMILIAR_BOOKWYRM = appendFamiliar(BOOKWYRM);
     public static final String FAMILIAR_JABBERWOG = appendFamiliar(JABBERWOG);
+    public static final String FAMILIAR_AMETHYST_GOLEM = appendFamiliar(AMETHYST_GOLEM);
 
     public static final String FLOURISHING_WEALD_WALKER = appendWeald("flourishing");
     public static final String VEXING_WEALD_WALKER = appendWeald("vexing");
     public static final String BLAZING_WEALD_WALKER = appendWeald("blazing");
     public static final String CASCADING_WEALD_WALKER = appendWeald("cascading");
-    public static final String AMETHYST_GOLEM = "amethyst_golem";
     public static final String SCRYER_CAMERA = "scryer_camera";
     public static final String GIFT_STARBY = "gift_starby";
     public static final String WALL = "wall";

@@ -35,7 +35,7 @@ public class FlightEffect extends MobEffect {
             boolean canFly = player.isCreative() || player.isSpectator();
             player.abilities.mayfly = canFly;
             player.abilities.flying = canFly;
-            Networking.sendToPlayer(new PacketUpdateFlight(canFly, canFly), (ServerPlayer) player);
+            Networking.sendToPlayerClient(new PacketUpdateFlight(canFly, canFly), (ServerPlayer) player);
         }
     }
 }

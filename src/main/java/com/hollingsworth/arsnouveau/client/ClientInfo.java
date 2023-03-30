@@ -5,6 +5,7 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,11 @@ public class ClientInfo {
     public static TextureTarget skyRenderTarget;
     public static ShaderInstance skyShader;
 
+
+    public static Component[] storageTooltip = new Component[0];
+    public static void setTooltip(Component... string) {
+        storageTooltip = string;
+    }
 
     public static void highlightPosition(List<ColorPos> colorPos, int ticks){
         highlightPositions = colorPos;

@@ -1,0 +1,30 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:item_detector",
+  "name": "block.ars_nouveau.item_detector",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.item_detector"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page2.item_detector"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:item_detector"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/bookwyrm_charm",
+        "ars_nouveau:machines/storage_lectern",
+        "ars_nouveau:automation/dominion_wand",
+        "ars_nouveau:automation/deny_scroll",
+        "ars_nouveau:automation/mimic_scroll",
+        "ars_nouveau:automation/allow_scroll"
+      ]
+    }
+  ]
+}

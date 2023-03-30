@@ -15,13 +15,13 @@ public class PortUtil {
 
     public static void sendMessageNoSpam(Entity playerEntity, Component component) {
         if (playerEntity instanceof ServerPlayer serverPlayer) {
-            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, false), serverPlayer);
+            Networking.sendToPlayerClient(new PacketNoSpamChatMessage(component, 0, false), serverPlayer);
         }
     }
 
     public static void sendMessageCenterScreen(Entity playerEntity, Component component) {
         if (playerEntity instanceof ServerPlayer serverPlayer) {
-            Networking.sendToPlayer(new PacketNoSpamChatMessage(component, 0, true), serverPlayer);
+            Networking.sendToPlayerClient(new PacketNoSpamChatMessage(component, 0, true), serverPlayer);
         }
     }
 

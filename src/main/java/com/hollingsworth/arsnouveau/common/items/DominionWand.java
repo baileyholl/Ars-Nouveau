@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class DominionWand extends ModItem {
     public DominionWand() {
-        super();
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
 
     @Override
@@ -41,12 +42,12 @@ public class DominionWand extends ModItem {
         BlockPos pos = data.storedPos;
         if(pos != null){
             if(pLevel.getBlockEntity(pos) instanceof IWandable wandable){
-                Networking.sendToPlayer(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
+                Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
             }
             return;
         }
         if(data.getEntity(pLevel) instanceof IWandable wandable){
-            Networking.sendToPlayer(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
+            Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
         }
     }
 

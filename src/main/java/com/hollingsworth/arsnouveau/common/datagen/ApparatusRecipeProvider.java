@@ -1059,6 +1059,10 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(4, Items.BLAZE_POWDER)
                 .withPedestalItem(4, Tags.Items.ENDER_PEARLS)
                 .keepNbtOfReagent(true).build());
+
+        addRecipe(builder().withResult(BlockRegistry.CRAFTING_LECTERN)
+                .withReagent(Blocks.LECTERN)
+                .withPedestalItem(4, Tags.Items.CHESTS).build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

@@ -26,7 +26,7 @@ public class StandardSpellValidator implements ISpellValidator {
     private static final ISpellValidator AUGMENT_COMPATIBILITY = new AugmentCompatibilityValidator();
     private static final ISpellValidator INVALID_COMBINATION_POLICY = new InvalidCombinationValidator();
 
-    private final ISpellValidator combinedValidator;
+    public final ISpellValidator combinedValidator;
 
     /**
      * Creates a standard spell recipe validator that enforces all standard rules.

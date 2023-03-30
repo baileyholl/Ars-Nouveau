@@ -1,4 +1,4 @@
-// 1.19.2	2023-02-27T21:00:25.635735777	Ars Nouveau Item Models
+// 1.19.2	2023-03-30T09:17:13.7112661	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -6,6 +6,7 @@ a81ea25c1312389ff436100c29d1ae20d35b0a40 assets/ars_nouveau/models/item/blue_sbe
 da0aadfa5d42c0daa4da0dbeff1177110928c7b4 assets/ars_nouveau/models/item/bombegranate_pod.json
 4af86c8ff67cf572b5ea18f4dca4dfff97af3f1e assets/ars_nouveau/models/item/experience_gem.json
 70d392c53a05ad554f3f3b1d3faa5fd1445e2a77 assets/ars_nouveau/models/item/falseweave.json
+93bd672531959f8b0215c53c30b552f3f0b4ec68 assets/ars_nouveau/models/item/familiar_amethyst_golem.json
 ae002abcf26e621204a56c58633ac527b78dafc0 assets/ars_nouveau/models/item/familiar_bookwyrm.json
 171689b60a6024caa046b0003fc362abdfa9395d assets/ars_nouveau/models/item/familiar_drygmy.json
 86470f55b241f9757924a412dd5ae3ec3add5b02 assets/ars_nouveau/models/item/familiar_starbuncle.json
@@ -96,6 +97,7 @@ c13b5fce1911737c61f1a2400caf025584c6b0dc assets/ars_nouveau/models/item/glyph_wa
 89b42dbdcb580f15b022c10196c1aece257714f1 assets/ars_nouveau/models/item/glyph_wither.json
 046743da6b41a321130305b5c44ee3f4516ed5d7 assets/ars_nouveau/models/item/greater_experience_gem.json
 8a3874b48013ee67b3d362bb9b7974924c5898d0 assets/ars_nouveau/models/item/green_sbed.json
+486511474b99fb4803c0781259ef5620ac0b5adf assets/ars_nouveau/models/item/item_detector.json
 6b4020f44475f6afeb58072fb014c8e53664a2c5 assets/ars_nouveau/models/item/magebloom_block.json
 4296f1fca7ce7fd990519d39def05883d1e95b82 assets/ars_nouveau/models/item/mendosteen_pod.json
 a869ede0c768f982722b00764902abac8e30fde9 assets/ars_nouveau/models/item/mirrorweave.json
@@ -137,13 +139,13 @@ b7e9fda47591eebba119a6088d7676e373d7a71a assets/ars_nouveau/models/item/smooth_g
 8c50cfe4e081f82f438c0df110939a2917e13c53 assets/ars_nouveau/models/item/smooth_sourcestone_large_bricks.json
 e5231658bf7f72000ed928faead72c2d34a3f9b8 assets/ars_nouveau/models/item/smooth_sourcestone_mosaic.json
 5d4980a4a234354d2195cd6da9cc6a71efa196f8 assets/ars_nouveau/models/item/smooth_sourcestone_small_bricks.json
-f433c503db1699241353f198a0d427f708716930 assets/ars_nouveau/models/item/source_gem_block.json
 4872637ae7f0ea6401d85bfb8e345286ed5438e6 assets/ars_nouveau/models/item/sourcestone.json
 e93914b4ab0533dd0fd5062d9010292fe776809f assets/ars_nouveau/models/item/sourcestone_alternating.json
 e14755cd9537696c6c53c2a4f06e389ec24ce325 assets/ars_nouveau/models/item/sourcestone_basketweave.json
 b889117827370fae1dad4e2ba50b488ce64cd04e assets/ars_nouveau/models/item/sourcestone_large_bricks.json
 ae2ea78a62d7da3321ff6e05889e8f44944d7173 assets/ars_nouveau/models/item/sourcestone_mosaic.json
 fad002103bb7ccaea2998a2fe617fcf5fd54d416 assets/ars_nouveau/models/item/sourcestone_small_bricks.json
+f433c503db1699241353f198a0d427f708716930 assets/ars_nouveau/models/item/source_gem_block.json
 1a921e2809c2a9588e7e8f5fbe4556f5f6729487 assets/ars_nouveau/models/item/stripped_blue_archwood_log.json
 1205608f4c722986291eb4255ad2e405715515cf assets/ars_nouveau/models/item/stripped_blue_archwood_wood.json
 8cf33c617e9b25c0fe978d8e517ff8f7d03f266f assets/ars_nouveau/models/item/stripped_green_archwood_log.json

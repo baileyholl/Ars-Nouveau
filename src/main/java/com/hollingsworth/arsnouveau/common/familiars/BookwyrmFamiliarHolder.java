@@ -29,6 +29,6 @@ public class BookwyrmFamiliarHolder extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "A Bookwyrm will reduce the cost of all spells cast, and increases any spell damage by 1. Obtained by performing the Ritual of Binding near a Bookwyrm.";
+        return "A Bookwyrm will automatically pickup nearby items and exp orbs within 5 blocks of the player. Thrown items will not be picked up. Use of the familiar hotkey is recommended to turn the magnet on and off as needed. Obtained by performing the Ritual of Binding near a Bookwyrm.";
     }
 }

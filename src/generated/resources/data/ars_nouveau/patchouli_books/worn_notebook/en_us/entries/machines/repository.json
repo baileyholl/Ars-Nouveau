@@ -1,0 +1,22 @@
+{
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:repository",
+  "name": "block.ars_nouveau.repository",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page1.repository"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:repository",
+      "recipe2": "ars_nouveau:archwood_chest"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/storage_lectern"
+      ]
+    }
+  ]
+}

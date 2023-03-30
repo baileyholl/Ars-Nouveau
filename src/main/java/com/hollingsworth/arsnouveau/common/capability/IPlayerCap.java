@@ -44,6 +44,11 @@ public interface IPlayerCap extends INBTSerializable<CompoundTag> {
     @Nullable
     FamiliarData getFamiliarData(ResourceLocation id);
 
+    @Nullable
+    FamiliarData getLastSummonedFamiliar();
+
+    void setLastSummonedFamiliar(ResourceLocation lastSummonedFamiliar);
+
     void setUnlockedFamiliars(Collection<FamiliarData> familiars);
 
     boolean removeFamiliar(AbstractFamiliarHolder holderID);

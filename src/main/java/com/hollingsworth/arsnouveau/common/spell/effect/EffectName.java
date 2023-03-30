@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +17,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -68,6 +72,15 @@ public class EffectName extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component name = getName(world, shooter, spellStats, spellContext, resolver);
+        BlockEntity blockEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
+        if(blockEntity instanceof BaseContainerBlockEntity nameable){
+            nameable.setCustomName(name);
+            BlockPos pos = rayTraceResult.getBlockPos();
+            BlockState state = world.getBlockState(pos);
+            world.sendBlockUpdated(pos, state, state, 3);
+            nameable.setChanged();
+            return;
+        }
         for(Entity entity : world.getEntities(null, new AABB(rayTraceResult.getBlockPos()).inflate(0.08))){
             entity.setCustomName(name);
             if (entity instanceof Mob mob) {
@@ -101,6 +114,6 @@ public class EffectName extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Names an entity after the set Spell Name. Targeting a block will name nearby entities. Targeting with Self will name the held offhand item. Can be overridden with a name tag in the hotbar.";
+        return "Names an entity after the set Spell Name. Targeting a block will name nearby entities or name inventory blocks directly if possible. Targeting with Self will name the held offhand item. Can be overridden with a name tag in the hotbar.";
     }
 }

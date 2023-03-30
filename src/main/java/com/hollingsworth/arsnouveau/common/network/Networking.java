@@ -208,7 +208,12 @@ public class Networking {
                 PacketSetLauncher::new,
                 PacketSetLauncher::handle);
         INSTANCE.registerMessage(nextID(), ChangeBiomePacket.class, ChangeBiomePacket::encode, ChangeBiomePacket::new, ChangeBiomePacket.Handler::onMessage);
+        INSTANCE.registerMessage(nextID(), ServerToClientStoragePacket.class, ServerToClientStoragePacket::toBytes, ServerToClientStoragePacket::new, ServerToClientStoragePacket.Handler::onMessage);
+        INSTANCE.registerMessage(nextID(), ClientToServerStoragePacket.class, ClientToServerStoragePacket::toBytes, ClientToServerStoragePacket::new, ClientToServerStoragePacket.Handler::onMessage);
         INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
+        INSTANCE.registerMessage(nextID(), PacketToggleFamiliar.class, PacketToggleFamiliar::toBytes, PacketToggleFamiliar::new, PacketToggleFamiliar::handle);
+        INSTANCE.registerMessage(nextID(), PacketDispelFamiliars.class, PacketDispelFamiliars::toBytes, PacketDispelFamiliars::new, PacketDispelFamiliars::handle);
+
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
@@ -223,7 +228,11 @@ public class Networking {
         sendToNearby(world, e.blockPosition(), toSend);
     }
 
-    public static void sendToPlayer(Object msg, ServerPlayer player) {
+    public static void sendToPlayerClient(Object msg, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+    }
+
+    public static void sendToServer(Object msg) {
+        INSTANCE.sendToServer(msg);
     }
 }

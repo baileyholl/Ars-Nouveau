@@ -11,8 +11,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -24,27 +27,47 @@ public class InvUtil {
             BlockEntity adjacentInvTile = level.getBlockEntity(pos.relative(d));
             if (adjacentInvTile == null)
                 continue;
-            adjacentInvTile.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inv ->{
-                List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
-                // Get all item frames attached to the tile
-                for (ItemFrame i : adjacentInvTile.getLevel().getEntitiesOfClass(ItemFrame.class, new AABB(adjacentInvTile.getBlockPos()).inflate(1))) {
-                    // Check if these frames are attached to the tile
-                    BlockEntity tileOnFrame = adjacentInvTile.getLevel().getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-                    ItemStack stackInFrame = i.getItem();
-                    if (tileOnFrame == null || !tileOnFrame.equals(adjacentInvTile) || i.getItem().isEmpty() || stackInFrame.isEmpty()) {
-                        continue;
-                    }
 
-                    if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
-                        filters.add(stackToStore -> scrollItem.getSortPref(stackToStore, stackInFrame, inv));
-                    }else{
-                        filters.add(stackToStore -> stackToStore.getItem() == stackInFrame.getItem() ? ItemScroll.SortPref.HIGHEST : ItemScroll.SortPref.INVALID);
-                    }
-                }
-                inventories.add(new FilterableItemHandler(inv, filters));
-            });
+            IItemHandler handler = adjacentInvTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            if(handler == null)
+                continue;
+            inventories.add(new FilterableItemHandler(handler, filtersOnTile(adjacentInvTile)));
         }
         return inventories;
+    }
+
+    public static FilterableItemHandler getFilteredHandler(@NotNull BlockEntity tile){
+        return new FilterableItemHandler(tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null), filtersOnTile(tile));
+    }
+
+    public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile){
+        if(thisTile == null){
+            return new ArrayList<>();
+        }
+        Level level = thisTile.getLevel();
+        BlockPos pos = thisTile.getBlockPos();
+        List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
+        IItemHandler inv = thisTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        if(inv == null)
+            return filters;
+
+        // Get all item frames attached to the tile
+        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
+            // Check if these frames are attached to the tile
+            BlockEntity tileOnFrame = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
+            ItemStack stackInFrame = i.getItem();
+            if (tileOnFrame == null || !tileOnFrame.equals(thisTile) || i.getItem().isEmpty() || stackInFrame.isEmpty()) {
+                continue;
+            }
+
+            if (stackInFrame.getItem() instanceof ItemScroll scrollItem) {
+                filters.add(stackToStore -> scrollItem.getSortPref(stackToStore, stackInFrame, inv));
+            } else {
+                filters.add(stackToStore -> stackToStore.getItem() == stackInFrame.getItem() ? ItemScroll.SortPref.HIGHEST : ItemScroll.SortPref.INVALID);
+            }
+        }
+
+        return filters;
     }
 
     public static List<FilterableItemHandler> fromPlayer(Player player){

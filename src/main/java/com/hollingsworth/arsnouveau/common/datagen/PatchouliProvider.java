@@ -149,7 +149,7 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(AUTOMATION, "spell_turret")
-                        .withEntry(AUTOMATION, "spell_prism").withEntry(AUTOMATION, "bookwyrm_charm").withEntry(AUTOMATION, "starbuncle_charm")
+                        .withEntry(AUTOMATION, "spell_prism").withEntry(AUTOMATION, "starbuncle_charm")
                         .withEntry(AUTOMATION, "wixie_charm")), getPath(GETTING_STARTED, "starting_automation"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "trinkets")
@@ -167,7 +167,7 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(ItemsRegistry.BELT_OF_LEVITATION, EQUIPMENT, new ApparatusPage(ItemsRegistry.BELT_OF_LEVITATION));
         addBasicItem(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS, EQUIPMENT, new ApparatusPage(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS));
         addBasicItem(ItemsRegistry.JAR_OF_LIGHT, EQUIPMENT, new ApparatusPage(ItemsRegistry.JAR_OF_LIGHT));
-        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.STARBUNCLE_CHARM)
+        var starby = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.STARBUNCLE_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.STARBUNCLE_CHARM))
                 .withPage(new EntityPage(getRegistryName(ModEntities.STARBUNCLE_TYPE.get()).toString())
@@ -219,7 +219,7 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(ItemsRegistry.RING_OF_GREATER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_GREATER_DISCOUNT));
         addBasicItem(ItemsRegistry.RING_OF_LESSER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_LESSER_DISCOUNT));
 
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.BASIC_SPELL_TURRET)
+        var turrets = addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.BASIC_SPELL_TURRET)
                 .withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.BASIC_SPELL_TURRET))
                 .withLocalizedText()
@@ -241,7 +241,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 5)).withTitle("ars_nouveau.important"))
                 .withPage(new TextPage(getLangPath("whirlisprig_charm", 6)).withTitle("ars_nouveau.production")), getPath(AUTOMATION, "whirlisprig_charm"));
 
-        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
+        var wixie = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.WIXIE_CHARM))
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_WIXIE_TYPE.get()).toString())
@@ -295,19 +295,21 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_BOSS.get()).toString()).withText(getLangPath("wilden", 6)))
                 .withPage(new TextPage(getLangPath("wilden", 7))), getPath(RESOURCES, "wilden"));
 
-        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
+        var denyScroll = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.BLANK_PARCHMENT).withRecipe2(ItemsRegistry.DENY_ITEM_SCROLL)), getPath(AUTOMATION, "deny_scroll"));
 
-        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.MIMIC_ITEM_SCROLL)
+        var mimicScroll = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.MIMIC_ITEM_SCROLL)
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.BLANK_PARCHMENT).withRecipe2(ItemsRegistry.MIMIC_ITEM_SCROLL)), getPath(AUTOMATION, "mimic_scroll"));
-        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.ALLOW_ITEM_SCROLL)
+        var allowScroll = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.ALLOW_ITEM_SCROLL)
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.BLANK_PARCHMENT).withRecipe2(ItemsRegistry.ALLOW_ITEM_SCROLL)), getPath(AUTOMATION, "allow_scroll"));
 
-        addBasicItem(ItemsRegistry.DOMINION_ROD, AUTOMATION, new ApparatusPage(ItemsRegistry.DOMINION_ROD));
-        addBasicItem(BlockRegistry.SPELL_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.SPELL_PRISM));
+        var dominionWand = addBasicItem(ItemsRegistry.DOMINION_ROD, AUTOMATION, new ApparatusPage(ItemsRegistry.DOMINION_ROD));
+
+
+        var prisms = addBasicItem(BlockRegistry.SPELL_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.SPELL_PRISM));
 
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
                 .withLocalizedText()
@@ -356,9 +358,15 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_PLATFORM))
                 .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
 
-        addBasicItem(BlockRegistry.POTION_JAR, MACHINES, new CraftingPage(BlockRegistry.POTION_JAR));
-        addBasicItem(BlockRegistry.POTION_MELDER, MACHINES, new ApparatusPage(BlockRegistry.POTION_MELDER));
-        addBasicItem(BlockRegistry.POTION_DIFFUSER, MACHINES, new ApparatusPage(BlockRegistry.POTION_DIFFUSER));
+        var potionJar = addBasicItem(BlockRegistry.POTION_JAR, MACHINES, new CraftingPage(BlockRegistry.POTION_JAR));
+        var melder = addBasicItem(BlockRegistry.POTION_MELDER, MACHINES, new ApparatusPage(BlockRegistry.POTION_MELDER));
+        var diffuser = addBasicItem(BlockRegistry.POTION_DIFFUSER, MACHINES, new ApparatusPage(BlockRegistry.POTION_DIFFUSER));
+
+        wixie.builder.withPage(new RelationsPage().withEntry(potionJar).withEntry(melder).withEntry(diffuser));
+        potionJar.builder.withPage(new RelationsPage().withEntry(melder).withEntry(diffuser).withEntry(wixie));
+        melder.builder.withPage(new RelationsPage().withEntry(potionJar).withEntry(diffuser).withEntry(wixie));
+        diffuser.builder.withPage(new RelationsPage().withEntry(potionJar).withEntry(melder).withEntry(wixie));
+
         addBasicItem(BlockRegistry.RITUAL_BLOCK, MACHINES, new CraftingPage(BlockRegistry.RITUAL_BLOCK));
         addBasicItem(BlockRegistry.BRAZIER_RELAY, MACHINES, new ApparatusPage(BlockRegistry.BRAZIER_RELAY));
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.SCRIBES_BLOCK)
@@ -444,19 +452,22 @@ public class PatchouliProvider implements DataProvider {
                         .withPage(new TextPage(getLangPath("amethyst_golem_charm", 5)).withTitle("ars_nouveau.amethyst_storage")),
                 getPath(AUTOMATION, "amethyst_golem_charm"));
         addBasicItem(ItemsRegistry.ANNOTATED_CODEX, EQUIPMENT, new CraftingPage(ItemsRegistry.ANNOTATED_CODEX));
-        addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ORANGE_SBED).withName("ars_nouveau.summon_bed").withLocalizedText("summon_bed")
+        var starbyBed = addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.ORANGE_SBED).withName("ars_nouveau.summon_bed").withLocalizedText("summon_bed")
                         .withPage(new CraftingPage(BlockRegistry.ORANGE_SBED).withRecipe2(BlockRegistry.BLUE_SBED))
                         .withPage(new CraftingPage(BlockRegistry.GREEN_SBED).withRecipe2(BlockRegistry.YELLOW_SBED))
                         .withPage(new CraftingPage(BlockRegistry.RED_SBED).withRecipe2(BlockRegistry.PURPLE_SBED))
                 , getPath(AUTOMATION, "summon_bed"));
         var scryCaster = addBasicItem(ItemsRegistry.SCRY_CASTER, EQUIPMENT, new ApparatusPage(ItemsRegistry.SCRY_CASTER));
         var scryCrystal = addBasicItem(BlockRegistry.SCRYERS_CRYSTAL, MACHINES, new CraftingPage(BlockRegistry.SCRYERS_CRYSTAL));
-        scryCrystal.builder.withPage(new RelationsPage().withEntry(scryCaster.relationPath()));
+        var oculus = addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
+        var scryScroll = addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
+
+        scryCrystal.builder.withPage(new RelationsPage().withEntry(scryCaster).withEntry(scryScroll).withEntry(oculus));
         scryCaster.builder.withPage(new RelationsPage().withEntry(scryCrystal.relationPath()));
-        addBasicItem(BlockRegistry.SCRYERS_OCULUS, MACHINES, new ApparatusPage(BlockRegistry.SCRYERS_OCULUS));
-        addBasicItem(ItemsRegistry.SCRYER_SCROLL, MACHINES, null);
-        addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
-        addBasicItem(ItemsRegistry.WIXIE_HAT, AUTOMATION, new CraftingPage(ItemsRegistry.WIXIE_HAT));
+        oculus.builder.withPage(new RelationsPage().withEntry(scryScroll).withEntry(scryCrystal));
+        scryScroll.builder.withPage(new RelationsPage().withEntry(scryCaster).withEntry(oculus).withEntry(scryCrystal));
+        var starbyShades = addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION, new CraftingPage(ItemsRegistry.STARBUNCLE_SHADES));
+        var wixieHat = addBasicItem(ItemsRegistry.WIXIE_HAT, AUTOMATION, new CraftingPage(ItemsRegistry.WIXIE_HAT));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "support_mod")
                         .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
@@ -533,7 +544,11 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
 
-        addBasicItem(BlockRegistry.VOID_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.VOID_PRISM));
+        var voidPrism = addBasicItem(BlockRegistry.VOID_PRISM, AUTOMATION, new CraftingPage(BlockRegistry.VOID_PRISM));
+
+        turrets.builder.withPage(new RelationsPage().withEntry(prisms).withEntry(voidPrism));
+        prisms.builder.withPage(new RelationsPage().withEntry(turrets).withEntry(voidPrism));
+        voidPrism.builder.withPage(new RelationsPage().withEntry(turrets).withEntry(prisms));
         addPage(new PatchouliBuilder(RESOURCES, "illusion_blocks").withIcon(BlockRegistry.GHOST_WEAVE).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.MIRROR_WEAVE))
                 .withLocalizedText()
@@ -543,6 +558,71 @@ public class PatchouliProvider implements DataProvider {
                 ).withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.SKY_WEAVE)), getPath(RESOURCES, "illusion_blocks"));
 
+        var bookwyrm = addPage(new PatchouliBuilder(MACHINES, ItemsRegistry.BOOKWYRM_CHARM)
+                .withLocalizedText()
+                .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BOOKWYRM_TYPE.get()).toString())
+                        .withText(getLangPath("bookwyrm_charm", 2))), getPath(MACHINES, "bookwyrm_charm"));
+
+        var storageLectern = addPage(new PatchouliBuilder(MACHINES, BlockRegistry.CRAFTING_LECTERN)
+                        .withLocalizedText()
+                        .withPage(new TextPage(getLangPath("storage", 2)).withTitle("ars_nouveau.storage"))
+                        .withPage(new TextPage(getLangPath("storage", 3)).withTitle("ars_nouveau.storage_tabs"))
+                        .withPage(new ApparatusPage(BlockRegistry.CRAFTING_LECTERN))
+                , getPath(MACHINES, "storage_lectern"));
+        bookwyrm.builder.withPage(new RelationsPage().withEntry(storageLectern.relationPath()));
+
+        var displayCase = addPage(new PatchouliBuilder(MACHINES, BlockRegistry.ITEM_DETECTOR)
+                .withLocalizedText()
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.ITEM_DETECTOR)), getPath(MACHINES, "item_detector"));
+        var repository = addPage(new PatchouliBuilder(MACHINES, BlockRegistry.REPOSITORY)
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.REPOSITORY).withRecipe2(BlockRegistry.ARCHWOOD_CHEST)), getPath(MACHINES, "repository"));
+
+        // add scrolls to arrylist
+        var scrollRelations = new ArrayList<PatchouliPage>(){
+            {
+                add(denyScroll);
+                add(mimicScroll);
+                add(allowScroll);
+            }
+        };
+
+
+        storageLectern.builder.withPage(new RelationsPage()
+                .withEntry(bookwyrm.relationPath())
+                .withEntry(displayCase.relationPath())
+                .withEntry(repository.relationPath()));
+        repository.builder.withPage(new RelationsPage().withEntry(storageLectern.relationPath()));
+
+
+        starby.builder.withPage(new RelationsPage()
+                        .withEntries(scrollRelations)
+                .withEntry(dominionWand)
+                .withEntry(storageLectern)
+                .withEntry(starbyShades)
+                .withEntry(wixieHat)
+                .withEntry(starbyBed));
+        denyScroll.builder.withPage(new RelationsPage()
+                .withEntry(mimicScroll)
+                .withEntry(allowScroll)
+                .withEntry(dominionWand)
+                .withEntry(starby)
+                .withEntry(storageLectern)
+                .withEntry(displayCase));
+        mimicScroll.builder.withPage(new RelationsPage()
+                .withEntry(denyScroll)
+                .withEntry(allowScroll)
+                .withEntry(dominionWand)
+                .withEntry(starby)
+                .withEntry(storageLectern)
+                .withEntry(displayCase));
+        allowScroll.builder.withPage(new RelationsPage()
+                .withEntry(denyScroll).withEntry(mimicScroll).withEntry(dominionWand).withEntry(starby).withEntry(storageLectern).withEntry(displayCase));
+
+        displayCase.builder.withPage(new RelationsPage().withEntry(bookwyrm).withEntry(storageLectern).withEntry(dominionWand)
+                .withEntries(scrollRelations));
+        dominionWand.builder.withPage(new RelationsPage().withEntry(storageLectern).withEntry(displayCase).withEntry(starby));
     }
 
     public String getLangPath(String name, int count) {

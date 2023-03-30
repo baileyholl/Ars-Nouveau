@@ -109,7 +109,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.STRIPPED_AWWOOD_RED,
                 BlockRegistry.STRIPPED_AWLOG_PURPLE,
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE,
-                BlockRegistry.BOOKWYRM_LECTERN,
+                BlockRegistry.CRAFTING_LECTERN.get(),
                 BlockRegistry.ARCHWOOD_CHEST,
                 BlockRegistry.ALTERATION_TABLE
         );

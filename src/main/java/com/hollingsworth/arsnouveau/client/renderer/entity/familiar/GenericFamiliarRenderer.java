@@ -42,7 +42,7 @@ public class GenericFamiliarRenderer<T extends FamiliarEntity> extends GenericRe
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
-            return entity.getTexture(entity);
+        return entity.getTexture(entity) == null ? super.getTextureLocation(entity) : entity.getTexture(entity);
     }
 
 }

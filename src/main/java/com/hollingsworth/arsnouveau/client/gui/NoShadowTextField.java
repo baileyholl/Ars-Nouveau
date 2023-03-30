@@ -115,4 +115,17 @@ public class NoShadowTextField extends EditBox {
             }
         }
     }
+
+
+    public void setY(int i) {
+        y = i;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

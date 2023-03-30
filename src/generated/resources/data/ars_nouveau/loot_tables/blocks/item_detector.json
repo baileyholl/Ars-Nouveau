@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:lectern"
+          "name": "ars_nouveau:item_detector"
         }
       ],
       "rolls": 1.0

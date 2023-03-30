@@ -34,6 +34,14 @@
     {
       "type": "patchouli:text",
       "text": "ars_nouveau.page6.wixie_charm"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/potion_jar",
+        "ars_nouveau:machines/potion_melder",
+        "ars_nouveau:machines/potion_diffuser"
+      ]
     }
   ]
 }

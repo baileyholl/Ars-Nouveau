@@ -10,6 +10,14 @@
     {
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "ars_nouveau:dominion_wand"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "ars_nouveau:machines/storage_lectern",
+        "ars_nouveau:machines/item_detector",
+        "ars_nouveau:automation/starbuncle_charm"
+      ]
     }
   ]
 }
