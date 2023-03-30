@@ -76,10 +76,18 @@ public class JarBehavior<T extends Entity> {
         return 0;
     }
 
+    public int getAnalogPower(MobJarTile tile) {
+        return tile.getEntity() == null ? 0 : 15;
+    }
+
     public void onRedstonePower(MobJarTile tile) {
         T entity = entityFromJar(tile);
         if (entity instanceof Mob mob) {
             mob.playAmbientSound();
         }
+    }
+
+    public int getSignalPower(MobJarTile tile) {
+        return 0;
     }
 }

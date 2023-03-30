@@ -37,6 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -139,8 +140,11 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
         MobJarTile tile = (MobJarTile) worldIn.getBlockEntity(pos);
-        if (tile == null || tile.getEntity() == null) return 0;
-        return 15;
+        AtomicInteger power = new AtomicInteger();
+        tile.dispatchBehavior((behavior) -> {
+            power.set(Math.max(power.get(), behavior.getAnalogPower(tile)));
+        });
+        return Math.min(power.get(), 15);
     }
 
     @Override
@@ -172,4 +176,14 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         return new MobJarTile(pPos, pState);
     }
 
+    public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
+        if(pBlockAccess.getBlockEntity(pPos) instanceof MobJarTile jarTile){
+            AtomicInteger power = new AtomicInteger();
+            jarTile.dispatchBehavior((behavior) -> {
+                power.set(Math.max(power.get(), behavior.getSignalPower(jarTile)));
+            });
+            return Math.min(power.get(), 15);
+        }
+        return 0;
+    }
 }
