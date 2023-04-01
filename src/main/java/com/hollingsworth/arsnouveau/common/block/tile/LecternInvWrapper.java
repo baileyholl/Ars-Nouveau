@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.item.inv.CombinedHandlerInv;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public class LecternInvWrapper extends CombinedInvWrapper {
+public class LecternInvWrapper extends CombinedHandlerInv {
     public StorageLecternTile lecternTile;
 
-    public LecternInvWrapper(StorageLecternTile lecternTile, IItemHandlerModifiable... itemHandler)
+    public LecternInvWrapper(StorageLecternTile lecternTile, IItemHandler... itemHandler)
     {
         super(itemHandler);
         this.lecternTile = lecternTile;

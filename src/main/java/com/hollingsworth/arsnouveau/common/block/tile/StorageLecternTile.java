@@ -41,7 +41,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -90,19 +89,18 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				this.lecternInvWrapper = LazyOptional.of(() -> new LecternInvWrapper(this));
 				return this.lecternInvWrapper.cast();
 			}
-			List<IItemHandlerModifiable> modifiables = new ArrayList<>();
+			List<IItemHandler> modifiables = new ArrayList<>();
 			for(BlockPos pos : lecternTile.connectedInventories) {
 				BlockEntity invTile = lecternTile.level.getBlockEntity(pos);
 				if(invTile != null) {
-					LazyOptional<IItemHandler> lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-					lih.ifPresent(i -> {
-						if(i instanceof IItemHandlerModifiable handlerModifiable) {
-							modifiables.add(handlerModifiable);
-						}
-					});
+					IItemHandler lih = invTile.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
+					if(lih == null){
+						continue;
+					}
+					modifiables.add(lih);
 				}
 			}
-			lecternTile.lecternInvWrapper = LazyOptional.of(() -> new LecternInvWrapper(this, modifiables.toArray(new IItemHandlerModifiable[0])));
+			lecternTile.lecternInvWrapper = LazyOptional.of(() -> new LecternInvWrapper(this, modifiables.toArray(new IItemHandler[0])));
 			return lecternTile.lecternInvWrapper.cast();
 		}
 		return super.getCapability(cap, side);

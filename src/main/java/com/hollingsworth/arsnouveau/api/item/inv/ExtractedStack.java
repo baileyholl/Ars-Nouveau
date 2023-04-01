@@ -11,7 +11,7 @@ public class ExtractedStack extends SlotReference{
 
     public ItemStack stack;
 
-    public ExtractedStack(ItemStack stack, IItemHandler handler, int slot) {
+    protected ExtractedStack(ItemStack stack, IItemHandler handler, int slot) {
         super(handler, slot);
         this.stack = stack;
     }
