@@ -37,6 +37,6 @@ public class AmethystFamiliarHolder extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "Reduces knockback taken by half.";
+        return "Reduces knockback taken by half and knocks back any attackers. Giving the golem an Amethyst Shard will grant 3 minutes of Shielding.";
     }
 }

@@ -5,11 +5,12 @@ import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -113,11 +114,20 @@ public class FamiliarEvents {
 
     @SubscribeEvent
     public static void knockbackEvent(LivingKnockBackEvent event){
-        for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem))) {
-            if (entity instanceof FamiliarAmethystGolem golem) {
-                if(golem.getOwner() != null && golem.getOwner().equals(event.getEntity())) {
-                    event.setStrength(event.getStrength() * 0.5f);
-                    return;
+        List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
+        if(!golems.isEmpty()) {
+            event.setStrength(event.getStrength() * 0.5f);
+        }
+    }
+
+    @SubscribeEvent
+    public static void livingHurtEvent(LivingHurtEvent event){
+        if(!event.getSource().isBypassArmor() && event.getEntity() instanceof Player player) {
+            List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
+            if (!golems.isEmpty()) {
+                Entity entity = event.getSource().getEntity();
+                if(entity instanceof LivingEntity livingTarget && BlockUtil.distanceFrom(player.blockPosition(), entity.blockPosition()) < 3){
+                    livingTarget.knockback(0.5f, player.getX() - entity.getX(), player.getZ() - entity.getZ());
                 }
             }
         }
