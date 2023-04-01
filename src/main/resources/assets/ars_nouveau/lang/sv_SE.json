@@ -164,7 +164,7 @@
   "ars_nouveau.familiar.script": "Används för att skaffa bekantelser. Skaffas från Ritualen av Bindelse.",
   "ars_nouveau.familiar.sickness": "Du måste vänta innan du kallar en annan bekant.",
   "ars_nouveau.familiar.unlocked": "Bekant upplåst.",
-  "ars_nouveau.familiar_desc.familiar_amethyst_golem": "Reduces knockback taken by half.",
+  "ars_nouveau.familiar_desc.familiar_amethyst_golem": "Reduces knockback taken by half and knocks back any attackers. Giving the golem an Amethyst Shard will grant 3 minutes of Shielding.",
   "ars_nouveau.familiar_desc.familiar_bookwyrm": "A Bookwyrm will automatically pickup nearby items and exp orbs within 5 blocks of the player. Thrown items will not be picked up. Use of the familiar hotkey is recommended to turn the magnet on and off as needed. Obtained by performing the Ritual of Binding near a Bookwyrm.",
   "ars_nouveau.familiar_desc.familiar_drygmy": "En Drygmy bekantelse kommer öka skada av Jord formler med 2, och har en chans att öka mängden av plundring när du dödar fiender. Skaffas genom att genomgå Ritual av Bindelse nära en Drygmy.",
   "ars_nouveau.familiar_desc.familiar_starbuncle": "En Stjärnbunke bekantelse som kommer ge dig Hastighet 2. Ytterligare, genom att använda en Guldklimp på en Stjärnbunkel kommer den konsumera den och ge ägaren en kort tid av Skrikande för Guldmalm. Skaffas genom att genomgå Ritual av Bindelse nära en Stjärnbunkel.",
