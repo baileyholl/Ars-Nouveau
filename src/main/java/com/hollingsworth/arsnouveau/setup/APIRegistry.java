@@ -271,6 +271,7 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.MOOSHROOM, new MooshroomBehavior());
         JarBehaviorRegistry.register(EntityType.ENDER_DRAGON, new DragonBehavior());
         JarBehaviorRegistry.register(EntityType.PUFFERFISH, new PufferfishBehavior());
+        JarBehaviorRegistry.register(EntityType.ALLAY, new AllayBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

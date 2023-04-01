@@ -1176,5 +1176,17 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
         add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
+        add("mob_jar.villager","Can be traded with in a jar, periodically resetting its trades.");
+        add("mob_jar.piglin", "Can be traded with by throwing gold ingots at the jar.");
+        add("mob_jar.ender_dragon", "Use a bottle to obtain Dragon's Breath.");
+        add("mob_jar.sheep", "Can be sheared. Will eat Grass beneath the jar if available.");
+        add("mob_jar.chicken", "Will occasionally lay eggs.");
+        add("mob_jar.cow", "Can be milked.");
+        add("mob_jar.mooshroom", "Can use a bowl to obtain mushroom stew. Can be sheared into a normal cow.");
+        add("mob_jar.pufferfish", "Will inflate when mobs are nearby. While inflated, the jar produces a redstone signal.");
+        add("mob_jar.frog", "Will eat nearby slimes.");
+        add("mob_jar.panda", "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.");
+        add("mob_jar.allay.title", "Allay Behavior");
+        add("mob_jar.allay", "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories.");
     }
 }

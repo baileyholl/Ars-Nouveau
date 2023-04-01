@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -41,11 +42,13 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
         }
         AtomicReference<Vec3> adjustedScale = new AtomicReference<>(new Vec3(0, 0, 0));
         AtomicReference<Vec3> adjustedTranslation = new AtomicReference<>(new Vec3(0, 0, 0));
-
+        AtomicReference<Boolean> shouldParticlaTick = new AtomicReference<>(false);
         JarBehaviorRegistry.forEach(entity, jarBehavior ->{
             Vec3 customScale = jarBehavior.scaleOffset(pBlockEntity);
             adjustedScale.set(adjustedScale.get().add(customScale));
             adjustedTranslation.set(adjustedTranslation.get().add(jarBehavior.translate(pBlockEntity)));
+            if(jarBehavior.shouldUsePartialTicks(pBlockEntity))
+                shouldParticlaTick.set(true);
         });
 
         Vec3 scale = new Vec3(f, f, f).multiply(adjustedScale.get().add(1,1,1));
@@ -65,9 +68,23 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
         }
         pPoseStack.mulPose(pBlockEntity.getBlockState().getValue(MobJar.FACING).getRotation());
         entity.setDeltaMovement(0,0,0);
-        this.entityRenderer.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 0, pPoseStack, pBufferSource, pPackedLight);
+        if(shouldParticlaTick.get()) {
+            entity.xo = entity.getX();
+            entity.yo = entity.getY();
+            entity.zo = entity.getZ();
+            entity.xRotO = entity.xRot;
+            entity.yRotO = entity.yRot;
+            if (entity instanceof LivingEntity livingEntity) {
+                livingEntity.yBodyRotO = livingEntity.yBodyRot;
+                livingEntity.yHeadRotO = livingEntity.yHeadRot;
+                livingEntity.animationSpeedOld = livingEntity.animationSpeed;
+            }
+        }else{
+            pPartialTick = 0;
+        }
+        this.entityRenderer.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, pPartialTick, pPoseStack, pBufferSource, pPackedLight);
         for(Entity entity1 : entity.getPassengers()){
-            this.entityRenderer.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, 0, pPoseStack, pBufferSource, pPackedLight);
+            this.entityRenderer.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, pPartialTick, pPoseStack, pBufferSource, pPackedLight);
         }
     }
 }

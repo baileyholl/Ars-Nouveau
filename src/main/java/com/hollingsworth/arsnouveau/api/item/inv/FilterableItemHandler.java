@@ -1,12 +1,15 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Represents an ItemHandler and its list of filters.
@@ -15,14 +18,24 @@ public class FilterableItemHandler {
 
     private IItemHandler handler;
     private List<Function<ItemStack, ItemScroll.SortPref>> filters;
+    private @Nullable Supplier<BlockPos> posSupplier;
 
     public FilterableItemHandler(IItemHandler handler){
         this(handler, new ArrayList<>());
     }
 
     public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> filters){
+        this(handler, filters, null);
+    }
+
+    public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> filters, @Nullable Supplier<BlockPos> posSupplier){
         this.handler = handler;
         this.filters = filters;
+        this.posSupplier = posSupplier;
+    }
+
+    public @Nullable BlockPos getPos(){
+        return posSupplier == null ? null : posSupplier.get();
     }
 
     /**
@@ -71,6 +84,13 @@ public class FilterableItemHandler {
 
     public List<Function<ItemStack, ItemScroll.SortPref>> getFilters() {
         return filters;
+    }
+
+    public boolean addFilterScroll(ItemStack scrollStack){
+        if(scrollStack.getItem() instanceof ItemScroll itemScroll){
+            return filters.add(stackIn -> itemScroll.getSortPref(stackIn, scrollStack, handler));
+        }
+        return false;
     }
 
 }

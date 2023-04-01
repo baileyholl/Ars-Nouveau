@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
@@ -10,6 +11,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
@@ -19,12 +21,13 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
+public class MobJarTile extends ModdedTile implements ITickable, IDispellable, ITooltipProvider {
     @Nullable
     public Entity cachedEntity;
 
@@ -210,5 +213,15 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable {
             }
         }
         return tag;
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+        Entity entity = getEntity();
+        if(entity != null){
+            JarBehaviorRegistry.forEach(entity, (behavior) -> {
+                behavior.getTooltip(this, tooltip);
+            });
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.mob_jar;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +18,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IForgeShearable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class JarBehavior<T extends Entity> {
 
@@ -36,7 +39,8 @@ public class JarBehavior<T extends Entity> {
         }
     }
 
-    public void tick(MobJarTile tile){}
+    public void tick(MobJarTile tile){
+    }
 
     /**
      * A helper method to sync the jar change to the client, also sends a block update.
@@ -68,6 +72,10 @@ public class JarBehavior<T extends Entity> {
         return new Vec3(0,0,0);
     }
 
+    public boolean shouldUsePartialTicks(MobJarTile pBlockEntity){
+        return false;
+    }
+
     /**
      *
      * @return Light level the jar should give off
@@ -89,5 +97,9 @@ public class JarBehavior<T extends Entity> {
 
     public int getSignalPower(MobJarTile tile) {
         return 0;
+    }
+
+    public void getTooltip(MobJarTile tile, List<Component> tooltips){
+
     }
 }

@@ -209,6 +209,8 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:config-419699:4147353") // arch
     runtimeOnly fg.deobf("curse.maven:config-404465:4210870") // ftb library
     runtimeOnly fg.deobf("curse.maven:config-404468:4229140") // ftb teams
+    runtimeOnly fg.deobf("curse.maven:config-556861:4324174") // functional storage
+    runtimeOnly fg.deobf("curse.maven:config-287342:4391554") // titanium
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
 }

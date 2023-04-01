@@ -75,12 +75,12 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         if(tile.getEntity() != null && !(tile.getEntity() instanceof PlayerRideable) && !JarBehaviorRegistry.containsEntity(tile.getEntity())
         && !(tile.getEntity() instanceof ContainerEntity)){
             pPlayer.interactOn(tile.getEntity(), pHand);
-            tile.updateBlock();
         }
         tile.dispatchBehavior((behavior) -> {
             behavior.use(pState, pLevel, pPos, pPlayer, pHand, pHit, tile);
         });
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        tile.updateBlock();
+        return InteractionResult.SUCCESS;
     }
 
     @Override

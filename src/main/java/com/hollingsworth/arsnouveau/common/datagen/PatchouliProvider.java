@@ -22,6 +22,7 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -541,6 +542,18 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.MOB_JAR)
                 .withLocalizedText()
                 .withPage(new TextPage("ars_nouveau.page2.mob_jar").withTitle("ars_nouveau.title.mob_jar"))
+                .withPage(new EntityPage(EntityType.VILLAGER).withText("mob_jar.villager"))
+                .withPage(new EntityPage(EntityType.PIGLIN).withText("mob_jar.piglin"))
+                .withPage(new TextPage("mob_jar.allay").withTitle("mob_jar.allay.title"))
+                .withPage(new EntityPage(EntityType.ALLAY))
+                .withPage(new EntityPage(EntityType.ENDER_DRAGON).withText("mob_jar.ender_dragon"))
+                .withPage(new EntityPage(EntityType.SHEEP).withText("mob_jar.sheep"))
+                .withPage(new EntityPage(EntityType.CHICKEN).withText("mob_jar.chicken"))
+                .withPage(new EntityPage(EntityType.COW).withText("mob_jar.cow"))
+                .withPage(new EntityPage(EntityType.MOOSHROOM).withText("mob_jar.mooshroom"))
+                .withPage(new EntityPage(EntityType.PUFFERFISH).withText("mob_jar.pufferfish"))
+                .withPage(new EntityPage(EntityType.FROG).withText("mob_jar.frog"))
+                .withPage(new EntityPage(EntityType.PANDA).withText("mob_jar.panda"))
                 .withPage(new CraftingPage(BlockRegistry.MOB_JAR))
                 .withPage(new RelationsPage().withEntry(RITUALS, RitualLib.CONTAINMENT).withEntry(AUTOMATION, "drygmy_charm")), getPath(MACHINES, "mob_jar"));
 

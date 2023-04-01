@@ -1,11 +1,17 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
+import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 
 public class EntityPage extends AbstractPage {
 
     public EntityPage(String entity) {
         object.addProperty("entity", entity);
+    }
+
+    public EntityPage(EntityType type){
+        this(RegistryHelper.getRegistryName(type).toString());
     }
 
     public EntityPage withScale(float scale) {
@@ -30,6 +36,11 @@ public class EntityPage extends AbstractPage {
 
     public EntityPage withText(String text) {
         object.addProperty("text", text);
+        return this;
+    }
+
+    public EntityPage withName(String name){
+        object.addProperty("name", name);
         return this;
     }
 
