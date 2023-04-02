@@ -57,6 +57,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_X_OFFSET;
     public static ForgeConfigSpec.IntValue MANABAR_Y_OFFSET;
+    public static ForgeConfigSpec.IntValue BOOKWYRM_LIMIT;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
 
@@ -110,7 +111,7 @@ public class Config {
         CHIMERA_DIVE_DESTRUCTIVE = SERVER_BUILDER.comment("Should the Wilden Chimera dive bomb destroy blocks?").define("destructiveDiveBomb", true);
 
         ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 2, 0, Integer.MAX_VALUE);
-
+        BOOKWYRM_LIMIT = SERVER_BUILDER.comment("How many inventories can lectern support per bookwyrm").defineInRange("bookwyrmLimit", 8, 1, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.push(DRYGMY_CATEGORY);
         DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much source drygmys consume per generation").defineInRange("drygmyManaCost", 1000, 0, 10000);
