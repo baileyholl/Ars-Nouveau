@@ -28,10 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -102,7 +99,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			}
 			// Set isAll tab visible
 			tabButtons.get(0).visible = true;
-			List<String> names = new ArrayList<>(menu.tabNames);
+			List<String> names = new ArrayList<>(new HashSet<>(menu.tabNames));
 			names.sort(String::compareToIgnoreCase);
 			for(int i = 0; i < names.size() && i < tabButtons.size(); i++){
 				tabButtons.get(i+1).visible = true;
