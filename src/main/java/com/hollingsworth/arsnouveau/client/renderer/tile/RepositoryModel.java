@@ -19,16 +19,18 @@ public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
     @Override
     public void setCustomAnimations(RepositoryTile repo, int instanceId) {
         super.setCustomAnimations(repo, instanceId);
-        this.getBone("1").setHidden(repo.fillLevel == 0);
-        this.getBone("2_3").setHidden(repo.fillLevel < 3);
-        this.getBone("4_6").setHidden(repo.fillLevel < 5);
-        this.getBone("7_9").setHidden(repo.fillLevel < 7);
-        this.getBone("10_12").setHidden(repo.fillLevel < 9);
-        this.getBone("13_15").setHidden(repo.fillLevel < 11);
-        this.getBone("16_18").setHidden(repo.fillLevel < 12);
-        this.getBone("19_21").setHidden(repo.fillLevel < 13);
-        this.getBone("22_24").setHidden(repo.fillLevel < 14);
-        this.getBone("25_27").setHidden(repo.fillLevel < 15);
+        int level = repo.fillLevel;
+        String[] configuration = repo.configuration > RepositoryTile.CONFIGURATIONS.length ? RepositoryTile.CONFIGURATIONS[0] : RepositoryTile.CONFIGURATIONS[repo.configuration];
+        this.getBone(configuration[0]).setHidden(level == 0);
+        this.getBone(configuration[1]).setHidden(level < 3);
+        this.getBone(configuration[2]).setHidden(level < 5);
+        this.getBone(configuration[3]).setHidden(level < 7);
+        this.getBone(configuration[4]).setHidden(level < 9);
+        this.getBone(configuration[5]).setHidden(level < 11);
+        this.getBone(configuration[6]).setHidden(level < 12);
+        this.getBone(configuration[7]).setHidden(level < 13);
+        this.getBone(configuration[8]).setHidden(level < 14);
+        this.getBone(configuration[9]).setHidden(level < 15);
     }
 
     @Override

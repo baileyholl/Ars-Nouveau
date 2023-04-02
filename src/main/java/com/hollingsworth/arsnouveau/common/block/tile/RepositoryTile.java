@@ -29,8 +29,20 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class RepositoryTile extends RandomizableContainerBlockEntity implements IAnimatable, ITooltipProvider {
+    public static String[][] CONFIGURATIONS = new String[][]{
+            {"1","2_3","4_6","7_9","10_12","13_15","16_18","19_21","22_24", "25_27"},
+            {"1","2_3","25_27","22_24","19_21","10_12","7_9","4_6","13_15","16_18"},
+            {"10_12","13_15","7_9","16_18","4_6","19_21","2_3","22_24","1","25_27"},
+            {"1","2_3","4_6","13_15","16_18","25_27","22_24","10_12","19_21","7_9"},
+            {"1","25_27","2_3","22_24","4_6","19_21","7_9","16_18","10_12","13_15"},
+            {"1","2_3","4_6", "10_12","25_27","22_24","19_21","13_15","7_9","16_18"}
+    };
+
+
     private NonNullList<ItemStack> items = NonNullList.withSize(54, ItemStack.EMPTY);
     public int fillLevel;
+    public int configuration;
+
     private ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
         protected void onOpen(Level p_155062_, BlockPos p_155063_, BlockState p_155064_) {
         }
@@ -128,6 +140,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             ContainerHelper.saveAllItems(pTag, this.items);
         }
         pTag.putInt("fillLevel", fillLevel);
+        pTag.putInt("configuration", configuration);
     }
 
     public void load(CompoundTag pTag) {
@@ -137,6 +150,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             ContainerHelper.loadAllItems(pTag, this.items);
         }
         fillLevel = pTag.getInt("fillLevel");
+        configuration = pTag.getInt("configuration");
     }
 
     @Override

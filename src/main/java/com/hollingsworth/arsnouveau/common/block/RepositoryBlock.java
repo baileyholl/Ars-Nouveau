@@ -29,13 +29,14 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
      * Called by BlockItem after this block has been placed.
      */
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @javax.annotation.Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (pStack.hasCustomHoverName()) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof RepositoryTile tile) {
+        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        if (blockentity instanceof RepositoryTile tile) {
+            if (pStack.hasCustomHoverName()) {
                 tile.setCustomName(pStack.getHoverName());
             }
+            tile.configuration = pLevel.random.nextInt(RepositoryTile.CONFIGURATIONS.length);
+            tile.updateBlock();
         }
-
     }
 
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
