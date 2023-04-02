@@ -3,10 +3,12 @@ package com.hollingsworth.arsnouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.events.ClientHandler;
 import com.hollingsworth.arsnouveau.client.events.TextureEvent;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.entity.DataSerializers;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
@@ -17,13 +19,13 @@ import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -112,6 +114,9 @@ public class ArsNouveau {
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         event.enqueueWork(ModEntities::registerPlacements);
+        event.enqueueWork(() -> {
+            EntityDataSerializers.registerSerializer(DataSerializers.VEC3);
+        });
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }

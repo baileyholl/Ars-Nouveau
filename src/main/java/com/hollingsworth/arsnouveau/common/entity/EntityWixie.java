@@ -29,7 +29,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -48,14 +47,10 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable, IVariantColorProvider<EntityWixie> {
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
-
-    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
 
     public BlockPos cauldronPos;
@@ -106,15 +101,11 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
         this.moveControl = new FlyingMoveControl(this, 10, true);
-        addGoalsAfterConstructor();
     }
 
-    public EntityWixie(Level world, boolean isTamed, BlockPos pos) {
-        super(ModEntities.ENTITY_WIXIE_TYPE.get(), world);
+    public EntityWixie(Level world, BlockPos pos) {
+        this(ModEntities.ENTITY_WIXIE_TYPE.get(), world);
         this.cauldronPos = pos;
-        this.moveControl = new FlyingMoveControl(this, 10, true);
-        this.entityData.set(TAMED, isTamed);
-        addGoalsAfterConstructor();
     }
 
     public static String[] COLORS = {"white", "green", "blue", "black", "red"};
@@ -145,47 +136,20 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         if (!level.isClientSide && inventoryBackoff > 0) {
             inventoryBackoff--;
         }
-
     }
 
-    //MOJANG MAKES THIS SO CURSED WHAT THE HECK
-    public List<WrappedGoal> getTamedGoals() {
-        List<WrappedGoal> list = new ArrayList<>();
-        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
-        list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
-        list.add(new WrappedGoal(2, new FindPotionGoal(this)));
-        list.add(new WrappedGoal(1, new CompleteCraftingGoal(this)));
-        return list;
-    }
-
-    public List<WrappedGoal> getUntamedGoals() {
-        List<WrappedGoal> list = new ArrayList<>();
-        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
-        list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
-        list.add(new WrappedGoal(2, new FindPotionGoal(this)));
-        list.add(new WrappedGoal(1, new CompleteCraftingGoal(this)));
-        return list;
-    }
-
-
-    // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
-    protected void addGoalsAfterConstructor() {
-        if (this.level.isClientSide())
-            return;
-
-        for (WrappedGoal goal : getGoals()) {
-            this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
-        }
-    }
-
-    public List<WrappedGoal> getGoals() {
-        return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+        goalSelector.addGoal(2, new FindNextItemGoal(this));
+        goalSelector.addGoal(2, new FindPotionGoal(this));
+        goalSelector.addGoal(1, new CompleteCraftingGoal(this));
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(TAMED, false);
         this.entityData.define(COLOR, "blue");
     }
 
@@ -214,8 +178,6 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         super.readAdditionalSaveData(tag);
         if (tag.contains("summoner_x"))
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
-
-        this.entityData.set(TAMED, tag.getBoolean("tamed"));
         if (tag.contains("color"))
             this.entityData.set(COLOR, tag.getString("color"));
 
@@ -229,7 +191,6 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putString("color", this.entityData.get(COLOR));
     }
 

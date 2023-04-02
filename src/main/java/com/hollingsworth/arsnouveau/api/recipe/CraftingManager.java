@@ -17,7 +17,9 @@ import java.util.List;
 
 public class CraftingManager {
     public ItemStack outputStack;
+    // Stacks still needed to craft
     public List<ItemStack> neededItems;
+    // Items that are left over after crafting, like buckets
     public List<ItemStack> remainingItems;
     public boolean craftCompleted;
 

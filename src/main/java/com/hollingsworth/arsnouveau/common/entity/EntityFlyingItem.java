@@ -23,8 +23,8 @@ import software.bernie.geckolib3.core.easing.EasingManager;
 import software.bernie.geckolib3.core.easing.EasingType;
 
 public class EntityFlyingItem extends ColoredProjectile {
-    public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BLOCK_POS);
-    public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<Vec3> to = SynchedEntityData.defineId(EntityFlyingItem.class, DataSerializers.VEC3);
+    public static final EntityDataAccessor<Vec3> from = SynchedEntityData.defineId(EntityFlyingItem.class, DataSerializers.VEC3);
     public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public int age;
@@ -34,24 +34,27 @@ public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Float> OFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
+    public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
+        this(worldIn, from, to, 255, 25, 180);
+    }
+
     public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to, int r, int g, int b) {
         this(ModEntities.ENTITY_FLYING_ITEM.get(), worldIn);
-        this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
-        this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
-//        this.age = 0;
+        this.entityData.set(EntityFlyingItem.to, to);
+        this.entityData.set(EntityFlyingItem.from, from);
         this.maxAge = (int) Math.floor(from.subtract(to).length() * 5);
-        setPos(from.x + 0.5, from.y, from.z + 0.5);
         this.entityData.set(RED, r);
         this.entityData.set(GREEN, g);
         this.entityData.set(BLUE, b);
+        setPos(from);
     }
 
     public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to) {
-        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()), 255, 25, 180);
+        this(worldIn, new Vec3(from.getX() + 0.5, from.getY(), from.getZ() + 0.5), new Vec3(to.getX() + 0.5, to.getY(), to.getZ() + 0.5), 255, 25, 180);
     }
 
     public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
-        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()), r,g,b);
+        this(worldIn, new Vec3(from.getX() + 0.5, from.getY(), from.getZ() + 0.5), new Vec3(to.getX() + 0.5, to.getY(), to.getZ() + 0.5), r,g,b);
     }
 
     public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, Level world) {
@@ -105,15 +108,17 @@ public class EntityFlyingItem extends ColoredProjectile {
 
 
         Vec3 vec3d2 = this.getDeltaMovement();
-        BlockPos start = entityData.get(from);
-        BlockPos end = entityData.get(to);
-        if (BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 16) {
+        Vec3 start = entityData.get(from);
+        Vec3 end = entityData.get(to);
+        System.out.println(BlockUtil.distanceFrom(end, this.position()));
+        if (BlockUtil.distanceFrom(end, this.position()) <= 1 || this.age > 1000 || BlockUtil.distanceFrom(end, this.position()) > 16) {
             this.remove(RemovalReason.DISCARDED);
             if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
-                ParticleUtil.spawnTouch((ClientLevel) level, end, new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
+                ParticleUtil.spawnTouch((ClientLevel) level, new BlockPos(end.x, end.y, end.z), new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
             }
             return;
         }
+
         double posX = getX();
         double posY = getY();
         double posZ = getZ();
@@ -123,15 +128,16 @@ public class EntityFlyingItem extends ColoredProjectile {
 
         EasingType type = EasingType.NONE;
 
-        double startY = start.getY();
-        double endY = end.getY() + getDistanceAdjustment(start, end);// BlockUtil.distanceFrom(start, end)*3;
-        double lerpX = lerp(time, (double) start.getX() + 0.5, (double) end.getX() + 0.5, type);
+        double startY = start.y();
+        double endY = end.y() + getDistanceAdjustment(start, end);
+        double lerpX = lerp(time, start.x(), end.x(), type);
         double lerpY = lerp(time, lerp(time, startY, endY, type), lerp(time, endY, startY, type), type);
-        double lerpZ = lerp(time, (double) start.getZ() + 0.5, (double) end.getZ() + 0.5, type);
+        double lerpZ = lerp(time, start.z(), end.z(), type);
 
-        BlockPos adjustedPos = new BlockPos(posX, end.getY(), posZ);
-        if (BlockUtil.distanceFrom(adjustedPos, end) <= 0.5) {
+        Vec3 adjustedPos = new Vec3(posX, end.y(), posZ);
+        if (BlockUtil.distanceFrom(end, adjustedPos) <= 0.5) {
             posY = getY() - 0.05;
+
             //  this.setPosition(lerpX, posY - 0.05, lerpZ);
             this.setPos(lerpX, posY, lerpZ);
         } else {
@@ -168,9 +174,10 @@ public class EntityFlyingItem extends ColoredProjectile {
         this.entityData.set(DIDOFFSET, true);
     }
 
-    private double getDistanceAdjustment(BlockPos start, BlockPos end) {
+    private double getDistanceAdjustment(Vec3 start, Vec3 end) {
         if (this.entityData.get(DIDOFFSET))
             return this.entityData.get(OFFSET);
+
         double distance = BlockUtil.distanceFrom(start, end);
         if (distance <= 1.5)
             return 2.5;
@@ -187,8 +194,8 @@ public class EntityFlyingItem extends ColoredProjectile {
         this.age = compound.getInt("age");
         this.entityData.set(DIDOFFSET, compound.getBoolean("didoffset"));
         this.entityData.set(OFFSET, compound.getFloat("offset"));
-        this.entityData.set(EntityFollowProjectile.from, NBTUtil.getBlockPos(compound, "from"));
-        this.entityData.set(EntityFollowProjectile.to, NBTUtil.getBlockPos(compound, "to"));
+        this.entityData.set(EntityFlyingItem.from, NBTUtil.getVec(compound, "from"));
+        this.entityData.set(EntityFlyingItem.to, NBTUtil.getVec(compound, "to"));
     }
 
     @Override
@@ -203,9 +210,9 @@ public class EntityFlyingItem extends ColoredProjectile {
         compound.putBoolean("didoffset", this.entityData.get(DIDOFFSET));
         compound.putFloat("offset", this.entityData.get(OFFSET));
         if (from != null)
-            NBTUtil.storeBlockPos(compound, "from", this.entityData.get(EntityFollowProjectile.from));
+            NBTUtil.storeVec(compound, "from", this.entityData.get(EntityFlyingItem.from));
         if (to != null)
-            NBTUtil.storeBlockPos(compound, "to", this.entityData.get(EntityFollowProjectile.to));
+            NBTUtil.storeVec(compound, "to", this.entityData.get(EntityFlyingItem.to));
     }
 
     public ItemStack getStack() {
@@ -218,8 +225,8 @@ public class EntityFlyingItem extends ColoredProjectile {
         this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(OFFSET, 0.0f);
         this.entityData.define(DIDOFFSET, false);
-        this.entityData.define(to, new BlockPos(0, 0, 0));
-        this.entityData.define(from, new BlockPos(0, 0, 0));
+        this.entityData.define(to, new Vec3(0, 0, 0));
+        this.entityData.define(from, new Vec3(0, 0, 0));
         this.entityData.define(SPAWN_TOUCH, true);
     }
 

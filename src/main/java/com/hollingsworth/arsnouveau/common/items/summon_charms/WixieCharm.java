@@ -40,7 +40,7 @@ public class WixieCharm extends AbstractSummonCharm {
             if (cauldronTile.hasWixie()) {
                 PortUtil.sendMessage(context.getPlayer(), Component.translatable("ars_nouveau.wixie.has_wixie"));
             } else {
-                EntityWixie wixie = new EntityWixie(world, true, pos);
+                EntityWixie wixie = new EntityWixie(world, pos);
                 wixie.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                 world.addFreshEntity(wixie);
                 cauldronTile.entityID = wixie.getId();

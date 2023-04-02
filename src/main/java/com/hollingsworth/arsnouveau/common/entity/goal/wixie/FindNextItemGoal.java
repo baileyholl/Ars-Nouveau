@@ -1,7 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.wixie;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.event.FlyingItemEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -12,10 +16,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class FindNextItemGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
@@ -87,33 +90,51 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                 found = true;
                 return;
             }
-
-            for (BlockPos b : tile.inventories) {
-
-                if (!(world.getBlockEntity(b) instanceof Container i))
-                    continue;
-                for (int j = 0; j < i.getContainerSize(); j++) {
-                    if (i.getItem(j).getItem() == getStack.getItem()) {
+            List<ItemStack> neededStacks = new ArrayList<>(tile.craftManager.neededItems);
+            boolean anyFound = false;
+            int spawnDelay = 0;
+            for(ItemStack needed : neededStacks) {
+                for (BlockPos b : tile.inventories) {
+                    if(tile.craftManager.neededItems.isEmpty()){
                         found = true;
-                        ItemStack stackToGive = i.getItem(j).copy();
-                        tile.spawnFlyingItem(b, stackToGive);
-                        stackToGive.setCount(1);
-                        tile.giveItem(stackToGive);
-                        i.getItem(j).shrink(1);
-                        Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
-                        wixie.inventoryBackoff = 60;
-                        break;
+                        return;
+                    }
+                    if (!(world.getBlockEntity(b) instanceof Container i))
+                        continue;
+                    for (int j = 0; j < i.getContainerSize(); j++) {
+                        if (i.getItem(j).getItem() == needed.getItem()) {
+                            ItemStack stackToGive = i.getItem(j).copy();
+                            spawnFlyingItem(tile.getLevel(), tile.getBlockPos(), b, stackToGive, 1 + 3 * spawnDelay++);
+                            stackToGive.setCount(1);
+                            tile.giveItem(stackToGive);
+                            i.getItem(j).shrink(1);
+                            if(!anyFound) {
+                                Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
+                                wixie.inventoryBackoff = 60;
+                                anyFound = true;
+                            }
+                        }
                     }
                 }
-                if (found)
-                    break;
             }
+            found = true;
+            return;
         }
 
         if (movePos != null && !found) {
             setPath(movePos.getX(), movePos.getY() + 1, movePos.getZ(), 1.2D);
         }
     }
+
+    public void spawnFlyingItem(Level level, BlockPos worldPosition, BlockPos from, ItemStack stack, int delay) {
+        BlockPos above = from.above();
+        EntityFlyingItem flyingItem = new EntityFlyingItem(level,
+                new Vec3(above.getX() + 0.5, above.getY(), above.getZ() + 0.5).add(ParticleUtil.inRange(-0.25, 0.25), 0, ParticleUtil.inRange(-0.25, 0.25)),
+                new Vec3(worldPosition.getX() + 0.5, worldPosition.getY(), worldPosition.getZ() + 0.5).add(ParticleUtil.inRange(-0.25, 0.25), 0, ParticleUtil.inRange(-0.25, 0.25)));
+        flyingItem.getEntityData().set(EntityFlyingItem.HELD_ITEM, stack.copy());
+        EventQueue.getServerInstance().addEvent(new FlyingItemEvent(level, flyingItem, delay));
+    }
+
 
     public void setPath(double x, double y, double z, double speedIn) {
         wixie.getNavigation().moveTo(wixie.getNavigation().createPath(x + 0.5, y + 0.5, z + 0.5, 0), speedIn);

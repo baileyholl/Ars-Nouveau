@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.recipe.*;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
-import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -191,19 +190,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         return null;
     }
 
-    public void spawnFlyingItem(BlockPos from, ItemStack stack) {
-        EntityFlyingItem flyingItem = new EntityFlyingItem(level, from.above(), worldPosition);
-        flyingItem.getEntityData().set(EntityFlyingItem.HELD_ITEM, stack.copy());
-        level.addFreshEntity(flyingItem);
-    }
-
-
     public void convertedEffect() {
         super.convertedEffect();
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(SummoningTile.CONVERTED, true));
-            EntityWixie wixie = new EntityWixie(level, true, worldPosition);
+            EntityWixie wixie = new EntityWixie(level, worldPosition);
             wixie.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
             level.addFreshEntity(wixie);
             ParticleUtil.spawnPoof((ServerLevel) level, worldPosition.above());
