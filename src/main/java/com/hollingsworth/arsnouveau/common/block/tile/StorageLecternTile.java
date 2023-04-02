@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -467,7 +468,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 	}
 
 	public int getMaxConnectedInventories() {
-		return getBookwyrmEntities().size() * 8;
+		return getBookwyrmEntities().size() * Config.BOOKWYRM_LIMIT.get();
 	}
 
 	public @Nullable EntityBookwyrm addBookwyrm(){
