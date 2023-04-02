@@ -15,7 +15,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,7 +22,10 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -163,9 +165,14 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     public void updateInventories() {
         inventories = new ArrayList<>();
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.isLoaded(bPos) && level.getBlockEntity(bPos) instanceof Container container && !(container instanceof ArcanePedestalTile)) {
-                inventories.add(bPos.immutable());
-            }
+            if(!level.isLoaded(bPos))
+                continue;
+            BlockEntity blockEntity = level.getBlockEntity(bPos);
+            if(blockEntity == null || blockEntity instanceof ArcanePedestalTile)
+                continue;
+            if(!blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
+                continue;
+            inventories.add(bPos.immutable());
         }
         setChanged();
     }
@@ -219,24 +226,31 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if (inventories == null)
             return itemsAvailable;
         for (BlockPos p : inventories) {
-            if (level.getBlockEntity(p) instanceof Container container) {
-                for (int i = 0; i < container.getContainerSize(); i++) {
-                    ItemStack stack = container.getItem(i);
-                    if (stack == null) {
-                        System.out.println("======");
-                        System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
-                        System.out.println(container.toString());
-                        System.out.println("AT POS " + p.toString());
-                        continue;
-                    }
-                    if (!itemsAvailable.containsKey(stack.getItem())) {
-                        itemsAvailable.put(stack.getItem(), stack.getCount());
-                        continue;
-                    }
-                    itemsAvailable.put(stack.getItem(), itemsAvailable.get(stack.getItem()) + stack.getCount());
-                }
-            } else {
+            BlockEntity blockEntity = level.getBlockEntity(p);
+            if(blockEntity == null) {
                 stale.add(p);
+                continue;
+            }
+            IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            if(handler == null) {
+                stale.add(p);
+                continue;
+            }
+
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (stack == null) {
+                    System.out.println("======");
+                    System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
+                    System.out.println(blockEntity.toString());
+                    System.out.println("AT POS " + p.toString());
+                    continue;
+                }
+                if (!itemsAvailable.containsKey(stack.getItem())) {
+                    itemsAvailable.put(stack.getItem(), stack.getCount());
+                    continue;
+                }
+                itemsAvailable.put(stack.getItem(), itemsAvailable.get(stack.getItem()) + stack.getCount());
             }
         }
 
