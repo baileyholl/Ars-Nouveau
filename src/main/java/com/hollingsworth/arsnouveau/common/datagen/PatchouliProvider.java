@@ -249,6 +249,7 @@ public class PatchouliProvider implements DataProvider {
                         .withText(getLangPath("wixie_charm", 2)))
                 .withPage(new TextPage(getLangPath("wixie_charm", 3)).withTitle("ars_nouveau.item_crafting"))
                 .withPage(new TextPage(getLangPath("wixie_charm", 4)).withTitle("ars_nouveau.item_crafting_setting"))
+                .withPage(new TextPage(getLangPath("wixie_charm", 7)).withTitle("ars_nouveau.binding_inventories"))
                 .withPage(new TextPage(getLangPath("wixie_charm", 5)).withTitle("ars_nouveau.potion_crafting"))
                 .withPage(new TextPage(getLangPath("wixie_charm", 6))), getPath(AUTOMATION, "wixie_charm"));
 

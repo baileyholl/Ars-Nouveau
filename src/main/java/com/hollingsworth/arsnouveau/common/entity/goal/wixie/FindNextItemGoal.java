@@ -40,7 +40,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         movePos = null;
         Level world = wixie.getCommandSenderWorld();
         WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
-        if (tile == null || tile.inventories == null) {
+        if (tile == null || tile.getInventories() == null) {
             found = true;
             return;
         }
@@ -51,7 +51,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         }
         Set<Item> itemSet = new HashSet<>();
         itemSet.add(getStack.getItem());
-        for (BlockPos b : tile.inventories) {
+        for (BlockPos b : tile.getInventories()) {
             BlockEntity blockEntity = world.getBlockEntity(b);
             if(blockEntity == null)
                 continue;
@@ -115,7 +115,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             boolean anyFound = false;
             int spawnDelay = 0;
             List<StorageLecternTile.HandlerPos> handlers = new ArrayList<>();
-            for (BlockPos b : tile.inventories) {
+            for (BlockPos b : tile.getInventories()) {
                 BlockEntity blockEntity = world.getBlockEntity(b);
                 if(blockEntity == null)
                     continue;
