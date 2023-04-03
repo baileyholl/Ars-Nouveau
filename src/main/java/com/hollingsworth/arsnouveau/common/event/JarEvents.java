@@ -7,7 +7,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.entity.EntityMountEvent;
@@ -40,9 +39,9 @@ public class JarEvents {
 
     @SubscribeEvent
     public static void onRide(EntityMountEvent mountEvent){
-        Entity beingMounted = mountEvent.getEntityBeingMounted();
-        if (beingMounted.getLevel().isLoaded(beingMounted.getOnPos()) && beingMounted.getLevel().getBlockEntity(beingMounted.getOnPos()) instanceof MobJarTile) {
-            mountEvent.setCanceled(true);
-        }
+//        Entity beingMounted = mountEvent.getEntityBeingMounted();
+//        if (beingMounted.getLevel().isLoaded(beingMounted.getOnPos()) && beingMounted.getLevel().getBlockEntity(beingMounted.getOnPos()) instanceof MobJarTile) {
+//            mountEvent.setCanceled(true);
+//        }
     }
 }
