@@ -106,11 +106,8 @@ public class EntityFlyingItem extends ColoredProjectile {
         if (age > 400)
             this.remove(RemovalReason.DISCARDED);
 
-
-        Vec3 vec3d2 = this.getDeltaMovement();
         Vec3 start = entityData.get(from);
         Vec3 end = entityData.get(to);
-        System.out.println(BlockUtil.distanceFrom(end, this.position()));
         if (BlockUtil.distanceFrom(end, this.position()) <= 1 || this.age > 1000 || BlockUtil.distanceFrom(end, this.position()) > 16) {
             this.remove(RemovalReason.DISCARDED);
             if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
@@ -137,8 +134,6 @@ public class EntityFlyingItem extends ColoredProjectile {
         Vec3 adjustedPos = new Vec3(posX, end.y(), posZ);
         if (BlockUtil.distanceFrom(end, adjustedPos) <= 0.5) {
             posY = getY() - 0.05;
-
-            //  this.setPosition(lerpX, posY - 0.05, lerpZ);
             this.setPos(lerpX, posY, lerpZ);
         } else {
             this.setPos(lerpX, lerpY, lerpZ);
