@@ -267,14 +267,15 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
 			return;
 		}
-		if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
-			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
-			return;
-		}
+
 		if(this.connectedInventories.contains(storedPos)){
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
 			this.connectedInventories.remove(storedPos);
 		}else {
+			if(this.connectedInventories.size() >= this.getMaxConnectedInventories()){
+				PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
+				return;
+			}
 			this.connectedInventories.add(storedPos.immutable());
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
 		}
