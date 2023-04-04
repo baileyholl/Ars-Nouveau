@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
+import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
@@ -19,7 +19,6 @@ import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
-import com.hollingsworth.arsnouveau.common.datagen.RecipeDatagen;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -38,6 +37,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -53,7 +53,6 @@ import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -61,7 +60,6 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -215,19 +213,18 @@ public class EventHandler {
             CaelusHandler.setFlying(event.player);
         }
 
-        if (event.player.hasEffect(ModPotions.FLIGHT_EFFECT.get()) && event.player.level.getGameTime() % 20 == 0 && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20) {
-            FlightRefreshEvent flightRefreshEvent = new FlightRefreshEvent(event.player);
-            MinecraftForge.EVENT_BUS.post(flightRefreshEvent);
+        if (event.player.hasEffect(ModPotions.FLIGHT_EFFECT.get())
+                && event.player.level.getGameTime() % 20 == 0
+                && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20
+        && event.player instanceof ServerPlayer serverPlayer) {
+            RitualEventQueue.getRitual(event.player.level,RitualFlight.class, flight -> flight.refreshFlightEvent(serverPlayer));
         }
     }
 
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent event) {
         if (!event.getEntity().level.isClientSide && event.getEntity() instanceof Player entity) {
-            if (entity.getEffect(ModPotions.FLIGHT_EFFECT.get()) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null) {
-                RitualFlight.RitualFlightHandler.grantFlight(entity);
-            }
-
+            RitualEventQueue.getRitual(entity.level,RitualFlight.class, flight -> flight.onJumpEvent(event));
         }
     }
 
