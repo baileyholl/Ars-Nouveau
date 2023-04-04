@@ -134,8 +134,6 @@ public class EntityFlyingItem extends ColoredProjectile {
         Vec3 adjustedPos = new Vec3(posX, end.y(), posZ);
         if (BlockUtil.distanceFrom(end, adjustedPos) <= 0.5) {
             posY = getY() - 0.05;
-
-            //  this.setPosition(lerpX, posY - 0.05, lerpZ);
             this.setPos(lerpX, posY, lerpZ);
         } else {
             this.setPos(lerpX, lerpY, lerpZ);
