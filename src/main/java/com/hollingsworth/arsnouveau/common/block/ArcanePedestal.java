@@ -119,9 +119,11 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     @Override
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
-        if (pLevel.getBlockEntity(pPos) instanceof ArcanePedestalTile tile) {
-            tile.hasSignal = pLevel.hasNeighborSignal(pPos);
-            tile.setChanged();
+        if (!pLevel.isClientSide && pLevel.getBlockEntity(pPos) instanceof ArcanePedestalTile tile) {
+            if(tile.hasSignal != pLevel.hasNeighborSignal(pPos)) {
+                tile.hasSignal = !tile.hasSignal;
+                tile.updateBlock();
+            }
         }
     }
 
