@@ -1,4 +1,4 @@
-// 1.19.2	2023-04-01T09:19:42.6165645	Patchouli
+// 1.19.2	2023-04-02T10:01:18.4414408	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -33,7 +33,7 @@ c7d187c5baed53c4ddb63b6b6dc9ec9847c21a45 data/ars_nouveau/patchouli_books/worn_n
 2ea9c13e62cb450b8b22d140922ec1dc5647e7c0 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/summon_bed.json
 70e9745b59840561d25e8261355bcfd61a7d2efd data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/void_prism.json
 f6550bcc2b3942c8c56bcee77a7eb1b665f94dce data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/whirlisprig_charm.json
-6b738dce077a4a28b958817cbafe90e0d89ecb68 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/wixie_charm.json
+6c33f9c15e7ae17847d3d0b827d2fed0f25dab47 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/wixie_charm.json
 3ac1fbba7133877181a6dfb45a3912643d84c057 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/wixie_hat.json
 1611ad9925068a078a2c38232eb4838afe522831 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/bane_of_arthropods.json
 4410ed3db44cc2768b3e7112c540aa2f85542302 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/blast_protection.json

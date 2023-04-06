@@ -30,8 +30,8 @@ public class WixieCauldron extends SummonBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
-            return InteractionResult.SUCCESS;
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile) || player.getMainHandItem().getItem() == ItemsRegistry.DOMINION_ROD.get())
+            return InteractionResult.PASS;
 
         if (player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get()
                 && !player.getMainHandItem().isEmpty()

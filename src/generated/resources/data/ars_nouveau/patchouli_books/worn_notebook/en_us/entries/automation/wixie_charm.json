@@ -28,6 +28,11 @@
     },
     {
       "type": "patchouli:text",
+      "text": "ars_nouveau.page7.wixie_charm",
+      "title": "ars_nouveau.binding_inventories"
+    },
+    {
+      "type": "patchouli:text",
       "text": "ars_nouveau.page5.wixie_charm",
       "title": "ars_nouveau.potion_crafting"
     },
