@@ -111,7 +111,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE,
                 BlockRegistry.CRAFTING_LECTERN.get(),
                 BlockRegistry.ARCHWOOD_CHEST,
-                BlockRegistry.ALTERATION_TABLE
+                BlockRegistry.ALTERATION_TABLE,
+                BlockRegistry.ITEM_DETECTOR.get(),
+                BlockRegistry.REPOSITORY
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE,
