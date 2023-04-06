@@ -1188,5 +1188,11 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.panda", "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.");
         add("mob_jar.allay.title", "Allay Behavior");
         add("mob_jar.allay", "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories.");
+        add("ars_nouveau.cauldron.num_bounded", "%s bounded inventories");
+        add("ars_nouveau.wixie_cauldron.bound", "Inventory bound.");
+        add("ars_nouveau.wixie_cauldron.removed", "Inventory removed.");
+        add("ars_nouveau.wixie_cauldron.cleared", "Bound inventories cleared.");
+        add("ars_nouveau.binding_inventories", "Binding Inventories");
+        add("ars_nouveau.page7.wixie_charm", "You can select specific inventories for the wixie by using a dominion wand on an inventory, and then the cauldron. If any inventories are selected, only these inventories can be used and the Wixie will no longer pull from all nearby inventories by default.");
     }
 }
