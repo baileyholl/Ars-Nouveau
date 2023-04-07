@@ -111,7 +111,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
-    public Starbuncle(EntityType<Starbuncle> entityCarbuncleEntityType, Level world) {
+    public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.1f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());

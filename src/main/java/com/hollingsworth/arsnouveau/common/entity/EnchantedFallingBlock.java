@@ -36,6 +36,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -92,7 +93,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
     }
 
     public static boolean canFall(Level level, BlockPos pos, LivingEntity owner, SpellStats spellStats) {
-        if (level.isEmptyBlock(pos) || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile))) {
+        if (level.isEmptyBlock(pos) || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
             return false;
         }
         return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim(owner, level, pos);
@@ -106,6 +107,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
             fallingblockentity = new EnchantedMageblock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
             fallingblockentity.blockData = tile.saveWithoutMetadata();
             fallingblockentity.setColor(tile.color);
+        } else if (level.getBlockEntity(pos) instanceof SkullBlockEntity tile) {
+            fallingblockentity = new EnchantedSkull(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
+            fallingblockentity.blockData = tile.saveWithoutMetadata();
         } else {
             fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
         }

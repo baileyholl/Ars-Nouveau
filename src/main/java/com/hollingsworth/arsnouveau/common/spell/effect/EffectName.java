@@ -6,7 +6,9 @@ import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
+import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,6 +29,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+
+import static net.minecraft.world.level.block.entity.SkullBlockEntity.updateGameprofile;
 
 public class EffectName extends AbstractEffect {
 
@@ -38,14 +43,15 @@ public class EffectName extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component newName = getName(world, shooter, spellStats, spellContext, resolver);
-        rayTraceResult.getEntity().setCustomName(newName);
-        if (rayTraceResult.getEntity() instanceof Mob mob) {
+        Entity entity = rayTraceResult.getEntity();
+        entity.setCustomName(newName);
+        if (entity instanceof Mob mob) {
             mob.setPersistenceRequired();
-        } else if (rayTraceResult.getEntity() instanceof ItemEntity item) {
+        } else if (entity instanceof ItemEntity item) {
             item.getItem().setHoverName(newName);
         }
 
-        if(shooter instanceof Player player && isRealPlayer(shooter) && player.equals(rayTraceResult.getEntity())){
+        if(shooter instanceof Player player && isRealPlayer(shooter) && player.equals(entity)){
             ItemStack offhand = player.getOffhandItem();
             offhand.setHoverName(newName);
         }
@@ -72,16 +78,22 @@ public class EffectName extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component name = getName(world, shooter, spellStats, spellContext, resolver);
-        BlockEntity blockEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
+        BlockPos pos = rayTraceResult.getBlockPos();
+        BlockState state = world.getBlockState(pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof SkullBlockEntity head){
+            head.setOwner(new GameProfile(null, name.getString()));
+            world.sendBlockUpdated(pos, state, state, 3);
+            head.setChanged();
+            return;
+        }
         if(blockEntity instanceof BaseContainerBlockEntity nameable){
             nameable.setCustomName(name);
-            BlockPos pos = rayTraceResult.getBlockPos();
-            BlockState state = world.getBlockState(pos);
             world.sendBlockUpdated(pos, state, state, 3);
             nameable.setChanged();
             return;
         }
-        for(Entity entity : world.getEntities(null, new AABB(rayTraceResult.getBlockPos()).inflate(0.08))){
+        for(Entity entity : world.getEntities(null, new AABB(pos).inflate(0.08))){
             entity.setCustomName(name);
             if (entity instanceof Mob mob) {
                 mob.setPersistenceRequired();

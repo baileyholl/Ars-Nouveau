@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFallingBlock> {
+public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> extends EntityRenderer<T> {
     private final BlockRenderDispatcher dispatcher;
     public EnchantedFallingBlockRenderer(EntityRendererProvider.Context p_174112_) {
         super(p_174112_);
@@ -23,7 +23,7 @@ public class EnchantedFallingBlockRenderer extends EntityRenderer<EnchantedFalli
         dispatcher = p_174112_.getBlockRenderDispatcher();
     }
 
-    public void render(EnchantedFallingBlock pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(T pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         try {
             BlockState blockstate = pEntity.getBlockState();
             Level level = pEntity.getLevel();
