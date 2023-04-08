@@ -53,6 +53,14 @@ public class RitualHarvest extends AbstractRitual {
                 continue;
             }
 
+            if (state.getBlock() instanceof CocoaBlock) {
+                if (harvestPods(blockpos, state, world) && !hasPlayedSound) {
+                    world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
+                    hasPlayedSound = true;
+                }
+                continue;
+            }
+
             if (state.getBlock() instanceof StemGrownBlock || state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
                 processAndSpawnDrops(blockpos, state, world);
                 BlockUtil.destroyBlockSafely(world, blockpos, false, null);
@@ -79,6 +87,15 @@ public class RitualHarvest extends AbstractRitual {
             return false;
         processAndSpawnDrops(pos, state, world);
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
+        setNeedsSource(true);
+        return true;
+    }
+
+    public boolean harvestPods(BlockPos pos, BlockState state, Level world) {
+        if (state.getValue(CocoaBlock.AGE) != 3)
+            return false;
+        processAndSpawnDrops(pos, state, world);
+        world.setBlockAndUpdate(pos, state.setValue(CocoaBlock.AGE, 0));
         setNeedsSource(true);
         return true;
     }

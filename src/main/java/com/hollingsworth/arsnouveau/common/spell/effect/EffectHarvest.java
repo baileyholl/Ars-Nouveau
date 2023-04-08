@@ -40,6 +40,14 @@ public class EffectHarvest extends AbstractEffect {
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
     }
 
+
+    public static void harvestPods(BlockPos pos, BlockState state, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if (state.getValue(CocoaBlock.AGE) != 3)
+            return;
+        processAndSpawnDrops(pos, state, world, shooter, spellStats, spellContext);
+        world.setBlockAndUpdate(pos, state.setValue(CocoaBlock.AGE, 0));
+    }
+
     public static void processAndSpawnDrops(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         List<ItemStack> cropDrops = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
         if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
@@ -68,6 +76,12 @@ public class EffectHarvest extends AbstractEffect {
                 blockpos = blockpos.above();
                 state = world.getBlockState(blockpos);
             }
+
+            if (state.getBlock() instanceof CocoaBlock){
+                harvestPods(blockpos, state, world, shooter, spellStats, spellContext);
+                continue;
+            }
+
             if (state.getBlock() instanceof NetherWartBlock) {
                 harvestNetherwart(blockpos, state, world, shooter, spellStats, spellContext);
                 continue;
