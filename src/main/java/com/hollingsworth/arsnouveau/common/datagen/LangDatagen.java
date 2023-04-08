@@ -849,6 +849,8 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.redstone_air", "Redstone Air");
         add("entity.ars_nouveau.dummy", "Dummy");
         add("entity.ars_nouveau.enchanted_falling_block", "Enchanted Falling Block");
+        add("entity.ars_nouveau.enchanted_mage_block", "Enchanted Falling Block");
+        add("entity.ars_nouveau.enchanted_head_block", "Enchanted Falling Block");
         add("entity.ars_nouveau.familiar_jabberwog", "Familiar Jabberwog");
         add("entity.ars_nouveau.fangs", "Fangs");
         add("entity.ars_nouveau.ritual", "Ritual");
@@ -1108,6 +1110,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_hidden", "Spell is now hidden.");
         add("entity.minecraft.villager.ars_nouveau.shady_wizard", "Shady Wizard");
         add("death.attack.an_enchantedBlock", "%1$s was crushed by %2$s magic blocks");
+        add("death.attack.freeze.item", "%1$s was frozen to death by %2$s using %3$");
         add("block.ars_nouveau.magelight_torch", "Magelight Torch");
         add("block.ars_nouveau.arcane_platform", "Arcane Platform");
         add("ars_nouveau.arcane_platform.tooltip", "Can be placed in any direction and can be used in place of a pedestal.");
@@ -1131,6 +1134,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scry_caster.no_pos", "No position set. Use this on a Scry Crystal or hold a Scryer's Scroll in the offhand.");
         add("ars_nouveau.scry_caster.invalid_behavior", "Invalid spell bound. Rebind a new valid spell.");
         add("entity.ars_nouveau.animated_block", "Animated Block");
+        add("entity.ars_nouveau.animated_head", "Animated Head");
+
         add("item.ars_nouveau.enchanters_eye", "Enchanter's Eye");
         add("ars_nouveau.page.enchanters_eye", "A caster tool that can cast inscribed spells remotely through a Scry Crystal. Use the eye on a Scry Crystal to bind the location, or hold a bound Scry Parchment in the offhand. Spells will be cast through the eye similar to a Spell Turret, but you are considered the caster for all effects. Useful for remote teleportation or item movement.");
         add("ars_nouveau.warp_scroll.disabled_warp_portal", "Permanent warp portals are currently disabled");
