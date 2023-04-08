@@ -1,0 +1,53 @@
+package com.hollingsworth.arsnouveau.client.jei;
+
+
+import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class DyeRecipeCategory implements ICraftingCategoryExtension {
+    private final DyeRecipe recipe;
+
+    public DyeRecipeCategory(DyeRecipe recipe) {
+        this.recipe = recipe;
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+        List<List<ItemStack>> inputs = recipe.getIngredients().stream()
+                .map(ingredient -> List.of(ingredient.getItems()))
+                .toList();
+        ItemStack resultItem = recipe.getResultItem();
+        List<ItemStack> results = new ArrayList<>();
+        if (resultItem.getItem() instanceof IDyeable toDye) {
+            var focus = focuses.getFocuses(VanillaTypes.ITEM_STACK, RecipeIngredientRole.CATALYST)
+                    .filter(f -> f.getTypedValue().getIngredient().getItem() instanceof DyeItem)
+                    .map(f -> f.getTypedValue().getIngredient())
+                    .toList();
+
+            List<DyeColor> colors = focus.isEmpty() ? Arrays.stream(recipe.getIngredients().get(0).getItems()).map(DyeColor::getColor).toList() : focus.stream().map(DyeColor::getColor).toList();
+
+            for (DyeColor color : colors) {
+                ItemStack copy = resultItem.copy();
+                toDye.onDye(copy, color);
+                results.add(copy);
+            }
+        }
+
+        craftingGridHelper.createAndSetOutputs(builder, results);
+        craftingGridHelper.createAndSetInputs(builder, inputs, 0, 0);
+    }
+
+}

@@ -8,6 +8,8 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
@@ -23,6 +25,13 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
     public void setRecipe(IRecipeLayoutBuilder builder, EnchantmentRecipe recipe, IFocusGroup focuses) {
         List<Ingredient> inputs = multiProvider.apply(recipe).input();
         double angleBetweenEach = 360.0 / inputs.size();
+
+
+        ItemStack dummy = recipe.enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(recipe.enchantment, recipe.enchantLevel-1)) : Items.BOOK.getDefaultInstance();
+        Component message = recipe.enchantLevel == 1 ? Component.literal("Any compatible item") : Component.literal("Needs lower level enchantment");
+        dummy.setHoverName(message); //TODO Translatable
+
+        builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addItemStack(dummy);
 
         for (Ingredient input : inputs) {
             builder.addSlot(RecipeIngredientRole.INPUT, (int) point.x, (int) point.y)
