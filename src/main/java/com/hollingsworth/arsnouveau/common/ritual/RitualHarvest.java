@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,10 +18,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -31,26 +30,32 @@ public class RitualHarvest extends AbstractRitual {
     protected void tick() {
         Level world = getWorld();
         BlockPos pos = getPos();
-        if(world.isClientSide){
+        if (world != null && world.isClientSide) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 4);
             return;
         }
-        if(getWorld().getGameTime() % 200 != 0)
+        if (world == null || pos == null || world.getGameTime() % 200 != 0)
             return;
         int range = 4;
         boolean hasPlayedSound = false;
         for (BlockPos blockpos : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))) {
             BlockState state = world.getBlockState(blockpos);
 
-            if (state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock) {
+            if (state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock || world.getBlockState(blockpos.above()).is(BlockTagProvider.HARVEST_STEMS)) {
                 blockpos = blockpos.above();
                 state = world.getBlockState(blockpos);
             }
             if (state.getBlock() instanceof NetherWartBlock) {
-                if(harvestNetherwart(blockpos, state, world) && !hasPlayedSound){
+                if (harvestNetherwart(blockpos, state, world) && !hasPlayedSound) {
                     world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
                     hasPlayedSound = true;
                 }
+                continue;
+            }
+
+            if (state.getBlock() instanceof StemGrownBlock || state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
+                processAndSpawnDrops(blockpos, state, world);
+                BlockUtil.destroyBlockSafely(world, blockpos, false, null);
                 continue;
             }
 
@@ -61,7 +66,7 @@ public class RitualHarvest extends AbstractRitual {
             if (!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
                 continue;
 
-            if(processAndSpawnDrops(blockpos, state, world) && !hasPlayedSound){
+            if (processAndSpawnDrops(blockpos, state, world) && !hasPlayedSound) {
                 world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
                 hasPlayedSound = true;
             }
@@ -93,7 +98,7 @@ public class RitualHarvest extends AbstractRitual {
                 return;
             }
             d = manager.insertStack(d);
-            if(!d.isEmpty()) {
+            if (!d.isEmpty()) {
                 world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), d));
             }
         });

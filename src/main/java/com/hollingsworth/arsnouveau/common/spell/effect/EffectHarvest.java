@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
@@ -15,10 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +64,7 @@ public class EffectHarvest extends AbstractEffect {
         for (BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, spellStats)) {
             BlockState state = world.getBlockState(blockpos);
 
-            if (state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock) {
+            if (state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock || world.getBlockState(blockpos.above()).is(BlockTagProvider.HARVEST_STEMS)) {
                 blockpos = blockpos.above();
                 state = world.getBlockState(blockpos);
             }
@@ -74,15 +73,18 @@ public class EffectHarvest extends AbstractEffect {
                 continue;
             }
 
-            if (!(state.getBlock() instanceof CropBlock))
+            if (state.getBlock() instanceof StemGrownBlock || state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
+                processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext);
+                BlockUtil.destroyBlockSafely(world, blockpos, false, shooter);
                 continue;
-            CropBlock cropsBlock = (CropBlock) world.getBlockState(blockpos).getBlock();
+            }
 
-            if (!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
-                continue;
-
-            processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext);
-            world.setBlockAndUpdate(blockpos, cropsBlock.getStateForAge(1));
+            if (state.getBlock() instanceof CropBlock crop) {
+                if (crop.isMaxAge(state) && world instanceof ServerLevel) {
+                    processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext);
+                    world.setBlockAndUpdate(blockpos, crop.getStateForAge(1));
+                }
+            }
         }
     }
 
@@ -92,7 +94,7 @@ public class EffectHarvest extends AbstractEffect {
         return 10;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentFortune.INSTANCE);
@@ -103,7 +105,7 @@ public class EffectHarvest extends AbstractEffect {
         return "When used on grown crops, this spell will obtain the fully grown product without destroying the plant.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);
