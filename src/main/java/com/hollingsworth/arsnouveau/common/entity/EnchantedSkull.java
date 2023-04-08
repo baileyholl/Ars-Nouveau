@@ -7,12 +7,14 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class EnchantedSkull extends EnchantedFallingBlock{
     public EnchantedSkull(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
@@ -35,6 +37,14 @@ public class EnchantedSkull extends EnchantedFallingBlock{
     @Override
     public Packet<?> getAddEntityPacket() {
         return new SkullEntityPacket(this, Block.getId(this.getBlockState()), this.blockData);
+    }
+
+    @Nullable
+    @Override
+    public ItemEntity spawnAtLocation(ItemStack pStack) {
+        if (pStack.getItem() instanceof PlayerHeadItem)
+            pStack.setTag(blockData);
+        return this.spawnAtLocation(pStack, 0.0F);
     }
 
     @Override

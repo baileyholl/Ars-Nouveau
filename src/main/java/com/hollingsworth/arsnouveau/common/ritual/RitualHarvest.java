@@ -62,7 +62,7 @@ public class RitualHarvest extends AbstractRitual {
             }
 
             if (state.getBlock() instanceof StemGrownBlock || state.is(BlockTagProvider.HARVEST_STEMS) && state.getBlock() == world.getBlockState(blockpos.below()).getBlock()) {
-                processAndSpawnDrops(blockpos, state, world);
+                processAndSpawnDrops(blockpos, state, world, false);
                 BlockUtil.destroyBlockSafely(world, blockpos, false, null);
                 continue;
             }
@@ -74,7 +74,7 @@ public class RitualHarvest extends AbstractRitual {
             if (!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
                 continue;
 
-            if (processAndSpawnDrops(blockpos, state, world) && !hasPlayedSound) {
+            if (processAndSpawnDrops(blockpos, state, world, true) && !hasPlayedSound) {
                 world.playSound(null, getPos(), SoundEvents.CROP_BREAK, SoundSource.BLOCKS, 1, 1);
                 hasPlayedSound = true;
             }
@@ -85,30 +85,31 @@ public class RitualHarvest extends AbstractRitual {
     public boolean harvestNetherwart(BlockPos pos, BlockState state, Level world) {
         if (state.getValue(NetherWartBlock.AGE) != 3)
             return false;
-        processAndSpawnDrops(pos, state, world);
+        processAndSpawnDrops(pos, state, world, true);
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
         setNeedsSource(true);
         return true;
     }
 
     public boolean harvestPods(BlockPos pos, BlockState state, Level world) {
-        if (state.getValue(CocoaBlock.AGE) != 3)
+        if (state.getValue(CocoaBlock.AGE) != 2)
             return false;
-        processAndSpawnDrops(pos, state, world);
+        processAndSpawnDrops(pos, state, world, true);
         world.setBlockAndUpdate(pos, state.setValue(CocoaBlock.AGE, 0));
         setNeedsSource(true);
         return true;
     }
 
-    public boolean processAndSpawnDrops(BlockPos pos, BlockState state, Level world) {
+    public boolean processAndSpawnDrops(BlockPos pos, BlockState state, Level world, boolean takeSeedToReplant) {
         List<ItemStack> cropDrops = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
 
-        for (ItemStack i : cropDrops) {
-            if (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock() == state.getBlock()) {
-                i.shrink(1);
-                break;
+        if (takeSeedToReplant)
+            for (ItemStack i : cropDrops) {
+                if (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock() == state.getBlock()) {
+                    i.shrink(1);
+                    break;
+                }
             }
-        }
         InventoryManager manager = tile.getInventoryManager();
         cropDrops.forEach(d -> {
             if (d.isEmpty() || d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()) {
