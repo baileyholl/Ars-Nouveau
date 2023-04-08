@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -32,9 +31,9 @@ public class DyeRecipeCategory implements ICraftingCategoryExtension {
         ItemStack resultItem = recipe.getResultItem();
         List<ItemStack> results = new ArrayList<>();
         if (resultItem.getItem() instanceof IDyeable toDye) {
-            var focus = focuses.getFocuses(VanillaTypes.ITEM_STACK, RecipeIngredientRole.CATALYST)
-                    .filter(f -> f.getTypedValue().getIngredient().getItem() instanceof DyeItem)
+            var focus = focuses.getItemStackFocuses(RecipeIngredientRole.INPUT)
                     .map(f -> f.getTypedValue().getIngredient())
+                    .filter(f -> f.getItem() instanceof DyeItem)
                     .toList();
 
             List<DyeColor> colors = focus.isEmpty() ? Arrays.stream(recipe.getIngredients().get(0).getItems()).map(DyeColor::getColor).toList() : focus.stream().map(DyeColor::getColor).toList();
