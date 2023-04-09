@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.RedstoneAir;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,8 @@ public class EffectRedstone extends AbstractEffect {
         }
         int timeBonus = (int) spellStats.getDurationMultiplier();
         world.setBlockAndUpdate(pos, state);
-        world.scheduleTick(pos, state.getBlock(), GENERIC_INT.get() + timeBonus * BONUS_TIME.get());
+        int delay = Math.max(GENERIC_INT.get() + timeBonus * BONUS_TIME.get(), 2);
+        world.scheduleTick(pos, state.getBlock(), delay);
         BlockPos hitPos = pos.relative(rayTraceResult.getDirection().getOpposite());
 
         BlockUtil.safelyUpdateState(world, pos);
@@ -62,12 +64,12 @@ public class EffectRedstone extends AbstractEffect {
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Creates a brief redstone signal on a block, like a button. The signal starts at strength 10, and may be increased with Amplify, or decreased with Dampen. The duration may be extended with Extend Time.";
+        return "Creates a brief redstone signal on a block, like a button. The signal starts at strength 10, and may be increased with Amplify, or decreased with Dampen. The duration may be extended with Extend Time or shortened with Duration Down.";
     }
 
     @Override
