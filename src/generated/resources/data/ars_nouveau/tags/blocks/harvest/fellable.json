@@ -1,5 +1,7 @@
 {
   "values": [
+    "minecraft:mushroom_stem",
+    "#minecraft:logs",
     "#ars_nouveau:harvest/foliage",
     "#ars_nouveau:harvest/stems"
   ]
