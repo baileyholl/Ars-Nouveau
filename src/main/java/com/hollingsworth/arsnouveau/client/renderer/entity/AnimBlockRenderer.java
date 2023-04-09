@@ -27,14 +27,14 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
-public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
+public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/anim_block.png");
+    protected static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/anim_block.png");
     public static final ResourceLocation BASE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/animated_block.geo.json");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/animated_block_animations.json");
 
     private final BlockRenderDispatcher dispatcher;
-    MultiBufferSource bufferSource;
+    protected MultiBufferSource bufferSource;
 
     public AnimBlockRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AnimatedGeoModel<>() {
@@ -54,7 +54,7 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
             }
 
             @Override
-            public void setCustomAnimations(AnimBlockSummon animatable, int instanceId, AnimationEvent customPredicate) {
+            public void setCustomAnimations(BOBBY animatable, int instanceId, AnimationEvent customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
                 IBone head = this.getAnimationProcessor().getBone("block");
                 head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));
@@ -64,7 +64,7 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
     }
 
     @Override
-    public void render(AnimBlockSummon animatable, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(BOBBY animatable, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         poseStack.pushPose();
         poseStack.scale(0.8F, 0.8F, 0.8F);
         super.render(animatable, entityYaw, partialTick, poseStack, bufferSource, packedLight);
@@ -72,7 +72,7 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
     }
 
     @Override
-    public void renderEarly(AnimBlockSummon animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
+    public void renderEarly(BOBBY animatable, PoseStack poseStack, float partialTick, MultiBufferSource bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
         super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
         this.bufferSource = bufferSource;
     }
@@ -83,35 +83,32 @@ public class AnimBlockRenderer extends GeoEntityRenderer<AnimBlockSummon> {
             AnimBlockSummon animBlock = animatable;
             if (animBlock == null) return;
             BlockState blockstate = animatable.getBlockState();
-            //don't override the block and color it
-            if(blockstate.getBlock() instanceof MageBlock){
-                super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-                return;
-            }
+            //don't override the block and color it or
             //hide the block and render the blockstate
-            try {
-                Level level = animatable.getLevel();
-                if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
-                    poseStack.pushPose();
-                    BlockPos blockpos = animBlock.blockPosition().above();
-                    RenderUtils.translateToPivotPoint(poseStack, bone);
-                    poseStack.translate(-0.5D, -0.5, -0.5D);
-                    var model = this.dispatcher.getBlockModel(blockstate);
-                    for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
-                        this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, poseStack, this.bufferSource.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(animBlock.getOnPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-                    poseStack.popPose();
-                    buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+            if (!(blockstate.getBlock() instanceof MageBlock)) {
+                try {
+                    Level level = animatable.getLevel();
+                    if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+                        poseStack.pushPose();
+                        BlockPos blockpos = animBlock.blockPosition().above();
+                        RenderUtils.translateToPivotPoint(poseStack, bone);
+                        poseStack.translate(-0.5D, -0.5, -0.5D);
+                        var model = this.dispatcher.getBlockModel(blockstate);
+                        for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
+                            this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, poseStack, this.bufferSource.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(animBlock.getOnPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
+                        poseStack.popPose();
+                        buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+                    }
+                } catch (Exception e) {
+                    // We typically don't render non-models like this, so catch our shenanigans.
                 }
-            } catch (Exception e) {
-                // We typically don't render non-models like this, so catch our shenanigans.
             }
-
         }
         super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
-    public Color getRenderColor(AnimBlockSummon animatable, float partialTick, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight) {
+    public Color getRenderColor(BOBBY animatable, float partialTick, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight) {
         if (animatable != null) {
             ParticleColor color = ParticleColor.fromInt(animatable.getColor());
             return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);

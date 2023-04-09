@@ -111,7 +111,9 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE,
                 BlockRegistry.CRAFTING_LECTERN.get(),
                 BlockRegistry.ARCHWOOD_CHEST,
-                BlockRegistry.ALTERATION_TABLE
+                BlockRegistry.ALTERATION_TABLE,
+                BlockRegistry.ITEM_DETECTOR.get(),
+                BlockRegistry.REPOSITORY
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE,
@@ -143,14 +145,13 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.WEEPING_VINES,
                 Blocks.MANGROVE_ROOTS);
 
-        this.tag(HARVEST_STEMS).addTag(BlockTags.LOGS).add(
-                Blocks.MUSHROOM_STEM,
+        this.tag(HARVEST_STEMS).add(
                 Blocks.BAMBOO,
                 Blocks.SUGAR_CANE,
                 Blocks.CACTUS);
 
 
-        this.tag(FELLABLE).addTags(HARVEST_FOLIAGE, HARVEST_STEMS);
+        this.tag(FELLABLE).add(Blocks.MUSHROOM_STEM).addTags(BlockTags.LOGS, HARVEST_FOLIAGE, HARVEST_STEMS);
 
         TagKey<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
         TagKey<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));

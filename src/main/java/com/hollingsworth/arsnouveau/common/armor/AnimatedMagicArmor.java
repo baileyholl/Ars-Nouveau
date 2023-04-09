@@ -155,4 +155,8 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
         return data.getColor() == null || data.getColor().isEmpty() ? "purple" : data.getColor();
     }
 
+    //needed to exclude armors that can't be upgraded via recipe from jei info
+    public int getMinTier() {
+        return 0;
+    }
 }

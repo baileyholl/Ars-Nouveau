@@ -2,11 +2,16 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
+import com.hollingsworth.arsnouveau.common.entity.AnimHeadSummon;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractSkullBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -27,17 +32,19 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockState state = world.getBlockState(rayTraceResult.getBlockPos());
-        if (EnchantedFallingBlock.canFall(world, rayTraceResult.getBlockPos(), shooter, spellStats)) {
-            animateBlock(rayTraceResult, rayTraceResult.getLocation(), world, shooter, spellStats, spellContext, state);
-            world.setBlock(rayTraceResult.getBlockPos(), state.getFluidState().createLegacyBlock(), 3);
+        BlockPos pos = rayTraceResult.getBlockPos();
+        BlockState state = world.getBlockState(pos);
+        if (EnchantedFallingBlock.canFall(world, pos, shooter, spellStats)) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            animateBlock(rayTraceResult, rayTraceResult.getLocation(), world, shooter, spellStats, spellContext, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata());
+            world.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
         }
     }
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock && !fallingBlock.isRemoved()) {
-            AnimBlockSummon summon = animateBlock(rayTraceResult, fallingBlock.position, world, shooter, spellStats, spellContext, fallingBlock.getBlockState());
+            AnimBlockSummon summon = animateBlock(rayTraceResult, fallingBlock.position, world, shooter, spellStats, spellContext, fallingBlock.getBlockState(), fallingBlock.blockData);
             summon.setDeltaMovement(fallingBlock.getDeltaMovement());
             summon.hurtMarked = true;
             summon.fallDistance = 0.0f;
@@ -45,8 +52,8 @@ public class EffectAnimate extends AbstractEffect {
         }
     }
 
-    private AnimBlockSummon animateBlock(HitResult rayTraceResult, Vec3 pos, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, BlockState state) {
-        AnimBlockSummon blockSummon = new AnimBlockSummon(world, state);
+    private AnimBlockSummon animateBlock(HitResult rayTraceResult, Vec3 pos, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, BlockState state, CompoundTag data) {
+        AnimBlockSummon blockSummon = state.getBlock() instanceof AbstractSkullBlock ? new AnimHeadSummon(world, state, data) : new AnimBlockSummon(world, state);
         blockSummon.setColor(spellContext.getColors().getColor());
         blockSummon.setPos(pos);
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));

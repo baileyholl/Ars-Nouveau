@@ -28,6 +28,8 @@
     "ars_nouveau:stripped_purple_archwood_wood",
     "ars_nouveau:storage_lectern",
     "ars_nouveau:archwood_chest",
-    "ars_nouveau:alteration_table"
+    "ars_nouveau:alteration_table",
+    "ars_nouveau:item_detector",
+    "ars_nouveau:repository"
   ]
 }

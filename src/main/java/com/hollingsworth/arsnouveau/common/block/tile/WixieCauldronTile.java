@@ -1,21 +1,27 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.api.recipe.*;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,14 +29,19 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
+// TODO: 1.20 Make all inventories bind only, remove auto inventory detection
+// Also remove setStack and use pedestals only.
+public class WixieCauldronTile extends SummoningTile implements ITooltipProvider, IWandable {
 
-public class WixieCauldronTile extends SummoningTile implements ITooltipProvider {
-
-    public List<BlockPos> inventories;
+    private List<BlockPos> cachedInventories;
+    public List<BlockPos> boundedInvs = new ArrayList<>();
     private ItemStack setStack;
     private ItemStack stackBeingCrafted;
     public int entityID;
@@ -66,6 +77,46 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
                 rotateCraft();
             }
         }
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@org.jetbrains.annotations.Nullable BlockPos storedPos, @org.jetbrains.annotations.Nullable LivingEntity storedEntity, Player playerEntity) {
+        if(storedPos == null)
+            return;
+        BlockEntity blockEntity = level.getBlockEntity(storedPos);
+        if(blockEntity == null){
+            return;
+        }
+        IItemHandler itemHandler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        if(itemHandler == null){
+            return;
+        }
+        storedPos = storedPos.immutable();
+        if(!this.boundedInvs.contains(storedPos)){
+            this.boundedInvs.add(storedPos);
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie_cauldron.bound"));
+        }else{
+            this.boundedInvs.remove(storedPos);
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie_cauldron.removed"));
+        }
+        updateBlock();
+    }
+
+    @Override
+    public void onWanded(Player playerEntity) {
+        if(!this.boundedInvs.isEmpty()){
+            this.boundedInvs = new ArrayList<>();
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.wixie_cauldron.cleared"));
+            updateBlock();
+        }
+    }
+
+    @Override
+    public List<ColorPos> getWandHighlight(List<ColorPos> list) {
+        for(BlockPos blockPos : boundedInvs){
+            list.add(ColorPos.centered(blockPos,  ParticleColor.FROM_HIGHLIGHT));
+        }
+        return list;
     }
 
     /**
@@ -161,11 +212,19 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     public void updateInventories() {
-        inventories = new ArrayList<>();
+        if(!boundedInvs.isEmpty()){
+            return;
+        }
+        cachedInventories = new ArrayList<>();
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.isLoaded(bPos) && level.getBlockEntity(bPos) instanceof Container container && !(container instanceof ArcanePedestalTile)) {
-                inventories.add(bPos.immutable());
-            }
+            if(!level.isLoaded(bPos))
+                continue;
+            BlockEntity blockEntity = level.getBlockEntity(bPos);
+            if(blockEntity == null || blockEntity instanceof ArcanePedestalTile)
+                continue;
+            if(!blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
+                continue;
+            cachedInventories.add(bPos.immutable());
         }
         setChanged();
     }
@@ -216,32 +275,40 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     private Map<Item, Integer> getInventoryCount() {
         List<BlockPos> stale = new ArrayList<>();
         Map<Item, Integer> itemsAvailable = new HashMap<>();
-        if (inventories == null)
+        if (cachedInventories == null && boundedInvs.isEmpty())
             return itemsAvailable;
-        for (BlockPos p : inventories) {
-            if (level.getBlockEntity(p) instanceof Container container) {
-                for (int i = 0; i < container.getContainerSize(); i++) {
-                    ItemStack stack = container.getItem(i);
-                    if (stack == null) {
-                        System.out.println("======");
-                        System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
-                        System.out.println(container.toString());
-                        System.out.println("AT POS " + p.toString());
-                        continue;
-                    }
-                    if (!itemsAvailable.containsKey(stack.getItem())) {
-                        itemsAvailable.put(stack.getItem(), stack.getCount());
-                        continue;
-                    }
-                    itemsAvailable.put(stack.getItem(), itemsAvailable.get(stack.getItem()) + stack.getCount());
-                }
-            } else {
+        for (BlockPos p : getInventories()) {
+            BlockEntity blockEntity = level.getBlockEntity(p);
+            if(blockEntity == null) {
                 stale.add(p);
+                continue;
+            }
+            IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            if(handler == null) {
+                stale.add(p);
+                continue;
+            }
+
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (stack == null) {
+                    System.out.println("======");
+                    System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
+                    System.out.println(blockEntity.toString());
+                    System.out.println("AT POS " + p.toString());
+                    continue;
+                }
+                if (!itemsAvailable.containsKey(stack.getItem())) {
+                    itemsAvailable.put(stack.getItem(), stack.getCount());
+                    continue;
+                }
+                itemsAvailable.put(stack.getItem(), itemsAvailable.get(stack.getItem()) + stack.getCount());
             }
         }
-
-        for (BlockPos p : stale) {
-            inventories.remove(p);
+        if(boundedInvs.isEmpty()) {
+            for (BlockPos p : stale) {
+                cachedInventories.remove(p);
+            }
         }
         return itemsAvailable;
     }
@@ -261,6 +328,15 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         this.isCraftingPotion = compound.getBoolean("isPotion");
         needsPotionStorage = compound.getBoolean("storage");
         craftingIndex = compound.getInt("craftingIndex");
+        boundedInvs = new ArrayList<>();
+        if(compound.contains("boundedInvs")){
+            ListTag list = compound.getList("boundedInvs", 10);
+            for(int i = 0; i < list.size(); i++){
+                CompoundTag tag = list.getCompound(i);
+                BlockPos pos = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
+                boundedInvs.add(pos);
+            }
+        }
     }
 
     @Override
@@ -285,6 +361,15 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
         compound.putInt("craftingIndex", craftingIndex);
+        ListTag boundedList = new ListTag();
+        for(BlockPos pos : boundedInvs){
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("x", pos.getX());
+            tag.putInt("y", pos.getY());
+            tag.putInt("z", pos.getZ());
+            boundedList.add(tag);
+        }
+        compound.put("boundedInvs", boundedList);
     }
 
     @Override
@@ -295,6 +380,10 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         if (isOff) {
             tooltip.add(Component.translatable("ars_nouveau.tooltip.turned_off"));
+        }
+
+        if(!boundedInvs.isEmpty()){
+            tooltip.add(Component.translatable("ars_nouveau.cauldron.num_bounded", boundedInvs.size()));
         }
 
         if (this.craftManager != null && !(this.craftManager instanceof PotionCraftingManager)) {
@@ -334,12 +423,12 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     }
 
-    public ItemStack getSetStack() {
-        return setStack;
-    }
-
     public void setSetStack(ItemStack setStack) {
         this.setStack = setStack;
         updateBlock();
+    }
+
+    public List<BlockPos> getInventories() {
+        return boundedInvs.isEmpty() ? cachedInventories : boundedInvs;
     }
 }

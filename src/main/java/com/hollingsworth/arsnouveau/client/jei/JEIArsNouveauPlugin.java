@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ArmorUpgradeRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
@@ -103,6 +104,11 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         CraftingTerminalTransferHandler.registerTransferHandlers(registration);
+    }
+
+    @Override
+    public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
+        registration.getCraftingCategory().addCategoryExtension(DyeRecipe.class, DyeRecipeCategory::new);
     }
 
     private static IJeiRuntime jeiRuntime;

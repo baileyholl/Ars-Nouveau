@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '3.13.1'
+version = '3.13.2'
 
 
 configurations {
@@ -49,7 +49,7 @@ java.withSourcesJar()
 
 // Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
 // If you have any module issues, check these files to make sure there are no duplicate dependencies
-minecraft.runs.all {
+minecraft.runs.configureEach {
     lazyToken('minecraft_classpath') {
         configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
     }
@@ -172,7 +172,7 @@ repositories {
 }
 dependencies {
 
-    minecraft "net.minecraftforge:forge:1.19.2-${forge_version}"
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
     shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.1.1")
@@ -181,16 +181,16 @@ dependencies {
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     // at runtime, use the full JEI
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-common:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
-    shade fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
+    shade fg.deobf("software.bernie.geckolib:geckolib-forge-1.19:${gecko_version}")
 
-    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}.2-2.0.1.128")
+    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.1.128")
 
     runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
     runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
@@ -198,7 +198,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // ars elemental
 
     implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${mc_version}-3.0.0.3:api")
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
     implementation fg.deobf("curse.maven:jade-324717:4318618")
     runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
 //    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }

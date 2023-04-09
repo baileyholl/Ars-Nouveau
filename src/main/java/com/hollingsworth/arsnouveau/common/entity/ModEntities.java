@@ -213,6 +213,10 @@ public class ModEntities {
             "enchanted_mage_block", EntityType.Builder.<EnchantedMageblock>of(EnchantedMageblock::new, MobCategory.MISC).sized(0.98F, 0.98F)
                     .setShouldReceiveVelocityUpdates(true)
                     .setTrackingRange(256));
+    public static final RegistryObject<EntityType<EnchantedSkull>> ENCHANTED_HEAD_BLOCK = registerEntity(
+            "enchanted_head_block", EntityType.Builder.<EnchantedSkull>of(EnchantedSkull::new, MobCategory.MISC).sized(0.98F, 0.98F)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setTrackingRange(256));
 
     public static final RegistryObject<EntityType<GiftStarbuncle>> GIFT_STARBY = registerEntity(LibEntityNames.GIFT_STARBY, EntityType.Builder.of(GiftStarbuncle::new, MobCategory.CREATURE)
             .sized(0.6F, 0.63F).setTrackingRange(10)
@@ -230,6 +234,13 @@ public class ModEntities {
     public static final RegistryObject<EntityType<AnimBlockSummon>> ANIMATED_BLOCK = registerEntity(
             "animated_block",
             EntityType.Builder.<AnimBlockSummon>of(AnimBlockSummon::new, MobCategory.MISC)
+                    .sized(1.0f, 1.5f)
+                    .noSave()
+                    .setTrackingRange(10));
+
+    public static final RegistryObject<EntityType<AnimHeadSummon>> ANIMATED_HEAD = registerEntity(
+            "animated_head",
+            EntityType.Builder.<AnimHeadSummon>of(AnimHeadSummon::new, MobCategory.MISC)
                     .sized(1.0f, 1.5f)
                     .noSave()
                     .setTrackingRange(10));
@@ -291,6 +302,8 @@ public class ModEntities {
             event.put(SUMMON_SKELETON.get(), SummonSkeleton.createAttributes().build());
             event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
             event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
+            event.put(ANIMATED_HEAD.get(), AnimBlockSummon.createAttributes().build());
+
         }
     }
 

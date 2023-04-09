@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class JarBehaviorRegistry {
-
+    public static final List<JarBehavior<?>> DEFAULT_BEHAVIOR = List.of(new JarBehavior<>());
     private static final ConcurrentHashMap<EntityType<?>, List<JarBehavior<?>>> BEHAVIOR_REGISTRY = new ConcurrentHashMap<>();
 
     public static <T extends Entity> void register(EntityType<T> type, JarBehavior<T> jarBehavior) {
@@ -20,7 +20,7 @@ public class JarBehaviorRegistry {
     }
 
     public static void forEach(Entity entity, Consumer<JarBehavior<? extends Entity>> consumer){
-        List<JarBehavior<?>> jarBehaviors = BEHAVIOR_REGISTRY.getOrDefault(entity.getType(), new ArrayList<>());
+        List<JarBehavior<?>> jarBehaviors = BEHAVIOR_REGISTRY.getOrDefault(entity.getType(), DEFAULT_BEHAVIOR);
         for(JarBehavior<?> jarBehavior : jarBehaviors){
             consumer.accept(jarBehavior);
         }

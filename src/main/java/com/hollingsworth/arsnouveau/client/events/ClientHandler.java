@@ -11,10 +11,7 @@ import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.entity.*;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarBookwyrmRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarCarbyRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.FamiliarWhirlisprigRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.GenericFamiliarRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.entity.familiar.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
@@ -142,7 +139,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH.get(), FamiliarWhirlisprigRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), (t) -> new GenericFamiliarRenderer<>(t, new WixieModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), BookwyrmRenderer::new);
-        event.registerEntityRenderer(ModEntities.FAMILIAR_AMETHYST_GOLEM.get(), (t) ->new GenericFamiliarRenderer<>(t, new AmethystGolemModel<>()));
+        event.registerEntityRenderer(ModEntities.FAMILIAR_AMETHYST_GOLEM.get(), (t) -> new GenericFamiliarRenderer<>(t, new AmethystGolemModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarBookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.LINGER_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
@@ -155,8 +152,10 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENCHANTED_FALLING_BLOCK.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENCHANTED_HEAD_BLOCK.get(), EnchantedSkullRenderer::new);
         event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), GiftStarbyRenderer::new);
         event.registerEntityRenderer(ModEntities.ANIMATED_BLOCK.get(), AnimBlockRenderer::new);
+        event.registerEntityRenderer(ModEntities.ANIMATED_HEAD.get(), AnimSkullRenderer::new);
 
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));

@@ -592,7 +592,7 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("source_relay");
             }
         });
-        registry.register(LibBlockNames.PORTAL, new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()));
+        //registry.register(LibBlockNames.PORTAL, new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()));
         registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
