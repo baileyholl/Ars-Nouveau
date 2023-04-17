@@ -25,12 +25,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
+public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
     public static AnimatedGeoModel model = new GenericModel<>("scribes_table");
 
     public ScribesRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {

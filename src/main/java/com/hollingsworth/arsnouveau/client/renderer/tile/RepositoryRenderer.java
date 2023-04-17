@@ -15,10 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.EModelRenderCycle;
 
-public class RepositoryRenderer extends GeoBlockRenderer<RepositoryTile> {
+public class RepositoryRenderer extends ArsGeoBlockRenderer<RepositoryTile> {
     public static AnimatedGeoModel<RepositoryTile> model = new RepositoryModel();
     public RepositoryRenderer(BlockEntityRendererProvider.Context rendererProvider) {
         super(rendererProvider, model);

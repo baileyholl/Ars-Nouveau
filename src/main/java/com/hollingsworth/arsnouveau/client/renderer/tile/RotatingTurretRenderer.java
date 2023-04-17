@@ -8,10 +8,9 @@ import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 @SuppressWarnings("rawtypes")
-public class RotatingTurretRenderer extends GeoBlockRenderer<RotatingTurretTile> {
+public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTile> {
     public static AnimatedGeoModel model = new GenericModel("basic_spell_turret") {
         @Override
         public void setCustomAnimations(Object animatable, int instanceId, AnimationEvent event) {

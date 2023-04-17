@@ -9,11 +9,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import javax.annotation.Nullable;
 
-public class RuneRenderer extends GeoBlockRenderer<RuneTile> {
+public class RuneRenderer extends ArsGeoBlockRenderer<RuneTile> {
 
     public static GenericModel model = new GenericModel("rune");
 
