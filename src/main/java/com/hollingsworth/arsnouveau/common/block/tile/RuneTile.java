@@ -64,7 +64,7 @@ public class RuneTile extends ModdedTile implements IAnimatable, ITickable, IToo
         try {
 
             Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : ANFakePlayer.getPlayer((ServerLevel) level);
-            playerEntity = playerEntity == null ? ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
+            playerEntity = !this.isSensitive || playerEntity == null ? ANFakePlayer.getPlayer((ServerLevel) level) : playerEntity;
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
