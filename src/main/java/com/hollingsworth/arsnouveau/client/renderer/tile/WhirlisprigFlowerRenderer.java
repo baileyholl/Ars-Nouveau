@@ -9,11 +9,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import javax.annotation.Nullable;
 
-public class WhirlisprigFlowerRenderer extends GeoBlockRenderer<WhirlisprigTile> {
+public class WhirlisprigFlowerRenderer extends ArsGeoBlockRenderer<WhirlisprigTile> {
     public static AnimatedGeoModel model = new GenericModel("whirlisprig_blossom");
 
     public WhirlisprigFlowerRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {

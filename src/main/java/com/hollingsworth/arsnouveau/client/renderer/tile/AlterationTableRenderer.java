@@ -39,14 +39,13 @@ import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraftforge.client.ForgeHooksClient;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
+public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile> {
     private static final Map<String, ResourceLocation> ARMOR_LOCATION_CACHE = Maps.newHashMap();
 
     public final ArmorStandArmorModel innerModel;

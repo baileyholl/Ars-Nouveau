@@ -4,9 +4,8 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRendere
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-public class LecternRenderer extends GeoBlockRenderer<CraftingLecternTile> {
+public class LecternRenderer extends ArsGeoBlockRenderer<CraftingLecternTile> {
     public static AnimatedGeoModel model = new GenericModel<>("book_wyrm_lectern");
 
     public LecternRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {

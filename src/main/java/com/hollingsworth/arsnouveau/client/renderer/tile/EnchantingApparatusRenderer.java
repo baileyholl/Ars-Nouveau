@@ -14,10 +14,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
-public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingApparatusTile> {
+public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingApparatusTile> {
 
     public EnchantingApparatusRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(p_i226006_1_, new GenericModel<>("enchanting_apparatus"));
