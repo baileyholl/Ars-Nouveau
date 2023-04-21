@@ -36,7 +36,7 @@ public class EffectAnimate extends AbstractEffect {
         BlockState state = world.getBlockState(pos);
         if (EnchantedFallingBlock.canFall(world, pos, shooter, spellStats)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            animateBlock(rayTraceResult, rayTraceResult.getLocation(), world, shooter, spellStats, spellContext, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata());
+            animateBlock(rayTraceResult, rayTraceResult.getLocation(), world, shooter, spellStats, spellContext, resolver, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata());
             world.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
         }
     }
@@ -44,7 +44,7 @@ public class EffectAnimate extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock && !fallingBlock.isRemoved()) {
-            AnimBlockSummon summon = animateBlock(rayTraceResult, fallingBlock.position, world, shooter, spellStats, spellContext, fallingBlock.getBlockState(), fallingBlock.blockData);
+            AnimBlockSummon summon = animateBlock(rayTraceResult, fallingBlock.position, world, shooter, spellStats, spellContext, resolver, fallingBlock.getBlockState(), fallingBlock.blockData);
             summon.setDeltaMovement(fallingBlock.getDeltaMovement());
             summon.hurtMarked = true;
             summon.fallDistance = 0.0f;
@@ -52,7 +52,7 @@ public class EffectAnimate extends AbstractEffect {
         }
     }
 
-    private AnimBlockSummon animateBlock(HitResult rayTraceResult, Vec3 pos, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, BlockState state, CompoundTag data) {
+    private AnimBlockSummon animateBlock(HitResult rayTraceResult, Vec3 pos, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, BlockState state, CompoundTag data) {
         AnimBlockSummon blockSummon = state.getBlock() instanceof AbstractSkullBlock ? new AnimHeadSummon(world, state, data) : new AnimBlockSummon(world, state);
         blockSummon.setColor(spellContext.getColors().getColor());
         blockSummon.setPos(pos);
@@ -62,7 +62,7 @@ public class EffectAnimate extends AbstractEffect {
         blockSummon.setAggressive(true);
         blockSummon.setTame(true);
         if (shooter instanceof Player player) blockSummon.tame(player);
-        summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, blockSummon);
+        summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, blockSummon);
         return blockSummon;
     }
 

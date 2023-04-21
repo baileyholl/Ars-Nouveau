@@ -61,7 +61,7 @@ public class EffectSummonUndead extends AbstractEffect {
             undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null, null);
             undeadentity.setOwner(shooter);
             undeadentity.setLimitedLife(ticks);
-            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, undeadentity);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadentity);
         }
         shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), ticks));
     }

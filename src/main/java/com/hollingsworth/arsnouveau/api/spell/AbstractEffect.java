@@ -4,11 +4,13 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +37,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,10 +69,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
     }
 
     /**
@@ -108,11 +111,23 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), time));
     }
 
-    public void summonLivingEntity(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon) {
+    @Deprecated(forRemoval = true)
+    public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon) {
+        summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, null, summon);
+    }
+
+    public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, @Nullable SpellResolver resolver, ISummon summon) {
         if (isRealPlayer(shooter))
             summon.setOwnerID(shooter.getUUID());
-        if (summon.getLivingEntity() != null)
+        LivingEntity summonLivingEntity = summon.getLivingEntity();
+        if (summonLivingEntity != null) {
             world.addFreshEntity(summon.getLivingEntity());
+            if (resolver != null && resolver.hasFocus(ItemsRegistry.SUMMONING_FOCUS.get().getDefaultInstance())) {
+                EntitySpellResolver spellResolver = new EntitySpellResolver(spellContext.clone().withSpell(spellContext.getRemainingSpell()).withWrappedCaster(new LivingCaster(summonLivingEntity)));
+                spellResolver.onResolveEffect(world, new EntityHitResult(summonLivingEntity));
+                spellContext.setCanceled(true);
+            }
+        }
 
         MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
@@ -125,7 +140,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return (int) (3 + stats.getAmpMultiplier());
     }
 
-    public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
+    public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos) {
         return BlockUtil.canBlockBeHarvested(stats, world, pos);
     }
 
@@ -133,7 +148,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
      * See IDamageEffect
      */
     @Deprecated(forRemoval = true)
-    public void dealDamage(Level world,@NotNull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
+    public void dealDamage(Level world, @NotNull LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source) {
         if (!(world instanceof ServerLevel server) || (entity instanceof LivingEntity living && living.getHealth() <= 0))
             return;
 
