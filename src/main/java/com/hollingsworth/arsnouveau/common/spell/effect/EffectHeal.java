@@ -23,7 +23,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity) {
+    public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, @NotNull Entity entity) {
         return entity instanceof LivingEntity living && living.isInvertedHealAndHarm() && IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity);
     }
 
