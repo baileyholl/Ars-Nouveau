@@ -90,7 +90,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         NONE
     }
     public EntityDebugger debugger = new EntityDebugger(this);
-    public StarbuncleGoalState goalState;
+    public StarbuncleGoalState goalState = StarbuncleGoalState.NONE;
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.BOOLEAN);
@@ -99,6 +99,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public static final EntityDataAccessor<ItemStack> HEAD_COSMETIC = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<CompoundTag> BEHAVIOR_TAG = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.COMPOUND_TAG);
     private int backOff; // Used to stop inventory store/take spam when chests are full or empty.
+
+    private int bedBackoff;
+
     public int tamingTime;
     private int lastAABBCalc;
     private AABB cachedAAB;
@@ -545,6 +548,14 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
         this.data.name = pName;
+    }
+
+    public int getBedBackoff() {
+        return bedBackoff;
+    }
+
+    public void setBedBackoff(int bedBackoff) {
+        this.bedBackoff = bedBackoff;
     }
 
     @Override
