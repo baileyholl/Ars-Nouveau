@@ -25,7 +25,7 @@ public class AugmentDampen extends AbstractAugment {
 
     @Override
     public String getBookDescription() {
-        return "Decreases the power of most spells. Decreases the mana cost slighty, but never below 0.";
+        return "Decreases the power of most spells.";
     }
 
     @Override
