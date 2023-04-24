@@ -202,7 +202,7 @@
   "ars_nouveau.glyph_desc.glyph_craft": "Opent het Werkbankmenu.",
   "ars_nouveau.glyph_desc.glyph_crush": "Verandert steen naar grind, en grind naar zand. Zal ook bloemen verpletteren voor extra kleurstof. Vereist Gevoelig om te werken op voorwerpen. Voor volledige ondersteuning, zie de JEI mod. Zal ook doelwitten schade aanbrengen en brengt extra schade aan zwemmende doelwitten.",
   "ars_nouveau.glyph_desc.glyph_cut": "Simuleert het gebruik van scharen op wezens en blokken, of brengt een beetje schade aan aan doelwitten die niet geschoren kunnen worden. Versterk zal het gebruik van een bijl simuleren in plaats van een schaar. Over blokken breken met een schaar, zie Breek en Gevoelig. Kost niets.",
-  "ars_nouveau.glyph_desc.glyph_dampen": "Vermindert de kracht van de meeste spreuken. Vermindert de mana kosten lichtelijk, maar het gaat nooit onder 0.",
+  "ars_nouveau.glyph_desc.glyph_dampen": "Decreases the power of most spells.",
   "ars_nouveau.glyph_desc.glyph_decelerate": "Vermindert de snelheid van projectielspreuken.",
   "ars_nouveau.glyph_desc.glyph_delay": "Stelt de uitkomst van de effecten die rechts van deze spreuk voor een tijdje uit. De vertraging kan langer worden gemaakt door middel van de aanpassing Verlengde Tijd, of verkort door Verminderde Duur.",
   "ars_nouveau.glyph_desc.glyph_dispel": "Verwijdert een toverdrankeffect van het doelwit. Als het wordt gebruikt op een half-gedoodde heks, zal de heks verdwijnen en zal er een wixie scherf voor in de plaats komen. Zal ook getemde Opgeroepenen terug laten keren naar hun Amulet.",
