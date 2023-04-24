@@ -59,6 +59,7 @@ public class ArsNouveau {
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
+    public static boolean optifineLoaded = false;
 
     public static CreativeModeTab itemGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), MODID) {
         @Override
@@ -158,8 +159,13 @@ public class ArsNouveau {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(TextureEvent::textEvent);
         event.enqueueWork(() ->{
             MenuScreens.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
-
         });
+        try {
+            Class.forName("net.optifine.Config");
+            optifineLoaded = true;
+        } catch (Exception e) {
+            optifineLoaded = false;
+        }
     }
 
     public void sendImc(InterModEnqueueEvent evt) {
