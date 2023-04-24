@@ -32,6 +32,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
 
+    public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
 
     private final DataGenerator generator;
 
@@ -264,7 +265,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(BREAK_BLACKLIST);
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK);
-
+        this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
     }
 
     protected Path getPath(ResourceLocation p_126514_) {
