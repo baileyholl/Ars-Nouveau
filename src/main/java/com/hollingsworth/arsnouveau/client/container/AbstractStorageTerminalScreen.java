@@ -335,6 +335,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if (buttonSearchType.isHoveredOrFocused()) {
 			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
+		if(buttonDirection.isHoveredOrFocused()){
+			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+		}
 		for(StorageTabButton tabButton : tabButtons) {
 			if(tabButton.isHoveredOrFocused() && tabButton.isAll){
 				renderTooltip(st, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);

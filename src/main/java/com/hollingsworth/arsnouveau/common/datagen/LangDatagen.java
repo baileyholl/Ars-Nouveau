@@ -1199,5 +1199,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wixie_cauldron.cleared", "Bound inventories cleared.");
         add("ars_nouveau.binding_inventories", "Binding Inventories");
         add("ars_nouveau.page7.wixie_charm", "You can select specific inventories for the wixie by using a dominion wand on an inventory, and then the cauldron. If any inventories are selected, only these inventories can be used and the Wixie will no longer pull from all nearby inventories by default.");
+        add("ars_nouveau.direction_0", "Sorting Descending");
+        add("tooltip.ars_nouveau.direction_1", "Sorting Ascending");
+        add("tooltip.ars_nouveau.clear_grid", "Clear");
+        add("tooltip.ars_nouveau.open_recipe", "Recipe Book");
     }
 }
