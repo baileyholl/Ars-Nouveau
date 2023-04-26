@@ -132,11 +132,15 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
             return false;
         entity.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 1.0, getBlockPos().getZ() + 0.5);
         level.addFreshEntity(entity);
+        removeEntity();
+        return true;
+    }
+
+    public void removeEntity(){
         this.entityTag = null;
         this.cachedEntity = null;
         this.extraDataTag = null;
         updateBlock();
-        return true;
     }
 
     public CompoundTag getExtraDataTag(){

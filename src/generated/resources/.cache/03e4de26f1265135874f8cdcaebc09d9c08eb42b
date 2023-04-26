@@ -1,5 +1,6 @@
-// 1.19.2	2023-02-27T21:33:05.503456619	Tags for minecraft:item
+// 1.19.2	2023-04-25T20:14:22.556997	Tags for minecraft:item
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/items/golem/shard.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/items/magic_food.json
 1781e2e03328482696e713943d129953a77de05c data/ars_nouveau/tags/items/magic_shards.json
 f5e3f6895ab28e98f84db162bb5a7ec0d8484aae data/ars_nouveau/tags/items/summon_bed.json
