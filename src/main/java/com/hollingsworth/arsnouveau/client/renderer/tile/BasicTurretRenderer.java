@@ -11,11 +11,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import javax.annotation.Nullable;
 
-public class BasicTurretRenderer extends GeoBlockRenderer<BasicSpellTurretTile> {
+public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTile> {
     public static AnimatedGeoModel model = new GenericModel("basic_spell_turret");
 
     public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {

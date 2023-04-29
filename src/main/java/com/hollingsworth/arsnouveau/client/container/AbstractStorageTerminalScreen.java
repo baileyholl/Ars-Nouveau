@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -57,7 +58,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	 */
 	private boolean refreshItemList;
 	protected boolean wasClicking;
-	protected NoShadowTextField searchField;
+	protected EditBox searchField;
 	protected int slotIDUnderMouse = -1;
 	protected int controllMode;
 	protected int rowCount;
@@ -86,9 +87,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			controllMode = s.controlMode;
 			comparator = StoredItemStack.SortingTypes.VALUES[s.sortType % StoredItemStack.SortingTypes.VALUES.length].create(s.reverseSort);
 			searchType = s.searchType;
-			if(!searchField.isFocused()) {
-				searchField.setFocus(true);
-			}
 			buttonSortingType.state = s.sortType;
 			buttonDirection.state = s.reverseSort ? 1 : 0;
 			buttonSearchType.state = searchType;
@@ -110,6 +108,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if(!loadedSearch && menu.search != null) {
 			loadedSearch = true;
 			searchField.setValue(menu.search);
+			searchField.setFocus(true);
 		}
 	}
 
@@ -336,6 +335,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if (buttonSearchType.isHoveredOrFocused()) {
 			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
+		if(buttonDirection.isHoveredOrFocused()){
+			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+		}
 		for(StorageTabButton tabButton : tabButtons) {
 			if(tabButton.isHoveredOrFocused() && tabButton.isAll){
 				renderTooltip(st, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
@@ -442,9 +444,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		} else if (GLFW.glfwGetKey(mc.getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
 			storageSlotClick(null, SPACE_CLICK, false);
 		} else {
-			if (mouseButton == 1 && isHovering(searchField.getX() - leftPos, searchField.getY() - topPos, 89, this.getFont().lineHeight, mouseX, mouseY))
+			if (mouseButton == 1 && isHovering(searchField.x - leftPos, searchField.y - topPos, 89, this.getFont().lineHeight, mouseX, mouseY))
 				searchField.setValue("");
-			else if(this.searchField.mouseClicked(mouseX, mouseY, mouseButton))return true;
+			else if(this.searchField.mouseClicked(mouseX, mouseY, mouseButton))
+				return true;
 			else
 				return super.mouseClicked(mouseX, mouseY, mouseButton);
 		}

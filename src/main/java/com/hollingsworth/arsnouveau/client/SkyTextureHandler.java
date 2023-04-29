@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -27,6 +28,9 @@ public class SkyTextureHandler {
     @SubscribeEvent
     public static void renderSky(RenderLevelStageEvent event) {
         if (event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY)) {
+            if(ArsNouveau.optifineLoaded || Config.DISABLE_SKY_SHADER.get()){
+                return;
+            }
             Minecraft minecraft = Minecraft.getInstance();
             if (skyRenderTarget == null) {
                 Window window = minecraft.getWindow();

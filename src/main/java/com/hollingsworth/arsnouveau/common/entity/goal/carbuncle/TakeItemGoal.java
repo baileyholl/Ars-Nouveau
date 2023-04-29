@@ -19,6 +19,18 @@ public class TakeItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoal
     }
 
     @Override
+    public boolean canUse() {
+        boolean superCan = super.canUse();
+        if(!superCan)
+            return false;
+        if(getDestination() == null){
+            starbuncle.setBackOff(20);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public void start() {
         super.start();
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;

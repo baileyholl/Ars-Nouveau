@@ -11,9 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-public class ImbuementRenderer extends GeoBlockRenderer<ImbuementTile> {
+public class ImbuementRenderer extends ArsGeoBlockRenderer<ImbuementTile> {
 
     public ImbuementRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(p_i226006_1_, new GenericModel<>("imbuement_chamber"));

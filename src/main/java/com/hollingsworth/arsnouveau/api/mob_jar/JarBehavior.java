@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.api.mob_jar;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InteractResult;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,12 +29,15 @@ public class JarBehavior<T extends Entity> {
         T entity = entityFromJar(tile);
         if (entity.getType().is(EntityTags.INTERACT_JAR_BLACKLIST)) return;
 
-        ItemStack handItem = player.getItemInHand(handIn);
-        if (entity instanceof IForgeShearable shearable && handItem.getItem() instanceof ShearsItem shearsItem) {
-            shearsItem.interactLivingEntity(handItem, player, (LivingEntity) shearable, handIn);
-            syncClient(tile);
-            return;
+        if (entity instanceof LivingEntity livingEntity) {
+            ItemStack handItem = player.getItemInHand(handIn);
+            InteractionResult result = handItem.getItem().interactLivingEntity(handItem, player, livingEntity, handIn);
+            if (result != InteractionResult.PASS) {
+                syncClient(tile);
+                return;
+            }
         }
+
         if (entity instanceof Mob mob) {
             mob.interact(player, handIn);
             syncClient(tile);

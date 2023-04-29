@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -23,12 +24,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static net.minecraft.core.Direction.*;
 
@@ -147,34 +150,38 @@ public class RotatingSpellTurret extends BasicSpellTurret {
     static {
         ROT_TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
             @Override
-            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel world, BlockPos pos, FakePlayer fakePlayer, Position iposition, Direction direction) {
-                EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
-                spell.setOwner(fakePlayer);
-                spell.setPos(iposition.x(), iposition.y(), iposition.z());
-                RotatingTurretTile rotatingTurretTile = (RotatingTurretTile) tile;
-                Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
-                spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
-                world.addFreshEntity(spell);
+            public void onCast(SpellResolver resolver, ServerLevel world, BlockPos pos, Player fakePlayer, Position iposition, Direction direction) {
+                if(world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
+                    EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
+                    spell.setOwner(fakePlayer);
+                    spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                    Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
+                    spell.shoot(vec3d.x(), vec3d.y(), vec3d.z(), 0.5f, 0);
+                    world.addFreshEntity(spell);
+                }
             }
         });
 
-        /*
-        TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
+
+        ROT_TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
             @Override
-            //TODO: Adapt and test for adjustable turrets, it's not 100% broken but they won't use the corners (will use one of the two close directions)
-            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction facingDir) {
+            public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
                 BlockPos touchPos = pos.relative(facingDir);
+
+                if(!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
+                    return;
+                }
+                Vec3 aimVec = rotatingTurretTile.getShootAngle().add(rotatingTurretTile.getX() + 0.5, rotatingTurretTile.getY() + 0.5, rotatingTurretTile.getZ() + 0.5);
                 List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(touchPos));
                 if (!entityList.isEmpty()) {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
-                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir, new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                   resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, new BlockPos(aimVec.x(), aimVec.y(), aimVec.z()), true));
                 }
             }
         });
-        */
+
     }
     
 }

@@ -10,9 +10,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-public class ScryerEyeRenderer extends GeoBlockRenderer<ScryersOculusTile> {
+public class ScryerEyeRenderer extends ArsGeoBlockRenderer<ScryersOculusTile> {
     ScryersEyeModel model;
 
     public ScryerEyeRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, ScryersEyeModel model) {

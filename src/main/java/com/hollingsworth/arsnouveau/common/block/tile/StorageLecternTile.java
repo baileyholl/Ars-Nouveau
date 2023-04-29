@@ -263,7 +263,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
 			return;
 		}
-		if(BlockUtil.distanceFrom(storedPos, worldPosition) > 20){
+		if(BlockUtil.distanceFrom(storedPos, worldPosition) > 30){
 			PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
 			return;
 		}

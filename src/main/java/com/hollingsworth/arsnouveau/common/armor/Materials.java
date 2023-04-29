@@ -72,8 +72,7 @@ public class Materials {
         public Ingredient getRepairIngredient() {
             return repairMaterial.get();
         }
-
-        @OnlyIn(Dist.CLIENT)
+        
         @Override
         public String getName() {
             return name;
