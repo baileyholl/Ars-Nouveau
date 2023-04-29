@@ -1,0 +1,14 @@
+{
+  "values": [
+    "minecraft:slow_falling",
+    "minecraft:night_vision",
+    "minecraft:conduit_power",
+    "minecraft:absorption",
+    "minecraft:strength",
+    "minecraft:fire_resistance",
+    "minecraft:haste",
+    "minecraft:speed",
+    "minecraft:regeneration",
+    "minecraft:resistance"
+  ]
+}
