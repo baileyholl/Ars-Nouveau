@@ -196,6 +196,8 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(ItemsRegistry.ABJURATION_ESSENCE)
                     .save(consumer);
 
+            shapelessBuilder(BlockRegistry.POTION_JAR).requires(BlockRegistry.POTION_JAR).save(consumer, new ResourceLocation(ArsNouveau.MODID,"potion_jar_empty"));
+
             shapelessBuilder(BlockRegistry.RITUAL_BLOCK)
                     .requires(BlockRegistry.ARCANE_PEDESTAL.get())
                     .requires(SOURCE_GEM_BLOCK)
