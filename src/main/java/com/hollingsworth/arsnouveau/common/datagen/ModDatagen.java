@@ -33,6 +33,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new EntityTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new JsonDatagen(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new Advancements(event.getGenerator(), event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
