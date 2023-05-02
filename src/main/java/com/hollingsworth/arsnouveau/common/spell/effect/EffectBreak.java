@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -39,20 +40,24 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
-    public ItemStack getStack(LivingEntity shooter) {
+    public ItemStack getStack(LivingEntity shooter, BlockHitResult blockHitResult) {
         ItemStack stack = shooter.getMainHandItem().copy();
+        boolean usePick = shooter.level.getBlockState(blockHitResult.getBlockPos()).is(BlockTagProvider.BREAK_WITH_PICKAXE);
+        if(usePick){
+            return new ItemStack(Items.DIAMOND_PICKAXE);
+        }
         return stack.isEmpty() ? new ItemStack(Items.DIAMOND_PICKAXE) : stack;
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         BlockState state;
 
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
-        ItemStack stack = spellStats.hasBuff(AugmentSensitive.INSTANCE) ? new ItemStack(Items.SHEARS) : getStack(shooter);
+        ItemStack stack = spellStats.hasBuff(AugmentSensitive.INSTANCE) ? new ItemStack(Items.SHEARS) : getStack(shooter, rayTraceResult);
 
         int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
         int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);

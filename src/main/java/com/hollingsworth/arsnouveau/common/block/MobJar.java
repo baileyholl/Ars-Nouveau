@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -60,6 +61,12 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         if (tile == null) {
             return InteractionResult.PASS;
         }
+        if(!pLevel.isClientSide){
+            ItemStack held = pPlayer.getItemInHand(pHand);
+            if(held.is(ItemTagProvider.JAR_ITEM_BLACKLIST)){
+                return InteractionResult.PASS;
+            }
+        }
         if(tile.getEntity() == null && !pLevel.isClientSide){
             ItemStack stack = pPlayer.getItemInHand(pHand);
             if(stack.getItem() instanceof SpawnEggItem spawnEggItem){
@@ -72,9 +79,15 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
                 }
             }
         }
-        if(tile.getEntity() != null && !(tile.getEntity() instanceof PlayerRideable) && !JarBehaviorRegistry.containsEntity(tile.getEntity())
-        && !(tile.getEntity() instanceof ContainerEntity)){
-            pPlayer.interactOn(tile.getEntity(), pHand);
+        if(tile.getEntity() != null
+                && !(tile.getEntity() instanceof PlayerRideable)
+                && !JarBehaviorRegistry.containsEntity(tile.getEntity())
+                && !(tile.getEntity() instanceof ContainerEntity)){
+            Entity tileEntity = tile.getEntity();
+            pPlayer.interactOn(tileEntity, pHand);
+            if(!tileEntity.isAlive() || tileEntity.isRemoved()){
+                tile.removeEntity();
+            }
         }
         tile.dispatchBehavior((behavior) -> {
             behavior.use(pState, pLevel, pPos, pPlayer, pHand, pHit, tile);

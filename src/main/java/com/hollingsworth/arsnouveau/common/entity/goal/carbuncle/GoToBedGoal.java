@@ -79,12 +79,15 @@ public class GoToBedGoal extends Goal {
     @Override
     public boolean canUse() {
         bedPos = starbuncle.data.bedPos;
-        if (starbuncle.getBackOff() > 0 || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE || bedPos == null || !behavior.canGoToBed()) {
+        if (starbuncle.getBedBackoff() > 0
+                || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE
+                || bedPos == null
+                || !behavior.canGoToBed()) {
             return false;
         }
         boolean canRun = isBedValid() && !isOnBed();
         if(!canRun){
-            starbuncle.setBackOff(20 * 3);
+            starbuncle.setBedBackoff(20 * 3);
         }
         return canRun;
     }

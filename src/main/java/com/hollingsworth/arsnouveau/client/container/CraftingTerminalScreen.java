@@ -24,6 +24,10 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	private EditBox recipeBookSearch;
 	private GhostRecipe ghostRecipe;
 
+	public GuiImageButton btnClr;
+
+	public GuiImageButton btnRecipeBook;
+
 	public CraftingTerminalScreen(CraftingTerminalMenu screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
 
@@ -63,10 +67,10 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 		addRenderableWidget(recipeBookGui);
 		this.setInitialFocus(this.recipeBookGui);
 		int recipeButtonY = this.height / 2 - 34;
-		GuiImageButton btnClr = new GuiImageButton(leftPos + 86, recipeButtonY, 0,0,9,9,9,9, CLEAR_CRAFT_TEXTURE, b -> clearGrid());
+		btnClr = new GuiImageButton(leftPos + 86, recipeButtonY, 0,0,9,9,9,9, CLEAR_CRAFT_TEXTURE, b -> clearGrid());
 		addRenderableWidget(btnClr);
 
-		addRenderableWidget(new GuiImageButton( this.leftPos + 98, recipeButtonY , 0, 0, 9, 9, 9,9, RECIPE_BUTTON_TEXTURE, (thisButton) -> {
+		btnRecipeBook = addRenderableWidget(new GuiImageButton( this.leftPos + 98, recipeButtonY , 0, 0, 9, 9, 9,9, RECIPE_BUTTON_TEXTURE, (thisButton) -> {
 			this.recipeBookGui.initVisuals();
 			recipeBookSearch = recipeBookGui.searchBox;
 
@@ -98,9 +102,7 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 
 	@Override
 	public void render(PoseStack st, int mouseX, int mouseY, float partialTicks) {
-
 		this.renderBackground(st);
-
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
 			this.renderBg(st, partialTicks, mouseX, mouseY);
 			this.recipeBookGui.render(st, mouseX, mouseY, partialTicks);

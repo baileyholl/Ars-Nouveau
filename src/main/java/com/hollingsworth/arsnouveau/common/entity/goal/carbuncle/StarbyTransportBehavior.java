@@ -157,7 +157,9 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             if (handlerStack.isEmpty()) {
                 return handler.getSlotLimit(i);
             } else if (ItemHandlerHelper.canItemStacksStack(handler.getStackInSlot(i), stack)) {
-                int maxRoom = handlerStack.getMaxStackSize() - handlerStack.getCount();
+                int originalCount = stack.getCount();
+                ItemStack simStack = handler.insertItem(i, stack, true);
+                int maxRoom = originalCount - simStack.getCount();
                 if (maxRoom > 0) {
                     return Math.min(maxRoom, handler.getSlotLimit(i));
                 }

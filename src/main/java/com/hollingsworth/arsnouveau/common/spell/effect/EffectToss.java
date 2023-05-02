@@ -76,9 +76,10 @@ public class EffectToss extends AbstractEffect {
                 ItemStack stackInTarget = targetInv.getStackInSlot(i);
                 if(stackInTarget.isEmpty()){
                     return targetInv.getSlotLimit(i);
-                }else if (ItemHandlerHelper.canItemStacksStack(targetInv.getStackInSlot(i), stackToExtract)) {
-                    ItemStack handlerStack = targetInv.getStackInSlot(i);
-                    int maxRoom = handlerStack.getMaxStackSize() - handlerStack.getCount();
+                }else if (ItemHandlerHelper.canItemStacksStack(stackInTarget, stackToExtract)) {
+                    int origSize = stackToExtract.getCount();
+                    ItemStack simReturn = targetInv.insertItem(i, stackToExtract, true);
+                    int maxRoom = origSize - simReturn.getCount();
                     int adjustedMax = Math.min(maxRoom, targetInv.getSlotLimit(i));
                     if(adjustedMax > 0) {
                         return adjustedMax;

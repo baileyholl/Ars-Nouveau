@@ -51,6 +51,10 @@ public class CrushRecipeProvider implements DataProvider {
         recipes.add(new CrushRecipe("red_dye_beetroot", Ingredient.of(Items.BEETROOT)).withItems(new ItemStack(Items.RED_DYE, 2)));
         recipes.add(new CrushRecipe("red_dye_poppy", Ingredient.of(Items.POPPY)).withItems(new ItemStack(Items.RED_DYE, 2)));
         recipes.add(new CrushRecipe("red_dye_rose_bush", Ingredient.of(Items.ROSE_BUSH)).withItems(new ItemStack(Items.RED_DYE, 4)));
+        recipes.add(new CrushRecipe("yellow_dye_sunflower", Ingredient.of(Items.SUNFLOWER)).withItems(new ItemStack(Items.YELLOW_DYE, 4)));
+        recipes.add(new CrushRecipe("magenta_dye_lilac", Ingredient.of(Items.LILAC)).withItems(new ItemStack(Items.MAGENTA_DYE, 4)));
+        recipes.add(new CrushRecipe("pink_dye_peony", Ingredient.of(Items.PEONY)).withItems(new ItemStack(Items.PINK_DYE, 4)));
+
 
         recipes.add(new CrushRecipe("terracotta", Ingredient.of(Items.TERRACOTTA)).withItems(Items.RED_SAND.getDefaultInstance()));
         recipes.add(new CrushRecipe("sugar_cane", Ingredient.of(Items.SUGAR_CANE)).withItems(new ItemStack(Items.SUGAR, 2)));
