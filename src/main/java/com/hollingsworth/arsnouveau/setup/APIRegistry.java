@@ -108,6 +108,7 @@ public class APIRegistry {
         registerSpell(EffectRotate.INSTANCE);
         registerSpell(EffectWall.INSTANCE);
         registerSpell(EffectAnimate.INSTANCE);
+        registerSpell(EffectBurst.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
