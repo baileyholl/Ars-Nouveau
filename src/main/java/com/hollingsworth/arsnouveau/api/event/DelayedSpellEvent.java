@@ -44,6 +44,7 @@ public class DelayedSpellEvent implements ITimedEvent {
     public void resolveSpell() {
         if (world == null || result instanceof EntityHitResult ehr && ehr.getEntity().isRemoved())
             return;
+        //Optional TODO: Resolve the spell in the last position of the entity if it was removed during the delay, instead of cancelling. This would allow to keep the old behaviour without dupes.
         SpellResolver resolver = new SpellResolver(context);
         resolver.onResolveEffect(world, result);
     }

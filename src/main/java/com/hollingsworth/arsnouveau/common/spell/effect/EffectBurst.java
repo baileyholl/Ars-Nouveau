@@ -26,6 +26,11 @@ public class EffectBurst extends AbstractEffect {
         invalidCombinations.add(EffectWall.INSTANCE.getRegistryName());
     }
 
+    @Override //TODO
+    public String getBookDescription() {
+        return super.getBookDescription();
+    }
+
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         makeSphere(rayTraceResult.getBlockPos(), world, shooter, spellStats, spellContext, resolver);

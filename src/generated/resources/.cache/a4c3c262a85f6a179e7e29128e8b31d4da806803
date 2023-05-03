@@ -1,9 +1,10 @@
-// 1.19.2	2023-03-30T09:17:13.7112661	Ars Nouveau Item Models
+// 1.19.2	2023-05-03T17:06:39.6567085	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
 a81ea25c1312389ff436100c29d1ae20d35b0a40 assets/ars_nouveau/models/item/blue_sbed.json
 da0aadfa5d42c0daa4da0dbeff1177110928c7b4 assets/ars_nouveau/models/item/bombegranate_pod.json
+5ddf91a9d7abd26d9e0e051c69eba796168edf75 assets/ars_nouveau/models/item/burst.json
 4af86c8ff67cf572b5ea18f4dca4dfff97af3f1e assets/ars_nouveau/models/item/experience_gem.json
 70d392c53a05ad554f3f3b1d3faa5fd1445e2a77 assets/ars_nouveau/models/item/falseweave.json
 93bd672531959f8b0215c53c30b552f3f0b4ec68 assets/ars_nouveau/models/item/familiar_amethyst_golem.json
