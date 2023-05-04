@@ -191,7 +191,7 @@
   "ars_nouveau.getting_started": "Getting Started",
   "ars_nouveau.getting_started_desc": "An introduction to Ars Nouveau. It is recommended to follow each section in order.",
   "ars_nouveau.glyph_crafting": "Glyph Crafting",
-  "ars_nouveau.glyph_desc.burst": "",
+  "ars_nouveau.glyph_desc.burst": "Resolves the spell in a spherical area around the target. Augment with Sensitive to target blocks instead of entities and Dampen to make an empty sphere. Augment with AOE to increase the radius. ",
   "ars_nouveau.glyph_desc.glyph_accelerate": "Increases the speed of projectile spells.",
   "ars_nouveau.glyph_desc.glyph_amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
   "ars_nouveau.glyph_desc.glyph_animate_block": "Animates a block to fight for you. The animated block will convert to a falling block when it dies. Costs a large amount of mana, but does not grant Summoning Sickness",
