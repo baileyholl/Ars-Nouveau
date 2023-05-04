@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wilden;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -35,7 +36,7 @@ public class WildenRamAttack extends MeleeAttackGoal {
             this.mob.doHurtTarget(enemy);
             if (this.mob instanceof WildenHunter)
                 ((WildenHunter) this.mob).ramCooldown = 200;
-            enemy.knockback(2.0F, enemy.getX() - mob.getX(), enemy.getZ() - mob.getZ());
+            enemy.knockback(2.0F, (double) Mth.sin(mob.getYRot() * ((float)Math.PI / 180F)), (double)(-Mth.cos(mob.getYRot() * ((float)Math.PI / 180F))));
             enemy.hurtMarked = true;
 
         }

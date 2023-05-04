@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
-import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenRamAttack;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenSummon;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.sounds.SoundEvent;
@@ -12,10 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
@@ -31,6 +26,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class WildenHunter extends Monster implements IAnimatable, IAnimationListener {
+
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public WildenHunter(EntityType<? extends Monster> type, Level worldIn) {
@@ -47,11 +43,11 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenHunter.Animations.ATTACK.ordinal(), () -> true));
-        this.goalSelector.addGoal(3, new WildenRamAttack(this, 2D, true));
-        this.goalSelector.addGoal(3, new WildenSummon(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.goalSelector.addGoal(3, new WildenSummon(this));
+        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.3f));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 2D, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -95,7 +91,7 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
-                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
                 .add(Attributes.ATTACK_DAMAGE, 4.5D)
                 .add(Attributes.ARMOR, 2.0D);
     }
@@ -117,25 +113,25 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
             if (controller == null)
                 return;
             if (arg == Animations.ATTACK.ordinal()) {
-                if (controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
-                        controller.getCurrentAnimation().animationName.equals("howl"))) {
-                    return;
-                }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
+//                if (controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
+//                        controller.getCurrentAnimation().animationName.equals("howl"))) {
+//                    return;
+//                }
+//                controller.markNeedsReload();
+//                controller.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
             }
 
-            if (arg == Animations.RAM.ordinal()) {
-                if (controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
-                    return;
-                }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("attack2").addAnimation("idle"));
-            }
+//            if (arg == Animations.RAM.ordinal()) {
+//                if (controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
+//                    return;
+//                }
+//                controller.markNeedsReload();
+//                controller.setAnimation(new AnimationBuilder().addAnimation("attack2").addAnimation("idle"));
+//            }
 
             if (arg == Animations.HOWL.ordinal()) {
                 controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
+                controller.setAnimation(new AnimationBuilder().addAnimation("howl_master").addAnimation("idle"));
             }
 
         } catch (Exception e) {
@@ -150,10 +146,23 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
 
     AnimationController<WildenHunter> controller;
 
+    AnimationController<WildenHunter> runController;
+
     @Override
     public void registerControllers(AnimationData animationData) {
         controller = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
+        runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
         animationData.addAnimationController(controller);
+        animationData.addAnimationController(runController);
+    }
+
+    private <T extends IAnimatable> PlayState runPredicate(AnimationEvent<T> tAnimationEvent) {
+        if(tAnimationEvent.isMoving() && (controller.getCurrentAnimation() == null || !controller.getCurrentAnimation().equals("howl_master"))){
+            tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
     @Override

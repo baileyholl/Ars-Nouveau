@@ -92,7 +92,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenHunter>> WILDEN_HUNTER = registerEntity(
             LibEntityNames.WILDEN_HUNTER,
             EntityType.Builder.<WildenHunter>of(WildenHunter::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F)
+                    .sized(1.0f, 1.45F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntitySpellArrow>> ENTITY_SPELL_ARROW = registerEntity(
