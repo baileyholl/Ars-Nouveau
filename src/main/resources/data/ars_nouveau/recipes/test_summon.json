@@ -1,0 +1,8 @@
+{
+  "type": "ars_nouveau:summon_ritual",
+  "augment":
+    {
+      "item": "ars_nouveau:source_gem"
+    },
+  "mob": "ars_nouveau:wilden_hunter"
+}
