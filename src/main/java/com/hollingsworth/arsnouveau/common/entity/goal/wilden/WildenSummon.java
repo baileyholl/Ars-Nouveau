@@ -15,6 +15,7 @@ import java.util.EnumSet;
 public class WildenSummon extends Goal {
     private final WildenHunter entity;
     private int ticksSummoning;
+    public final int maxSummoning = 45;
 
     public WildenSummon(WildenHunter entityIn) {
         this.entity = entityIn;
@@ -28,7 +29,7 @@ public class WildenSummon extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return ticksSummoning < 45;
+        return ticksSummoning < maxSummoning;
     }
 
     @Override
@@ -38,6 +39,12 @@ public class WildenSummon extends Goal {
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.3f);
         ticksSummoning = 0;
         this.entity.summonCooldown = 400;
+        this.entity.getEntityData().set(WildenHunter.ANIM_STATE, WildenHunter.Animations.HOWL.name());
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
     }
 
     @Override
@@ -66,6 +73,9 @@ public class WildenSummon extends Goal {
             wolf2.isWildenSummon = true;
             entity.level.addFreshEntity(wolf);
             entity.level.addFreshEntity(wolf2);
+        }
+        if(ticksSummoning >= maxSummoning){
+            this.entity.getEntityData().set(WildenHunter.ANIM_STATE, WildenHunter.Animations.IDLE.name());
         }
     }
 }

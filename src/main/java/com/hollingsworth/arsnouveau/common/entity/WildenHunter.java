@@ -3,6 +3,10 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenSummon;
 import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,6 +31,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class WildenHunter extends Monster implements IAnimatable, IAnimationListener {
 
+    public static final EntityDataAccessor<String> ANIM_STATE = SynchedEntityData.defineId(WildenHunter.class, EntityDataSerializers.STRING);
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public WildenHunter(EntityType<? extends Monster> type, Level worldIn) {
@@ -54,6 +59,12 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
         if (Config.HUNTER_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ANIM_STATE, Animations.IDLE.name());
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
@@ -147,24 +158,39 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
     AnimationController<WildenHunter> controller;
 
     AnimationController<WildenHunter> runController;
+    AnimationController<WildenHunter> idleController;
 
     @Override
     public void registerControllers(AnimationData animationData) {
         controller = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
         runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
+        idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
         animationData.addAnimationController(controller);
         animationData.addAnimationController(runController);
+        animationData.addAnimationController(idleController);
     }
 
     private <T extends IAnimatable> PlayState runPredicate(AnimationEvent<T> tAnimationEvent) {
-        if(tAnimationEvent.isMoving() && (controller.getCurrentAnimation() == null || !controller.getCurrentAnimation().equals("howl_master"))){
+        if(this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())){
+            return PlayState.STOP;
+        }
+        if(tAnimationEvent.isMoving()){
             tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
-
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
+    private <T extends IAnimatable> PlayState idlePredicate(AnimationEvent<T> tAnimationEvent) {
+        if(this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())){
+            return PlayState.STOP;
+        }
+        if(tAnimationEvent.isMoving()){
+            return PlayState.STOP;
+        }
+        tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
+    }
     @Override
     public AnimationFactory getFactory() {
         return manager;
@@ -173,6 +199,19 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
     public enum Animations {
         ATTACK,
         RAM,
-        HOWL
+        HOWL,
+        IDLE
+    }
+
+    @Override
+    public boolean save(CompoundTag pCompound) {
+        pCompound.putInt("summonCooldown", summonCooldown);
+        return super.save(pCompound);
+    }
+
+    @Override
+    public void load(CompoundTag pCompound) {
+        super.load(pCompound);
+        summonCooldown = pCompound.getInt("summonCooldown");
     }
 }

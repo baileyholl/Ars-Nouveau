@@ -120,23 +120,23 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
     @Override
     public void startAnimation(int arg) {
         try {
-            if (arg == Animations.DIVE.ordinal()) {
-                flyController.markNeedsReload();
-                flyController.setAnimation(new AnimationBuilder().addAnimation("dive"));
-            }
-
-            if (arg == Animations.FLY.ordinal()) {
-                flyController.markNeedsReload();
-                flyController.setAnimation(new AnimationBuilder().addAnimation("flying"));
-            }
-
-            if (arg == Animations.ATTACK.ordinal()) {
-                if (groundController.getCurrentAnimation() != null && (groundController.getCurrentAnimation().animationName.equals("attack"))) {
-                    return;
-                }
-                groundController.markNeedsReload();
-                groundController.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
-            }
+//            if (arg == Animations.DIVE.ordinal()) {
+//                flyController.markNeedsReload();
+//                flyController.setAnimation(new AnimationBuilder().addAnimation("dive"));
+//            }
+//
+//            if (arg == Animations.FLY.ordinal()) {
+//                flyController.markNeedsReload();
+//                flyController.setAnimation(new AnimationBuilder().addAnimation("flying"));
+//            }
+//
+//            if (arg == Animations.ATTACK.ordinal()) {
+//                if (groundController.getCurrentAnimation() != null && (groundController.getCurrentAnimation().animationName.equals("attack"))) {
+//                    return;
+//                }
+//                groundController.markNeedsReload();
+//                groundController.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,11 +144,21 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
     }
 
     private PlayState flyPredicate(AnimationEvent<?> event) {
-        return isFlying() ? PlayState.CONTINUE : PlayState.STOP;
+        if(isFlying()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly_master"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
     private PlayState groundPredicate(AnimationEvent<?> e) {
-        return isFlying() ? PlayState.STOP : PlayState.CONTINUE;
+        if(isFlying()){
+            return PlayState.STOP;
+        }else if(e.isMoving()){
+            e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
     AnimationController<WildenStalker> flyController;

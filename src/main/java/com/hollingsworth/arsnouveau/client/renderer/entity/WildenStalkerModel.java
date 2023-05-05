@@ -21,6 +21,12 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+
+        this.getBone("wing_fly_left").setHidden(!entity.isFlying());
+        this.getBone("wing_fly_right").setHidden(!entity.isFlying());
+
+        this.getBone("wing_run_left").setHidden(entity.isFlying());
+        this.getBone("wing_run_right").setHidden(entity.isFlying());
     }
 
     @Override
@@ -35,7 +41,7 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
 
     @Override
     public ResourceLocation getAnimationResource(WildenStalker wildenStalker) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_stalker_animations.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_stalker_animations.json");
     }
 
 }
