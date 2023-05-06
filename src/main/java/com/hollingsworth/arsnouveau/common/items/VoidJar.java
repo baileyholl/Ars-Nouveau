@@ -36,16 +36,23 @@ public class VoidJar extends ModItem implements IScribeable {
 
     public static boolean tryVoiding(Player player, ItemStack pickingUp) {
         NonNullList<ItemStack> list = player.inventory.items;
-        for (int i = 0; i < 9; i++) {
-            ItemStack jar = list.get(i);
+        for (ItemStack jar : list) {
             if (jar.getItem() == ItemsRegistry.VOID_JAR.get()) {
-                VoidJarData jarData = new VoidJarData(jar);
-                if (jarData.isActive() && jarData.containsStack(pickingUp)) {
-                    CapabilityRegistry.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * pickingUp.getCount()));
-                    pickingUp.setCount(0);
-                    return true;
-                }
+                return voidStack(player, jar, pickingUp);
             }
+        }
+        if (player.getOffhandItem().is(ItemsRegistry.VOID_JAR.get())) {
+            return voidStack(player, player.getOffhandItem(), pickingUp);
+        }
+        return false;
+    }
+
+    public static boolean voidStack(Player player, ItemStack jarStack, ItemStack stackToVoid){
+        VoidJarData jarData = new VoidJarData(jarStack);
+        if (jarData.isActive() && jarData.containsStack(stackToVoid)) {
+            CapabilityRegistry.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * stackToVoid.getCount()));
+            stackToVoid.setCount(0);
+            return true;
         }
         return false;
     }
