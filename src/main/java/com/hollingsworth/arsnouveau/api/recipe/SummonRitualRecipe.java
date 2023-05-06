@@ -15,6 +15,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SummonRitualRecipe implements Recipe<Container> {
 
     public final ResourceLocation id;
@@ -66,6 +69,7 @@ public class SummonRitualRecipe implements Recipe<Container> {
     public RecipeType<?> getType() {
         return RecipeRegistry.SUMMON_RITUAL_TYPE.get();
     }
+
     @Override
     public boolean isSpecial() {
         return true;
@@ -79,7 +83,7 @@ public class SummonRitualRecipe implements Recipe<Container> {
         return jsonobject;
     }
 
-    public static class Serializer implements RecipeSerializer<SummonRitualRecipe>{
+    public static class Serializer implements RecipeSerializer<SummonRitualRecipe> {
 
         @Override
         public SummonRitualRecipe fromJson(ResourceLocation pRecipeId, JsonObject json) {
@@ -101,4 +105,29 @@ public class SummonRitualRecipe implements Recipe<Container> {
             pBuffer.writeResourceLocation(pRecipe.mob);
         }
     }
+
+
+    // A possible expansion of the summon ritual recipe to allow for multiple mob types to be spawned
+    public final List<WeightedMobType> mobTypes = new ArrayList<>();
+    /**
+     * A mob type with a weight and a chance to be selected for spawning
+     *
+     * @param mob    The mob to spawn
+     * @param weight The weight of the mob, the ritual will stop when the total weight of entities spawned reach 15
+     * @param chance If there is more than one mob in the list, this is the chance that this mob will be selected
+     */
+    record WeightedMobType(ResourceLocation mob, int weight, float chance) {
+
+        public WeightedMobType(ResourceLocation mob) {
+            this(mob, 1, 1.0f);
+        }
+
+        JsonObject toJson() {
+            JsonObject jsonobject = new JsonObject();
+            jsonobject.addProperty("mob", this.mob.toString());
+            jsonobject.addProperty("weight", this.weight);
+            return jsonobject;
+        }
+    }
+
 }
