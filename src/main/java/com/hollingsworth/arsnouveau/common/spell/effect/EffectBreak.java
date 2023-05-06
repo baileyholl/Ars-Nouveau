@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -21,7 +20,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,9 +59,12 @@ public class EffectBreak extends AbstractEffect {
 
         int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
         int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
-        stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
-        stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
-
+        if(numFortune > 0 && stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) < numFortune) {
+            stack.enchant(Enchantments.BLOCK_FORTUNE, numFortune);
+        }
+        if(numSilkTouch > 0 && stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < numSilkTouch) {
+            stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
+        }
         for (BlockPos pos1 : posList) {
             state = world.getBlockState(pos1);
 
