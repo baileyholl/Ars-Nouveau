@@ -14,7 +14,7 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
 
     public static final ResourceLocation WARDER_NEUTRAL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_guardian.geo.json");
     public static final ResourceLocation TEXT = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_guardian.png");
-    public static final ResourceLocation ANIM = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_guardian_animations.geo.json");
+    public static final ResourceLocation ANIM = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_defender_animations.geo.json");
 
     //wilden_warder_defense
 
@@ -25,6 +25,9 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+
+        this.getBone("body_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("body_spines_extended").setHidden(!entity.isArmored());
     }
 
     @Override

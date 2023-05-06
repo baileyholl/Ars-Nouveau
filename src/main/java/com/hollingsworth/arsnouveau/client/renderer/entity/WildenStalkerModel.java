@@ -15,8 +15,6 @@ public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
     @Override
     public void setCustomAnimations(WildenStalker entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        if (entity.isFlying())
-            return;
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);

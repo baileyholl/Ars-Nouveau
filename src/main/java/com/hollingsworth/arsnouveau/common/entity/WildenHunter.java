@@ -123,28 +123,10 @@ public class WildenHunter extends Monster implements IAnimatable, IAnimationList
         try {
             if (controller == null)
                 return;
-            if (arg == Animations.ATTACK.ordinal()) {
-//                if (controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
-//                        controller.getCurrentAnimation().animationName.equals("howl"))) {
-//                    return;
-//                }
-//                controller.markNeedsReload();
-//                controller.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
-            }
-
-//            if (arg == Animations.RAM.ordinal()) {
-//                if (controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
-//                    return;
-//                }
-//                controller.markNeedsReload();
-//                controller.setAnimation(new AnimationBuilder().addAnimation("attack2").addAnimation("idle"));
-//            }
-
             if (arg == Animations.HOWL.ordinal()) {
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("howl_master").addAnimation("idle"));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

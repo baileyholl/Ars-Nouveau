@@ -92,7 +92,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenHunter>> WILDEN_HUNTER = registerEntity(
             LibEntityNames.WILDEN_HUNTER,
             EntityType.Builder.<WildenHunter>of(WildenHunter::new, MobCategory.MONSTER)
-                    .sized(1.0f, 1.45F)
+                    .sized(1.2f, 1.2F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntitySpellArrow>> ENTITY_SPELL_ARROW = registerEntity(
@@ -106,7 +106,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenStalker>> WILDEN_STALKER = registerEntity(
             LibEntityNames.WILDEN_STALKER,
             EntityType.Builder.<WildenStalker>of(WildenStalker::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F)
+                    .sized(0.95F, 1F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<SummonHorse>> SUMMON_HORSE = registerEntity(
@@ -117,7 +117,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WildenGuardian>> WILDEN_GUARDIAN = registerEntity(
             LibEntityNames.WILDEN_GUARDIAN,
             EntityType.Builder.<WildenGuardian>of(WildenGuardian::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F)
+                    .sized(1.15F, 1.15F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<EntityChimera>> WILDEN_BOSS = registerEntity(
