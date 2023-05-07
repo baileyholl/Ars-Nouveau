@@ -42,7 +42,7 @@ public class EffectSummonVex extends AbstractEffect {
             vexentity.setOwner(shooter);
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(ticks);
-            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, vexentity);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, vexentity);
         }
         shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT.get(), ticks));
     }

@@ -22,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.TargetBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -270,16 +271,20 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
         if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
 
-            BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
+            BlockState state = level.getBlockState(blockraytraceresult.getBlockPos());
 
             if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
-                prismaticBlock.onHit((ServerLevel) level, ((BlockHitResult) result).getBlockPos(), this);
+                prismaticBlock.onHit((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
                 return;
             }
 
             if (state.getMaterial() == Material.PORTAL) {
-                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);
+                state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
                 return;
+            }
+
+            if (state.getBlock() instanceof TargetBlock) {
+                this.onHitBlock(blockraytraceresult);
             }
 
             if (this.spellResolver != null) {

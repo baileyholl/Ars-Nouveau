@@ -52,14 +52,14 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     public void warp(Entity e) {
-        if ((level instanceof ServerLevel serverLevel) && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
-            e.moveTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5,
-                    rotationVec != null ? rotationVec.y : e.getYRot(), rotationVec != null ? rotationVec.x : e.getXRot());
-            e.setXRot(rotationVec != null ? rotationVec.x : e.getXRot());
-            e.setYRot(rotationVec != null ? rotationVec.y : e.getYRot());
-            Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.getXRot(), e.getYRot()));
+        if ((level instanceof ServerLevel serverLevel)
+                && warpPos != null
+                && dimID != null
+                && PortalTile.teleportEntityTo(e, getServerLevel(dimID), this.warpPos, rotationVec) != null) {
+            ServerLevel serverWorld = getServerLevel(dimID);
+            Networking.sendToNearby(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.getXRot(), e.getYRot()));
             serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
-                    4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+                    4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
     }
 

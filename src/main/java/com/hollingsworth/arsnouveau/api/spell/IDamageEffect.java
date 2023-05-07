@@ -22,8 +22,8 @@ import java.util.List;
 
 public interface IDamageEffect {
 
-    default boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity) {
-        return !(entity instanceof LivingEntity living && living.getHealth() <= 0);
+    default boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, @NotNull Entity entity) {
+        return !(entity instanceof LivingEntity living && living.getHealth() <= 0 || entity.isAlliedTo(shooter));
     }
 
 
@@ -38,7 +38,7 @@ public interface IDamageEffect {
      * @param baseDamage   Starting damage
      * //TODO @return true if Damage is dealt, false if damage was canceled or reduced to 0
      */
-    default void attemptDamage(Level world,@NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage) {
+    default void attemptDamage(Level world, @NotNull LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity, DamageSource source, float baseDamage) {
         if (!canDamage(shooter, stats, spellContext, resolver, entity))
             return; //false;
         ServerLevel server = (ServerLevel) world;
