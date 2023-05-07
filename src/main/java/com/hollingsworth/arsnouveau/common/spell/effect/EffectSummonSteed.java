@@ -46,7 +46,7 @@ public class EffectSummonSteed extends AbstractEffect {
             horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
             horse.setOwnerID(shooter.getUUID());
             horse.setDropChance(EquipmentSlot.CHEST, 0.0F);
-            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, horse);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, horse);
         }
         applySummoningSickness(shooter, 30 * 20);
     }

@@ -28,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.scores.Team;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -163,6 +164,20 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
             this.limitedLifeTicks = 20;
             this.hurt(DamageSource.STARVE, 20.0F);
         }
+    }
+
+    public Team getTeam() {
+        if (this.getSummoner() != null) return getSummoner().getTeam();
+        return super.getTeam();
+    }
+
+    @Override
+    public boolean isAlliedTo(Entity pEntity) {
+        if (this.getSummoner() != null) {
+            LivingEntity livingentity = this.getSummoner();
+            return pEntity == livingentity || livingentity.isAlliedTo(pEntity);
+        }
+        return super.isAlliedTo(pEntity);
     }
 
     @Override

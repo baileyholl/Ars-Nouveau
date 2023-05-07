@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,6 +15,9 @@ import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FamiliarAmethystGolem extends FamiliarEntity {
     public FamiliarAmethystGolem(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
@@ -44,4 +49,15 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
     public EntityType<?> getType() {
         return ModEntities.FAMILIAR_AMETHYST_GOLEM.get();
     }
+
+    public static final Map<String,ResourceLocation> Variants = new HashMap<>();
+    static {
+        Variants.put("default", new ResourceLocation(ArsNouveau.MODID, "textures/entity/amethyst_golem.png"));
+    }
+
+    @Override
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        return Variants.getOrDefault(entity.getColor(), Variants.get("default"));
+    }
+
 }

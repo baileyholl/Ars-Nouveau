@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.IFilter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
@@ -28,10 +30,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class RuneBlock extends TickableModBlock {
@@ -94,6 +98,15 @@ public class RuneBlock extends TickableModBlock {
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
         if (worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
+            if (rune.spell != null) {
+                for (AbstractSpellPart part : rune.spell.recipe) {
+                    if ( part instanceof IFilter filter) {
+                        if (!filter.shouldResolveOnEntity(entityIn)) {
+                            return;
+                        }
+                    } else break;
+                }
+            }
             rune.touchedEntity = entityIn;
             worldIn.scheduleTick(pos, this, 1);
         }

@@ -39,7 +39,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, Entity entity) {
+    public boolean canDamage(LivingEntity shooter, SpellStats stats, SpellContext spellContext, SpellResolver resolver, @NotNull Entity entity) {
         return IDamageEffect.super.canDamage(shooter, stats, spellContext, resolver, entity) && !(entity instanceof IForgeShearable);
     }
 

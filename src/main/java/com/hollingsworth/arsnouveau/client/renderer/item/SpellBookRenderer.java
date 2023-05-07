@@ -58,6 +58,13 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
         stack.popPose();
     }
 
+    /*
+     * Needed to fetch the current itemstack in the renderer from a mixin
+     */
+    public ItemStack currentItemStack(){
+        return currentItemStack;
+    }
+
     @Override
     public ResourceLocation getTextureLocation(SpellBook o) {
         String base = "textures/items/spellbook_";

@@ -122,7 +122,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(world, caster.getSpell(), fakePlayer, new TileCaster(tile, SpellContext.CasterType.TURRET)));
         if (resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
-            TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, tile, world, pos, fakePlayer, iposition, direction);
+            TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, world, pos, fakePlayer, iposition, direction);
             caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
         }
     }

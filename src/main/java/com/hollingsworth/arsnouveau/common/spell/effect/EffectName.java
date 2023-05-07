@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -29,8 +28,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-
-import static net.minecraft.world.level.block.entity.SkullBlockEntity.updateGameprofile;
 
 public class EffectName extends AbstractEffect {
 
