@@ -6,47 +6,47 @@
 			"bones": {
 				"base": {
 					"rotation": {
-						"vector": ["Math.cos(query.anim_time * speed)*11", 0, "Math.cos(query.anim_time * speed)*8"]
+						"vector": ["Math.cos(query.anim_time * 475)*11", 0, "Math.cos(query.anim_time * 475)*8"]
 					},
 					"position": {
-						"vector": [0, "Math.cos(query.anim_time * speed +50)*1.5", 0]
+						"vector": [0, "Math.cos(query.anim_time * 475 +50)*1.5", 0]
 					}
 				},
 				"head": {
 					"rotation": {
-						"vector": ["-Math.cos(query.anim_time * speed)*10", 0, "-Math.sin(query.anim_time * speed)*3"]
+						"vector": ["-Math.cos(query.anim_time * 475)*10", 0, "-Math.sin(query.anim_time * 475)*3"]
 					}
 				},
 				"left_arm": {
 					"rotation": {
-						"vector": ["Math.cos(query.anim_time * speed +125) * 50", 0, 0]
+						"vector": ["Math.cos(query.anim_time * 475 +125) * 50", 0, 0]
 					},
 					"position": {
-						"vector": [0, "-math.sin(query.anim_time * speed) * 1.5", "-math.cos(query.anim_time * speed) * 1.5"]
+						"vector": [0, "-math.sin(query.anim_time * 475) * 1.5", "-math.cos(query.anim_time * 475) * 1.5"]
 					}
 				},
 				"right_arm": {
 					"rotation": {
-						"vector": ["Math.cos(query.anim_time * speed +75) * 45 + 20", 0, 0]
+						"vector": ["Math.cos(query.anim_time * 475 +75) * 45 + 20", 0, 0]
 					},
 					"position": {
-						"vector": [0, "math.sin(query.anim_time * speed) * 1.5", "math.cos(query.anim_time * speed) * 1.5"]
+						"vector": [0, "math.sin(query.anim_time * 475) * 1.5", "math.cos(query.anim_time * 475) * 1.5"]
 					}
 				},
 				"right_leg": {
 					"rotation": {
-						"vector": ["Math.cos(query.anim_time * speed +50) * 40 + 20", 0, 0]
+						"vector": ["Math.cos(query.anim_time * 475 +50) * 40 + 20", 0, 0]
 					},
 					"position": {
-						"vector": [0, "math.sin(query.anim_time * speed) * 1.5", "math.cos(query.anim_time * speed) * 1.5"]
+						"vector": [0, "math.sin(query.anim_time * 475) * 1.5", "math.cos(query.anim_time * 475) * 1.5"]
 					}
 				},
 				"left_leg": {
 					"rotation": {
-						"vector": ["Math.cos(query.anim_time * speed -5) * 45 + 20", 0, 0]
+						"vector": ["Math.cos(query.anim_time * 475 -5) * 45 + 20", 0, 0]
 					},
 					"position": {
-						"vector": [0, "math.sin(query.anim_time * speed) * 1.5", "math.cos(query.anim_time * speed) * 1.5"]
+						"vector": [0, "math.sin(query.anim_time * 475) * 1.5", "math.cos(query.anim_time * 475) * 1.5"]
 					}
 				}
 			}
@@ -90,12 +90,12 @@
 			"bones": {
 				"body": {
 					"position": {
-						"vector": [0, "math.sin(query.anim_time * idlespeed) * 0.25", 0]
+						"vector": [0, "math.sin(query.anim_time * 175) * 0.25", 0]
 					}
 				},
 				"head": {
 					"position": {
-						"vector": [0, "math.sin(query.anim_time * idlespeed + 50) * 0.25", 0]
+						"vector": [0, "math.sin(query.anim_time * 175 + 50) * 0.25", 0]
 					}
 				}
 			}

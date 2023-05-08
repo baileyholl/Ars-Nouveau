@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.guardian.LaserAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
 import com.hollingsworth.arsnouveau.setup.Config;
@@ -36,7 +35,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-public class WildenGuardian extends Monster implements IAnimatable, IAnimationListener {
+public class WildenGuardian extends Monster implements IAnimatable {
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
     public int laserCooldown;
     public int armorCooldown;
@@ -186,38 +185,26 @@ public class WildenGuardian extends Monster implements IAnimatable, IAnimationLi
         }
     }
 
-    @Override
-    public void startAnimation(int arg) {
-        try {
-            AnimationController<?> controller = attackController;
-            if (attackController == null)
-                return;
-            if (arg == WildenHunter.Animations.ATTACK.ordinal()) {
-
-                if (controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
-                        controller.getCurrentAnimation().animationName.equals("howl"))) {
-                    return;
-                }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
-            }
-
-            if (arg == WildenHunter.Animations.RAM.ordinal()) {
-                if (controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
-                    return;
-                }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("attack2").addAnimation("idle"));
-            }
-
-            if (arg == WildenHunter.Animations.HOWL.ordinal()) {
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    private <T extends IAnimatable> PlayState runPredicate(AnimationEvent<T> tAnimationEvent) {
+        if(this.isArmored()){
+            return PlayState.STOP;
         }
+        if(tAnimationEvent.isMoving()){
+            tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
+    }
+
+    private <T extends IAnimatable> PlayState idlePredicate(AnimationEvent<T> tAnimationEvent) {
+        if(this.isArmored()){
+            return PlayState.STOP;
+        }
+        if(tAnimationEvent.isMoving()){
+            return PlayState.STOP;
+        }
+        tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
     }
 
     @Override
@@ -229,16 +216,24 @@ public class WildenGuardian extends Monster implements IAnimatable, IAnimationLi
         this.entityData.define(IS_ARMORED, false);
     }
 
-    private PlayState attackPredicate(AnimationEvent<?> event) {
-        return PlayState.CONTINUE;
+    private PlayState defendPredicate(AnimationEvent<?> event) {
+        if(this.isArmored()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
-    AnimationController<WildenGuardian> attackController;
-
+    AnimationController<WildenGuardian> controller;
+    AnimationController<WildenGuardian> runController;
+    AnimationController<WildenGuardian> idleController;
     @Override
     public void registerControllers(AnimationData animationData) {
-        attackController = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
-        animationData.addAnimationController(attackController);
+        controller = new AnimationController<>(this, "attackController", 1, this::defendPredicate);
+        runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
+        idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
+        animationData.addAnimationController(runController);
+        animationData.addAnimationController(idleController);
     }
 
     public int getAttackDuration() {

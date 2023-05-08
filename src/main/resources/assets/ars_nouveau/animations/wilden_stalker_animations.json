@@ -86,7 +86,7 @@
 				},
 				"head": {
 					"rotation": {
-						"vector": ["Math.sin(query.anim_time * 600) * 10", 0, 0]
+						"vector": ["Math.sin(query.anim_time * 600) * 15", 0, 0]
 					}
 				}
 			}
