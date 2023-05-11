@@ -15,9 +15,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
@@ -58,15 +55,8 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         return ItemStack.EMPTY;
     }
 
-    private <E extends Entity> PlayState attackPredicate(AnimationEvent<?> e) {
-//        e.getController().setAnimation(new AnimationBuilder().addAnimation("spike_spin"));
-        return PlayState.STOP;
-    }
-
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 1, this::attackPredicate));
-    }
+    public void registerControllers(AnimationData data) {}
 
     @Override
     protected void onHitEntity(EntityHitResult rayTraceResult) {
@@ -125,7 +115,6 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
                 if (e.getEffect().isBeneficial())
                     entity.removeEffect(e.getEffect());
             }
-            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
         }
 

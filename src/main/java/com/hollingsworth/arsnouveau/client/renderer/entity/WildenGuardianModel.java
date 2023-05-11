@@ -14,7 +14,7 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
 
     public static final ResourceLocation WARDER_NEUTRAL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_guardian.geo.json");
     public static final ResourceLocation TEXT = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_guardian.png");
-    public static final ResourceLocation ANIM = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_defender_animations.geo.json");
+    public static final ResourceLocation ANIM = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_defender_animations.json");
 
     //wilden_warder_defense
 

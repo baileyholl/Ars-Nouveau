@@ -11,17 +11,14 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class WildenBossRenderer extends GeoEntityRenderer<EntityChimera> {
-    public WildenBossRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new WildenBossModel());
+public class WildenChimeraRenderer extends GeoEntityRenderer<EntityChimera> {
+    public WildenChimeraRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new WildenChimeraModel());
     }
 
     @Override
     public void render(EntityChimera entity, float entityYaw, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
-        stack.pushPose();
-        stack.scale(1.25f, 1.25f, 1.25f);
         super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
-        stack.popPose();
     }
 
     @Override

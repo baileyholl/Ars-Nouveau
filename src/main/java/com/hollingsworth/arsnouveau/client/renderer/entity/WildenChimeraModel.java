@@ -10,13 +10,13 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
+public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/chimera.png");
-    private static final ResourceLocation DEFENSIVE_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/chimera_defense.png");
-
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_chimera.png");
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera.geo.json");
     public static final ResourceLocation DEFENSIVE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera_defense.geo.json");
+    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.json");
+
 
 
     @Override
@@ -28,14 +28,9 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
         head.setRotationX(extraData.headPitch * 0.037453292F + 0.45f);
         head.setRotationY(extraData.netHeadYaw * 0.012453292F);
         this.getBone("wings").setHidden(!entity.hasWings());
-        this.getBone("spikes_lower_body").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_upper_body").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_right_forearm").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_left_upper_arm").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_left_forearm").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_right_thigh").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_left_thigh").setHidden(!entity.hasSpikes());
-        this.getBone("spikes_right_upper_arm").setHidden(!entity.hasSpikes());
+        this.getBone("spikes_extended").setHidden(!entity.isDefensive() || !entity.hasSpikes());
+        this.getBone("spikes_retracted").setHidden(!entity.hasSpikes() || entity.isDefensive());
+        this.getBone("fins").setHidden(!entity.hasSpikes());
         this.getBone("horns").setHidden(!entity.hasHorns());
 
     }
@@ -47,11 +42,11 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
 
     @Override
     public ResourceLocation getTextureResource(EntityChimera entity) {
-        return entity.isDefensive() ? DEFENSIVE_TEXTURE : TEXTURE;
+        return TEXTURE;
     }
 
     @Override
     public ResourceLocation getAnimationResource(EntityChimera animatable) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.geo.json");
+        return ANIMATIONS;
     }
 }
