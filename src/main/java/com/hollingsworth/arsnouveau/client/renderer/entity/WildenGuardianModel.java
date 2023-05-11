@@ -27,7 +27,16 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
 
         this.getBone("body_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("left_arm_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("right_arm_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("right_leg_spines_retracted").setHidden(entity.isArmored());
+        this.getBone("left_leg_spines_retracted").setHidden(entity.isArmored());
+
         this.getBone("body_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("left_arm_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("right_arm_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("right_leg_spines_extended").setHidden(!entity.isArmored());
+        this.getBone("left_leg_spines_extended").setHidden(!entity.isArmored());
     }
 
     @Override
