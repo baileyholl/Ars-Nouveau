@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenSummon;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.WildenSummon;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;

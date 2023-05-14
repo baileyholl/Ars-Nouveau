@@ -14,7 +14,6 @@ public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_chimera.png");
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera.geo.json");
-    public static final ResourceLocation DEFENSIVE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera_defense.geo.json");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.json");
 
 
@@ -25,19 +24,32 @@ public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
 
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.037453292F + 0.45f);
+        head.setRotationX(extraData.headPitch * 0.037453292F);
         head.setRotationY(extraData.netHeadYaw * 0.012453292F);
-        this.getBone("wings").setHidden(!entity.hasWings());
+        this.getBone("wings_folded").setHidden(!entity.hasWings() || entity.isFlying());
+        this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
+
+        this.getBone("wings_extended_left").setHidden(!entity.hasWings() || !entity.isFlying());
+        this.getBone("wings_extended_right2").setHidden(!entity.hasWings() || !entity.isFlying());
+        this.getBone("wings_extended_left2").setHidden(!entity.hasWings() || !entity.isFlying());
+
+//        this.getBone("wings_extended_left").setHidden(!entity.hasWings() || !entity.isFlying());
+//        this.getBone("wings_extended_left2").setHidden(!entity.hasWings() || !entity.isFlying());
+//        this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
+//        this.getBone("wings_extended_right2").setHidden(!entity.hasWings() || !entity.isFlying());
+
         this.getBone("spikes_extended").setHidden(!entity.isDefensive() || !entity.hasSpikes());
         this.getBone("spikes_retracted").setHidden(!entity.hasSpikes() || entity.isDefensive());
         this.getBone("fins").setHidden(!entity.hasSpikes());
         this.getBone("horns").setHidden(!entity.hasHorns());
 
+        this.getBone("wings_extended_left").setHidden(!entity.hasWings() || !entity.isFlying());
+        this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
     }
 
     @Override
     public ResourceLocation getModelResource(EntityChimera entity) {
-        return entity.isDefensive() ? DEFENSIVE_MODEL : NORMAL_MODEL;
+        return NORMAL_MODEL;
     }
 
     @Override

@@ -66,6 +66,7 @@ public class ChimeraDiveGoal extends Goal {
         }
 
         if (ticksFlying > 60) {
+            boss.setDiving(true);
             isDiving = true;
             boss.diving = true;
 
@@ -81,7 +82,6 @@ public class ChimeraDiveGoal extends Goal {
                         }
                     }
                 }
-                Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.DIVE_BOMB.ordinal()));
             }
             if (divePos != null) {
                 boss.flyingNavigator.moveTo(divePos.getX() + 0.5, divePos.getY(), divePos.getZ(), 4f);
@@ -116,6 +116,7 @@ public class ChimeraDiveGoal extends Goal {
         boss.setDeltaMovement(0, 0, 0);
         boss.getNavigation().moveTo(this.boss.getTarget() != null ? this.boss.getTarget() : this.boss, 0.0f);
         finished = true;
+        boss.setDiving(false);
         ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION, (ServerLevel) boss.level, new BlockPos(boss.position().x, boss.position.y, boss.position.z), 10);
     }
 
@@ -125,7 +126,6 @@ public class ChimeraDiveGoal extends Goal {
             mode = Explosion.BlockInteraction.NONE;
         }
         boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, mode);
-        Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }
 
     @Override

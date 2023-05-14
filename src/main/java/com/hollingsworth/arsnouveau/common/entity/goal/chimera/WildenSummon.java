@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal.wilden;
+package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;

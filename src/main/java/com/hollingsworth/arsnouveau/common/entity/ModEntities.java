@@ -123,7 +123,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<EntityChimera>> WILDEN_BOSS = registerEntity(
             LibEntityNames.WILDEN_CHIMERA,
             EntityType.Builder.<EntityChimera>of(EntityChimera::new, MobCategory.MONSTER)
-                    .sized(2.5f, 2.5f)
+                    .sized(2.5f, 2.25f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final RegistryObject<EntityType<LightningEntity>> LIGHTNING_ENTITY = registerEntity(LibEntityNames.AN_LIGHTNING, EntityType.Builder.<LightningEntity>of(LightningEntity::new, MobCategory.MISC)
