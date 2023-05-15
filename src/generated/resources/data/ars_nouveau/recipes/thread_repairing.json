@@ -6,19 +6,13 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:anvil"
-      }
+      "item": "minecraft:anvil"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     }
   ],
   "reagent": [

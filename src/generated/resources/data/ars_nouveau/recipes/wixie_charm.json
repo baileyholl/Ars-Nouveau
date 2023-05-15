@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "minecraft:saplings"
-      }
+      "tag": "minecraft:saplings"
     },
     {
-      "item": {
-        "tag": "forge:gems/emerald"
-      }
+      "tag": "forge:gems/emerald"
     },
     {
-      "item": {
-        "item": "minecraft:crafting_table"
-      }
+      "item": "minecraft:crafting_table"
     },
     {
-      "item": {
-        "item": "minecraft:brewing_stand"
-      }
+      "item": "minecraft:brewing_stand"
     }
   ],
   "reagent": [

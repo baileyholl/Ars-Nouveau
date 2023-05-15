@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:totem_of_undying"
-      }
+      "item": "minecraft:totem_of_undying"
     },
     {
-      "item": {
-        "item": "minecraft:phantom_membrane"
-      }
+      "item": "minecraft:phantom_membrane"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     }
   ],
   "reagent": [

@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:glass"
-      }
+      "tag": "forge:glass"
     },
     {
-      "item": {
-        "tag": "forge:glass"
-      }
+      "tag": "forge:glass"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     },
     {
-      "item": {
-        "tag": "forge:logs/archwood"
-      }
+      "tag": "forge:logs/archwood"
     },
     {
-      "item": {
-        "tag": "forge:logs/archwood"
-      }
+      "tag": "forge:logs/archwood"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     }
   ],
   "reagent": [

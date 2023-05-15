@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "tag": "forge:storage_blocks/gold"
-      }
+      "tag": "forge:storage_blocks/gold"
     },
     {
-      "item": {
-        "tag": "forge:storage_blocks/gold"
-      }
+      "tag": "forge:storage_blocks/gold"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     }
   ],
   "reagent": [

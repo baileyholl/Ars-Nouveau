@@ -6,19 +6,13 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:glass_bottle"
-      }
+      "item": "minecraft:glass_bottle"
     },
     {
-      "item": {
-        "item": "minecraft:glass_bottle"
-      }
+      "item": "minecraft:glass_bottle"
     },
     {
-      "item": {
-        "item": "minecraft:glass_bottle"
-      }
+      "item": "minecraft:glass_bottle"
     }
   ],
   "reagent": [
