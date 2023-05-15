@@ -204,7 +204,7 @@
   "ars_nouveau.glyph_desc.glyph_craft": "Opens the crafting menu.",
   "ars_nouveau.glyph_desc.glyph_crush": "Turns stone into gravel, and gravel into sand. Will also crush flowers into bonus dye. Need Sensitive to work on items. For full recipe support, see JEI. Will also harm entities and deals bonus damage to entities that are swimming.",
   "ars_nouveau.glyph_desc.glyph_cut": "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. Amplify will simulate using an Axe instead of Shears. For simulating breaking with shears, see Break and Sensitive. Costs nothing.",
-  "ars_nouveau.glyph_desc.glyph_dampen": "Decreases the power of most spells. Decreases the mana cost slighty, but never below 0.",
+  "ars_nouveau.glyph_desc.glyph_dampen": "Decreases the power of most spells.",
   "ars_nouveau.glyph_desc.glyph_decelerate": "Decreases the speed of projectile spells.",
   "ars_nouveau.glyph_desc.glyph_delay": "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment, or decreased with Duration Down.",
   "ars_nouveau.glyph_desc.glyph_dispel": "Removes any potion effects on the target. When used on a witch at half health, the witch will vanish in return for a Wixie shard. Will also dispel tamed summons back into their charm.",
