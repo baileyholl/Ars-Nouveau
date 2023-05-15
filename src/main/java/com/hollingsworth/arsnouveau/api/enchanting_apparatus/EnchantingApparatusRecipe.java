@@ -208,11 +208,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 Ingredient input = null;
                 JsonObject obj = item.getAsJsonObject();
                 if (GsonHelper.isObjectNode(obj, "item")) {
-                    if (GsonHelper.isArrayNode(obj, "item")) {
-                        input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                    } else {
-                        input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
-                    }
+                    input = Ingredient.fromJson(obj.get("item"));
                 } else {
                     input = Ingredient.fromJson(obj);
                 }
