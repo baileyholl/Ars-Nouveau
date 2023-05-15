@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:chests"
-      }
+      "tag": "forge:chests"
     },
     {
-      "item": {
-        "tag": "forge:chests"
-      }
+      "tag": "forge:chests"
     },
     {
-      "item": {
-        "tag": "forge:chests"
-      }
+      "tag": "forge:chests"
     },
     {
-      "item": {
-        "tag": "forge:chests"
-      }
+      "tag": "forge:chests"
     }
   ],
   "reagent": [

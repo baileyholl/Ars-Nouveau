@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "item": "ars_nouveau:archwood_planks"
-      }
+      "item": "ars_nouveau:archwood_planks"
     },
     {
-      "item": {
-        "item": "ars_nouveau:archwood_planks"
-      }
+      "item": "ars_nouveau:archwood_planks"
     },
     {
-      "item": {
-        "item": "ars_nouveau:archwood_planks"
-      }
+      "item": "ars_nouveau:archwood_planks"
     }
   ],
   "reagent": [

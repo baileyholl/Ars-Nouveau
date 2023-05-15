@@ -6,19 +6,13 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:dragon_breath"
-      }
+      "item": "minecraft:dragon_breath"
     },
     {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
+      "item": "ars_nouveau:air_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
+      "item": "ars_nouveau:air_essence"
     }
   ],
   "reagent": [

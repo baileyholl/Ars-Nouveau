@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "forge:ender_pearls"
     },
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "forge:ender_pearls"
     },
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "forge:ender_pearls"
     },
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "forge:ender_pearls"
     },
     {
-      "item": {
-        "item": "minecraft:popped_chorus_fruit"
-      }
+      "item": "minecraft:popped_chorus_fruit"
     },
     {
-      "item": {
-        "item": "minecraft:popped_chorus_fruit"
-      }
+      "item": "minecraft:popped_chorus_fruit"
     },
     {
-      "item": {
-        "item": "minecraft:popped_chorus_fruit"
-      }
+      "item": "minecraft:popped_chorus_fruit"
     },
     {
-      "item": {
-        "item": "minecraft:popped_chorus_fruit"
-      }
+      "item": "minecraft:popped_chorus_fruit"
     }
   ],
   "reagent": [

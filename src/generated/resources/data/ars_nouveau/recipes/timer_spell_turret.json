@@ -6,9 +6,7 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:clock"
-      }
+      "item": "minecraft:clock"
     }
   ],
   "reagent": [

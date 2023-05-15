@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "minecraft:fishes"
-      }
+      "tag": "minecraft:fishes"
     },
     {
-      "item": {
-        "tag": "minecraft:fishes"
-      }
+      "tag": "minecraft:fishes"
     },
     {
-      "item": {
-        "tag": "minecraft:fishes"
-      }
+      "tag": "minecraft:fishes"
     },
     {
-      "item": {
-        "item": "ars_nouveau:water_essence"
-      }
+      "item": "ars_nouveau:water_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:water_essence"
-      }
+      "item": "ars_nouveau:water_essence"
     },
     {
-      "item": {
-        "item": "minecraft:pufferfish"
-      }
+      "item": "minecraft:pufferfish"
     }
   ],
   "reagent": [

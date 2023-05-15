@@ -6,29 +6,19 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:wilden_horn"
-      }
+      "item": "ars_nouveau:wilden_horn"
     },
     {
-      "item": {
-        "item": "ars_nouveau:wilden_spike"
-      }
+      "item": "ars_nouveau:wilden_spike"
     },
     {
-      "item": {
-        "item": "ars_nouveau:wilden_wing"
-      }
+      "item": "ars_nouveau:wilden_wing"
     },
     {
-      "item": {
-        "item": "ars_nouveau:wilden_tribute"
-      }
+      "item": "ars_nouveau:wilden_tribute"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     }
   ],
   "reagent": [

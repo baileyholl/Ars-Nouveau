@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:mendosteen_pod"
-      }
+      "item": "ars_nouveau:mendosteen_pod"
     },
     {
-      "item": {
-        "item": "minecraft:sculk_catalyst"
-      }
+      "item": "minecraft:sculk_catalyst"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     }
   ],
   "reagent": [

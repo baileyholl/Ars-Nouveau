@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "minecraft:fishes"
-      }
+      "tag": "minecraft:fishes"
     },
     {
-      "item": {
-        "item": "minecraft:wheat"
-      }
+      "item": "minecraft:wheat"
     },
     {
-      "item": {
-        "item": "minecraft:apple"
-      }
+      "item": "minecraft:apple"
     },
     {
-      "item": {
-        "item": "minecraft:carrot"
-      }
+      "item": "minecraft:carrot"
     },
     {
-      "item": {
-        "tag": "forge:seeds"
-      }
+      "tag": "forge:seeds"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     }
   ],
   "reagent": [

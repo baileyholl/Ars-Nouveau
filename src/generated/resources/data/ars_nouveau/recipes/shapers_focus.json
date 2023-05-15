@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "item": "minecraft:piston"
-      }
+      "item": "minecraft:piston"
     },
     {
-      "item": {
-        "item": "minecraft:slime_block"
-      }
+      "item": "minecraft:slime_block"
     },
     {
-      "item": {
-        "tag": "forge:gems/diamond"
-      }
+      "tag": "forge:gems/diamond"
     }
   ],
   "reagent": [

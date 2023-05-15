@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:blaze_powder"
-      }
+      "item": "minecraft:blaze_powder"
     },
     {
-      "item": {
-        "item": "minecraft:blaze_powder"
-      }
+      "item": "minecraft:blaze_powder"
     },
     {
-      "item": {
-        "item": "minecraft:blaze_powder"
-      }
+      "item": "minecraft:blaze_powder"
     },
     {
-      "item": {
-        "item": "minecraft:blaze_powder"
-      }
+      "item": "minecraft:blaze_powder"
     },
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "forge:ender_pearls"
     },
     {
-      "item": {
-        "tag": "forge:ender_pearls"
-      }
+      "tag": "forge:ender_pearls"
     }
   ],
   "reagent": [

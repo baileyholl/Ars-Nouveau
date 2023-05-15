@@ -6,19 +6,13 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     }
   ],
   "reagent": [

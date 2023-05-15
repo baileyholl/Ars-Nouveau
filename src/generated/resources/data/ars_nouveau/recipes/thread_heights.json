@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:spider_eye"
-      }
+      "item": "minecraft:spider_eye"
     },
     {
-      "item": {
-        "item": "minecraft:rabbit_hide"
-      }
+      "item": "minecraft:rabbit_hide"
     },
     {
-      "item": {
-        "item": "minecraft:rabbit_hide"
-      }
+      "item": "minecraft:rabbit_hide"
     },
     {
-      "item": {
-        "item": "minecraft:rabbit_hide"
-      }
+      "item": "minecraft:rabbit_hide"
     },
     {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
+      "item": "ars_nouveau:air_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
+      "item": "ars_nouveau:air_essence"
     }
   ],
   "reagent": [

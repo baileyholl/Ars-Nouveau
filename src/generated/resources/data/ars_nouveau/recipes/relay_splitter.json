@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:gems/quartz"
-      }
+      "tag": "forge:gems/quartz"
     },
     {
-      "item": {
-        "tag": "forge:gems/quartz"
-      }
+      "tag": "forge:gems/quartz"
     },
     {
-      "item": {
-        "tag": "forge:gems/quartz"
-      }
+      "tag": "forge:gems/quartz"
     },
     {
-      "item": {
-        "tag": "forge:gems/quartz"
-      }
+      "tag": "forge:gems/quartz"
     },
     {
-      "item": {
-        "tag": "forge:gems/lapis"
-      }
+      "tag": "forge:gems/lapis"
     },
     {
-      "item": {
-        "tag": "forge:gems/lapis"
-      }
+      "tag": "forge:gems/lapis"
     },
     {
-      "item": {
-        "tag": "forge:gems/lapis"
-      }
+      "tag": "forge:gems/lapis"
     },
     {
-      "item": {
-        "tag": "forge:gems/lapis"
-      }
+      "tag": "forge:gems/lapis"
     }
   ],
   "reagent": [

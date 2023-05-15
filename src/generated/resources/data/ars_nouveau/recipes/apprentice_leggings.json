@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:magebloom_fiber"
-      }
+      "item": "ars_nouveau:magebloom_fiber"
     },
     {
-      "item": {
-        "item": "ars_nouveau:magebloom_fiber"
-      }
+      "item": "ars_nouveau:magebloom_fiber"
     },
     {
-      "item": {
-        "item": "ars_nouveau:magebloom_fiber"
-      }
+      "item": "ars_nouveau:magebloom_fiber"
     },
     {
-      "item": {
-        "item": "ars_nouveau:magebloom_fiber"
-      }
+      "item": "ars_nouveau:magebloom_fiber"
     }
   ],
   "reagent": [
