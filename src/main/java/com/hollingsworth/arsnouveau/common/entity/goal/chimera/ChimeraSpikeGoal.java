@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -10,11 +10,11 @@ import java.util.EnumSet;
 
 public class ChimeraSpikeGoal extends Goal {
 
-    EntityChimera boss;
+    WildenChimera boss;
     boolean finished;
     int ticks;
 
-    public ChimeraSpikeGoal(EntityChimera boss) {
+    public ChimeraSpikeGoal(WildenChimera boss) {
         this.boss = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -38,12 +38,7 @@ public class ChimeraSpikeGoal extends Goal {
         boss.setDefensiveMode(true);
         boss.setDeltaMovement(0, 0, 0);
         if (ticks % 20 == 0) {
-            for (int i = 0; i < 100; i++) {
-                EntityChimeraProjectile entity = new EntityChimeraProjectile(boss.level);
-                entity.shootFromRotation(boss, boss.level.random.nextInt(360), boss.level.random.nextInt(360), 0.0f, (float) (1.0F + ParticleUtil.inRange(0.0, 0.5)), 1.0F);
-                entity.setPos(boss.position.x, boss.position.y + 2, boss.position.z);
-                boss.level.addFreshEntity(entity);
-            }
+            spawnAOESpikes(boss);
             for (int i = 0; i < 3; i++) {
                 if (this.boss.getTarget() != null) {
                     EntityChimeraProjectile abstractarrowentity = new EntityChimeraProjectile(boss.level);
@@ -61,6 +56,15 @@ public class ChimeraSpikeGoal extends Goal {
             boss.setDefensiveMode(false);
             finished = true;
             boss.spikeCooldown = (int) (500 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());
+        }
+    }
+
+    public static void spawnAOESpikes(WildenChimera boss){
+        for (int i = 0; i < 100; i++) {
+            EntityChimeraProjectile entity = new EntityChimeraProjectile(boss.level);
+            entity.shootFromRotation(boss, boss.level.random.nextInt(360), boss.level.random.nextInt(360), 0.0f, (float) (1.0F + ParticleUtil.inRange(0.0, 0.5)), 1.0F);
+            entity.setPos(boss.position.x, boss.position.y + 2, boss.position.z);
+            boss.level.addFreshEntity(entity);
         }
     }
 

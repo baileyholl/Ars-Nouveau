@@ -133,7 +133,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
                     || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }
-        return !(entity instanceof EntityChimera) && super.canHitEntity(entity);
+        return !(entity instanceof WildenChimera) && super.canHitEntity(entity);
     }
 
     AnimationFactory factory = GeckoLibUtil.createFactory(this);

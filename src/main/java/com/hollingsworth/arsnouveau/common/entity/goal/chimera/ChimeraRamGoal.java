@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class ChimeraRamGoal extends Goal {
-    EntityChimera boss;
+    WildenChimera boss;
     int timeCharging;
 
     boolean finished;
@@ -26,7 +26,7 @@ public class ChimeraRamGoal extends Goal {
     boolean isCharging;
     boolean hasHit;
 
-    public ChimeraRamGoal(EntityChimera boss) {
+    public ChimeraRamGoal(WildenChimera boss) {
         this.boss = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -58,7 +58,7 @@ public class ChimeraRamGoal extends Goal {
             endRam();
         }
         if (!startedCharge) {
-            Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.CHARGE.ordinal()));
+            Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), WildenChimera.Animations.CHARGE.ordinal()));
             boss.setRamPrep(true);
             startedCharge = true;
         }

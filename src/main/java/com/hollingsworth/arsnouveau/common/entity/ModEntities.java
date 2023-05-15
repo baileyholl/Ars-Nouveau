@@ -120,9 +120,9 @@ public class ModEntities {
                     .sized(1.15F, 1.15F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
-    public static final RegistryObject<EntityType<EntityChimera>> WILDEN_BOSS = registerEntity(
+    public static final RegistryObject<EntityType<WildenChimera>> WILDEN_BOSS = registerEntity(
             LibEntityNames.WILDEN_CHIMERA,
-            EntityType.Builder.<EntityChimera>of(EntityChimera::new, MobCategory.MONSTER)
+            EntityType.Builder.<WildenChimera>of(WildenChimera::new, MobCategory.MONSTER)
                     .sized(2.5f, 2.25f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
@@ -286,7 +286,7 @@ public class ModEntities {
             event.put(ENTITY_DUMMY.get(), Mob.createMobAttributes()
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
-            event.put(WILDEN_BOSS.get(), EntityChimera.getModdedAttributes().build());
+            event.put(WILDEN_BOSS.get(), WildenChimera.getModdedAttributes().build());
             event.put(ENTITY_FAMILIAR_STARBUNCLE.get(), FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarEntity.attributes().build());
 //            event.put(ENTITY_FAMILIAR_JABBERWOG.get(), FamiliarEntity.attributes().build());

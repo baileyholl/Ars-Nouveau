@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketTimedEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -13,12 +13,12 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import java.util.EnumSet;
 
 public class ChimeraSummonGoal extends Goal {
-    private EntityChimera mob;
+    private WildenChimera mob;
     public int timeSummoning;
     public boolean done;
     public boolean howling;
 
-    public ChimeraSummonGoal(EntityChimera boss) {
+    public ChimeraSummonGoal(WildenChimera boss) {
         this.mob = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }

@@ -69,19 +69,19 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 
-public class EntityChimera extends Monster implements IAnimatable, IAnimationListener {
+public class WildenChimera extends Monster implements IAnimatable, IAnimationListener {
     private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true).setPlayBossMusic(true);
-    public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> HAS_WINGS = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Boolean> DEFENSIVE_MODE = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> PHASE_SWAPPING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> IS_FLYING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> IS_HOWLING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> IS_DIVING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> IS_RAMMING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> RAM_PREP = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HAS_WINGS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> DEFENSIVE_MODE = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> PHASE_SWAPPING = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_FLYING = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_HOWLING = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_DIVING = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_RAMMING = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> RAM_PREP = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
 
     public boolean isRamGoal;
     public int summonCooldown;
@@ -95,7 +95,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     protected final WaterBoundPathNavigation waterNavigation;
     protected final GroundPathNavigation groundNavigation;
 
-    public EntityChimera(EntityType<? extends Monster> type, Level level) {
+    public WildenChimera(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         moveControl = new ChimeraMoveController(this, 10, true);
         maxUpStep = 2.0f;
@@ -112,7 +112,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         this.xpReward = 75;
     }
 
-    public EntityChimera(Level level) {
+    public WildenChimera(Level level) {
         this(ModEntities.WILDEN_BOSS.get(), level);
     }
 
@@ -129,8 +129,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
     }
 
-    AnimationController<EntityChimera> attackController;
-    AnimationController<EntityChimera> crouchController;
+    AnimationController<WildenChimera> attackController;
+    AnimationController<WildenChimera> crouchController;
 
     public boolean isPushedByFluid() {
         return !this.isSwimming();
@@ -151,16 +151,16 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, this::idlePredicate));
         animationData.addAnimationController(new AnimationController<>(this, "flyController", 1, this::flyPredicate));
         animationData.addAnimationController(new AnimationController<>(this, "diveController", 1, this::divePredicate));
-        animationData.addAnimationController(new AnimationController(this, "howlController", 1, this::howlPredicate));
-        animationData.addAnimationController(new AnimationController(this, "swimController", 1, this::swimPredicate));
-        animationData.addAnimationController(new AnimationController(this, "ramController", 1, (event -> {
+        animationData.addAnimationController(new AnimationController<>(this, "howlController", 1, this::howlPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "swimController", 1, this::swimPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "ramController", 1, (event -> {
             if(isRamming() && !isRamPrep()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("charge"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         })));
-        animationData.addAnimationController(new AnimationController(this, "ramPrep", 1, (event -> {
+        animationData.addAnimationController(new AnimationController<>(this, "ramPrep", 1, (event -> {
             if(isRamPrep() && !isRamming()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("charge_prep"));
                 return PlayState.CONTINUE;
@@ -794,8 +794,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
         private final int maxTurn;
         private final boolean hoversInPlace;
-        private final EntityChimera chimera;
-        public ChimeraMoveController(EntityChimera chimera, int maxTurn, boolean hoversInPlace) {
+        private final WildenChimera chimera;
+        public ChimeraMoveController(WildenChimera chimera, int maxTurn, boolean hoversInPlace) {
             super(chimera);
             this.maxTurn = maxTurn;
             this.hoversInPlace = hoversInPlace;
@@ -804,7 +804,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
         @Override
         public void tick() {
-            EntityChimera chimera = (EntityChimera) this.mob;
+            WildenChimera chimera = (WildenChimera) this.mob;
             if (chimera.isFlying()) {
                 if (chimera.diving) {
                     diveTick();
@@ -887,7 +887,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         }
 
         public void diveTick() {
-            EntityChimera mob = (EntityChimera) this.mob;
+            WildenChimera mob = (WildenChimera) this.mob;
             double posX = mob.getX();
             double posY = mob.getY();
             double posZ = mob.getZ();

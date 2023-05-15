@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.pathfinder.Path;
 import java.util.EnumSet;
 
 public class ChimeraAttackGoal extends Goal {
-    protected final EntityChimera mob;
+    protected final WildenChimera mob;
     private final double speedModifier;
     private final boolean followingTargetEvenIfNotSeen;
     private Path path;
@@ -30,7 +30,7 @@ public class ChimeraAttackGoal extends Goal {
     public boolean arrived = false;
     public boolean done = false;
 
-    public ChimeraAttackGoal(EntityChimera p_i1636_1_, boolean p_i1636_4_) {
+    public ChimeraAttackGoal(WildenChimera p_i1636_1_, boolean p_i1636_4_) {
         this.mob = p_i1636_1_;
         this.speedModifier = 1.8f;
         this.followingTargetEvenIfNotSeen = p_i1636_4_;
@@ -125,7 +125,7 @@ public class ChimeraAttackGoal extends Goal {
         this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
         if (BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= 3) {
             this.arrived = true;
-            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), EntityChimera.Animations.ATTACK.ordinal()));
+            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), WildenChimera.Animations.ATTACK.ordinal()));
         }
         if ((this.followingTargetEvenIfNotSeen || this.mob.getSensing().hasLineOfSight(livingentity)) && this.ticksUntilNextPathRecalculation <= 0 && (this.pathedTargetX == 0.0D && this.pathedTargetY == 0.0D && this.pathedTargetZ == 0.0D || livingentity.distanceToSqr(this.pathedTargetX, this.pathedTargetY, this.pathedTargetZ) >= 1.0D || this.mob.getRandom().nextFloat() < 0.05F)) {
             this.pathedTargetX = livingentity.getX();

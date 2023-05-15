@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -10,7 +10,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
+public class WildenChimeraModel extends AnimatedGeoModel<WildenChimera> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_chimera.png");
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera.geo.json");
@@ -19,7 +19,7 @@ public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
 
 
     @Override
-    public void setCustomAnimations(EntityChimera entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setCustomAnimations(WildenChimera entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         IBone head = this.getAnimationProcessor().getBone("head");
@@ -50,17 +50,17 @@ public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
     }
 
     @Override
-    public ResourceLocation getModelResource(EntityChimera entity) {
+    public ResourceLocation getModelResource(WildenChimera entity) {
         return NORMAL_MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureResource(EntityChimera entity) {
+    public ResourceLocation getTextureResource(WildenChimera entity) {
         return TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationResource(EntityChimera animatable) {
+    public ResourceLocation getAnimationResource(WildenChimera animatable) {
         return ANIMATIONS;
     }
 }
