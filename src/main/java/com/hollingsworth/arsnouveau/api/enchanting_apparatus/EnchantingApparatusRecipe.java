@@ -123,7 +123,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 ", pedestalItems=" + pedestalItems +
                 '}';
     }
-
+    // TODO: 1.20 unnest item and use tag/item directly
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:enchanting_apparatus");
