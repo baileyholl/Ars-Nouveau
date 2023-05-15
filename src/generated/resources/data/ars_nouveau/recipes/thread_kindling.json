@@ -6,19 +6,13 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:magma_cream"
-      }
+      "item": "minecraft:magma_cream"
     },
     {
-      "item": {
-        "item": "ars_nouveau:fire_essence"
-      }
+      "item": "ars_nouveau:fire_essence"
     },
     {
-      "item": {
-        "item": "minecraft:fire_charge"
-      }
+      "item": "minecraft:fire_charge"
     }
   ],
   "reagent": [

@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:glowstone"
-      }
+      "item": "minecraft:glowstone"
     },
     {
-      "item": {
-        "item": "minecraft:glowstone"
-      }
+      "item": "minecraft:glowstone"
     },
     {
-      "item": {
-        "item": "minecraft:glowstone"
-      }
+      "item": "minecraft:glowstone"
     },
     {
-      "item": {
-        "item": "minecraft:glowstone"
-      }
+      "item": "minecraft:glowstone"
     },
     {
-      "item": {
-        "item": "minecraft:redstone_lamp"
-      }
+      "item": "minecraft:redstone_lamp"
     },
     {
-      "item": {
-        "item": "minecraft:redstone_lamp"
-      }
+      "item": "minecraft:redstone_lamp"
     },
     {
-      "item": {
-        "tag": "forge:glass"
-      }
+      "tag": "forge:glass"
     },
     {
-      "item": {
-        "tag": "forge:glass"
-      }
+      "tag": "forge:glass"
     }
   ],
   "reagent": [

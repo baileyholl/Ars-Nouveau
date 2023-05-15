@@ -123,16 +123,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 ", pedestalItems=" + pedestalItems +
                 '}';
     }
-
+    // TODO: 1.20 unnest item and use tag/item directly
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:enchanting_apparatus");
 
         JsonArray pedestalArr = new JsonArray();
         for (Ingredient i : this.pedestalItems) {
-            JsonObject object = new JsonObject();
-            object.add("item", i.toJson());
-            pedestalArr.add(object);
+            pedestalArr.add(i.toJson());
         }
         JsonArray reagent = new JsonArray();
         reagent.add(this.reagent.toJson());
@@ -200,7 +198,29 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTING_APPARATUS_RECIPE_ID));
     }
 
+
     public static class Serializer implements RecipeSerializer<EnchantingApparatusRecipe> {
+
+        private List<Ingredient> getPedestalItems(JsonArray pedestalJson) {
+            List<Ingredient> stacks = new ArrayList<>();
+
+            for (JsonElement item : pedestalJson) {
+                Ingredient input = null;
+                JsonObject obj = item.getAsJsonObject();
+                if (GsonHelper.isObjectNode(obj, "item")) {
+                    if (GsonHelper.isArrayNode(obj, "item")) {
+                        input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
+                    } else {
+                        input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
+                    }
+                } else {
+                    input = Ingredient.fromJson(obj);
+                }
+                stacks.add(input);
+            }
+
+            return stacks;
+        }
 
         @Override
         public EnchantingApparatusRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -209,18 +229,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
             boolean keepNbtOfReagent = json.has("keepNbtOfReagent") && GsonHelper.getAsBoolean(json, "keepNbtOfReagent");
             JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
-            List<Ingredient> stacks = new ArrayList<>();
-
-            for (JsonElement e : pedestalItems) {
-                JsonObject obj = e.getAsJsonObject();
-                Ingredient input = null;
-                if (GsonHelper.isArrayNode(obj, "item")) {
-                    input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
-                } else {
-                    input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
-                }
-                stacks.add(input);
-            }
+            List<Ingredient> stacks = getPedestalItems(pedestalItems);
             return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepNbtOfReagent);
         }
 

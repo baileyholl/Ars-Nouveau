@@ -37,6 +37,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new JsonDatagen(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new Advancements(event.getGenerator(), event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         BiomeModifiersProvider.datagenModifiers(event);
     }
 

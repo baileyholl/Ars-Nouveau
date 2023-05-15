@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
+      "item": "ars_nouveau:air_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:manipulation_essence"
-      }
+      "item": "ars_nouveau:manipulation_essence"
     }
   ],
   "reagent": [

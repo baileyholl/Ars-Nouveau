@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:wixie_shards"
-      }
+      "item": "ars_nouveau:wixie_shards"
     },
     {
-      "item": {
-        "item": "ars_nouveau:wixie_shards"
-      }
+      "item": "ars_nouveau:wixie_shards"
     },
     {
-      "item": {
-        "item": "ars_nouveau:wixie_shards"
-      }
+      "item": "ars_nouveau:wixie_shards"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "tag": "forge:crops/nether_wart"
-      }
+      "tag": "forge:crops/nether_wart"
     },
     {
-      "item": {
-        "tag": "forge:crops/nether_wart"
-      }
+      "tag": "forge:crops/nether_wart"
     },
     {
-      "item": {
-        "item": "minecraft:blaze_rod"
-      }
+      "item": "minecraft:blaze_rod"
     }
   ],
   "reagent": [

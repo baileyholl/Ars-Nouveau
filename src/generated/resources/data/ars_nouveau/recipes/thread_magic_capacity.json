@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "ars_nouveau:source_berry"
-      }
+      "item": "ars_nouveau:source_berry"
     },
     {
-      "item": {
-        "item": "ars_nouveau:source_berry"
-      }
+      "item": "ars_nouveau:source_berry"
     },
     {
-      "item": {
-        "item": "ars_nouveau:source_berry"
-      }
+      "item": "ars_nouveau:source_berry"
     },
     {
-      "item": {
-        "item": "ars_nouveau:magebloom"
-      }
+      "item": "ars_nouveau:magebloom"
     },
     {
-      "item": {
-        "item": "ars_nouveau:magebloom"
-      }
+      "item": "ars_nouveau:magebloom"
     },
     {
-      "item": {
-        "item": "ars_nouveau:magebloom"
-      }
+      "item": "ars_nouveau:magebloom"
     }
   ],
   "reagent": [

@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:gunpowder"
-      }
+      "tag": "forge:gunpowder"
     },
     {
-      "item": {
-        "tag": "forge:gunpowder"
-      }
+      "tag": "forge:gunpowder"
     },
     {
-      "item": {
-        "tag": "forge:gunpowder"
-      }
+      "tag": "forge:gunpowder"
     },
     {
-      "item": {
-        "tag": "forge:gunpowder"
-      }
+      "tag": "forge:gunpowder"
     }
   ],
   "reagent": [

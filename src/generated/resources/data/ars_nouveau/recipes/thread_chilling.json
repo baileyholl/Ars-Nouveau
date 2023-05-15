@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:blue_ice"
-      }
+      "item": "minecraft:blue_ice"
     },
     {
-      "item": {
-        "item": "ars_nouveau:water_essence"
-      }
+      "item": "ars_nouveau:water_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:water_essence"
-      }
+      "item": "ars_nouveau:water_essence"
     },
     {
-      "item": {
-        "item": "minecraft:powder_snow_bucket"
-      }
+      "item": "minecraft:powder_snow_bucket"
     }
   ],
   "reagent": [

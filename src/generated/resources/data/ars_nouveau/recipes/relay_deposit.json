@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:hopper"
-      }
+      "item": "minecraft:hopper"
     },
     {
-      "item": {
-        "item": "minecraft:hopper"
-      }
+      "item": "minecraft:hopper"
     },
     {
-      "item": {
-        "item": "minecraft:hopper"
-      }
+      "item": "minecraft:hopper"
     },
     {
-      "item": {
-        "item": "minecraft:hopper"
-      }
+      "item": "minecraft:hopper"
     }
   ],
   "reagent": [

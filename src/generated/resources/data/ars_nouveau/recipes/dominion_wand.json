@@ -6,19 +6,13 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     }
   ],
   "reagent": [

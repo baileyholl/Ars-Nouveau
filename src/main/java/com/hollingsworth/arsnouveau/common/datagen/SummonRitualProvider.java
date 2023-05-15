@@ -30,6 +30,9 @@ public class SummonRitualProvider implements DataProvider{
         }
 
     protected void addEntries() {
+        // ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
+        // bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
+        // recipes.add(new SummonRitualRecipe(new ResourceLocation("", ""), Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, bats));
     }
 
     protected static Path getRecipePath(Path path, String id) {

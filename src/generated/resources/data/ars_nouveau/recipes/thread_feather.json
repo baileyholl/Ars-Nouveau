@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:feathers"
-      }
+      "tag": "forge:feathers"
     },
     {
-      "item": {
-        "tag": "forge:feathers"
-      }
+      "tag": "forge:feathers"
     },
     {
-      "item": {
-        "tag": "forge:feathers"
-      }
+      "tag": "forge:feathers"
     },
     {
-      "item": {
-        "tag": "forge:feathers"
-      }
+      "tag": "forge:feathers"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     },
     {
-      "item": {
-        "item": "ars_nouveau:abjuration_essence"
-      }
+      "item": "ars_nouveau:abjuration_essence"
     }
   ],
   "reagent": [

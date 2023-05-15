@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:gems/diamond"
-      }
+      "tag": "forge:gems/diamond"
     },
     {
-      "item": {
-        "tag": "forge:gems/diamond"
-      }
+      "tag": "forge:gems/diamond"
     },
     {
-      "item": {
-        "tag": "forge:gems/diamond"
-      }
+      "tag": "forge:gems/diamond"
     },
     {
-      "item": {
-        "tag": "forge:gems/diamond"
-      }
+      "tag": "forge:gems/diamond"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:rods/blaze"
-      }
+      "tag": "forge:rods/blaze"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     }
   ],
   "reagent": [

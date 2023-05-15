@@ -6,44 +6,28 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "tag": "forge:ingots/gold"
-      }
+      "tag": "forge:ingots/gold"
     },
     {
-      "item": {
-        "item": "minecraft:feather"
-      }
+      "item": "minecraft:feather"
     },
     {
-      "item": {
-        "item": "minecraft:feather"
-      }
+      "item": "minecraft:feather"
     },
     {
-      "item": {
-        "item": "minecraft:feather"
-      }
+      "item": "minecraft:feather"
     },
     {
-      "item": {
-        "item": "ars_nouveau:air_essence"
-      }
+      "item": "ars_nouveau:air_essence"
     }
   ],
   "reagent": [
