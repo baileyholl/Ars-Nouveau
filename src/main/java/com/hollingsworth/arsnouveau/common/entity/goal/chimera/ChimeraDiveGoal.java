@@ -56,8 +56,6 @@ public class ChimeraDiveGoal extends Goal {
         super.tick();
         ticksFlying++;
         if (ticksFlying < 60) {
-            boss.setFlying(true);
-            boss.getNavigation().setCanFloat(true);
             boss.flyingNavigator.moveTo(hoverPos.getX(), hoverPos.getY(), hoverPos.getZ(), 1.0f);
             boss.setDeltaMovement(boss.getDeltaMovement().add(0, 0.005, 0));
             if (boss.getTarget() != null) {
@@ -109,12 +107,9 @@ public class ChimeraDiveGoal extends Goal {
         boss.setFlying(false);
 
         boss.diveCooldown = (int) (300 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());
-        boss.getNavigation().stop();
-        boss.getNavigation().setCanFloat(false);
         boss.diving = false;
         boss.setNoGravity(false);
         boss.setDeltaMovement(0, 0, 0);
-        boss.getNavigation().moveTo(this.boss.getTarget() != null ? this.boss.getTarget() : this.boss, 0.0f);
         finished = true;
         boss.setDiving(false);
         ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION, (ServerLevel) boss.level, new BlockPos(boss.position().x, boss.position.y, boss.position.z), 10);

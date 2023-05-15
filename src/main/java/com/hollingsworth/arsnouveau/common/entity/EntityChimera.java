@@ -10,10 +10,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraDiveGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraMeleeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSpikeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.potions.SnareEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -22,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectKnockback;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -82,8 +80,10 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     public static final EntityDataAccessor<Boolean> IS_FLYING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> IS_HOWLING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> IS_DIVING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_RAMMING = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> RAM_PREP = SynchedEntityData.defineId(EntityChimera.class, EntityDataSerializers.BOOLEAN);
 
-    public boolean isRamming;
+    public boolean isRamGoal;
     public int summonCooldown;
     public int diveCooldown;
     public int spikeCooldown;
@@ -120,11 +120,11 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     protected void registerGoals() {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(5, new ChimeraMeleeGoal(this, 1.2d, true, ()-> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping()));
+        this.goalSelector.addGoal(5, new ChimeraMeleeGoal(this, 1.2d, true, ()-> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
 //        this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
-//        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
+        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraDiveGoal(this));
         this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
     }
@@ -153,6 +153,20 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         animationData.addAnimationController(new AnimationController<>(this, "diveController", 1, this::divePredicate));
         animationData.addAnimationController(new AnimationController(this, "howlController", 1, this::howlPredicate));
         animationData.addAnimationController(new AnimationController(this, "swimController", 1, this::swimPredicate));
+        animationData.addAnimationController(new AnimationController(this, "ramController", 1, (event -> {
+            if(isRamming() && !isRamPrep()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("charge"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        })));
+        animationData.addAnimationController(new AnimationController(this, "ramPrep", 1, (event -> {
+            if(isRamPrep() && !isRamming()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("charge_prep"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        })));
     }
 
     public void updateSwimming() {
@@ -175,6 +189,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState flyPredicate(AnimationEvent<?> event) {
         if(isFlying() && !isDiving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly_rising"));
+            System.out.println("fly");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -183,14 +198,16 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState divePredicate(AnimationEvent<?> event) {
         if(isDiving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("dive"));
+            System.out.println("dive");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
     private PlayState idlePredicate(AnimationEvent<?> event) {
-        if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling()){
+        if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+            System.out.println("idle");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -199,14 +216,16 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState crouchPredicate(AnimationEvent<?> event) {
         if (isDefensive() && !isFlying() && !this.isHowling()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
+            System.out.println("defend");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
     private PlayState movePredicate(AnimationEvent<?> e) {
-        if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming()){
+        if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
             e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            System.out.println("run");
             return PlayState.CONTINUE;
         }
 
@@ -215,6 +234,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
     private PlayState swimPredicate(AnimationEvent<?> e) {
         if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
+            System.out.println("swim");
             e.getController().setAnimation(new AnimationBuilder().addAnimation("swim"));
             return PlayState.CONTINUE;
         }
@@ -224,10 +244,11 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
     private PlayState howlPredicate(AnimationEvent<?> e) {
         if (isHowling()) {
-            e.getController().setAnimation(new AnimationBuilder().addAnimation("roar").addAnimation("idle"));
+            System.out.println("howl");
+            e.getController().setAnimation(new AnimationBuilder().addAnimation("roar"));
             return PlayState.CONTINUE;
         }
-
+        e.getController().markNeedsReload();
         return PlayState.STOP;
     }
 
@@ -304,6 +325,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         if (!level.isClientSide && getPhaseSwapping() && !this.dead) {
             if (this.getHealth() < this.getMaxHealth()) {
                 this.heal(2.0f);
+                this.navigation.stop();
             } else {
                 this.removeAllEffects();
                 this.setPhaseSwapping(false);
@@ -329,6 +351,11 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         if (getPhaseSwapping() && level.isClientSide) {
             spawnPhaseParticles(blockPosition(), level, getPhase());
         }
+    }
+
+    @Override
+    public void lookAt(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
+        super.lookAt(pAnchor, pTarget);
     }
 
     public static void spawnPhaseParticles(BlockPos pos, Level level, int multiplier) {
@@ -401,27 +428,27 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     }
 
     public boolean canDive() {
-        return !isRamming && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround && !isDefensive();
+        return !isRamGoal && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround && !isDefensive();
     }
 
     public boolean canSpike() {
-        return !isRamming && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround && this.getTarget() != null;
+        return !isRamGoal && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround && this.getTarget() != null;
     }
 
     public boolean canRam() {
-        return !isRamming && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().isOnGround() && this.isOnGround();
+        return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().isOnGround() && this.isOnGround();
     }
 
     public boolean canSummon() {
-        return !isRamming && getTarget() != null && summonCooldown <= 0 && !isFlying() && !getPhaseSwapping() && !isDefensive() && this.onGround;
+        return !isRamGoal && getTarget() != null && summonCooldown <= 0 && !isFlying() && !getPhaseSwapping() && !isDefensive() && this.onGround;
     }
 
     public boolean canAttack() {
-        return !isRamming && getTarget() != null && this.getHealth() >= 1 && !this.getPhaseSwapping() && !isFlying() && !isDefensive();
+        return !isRamGoal && getTarget() != null && this.getHealth() >= 1 && !this.getPhaseSwapping() && !isFlying() && !isDefensive();
     }
 
     public boolean canRage() {
-        return !getPhaseSwapping() && !isRamming;
+        return !getPhaseSwapping() && !isRamGoal;
     }
 
     @Override
@@ -493,7 +520,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
             this.setHealth(1.0f);
             this.setFlying(false);
             this.setDefensiveMode(false);
-            this.isRamming = false;
+            isRamGoal = false;
             this.dead = false;
             return false;
         }else if (!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() == 3) {
@@ -574,6 +601,8 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         this.entityData.define(IS_FLYING, false);
         this.entityData.define(IS_HOWLING, false);
         this.entityData.define(IS_DIVING, false);
+        this.entityData.define(IS_RAMMING, false);
+        this.entityData.define(RAM_PREP, false);
     }
 
     public boolean isFlying() {
@@ -646,6 +675,22 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
     public boolean isDiving() {
         return entityData.get(IS_DIVING);
+    }
+
+    public boolean isRamming() {
+        return entityData.get(IS_RAMMING);
+    }
+
+    public void setRamming(boolean ramming) {
+        entityData.set(IS_RAMMING, ramming);
+    }
+
+    public boolean isRamPrep(){
+        return entityData.get(RAM_PREP);
+    }
+
+    public void setRamPrep(boolean ramPrep) {
+        entityData.set(RAM_PREP, ramPrep);
     }
 
     @Override
@@ -769,6 +814,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
             }else if(this.chimera.wantsToSwim() && this.chimera.isInWater()){
                 swimTick();
             } else {
+                this.mob.setNoGravity(false);
                 super.tick();
             }
         }
@@ -816,7 +862,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                 }
 
                 float f = (float) (Mth.atan2(d2, d0) * (double) (180F / (float) Math.PI)) - 90.0F;
-                this.mob.yRot = this.rotlerp(this.mob.yRot, f, 90.0F);
+//                this.mob.yRot = this.rotlerp(this.mob.yRot, f, 90.0F);
                 float f1;
                 if (this.mob.isOnGround()) {
                     f1 = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
@@ -827,7 +873,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                 this.mob.setSpeed(f1);
                 double d4 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
                 float f2 = (float) (-(Mth.atan2(d1, d4) * (double) (180F / (float) Math.PI)));
-                this.mob.xRot = this.rotlerp(this.mob.xRot, f2, (float) this.maxTurn);
+//                this.mob.xRot = this.rotlerp(this.mob.xRot, f2, (float) this.maxTurn);
                 this.mob.setYya(d1 > 0.0D ? f1 : -f1);
             } else {
                 if (!this.hoversInPlace) {
@@ -896,7 +942,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
 
     @Override
     protected float getWaterSlowDown() {
-        return isSwimming() ? super.getWaterSlowDown() : 1.0f;
+        return isSwimming() ? super.getWaterSlowDown() : 0.98f;
     }
 
     public static AttributeSupplier.Builder getModdedAttributes() {

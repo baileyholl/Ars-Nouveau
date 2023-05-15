@@ -24,8 +24,10 @@ public class WildenChimeraModel extends AnimatedGeoModel<EntityChimera> {
 
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.037453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.012453292F);
+        if(!entity.isFlying()){
+            head.setRotationY(extraData.netHeadYaw * 0.012453292F);
+            head.setRotationX(extraData.headPitch * 0.037453292F);
+        }
         this.getBone("wings_folded").setHidden(!entity.hasWings() || entity.isFlying());
         this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
 

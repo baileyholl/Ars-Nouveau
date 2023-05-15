@@ -44,7 +44,7 @@ public class ChimeraRamGoal extends Goal {
         startedCharge = false;
         isCharging = false;
         hasHit = false;
-        boss.isRamming = true;
+        boss.isRamGoal = true;
     }
 
     @Override
@@ -59,6 +59,7 @@ public class ChimeraRamGoal extends Goal {
         }
         if (!startedCharge) {
             Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.CHARGE.ordinal()));
+            boss.setRamPrep(true);
             startedCharge = true;
         }
         timeCharging++;
@@ -71,8 +72,10 @@ public class ChimeraRamGoal extends Goal {
             this.boss.getNavigation().stop();
         }
 
-        if (timeCharging > 25) {
+        if (timeCharging > 25 && !isCharging) {
             isCharging = true;
+            boss.setRamPrep(false);
+            boss.setRamming(true);
         }
         if (isCharging) {
             if (boss.getNavigation() == null || boss.getTarget() == null) {
@@ -89,7 +92,7 @@ public class ChimeraRamGoal extends Goal {
             attack();
         }
 
-        if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f) {
+        if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.5f) {
             endRam();
         }
     }
@@ -119,7 +122,9 @@ public class ChimeraRamGoal extends Goal {
     @Override
     public void stop() {
         super.stop();
-        boss.isRamming = false;
+        boss.isRamGoal = false;
+        boss.setRamming(false);
+        boss.setRamPrep(false);
     }
 
     public void endRam() {
@@ -127,13 +132,14 @@ public class ChimeraRamGoal extends Goal {
         if (boss.level.random.nextInt(3) != 0) {
             boss.ramCooldown = (int) (400 + ParticleUtil.inRange(-100, 100 + boss.getCooldownModifier()));
         }
-        boss.isRamming = false;
-        Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.ATTACK.ordinal()));
+        boss.isRamGoal = false;
         attack();
+        boss.setRamming(false);
+        boss.setRamPrep(false);
     }
 
     protected void attack() {
-        List<LivingEntity> nearbyEntities = boss.level.getEntitiesOfClass(LivingEntity.class, new AABB(boss.blockPosition()).inflate(1, 1, 1));
+        List<LivingEntity> nearbyEntities = boss.level.getEntitiesOfClass(LivingEntity.class, new AABB(boss.blockPosition()).inflate(2, 1, 2));
         for (LivingEntity enemy : nearbyEntities) {
             if (enemy.equals(boss))
                 continue;

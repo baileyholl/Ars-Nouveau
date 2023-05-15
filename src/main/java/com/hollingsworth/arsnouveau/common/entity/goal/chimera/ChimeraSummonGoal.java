@@ -52,15 +52,14 @@ public class ChimeraSummonGoal extends Goal {
         super.tick();
 
         if (!howling) {
+            howling = true;
             this.mob.setHowling(true);
             ChimeraSummonEvent summonEvent = new ChimeraSummonEvent(40 + mob.getPhase() * 20, mob.getPhase(), mob.level, mob.blockPosition(), this.mob.getId());
             EventQueue.getServerInstance().addEvent(summonEvent);
             Networking.sendToNearby(mob.level, mob, new PacketTimedEvent(summonEvent));
             mob.level.playSound(null, mob.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.2f);
         }
-        howling = true;
         timeSummoning++;
-
         if (timeSummoning >= 80) {
             done = true;
             mob.summonCooldown = (int) (1000 + ParticleUtil.inRange(-100, 100) + mob.getCooldownModifier());
