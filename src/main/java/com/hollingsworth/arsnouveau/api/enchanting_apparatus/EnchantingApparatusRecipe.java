@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
@@ -201,21 +203,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     public static class Serializer implements RecipeSerializer<EnchantingApparatusRecipe> {
 
-        private List<Ingredient> getPedestalItems(JsonArray pedestalJson) {
-            List<Ingredient> stacks = new ArrayList<>();
-
-            for (JsonElement item : pedestalJson) {
-                Ingredient input = null;
-                JsonObject obj = item.getAsJsonObject();
-                if (GsonHelper.isObjectNode(obj, "item")) {
-                    input = Ingredient.fromJson(obj.get("item"));
-                } else {
-                    input = Ingredient.fromJson(obj);
+        private List<Ingredient> getPedestalItems(ResourceLocation recipeId, JsonArray pedestalJson) {
+            return StreamSupport.stream(pedestalJson.spliterator(), true).map(el -> {
+                if (el instanceof JsonObject obj && (GsonHelper.isObjectNode(obj, "item") || GsonHelper.isArrayNode(obj, "item"))) {
+                    Log.getLogger().warn("Use of deprecated recipe format in recipe ID: {}", recipeId);
+                    return Ingredient.fromJson(obj.get("item"));
                 }
-                stacks.add(input);
-            }
-
-            return stacks;
+                return Ingredient.fromJson(el);
+            }).collect(Collectors.toList());
         }
 
         @Override
@@ -225,7 +220,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
             boolean keepNbtOfReagent = json.has("keepNbtOfReagent") && GsonHelper.getAsBoolean(json, "keepNbtOfReagent");
             JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
-            List<Ingredient> stacks = getPedestalItems(pedestalItems);
+            List<Ingredient> stacks = getPedestalItems(ResourceLocation recipeId, pedestalItems);
             return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepNbtOfReagent);
         }
 
