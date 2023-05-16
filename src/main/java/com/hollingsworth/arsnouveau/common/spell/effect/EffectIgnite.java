@@ -38,7 +38,7 @@ public class EffectIgnite extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellStats.hasBuff(AugmentSensitive.INSTANCE))
+        if (spellStats.isSensitive())
             return;
         BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
         if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState) || hitState.getBlock() instanceof CampfireBlock && CampfireBlock.canLight(hitState)) {

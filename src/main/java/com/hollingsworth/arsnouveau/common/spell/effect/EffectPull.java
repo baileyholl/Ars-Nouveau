@@ -6,10 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +18,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +29,7 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity target = rayTraceResult.getEntity();
         Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
         double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
@@ -42,16 +38,17 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult blockHitResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult blockHitResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (spellStats.isSensitive()) return;
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, blockHitResult.getBlockPos(), blockHitResult, spellStats);
         for (BlockPos p : posList) {
             if (!canBlockBeHarvested(spellStats, world, p)) {
                 continue;
             }
-            EnchantedFallingBlock fallingblockentity = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
-            if (fallingblockentity != null) {
-                setMotion(fallingblockentity, blockHitResult, spellStats);
-                ShapersFocus.tryPropagateEntitySpell(fallingblockentity, world, shooter, spellContext, resolver);
+            EnchantedFallingBlock fallingBlockEntity = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
+            if (fallingBlockEntity != null) {
+                setMotion(fallingBlockEntity, blockHitResult, spellStats);
+                ShapersFocus.tryPropagateEntitySpell(fallingBlockEntity, world, shooter, spellContext, resolver);
             }
         }
     }
@@ -76,10 +73,10 @@ public class EffectPull extends AbstractEffect {
         return 15;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
@@ -87,7 +84,7 @@ public class EffectPull extends AbstractEffect {
         return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);
