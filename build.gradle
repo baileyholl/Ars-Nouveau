@@ -192,9 +192,6 @@ dependencies {
 
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.1.128")
 
-    runtimeOnly fg.deobf("curse.maven:rubidium-574856:4448157") // Rubidium
-    runtimeOnly fg.deobf("curse.maven:oculus-581495:4299147") // Oculus
-
     runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
     runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
     compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental
