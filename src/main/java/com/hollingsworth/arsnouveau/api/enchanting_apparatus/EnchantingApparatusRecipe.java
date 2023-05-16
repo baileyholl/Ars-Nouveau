@@ -220,7 +220,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
             boolean keepNbtOfReagent = json.has("keepNbtOfReagent") && GsonHelper.getAsBoolean(json, "keepNbtOfReagent");
             JsonArray pedestalItems = GsonHelper.getAsJsonArray(json, "pedestalItems");
-            List<Ingredient> stacks = getPedestalItems(ResourceLocation recipeId, pedestalItems);
+            List<Ingredient> stacks = getPedestalItems(recipeId, pedestalItems);
             return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepNbtOfReagent);
         }
 
