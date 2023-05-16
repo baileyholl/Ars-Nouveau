@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -82,7 +81,6 @@ public class BrazierRelayTile extends RitualBrazierTile{
                 return;
             }
             brazierPos = storedPos;
-            Log.getLogger().info("Linked brazier relay to {}", storedPos);
             updateBlock();
         }
     }
