@@ -19,6 +19,10 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectKnockback;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +34,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -83,6 +88,8 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     public static final EntityDataAccessor<Boolean> IS_RAMMING = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> RAM_PREP = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
 
+    public boolean initMusic;
+
     public boolean isRamGoal;
     public int summonCooldown;
     public int diveCooldown;
@@ -124,6 +131,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
 //        this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
+        this.goalSelector.addGoal(3, new ChimeraLeapRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraDiveGoal(this));
         this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
@@ -155,16 +163,23 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         animationData.addAnimationController(new AnimationController<>(this, "swimController", 1, this::swimPredicate));
         animationData.addAnimationController(new AnimationController<>(this, "ramController", 1, (event -> {
             if(isRamming() && !isRamPrep()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("charge"));
+                if(!this.hasWings()){
+                    event.getController().setAnimation(new AnimationBuilder().addAnimation("charge"));
+                }
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         })));
         animationData.addAnimationController(new AnimationController<>(this, "ramPrep", 1, (event -> {
             if(isRamPrep() && !isRamming()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("charge_prep"));
+                if(this.hasWings()){
+                    event.getController().setAnimation(new AnimationBuilder().addAnimation("wing_charge_prep"));
+                }else{
+                    event.getController().setAnimation(new AnimationBuilder().addAnimation("charge_prep"));
+                }
                 return PlayState.CONTINUE;
             }
+            event.getController().markNeedsReload();
             return PlayState.STOP;
         })));
     }
@@ -189,7 +204,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState flyPredicate(AnimationEvent<?> event) {
         if(isFlying() && !isDiving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("fly_rising"));
-            System.out.println("fly");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -198,7 +212,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState divePredicate(AnimationEvent<?> event) {
         if(isDiving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("dive"));
-            System.out.println("dive");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -207,7 +220,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState idlePredicate(AnimationEvent<?> event) {
         if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
-            System.out.println("idle");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -216,7 +228,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState crouchPredicate(AnimationEvent<?> event) {
         if (isDefensive() && !isFlying() && !this.isHowling()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
-            System.out.println("defend");
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -225,7 +236,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     private PlayState movePredicate(AnimationEvent<?> e) {
         if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
             e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
-            System.out.println("run");
             return PlayState.CONTINUE;
         }
 
@@ -234,7 +244,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     private PlayState swimPredicate(AnimationEvent<?> e) {
         if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
-            System.out.println("swim");
             e.getController().setAnimation(new AnimationBuilder().addAnimation("swim"));
             return PlayState.CONTINUE;
         }
@@ -244,7 +253,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     private PlayState howlPredicate(AnimationEvent<?> e) {
         if (isHowling()) {
-            System.out.println("howl");
             e.getController().setAnimation(new AnimationBuilder().addAnimation("roar"));
             return PlayState.CONTINUE;
         }
@@ -255,10 +263,15 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     @Override
     public void tick() {
         super.tick();
+        if(level.isClientSide && !initMusic){
+            initMusic = true;
+            ((Runnable) () -> ChimeraMusic.play(WildenChimera.this)).run();
+        }
 
         //   this.goalSelector.getRunningGoals().forEach(g -> System.out.println(g.getGoal().toString()));
-        if (isDefensive())
-            setDeltaMovement(0, 0, 0);
+        if (!level.isClientSide && isDefensive()){
+            this.getNavigation().stop();
+        }
         if (level.isClientSide && isFlying() && random.nextInt(18) == 0) {
 
             this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.BAT_LOOP, this.getSoundSource(),
@@ -277,10 +290,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
                 }
             }
         }
-        if (!isFlying()) {
-            setNoGravity(this.isInLava());
-        }
-
         if (!level.isClientSide && this.isInLava() && this.level.getGameTime() % 10 == 0) {
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 4));
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 3));
@@ -292,18 +301,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         if (this.isFlying()) {
             this.navigation.stop();
             flyingNavigator.tick();
-        }
-        if (!this.level.isClientSide) {
-            // Reset our states if something bad happens
-            if (this.isFlying()) {
-                if (this.goalSelector.getRunningGoals().noneMatch(g -> g.getGoal() instanceof ChimeraDiveGoal))
-                    setFlying(false);
-            }
-
-            if (this.isDefensive()) {
-                if (this.goalSelector.getRunningGoals().noneMatch(g -> g.getGoal() instanceof ChimeraSpikeGoal))
-                    setDefensiveMode(false);
-            }
         }
 
         if (!level.isClientSide) {
@@ -435,7 +432,10 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         return !isRamGoal && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround && this.getTarget() != null;
     }
 
-    public boolean canRam() {
+    public boolean canRam(boolean withWings) {
+        if(withWings != hasWings()){
+            return false;
+        }
         return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().isOnGround() && this.isOnGround();
     }
 
@@ -814,7 +814,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
             }else if(this.chimera.wantsToSwim() && this.chimera.isInWater()){
                 swimTick();
             } else {
-                this.mob.setNoGravity(false);
                 super.tick();
             }
         }
@@ -860,20 +859,13 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
                     this.mob.setZza(0.0F);
                     return;
                 }
-
-                float f = (float) (Mth.atan2(d2, d0) * (double) (180F / (float) Math.PI)) - 90.0F;
-//                this.mob.yRot = this.rotlerp(this.mob.yRot, f, 90.0F);
                 float f1;
                 if (this.mob.isOnGround()) {
                     f1 = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 } else {
                     f1 = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.FLYING_SPEED));
                 }
-
                 this.mob.setSpeed(f1);
-                double d4 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
-                float f2 = (float) (-(Mth.atan2(d1, d4) * (double) (180F / (float) Math.PI)));
-//                this.mob.xRot = this.rotlerp(this.mob.xRot, f2, (float) this.maxTurn);
                 this.mob.setYya(d1 > 0.0D ? f1 : -f1);
             } else {
                 if (!this.hoversInPlace) {
@@ -942,7 +934,12 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     @Override
     protected float getWaterSlowDown() {
-        return isSwimming() ? super.getWaterSlowDown() : 0.98f;
+        return isSwimming() ? super.getWaterSlowDown() : 0.8f;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return !this.isRemoved();
     }
 
     public static AttributeSupplier.Builder getModdedAttributes() {
@@ -955,5 +952,33 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
                 .add(Attributes.ARMOR, 6D)
                 .add(Attributes.FOLLOW_RANGE, 100D)
                 .add(Attributes.FLYING_SPEED, 0.4f);
+    }
+
+    private static class ChimeraMusic extends AbstractTickableSoundInstance {
+        private final WildenChimera chimera;
+
+        private ChimeraMusic(WildenChimera chimera) {
+            super(SoundRegistry.WILD_HUNT.get(), SoundSource.RECORDS, SoundInstance.createUnseededRandom());
+            this.chimera = chimera;
+            this.x = chimera.getX();
+            this.y = chimera.getY();
+            this.z = chimera.getZ();
+            this.looping = true;
+        }
+
+        public static void play(WildenChimera chimera) {
+            Minecraft.getInstance().getSoundManager().play(new ChimeraMusic(chimera));
+        }
+
+        @Override
+        public void tick() {
+            if (!chimera.isAlive()) {
+                stop();
+            }else{
+                this.x = chimera.getX();
+                this.y = chimera.getY();
+                this.z = chimera.getZ();
+            }
+        }
     }
 }

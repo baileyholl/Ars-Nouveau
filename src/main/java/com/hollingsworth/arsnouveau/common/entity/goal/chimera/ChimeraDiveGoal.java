@@ -109,10 +109,18 @@ public class ChimeraDiveGoal extends Goal {
         boss.diveCooldown = (int) (300 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());
         boss.diving = false;
         boss.setNoGravity(false);
-        boss.setDeltaMovement(0, 0, 0);
         finished = true;
         boss.setDiving(false);
         ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION, (ServerLevel) boss.level, new BlockPos(boss.position().x, boss.position.y, boss.position.z), 10);
+        boss.setDeltaMovement(0, 0, 0);
+        for(int i = 0; i < 40; i++){
+            if(!boss.level.getBlockState(boss.getOnPos().below(i)).isAir()){
+                boss.setPos(boss.getX(), boss.getY() - i, boss.getZ());
+                boss.setOnGround(true);
+                return;
+            }
+        }
+        boss.getJumpControl().jump();
     }
 
     public void makeExplosion() {

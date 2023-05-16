@@ -11,28 +11,25 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class ChimeraRamGoal extends Goal {
+public class ChimeraLeapRamGoal extends Goal {
     WildenChimera boss;
-    int timeCharging;
 
+    int timeCharging;
     boolean finished;
     boolean startedCharge;
     boolean isCharging;
     boolean hasHit;
 
-    public ChimeraRamGoal(WildenChimera boss) {
+    public ChimeraLeapRamGoal(WildenChimera boss) {
         this.boss = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
-    @Override
-    public boolean isInterruptable() {
-        return false;
-    }
 
     @Override
     public void start() {
@@ -48,10 +45,6 @@ public class ChimeraRamGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-
-        if (timeCharging >= 105) {
-            endRam();
-        }
         if (this.boss.getTarget() == null) {
             endRam();
         }
@@ -60,19 +53,24 @@ public class ChimeraRamGoal extends Goal {
             startedCharge = true;
         }
         timeCharging++;
-
-
-        if (timeCharging <= 25 && !isCharging) {
+        if (timeCharging <= 20 && !isCharging) {
             LivingEntity livingentity = this.boss.getTarget();
             if (livingentity != null)
                 this.boss.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
             this.boss.getNavigation().stop();
         }
 
-        if (timeCharging > 25 && !isCharging) {
-            isCharging = true;
+        if (timeCharging > 20 && !isCharging) {
             boss.setRamPrep(false);
-            boss.setRamming(true);
+            Vec3 vec3 = this.boss.getDeltaMovement();
+            Vec3 vec31 = new Vec3(boss.getTarget().getX() - this.boss.getX(), 0.0D, this.boss.getTarget().getZ() - this.boss.getZ());
+            if (vec31.lengthSqr() > 1.0E-7D) {
+                vec31 = vec31.normalize().scale(0.4D).add(vec3.scale(0.2D));
+            }
+
+            this.boss.setDeltaMovement(vec31.x * 6f, 1.2d, vec31.z * 6f);
+            boss.hasImpulse = true;
+            isCharging = true;
         }
         if (isCharging) {
             if (boss.getNavigation() == null || boss.getTarget() == null) {
@@ -80,11 +78,13 @@ public class ChimeraRamGoal extends Goal {
                 return;
             }
             breakBlocks();
-            Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(), 1);
-            if (path == null) {
-                return;
+            if(boss.isOnGround()) {
+                Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(), 1);
+                if (path == null) {
+                    return;
+                }
+                boss.getNavigation().moveTo(path, 2.0f);
             }
-            boss.getNavigation().moveTo(path, 2.0f);
             attack();
         }
 
@@ -109,19 +109,13 @@ public class ChimeraRamGoal extends Goal {
         }
     }
 
+
     public void destroyBlock(BlockPos pos) {
         if (SpellUtil.isCorrectHarvestLevel(4, boss.level.getBlockState(pos))) {
             boss.level.destroyBlock(pos, true);
         }
     }
 
-    @Override
-    public void stop() {
-        super.stop();
-        boss.isRamGoal = false;
-        boss.setRamming(false);
-        boss.setRamPrep(false);
-    }
 
     public void endRam() {
         finished = true;
@@ -146,12 +140,17 @@ public class ChimeraRamGoal extends Goal {
     }
 
     @Override
+    public boolean isInterruptable() {
+        return false;
+    }
+
+    @Override
     public boolean canContinueToUse() {
         return !finished && !boss.getPhaseSwapping();
     }
 
     @Override
     public boolean canUse() {
-        return boss.getTarget() != null && boss.ramCooldown <= 0 && boss.canRam(false);
+        return boss.getTarget() != null && boss.ramCooldown <= 0 && boss.canRam(true);
     }
 }

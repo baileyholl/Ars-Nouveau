@@ -28,25 +28,20 @@ public class WildenChimeraModel extends AnimatedGeoModel<WildenChimera> {
             head.setRotationY(extraData.netHeadYaw * 0.012453292F);
             head.setRotationX(extraData.headPitch * 0.037453292F);
         }
-        this.getBone("wings_folded").setHidden(!entity.hasWings() || entity.isFlying());
-        this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
 
-        this.getBone("wings_extended_left").setHidden(!entity.hasWings() || !entity.isFlying());
-        this.getBone("wings_extended_right2").setHidden(!entity.hasWings() || !entity.isFlying());
-        this.getBone("wings_extended_left2").setHidden(!entity.hasWings() || !entity.isFlying());
+        boolean useBigWings = entity.hasWings() && (entity.isFlying() || (entity.hasWings() && entity.isRamPrep()));
 
-//        this.getBone("wings_extended_left").setHidden(!entity.hasWings() || !entity.isFlying());
-//        this.getBone("wings_extended_left2").setHidden(!entity.hasWings() || !entity.isFlying());
-//        this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
-//        this.getBone("wings_extended_right2").setHidden(!entity.hasWings() || !entity.isFlying());
+        this.getBone("wings_folded").setHidden(!entity.hasWings() || useBigWings);
+
+        this.getBone("wings_extended_right").setHidden(!useBigWings);
+        this.getBone("wings_extended_left").setHidden(!useBigWings);
+        this.getBone("wings_extended_right2").setHidden(!useBigWings);
+        this.getBone("wings_extended_left2").setHidden(!useBigWings);
 
         this.getBone("spikes_extended").setHidden(!entity.isDefensive() || !entity.hasSpikes());
         this.getBone("spikes_retracted").setHidden(!entity.hasSpikes() || entity.isDefensive());
         this.getBone("fins").setHidden(!entity.hasSpikes());
         this.getBone("horns").setHidden(!entity.hasHorns());
-
-        this.getBone("wings_extended_left").setHidden(!entity.hasWings() || !entity.isFlying());
-        this.getBone("wings_extended_right").setHidden(!entity.hasWings() || !entity.isFlying());
     }
 
     @Override
