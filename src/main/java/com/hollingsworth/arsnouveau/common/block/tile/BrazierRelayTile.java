@@ -1,8 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +21,7 @@ import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 public class BrazierRelayTile extends RitualBrazierTile{
 
     int ticksToLightOff = 0;
-
+    public BlockPos brazierPos;
 
     public BrazierRelayTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -74,7 +77,14 @@ public class BrazierRelayTile extends RitualBrazierTile{
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-
+        if (storedPos != null && level != null && level.getBlockEntity(storedPos) instanceof RitualBrazierTile brazierTile) {
+            if (BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16) {
+                return;
+            }
+            brazierPos = storedPos;
+            Log.getLogger().info("Linked brazier relay to {}", storedPos);
+            updateBlock();
+        }
     }
 
     @Override
@@ -87,11 +97,28 @@ public class BrazierRelayTile extends RitualBrazierTile{
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt("ticksToLightOff", ticksToLightOff);
+        if (this.brazierPos != null) {
+            tag.putLong("brazierPos", this.brazierPos.asLong());
+        }
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         this.ticksToLightOff = tag.getInt("ticksToLightOff");
+        if (tag.contains("brazierPos")) {
+            this.brazierPos = BlockPos.of(tag.getLong("brazierPos"));
+        }
+    }
+
+    @Override
+    public InventoryManager getInventoryManager() {
+        if (this.brazierPos != null && level != null && level.isLoaded(this.brazierPos) && level.getBlockEntity(this.brazierPos) instanceof RitualBrazierTile brazierTile) {
+            InventoryManager brazierInv = brazierTile.getInventoryManager();
+            if (brazierInv.getInventory().size() > 0) {
+                return brazierInv;
+            }
+        }
+        return super.getInventoryManager();
     }
 }
