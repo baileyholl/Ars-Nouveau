@@ -36,7 +36,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     public void warp(Entity e) {
-        if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+        if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock) && !e.getType().is(EntityTags.PORTAL_BLACKLISTED)) {
             e.moveTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5,
                     rotationVec != null ? rotationVec.y : e.yRot, rotationVec != null ? rotationVec.x : e.xRot);
             e.xRot = rotationVec != null ? rotationVec.x : e.xRot;
@@ -79,8 +79,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
             List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AABB(worldPosition));
             for (Entity e : entities) {
-                if(e instanceof EntityFollowProjectile)
+                if (e.getType().is(EntityTags.PORTAL_BLACKLISTED) || (e instanceof EntityFollowProjectile)) {
                     continue;
+                }
                 level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 e.teleportTo(warpPos.getX()+ 0.5, warpPos.getY(), warpPos.getZ()+ 0.5);
                 ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
