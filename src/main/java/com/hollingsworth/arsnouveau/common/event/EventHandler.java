@@ -29,6 +29,7 @@ import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
+import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -240,6 +241,13 @@ public class EventHandler {
                 && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20
         && event.player instanceof ServerPlayer serverPlayer) {
             RitualEventQueue.getRitual(event.player.level,RitualFlight.class, flight -> flight.refreshFlightEvent(serverPlayer));
+        }
+
+        if (event.player.level.getGameTime() % RitualGravity.RenewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
+            MobEffectInstance gravity = event.player.getEffect(ModPotions.GRAVITY_EFFECT.get());
+            if (gravity == null || gravity.getDuration() <= RitualGravity.RenewDuration) {
+                RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> ritual.applyGravityIfNear(serverPlayer));
+            }
         }
     }
 
