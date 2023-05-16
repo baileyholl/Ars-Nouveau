@@ -19,7 +19,6 @@ public class ANCriteriaTriggers {
     public static final PlayerTrigger SHRUNK_STARBY = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "shrunk_starby")));
     public static final PlayerTrigger CAUGHT_LIGHTNING = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "catch_lightning")));
     public static final PlayerTrigger TIME_IN_BOTTLE = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "time_in_bottle")));
-    public static final PlayerTrigger GROUNDED = register(new PlayerTrigger(new Re))
 
     public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
         AABB aabb = new AABB(pos).inflate(radius);

@@ -240,13 +240,13 @@ public class EventHandler {
                 && event.player.level.getGameTime() % 20 == 0
                 && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20
         && event.player instanceof ServerPlayer serverPlayer) {
-            RitualEventQueue.getRitual(event.player.level,RitualFlight.class, flight -> flight.refreshFlightEvent(serverPlayer));
+            RitualEventQueue.getRitual(event.player.level,RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
         }
 
-        if (event.player.level.getGameTime() % RitualGravity.RenewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
+        if (event.player.level.getGameTime() % RitualGravity.renewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
             MobEffectInstance gravity = event.player.getEffect(ModPotions.GRAVITY_EFFECT.get());
-            if (gravity == null || gravity.getDuration() <= RitualGravity.RenewThreshold) {
-                RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> ritual.applyGravityIfNear(serverPlayer));
+            if (gravity == null || gravity.getDuration() <= RitualGravity.renewThreshold) {
+                RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> ritual.attemptRefresh(serverPlayer));
             }
         }
     }

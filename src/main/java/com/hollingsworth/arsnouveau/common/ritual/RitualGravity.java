@@ -1,19 +1,30 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ritual.RangeRitual;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.ritual.RangeEffectRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffect;
 
-public class RitualGravity extends RangeRitual {
-    public static int Duration = 60 * 20;
-    public static int RenewInterval = 20;
-    public static int RenewThreshold = 10 * 20;
-    public static int Range = 60;
+public class RitualGravity extends RangeEffectRitual {
+    public static int renewInterval = 20;
+    public static int renewThreshold = 10 * 20;
+
+    @Override
+    public MobEffect getEffect() {
+        return ModPotions.GRAVITY_EFFECT.get();
+    }
+
+    @Override
+    public int getRange() {
+        return 60;
+    }
+
+    @Override
+    public int getDuration() {
+        return 60 * 20;
+    }
 
     @Override
     public int getSourceCost() {
@@ -33,13 +44,5 @@ public class RitualGravity extends RangeRitual {
     @Override
     public String getLangName() {
         return "Gravity";
-    }
-
-    public boolean applyGravityIfNear(ServerPlayer player) {
-        if (player.level.isClientSide || needsSourceNow() || BlockUtil.distanceFrom(getPos(), player.blockPosition()) > RitualGravity.Range) return false;
-
-        player.addEffect(new MobEffectInstance(ModPotions.GRAVITY_EFFECT.get(), RitualGravity.Duration));
-        setNeedsSource(true);
-        return true;
     }
 }
