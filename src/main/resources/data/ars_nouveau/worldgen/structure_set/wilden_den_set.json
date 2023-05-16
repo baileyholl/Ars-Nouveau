@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "ars_nouveau:structure_wilden_den",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1224466880,
+    "spacing": 16,
+    "separation": 6,
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:ocean_monuments"
+    }
+  }
+}

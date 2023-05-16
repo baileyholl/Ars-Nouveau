@@ -75,7 +75,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.ArrayList;
 
 public class WildenChimera extends Monster implements IAnimatable, IAnimationListener {
-    private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true).setPlayBossMusic(true);
+    private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
     public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_WINGS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
