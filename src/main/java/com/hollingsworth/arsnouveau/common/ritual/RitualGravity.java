@@ -12,7 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 public class RitualGravity extends RangeRitual {
     public static int Duration = 60 * 20;
     public static int RenewInterval = 20;
-    public static int RenewDuration = 10 * 20;
+    public static int RenewThreshold = 10 * 20;
     public static int Range = 60;
 
     @Override

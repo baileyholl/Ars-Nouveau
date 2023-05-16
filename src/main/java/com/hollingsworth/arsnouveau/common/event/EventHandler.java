@@ -245,7 +245,7 @@ public class EventHandler {
 
         if (event.player.level.getGameTime() % RitualGravity.RenewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
             MobEffectInstance gravity = event.player.getEffect(ModPotions.GRAVITY_EFFECT.get());
-            if (gravity == null || gravity.getDuration() <= RitualGravity.RenewDuration) {
+            if (gravity == null || gravity.getDuration() <= RitualGravity.RenewThreshold) {
                 RitualEventQueue.getRitual(event.player.level, RitualGravity.class, ritual -> ritual.applyGravityIfNear(serverPlayer));
             }
         }
