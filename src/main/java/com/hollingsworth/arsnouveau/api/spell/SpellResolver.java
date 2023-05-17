@@ -197,7 +197,7 @@ public class SpellResolver {
     }
 
     public int getResolveCost() {
-        int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster());
+        int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell);
         return Math.max(cost, 0);
     }
 
