@@ -29,6 +29,8 @@ public class LightTile extends ModdedTile implements ITickable {
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
         if (level.isClientSide){
+            //don't spawn particles with 1/1/1 color, they would be invisible anyway
+            if (this.color.getColor() == 65793) return;
             level.addParticle(
                     GlowParticleData.createData(this.color.nextColor(random), 0.25f, 0.9f, 36),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), pos.getY() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), pos.getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
