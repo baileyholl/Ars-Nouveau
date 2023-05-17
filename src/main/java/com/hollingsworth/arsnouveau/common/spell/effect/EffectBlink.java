@@ -73,6 +73,9 @@ public class EffectBlink extends AbstractEffect {
 
     public static void warpEntity(Entity entity, BlockPos warpPos) {
         if (entity == null) return;
+        if (entity.getType().is(EntityTags.BLINK_BLACKLISTED)){
+            return;
+        }
         Level world = entity.level;
         if (entity instanceof LivingEntity living) {
             if (ForgeEventFactory.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ()).isCanceled())
