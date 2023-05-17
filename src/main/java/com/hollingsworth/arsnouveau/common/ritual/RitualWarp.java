@@ -40,6 +40,9 @@ public class RitualWarp extends AbstractRitual {
                 ItemStack i = getConsumedItems().get(0);
                 BlockPos b = WarpScroll.getPos(i);
                 for(LivingEntity a : entities){
+                    if (a.getType().is(EntityTags.BLINK_BLACKLISTED)){
+                        continue;
+                    }
                     if(b != null)
                         a.teleportTo(b.getX(), b.getY(), b.getZ());
                 }
