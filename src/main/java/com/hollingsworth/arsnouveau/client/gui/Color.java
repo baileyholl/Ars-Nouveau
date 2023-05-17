@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 
 import com.google.common.hash.Hashing;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -22,6 +23,10 @@ public class Color {
 
     protected boolean mutable = true;
     protected int value;
+
+    public ParticleColor toParticle(){
+        return ParticleColor.fromInt(this.getRGB());
+    }
 
     public Color(int r, int g, int b) {
         this(r, g, b, 0xff);

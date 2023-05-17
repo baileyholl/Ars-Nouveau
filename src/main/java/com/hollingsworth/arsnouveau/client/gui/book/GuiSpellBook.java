@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -19,13 +20,15 @@ import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidat
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -515,7 +518,7 @@ public class GuiSpellBook extends BaseBook {
         //manabar
         int manaLength = 96;
         if (maxManaCache > 0) {
-            manaLength *= Math.max(0F, ((float) (maxManaCache - currentCostCache) / maxManaCache));
+            manaLength *= (float) (maxManaCache - currentCostCache) / maxManaCache;
         } else manaLength = 0;
 
         int offsetLeft = 89;
@@ -528,15 +531,45 @@ public class GuiSpellBook extends BaseBook {
         blit(stack, offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) (((ClientInfo.ticksInGame + partialTicks) / 3 % (33))) * 6;
 
-        // 96
-        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
-        blit(stack, offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+        // default length is 96
+        // rainbow effect for perfect match is disabled by the >=
+        if (manaLength >= 0) {
+            RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
+            blit(stack, offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+        } else {
+            //color rainbow if mana cost = max mana, red if mana cost > max mana
+            RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_grayscale.png"));
+            colorBlit(stack, offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
+        }
         if (ENABLE_DEBUG_NUMBERS) minecraft.font.draw(stack, String.format("%d / %d", currentCostCache, maxManaCache), offsetLeft + 25, yOffset, 16777215);
 
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
         blit(stack, offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
         stack.popPose();
 
+    }
+
+
+    /*
+    * Adapted from Eidolon, Elucent
+    */
+    static void colorBlit(PoseStack mStack, int x, int y, int uOffset, int vOffset, int width, int height, int textureWidth, int textureHeight, Color color) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        Matrix4f matrix = mStack.last().pose();
+        int maxX = x + width, maxY = y + height;
+        float minU = (float) uOffset / textureWidth, minV = (float) vOffset / textureHeight;
+        float maxU = minU + (float) width / textureWidth, maxV = minV + (float) height / textureHeight;
+        int r = color.getRed(), g = color.getGreen(), b = color.getBlue();
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferbuilder.vertex(matrix, (float) x, (float) maxY, 0).uv(minU, maxV).color(r, g, b, 255).endVertex();
+        bufferbuilder.vertex(matrix, (float) maxX, (float) maxY, 0).uv(maxU, maxV).color(r, g, b, 255).endVertex();
+        bufferbuilder.vertex(matrix, (float) maxX, (float) y, 0).uv(maxU, minV).color(r, g, b, 255).endVertex();
+        bufferbuilder.vertex(matrix, (float) x, (float) y, 0).uv(minU, minV).color(r, g, b, 255).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
+        RenderSystem.disableBlend();
     }
 
     private int getCurrentManaCost() {

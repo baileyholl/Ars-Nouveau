@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -35,7 +36,14 @@ public abstract class ColoredProjectile extends Projectile {
     }
 
     public ParticleColor getParticleColor() {
+        if (isRainbow())
+           return Color.rainbowColor(this.tickCount * 5).toParticle();
+
         return new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
+    }
+
+    public boolean isRainbow() {
+        return false;
     }
 
     public ParticleColor.IntWrapper getParticleColorWrapper() {
