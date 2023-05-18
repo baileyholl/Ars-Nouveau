@@ -154,6 +154,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.FALSE_WEAVE);
             registerDropSelf(BlockRegistry.MIRROR_WEAVE);
             registerDropSelf(BlockRegistry.ITEM_DETECTOR);
+            registerDropSelf(BlockRegistry.SKY_WEAVE);
         }
 
         protected void registerSlabItemTable(Block p_124291_) {
