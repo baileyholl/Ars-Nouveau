@@ -1,11 +1,11 @@
 {
-  "name": "ars_nouveau:wilden_den",
+  "name": "ars_nouveau:wilden_den_top",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "ars_nouveau:wilden_den",
+        "location": "ars_nouveau:wilden_den_top",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

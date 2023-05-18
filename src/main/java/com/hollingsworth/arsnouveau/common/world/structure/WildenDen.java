@@ -1,17 +1,22 @@
 package com.hollingsworth.arsnouveau.common.world.structure;
 
-import com.hollingsworth.arsnouveau.setup.StructureRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
@@ -94,7 +99,6 @@ public class WildenDen extends Structure {
 
     @Override
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
-
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
         if (!WildenDen.extraSpawningChecks(context)) {
@@ -134,9 +138,13 @@ public class WildenDen extends Structure {
         return structurePiecesGenerator;
     }
 
+    @Override
+    public void afterPlace(WorldGenLevel level, StructureManager manager, ChunkGenerator p_226562_, RandomSource p_226563_, BoundingBox p_226564_, ChunkPos p_226565_, PiecesContainer p_226566_) {
+        super.afterPlace(level, manager, p_226562_, p_226563_, p_226564_, p_226565_, p_226566_);
+    }
 
     @Override
     public StructureType<?> type() {
-        return StructureRegistry.WILDEN_DEN.get();
+        return null;//StructureRegistry.WILDEN_DEN.get();
     }
 }
