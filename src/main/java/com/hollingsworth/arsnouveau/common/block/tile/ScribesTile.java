@@ -124,25 +124,28 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     public void checkInventories(){
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
             if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).isPresent()) {
-                IItemHandler handler = level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
-                if (handler != null) {
-                    for (int i = 0; i < handler.getSlots(); i++) {
-                        ItemStack stack = handler.getStackInSlot(i);
-                        if (canConsumeItemstack(stack)) {
-                            ItemStack stack1 = handler.extractItem(i, 1, false);
-                            stack1.copy().setCount(1);
-                            consumedStacks.add(stack1);
-                            EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
-                            flyingItem.setStack(stack1);
-                            level.addFreshEntity(flyingItem);
-                            updateBlock();
-                            return;
+                try {
+                    IItemHandler handler = level.getBlockEntity(bPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
+                    if (handler != null) {
+                        for (int i = 0; i < handler.getSlots(); i++) {
+                            ItemStack stack = handler.getStackInSlot(i);
+                            if (canConsumeItemstack(stack)) {
+                                ItemStack stack1 = handler.extractItem(i, 1, false);
+                                stack1.copy().setCount(1);
+                                consumedStacks.add(stack1);
+                                EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
+                                flyingItem.setStack(stack1);
+                                level.addFreshEntity(flyingItem);
+                                updateBlock();
+                                return;
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    // Dang mods doing ridiculous things with item handlers, and I aint updating this 1.18 branch again.
                 }
             }
         }
-
     }
 
     public boolean consumeStack(ItemStack stack){
