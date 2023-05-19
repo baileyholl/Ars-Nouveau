@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +46,7 @@ public class ManaUtil {
     public record Mana(int Max, float Reserve){
         //Usable max mana
         public int getRealMax(){
-            return (int) (Max  * (1 - Reserve));
+            return (int) (Max  * (1.0 - Reserve));
         }
     }
 

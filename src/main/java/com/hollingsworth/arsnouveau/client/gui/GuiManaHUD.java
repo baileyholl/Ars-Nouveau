@@ -67,7 +67,6 @@ public class GuiManaHUD extends GuiComponent {
 
             drawString(ms, minecraft.font, text, offset, yOffset - 10, 0xFFFFFF);
             drawString(ms, minecraft.font, String.valueOf((int)(ClientInfo.reservedOverlayMana * maxMana)), offset + 69, yOffset - 20, 0xFFFFFF);
-
         }
 
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
@@ -89,6 +88,8 @@ public class GuiManaHUD extends GuiComponent {
     static boolean stillBar = true;
 
     public static void renderReserveOverlay(PoseStack ms, int offsetLeft, int yOffset, int manaOffset, int maxMana){
+        if (ClientInfo.reservedOverlayMana <= 0)
+            return;
         int reserveManaLength = (int) (96F * ClientInfo.reservedOverlayMana);
         //invert offsets so it aligns with the right side of the bar
         int offset = 96 - reserveManaLength;
