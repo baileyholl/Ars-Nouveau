@@ -27,14 +27,14 @@ public class LaserAttackGoal extends Goal {
      */
     public boolean canUse() {
         LivingEntity livingentity = this.guardian.getTarget();
-        return livingentity != null && livingentity.isAlive() && guardian.laserCooldown == 0;
+        return livingentity != null && livingentity.isAlive() && guardian.laserCooldown == 0 && this.guardian.getTarget() != null;
     }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && (this.guardian.distanceToSqr(this.guardian.getTarget()) > 9.0D) && guardian.laserCooldown == 0;
+        return super.canContinueToUse() && (this.guardian.getTarget() != null && this.guardian.distanceToSqr(this.guardian.getTarget()) > 9.0D) && guardian.laserCooldown == 0;
     }
 
     /**
@@ -42,6 +42,9 @@ public class LaserAttackGoal extends Goal {
      */
     public void start() {
         this.tickCounter = -10;
+        if(this.guardian.getTarget() == null){
+            return;
+        }
         this.guardian.getNavigation().stop();
         this.guardian.getLookControl().setLookAt(this.guardian.getTarget(), 90.0F, 90.0F);
         this.guardian.setLaser(true);
@@ -60,6 +63,9 @@ public class LaserAttackGoal extends Goal {
      */
     public void tick() {
         LivingEntity livingentity = this.guardian.getTarget();
+        if(livingentity == null){
+            return;
+        }
         this.guardian.getNavigation().stop();
         this.guardian.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
         if (!this.guardian.hasLineOfSight(livingentity)) {
