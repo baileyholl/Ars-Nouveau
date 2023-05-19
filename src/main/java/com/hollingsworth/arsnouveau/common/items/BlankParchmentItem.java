@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
-import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -43,14 +42,13 @@ public class BlankParchmentItem extends ModItem implements IScribeable {
 
     @Override
     public boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack) {
-        if(player.getItemInHand(handIn).getItem() instanceof ICasterTool casterTool){
-            if(world.getBlockEntity(pos) instanceof ScribesTile scribesTile){
-                scribesTile.setStack(new ItemStack(ItemsRegistry.SPELL_PARCHMENT.get()));
-                if(scribesTile.getStack().getItem() instanceof IScribeable iScribeable){
-                    iScribeable.onScribe(world, pos, player, handIn, scribesTile.getStack());
-                }
-                return true;
+        ItemStack spellParchment = new ItemStack(ItemsRegistry.SPELL_PARCHMENT.get());
+        if (spellParchment.getItem() instanceof IScribeable scribeable) {
+            boolean success = scribeable.onScribe(world, pos, player, handIn, spellParchment);
+            if (world.getBlockEntity(pos) instanceof ScribesTile scribesTile && success) {
+                scribesTile.setStack(spellParchment);
             }
+            return success;
         }
         return false;
     }
