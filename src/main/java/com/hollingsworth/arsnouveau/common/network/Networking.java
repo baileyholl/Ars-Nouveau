@@ -213,6 +213,7 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
         INSTANCE.registerMessage(nextID(), PacketToggleFamiliar.class, PacketToggleFamiliar::toBytes, PacketToggleFamiliar::new, PacketToggleFamiliar::handle);
         INSTANCE.registerMessage(nextID(), PacketDispelFamiliars.class, PacketDispelFamiliars::toBytes, PacketDispelFamiliars::new, PacketDispelFamiliars::handle);
+        INSTANCE.registerMessage(nextID(), PacketGenericClientMessage.class, PacketGenericClientMessage::toBytes, PacketGenericClientMessage::new, PacketGenericClientMessage::handle);
 
     }
 

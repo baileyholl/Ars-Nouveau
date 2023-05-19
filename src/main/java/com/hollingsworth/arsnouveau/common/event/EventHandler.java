@@ -170,10 +170,10 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        if (e.getEntity() == null || !e.getEntity().hasEffect(ModPotions.SNARE_EFFECT.get()))
+        if(e.getEntity() != null && e.getEntity().hasEffect(ModPotions.SNARE_EFFECT.get())){
+            e.getEntity().setDeltaMovement(0, 0, 0);
             return;
-        e.getEntity().setDeltaMovement(0, 0, 0);
-
+        }
     }
 
 
