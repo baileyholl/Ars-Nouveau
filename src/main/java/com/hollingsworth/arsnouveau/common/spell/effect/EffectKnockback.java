@@ -87,7 +87,7 @@ public class EffectKnockback extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Knocks a target or block away a short distance from the caster.";
+        return "Knocks a target or block away a short distance from the caster. Sensitive will stop this spell from launching blocks.";
     }
 
    @NotNull

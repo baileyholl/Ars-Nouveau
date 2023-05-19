@@ -81,7 +81,7 @@ public class EffectPull extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit.";
+        return "Pulls the target closer to the caster. When used on blocks, they become falling blocks with motion towards the side of the block that was hit. Sensitive will stop this spell from pulling blocks.";
     }
 
     @NotNull

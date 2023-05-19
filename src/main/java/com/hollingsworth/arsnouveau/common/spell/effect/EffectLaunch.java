@@ -68,7 +68,7 @@ public class EffectLaunch extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Launches an entity or block into the air. Can be used for large jumps or for scaling mountains!";
+        return "Launches an entity or block into the air. Can be used for large jumps, yeeting mobs in the sky or for scaling mountains! Sensitive will stop this spell from launching blocks.";
     }
 
    @NotNull
