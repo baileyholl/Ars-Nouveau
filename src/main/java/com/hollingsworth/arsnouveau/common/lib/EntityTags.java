@@ -13,4 +13,6 @@ public class EntityTags {
 
     public static final TagKey<EntityType<?>> MAGIC_FIND =  TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "magic_find"));
     public static final TagKey<EntityType<?>> SPELL_CAN_HIT = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "spell_can_hit"));
+    public static final TagKey<EntityType<?>> PORTAL_BLACKLISTED =  TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "portal_blacklisted"));
+    public static final TagKey<EntityType<?>> BLINK_BLACKLISTED =  TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "blink_blacklisted"));
 }
