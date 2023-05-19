@@ -213,7 +213,7 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), HighlightAreaPacket.class, HighlightAreaPacket::encode, HighlightAreaPacket::decode, HighlightAreaPacket.Handler::handle);
         INSTANCE.registerMessage(nextID(), PacketToggleFamiliar.class, PacketToggleFamiliar::toBytes, PacketToggleFamiliar::new, PacketToggleFamiliar::handle);
         INSTANCE.registerMessage(nextID(), PacketDispelFamiliars.class, PacketDispelFamiliars::toBytes, PacketDispelFamiliars::new, PacketDispelFamiliars::handle);
-
+        INSTANCE.registerMessage(nextID(), NotEnoughManaPacket.class, NotEnoughManaPacket::encode, NotEnoughManaPacket::decode, NotEnoughManaPacket::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

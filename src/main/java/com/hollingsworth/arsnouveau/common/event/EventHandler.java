@@ -203,6 +203,9 @@ public class EventHandler {
     public static void clientTickEnd(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientInfo.ticksInGame++;
+            if (ClientInfo.redTicks()) {
+                ClientInfo.redOverlayTicks--;
+            }
         }
     }
 
