@@ -254,7 +254,7 @@ public class ModEntities {
         SpawnPlacements.register(WHIRLISPRIG_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
         SpawnPlacements.register(ENTITY_DRYGMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
 
-        SpawnPlacements.register(WILDEN_GUARDIAN.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
+        SpawnPlacements.register(WILDEN_GUARDIAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
         SpawnPlacements.register(WILDEN_HUNTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
         SpawnPlacements.register(WILDEN_STALKER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::wildenSpawnRules);
 
