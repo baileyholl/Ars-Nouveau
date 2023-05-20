@@ -291,10 +291,10 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
                 .withLocalizedText()
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_HUNTER.get()).toString()).withText(getLangPath("wilden", 3)))
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_STALKER.get()).toString()).withText(getLangPath("wilden", 4)))
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_GUARDIAN.get()).toString()).withText(getLangPath("wilden", 5)))
-                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_BOSS.get()).toString()).withText(getLangPath("wilden", 6)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_HUNTER.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 3)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_STALKER.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 4)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_GUARDIAN.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 5)))
+                .withPage(new EntityPage(getRegistryName(ModEntities.WILDEN_BOSS.get()).toString()).withScale(0.55f).withText(getLangPath("wilden", 6)))
                 .withPage(new TextPage(getLangPath("wilden", 7))), getPath(RESOURCES, "wilden"));
 
         var denyScroll = addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.DENY_ITEM_SCROLL)

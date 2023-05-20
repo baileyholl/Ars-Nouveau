@@ -1,7 +1,13 @@
 {
   "structures": [
     {
-      "structure": "ars_nouveau:structure_wilden_den",
+      "structure": "ars_nouveau:hunter_wilden_den",
+      "weight": 1
+    },{
+      "structure": "ars_nouveau:guardian_wilden_den",
+      "weight": 1
+    },{
+      "structure": "ars_nouveau:stalker_wilden_den",
       "weight": 1
     }
   ],

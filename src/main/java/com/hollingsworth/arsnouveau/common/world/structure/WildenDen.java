@@ -37,12 +37,12 @@ public class WildenDen extends Structure {
                     Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
             ).apply(instance, WildenDen::new)).codec();
 
-    private final Holder<StructureTemplatePool> startPool;
-    private final Optional<ResourceLocation> startJigsawName;
-    private final int size;
-    private final HeightProvider startHeight;
-    private final Optional<Heightmap.Types> projectStartToHeightmap;
-    private final int maxDistanceFromCenter;
+    public final Holder<StructureTemplatePool> startPool;
+    public final Optional<ResourceLocation> startJigsawName;
+    public final int size;
+    public final HeightProvider startHeight;
+    public final Optional<Heightmap.Types> projectStartToHeightmap;
+    public final int maxDistanceFromCenter;
 
     public boolean cannotSpawnInLiquid = true;
 

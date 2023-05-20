@@ -1,0 +1,7 @@
+{
+  "processors": [
+    {
+      "processor_type": "ars_nouveau:waterlogging_fix"
+    }
+  ]
+}

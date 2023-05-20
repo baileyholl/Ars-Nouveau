@@ -269,9 +269,9 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.wilden_spike", "Wilden Spike");
         add("item.ars_nouveau.wilden_horn", "Wilden Horn");
         add("item.ars_nouveau.wilden_wing", "Wilden Wing");
-        add("tooltip.wilden_spike", "Drops from Wilden Defenders, found in cold biomes.");
-        add("tooltip.wilden_wing", "Drops from Wilden Stalkers");
-        add("tooltip.wilden_horn", "Drops from Wilden Pack Hunters");
+        add("tooltip.wilden_spike", "Drops from Wilden Defenders, found in Wilden Dens in cold biomes, or by using a Tablet of Summon Wilden.");
+        add("tooltip.wilden_wing", "Drops from Wilden Stalkers found in Wilden Dens, or by using a Tablet of Summon Wilden.");
+        add("tooltip.wilden_horn", "Drops from Wilden Pack Hunters found in Wilden Dens, or by using a Tablet of Summon Wilden.");
         add("entity.ars_nouveau.summon_wolf", "Summoned Wolf");
         add("tooltip.worn_notebook", "Documentation for Ars Nouveau");
         add("effect.ars_nouveau.shocked", "Shocked");
@@ -463,7 +463,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page1.scribes_table", "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories.");
         add("ars_nouveau.page2.scribes_table", "You may also inscribe a spell onto Spell Parchment or Enchanters Items. To do this, place a Blank Parchment on the table. Then, with your spell book in hand, change your spell book to your desired spell as if you were going to cast it. Then, use the book on the table while sneaking. Your item will now contain that spell. Using Manipulation Essence will permanently hide the scribed spell.");
         add("ars_nouveau.page1.lava_lily", "A decorative block that can be placed on any liquid or block. The texture of this block varies if it is placed on Lava, a Magma Block, or any other block.");
-        add("ars_nouveau.page1.wilden", "An ancient race that mastered shapeshifting magic, Wilden are hostile creatures that can be commonly found at night. While Wilden Defenders may only be found in cold biomes, Stalkers and Pack Hunters can be found in any biome.");
+        add("ars_nouveau.page1.wilden", "Wilden are hostile creatures that can be commonly found at night around Wilden Dens. While Wilden Defenders may only be found in cold biomes, Stalker and Hunter Dens can be found in any forest biome.");
         add("ars_nouveau.page3.wilden", "An aggressive and fast hunter that can summon allied wolves.");
         add("ars_nouveau.page4.wilden", "Generally spawning in small groups, Stalkers have ground and aerial attacks.");
         add("ars_nouveau.page5.wilden", "Found in cold biomes, a Defender is a slow moving heavy hitter with a ranged attack.");

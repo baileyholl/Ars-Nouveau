@@ -16,16 +16,10 @@
       "bounding_box": "piece",
       "spawns": [
         {
-          "type": "minecraft:evoker",
+          "type": "ars_nouveau:wilden_stalker",
           "weight": 5,
-          "minCount": 1,
-          "maxCount": 2
-        },
-        {
-          "type": "minecraft:phantom",
-          "weight": 1,
-          "minCount": 1,
-          "maxCount": 1
+          "minCount": 3,
+          "maxCount": 3
         }
       ]
     }

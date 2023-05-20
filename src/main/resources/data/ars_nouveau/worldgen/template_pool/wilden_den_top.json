@@ -6,7 +6,7 @@
       "weight": 1,
       "element": {
         "location": "ars_nouveau:wilden_den_top",
-        "processors": "minecraft:empty",
+        "processors": "ars_nouveau:wilden_den/hunter",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }

@@ -23,6 +23,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -57,7 +58,10 @@ public class WildenGuardian extends Monster implements IAnimatable {
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if (Config.GUARDIAN_ATTACK_ANIMALS.get())
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
+    }
 
+    public boolean checkSpawnObstruction(LevelReader pLevel) {
+        return pLevel.isUnobstructed(this);
     }
 
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -89,6 +93,14 @@ public class WildenGuardian extends Monster implements IAnimatable {
 
         }
         super.actuallyHurt(damageSrc, damageAmount);
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if(pSource == DamageSource.DROWN){
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Override
