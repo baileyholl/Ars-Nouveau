@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:jigsaw",
+  "type": "ars_nouveau:wilden_den",
   "start_pool": "ars_nouveau:wilden_den_top",
   "size": 3,
   "max_distance_from_center": 80,

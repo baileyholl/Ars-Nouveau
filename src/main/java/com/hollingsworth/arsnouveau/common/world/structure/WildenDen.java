@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.world.structure;
 
+import com.hollingsworth.arsnouveau.setup.StructureRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -7,8 +8,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
@@ -41,6 +44,8 @@ public class WildenDen extends Structure {
     private final Optional<Heightmap.Types> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
 
+    public boolean cannotSpawnInLiquid = true;
+
     public WildenDen(Structure.StructureSettings config,
                          Holder<StructureTemplatePool> startPool,
                          Optional<ResourceLocation> startJigsawName,
@@ -57,52 +62,20 @@ public class WildenDen extends Structure {
         this.projectStartToHeightmap = projectStartToHeightmap;
         this.maxDistanceFromCenter = maxDistanceFromCenter;
     }
-    /*
-     * This is where extra checks can be done to determine if the structure can spawn here.
-     * This only needs to be overridden if you're adding additional spawn conditions.
-     *
-     * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
-     * extraSpawningChecks to return true only if certain chunk coordinates are passed in
-     * which allows you to spawn structures only at certain coordinates in the world.
-     *
-     * Basically, this method is used for determining if the land is at a suitable height,
-     * if certain other structures are too close or not, or some other restrictive condition.
-     *
-     * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
-     * (Bedrock Edition seems to not have the same check)
-     *
-     * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
-     * Best way to do that is to use getBaseColumn to grab a column of blocks at the structure's x/z position.
-     * Then loop through it and look for land with air above it and set blockpos's Y value to it.
-     * Make sure to set the final boolean in JigsawPlacement.addPieces to false so
-     * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
-     *
-     * Also, please for the love of god, do not do dimension checking here.
-     * If you do and another mod's dimension is trying to spawn your structure,
-     * the locate command will make minecraft hang forever and break the game.
-     * Use the biome tags for where to spawn the structure and users can datapack
-     * it to spawn in specific biomes that aren't in the dimension they don't like if they wish.
-     */
-    private static boolean extraSpawningChecks(Structure.GenerationContext context) {
-        // Grabs the chunk position we are at
-        ChunkPos chunkpos = context.chunkPos();
-
-        // Checks to make sure our structure does not spawn above land that's higher than y = 150
-        // to demonstrate how this method is good for checking extra conditions for spawning
-        return context.chunkGenerator().getFirstOccupiedHeight(
-                chunkpos.getMinBlockX(),
-                chunkpos.getMinBlockZ(),
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                context.heightAccessor(),
-                context.randomState()) < 150;
-    }
 
     @Override
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
-        if (!WildenDen.extraSpawningChecks(context)) {
-            return Optional.empty();
+        if (this.cannotSpawnInLiquid) {
+            BlockPos centerOfChunk = context.chunkPos().getMiddleBlockPosition(0);
+            int landHeight = context.chunkGenerator().getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
+            NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ(), context.heightAccessor(), context.randomState());
+            BlockState topBlock = columnOfBlocks.getBlock(centerOfChunk.getY() + landHeight);
+
+            if(!topBlock.getFluidState().isEmpty()) {
+                return Optional.empty();
+            }
         }
 
         // Set's our spawning blockpos's y offset to be 60 blocks up.
@@ -128,13 +101,6 @@ public class WildenDen extends Structure {
                         // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
                         this.maxDistanceFromCenter); // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
 
-        /*
-         * Note, you are always free to make your own JigsawPlacement class and implementation of how the structure
-         * should generate. It is tricky but extremely powerful if you are doing something that vanilla's jigsaw system cannot do.
-         * Such as for example, forcing 3 pieces to always spawn every time, limiting how often a piece spawns, or remove the intersection limitation of pieces.
-         */
-
-        // Return the pieces generator that is now set up so that the game runs it when it needs to create the layout of structure pieces.
         return structurePiecesGenerator;
     }
 
@@ -145,6 +111,6 @@ public class WildenDen extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return null;//StructureRegistry.WILDEN_DEN.get();
+        return StructureRegistry.WILDEN_DEN.get();
     }
 }
