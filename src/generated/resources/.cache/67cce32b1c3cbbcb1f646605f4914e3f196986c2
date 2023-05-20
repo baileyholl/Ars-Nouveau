@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-30T15:23:45.8123278	LootTables
+// 1.19.2	2023-05-18T18:44:06.9199134	LootTables
 d2e03e3c4f0549450774454a6592cf602f65d58e data/ars_nouveau/loot_tables/blocks/agronomic_sourcelink.json
 3c10d96f7ca01306c8b28d77f99cc15aa555f0b7 data/ars_nouveau/loot_tables/blocks/alchemical_sourcelink.json
 5989e056e242a821281ec28bc1fb6225f84ecbe1 data/ars_nouveau/loot_tables/blocks/alteration_table.json
@@ -71,6 +71,7 @@ e95d7189b9a2cfcf7ffdb654f0a696ff694a3f72 data/ars_nouveau/loot_tables/blocks/rel
 2a9fdd642aa0f16af5ee973ab31fe48baf4b21c5 data/ars_nouveau/loot_tables/blocks/scribes_table.json
 f725a66b09ecd108a74e86916742e1aebfccf8ff data/ars_nouveau/loot_tables/blocks/scryers_crystal.json
 49edc186fd91ebb237a50ad024187a8c0103cc48 data/ars_nouveau/loot_tables/blocks/scryers_oculus.json
+1ade494d3bdd005d3e69a4b5b4ca3e5208c60562 data/ars_nouveau/loot_tables/blocks/sky_block.json
 91d6e15c75e0a637b436caf75a7af82fdd0ec0d1 data/ars_nouveau/loot_tables/blocks/smooth_gilded_sourcestone_alternating.json
 1d84cfcc8b073980fe62df1485e5809319868c4d data/ars_nouveau/loot_tables/blocks/smooth_gilded_sourcestone_basketweave.json
 f28e04100984d4b2183dcb1706e9e5627660fa7e data/ars_nouveau/loot_tables/blocks/smooth_gilded_sourcestone_large_bricks.json
