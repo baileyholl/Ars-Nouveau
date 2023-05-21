@@ -45,7 +45,7 @@ public class EffectRotate extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        boolean sensitive = spellStats.getBuffCount(AugmentSensitive.INSTANCE) >= 1;
+        boolean sensitive = spellStats.isSensitive();
         int ampMod = (int)spellStats.getAmpMultiplier();
         boolean counterClockwise = ampMod < 0;
         for (int i = 0; i < 1 + Math.abs(ampMod); i++) {
@@ -73,7 +73,7 @@ public class EffectRotate extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        boolean swapAxis = spellStats.getBuffCount(AugmentSensitive.INSTANCE) >= 1;
+        boolean swapAxis = spellStats.isSensitive();
         for (BlockPos pos : posList) {
             BlockState state = world.getBlockState(pos);
             int ampMod = (int)spellStats.getAmpMultiplier();

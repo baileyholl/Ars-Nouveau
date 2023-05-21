@@ -35,8 +35,6 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE));
 
         for (BlockPos pos1 : posList) {
-            if (world.getBlockEntity(pos1) != null || !canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
-                continue;
             EnchantedFallingBlock fallingBlock = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
             if (fallingBlock != null)
                 ShapersFocus.tryPropagateEntitySpell(fallingBlock, world, shooter, spellContext, resolver);

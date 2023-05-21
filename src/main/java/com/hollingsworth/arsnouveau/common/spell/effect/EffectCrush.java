@@ -37,7 +37,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+        if (spellStats.isSensitive()) {
             double aoeBuff = spellStats.getAoeMultiplier();
             int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
             int maxItemCrush = (int) (4 + (4 * aoeBuff) + (4 * pierceBuff));
