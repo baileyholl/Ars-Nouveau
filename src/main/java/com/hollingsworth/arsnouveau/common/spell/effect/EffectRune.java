@@ -39,7 +39,7 @@ public class EffectRune extends AbstractEffect {
                 runeTile.isTemporary = true;
                 newSpell.recipe.add(0, MethodTouch.INSTANCE);
                 runeTile.spell = newSpell;
-                runeTile.isSensitive = spellStats.hasBuff(AugmentSensitive.INSTANCE);
+                runeTile.isSensitive = spellStats.isSensitive();
             }
         }
     }

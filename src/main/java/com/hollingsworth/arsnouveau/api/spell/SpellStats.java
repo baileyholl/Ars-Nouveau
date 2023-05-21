@@ -20,6 +20,10 @@ import java.util.List;
  * A wrapper for spell modifiers as they exist for a single effect before resolving.
  */
 public class SpellStats {
+
+    //true if at least one sensitive augment is present, keep using getBuffCount() for more than one
+    private boolean sensitive = false;
+
     private double amplification;
 
     private float acceleration;
@@ -115,6 +119,10 @@ public class SpellStats {
         this.modifierItems = modifierItems;
     }
 
+    public boolean isSensitive() {
+        return sensitive;
+    }
+
     public static class Builder {
         private SpellStats spellStats;
 
@@ -141,6 +149,11 @@ public class SpellStats {
 
         public SpellStats build() {
             return spellStats;
+        }
+
+        public Builder setSensitive() {
+            spellStats.sensitive = true;
+            return this;
         }
 
         public Builder setDamageModifier(double damageModifier) {
