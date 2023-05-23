@@ -1,11 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
@@ -14,9 +11,11 @@ import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchantedSkull extends EnchantedFallingBlock{
+public class EnchantedSkull extends EnchantedFallingBlock implements IEntityAdditionalSpawnData {
     public EnchantedSkull(EntityType<? extends ColoredProjectile> p_31950_, Level p_31951_) {
         super(p_31950_, p_31951_);
     }
@@ -36,7 +35,7 @@ public class EnchantedSkull extends EnchantedFallingBlock{
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return new SkullEntityPacket(this, Block.getId(this.getBlockState()), this.blockData);
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Nullable
@@ -45,14 +44,6 @@ public class EnchantedSkull extends EnchantedFallingBlock{
         if (pStack.getItem() instanceof PlayerHeadItem)
             pStack.setTag(blockData);
         return this.spawnAtLocation(pStack, 0.0F);
-    }
-
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-        if (pPacket instanceof SkullEntityPacket skullEntityPacket){
-            this.blockData = skullEntityPacket.getTag();
-        }
     }
 
     public ItemStack getStack() {
@@ -64,31 +55,28 @@ public class EnchantedSkull extends EnchantedFallingBlock{
         return stack;
     }
 
-    public static class SkullEntityPacket extends ClientboundAddEntityPacket {
-
-        private CompoundTag compound = new CompoundTag();
-
-        public CompoundTag getTag(){return compound;}
-        public SkullEntityPacket(Entity pEntity, int pData) {
-            super(pEntity, pData);
-        }
-
-        public SkullEntityPacket(FriendlyByteBuf pBuffer){
-            super(pBuffer);
-            this.compound = pBuffer.readNbt();
-        }
-
-        public SkullEntityPacket(Entity pEntity, int pData, CompoundTag tag) {
-            this(pEntity, pData);
-            this.compound = tag;
-        }
-
-        @Override
-        public void write(FriendlyByteBuf pBuffer) {
-            super.write(pBuffer);
-            pBuffer.writeNbt(this.compound);
-        }
-
-
+    /**
+     * Called by the server when constructing the spawn packet.
+     * Data should be added to the provided stream.
+     *
+     * @param buffer The packet data stream
+     */
+    @Override
+    public void writeSpawnData(FriendlyByteBuf buffer) {
+        buffer.writeInt(Block.getId(blockState));
+        buffer.writeNbt(blockData);
     }
+
+    /**
+     * Called by the client when it receives a Entity spawn packet.
+     * Data should be read out of the stream in the same way as it was written.
+     *
+     * @param additionalData The packet data stream
+     */
+    @Override
+    public void readSpawnData(FriendlyByteBuf additionalData) {
+        blockState = Block.stateById(additionalData.readInt());
+        blockData = additionalData.readNbt();
+    }
+
 }

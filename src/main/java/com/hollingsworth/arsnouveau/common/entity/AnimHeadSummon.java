@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.Item;
@@ -12,8 +12,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.network.NetworkHooks;
 
-public class AnimHeadSummon extends AnimBlockSummon {
+public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditionalSpawnData {
 
     CompoundTag head_data = new CompoundTag();
 
@@ -52,15 +54,7 @@ public class AnimHeadSummon extends AnimBlockSummon {
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return new EnchantedSkull.SkullEntityPacket(this, Block.getId(this.getBlockState()), this.head_data);
-    }
-
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-        if (pPacket instanceof EnchantedSkull.SkullEntityPacket skullEntityPacket){
-            this.head_data = skullEntityPacket.getTag();
-        }
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -82,5 +76,29 @@ public class AnimHeadSummon extends AnimBlockSummon {
             stack.setTag(this.head_data);
         }
         return stack;
+    }
+
+    /**
+     * Called by the server when constructing the spawn packet.
+     * Data should be added to the provided stream.
+     *
+     * @param buffer The packet data stream
+     */
+    @Override
+    public void writeSpawnData(FriendlyByteBuf buffer) {
+        buffer.writeInt(Block.getId(blockState));
+        buffer.writeNbt(head_data);
+    }
+
+    /**
+     * Called by the client when it receives a Entity spawn packet.
+     * Data should be read out of the stream in the same way as it was written.
+     *
+     * @param additionalData The packet data stream
+     */
+    @Override
+    public void readSpawnData(FriendlyByteBuf additionalData) {
+        blockState = Block.stateById(additionalData.readInt());
+        head_data = additionalData.readNbt();
     }
 }
