@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "En surfplatta som används för ritualer. Förbrukas vid användning.",
   "tooltip.ars_nouveau.wilden_tribute": "Erhålls genom att besegra Wilden Chimera. Se Ritual of Summon Wilden.",
   "tooltip.ars_nouveau.wixie_hat": "Ge till en Starbuncle för att få dem att transportera drycker.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Använd med ett objekt i offhand för att lägga till i rullningen, eller skriv på Scribes-tabellen.",
   "tooltip.magebloom": "Tillverkad med hjälp av den förtrollande apparaten",
   "tooltip.potion_flask": "Rymmer 8 laddningar trolldryck.",
