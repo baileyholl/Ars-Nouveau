@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "Una tauleta utilitzada per a rituals. Es consumeix amb l'ús.",
   "tooltip.ars_nouveau.wilden_tribute": "S'obté derrotant la Quimera de Wilden. Vegeu Ritual of Summon Wilden.",
   "tooltip.ars_nouveau.wixie_hat": "Dóna-li a un Starbuncle perquè els faci transportar pocions.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Utilitzeu-lo amb un element a la mà per afegir-lo al desplaçament o escriviu a la taula Scribes.",
   "tooltip.magebloom": "Creat amb l'aparell Encantador",
   "tooltip.potion_flask": "Conté 8 càrregues de poció.",
