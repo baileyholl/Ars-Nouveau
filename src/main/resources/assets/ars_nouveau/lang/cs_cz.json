@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "Tablet používaný pro rituály. Spotřebováno při použití.",
   "tooltip.ars_nouveau.wilden_tribute": "Získáno porážkou Wilden Chimera. Viz Rituál vyvolání Wildena.",
   "tooltip.ars_nouveau.wixie_hat": "Dejte Starbuncle, aby z nich převezl lektvary.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Použijte s položkou v ruce k přidání do svitku nebo pište na stůl Scribes.",
   "tooltip.magebloom": "Vytvořeno pomocí okouzlujícího přístroje",
   "tooltip.potion_flask": "Pojme 8 náplní lektvaru.",
