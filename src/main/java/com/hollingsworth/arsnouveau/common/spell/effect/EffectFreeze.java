@@ -76,7 +76,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
         BlockState aboveState = world.getBlockState(p.above());
         FluidState aboveFluidstate = world.getFluidState(p.above());
         if (aboveFluidstate.getType() == Fluids.WATER && aboveState.getBlock() instanceof LiquidBlock) {
-            if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+            if (spellStats.isSensitive()) {
                 world.setBlockAndUpdate(p.above(), Blocks.FROSTED_ICE.defaultBlockState());
             } else {
                 world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());

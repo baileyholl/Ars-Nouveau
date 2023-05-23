@@ -50,7 +50,7 @@ public class EffectBurst extends AbstractEffect {
         SpellContext newContext = resolver.spellContext.clone().withSpell(spellContext.getRemainingSpell());
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
-        if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+        if (spellStats.isSensitive()) {
             //TODO check if BlockPos.betweenClosed is better
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
                 if (Sphere.test(BlockUtil.distanceFromCenter(pos, center))) {

@@ -20,6 +20,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -28,8 +29,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.scores.Team;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -113,7 +114,12 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class){
+            @Override
+            protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, TargetingConditions pTargetPredicate) {
+                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerID()) ;
+            }
+        });
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
                 (LivingEntity entity) ->
@@ -172,9 +178,11 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Override
     public boolean isAlliedTo(Entity pEntity) {
-        if (this.getSummoner() != null) {
-            LivingEntity livingentity = this.getSummoner();
-            return pEntity == livingentity || livingentity.isAlliedTo(pEntity);
+        LivingEntity summoner = this.getSummoner();
+
+        if (summoner != null) {
+            if (pEntity instanceof ISummon summon && summon.getOwnerID() != null && summon.getOwnerID().equals(this.getOwnerID())) return true;
+            return pEntity == summoner || summoner.isAlliedTo(pEntity);
         }
         return super.isAlliedTo(pEntity);
     }

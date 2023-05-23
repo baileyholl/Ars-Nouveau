@@ -199,6 +199,11 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     }
 
     @Override
+    public boolean isAlliedTo(Entity pEntity) {
+        return !(pEntity instanceof Enemy) || (pEntity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) || super.isAlliedTo(pEntity) ;
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SMASHING, false);

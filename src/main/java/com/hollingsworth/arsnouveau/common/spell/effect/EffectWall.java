@@ -35,7 +35,7 @@ public class EffectWall extends AbstractEffect {
         SpellContext newContext = spellContext.clone().withSpell(newSpell);
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
-        entityWallSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
+        entityWallSpell.setSensitive(spellStats.isSensitive());
         entityWallSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityWallSpell.extendedTime = spellStats.getDurationMultiplier();
         entityWallSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));

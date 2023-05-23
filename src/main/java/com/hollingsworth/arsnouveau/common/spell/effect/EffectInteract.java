@@ -102,7 +102,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public void useOnEntity(Player player, SpellStats spellStats, Entity target) {
-        if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+        if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
             InteractionResult res = item.interactLivingEntity(player, (LivingEntity) target, getHand(player));
             if (res != InteractionResult.SUCCESS) {
@@ -114,7 +114,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public void useOnBlock(Player player, SpellStats spellStats, BlockPos pos, BlockState state, Level world, BlockHitResult rayTraceResult) {
-        if (spellStats.hasBuff(AugmentSensitive.INSTANCE)) {
+        if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
             if (item.getItem() instanceof BucketItem bucket) {
                 handleBucket(item, bucket, player, state, world, pos, rayTraceResult);
