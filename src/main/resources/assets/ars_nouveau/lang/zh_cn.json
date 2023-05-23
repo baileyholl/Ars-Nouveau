@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "用于仪式的木板。一次性物品。",
   "tooltip.ars_nouveau.wilden_tribute": "通过打败荒野奇美拉得到。请参阅荒野召唤仪式。",
   "tooltip.ars_nouveau.wixie_hat": "给予星宝石兽使它们能运输药水。",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "副手持有物品时使用可将其添加至卷轴。也能通过抄写台添加。",
   "tooltip.magebloom": "使用附魔装置合成。",
   "tooltip.potion_flask": "最多能容纳8份药水。",
