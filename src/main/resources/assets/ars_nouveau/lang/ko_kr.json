@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "의식에 사용되는 서판입니다. 사용시 소모됩니다.",
   "tooltip.ars_nouveau.wilden_tribute": "와일든 키메라를 쓰러뜨려 얻을 수 있습니다. 자세한 내용은 와일든 소환 의식을 참조하세요.",
   "tooltip.ars_nouveau.wixie_hat": "별다람쥐에게 주어 포션을 수송하도록 만드세요.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "손에 있는 아이템과 함께 사용해 스크롤에 추가하거나 서기관의 테이블에서 작성하세요.",
   "tooltip.magebloom": "마법 부여 기계로 만들수있음",
   "tooltip.potion_flask": "최대 8개 분량의 물약을 채울 수 있습니다.",
