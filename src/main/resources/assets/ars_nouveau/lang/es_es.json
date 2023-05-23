@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "Tabla utilizada para los rituales. Se consume al usarla",
   "tooltip.ars_nouveau.wilden_tribute": "Obtenido al derrotar a la quimera salvaje. Ver Ritual de Invocación de Wilden",
   "tooltip.ars_nouveau.wixie_hat": "Dale a un Starbuncle para que transporte pociones.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Úselo con un elemento en la mano para agregar al pergamino, o escriba en la mesa Escribas.",
   "tooltip.magebloom": "Fabricado con el Encantador Arcano",
   "tooltip.potion_flask": "Tiene 8 cargas de poción.",
