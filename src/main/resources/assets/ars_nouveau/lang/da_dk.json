@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "En tablet brugt til ritualer. Bruges ved brug.",
   "tooltip.ars_nouveau.wilden_tribute": "Opnået ved at besejre Wilden Chimera. Se Ritual of Summon Wilden.",
   "tooltip.ars_nouveau.wixie_hat": "Giv til en Starbuncle for at få dem til at transportere potions.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Brug med et element i hånden til at føje til rullen, eller skriv på skriftlærde-tabellen.",
   "tooltip.magebloom": "Lavet ved hjælp af det fortryllende apparat",
   "tooltip.potion_flask": "Indeholder 8 ladninger af eliksir.",
