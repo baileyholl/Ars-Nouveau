@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "A tablet used for rituals. Consumed on use.",
   "tooltip.ars_nouveau.wilden_tribute": "Obtained by defeating the Wilden Chimera. See Ritual of Summon Wilden.",
   "tooltip.ars_nouveau.wixie_hat": "Give to a Starbuncle to make them transport potions.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Use with an item in the offhand to add to the scroll, or scribe on the Scribes table.",
   "tooltip.magebloom": "Crafted using the Enchanting Apparatus",
   "tooltip.potion_flask": "Holds 8 charges of potion.",
