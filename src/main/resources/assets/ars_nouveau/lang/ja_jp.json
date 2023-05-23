@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "儀式に使用するタブレット。使用時に消費される。",
   "tooltip.ars_nouveau.wilden_tribute": "ウィルデンキマイラを倒して入手。ウィルデン召喚の儀式を参照。",
   "tooltip.ars_nouveau.wixie_hat": "スターバンクルに与えるとポーションを運んでくれるようになる。",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "追加したいアイテムを左手に持って使用するか、 スクライブテーブルに置いてアイテムを使用して追加する。",
   "tooltip.magebloom": "エンチャント装置を使用して製作。",
   "tooltip.potion_flask": "ポーションを８瓶分中に入れられます。",
