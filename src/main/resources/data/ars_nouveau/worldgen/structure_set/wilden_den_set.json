@@ -5,7 +5,7 @@
       "weight": 1
     },{
       "structure": "ars_nouveau:guardian_wilden_den",
-      "weight": 1
+      "weight": 25
     },{
       "structure": "ars_nouveau:stalker_wilden_den",
       "weight": 1
@@ -14,11 +14,7 @@
   "placement": {
     "type": "minecraft:random_spread",
     "salt": 1224466880,
-    "spacing": 16,
-    "separation": 6,
-    "exclusion_zone": {
-      "chunk_count": 10,
-      "other_set": "minecraft:ocean_monuments"
-    }
+    "spacing": 10,
+    "separation": 6
   }
 }

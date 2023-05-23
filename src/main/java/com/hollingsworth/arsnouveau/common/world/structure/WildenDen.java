@@ -43,9 +43,11 @@ public class WildenDen extends Structure {
     public final HeightProvider startHeight;
     public final Optional<Heightmap.Types> projectStartToHeightmap;
     public final int maxDistanceFromCenter;
-
+    public Optional<Integer> terrainHeightCheckRadius = Optional.empty();
+    public Optional<Integer> allowedTerrainHeightRange = Optional.empty();
     public boolean cannotSpawnInLiquid = true;
-
+    public Optional<Integer> minYAllowed = Optional.empty();
+    public Optional<Integer> maxYAllowed = Optional.empty();
     public WildenDen(Structure.StructureSettings config,
                          Holder<StructureTemplatePool> startPool,
                          Optional<ResourceLocation> startJigsawName,
@@ -61,12 +63,14 @@ public class WildenDen extends Structure {
         this.startHeight = startHeight;
         this.projectStartToHeightmap = projectStartToHeightmap;
         this.maxDistanceFromCenter = maxDistanceFromCenter;
+        terrainHeightCheckRadius = Optional.of(1);
+        allowedTerrainHeightRange = Optional.of(6);
+
     }
 
     @Override
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
-        // Check if the spot is valid for our structure. This is just as another method for cleanness.
-        // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
+        var chunkPos = context.chunkPos();
         if (this.cannotSpawnInLiquid) {
             BlockPos centerOfChunk = context.chunkPos().getMiddleBlockPosition(0);
             int landHeight = context.chunkGenerator().getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
@@ -78,13 +82,43 @@ public class WildenDen extends Structure {
             }
         }
 
+        if (this.terrainHeightCheckRadius.isPresent() &&
+                (this.allowedTerrainHeightRange.isPresent() || this.minYAllowed.isPresent()))
+        {
+            int maxTerrainHeight = Integer.MIN_VALUE;
+            int minTerrainHeight = Integer.MAX_VALUE;
+            int terrainCheckRange = this.terrainHeightCheckRadius.get();
+
+            for (int curChunkX = chunkPos.x - terrainCheckRange; curChunkX <= chunkPos.x + terrainCheckRange; curChunkX++) {
+                for (int curChunkZ = chunkPos.z - terrainCheckRange; curChunkZ <= chunkPos.z + terrainCheckRange; curChunkZ++) {
+                    int height = context.chunkGenerator().getBaseHeight((curChunkX << 4) + 7, (curChunkZ << 4) + 7, this.projectStartToHeightmap.orElse(Heightmap.Types.WORLD_SURFACE_WG), context.heightAccessor(), context.randomState());
+                    maxTerrainHeight = Math.max(maxTerrainHeight, height);
+                    minTerrainHeight = Math.min(minTerrainHeight, height);
+
+                    if (this.minYAllowed.isPresent() && minTerrainHeight < this.minYAllowed.get()) {
+                        return Optional.empty();
+                    }
+
+                    if (this.maxYAllowed.isPresent() && minTerrainHeight > this.maxYAllowed.get()) {
+                        return Optional.empty();
+                    }
+                }
+            }
+
+            if(this.allowedTerrainHeightRange.isPresent() &&
+                    maxTerrainHeight - minTerrainHeight > this.allowedTerrainHeightRange.get())
+            {
+                return Optional.empty();
+            }
+        }
+
+
         // Set's our spawning blockpos's y offset to be 60 blocks up.
         // Since we are going to have heightmap/terrain height spawning set to true further down, this will make it so we spawn 60 blocks above terrain.
         // If we wanted to spawn on ocean floor, we would set heightmap/terrain height spawning to false and the grab the y value of the terrain with OCEAN_FLOOR_WG heightmap.
         int startY = this.startHeight.sample(context.random(), new WorldGenerationContext(context.chunkGenerator(), context.heightAccessor()));
 
         // Turns the chunk coordinates into actual coordinates we can use. (Gets corner of that chunk)
-        ChunkPos chunkPos = context.chunkPos();
         BlockPos blockPos = new BlockPos(chunkPos.getMinBlockX(), startY, chunkPos.getMinBlockZ());
 
         Optional<Structure.GenerationStub> structurePiecesGenerator =
