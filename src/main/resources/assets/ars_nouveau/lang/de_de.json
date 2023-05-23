@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "Eine Tafel, die für Rituale verwendet wird. Wird bei Gebrauch verbraucht.",
   "tooltip.ars_nouveau.wilden_tribute": "Erhalten durch das Besiegen der Wilden-Chimäre. Siehe Ritual der Beschwörung von Wilden.",
   "tooltip.ars_nouveau.wixie_hat": "Gib es einem Sternenbunkel, damit er Tränke transportieren kann.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Verwenden Sie es mit einem Gegenstand in der Nebenhand, um es der Schriftrolle hinzuzufügen, oder schreiben Sie es auf die Tabelle „Schreiber“.",
   "tooltip.magebloom": "Hergestellt mit dem Verzauberungsapparat",
   "tooltip.potion_flask": "Fasst 8 Trankladungen.",
