@@ -1376,6 +1376,7 @@
   "tooltip.ars_nouveau.tablet": "Скрижаль, используется для ритуалов. Потребляется при использовании.",
   "tooltip.ars_nouveau.wilden_tribute": "Можно получить, победив Дикую Химеру. Смотри Ритуал Призыва Дикого.",
   "tooltip.ars_nouveau.wixie_hat": "Отдайте Звездоуху, чтобы они носили зелья.",
+  "tooltip.discount_item": "Reduce the cost of all spells by %d.",
   "tooltip.item_scroll": "Используйте с предметом в левой руке, чтобы добавить в свиток, или напишите на Писарском столе.",
   "tooltip.magebloom": "Изготовлен с помощью Чародейского Аппарата.",
   "tooltip.potion_flask": "Вмещает 8 зарядов зелья.",
