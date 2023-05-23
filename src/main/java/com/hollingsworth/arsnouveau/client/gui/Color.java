@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 
 import com.google.common.hash.Hashing;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -18,10 +19,16 @@ public class Color {
     public final static Color WHITE = new Color(255, 255, 255).setImmutable();
     public final static Color RED = new Color(255, 0, 0).setImmutable();
     public final static Color GREEN = new Color(0, 255, 0).setImmutable();
+    public final static Color BLUE = new Color(0, 0, 255).setImmutable();
+    public final static Color YELLOW = new Color(255, 255, 25).setImmutable();
     public final static Color SPRING_GREEN = new Color(0, 255, 187).setImmutable();
 
     protected boolean mutable = true;
     protected int value;
+
+    public ParticleColor toParticle(){
+        return ParticleColor.fromInt(this.getRGB());
+    }
 
     public Color(int r, int g, int b) {
         this(r, g, b, 0xff);
@@ -31,7 +38,7 @@ public class Color {
         value = ((a & 0xff) << 24) |
                 ((r & 0xff) << 16) |
                 ((g & 0xff) << 8)  |
-                ((b & 0xff) << 0);
+                ((b & 0xff));
     }
 
     public Color(float r, float g, float b, float a) {

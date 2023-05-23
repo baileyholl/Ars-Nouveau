@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -35,12 +38,14 @@ public class GuiManaHUD extends GuiComponent {
             return;
 
         IManaCap mana = CapabilityRegistry.getMana(minecraft.player).orElse(null);
-        if (mana == null)
+        int maxMana = mana.getMaxMana();
+        if (mana == null || maxMana == 0)
             return;
 
         int offsetLeft = 10 + Config.MANABAR_X_OFFSET.get();
         int manaLength = 96;
-        manaLength = (int) ((manaLength) * ((mana.getCurrentMana()) / ((double) mana.getMaxMana() - 0.0)));
+
+        manaLength *= mana.getCurrentMana() / (double) (maxMana * (1 + ClientInfo.reservedOverlayMana));
 
         int yOffset = minecraft.getWindow().getGuiScaledHeight() - 5 + Config.MANABAR_Y_OFFSET.get();
 
@@ -52,7 +57,45 @@ public class GuiManaHUD extends GuiComponent {
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
         blit(ms, offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
 
+        renderReserveOverlay(ms, offsetLeft, yOffset, manaOffset, maxMana);
+        renderRedOverlay(ms, offsetLeft, yOffset, manaOffset, maxMana);
+
+        if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS) {
+            String text = (int) mana.getCurrentMana() + "  /  " + maxMana;
+            int maxWidth = minecraft.font.width(maxMana + "  /  " + maxMana);
+            int offset = 67 - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
+
+            drawString(ms, minecraft.font, text, offset, yOffset - 10, 0xFFFFFF);
+            drawString(ms, minecraft.font, String.valueOf((int)(ClientInfo.reservedOverlayMana * maxMana)), offset + 69, yOffset - 20, 0xFFFFFF);
+        }
+
         RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
         blit(ms, offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
     }
+
+    public static void renderRedOverlay(PoseStack ms, int offsetLeft, int yOffset, int manaOffset, int maxMana) {
+        if (!ClientInfo.redTicks())
+            return;
+
+        int redManaLength = (int) (98F * Mth.clamp(0F,ClientInfo.redOverlayMana / maxMana , 1F));
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_grayscale.png"));
+        RenderUtils.colorBlit(ms, offsetLeft + 8, yOffset - 10, 0, manaOffset, redManaLength, 8, 256, 256, Color.RED.scaleAlpha(ClientInfo.redOverlayTicks/35f));
+
+    }
+
+    public final static Color BLACK = new Color(35, 35, 35).setImmutable();
+
+    static boolean stillBar = true;
+
+    public static void renderReserveOverlay(PoseStack ms, int offsetLeft, int yOffset, int manaOffset, int maxMana){
+        if (ClientInfo.reservedOverlayMana <= 0)
+            return;
+        int reserveManaLength = (int) (96F * ClientInfo.reservedOverlayMana);
+        //invert offsets so it aligns with the right side of the bar
+        int offset = 96 - reserveManaLength;
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
+        RenderUtils.colorBlit(ms, offsetLeft + 10 + offset, yOffset - 10, 0, stillBar ? 0 : manaOffset, reserveManaLength, 8, 256, 256, BLACK);
+
+    }
+
 }
