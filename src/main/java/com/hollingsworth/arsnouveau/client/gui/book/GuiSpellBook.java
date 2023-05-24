@@ -51,7 +51,6 @@ import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
 public class GuiSpellBook extends BaseBook {
 
-    public int numLinks = 10;
     public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
 
     public int selectedSpellSlot = 0;
@@ -61,6 +60,7 @@ public class GuiSpellBook extends BaseBook {
     public List<CraftingButton> craftingCells = new ArrayList<>();
     public List<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> displayedGlyphs;
+    public List<AbstractSpellPart> spell = new ArrayList<>();
 
     public List<GlyphButton> glyphButtons = new ArrayList<>();
     public int page = 0;
@@ -78,6 +78,8 @@ public class GuiSpellBook extends BaseBook {
 
     public int maxManaCache = 0;
     int currentCostCache = 0;
+
+    public int spellWindowOffset = 0;
 
     @Deprecated(forRemoval = true) // TODO: remove in 1.20
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
@@ -114,7 +116,7 @@ public class GuiSpellBook extends BaseBook {
         ISpellCaster caster = CasterUtil.getCaster(bookStack);
         int selectedSlot = caster.getCurrentSlot();
         //Crafting slots
-        for (int i = 0; i < numLinks; i++) {
+        for (int i = 0; i < 10; i++) {
             int offset = i >= 5 ? 14 : 0;
             CraftingButton cell = new CraftingButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
             addRenderableWidget(cell);
@@ -188,6 +190,16 @@ public class GuiSpellBook extends BaseBook {
         previousButton.visible = false;
 
         validate();
+
+        addRenderableWidget(new PageButton(bookRight - 25, bookBottom - 30, true, i ->{
+            updateWindowOffset(spellWindowOffset + 1);
+        }, true));
+        addRenderableWidget(new PageButton(bookLeft , bookBottom - 30, false, i->{
+            updateWindowOffset(spellWindowOffset - 1);
+        }, true));
+
+        List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(selectedSlot).recipe;
+        spell = new ArrayList<>(recipe);
     }
 
     public int getNumPages() {
@@ -406,6 +418,10 @@ public class GuiSpellBook extends BaseBook {
 
     public void onCraftingSlotClick(Button button) {
         ((CraftingButton) button).clear();
+//        spell.add(((CraftingButton) button).slotNum, null);
+        if(((CraftingButton) button).slotNum < spell.size()){
+            spell.remove(((CraftingButton) button).slotNum);
+        }
         validate();
     }
 
@@ -417,6 +433,11 @@ public class GuiSpellBook extends BaseBook {
                 if (b.abstractSpellPart == null) {
                     b.abstractSpellPart = button1.abstractSpellPart;
                     b.spellTag = button1.abstractSpellPart.getRegistryName();
+                    if(b.slotNum >= spell.size()){
+                        spell.add(button1.abstractSpellPart);
+                    }else{
+                        spell.set(b.slotNum, button1.abstractSpellPart);
+                    }
                     validate();
                     return;
                 }
@@ -448,6 +469,20 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
+    public void updateWindowOffset(int offset){
+        this.spellWindowOffset = Math.max(0, offset);
+        for(int i = 0; i < 10; i++){
+            CraftingButton craftingButton = craftingCells.get(i);
+            craftingButton.slotNum = spellWindowOffset + i;
+            if(spellWindowOffset + i >= spell.size()){
+                craftingButton.clear();
+            }else{
+                craftingButton.spellTag = spell.get(spellWindowOffset + i).getRegistryName();
+                craftingButton.abstractSpellPart = spell.get(spellWindowOffset + i);
+            }
+        }
+    }
+
     public void clear(Button button) {
         boolean allWereEmpty = true;
 
@@ -456,7 +491,8 @@ public class GuiSpellBook extends BaseBook {
                 allWereEmpty = false;
             slot.clear();
         }
-
+        spell.clear();
+        this.selectedSpellSlot = 0;
         if (allWereEmpty) spell_name.setValue("");
 
         validate();
@@ -466,9 +502,14 @@ public class GuiSpellBook extends BaseBook {
         validate();
         if (validationErrors.isEmpty()) {
             Spell spell = new Spell();
-            for (CraftingButton slot : craftingCells) {
-                AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(slot.spellTag);
-                if (spellPart != null) {
+//            for (CraftingButton slot : craftingCells) {
+//                AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(slot.spellTag);
+//                if (spellPart != null) {
+//                    spell.add(spellPart);
+//                }
+//            }
+            for(AbstractSpellPart spellPart : this.spell){
+                if(spellPart != null) {
                     spell.add(spellPart);
                 }
             }
