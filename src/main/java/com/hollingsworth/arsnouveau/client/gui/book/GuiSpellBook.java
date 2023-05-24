@@ -119,6 +119,7 @@ public class GuiSpellBook extends BaseBook {
         for (int i = 0; i < 10; i++) {
             int offset = i >= 5 ? 14 : 0;
             CraftingButton cell = new CraftingButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
+            cell.slotNum = i;
             addRenderableWidget(cell);
             craftingCells.add(cell);
         }
@@ -420,7 +421,7 @@ public class GuiSpellBook extends BaseBook {
         ((CraftingButton) button).clear();
 //        spell.add(((CraftingButton) button).slotNum, null);
         if(((CraftingButton) button).slotNum < spell.size()){
-            spell.remove(((CraftingButton) button).slotNum);
+            spell.set(((CraftingButton) button).slotNum, null);
         }
         validate();
     }
@@ -474,7 +475,7 @@ public class GuiSpellBook extends BaseBook {
         for(int i = 0; i < 10; i++){
             CraftingButton craftingButton = craftingCells.get(i);
             craftingButton.slotNum = spellWindowOffset + i;
-            if(spellWindowOffset + i >= spell.size()){
+            if(spellWindowOffset + i >= spell.size() || spell.get(spellWindowOffset + i) == null){
                 craftingButton.clear();
             }else{
                 craftingButton.spellTag = spell.get(spellWindowOffset + i).getRegistryName();
