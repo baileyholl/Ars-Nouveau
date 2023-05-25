@@ -82,7 +82,7 @@ public class EffectFell extends AbstractEffect {
 
     @Override
     public SpellTier defaultTier() {
-        return SpellTier.TWO;
+        return SpellTier.ONE;
     }
 
    @NotNull
