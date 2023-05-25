@@ -691,9 +691,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("xyx")
                     .pattern("zzz").define('x', Tags.Items.GLASS).define('y', Blocks.OBSERVER).define('z', BlockRegistry.ARCHWOOD_PLANK).save(consumer);
             shapedBuilder(BlockRegistry.REPOSITORY)
-                    .pattern("yzy")
-                    .pattern("zzz")
-                    .pattern("yzy").define('y', Tags.Items.NUGGETS_GOLD).define('z', BlockRegistry.ARCHWOOD_SLABS).save(consumer);
+                    .pattern("yxy")
+                    .pattern("x x")
+                    .pattern("yxy").define('x', ARCHWOOD_LOG).define('y', Tags.Items.NUGGETS_GOLD).save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.SANCTUARY)).requires(BlockRegistry.CASCADING_LOG).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.SEA_LANTERN).save(consumer);
 
 
         }

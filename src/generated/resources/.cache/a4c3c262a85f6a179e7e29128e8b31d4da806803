@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-03T17:06:39.6567085	Ars Nouveau Item Models
+// 1.19.2	2023-05-24T19:04:49.9199801	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -125,6 +125,7 @@ e92bef7fedddea01122386d4d38518869c2e98f5 assets/ars_nouveau/models/item/ritual_f
 ee73b481d05c274f670b581c61080a09aaa2115d assets/ars_nouveau/models/item/ritual_moonfall.json
 96bbe1059079c83d7002f0faf330d326927edc60 assets/ars_nouveau/models/item/ritual_overgrowth.json
 eed37c0360aecd9bc94e824de807489f4f8ffa67 assets/ars_nouveau/models/item/ritual_restoration.json
+61472b0e46627a9636645afe1e87ed3bf1cc17ca assets/ars_nouveau/models/item/ritual_sanctuary.json
 a254d5f42d3b23fb4baa5951eb2547ca70d2c791 assets/ars_nouveau/models/item/ritual_scrying.json
 92acfd38837ca6ac2110f9b5f924f00d9dc0bdf9 assets/ars_nouveau/models/item/ritual_sunrise.json
 f24377ede9ca9848e914ee85f8ce523e443d69a2 assets/ars_nouveau/models/item/ritual_warping.json
