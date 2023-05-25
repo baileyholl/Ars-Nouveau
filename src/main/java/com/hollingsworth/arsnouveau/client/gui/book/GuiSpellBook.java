@@ -5,8 +5,12 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
+import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -16,7 +20,8 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -41,6 +46,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
 public class GuiSpellBook extends BaseBook {
 
@@ -69,6 +76,9 @@ public class GuiSpellBook extends BaseBook {
     public int glyphsPerPage = 58;
     public InteractionHand hand;
 
+    public int maxManaCache = 0;
+    int currentCostCache = 0;
+
     @Deprecated(forRemoval = true) // TODO: remove in 1.20
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
         this(InteractionHand.MAIN_HAND);
@@ -80,6 +90,7 @@ public class GuiSpellBook extends BaseBook {
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
         ItemStack heldStack = Minecraft.getInstance().player.getItemInHand(hand);
         List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
+        maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
         parts.addAll(api.getDefaultStartingSpells());
         if (heldStack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
             parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
@@ -500,6 +511,59 @@ public class GuiSpellBook extends BaseBook {
             minecraft.font.draw(stack, textComponent, 233, 183, -8355712);
         }
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.clear").getString(), 177, 183, -8355712);
+
+        //manabar
+        int manaLength = 96;
+        if (maxManaCache > 0) {
+            manaLength *= (float) (maxManaCache - currentCostCache) / maxManaCache;
+        } else manaLength = 0;
+
+        int offsetLeft = 89;
+        int yOffset = 210;//
+
+        //scale the manabar to fit the gui
+        stack.pushPose();
+        stack.scale(1.2F, 1.2F, 1.2F);
+        stack.translate(-25, -30, 0);
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
+        blit(stack, offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
+        int manaOffset = (int) (((ClientInfo.ticksInGame + partialTicks) / 3 % (33))) * 6;
+
+        // default length is 96
+        // rainbow effect for perfect match is currently disabled by the >=
+        if (manaLength >= 0) {
+            RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
+            blit(stack, offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+        } else {
+            //color rainbow if mana cost = max mana, red if mana cost > max mana
+            RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_grayscale.png"));
+            RenderUtils.colorBlit(stack, offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
+        }
+        if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS) {
+            String text = currentCostCache + "  /  " + maxManaCache;
+            int maxWidth = minecraft.font.width(maxManaCache + "  /  " + maxManaCache);
+            int offset = offsetLeft - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
+
+            drawString(stack, minecraft.font, text,  offset + 55, yOffset - 10, 0xFFFFFF);
+        }
+
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
+        blit(stack, offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
+        stack.popPose();
+    }
+
+    private int getCurrentManaCost() {
+        Spell spell = new Spell();
+        for (CraftingButton button : craftingCells) {
+            if (button.spellTag != ArsNouveauAPI.EMPTY_KEY) {
+                AbstractSpellPart part = ArsNouveauAPI.getInstance().getSpellpartMap().get(button.spellTag);
+                if (part != null) {
+                    spell.add(part);
+                }
+            }
+        }
+        int cost = spell.getFinalCostAndReset() - getPlayerDiscounts(Minecraft.getInstance().player, spell);
+        return Math.max(cost, 0);
     }
 
     /**
@@ -542,6 +606,10 @@ public class GuiSpellBook extends BaseBook {
         for (GlyphButton button : glyphButtons) {
             validateGlyphButton(recipe, button);
         }
+
+        //update mana cache
+        currentCostCache = getCurrentManaCost();
+        maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
     }
 
     private void validateGlyphButton(List<AbstractSpellPart> recipe, GlyphButton glyphButton) {

@@ -382,6 +382,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.potion_flask_extend_time", "Increases the duration of potions by 50%.");
         add("tooltip.potion_flask_amplify", "Increases the level of potions, but reduces their duration.");
         add("tooltip.potion_flask", "Holds 8 charges of potion.");
+        add("tooltip.discount_item", "Reduce the cost of all spells by %d.");
         add("ars_nouveau.locked", "Locked");
         add("ars_nouveau.unlocked", "Unlocked");
         add("ars_nouveau.page5.wixie_charm", "Wixies will autocraft potions using nearby Potion Jars and items. Potions that require Water will be supplied by the Wixie. Potions that require another potion as a base will be taken from nearby Potion Jars. A Wixie will output 3 doses of a Potion into a nearby Potion Jar when complete. To begin, place down an empty Potion Jar, right click the cauldron with an Awkward Potion, and supply Nether Wart from a nearby chest.");

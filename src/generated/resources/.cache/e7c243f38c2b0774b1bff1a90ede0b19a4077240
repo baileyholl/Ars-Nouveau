@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-20T16:47:28.443773	Patchouli
+// 1.19.2	2023-05-24T19:16:13.06384	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -229,6 +229,7 @@ b7b236fb3ef28fea2260bcbf5abe2c202ee8a271 data/ars_nouveau/patchouli_books/worn_n
 be5c7be210f8e88dba08fd658065c693c154bff5 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_moonfall.json
 b4b44e353840375ed13ffa9657902f68fdd339c0 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_overgrowth.json
 55e04e43172c1bebb6b8ae203dfdcb080bd5de09 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_restoration.json
+ec591ffd95169da87b8c22b4813193df78d55bc1 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_sanctuary.json
 1a41fbd27f00cdec873ec6727bf9a18f132151a6 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_scrying.json
 c8758a36d9c9d49d217acf78b132c5aa8cf67c72 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_sunrise.json
 682bd8c651c407289485d6b874f0711792e390f6 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_warping.json

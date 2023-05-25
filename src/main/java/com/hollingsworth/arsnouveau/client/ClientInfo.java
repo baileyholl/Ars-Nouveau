@@ -16,6 +16,10 @@ public class ClientInfo {
 
     public static CompoundTag persistentData = new CompoundTag();
     public static int ticksInGame = 0;
+    public static int redOverlayTicks = 0;
+    public static float redOverlayMana = 0;
+    public static float reservedOverlayMana = 0.15F;
+
     public static float partialTicks = 0.0f;
     public static List<BlockPos> scryingPositions = new ArrayList<>();
 
@@ -34,5 +38,9 @@ public class ClientInfo {
     public static void highlightPosition(List<ColorPos> colorPos, int ticks){
         highlightPositions = colorPos;
         highlightTicks = ticks;
+    }
+
+    public static boolean redTicks() {
+        return redOverlayTicks > 0;
     }
 }

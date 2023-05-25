@@ -25,6 +25,7 @@ import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -167,6 +168,15 @@ public class EventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void livingSpawnEvent(LivingSpawnEvent.CheckSpawn checkSpawn) {
+        if(checkSpawn.getLevel() instanceof Level level && !level.isClientSide){
+            if(RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn)) != null){
+                checkSpawn.setResult(Event.Result.DENY);
+            }
+        }
+    }
+
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
@@ -203,6 +213,9 @@ public class EventHandler {
     public static void clientTickEnd(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientInfo.ticksInGame++;
+            if (ClientInfo.redTicks()) {
+                ClientInfo.redOverlayTicks--;
+            }
         }
     }
 

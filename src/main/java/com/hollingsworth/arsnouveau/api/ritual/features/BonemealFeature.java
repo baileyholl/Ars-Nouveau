@@ -37,6 +37,6 @@ public class BonemealFeature implements IPlaceableFeature {
 
     @Override
     public String getFeatureName() {
-        return null;
+        return "bonemeal";
     }
 }

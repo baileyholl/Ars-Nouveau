@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -16,6 +17,7 @@ public class PacketUpdateMana {
     public int glyphBonus;
 
     public int tierBonus;
+    public float reserved;
 
     //Decoder
     public PacketUpdateMana(FriendlyByteBuf buf) {
@@ -23,6 +25,7 @@ public class PacketUpdateMana {
         maxMana = buf.readInt();
         glyphBonus = buf.readInt();
         tierBonus = buf.readInt();
+        reserved = buf.readFloat();
     }
 
     //Encoder
@@ -31,6 +34,15 @@ public class PacketUpdateMana {
         buf.writeInt(maxMana);
         buf.writeInt(glyphBonus);
         buf.writeInt(tierBonus);
+        buf.writeFloat(reserved);
+    }
+
+    public PacketUpdateMana(double mana, int maxMana, int glyphBonus, int tierBonus, float reserved) {
+        this.mana = mana;
+        this.maxMana = maxMana;
+        this.glyphBonus = glyphBonus;
+        this.tierBonus = tierBonus;
+        this.reserved = reserved;
     }
 
     public PacketUpdateMana(double mana, int maxMana, int glyphBonus, int tierBonus) {
@@ -38,6 +50,7 @@ public class PacketUpdateMana {
         this.maxMana = maxMana;
         this.glyphBonus = glyphBonus;
         this.tierBonus = tierBonus;
+        this.reserved = -1;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -50,6 +63,9 @@ public class PacketUpdateMana {
                 mana.setGlyphBonus(this.glyphBonus);
                 mana.setBookTier(this.tierBonus);
             });
+            //sync the client cache of reserved mana
+            if (ctx.get().getDirection().getReceptionSide().isClient() && reserved != -1)
+                ClientInfo.reservedOverlayMana = reserved;
         });
         ctx.get().setPacketHandled(true);
     }

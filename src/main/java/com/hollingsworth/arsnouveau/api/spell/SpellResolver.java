@@ -11,8 +11,11 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -75,8 +78,11 @@ public class SpellResolver {
         if (manaCap == null)
             return false;
         boolean canCast = totalCost <= manaCap.getCurrentMana() || (entity instanceof Player player && player.isCreative());
-        if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent)
+        if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent) {
             PortUtil.sendMessageNoSpam(entity, Component.translatable("ars_nouveau.spell.no_mana"));
+            if (entity instanceof ServerPlayer serverPlayer)
+                Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);
+        }
         return canCast;
     }
 
@@ -166,21 +172,21 @@ public class SpellResolver {
                     .setAugments(augments)
                     .addItemsFromEntity(shooter)
                     .build(part, this.hitResult, world, shooter, spellContext);
-            if(!(part instanceof AbstractEffect effect))
+            if (!(part instanceof AbstractEffect effect))
                 continue;
 
             EffectResolveEvent.Pre preEvent = new EffectResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             if (MinecraftForge.EVENT_BUS.post(preEvent))
                 continue;
 
-            for(PerkInstance perkInstance : perkInstances){
-                if(perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk){
+            for (PerkInstance perkInstance : perkInstances) {
+                if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
                     effectPerk.onPreResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
                 }
             }
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-            for(PerkInstance perkInstance : perkInstances){
-                if(perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk){
+            for (PerkInstance perkInstance : perkInstances) {
+                if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
                     effectPerk.onPostResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
                 }
             }
@@ -197,7 +203,7 @@ public class SpellResolver {
     }
 
     public int getResolveCost() {
-        int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster());
+        int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell);
         return Math.max(cost, 0);
     }
 
