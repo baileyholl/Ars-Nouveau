@@ -1150,8 +1150,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.storage.too_many", "Maximum number of inventories reached. Add more Bookwyrms to increase the limit.");
         add("ars_nouveau.storage.num_connected", "%s connected inventories");
         add("ars_nouveau.storage_lectern", "Storage Lectern");
-        add("tooltip.ars_nouveau.search_1", "Standard Search");
-        add("tooltip.ars_nouveau.search_0", "JEI Synced Search");
+        add("tooltip.ars_nouveau.search_0", "Non-synced Search");
+        add("tooltip.ars_nouveau.search_1", "Synced Search");
         add("ars_nouveau.invalid_lectern", "Invalid lectern connected.");
         add("ars_nouveau.storage.lectern_chained", "Linked to x: %s y: %s z: %s");
         add("ars_nouveau.storage.num_bookwyrms", "%s Bookwyrms");
@@ -1200,7 +1200,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.wixie_cauldron.cleared", "Bound inventories cleared.");
         add("ars_nouveau.binding_inventories", "Binding Inventories");
         add("ars_nouveau.page7.wixie_charm", "You can select specific inventories for the wixie by using a dominion wand on an inventory, and then the cauldron. If any inventories are selected, only these inventories can be used and the Wixie will no longer pull from all nearby inventories by default.");
-        add("ars_nouveau.direction_0", "Sorting Descending");
+        add("tooltip.ars_nouveau.direction_0", "Sorting Descending");
         add("tooltip.ars_nouveau.direction_1", "Sorting Ascending");
         add("tooltip.ars_nouveau.clear_grid", "Clear");
         add("tooltip.ars_nouveau.open_recipe", "Recipe Book");
