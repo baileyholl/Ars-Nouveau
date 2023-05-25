@@ -17,6 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,11 @@ public class UnlockGlyphButton extends Button {
                     } else {
                         tip.add(Component.translatable("ars_nouveau.tier", spellPart.getConfigTier().value).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                         tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
+                        var modName = ModList.get()
+                                .getModContainerById(spellPart.getRegistryName().getNamespace())
+                                .map(ModContainer::getModInfo)
+                                .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
+                        tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
                     }
                     parent.tooltip = tip;
                     parent.hoveredRecipe = recipe;
