@@ -67,6 +67,11 @@ public class Spell implements Cloneable {
         return this;
     }
 
+    public Spell withSound(@NotNull ConfiguredSpellSound sound){
+        this.sound = sound;
+        return this;
+    }
+
     public int getSpellSize() {
         return recipe.size();
     }
