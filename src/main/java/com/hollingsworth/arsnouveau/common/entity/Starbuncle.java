@@ -253,6 +253,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             lastAABBCalc++;
             if(this.backOff > 0)
                 this.backOff--;
+            if(this.bedBackoff > 0){
+                this.bedBackoff--;
+            }
+        }
+        if(!level.isClientSide && dynamicBehavior != null && level.getGameTime() % 100 == 0){
+            dynamicBehavior.syncTag();
         }
         if (this.dead)
             return;
@@ -494,6 +500,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.reloadGoals();
             setBehaviors = true;
             restoreFromTag();
+            if(this.dynamicBehavior != null && !this.level.isClientSide){
+                this.dynamicBehavior.syncTag();
+            }
         }
     }
 
@@ -528,6 +537,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
             this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
             this.reloadGoals();
+        }
+        if(!level.isClientSide && this.dynamicBehavior != null){
+            this.dynamicBehavior.syncTag();
         }
     }
 
@@ -628,6 +640,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     public void addGoalDebug(Goal goal, DebugEvent debugEvent){
         debugEvent.id = goal.getClass().getSimpleName() + "_" + debugEvent.id;
+        debugEvent.message += " ===== current state: " + this.goalState.name();
         addDebugEvent(debugEvent);
     }
 
