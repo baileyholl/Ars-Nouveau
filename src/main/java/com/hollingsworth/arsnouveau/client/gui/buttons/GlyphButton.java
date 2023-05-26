@@ -14,6 +14,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -68,6 +71,11 @@ public class GlyphButton extends Button {
                         tip.add(spellPart.getBookDescLang());
                     } else {
                         tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
+                        var modName = ModList.get()
+                                .getModContainerById(spellPart.getRegistryName().getNamespace())
+                                .map(ModContainer::getModInfo)
+                                .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
+                        tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
                     }
 
                     parent.tooltip = tip;

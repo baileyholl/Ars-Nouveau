@@ -28,7 +28,9 @@
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
     "structure.StructureTemplateMixin",
-    "PufferfishAccessor"
+    "PufferfishAccessor",
+    "structure.StructureProcessorAccessor",
+    "structure.StructureTemplateAccessor"
   ],
   "minVersion": "0.8"
 }

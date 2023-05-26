@@ -28,7 +28,11 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.WHIRLISPRIG_TYPE.get(),
                         ModEntities.ENTITY_BOOKWYRM_TYPE.get(),
                         ModEntities.ENTITY_WIXIE_TYPE.get(),
-                        ModEntities.GIFT_STARBY.get()
+                        ModEntities.GIFT_STARBY.get(),
+                        ModEntities.WILDEN_GUARDIAN.get(),
+                        ModEntities.WILDEN_BOSS.get(),
+                        ModEntities.WILDEN_STALKER.get(),
+                        ModEntities.WILDEN_HUNTER.get()
                 );
         this.tag(EntityTags.SPELL_CAN_HIT);
         this.tag(EntityTags.HOSTILE_MOBS)

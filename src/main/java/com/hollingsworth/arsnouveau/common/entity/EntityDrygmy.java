@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.drygmy.CollectEssenceGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
@@ -269,7 +270,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         list.add(new WrappedGoal(1, new UntamedFindItemGoal(this,
                 () -> !this.isTamed() && !this.entityData.get(BEING_TAMED)
-                , (itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN.get()))));
+                , (itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().is(ItemTagProvider.WILDEN_DROP_TAG)))));
         return list;
     }
 

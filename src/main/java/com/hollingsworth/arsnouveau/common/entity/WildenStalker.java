@@ -1,12 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.DiveAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.FlyHelper;
-import com.hollingsworth.arsnouveau.common.entity.goal.stalker.LeapGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
+import com.hollingsworth.arsnouveau.common.entity.goal.stalker.StartFlightGoal;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -33,7 +32,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class WildenStalker extends Monster implements IAnimatable, IAnimationListener {
+public class WildenStalker extends Monster implements IAnimatable {
     int leapCooldown;
     public Vec3 orbitOffset = Vec3.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
@@ -54,12 +53,14 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new LeapGoal(this));
+        this.goalSelector.addGoal(1, new StartFlightGoal(this));
         this.goalSelector.addGoal(1, new DiveAttackGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenStalker.Animations.ATTACK.ordinal(), () -> !isFlying()));
-        this.goalSelector.addGoal(8, new MeleeAttackGoal(this, 1.2f, true));
+        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.3f));
+
+//        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenStalker.Animations.ATTACK.ordinal(), () -> !isFlying()));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.2f, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -117,49 +118,44 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
         return 0.4F;
     }
 
-    @Override
-    public void startAnimation(int arg) {
-        try {
-            if (arg == Animations.DIVE.ordinal()) {
-                flyController.markNeedsReload();
-                flyController.setAnimation(new AnimationBuilder().addAnimation("dive"));
-            }
-
-            if (arg == Animations.FLY.ordinal()) {
-                flyController.markNeedsReload();
-                flyController.setAnimation(new AnimationBuilder().addAnimation("flying"));
-            }
-
-            if (arg == Animations.ATTACK.ordinal()) {
-                if (groundController.getCurrentAnimation() != null && (groundController.getCurrentAnimation().animationName.equals("attack"))) {
-                    return;
-                }
-                groundController.markNeedsReload();
-                groundController.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private PlayState flyPredicate(AnimationEvent<?> event) {
-        return isFlying() ? PlayState.CONTINUE : PlayState.STOP;
+        if(isFlying()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
     private PlayState groundPredicate(AnimationEvent<?> e) {
-        return isFlying() ? PlayState.STOP : PlayState.CONTINUE;
+        if(isFlying()){
+            return PlayState.STOP;
+        }else if(e.isMoving()){
+            e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
     AnimationController<WildenStalker> flyController;
     AnimationController<WildenStalker> groundController;
-
+    AnimationController<WildenStalker> idleController;
     @Override
     public void registerControllers(AnimationData animationData) {
         flyController = new AnimationController<>(this, "flyController", 1, this::flyPredicate);
         animationData.addAnimationController(flyController);
         groundController = new AnimationController<>(this, "groundController", 1, this::groundPredicate);
         animationData.addAnimationController(groundController);
+        idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
+
+        animationData.addAnimationController(idleController);
+    }
+
+    private <T extends IAnimatable> PlayState idlePredicate(AnimationEvent<T> tAnimationEvent) {
+        if(tAnimationEvent.isMoving() || isFlying()){
+            return PlayState.STOP;
+        }
+        tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
     }
 
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
@@ -232,6 +228,18 @@ public class WildenStalker extends Monster implements IAnimatable, IAnimationLis
 
     public void setFlying(boolean flying) {
         this.entityData.set(isFlying, flying);
+    }
+
+    @Override
+    public void load(CompoundTag pCompound) {
+        super.load(pCompound);
+        setFlying(pCompound.getBoolean("isFlying"));
+    }
+
+    @Override
+    public boolean save(CompoundTag pCompound) {
+        pCompound.putBoolean("isFlying", isFlying());
+        return super.save(pCompound);
     }
 
     public enum Animations {

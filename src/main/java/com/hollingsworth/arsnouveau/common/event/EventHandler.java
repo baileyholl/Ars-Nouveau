@@ -25,6 +25,7 @@ import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -163,6 +164,15 @@ public class EventHandler {
             Level world = e.getEntity().level;
             if (world.getBlockState(e.getEntity().blockPosition()).getBlock() instanceof LavaLily) {
                 e.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void livingSpawnEvent(LivingSpawnEvent.CheckSpawn checkSpawn) {
+        if(checkSpawn.getLevel() instanceof Level level && !level.isClientSide){
+            if(RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn)) != null){
+                checkSpawn.setResult(Event.Result.DENY);
             }
         }
     }

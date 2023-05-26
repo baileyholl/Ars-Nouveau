@@ -73,12 +73,6 @@ public class NoShadowTextField extends EditBox {
                     this.font.draw(matrixStack, "_", (float) k1, (float) i1, i2);
                 }
             }
-
-//            if (k != j) {
-//                int l1 = l + this.fontRenderer.getStringWidth(s.substring(0, k));
-//                this.drawSelectionBox(k1, i1 - 1, l1 - 1, i1 + 1 + 9);
-//            }
-
         }
     }
 
@@ -87,12 +81,12 @@ public class NoShadowTextField extends EditBox {
         if (!this.isVisible()) {
             return false;
         } else {
-            boolean flag = clickedX >= (double) this.x && clickedX < (double) (this.x + this.width) && clickedY >= (double) this.y && clickedY < (double) (this.y + this.height);
+            boolean clickedThis = clickedX >= (double) this.x && clickedX < (double) (this.x + this.width) && clickedY >= (double) this.y && clickedY < (double) (this.y + this.height);
             if (this.canLoseFocus) {
-                this.setFocus(flag);
+                this.setFocus(clickedThis);
             }
 
-            if (this.isFocused() && flag && mouseButton == 0) {
+            if (this.isFocused() && clickedThis && mouseButton == 0) {
                 int i = Mth.floor(clickedX) - this.x;
                 if (this.bordered) {
                     i -= 4;
@@ -103,19 +97,18 @@ public class NoShadowTextField extends EditBox {
                 return true;
             } else if (this.isFocused() && mouseButton == 1) {
                 if (this.value.isEmpty())
-                    return false;
+                    return clickedThis;
 
 
                 if (onClear != null)
                     onClear.apply("");
                 setValue("");
-                return true;
+                return clickedThis;
             } else {
                 return false;
             }
         }
     }
-
 
     public void setY(int i) {
         y = i;

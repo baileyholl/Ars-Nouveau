@@ -1,4 +1,4 @@
-// 1.19.2	2023-03-22T10:56:58.4578557	Ars Nouveau LootTables
+// 1.19.2	2023-05-25T09:24:33.116473	Ars Nouveau LootTables
 f410a0488dc1f22dd45003ab6cdae57746243299 data/ars_nouveau/loot_tables/blocks/bastion_pod.json
 5e4c73e41e7db527c03e3d140e53a88da90e70f7 data/ars_nouveau/loot_tables/blocks/bombegranate_pod.json
 5d8bea499da860ce3d63ae700f37c01142381893 data/ars_nouveau/loot_tables/blocks/frostaya_pod.json
@@ -7,6 +7,6 @@ d2d3dac86adb813a8cc6c9a8f229a1bfc68052c1 data/ars_nouveau/loot_tables/blocks/mob
 4cad778c82e30498bf5e4393cb717a4c575d74c5 data/ars_nouveau/loot_tables/blocks/potion_jar.json
 9e9825758f9c90782c192ff89395152475a85c07 data/ars_nouveau/loot_tables/blocks/repository.json
 a6ac78605b9c611750c8e59d46448ae61fd77e43 data/ars_nouveau/loot_tables/blocks/source_jar.json
-f889bcb566e252195e445108f29b163c6760acbc data/ars_nouveau/loot_tables/entities/wilden_guardian.json
-d31cea5074bbc505fa3a58beddcb0e37909cc5e9 data/ars_nouveau/loot_tables/entities/wilden_hunter.json
-2c1bfdb85f212dc07f6955223c6fd4ae44037e2b data/ars_nouveau/loot_tables/entities/wilden_stalker.json
+74b793b8a2e12213e91e79bd2ccc4665146c0aba data/ars_nouveau/loot_tables/entities/wilden_guardian.json
+e982585417b35370441da2a6b63606083d409147 data/ars_nouveau/loot_tables/entities/wilden_hunter.json
+897ffcf42c1911c1efdb111fb157c12692ccbed0 data/ars_nouveau/loot_tables/entities/wilden_stalker.json

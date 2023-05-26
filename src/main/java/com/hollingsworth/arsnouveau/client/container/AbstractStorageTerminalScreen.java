@@ -16,7 +16,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +57,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	 */
 	private boolean refreshItemList;
 	protected boolean wasClicking;
-	protected EditBox searchField;
+	protected NoShadowTextField searchField;
 	protected int slotIDUnderMouse = -1;
 	protected int controllMode;
 	protected int rowCount;
@@ -143,7 +142,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		this.searchField.setMaxLength(100);
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);
-		this.searchField.setTextColor(16777215);
 		this.searchField.setValue(searchLast);
 		searchLast = "";
 		addRenderableWidget(searchField);
@@ -444,9 +442,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		} else if (GLFW.glfwGetKey(mc.getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
 			storageSlotClick(null, SPACE_CLICK, false);
 		} else {
-			if (mouseButton == 1 && isHovering(searchField.x - leftPos, searchField.y - topPos, 89, this.getFont().lineHeight, mouseX, mouseY))
-				searchField.setValue("");
-			else if(this.searchField.mouseClicked(mouseX, mouseY, mouseButton))
+			if(this.searchField.mouseClicked(mouseX, mouseY, mouseButton))
 				return true;
 			else
 				return super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -485,6 +481,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			this.onClose();
 			return true;
 		}
+		System.out.println("boop");
 		return this.searchField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.searchField.canConsumeInput() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 	}
 

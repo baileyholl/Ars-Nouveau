@@ -132,7 +132,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new TextureVariantRenderer<>(t, new DrygmyModel<>()));
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), WildenBossRenderer::new);
+        event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), WildenChimeraRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE.get(), ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), FamiliarCarbyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY.get(), (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>()));

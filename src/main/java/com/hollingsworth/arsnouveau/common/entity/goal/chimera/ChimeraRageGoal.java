@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -24,11 +24,11 @@ import java.util.EnumSet;
 
 public class ChimeraRageGoal extends Goal {
 
-    EntityChimera chimera;
+    WildenChimera chimera;
     boolean finished;
     public int ticks;
 
-    public ChimeraRageGoal(EntityChimera chimera) {
+    public ChimeraRageGoal(WildenChimera chimera) {
         this.chimera = chimera;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -52,7 +52,7 @@ public class ChimeraRageGoal extends Goal {
         chimera.rageTimer = 200;
         finished = false;
         ticks = 0;
-        Networking.sendToNearby(chimera.level, chimera, new PacketAnimEntity(chimera.getId(), EntityChimera.Animations.HOWL.ordinal()));
+        Networking.sendToNearby(chimera.level, chimera, new PacketAnimEntity(chimera.getId(), WildenChimera.Animations.HOWL.ordinal()));
         chimera.resetCooldowns();
         chimera.removeAllEffects();
         chimera.gainPhaseBuffs();

@@ -161,6 +161,18 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         }
     }
 
+    public boolean takeSource(){
+        if (ritual.consumesSource() && ritual.needsSourceNow()) {
+            int cost = ritual.getSourceCost();
+            if (SourceUtil.takeSourceWithParticles(getBlockPos(), getLevel(), 6, cost) != null) {
+                ritual.setNeedsSource(false);
+                updateBlock();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean tryBurnStack(ItemStack stack){
         if(ritual != null && !ritual.isRunning() && !level.isClientSide && ritual.canConsumeItem(stack)) {
             ritual.onItemConsumed(stack);

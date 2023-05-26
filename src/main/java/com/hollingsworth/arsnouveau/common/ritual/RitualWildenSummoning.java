@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
@@ -21,7 +21,7 @@ public class RitualWildenSummoning extends AbstractRitual {
 
     @Override
     protected void tick() {
-        EntityChimera.spawnPhaseParticles(getPos().above(), getWorld(), 1);
+        WildenChimera.spawnPhaseParticles(getPos().above(), getWorld(), 1);
         if (getWorld().getGameTime() % 20 == 0)
             incrementProgress();
         if (getWorld().getGameTime() % 60 == 0 && !getWorld().isClientSide) {
@@ -39,7 +39,7 @@ public class RitualWildenSummoning extends AbstractRitual {
                 }
             } else {
                 if (getProgress() >= 8) {
-                    EntityChimera chimera = new EntityChimera(getWorld());
+                    WildenChimera chimera = new WildenChimera(getWorld());
                     summon(chimera, getPos().above());
                     for(BlockPos b : BlockPos.betweenClosed(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))){
                         if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.getWorld(), chimera)) {

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
-import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateMixin;
+import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -52,7 +52,7 @@ public abstract class StructureRitual extends AbstractRitual {
         List<StructureTemplate.StructureBlockInfo> infoList = structureTemplate.palettes.get(0).blocks();
         blocks = new ArrayList<>(infoList.stream().filter(b -> !b.state.isAir()).toList());
         blocks.sort(new StructureComparator(getPos(), offset));
-        entityInfoList = new ArrayList<>(((StructureTemplateMixin) structureTemplate).getEntityInfoList());
+        entityInfoList = new ArrayList<>(((StructureTemplateAccessor) structureTemplate).getEntityInfoList());
     }
 
     @Override

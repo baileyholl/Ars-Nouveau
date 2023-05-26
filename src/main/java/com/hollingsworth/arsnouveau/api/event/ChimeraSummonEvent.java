@@ -41,7 +41,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
         duration--;
         if (serverSide) {
             Entity owner = world.getEntity(ownerID);
-            if (!(owner instanceof EntityChimera boss)) {
+            if (!(owner instanceof WildenChimera boss)) {
                 duration = 0;
                 return;
             }

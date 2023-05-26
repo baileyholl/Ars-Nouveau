@@ -48,19 +48,19 @@ public class LootTableProvider extends BaseLootTableProvider {
         putEntityTable(ModEntities.WILDEN_STALKER.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_WING.get())
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
+                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
                                 .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
         );
         putEntityTable(ModEntities.WILDEN_GUARDIAN.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_SPIKE.get())
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
+                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
                                 .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
         );
         putEntityTable(ModEntities.WILDEN_HUNTER.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_HORN.get())
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
+                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
                                 .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))))
         );
         blockTables.put(BlockRegistry.BASTION_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD)));

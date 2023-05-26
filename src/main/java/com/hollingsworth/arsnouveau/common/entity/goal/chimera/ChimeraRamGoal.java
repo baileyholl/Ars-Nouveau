@@ -3,9 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -18,7 +16,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class ChimeraRamGoal extends Goal {
-    EntityChimera boss;
+    WildenChimera boss;
     int timeCharging;
 
     boolean finished;
@@ -26,7 +24,7 @@ public class ChimeraRamGoal extends Goal {
     boolean isCharging;
     boolean hasHit;
 
-    public ChimeraRamGoal(EntityChimera boss) {
+    public ChimeraRamGoal(WildenChimera boss) {
         this.boss = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -44,7 +42,7 @@ public class ChimeraRamGoal extends Goal {
         startedCharge = false;
         isCharging = false;
         hasHit = false;
-        boss.isRamming = true;
+        boss.isRamGoal = true;
     }
 
     @Override
@@ -58,7 +56,7 @@ public class ChimeraRamGoal extends Goal {
             endRam();
         }
         if (!startedCharge) {
-            Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.CHARGE.ordinal()));
+            boss.setRamPrep(true);
             startedCharge = true;
         }
         timeCharging++;
@@ -71,8 +69,10 @@ public class ChimeraRamGoal extends Goal {
             this.boss.getNavigation().stop();
         }
 
-        if (timeCharging > 25) {
+        if (timeCharging > 25 && !isCharging) {
             isCharging = true;
+            boss.setRamPrep(false);
+            boss.setRamming(true);
         }
         if (isCharging) {
             if (boss.getNavigation() == null || boss.getTarget() == null) {
@@ -84,12 +84,11 @@ public class ChimeraRamGoal extends Goal {
             if (path == null) {
                 return;
             }
-            breakBlocks();
             boss.getNavigation().moveTo(path, 2.0f);
             attack();
         }
 
-        if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f) {
+        if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 3f) {
             endRam();
         }
     }
@@ -100,7 +99,7 @@ public class ChimeraRamGoal extends Goal {
         }
         Direction facing = boss.getDirection();
         BlockPos facingPos = boss.blockPosition().above().relative(facing);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             facingPos = facingPos.above(i);
             destroyBlock(facingPos.above());
             destroyBlock(facingPos.east());
@@ -119,7 +118,9 @@ public class ChimeraRamGoal extends Goal {
     @Override
     public void stop() {
         super.stop();
-        boss.isRamming = false;
+        boss.isRamGoal = false;
+        boss.setRamming(false);
+        boss.setRamPrep(false);
     }
 
     public void endRam() {
@@ -127,13 +128,14 @@ public class ChimeraRamGoal extends Goal {
         if (boss.level.random.nextInt(3) != 0) {
             boss.ramCooldown = (int) (400 + ParticleUtil.inRange(-100, 100 + boss.getCooldownModifier()));
         }
-        boss.isRamming = false;
-        Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.ATTACK.ordinal()));
+        boss.isRamGoal = false;
         attack();
+        boss.setRamming(false);
+        boss.setRamPrep(false);
     }
 
     protected void attack() {
-        List<LivingEntity> nearbyEntities = boss.level.getEntitiesOfClass(LivingEntity.class, new AABB(boss.blockPosition()).inflate(1, 1, 1));
+        List<LivingEntity> nearbyEntities = boss.level.getEntitiesOfClass(LivingEntity.class, new AABB(boss.blockPosition()).inflate(3, 3, 3));
         for (LivingEntity enemy : nearbyEntities) {
             if (enemy.equals(boss))
                 continue;
@@ -150,6 +152,6 @@ public class ChimeraRamGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return boss.getTarget() != null && boss.ramCooldown <= 0 && boss.canRam();
+        return boss.getTarget() != null && boss.ramCooldown <= 0 && boss.canRam(false);
     }
 }
