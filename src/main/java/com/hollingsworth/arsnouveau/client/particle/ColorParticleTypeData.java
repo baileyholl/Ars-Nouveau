@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -44,7 +45,7 @@ public class ColorParticleTypeData implements ParticleOptions {
 
         @Override
         public ColorParticleTypeData fromNetwork(ParticleType<ColorParticleTypeData> type, FriendlyByteBuf buffer) {
-            return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readNbt()), buffer.readBoolean());
+            return new ColorParticleTypeData(type, ParticleColorRegistry.from(buffer.readNbt()), buffer.readBoolean());
         }
     };
 

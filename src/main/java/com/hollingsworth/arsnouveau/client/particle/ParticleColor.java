@@ -32,9 +32,9 @@ public class ParticleColor implements IParticleColor, Cloneable {
     private final int color;
 
     public ParticleColor(int r, int g, int b) {
-        this.r = r / 255F;
-        this.g = g / 255F;
-        this.b = b / 255F;
+        this.r = Math.max(r, 1) / 255F;
+        this.g = Math.max(g, 1) / 255F;
+        this.b = Math.max(b, 1) / 255F;
         this.color = (r << 16) | (g << 8) | b;
     }
 
@@ -113,6 +113,12 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
     }
 
+    @Override
+    public ParticleColor transition(int ticks) {
+        ParticleColor.IntWrapper wrapper = toWrapper();
+        return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
+    }
+
     // Needed because particles can be created over commands
     public static ParticleColor fromString(String string) {
         if (string == null || string.isEmpty())
@@ -146,15 +152,15 @@ public class ParticleColor implements IParticleColor, Cloneable {
         public int b;
 
         public IntWrapper(int r, int g, int b) {
-            this.r = r;
-            this.g = g;
-            this.b = b;
+            this.r = Math.max(1, r);
+            this.g = Math.max(1, g);
+            this.b = Math.max(1, b);
         }
 
         public IntWrapper(ParticleColor color) {
-            this.r = (int) (color.getRed() * 255.0);
-            this.g = (int) (color.getGreen() * 255.0);
-            this.b = (int) (color.getBlue() * 255.0);
+            this.r = Math.max(1, (int) (color.getRed() * 255.0));
+            this.g = Math.max(1,(int) (color.getGreen() * 255.0));
+            this.b = Math.max(1,(int) (color.getBlue() * 255.0));
         }
 
         public ParticleColor toParticleColor() {
