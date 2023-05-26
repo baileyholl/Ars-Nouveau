@@ -75,7 +75,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'mixin.env.remapRefMap', 'true'
@@ -93,7 +92,6 @@ minecraft {
 
         server {
             workingDirectory project.file('server')
-
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'mixin.env.remapRefMap', 'true'

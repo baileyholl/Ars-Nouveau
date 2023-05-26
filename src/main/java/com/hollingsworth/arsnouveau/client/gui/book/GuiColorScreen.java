@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -81,6 +82,12 @@ public class GuiColorScreen extends BaseBook {
         // Cyan
         addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 116, 0, 0, 48, 11, 48, 11,
                 "textures/gui/cyan_color_icon.png", (_2) -> setFromPreset(25, 255, 255)));
+
+        // rainbow
+        addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 140, 0, 0, 48, 11, 48, 11,
+                "textures/gui/white_color_icon.png", (_2) -> {
+            Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new RainbowParticleColor(0,0,0), this.stackHand == InteractionHand.MAIN_HAND));
+        }));
     }
 
     public void setFromPreset(int r, int g, int b) {
@@ -88,6 +95,7 @@ public class GuiColorScreen extends BaseBook {
         greenW.setValue(g);
         blueW.setValue(b);
     }
+
 
     public void onSaveClick(Button button) {
         Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
@@ -109,6 +117,7 @@ public class GuiColorScreen extends BaseBook {
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.white").getString(), 228, 70, color);
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.orange").getString(), 228, 94, color);
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.cyan").getString(), 228, 118, color);
+        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.rainbow").getString(), 228, 142, color);
         minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.save").getString(), 67, 160, color);
     }
 

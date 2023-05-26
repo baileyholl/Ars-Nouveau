@@ -97,17 +97,22 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         Level world = getLevel();
         BlockPos pos = getBlockPos();
         double xzOffset = 0.25;
+        boolean isWeakFire = ritual != null && ritual.needsSourceNow();
+        double centerYMax = isWeakFire ? 0.1 : 0.2;
+        double outerYMax = isWeakFire ? 0.5 : 0.7;
+        double ySpeed = isWeakFire ? 0.02f : 0.05f;
+        intensity = isWeakFire ? intensity / 2 : intensity;
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
                     GlowParticleData.createData(centerColor),
-                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
-                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, centerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
+                    0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
                     GlowParticleData.createData(outerColor),
-                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
-                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, outerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
+                    0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
         if(relayPos != null && level.getBlockEntity(relayPos) instanceof BrazierRelayTile relayTile){
             relayTile.makeParticle(centerColor, outerColor, intensity);

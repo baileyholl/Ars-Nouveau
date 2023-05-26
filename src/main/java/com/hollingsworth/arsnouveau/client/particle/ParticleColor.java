@@ -1,12 +1,18 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.particle.IParticleColor;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+
+import java.util.Random;
 
 /**
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
-public class ParticleColor implements Cloneable {
+public class ParticleColor implements IParticleColor, Cloneable {
+    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "constant");
 
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);
     public static final ParticleColor RED = new ParticleColor(255, 50, 50);
@@ -18,7 +24,7 @@ public class ParticleColor implements Cloneable {
     public static final ParticleColor ORANGE = new ParticleColor(255, 128, 0);
     public static final ParticleColor TO_HIGHLIGHT = RED;
     public static final ParticleColor FROM_HIGHLIGHT = CYAN;
-
+    public static final Random random = new Random();
 
     private final float r;
     private final float g;
@@ -44,6 +50,9 @@ public class ParticleColor implements Cloneable {
         this((int) r, (int) g, (int) b);
     }
 
+    public ParticleColor(CompoundTag compoundTag){
+        this(compoundTag.getInt("r"), compoundTag.getInt("g"), compoundTag.getInt("b"));
+    }
 
     public static ParticleColor fromInt(int color) {
         int r = (color >> 16) & 0xFF;
@@ -72,6 +81,11 @@ public class ParticleColor implements Cloneable {
         return color;
     }
 
+    @Override
+    public ResourceLocation getRegistryName() {
+        return ID;
+    }
+
     public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
         // Wrap and store as int because we don't want to lose precision
@@ -79,6 +93,7 @@ public class ParticleColor implements Cloneable {
         tag.putInt("r", wrapper.r);
         tag.putInt("g", wrapper.g);
         tag.putInt("b", wrapper.b);
+        tag.putString("type", getRegistryName().toString());
         return tag;
     }
 
@@ -106,6 +121,8 @@ public class ParticleColor implements Cloneable {
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }
 
+    // See ParticleColorRegistry
+    @Deprecated(forRemoval = true)
     public static ParticleColor deserialize(CompoundTag tag) {
         if (tag == null || tag.isEmpty())
             return defaultParticleColor();
@@ -122,6 +139,7 @@ public class ParticleColor implements Cloneable {
         }
     }
 
+    @Deprecated(forRemoval = true)
     public static class IntWrapper implements Cloneable {
         public int r;
         public int g;
