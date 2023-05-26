@@ -453,6 +453,8 @@ public class GuiSpellBook extends BaseBook {
         this.selectedSpellSlot = this.selected_slot.slotNum;
         updateCraftingSlots(this.selectedSpellSlot);
         spell_name.setValue(CasterUtil.getCaster(bookStack).getSpellName(selectedSpellSlot));
+        this.spellWindowOffset = 0;
+        this.spell = CasterUtil.getCaster(bookStack).getSpell(selectedSpellSlot).recipe;
         validate();
     }
 
