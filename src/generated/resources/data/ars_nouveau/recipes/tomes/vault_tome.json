@@ -4,7 +4,7 @@
   "flavour_text": "Sometimes you just need to get over that wall.",
   "name": "Vault",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

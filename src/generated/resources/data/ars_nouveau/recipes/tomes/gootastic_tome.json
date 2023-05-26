@@ -4,7 +4,7 @@
   "flavour_text": "The squid's Lovecraftian roots appear to make it immune.",
   "name": "Gootastic's Telekinetic Fishing Rod",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

@@ -4,7 +4,7 @@
   "flavour_text": "Builds a small hut around the user.",
   "name": "Xacris' Tiny Hut",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

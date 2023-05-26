@@ -4,7 +4,7 @@
   "flavour_text": "Swarm your enemies with bladed spirits.",
   "name": "Othy's Death By 100 Pricks",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },
