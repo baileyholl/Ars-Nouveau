@@ -11,6 +11,9 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CaveVinesPlantBlock;
+import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -141,6 +144,18 @@ public class WildenDen extends Structure {
     @Override
     public void afterPlace(WorldGenLevel level, StructureManager manager, ChunkGenerator p_226562_, RandomSource p_226563_, BoundingBox p_226564_, ChunkPos p_226565_, PiecesContainer p_226566_) {
         super.afterPlace(level, manager, p_226562_, p_226563_, p_226564_, p_226565_, p_226566_);
+        // Replace all berries with vines
+        BlockPos.betweenClosed(p_226564_.minX(), p_226564_.minY(), p_226564_.minZ(), p_226564_.maxX(), p_226564_.maxY(), p_226564_.maxZ())
+                .forEach(pos -> {
+                    if (level.getBlockState(pos).is(Blocks.CAVE_VINES_PLANT)
+                            && level.getBlockState(pos).hasProperty(CaveVinesPlantBlock.BERRIES)
+                            && level.getBlockState(pos).getValue(CaveVinesPlantBlock.BERRIES)){
+                        level.setBlock(pos, Blocks.CAVE_VINES_PLANT.defaultBlockState().setValue(CaveVinesPlantBlock.BERRIES, false), 2);
+                    }
+                    if (level.getBlockState(pos).is(Blocks.CAVE_VINES)){
+                        level.setBlock(pos, Blocks.CAVE_VINES.defaultBlockState().setValue(CaveVinesPlantBlock.BERRIES, false).setValue(GrowingPlantHeadBlock.AGE, 25), 2);
+                    }
+                });
     }
 
     @Override
