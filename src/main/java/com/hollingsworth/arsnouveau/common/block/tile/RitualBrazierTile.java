@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IInvProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -97,17 +98,22 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         Level world = getLevel();
         BlockPos pos = getBlockPos();
         double xzOffset = 0.25;
+        boolean isWeakFire = ritual != null && ritual.needsSourceNow();
+        double centerYMax = isWeakFire ? 0.1 : 0.2;
+        double outerYMax = isWeakFire ? 0.5 : 0.7;
+        double ySpeed = isWeakFire ? 0.02f : 0.05f;
+        intensity = isWeakFire ? intensity / 2 : intensity;
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(centerColor),
-                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
-                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+                    GlowParticleData.createData(centerColor.transition((int) level.getGameTime() * 10)),
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 1 + ParticleUtil.inRange(-0.05, centerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
+                    0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor),
-                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
-                    0, ParticleUtil.inRange(0.0, 0.05f), 0);
+                    GlowParticleData.createData(outerColor.transition((int) level.getGameTime() * 10)),
+                    pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 1 + ParticleUtil.inRange(0, outerYMax), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
+                    0, ParticleUtil.inRange(0.0, ySpeed), 0);
         }
         if(relayPos != null && level.getBlockEntity(relayPos) instanceof BrazierRelayTile relayTile){
             relayTile.makeParticle(centerColor, outerColor, intensity);
@@ -117,7 +123,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.nextColor(level.random), color.nextColor(level.random), 10);
+            makeParticle(color.transition((int) level.getGameTime() * 20), color.transition((int) level.getGameTime() * 20 + 200), 10);
             return;
         }
 
@@ -212,7 +218,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
         } else {
             ritual = null;
         }
-        color = ParticleColor.deserialize(tag.getCompound("color"));
+        color = ParticleColorRegistry.from(tag.getCompound("color"));
         isDecorative = tag.getBoolean("decorative");
         isOff = tag.getBoolean("off");
 

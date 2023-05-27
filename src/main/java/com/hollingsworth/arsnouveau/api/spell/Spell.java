@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
@@ -182,7 +183,7 @@ public class Spell implements Cloneable {
             return new Spell();
         Spell spell = new Spell();
         spell.name = tag.getString("name");
-        spell.color = ParticleColor.deserialize(tag.getCompound("spellColor"));
+        spell.color = ParticleColorRegistry.from(tag.getCompound("spellColor"));
         spell.sound = ConfiguredSpellSound.fromTag(tag.getCompound("sound"));
         CompoundTag recipeTag = tag.getCompound("recipe");
         int size = recipeTag.getInt("size");
