@@ -1204,5 +1204,6 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.direction_1", "Sorting Ascending");
         add("tooltip.ars_nouveau.clear_grid", "Clear");
         add("tooltip.ars_nouveau.open_recipe", "Recipe Book");
+        add("ars_nouveau.color_gui.rainbow", "Rainbow");
     }
 }
