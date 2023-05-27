@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -13,6 +14,7 @@ public class ModDatagen {
 
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
+        APIRegistry.postInit();
         BlockTagsProvider blocktagsprovider = new BlockTagsProvider(event.getGenerator(), MODID, event.getExistingFileHelper());
 
         event.getGenerator().addProvider(event.includeClient(), new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));

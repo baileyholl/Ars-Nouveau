@@ -77,8 +77,10 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         }
 
         f /= (float)getContainerSize();
+        var oldFill = fillLevel;
         fillLevel = Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
-        updateBlock();
+        if(oldFill != fillLevel)
+            updateBlock();
     }
 
     public RepositoryTile(BlockPos pos, BlockState state) {

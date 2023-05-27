@@ -83,11 +83,13 @@ public class GoToBedGoal extends Goal {
                 || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE
                 || bedPos == null
                 || !behavior.canGoToBed()) {
+            starbuncle.addGoalDebug(this, new DebugEvent("CannotSleep","Bed not valid" + " backoff: " + starbuncle.getBedBackoff()));
             return false;
         }
         boolean canRun = isBedValid() && !isOnBed();
         if(!canRun){
             starbuncle.setBedBackoff(20 * 3);
+            starbuncle.addGoalDebug(this, new DebugEvent("InvalidBed", "Bed position invalid"));
         }
         return canRun;
     }
