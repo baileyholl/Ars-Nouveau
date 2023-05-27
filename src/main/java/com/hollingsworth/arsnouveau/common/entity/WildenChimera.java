@@ -126,11 +126,11 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     @Override
     protected void registerGoals() {
         super.registerGoals();
-//        this.goalSelector.addGoal(0, new FloatGoal(this));
+
         this.goalSelector.addGoal(5, new ChimeraMeleeGoal(this, 1.2d, true, ()-> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
-//        this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
+        this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
         this.goalSelector.addGoal(3, new ChimeraLeapRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraDiveGoal(this));
@@ -408,7 +408,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     public void gainPhaseBuffs() {
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100 + 100 * getPhase(), 3));
-        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 300 + 300 * getPhase(), getPhase()));
         this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300 + 300 * getPhase(), getPhase()));
     }
 
