@@ -450,6 +450,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public ResourceLocation getTexture(Whirlisprig entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/whirlisprig_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
     }
 }

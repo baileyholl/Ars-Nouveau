@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -45,7 +46,7 @@ public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable,
     public void load(CompoundTag compound) {
         super.load(compound);
         this.age = compound.getInt("age");
-        this.color = ParticleColor.deserialize(compound.getCompound("lightColor"));
+        this.color = ParticleColorRegistry.from(compound.getCompound("lightColor"));
         this.isPermanent = compound.getBoolean("permanent");
         this.lengthModifier = compound.getDouble("modifier");
     }

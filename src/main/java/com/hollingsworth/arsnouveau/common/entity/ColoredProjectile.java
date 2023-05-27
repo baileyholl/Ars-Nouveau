@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.client.gui.Color;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -20,26 +20,27 @@ public abstract class ColoredProjectile extends Projectile {
     public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
-
+    public static final EntityDataAccessor<CompoundTag> PARTICLE_TAG = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.COMPOUND_TAG);
+    public int rainbowStartTick = 0;
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn) {
         super(type, worldIn);
+        rainbowStartTick = level.random.nextInt(1536);
     }
 
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn, double x, double y, double z) {
-        super(type, worldIn);
+        this(type, worldIn);
         setPos(x, y, z);
     }
 
     public ColoredProjectile(EntityType<? extends ColoredProjectile> type, Level worldIn, LivingEntity shooter) {
-        super(type, worldIn);
+        this(type, worldIn);
         setOwner(shooter);
     }
 
     public ParticleColor getParticleColor() {
-        if (isRainbow())
-           return Color.rainbowColor(this.tickCount * 5).toParticle();
-
-        return new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE));
+        CompoundTag tag = entityData.get(PARTICLE_TAG);
+        System.out.println(tag);
+        return ParticleColorRegistry.from(entityData.get(PARTICLE_TAG)).transition(tickCount*50);
     }
 
     public boolean isRainbow() {
@@ -55,6 +56,7 @@ public abstract class ColoredProjectile extends Projectile {
         entityData.set(RED, wrapper.r);
         entityData.set(GREEN, wrapper.g);
         entityData.set(BLUE, wrapper.b);
+        entityData.set(PARTICLE_TAG, colors.serialize());
     }
 
     @Override
@@ -63,6 +65,7 @@ public abstract class ColoredProjectile extends Projectile {
         entityData.set(RED, compound.getInt("red"));
         entityData.set(GREEN, compound.getInt("green"));
         entityData.set(BLUE, compound.getInt("blue"));
+        entityData.set(PARTICLE_TAG, compound.getCompound("particle"));
     }
 
     @Override
@@ -71,6 +74,7 @@ public abstract class ColoredProjectile extends Projectile {
         compound.putInt("red", entityData.get(RED));
         compound.putInt("green", entityData.get(GREEN));
         compound.putInt("blue", entityData.get(BLUE));
+        compound.put("particle", entityData.get(PARTICLE_TAG));
     }
 
     @Override
@@ -78,6 +82,7 @@ public abstract class ColoredProjectile extends Projectile {
         this.entityData.define(RED, 255);
         this.entityData.define(GREEN, 25);
         this.entityData.define(BLUE, 180);
+        this.entityData.define(PARTICLE_TAG, new ParticleColor(255, 25, 180).serialize());
     }
 
 
