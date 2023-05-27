@@ -27,6 +27,12 @@ public class ChimeraSpikeGoal extends Goal {
     }
 
     @Override
+    public void stop() {
+        super.stop();
+        tearDownGoal();
+    }
+
+    @Override
     public boolean isInterruptable() {
         return false;
     }
@@ -53,9 +59,9 @@ public class ChimeraSpikeGoal extends Goal {
             }
         }
         if (ticks >= 120) {
-            boss.setDefensiveMode(false);
             finished = true;
             boss.spikeCooldown = (int) (500 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());
+            tearDownGoal();
         }
     }
 
@@ -68,9 +74,17 @@ public class ChimeraSpikeGoal extends Goal {
         }
     }
 
+    public void tearDownGoal(){
+        boss.setDefensiveMode(false);
+    }
+
     @Override
     public boolean canContinueToUse() {
-        return !finished && !boss.getPhaseSwapping();
+        boolean canContinue = !finished && !boss.getPhaseSwapping();
+        if (!canContinue) {
+            tearDownGoal();
+        }
+        return canContinue;
     }
 
     @Override

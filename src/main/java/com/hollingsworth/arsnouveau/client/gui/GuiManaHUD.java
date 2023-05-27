@@ -38,8 +38,11 @@ public class GuiManaHUD extends GuiComponent {
             return;
 
         IManaCap mana = CapabilityRegistry.getMana(minecraft.player).orElse(null);
+        if(mana == null){
+            return;
+        }
         int maxMana = mana.getMaxMana();
-        if (mana == null || maxMana == 0)
+        if (maxMana == 0)
             return;
 
         int offsetLeft = 10 + Config.MANABAR_X_OFFSET.get();
