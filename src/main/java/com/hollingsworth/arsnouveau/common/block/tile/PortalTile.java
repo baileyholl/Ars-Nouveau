@@ -57,6 +57,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 && dimID != null
                 && PortalTile.teleportEntityTo(e, getServerLevel(dimID), this.warpPos, rotationVec) != null) {
             ServerLevel serverWorld = getServerLevel(dimID);
+            if(serverWorld == null){
+                return;
+            }
             Networking.sendToNearby(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, e.getXRot(), e.getYRot()));
             serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);

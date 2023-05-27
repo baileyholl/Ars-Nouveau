@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-25T14:22:32.0334219	Patchouli
+// 1.19.2	2023-05-26T08:27:01.8104835	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -208,7 +208,7 @@ a8873366db454ebb1a2b3bc4b4a1e231c1149368 data/ars_nouveau/patchouli_books/worn_n
 efa72f31c7762cda58f2d069ab806997ddbfdf5c data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/magelighting.json
 15b916b41fe8431765bc26466633ca6e6011a2fe data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/sourceberry.json
 db2496ea2719bf0896a2bc677d6b7acfc70b2bfc data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/weald_walker.json
-bf5117d9044e6eb44ff80f7666c59d748f63512a data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/wilden.json
+538a462442e2a483ae77691159097b15c550ee41 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/resources/wilden.json
 42b5cfa4e9884b2ef27ce2198567192bad9d6f8b data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/respiration.json
 9aead2cc81b16e5fae92249660da4f6ba82d6285 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/performing_rituals.json
 183986f935c469bdf1fdb35de3fb0db38694c893 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/rituals/ritual_animal_summon.json

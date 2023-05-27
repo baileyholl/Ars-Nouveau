@@ -38,14 +38,18 @@ public class GuiManaHUD extends GuiComponent {
             return;
 
         IManaCap mana = CapabilityRegistry.getMana(minecraft.player).orElse(null);
+        if(mana == null){
+            return;
+        }
         int maxMana = mana.getMaxMana();
-        if (mana == null || maxMana == 0)
+        if (maxMana == 0)
             return;
 
         int offsetLeft = 10 + Config.MANABAR_X_OFFSET.get();
         int manaLength = 96;
 
-        manaLength *= mana.getCurrentMana() / (double) (maxMana * (1 + ClientInfo.reservedOverlayMana));
+        manaLength *= (mana.getCurrentMana() / (double) (maxMana * (1.0 + ClientInfo.reservedOverlayMana)));
+//        System.out.println(manaLength +" current: " + mana.getCurrentMana() + " - reserve: " +  ClientInfo.reservedOverlayMana + " - max: " + maxMana);
 
         int yOffset = minecraft.getWindow().getGuiScaledHeight() - 5 + Config.MANABAR_Y_OFFSET.get();
 

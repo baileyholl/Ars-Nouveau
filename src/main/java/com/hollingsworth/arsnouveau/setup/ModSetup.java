@@ -67,6 +67,8 @@ public class ModSetup {
         Deferred.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);
+        StructureRegistry.STRUCTURES.register(modEventBus);
+        StructureRegistry.STRUCTURE_PROCESSOR.register(modEventBus);
 
         MenuRegistry.MENU_REG.register(modEventBus);
         VillagerRegistry.POIs.register(modEventBus);
