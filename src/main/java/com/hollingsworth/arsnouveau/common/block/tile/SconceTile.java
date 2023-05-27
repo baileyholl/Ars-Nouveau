@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
@@ -40,7 +41,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
-        this.color = ParticleColor.deserialize(nbt.getCompound("color"));
+        this.color = ParticleColorRegistry.from(nbt.getCompound("color"));
         lit = nbt.getBoolean("lit");
     }
 
@@ -94,7 +95,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
             centerX += 0.8;
             centerZ += 0.5;
         }
-        ParticleColor nextColor = this.color.nextColor(this.level.random);
+        ParticleColor nextColor = this.color.transition((int) level.getGameTime() * 10);
         for (int i = 0; i < 10; i++) {
             level.addParticle(
                     GlowParticleData.createData(nextColor),

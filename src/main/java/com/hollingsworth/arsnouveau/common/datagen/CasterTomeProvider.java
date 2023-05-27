@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.common.tomes.CasterTomeData;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -166,6 +167,16 @@ public class CasterTomeProvider implements DataProvider {
                 .add(EffectSummonVex.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
 
+        tomes.add(buildTome("aurellia", "Aurellia's Bite Storm", new Spell()
+                .add(MethodProjectile.INSTANCE)
+                .add(EffectLinger.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(EffectFangs.INSTANCE)
+                .add(EffectLightning.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2)
+                .add(AugmentExtendTime.INSTANCE, 3)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
+                , "The bite from this storm is worse than its bark.", new ParticleColor( 255, 119, 203)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
@@ -183,7 +194,7 @@ public class CasterTomeProvider implements DataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                ParticleColor.defaultParticleColor().getColor(), ConfiguredSpellSound.DEFAULT);
+                spell.color.getColor(), spell.sound);
     }
 
     public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {

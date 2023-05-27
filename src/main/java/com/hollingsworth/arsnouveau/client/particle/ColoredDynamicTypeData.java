@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -9,8 +10,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
-
-import net.minecraft.core.particles.ParticleOptions.Deserializer;
 
 public class ColoredDynamicTypeData implements ParticleOptions {
 
@@ -42,7 +41,7 @@ public class ColoredDynamicTypeData implements ParticleOptions {
 
         @Override
         public ColoredDynamicTypeData fromNetwork(ParticleType<ColoredDynamicTypeData> type, FriendlyByteBuf buffer) {
-            return new ColoredDynamicTypeData(type, ParticleColor.deserialize(buffer.readNbt()), buffer.readFloat(), buffer.readInt());
+            return new ColoredDynamicTypeData(type, ParticleColorRegistry.from(buffer.readNbt()), buffer.readFloat(), buffer.readInt());
         }
     };
 

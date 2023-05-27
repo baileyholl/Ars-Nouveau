@@ -178,8 +178,4 @@ public class CasterTomeData implements Recipe<Container> {
             return new CasterTomeData(recipeId, caster.getSpellName(), caster.getSpell().recipe.stream().map(AbstractSpellPart::getRegistryName).toList(), getRegistryName(itemStack.getItem()) ,caster.getFlavorText(), caster.getColor().getColor(), caster.getCurrentSound());
         }
     }
-
-    public static List<CasterTomeData> TOME_DATA = new ArrayList<>();
-
-
 }

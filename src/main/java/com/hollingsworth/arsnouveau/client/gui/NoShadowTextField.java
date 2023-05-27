@@ -25,12 +25,6 @@ public class NoShadowTextField extends EditBox {
     @Override
     public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.isVisible()) {
-//            if (this.getEnableBackgroundDrawing()) {
-//                int i = this.isFocused() ? -1 : -6250336;
-//                fill(matrixStack, this.x - 1, this.y - 1, this.x + this.width + 1, this.y + this.height + 1, i);
-//                fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, -16777216);
-//            }
-
             int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
             int j = this.cursorPos - this.displayPos;
             int k = this.highlightPos - this.displayPos;

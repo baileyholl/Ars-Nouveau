@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.util;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -44,6 +45,6 @@ public class ColorPos {
     }
 
     public static ColorPos fromTag(CompoundTag tag){
-        return new ColorPos(new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")), ParticleColor.deserialize(tag.getCompound("color")));
+        return new ColorPos(new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")), ParticleColorRegistry.from(tag.getCompound("color")));
     }
 }

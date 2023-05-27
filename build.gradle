@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '3.13.4-infinity-demo'
+version = '3.15.0'
 
 
 configurations {
@@ -75,7 +75,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'mixin.env.remapRefMap', 'true'
@@ -93,7 +92,6 @@ minecraft {
 
         server {
             workingDirectory project.file('server')
-
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'mixin.env.remapRefMap', 'true'
@@ -212,7 +210,6 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:config-556861:4324174") // functional storage
     runtimeOnly fg.deobf("curse.maven:config-287342:4391554") // titanium
     runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")
-    runtimeOnly fg.deobf("curse.maven:structure-void-toggle-357304:4393745")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 

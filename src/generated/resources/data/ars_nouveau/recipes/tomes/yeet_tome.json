@@ -4,7 +4,7 @@
   "flavour_text": "Summons orbiting projectiles that will launch nearby enemies.",
   "name": "Knocked out of Orbit",
   "sound": {
-    "family": "default",
+    "family": "ars_nouveau:fire_family",
     "pitch": 1.0,
     "volume": 1.0
   },

@@ -38,7 +38,7 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
             }
             stack.pushPose();
             RenderUtils.translateMatrixToBone(stack, bone);
-            stack.translate(0, +0.4, 0);
+            stack.translate(0, +0.35, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = tile.renderEntity.getItem();
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) tile.getBlockPos().asLong());

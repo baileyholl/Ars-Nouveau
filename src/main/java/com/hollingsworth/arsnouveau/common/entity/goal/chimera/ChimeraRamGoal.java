@@ -49,7 +49,7 @@ public class ChimeraRamGoal extends Goal {
     public void tick() {
         super.tick();
 
-        if (timeCharging >= 105) {
+        if (timeCharging >= 65) {
             endRam();
         }
         if (this.boss.getTarget() == null) {
@@ -84,7 +84,7 @@ public class ChimeraRamGoal extends Goal {
             if (path == null) {
                 return;
             }
-            boss.getNavigation().moveTo(path, 2.0f);
+            boss.getNavigation().moveTo(path, 1.5f);
             attack();
         }
 
@@ -125,9 +125,7 @@ public class ChimeraRamGoal extends Goal {
 
     public void endRam() {
         finished = true;
-        if (boss.level.random.nextInt(3) != 0) {
-            boss.ramCooldown = (int) (400 + ParticleUtil.inRange(-100, 100 + boss.getCooldownModifier()));
-        }
+        boss.ramCooldown = (int) (400 + ParticleUtil.inRange(-100, 100 + boss.getCooldownModifier()));
         boss.isRamGoal = false;
         attack();
         boss.setRamming(false);
@@ -147,7 +145,13 @@ public class ChimeraRamGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !finished && !boss.getPhaseSwapping();
+        var canContinue = !finished && !boss.getPhaseSwapping();
+        if(!canContinue){
+            boss.setRamming(false);
+            boss.setRamPrep(false);
+            boss.isRamGoal = false;
+        }
+        return canContinue;
     }
 
     @Override

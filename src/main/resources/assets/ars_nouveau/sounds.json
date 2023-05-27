@@ -43,7 +43,17 @@
     "sounds": [
       {
         "name":"ars_nouveau:aria_biblio",
-        "stream": true
+        "stream": true,
+        "volume": 0.75
+      }
+    ]
+  },
+  "firel_the_wild_hunt": {
+    "sounds": [
+      {
+        "name":"ars_nouveau:firel_the_wild_hunt",
+        "stream": true,
+        "volume": 0.4
       }
     ]
   },

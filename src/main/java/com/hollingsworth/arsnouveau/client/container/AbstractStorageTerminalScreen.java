@@ -108,6 +108,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			loadedSearch = true;
 			searchField.setValue(menu.search);
 			searchField.setFocus(true);
+			if (searchField.getValue().isEmpty()) {
+				searchField.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+			}else{
+				searchField.setSuggestion("");
+			}
 		}
 	}
 
@@ -188,7 +193,14 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected void updateSearch() {
 		String searchString = searchField.getValue().trim();
+		if(searchField.getValue().isEmpty()){
+			searchField.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
+		}else{
+			searchField.setSuggestion("");
+		}
+
 		if (refreshItemList || !searchLast.equals(searchString)) {
+
 			getMenu().itemListClientSorted.clear();
 			boolean searchMod = false;
 			String search = searchString;
@@ -481,7 +493,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			this.onClose();
 			return true;
 		}
-		System.out.println("boop");
 		return this.searchField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.searchField.canConsumeInput() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
