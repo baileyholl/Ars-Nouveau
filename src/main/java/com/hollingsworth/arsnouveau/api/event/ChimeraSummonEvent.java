@@ -52,17 +52,17 @@ public class ChimeraSummonEvent implements ITimedEvent {
 
                 wolf.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
                 wolf.isWildenSummon = true;
-                wolf.ticksLeft = 100 + phase * 60;
+                wolf.ticksLeft = 600 + phase * 60;
                 summon(wolf, getPos(), boss.getTarget());
 
-                int randBound = 10 - boss.getPhase();
-                if (!summonedWilden && boss.hasWings() && boss.level.random.nextInt(randBound) == 0) {
+                int randBound = 8 - boss.getPhase();
+                if (boss.hasWings() && boss.level.random.nextInt(randBound) == 0) {
                     WildenStalker stalker = new WildenStalker(ModEntities.WILDEN_STALKER.get(), world);
                     summon(stalker, getPos(), boss.getTarget());
                     summonedWilden = true;
                 }
 
-                if (boss.hasHorns() && boss.level.random.nextInt(randBound) == 0) {
+                if (!summonedWilden && boss.hasHorns() && boss.level.random.nextInt(randBound) == 0) {
                     WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER.get(), world);
                     summon(hunter, getPos(), boss.getTarget());
                     summonedWilden = true;

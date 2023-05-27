@@ -59,7 +59,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
@@ -105,7 +104,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     public WildenChimera(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         moveControl = new ChimeraMoveController(this, 10, true);
-        maxUpStep = 2.0f;
+        maxUpStep = 3.0f;
         setPersistenceRequired();
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, level);
         flyingpathnavigator.setCanOpenDoors(true);
@@ -284,10 +283,10 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         if (!level.isClientSide) {
 
             if (getTarget() != null && this.invulnerableTime == 0 && !this.isDefensive() && !this.isFlying() && this.onGround) {
-                Path path = getNavigation().createPath(getTarget(), 1);
-                if (path == null || !path.canReach() || getTarget().getY() - (this.getY() + 2) >= 3) {
-                    rageTimer--;
-                }
+//                Path path = getNavigation().createPath(getTarget(), 1);
+//                if (path == null || !path.canReach() || getTarget().getY() - (this.getY() + 2) >= 3) {
+//                    rageTimer--;
+//                }
             }
         }
         if (!level.isClientSide && this.isInLava() && this.level.getGameTime() % 10 == 0) {
