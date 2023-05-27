@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectPull;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -55,7 +56,8 @@ public class ChimeraRageGoal extends Goal {
         Networking.sendToNearby(chimera.level, chimera, new PacketAnimEntity(chimera.getId(), WildenChimera.Animations.HOWL.ordinal()));
         chimera.resetCooldowns();
         chimera.removeAllEffects();
-        chimera.gainPhaseBuffs();
+        chimera.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100 + 100 * chimera.getPhase(), 3));
+        chimera.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300 + 300 * chimera.getPhase(), chimera.getPhase()));
         LivingEntity target = chimera.getTarget();
         if (target != null && !target.isOnGround()) {
             target.removeEffect(MobEffects.SLOW_FALLING);

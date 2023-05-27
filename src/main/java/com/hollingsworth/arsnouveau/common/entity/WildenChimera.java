@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.potions.SnareEffect;
@@ -23,7 +22,6 @@ import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -66,14 +64,13 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 
-public class WildenChimera extends Monster implements IAnimatable, IAnimationListener {
+public class WildenChimera extends Monster implements IAnimatable {
     private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
     public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
@@ -96,6 +93,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     public int ramCooldown;
     public int rageTimer;
     public boolean diving;
+    public int swapTicks;
 
     public FlyingPathNavigation flyingNavigator;
     protected final WaterBoundPathNavigation waterNavigation;
@@ -103,7 +101,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     public WildenChimera(EntityType<? extends Monster> type, Level level) {
         super(type, level);
-        moveControl = new ChimeraMoveController(this, 10, true);
+        moveControl = new ChimeraMoveController(this, true);
         maxUpStep = 3.0f;
         setPersistenceRequired();
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, level);
@@ -136,7 +134,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
     }
 
-    AnimationController<WildenChimera> attackController;
+
     AnimationController<WildenChimera> crouchController;
 
     public boolean isPushedByFluid() {
@@ -150,16 +148,60 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::movePredicate));
-        crouchController = new AnimationController<>(this, "crouchController", 1, this::crouchPredicate);
-        attackController = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
-        animationData.addAnimationController(attackController);
+        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, e ->{
+            if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
+                e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                return PlayState.CONTINUE;
+            }
+
+            return PlayState.STOP;
+        }));
+        crouchController = new AnimationController<>(this, "crouchController", 1, event -> {
+            if (isDefensive() && !isFlying() && !this.isHowling()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        });
+
         animationData.addAnimationController(crouchController);
-        animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, this::idlePredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "flyController", 1, this::flyPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "diveController", 1, this::divePredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "howlController", 1, this::howlPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "swimController", 1, this::swimPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, (event ->{
+            if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        })));
+        animationData.addAnimationController(new AnimationController<>(this, "flyController", 1, (event) ->{
+            if(isFlying() && !isDiving()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("fly_rising"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animationData.addAnimationController(new AnimationController<>(this, "diveController", 1, (event) ->{
+            if(isDiving()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("dive"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animationData.addAnimationController(new AnimationController<>(this, "howlController", 1, e ->{
+            if (isHowling()) {
+                e.getController().setAnimation(new AnimationBuilder().addAnimation("roar"));
+                return PlayState.CONTINUE;
+            }
+            e.getController().markNeedsReload();
+            return PlayState.STOP;
+        }));
+        animationData.addAnimationController(new AnimationController<>(this, "swimController", 1, e ->{
+            if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
+                e.getController().setAnimation(new AnimationBuilder().addAnimation("swim"));
+                return PlayState.CONTINUE;
+            }
+
+            return PlayState.STOP;
+        }));
         animationData.addAnimationController(new AnimationController<>(this, "ramController", 1, (event -> {
             if(isRamming() && !isRamPrep()){
                 if(!this.hasWings()){
@@ -196,69 +238,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     }
 
-    private PlayState attackPredicate(AnimationEvent<?> event) {
-        return PlayState.CONTINUE;
-    }
-
-    private PlayState flyPredicate(AnimationEvent<?> event) {
-        if(isFlying() && !isDiving()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly_rising"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState divePredicate(AnimationEvent<?> event) {
-        if(isDiving()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dive"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState idlePredicate(AnimationEvent<?> event) {
-        if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState crouchPredicate(AnimationEvent<?> event) {
-        if (isDefensive() && !isFlying() && !this.isHowling()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState movePredicate(AnimationEvent<?> e) {
-        if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
-            e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
-            return PlayState.CONTINUE;
-        }
-
-        return PlayState.STOP;
-    }
-
-    private PlayState swimPredicate(AnimationEvent<?> e) {
-        if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
-            e.getController().setAnimation(new AnimationBuilder().addAnimation("swim"));
-            return PlayState.CONTINUE;
-        }
-
-        return PlayState.STOP;
-    }
-
-    private PlayState howlPredicate(AnimationEvent<?> e) {
-        if (isHowling()) {
-            e.getController().setAnimation(new AnimationBuilder().addAnimation("roar"));
-            return PlayState.CONTINUE;
-        }
-        e.getController().markNeedsReload();
-        return PlayState.STOP;
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -279,16 +258,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
                     false);
 
         }
-        // If our target is CHEATING, we are going to run the rage goal
-        if (!level.isClientSide) {
 
-            if (getTarget() != null && this.invulnerableTime == 0 && !this.isDefensive() && !this.isFlying() && this.onGround) {
-//                Path path = getNavigation().createPath(getTarget(), 1);
-//                if (path == null || !path.canReach() || getTarget().getY() - (this.getY() + 2) >= 3) {
-//                    rageTimer--;
-//                }
-            }
-        }
         if (!level.isClientSide && this.isInLava() && this.level.getGameTime() % 10 == 0) {
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 4));
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 3));
@@ -319,14 +289,13 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         }
 
         if (!level.isClientSide && getPhaseSwapping() && !this.dead) {
-            if (this.getHealth() < this.getMaxHealth()) {
-                this.heal(2.0f);
+            if (swapTicks < 60) {
+                swapTicks++;
                 this.navigation.stop();
             } else {
                 this.removeAllEffects();
                 this.setPhaseSwapping(false);
                 for (LivingEntity e : level.getEntitiesOfClass(Player.class, new AABB(this.blockPosition()).inflate(5))) {
-
                     EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, new Spell().add(MethodTouch.INSTANCE)
                             .add(EffectLaunch.INSTANCE)
                             .add(AugmentAmplify.INSTANCE, 2)
@@ -337,21 +306,16 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
                     resolver.onCastOnEntity(ItemStack.EMPTY, e, InteractionHand.MAIN_HAND);
                 }
                 getRandomUpgrade();
-                gainPhaseBuffs();
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition().above());
                 if (getPhase() == 1)
                     rageTimer = 200;
+                swapTicks = 0;
             }
         }
 
         if (getPhaseSwapping() && level.isClientSide) {
             spawnPhaseParticles(blockPosition(), level, getPhase());
         }
-    }
-
-    @Override
-    public void lookAt(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
-        super.lookAt(pAnchor, pTarget);
     }
 
     public static void spawnPhaseParticles(BlockPos pos, Level level, int multiplier) {
@@ -376,11 +340,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         }
     }
 
-    @Override
-    protected boolean shouldDropLoot() {
-        return true;
-    }
-
     protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
         this.playSound(SoundEvents.POLAR_BEAR_STEP, 0.15F + (random.nextFloat() * 0.3f), 0.8F + random.nextFloat() * 0.1f);
     }
@@ -403,11 +362,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
     @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.POLAR_BEAR_DEATH;
-    }
-
-    public void gainPhaseBuffs() {
-        this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100 + 100 * getPhase(), 3));
-        this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300 + 300 * getPhase(), getPhase()));
     }
 
     public void resetCooldowns() {
@@ -447,11 +401,6 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     public boolean canRage() {
         return !getPhaseSwapping() && !isRamGoal;
-    }
-
-    @Override
-    public boolean isDeadOrDying() {
-        return getPhase() > 3;
     }
 
     public void getRandomUpgrade() {
@@ -509,24 +458,25 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
         if (isDefensive())
             return false;
-
+        var threshold = this.getMaxHealth() / 4;
+        var nextMin = this.getMaxHealth() - threshold * (1 + getPhase());
         boolean res = super.hurt(source, amount);
-        if (!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() < 3) {
+        if (!this.level.isClientSide && this.getHealth() <= nextMin && getPhase() < 3) {
             this.setPhaseSwapping(true);
             this.setPhase(this.getPhase() + 1);
             this.getNavigation().stop();
-            this.setHealth(1.0f);
+            this.setHealth(nextMin);
+            this.dead = false;
             this.setFlying(false);
             this.setDefensiveMode(false);
             isRamGoal = false;
-            this.dead = false;
-            return false;
-        }else if (!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() == 3) {
-            this.setPhase(4);
-            super.die(source);
         }
-
         return res;
+    }
+
+    @Override
+    public boolean isDeadOrDying() {
+        return getPhase() >= 3 && this.getHealth() <= 0;
     }
 
     @Override
@@ -705,6 +655,7 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         spikeCooldown = tag.getInt("spikeCooldown");
         ramCooldown = tag.getInt("ramCooldown");
         rageTimer = tag.getInt("rage");
+        swapTicks = tag.getInt("swapTicks");
     }
 
     @Override
@@ -720,44 +671,8 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
         tag.putInt("ramCooldown", ramCooldown);
         tag.putBoolean("swapping", getPhaseSwapping());
         tag.putInt("rage", rageTimer);
+        tag.putInt("swapTicks", swapTicks);
         return super.save(tag);
-    }
-
-    @Override
-    public void startAnimation(int arg) {
-        try {
-//            if (arg == Animations.ATTACK.ordinal()) {
-//                if (attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("claw_swipe"))) {
-//                    return;
-//                }
-//                attackController.markNeedsReload();
-//                attackController.setAnimation(new AnimationBuilder().addAnimation("claw_swipe").addAnimation("idle"));
-//            }
-//
-//            if (arg == Animations.HOWL.ordinal()) {
-//                if (attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("howl"))) {
-//                    return;
-//                }
-//                attackController.markNeedsReload();
-//                attackController.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
-//            }
-//
-//            if (arg == Animations.CHARGE.ordinal()) {
-//                attackController.markNeedsReload();
-//                attackController.setAnimation(new AnimationBuilder().addAnimation("ready_charge").addAnimation("charge"));
-//            }
-//
-//            if (arg == Animations.FLYING.ordinal()) {
-//                attackController.markNeedsReload();
-//                attackController.setAnimation(new AnimationBuilder().addAnimation("flying"));
-//            }
-//            if (arg == Animations.DIVE_BOMB.ordinal()) {
-//                attackController.markNeedsReload();
-//                attackController.setAnimation(new AnimationBuilder().addAnimation("divebomb"));
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -790,12 +705,11 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     public static class ChimeraMoveController extends MoveControl {
 
-        private final int maxTurn;
         private final boolean hoversInPlace;
         private final WildenChimera chimera;
-        public ChimeraMoveController(WildenChimera chimera, int maxTurn, boolean hoversInPlace) {
+
+        public ChimeraMoveController(WildenChimera chimera, boolean hoversInPlace) {
             super(chimera);
-            this.maxTurn = maxTurn;
             this.hoversInPlace = hoversInPlace;
             this.chimera = chimera;
         }
@@ -942,8 +856,8 @@ public class WildenChimera extends Monster implements IAnimatable, IAnimationLis
 
     public static AttributeSupplier.Builder getModdedAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 225D)
-                .add(Attributes.MOVEMENT_SPEED, 0.28D)
+                .add(Attributes.MAX_HEALTH, 1000)
+                .add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
                 .add(Attributes.ATTACK_DAMAGE, 8D)
