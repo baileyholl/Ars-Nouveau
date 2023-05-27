@@ -29,7 +29,7 @@ public class EffectBurst extends AbstractEffect {
         invalidCombinations.add(EffectWall.INSTANCE.getRegistryName());
     }
 
-    @Override //TODO
+    @Override
     public String getBookDescription() {
         return "Resolves the spell in a spherical area around the target. Augment with Sensitive to target blocks instead of entities and Dampen to make an empty sphere. Augment with AOE to increase the radius. ";
     }
