@@ -49,7 +49,6 @@ public class GuiManaHUD extends GuiComponent {
         int manaLength = 96;
 
         manaLength *= (mana.getCurrentMana() / (double) (maxMana * (1.0 + ClientInfo.reservedOverlayMana)));
-//        System.out.println(manaLength +" current: " + mana.getCurrentMana() + " - reserve: " +  ClientInfo.reservedOverlayMana + " - max: " + maxMana);
 
         int yOffset = minecraft.getWindow().getGuiScaledHeight() - 5 + Config.MANABAR_Y_OFFSET.get();
 

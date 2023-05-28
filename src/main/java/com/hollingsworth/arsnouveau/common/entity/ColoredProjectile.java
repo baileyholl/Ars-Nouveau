@@ -39,7 +39,6 @@ public abstract class ColoredProjectile extends Projectile {
 
     public ParticleColor getParticleColor() {
         CompoundTag tag = entityData.get(PARTICLE_TAG);
-        System.out.println(tag);
         return ParticleColorRegistry.from(entityData.get(PARTICLE_TAG)).transition(tickCount*50);
     }
 
