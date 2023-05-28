@@ -13,23 +13,16 @@ import java.util.List;
 
 public class TileCaster implements IWrappedCaster{
     protected SpellContext.CasterType casterType;
-    protected List<FilterableItemHandler> handlers;
     protected BlockEntity tile;
 
     public TileCaster(BlockEntity tile, SpellContext.CasterType casterType){
         this.tile = tile;
         this.casterType = casterType;
-        handlers = new ArrayList<>();
-        initFilterables(tile);
-    }
-
-    public void initFilterables(BlockEntity tile){
-        handlers = new ArrayList<>(InvUtil.adjacentInventories(tile.getLevel(), tile.getBlockPos()));
     }
 
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
-        return handlers;
+        return new ArrayList<>(InvUtil.adjacentInventories(tile.getLevel(), tile.getBlockPos()));
     }
 
     @Override

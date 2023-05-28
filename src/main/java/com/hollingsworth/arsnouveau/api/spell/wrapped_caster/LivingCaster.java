@@ -15,15 +15,8 @@ import java.util.List;
 public class LivingCaster implements IWrappedCaster {
     public LivingEntity livingEntity;
 
-    protected List<FilterableItemHandler> filterableItemHandlers;
-
     public LivingCaster(LivingEntity livingEntity){
         this.livingEntity = livingEntity;
-        filterableItemHandlers = new ArrayList<>();
-
-        livingEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(cap ->{
-            filterableItemHandlers.add(new FilterableItemHandler(cap));
-        });
     }
 
     public static LivingCaster from(LivingEntity livingEntity){
@@ -40,6 +33,8 @@ public class LivingCaster implements IWrappedCaster {
 
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
+        List<FilterableItemHandler> filterableItemHandlers = new ArrayList<>();
+        livingEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(cap -> filterableItemHandlers.add(new FilterableItemHandler(cap)));
         return filterableItemHandlers;
     }
 

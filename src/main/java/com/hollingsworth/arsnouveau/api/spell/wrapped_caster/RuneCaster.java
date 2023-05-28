@@ -16,7 +16,6 @@ public class RuneCaster extends TileCaster{
         super(tile, casterType);
     }
 
-
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
         RuneTile tile1 = (RuneTile) tile;

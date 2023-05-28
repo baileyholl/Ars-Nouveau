@@ -25,7 +25,7 @@ public class InvUtil {
         List<FilterableItemHandler> inventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
             BlockEntity adjacentInvTile = level.getBlockEntity(pos.relative(d));
-            if (adjacentInvTile == null)
+            if (adjacentInvTile == null || adjacentInvTile.isRemoved())
                 continue;
 
             IItemHandler handler = adjacentInvTile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
@@ -41,7 +41,7 @@ public class InvUtil {
     }
 
     public static List<Function<ItemStack, ItemScroll.SortPref>> filtersOnTile(@Nullable BlockEntity thisTile){
-        if(thisTile == null){
+        if(thisTile == null || thisTile.isRemoved()){
             return new ArrayList<>();
         }
         Level level = thisTile.getLevel();
