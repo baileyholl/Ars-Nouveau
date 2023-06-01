@@ -29,7 +29,7 @@ public class ANFakePlayer extends FakePlayer {
 
     @Override
     public double getReachDistance() {
-        return 5;
+        return 4.5; //Forge default
     }
 
     private ANFakePlayer(ServerLevel world) {

@@ -147,7 +147,7 @@ public interface ISpellCaster {
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, entity, AugmentSensitive.INSTANCE) > 0;
-        HitResult result = SpellUtil.rayTrace(entity, player.getReachDistance(), 0, isSensitive);
+        HitResult result = SpellUtil.rayTrace(entity, 0.5 + player.getReachDistance(), 0, isSensitive);
         if (result instanceof BlockHitResult blockHit) {
             BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
             if (tile instanceof ScribesTile)
