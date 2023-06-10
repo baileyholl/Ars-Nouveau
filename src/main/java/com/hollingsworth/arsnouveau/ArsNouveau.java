@@ -23,6 +23,7 @@ import com.hollingsworth.arsnouveau.common.world.Terrablender;
 import com.hollingsworth.arsnouveau.setup.*;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -108,6 +109,13 @@ public class ArsNouveau {
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
         ANCriteriaTriggers.init();
+        try {
+            Thread thread = new Thread(Rewards::init);
+            thread.setDaemon(true);
+            thread.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void setup(final FMLCommonSetupEvent event) {

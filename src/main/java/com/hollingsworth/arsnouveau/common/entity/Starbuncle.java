@@ -41,6 +41,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -55,6 +57,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirtPathBlock;
@@ -68,7 +71,6 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
@@ -158,9 +160,36 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "sleepController", 1, this::sleepPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, (event) ->{
+            if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animationData.addAnimationController(new AnimationController<>(this, "danceController", 1, (event) ->{
+            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("dance"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animationData.addAnimationController(new AnimationController<>(this, "sleepController", 1, (event) ->{
+            Block onBlock = level.getBlockState(new BlockPos(position)).getBlock();
+            if (!event.isMoving() && (onBlock instanceof BedBlock || onBlock instanceof SummonBed)) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("resting"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, (event) ->{
+            Block onBlock = level.getBlockState(new BlockPos(position)).getBlock();
+            if (!event.isMoving() && !(onBlock instanceof BedBlock || onBlock instanceof SummonBed)) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
     }
 
     @Override
@@ -171,31 +200,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
-    }
-
-    private PlayState dancePredicate(AnimationEvent<?> event) {
-        if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState animationPredicate(AnimationEvent<?> event) {
-        if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    private <T extends IAnimatable> PlayState sleepPredicate(AnimationEvent<T> event) {
-        Block onBlock = level.getBlockState(new BlockPos(position)).getBlock();
-        if (!event.isMoving() && (onBlock instanceof BedBlock || onBlock instanceof SummonBed)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("resting"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
     }
 
     public boolean isTamed() {
@@ -611,10 +615,18 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         String color = getColor(entity);
         if (color.isEmpty()) color = COLORS.ORANGE.name();
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color.toLowerCase() + ".png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
 
-    public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnData, @org.jetbrains.annotations.Nullable CompoundTag pDataTag) {
+        RandomSource randomSource = pLevel.getRandom();
+        this.setColor(carbyColors[randomSource.nextInt(carbyColors.length)]);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    public static String[] carbyColors = Arrays.stream(DyeColor.values()).map(DyeColor::getName).toArray(String[]::new);
 
     public int getBackOff() {
         return backOff;

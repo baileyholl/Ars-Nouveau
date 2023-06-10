@@ -12,9 +12,6 @@ import javax.annotation.Nullable;
 
 public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
-    private static final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
-
     @Override
     public void setCustomAnimations(Starbuncle entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
@@ -23,6 +20,7 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
         IBone head = this.getAnimationProcessor().getBone("head");
         if (customPredicate == null)
             return;
+        this.getBone("basket").setHidden(!entity.isTamed());
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.017453292F);
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
@@ -30,12 +28,12 @@ public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
     public ResourceLocation getModelResource(Starbuncle carbuncle) {
-        return new ResourceLocation(ArsNouveau.MODID, "geo/carbuncle.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "geo/starbuncle.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Starbuncle carbuncle) {
-        return carbuncle.isTamed() ? TAMED_TEXTURE : WILD_TEXTURE;
+        return carbuncle.getTexture(carbuncle);
     }
 
     @Override
