@@ -30,6 +30,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncTag;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -221,6 +222,10 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
+                if(this.data.adopter != null){
+                    stack.setCount(1);
+                    stack.setTag(data.toTag(this, new CompoundTag()));
+                }
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
                 ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.POOF_MOB, (ServerLevel) this.level, this.getOnPos(), 10);
@@ -560,11 +565,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
-    public SynchedEntityData getEntityData() {
-        return super.getEntityData();
-    }
-
-    @Override
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
         this.data.name = pName;
@@ -626,7 +626,15 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnData, @org.jetbrains.annotations.Nullable CompoundTag pDataTag) {
         RandomSource randomSource = pLevel.getRandom();
-        this.setColor(carbyColors[randomSource.nextInt(carbyColors.length)]);
+        if(randomSource.nextFloat() <= 1f && !Rewards.starbuncles.isEmpty()){
+            Rewards.ContributorStarby contributorStarby = Rewards.starbuncles.get(randomSource.nextInt(Rewards.starbuncles.size()));
+            this.setColor(contributorStarby.color);
+            this.setCustomName(Component.literal(contributorStarby.name));
+            this.data.bio = contributorStarby.bio;
+            this.data.adopter = contributorStarby.adopter;
+        }else {
+            this.setColor(carbyColors[randomSource.nextInt(carbyColors.length)]);
+        }
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -671,9 +679,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
         public Block pathBlock;
         public BlockPos bedPos;
         public CompoundTag behaviorTag;
+        public String adopter;
+        public String bio;
 
         public StarbuncleData(CompoundTag tag) {
             super(tag);
+            adopter = null;
+            bio = null;
 
             if (tag.contains("path")) {
                 pathBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("path")));
@@ -685,6 +697,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 behaviorTag = tag.getCompound("behavior");
             if(tag.contains("cosmetic")){
                 cosmetic = ItemStack.of(tag.getCompound("cosmetic"));
+            }
+            if(tag.contains("adopter")){
+                adopter = tag.getString("adopter");
+            }
+            if(tag.contains("bio")){
+                bio = tag.getString("bio");
             }
         }
 
@@ -699,6 +717,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
                 tag.put("cosmetic", starbuncle.getCosmeticItem().serializeNBT());
             }
             tag.put("behavior", starbuncle.dynamicBehavior.toTag(new CompoundTag()));
+            if(adopter != null){
+                tag.putString("adopter", adopter);
+            }
+            if(bio != null){
+                tag.putString("bio", bio);
+            }
             return tag;
         }
     }

@@ -1205,5 +1205,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.clear_grid", "Clear");
         add("tooltip.ars_nouveau.open_recipe", "Recipe Book");
         add("ars_nouveau.color_gui.rainbow", "Rainbow");
+        add("ars_nouveau.adopter", "Adopted by %s");
+
     }
 }

@@ -1,6 +1,7 @@
 {
   "alert.core": "An Arcane Core must be placed beneath this block.",
   "ars_nouveau.active_generation": "Active Generation",
+  "ars_nouveau.adopter": "Adopted by %s",
   "ars_nouveau.adv.desc.alteration_table": "Acquire an Alteration Table",
   "ars_nouveau.adv.desc.amethyst_golem_charm": "Acquire an Amethyst Golem Charm",
   "ars_nouveau.adv.desc.apprentice_spell_book": "Acquire an Apprentice Spell Book",

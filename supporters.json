@@ -1,11 +1,36 @@
 {
-  "uuids": ["facee59d-9953-4466-b8cb-eebe7297651d"],
+  "uuids": ["facee59d-9953-4466-b8cb-eebe7297651d", "9df6acb3-6618-474a-a2b0-e2e74748ae05", "066cfcbc-3db0-4a97-aa02-650f3f3a71ea", "9d7278bc-8d30-4241-aa7e-08ac8398cf2e", "fefb153f-4ffc-4f5c-acd2-3291e73bdd4d"],
   "starbuncleAdoptions": [
     {
       "name": "Xephyr",
       "adopter": "Xacris",
       "color": "cyan",
       "bio": "This quiet Starbuncle once lived in an Ancient City that was covered in plant life. He had all the source berries he could ever want, and skipped amongst the sculk."
+    },
+    {
+      "name": "Ophiuchus",
+      "adopter": "Amo",
+      "color": "cyan",
+      "bio": "When Ophiuchus slithers through the shadows, the stars weep blood and souls tremble with eternal despair."
+    },
+    {
+      "name": "Stonks",
+      "adopter": "Mrbysco",
+      "color": "red",
+      "bio": "Sees a starbuncle in the forest You: gives it a gold nugget Starbuncle: takes the nugget and teleports away You: Wait, that’s illegal. Starbuncle: comes back with more nuggets You: Stonks."
+    },
+    {
+      "name": "Maximilian",
+      "adopter": "Kaeghen",
+      "color": "black",
+      "bio": "Maximilian was sound asleep in the boughs of an Archwood tree but was unintentionally awakened by Kaeghen, who had dodged a horde of zombies with a Leap to the tree's top. Offered a nugget of gold as apology for interrupting his sleep the drowsy Starbuncle and Kaeghen became fast friends."
+    },
+    {
+      "name": "Dr. Cat",
+      "adopter": "Raycoms",
+      "color": "pink",
+      "bio": "In the realm of intellectual curiosity, Dr. Cat, a brilliant Starbunkle, embarked on an extraordinary journey under the tutelage of their owner, Raycoms. Late nights spent poring over textbooks and engaging in spirited discussions with Raycoms fueled Dr. Cat's hunger for knowledge. Through unwavering determination and countless hours of study, Dr. Cat, became a trailblazing symbol of Starbunkle intellect and the limitless possibilities of knowledge."
     }
+
   ]
 }

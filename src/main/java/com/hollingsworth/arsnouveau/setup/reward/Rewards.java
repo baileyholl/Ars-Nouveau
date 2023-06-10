@@ -73,6 +73,5 @@ public class Rewards {
             this.color = color;
             this.bio = bio;
         }
-
     }
 }

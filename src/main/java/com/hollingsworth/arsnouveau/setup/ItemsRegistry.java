@@ -124,7 +124,7 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<Debug> debug = register("debug", () -> new Debug());
 
-    public static RegistryWrapper<ModItem> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS, () -> new ModItem().withTooltip(Component.translatable("tooltip.starbuncle_shard")));
+    public static RegistryWrapper<StarbuncleShard> STARBUNCLE_SHARD = register(LibItemNames.STARBUNCLE_SHARDS, () -> new StarbuncleShard().withTooltip(Component.translatable("tooltip.starbuncle_shard")));
 
     public static RegistryWrapper<StarbuncleShades> STARBUNCLE_SHADES = register(LibItemNames.STARBUNCLE_SHADES, () -> new StarbuncleShades().withTooltip(Component.translatable("tooltip.starbuncle_shades")));
 
