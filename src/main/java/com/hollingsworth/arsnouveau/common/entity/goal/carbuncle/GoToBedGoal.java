@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
-import com.hollingsworth.arsnouveau.common.block.SummonBed;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
@@ -95,11 +95,11 @@ public class GoToBedGoal extends Goal {
     }
 
     public boolean isBedValid(){
-        return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).getBlock() instanceof SummonBed;
+        return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
     public boolean isOnBed(){
-        return starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).getBlock() instanceof SummonBed;
+        return starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
     @Override

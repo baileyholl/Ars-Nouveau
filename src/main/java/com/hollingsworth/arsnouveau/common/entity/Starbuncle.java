@@ -13,8 +13,8 @@ import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.debug.EntityDebugger;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
@@ -58,7 +58,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -113,7 +112,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public PathNavigation minecraftPathNav;
     public StarbuncleData data = new StarbuncleData(new CompoundTag());
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-
+    public boolean canSleep;
     AnimationFactory manager = GeckoLibUtil.createFactory(this);
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
@@ -175,16 +174,14 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return PlayState.STOP;
         }));
         animationData.addAnimationController(new AnimationController<>(this, "sleepController", 1, (event) ->{
-            Block onBlock = level.getBlockState(new BlockPos(position)).getBlock();
-            if (!event.isMoving() && (onBlock instanceof BedBlock || onBlock instanceof SummonBed)) {
+            if (!event.isMoving() && canSleep) {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("resting"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
         animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, (event) ->{
-            Block onBlock = level.getBlockState(new BlockPos(position)).getBlock();
-            if (!event.isMoving() && !(onBlock instanceof BedBlock || onBlock instanceof SummonBed)) {
+            if (!event.isMoving() && !canSleep) {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
                 return PlayState.CONTINUE;
             }
@@ -247,6 +244,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             System.out.println("Starbuncle threaded pathing failed.");
             System.out.println(this);
             return;
+        }
+        if(level.isClientSide && level.getGameTime() % 5 == 0){
+            if(this.getBlockStateOn().is(BlockTagProvider.SUMMON_SLEEPABLE)){
+                this.canSleep = true;
+            }else{
+                this.canSleep = false;
+            }
         }
         SummonUtil.healOverTime(this);
         if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {

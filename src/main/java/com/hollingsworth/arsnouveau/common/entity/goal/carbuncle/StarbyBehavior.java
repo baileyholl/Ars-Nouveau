@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.SummonBed;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -37,7 +37,7 @@ public class StarbyBehavior extends ChangeableBehavior {
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
-        if (storedPos != null && playerEntity.level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
+        if (storedPos != null && playerEntity.level.getBlockState(storedPos).is(BlockTagProvider.SUMMON_SLEEPABLE)) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
             starbuncle.data.bedPos = storedPos.immutable();
         }
