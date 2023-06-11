@@ -1,7 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.lily.WagGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -11,10 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -33,7 +36,12 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class Lily extends TamableAnimal implements IAnimatable {
+import java.util.UUID;
+
+public class Lily extends TamableAnimal implements IAnimatable, IDispellable {
+    // Owner UUID to Lily UUID
+    public static BiMap<UUID, UUID> ownerLilyMap = HashBiMap.create();
+
     private static final EntityDataAccessor<Boolean> SIT = SynchedEntityData.defineId(Lily.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> WAG = SynchedEntityData.defineId(Lily.class, EntityDataSerializers.BOOLEAN);
     public int wagTicks;
@@ -63,7 +71,7 @@ public class Lily extends TamableAnimal implements IAnimatable {
         if (this.level.isClientSide) {
             return InteractionResult.CONSUME;
         }
-        if (true || this.isOwnedBy(pPlayer)) {
+        if (this.isOwnedBy(pPlayer)) {
             this.setOrderedToSit(!this.isOrderedToSit());
             this.jumping = false;
             this.navigation.stop();
@@ -76,16 +84,16 @@ public class Lily extends TamableAnimal implements IAnimatable {
     @Override
     public void tick() {
         super.tick();
-        // print the goal that is running
-//        if(!level.isClientSide) {
-//            goalSelector.getRunningGoals().forEach(s -> {
-//                System.out.println(s.getGoal().toString());
-//            });
-//        }
-        if(!level.isClientSide && wagTicks > 0 && isWagging()){
-            wagTicks--;
-            if(wagTicks <= 0){
-                setWagging(false);
+        SummonUtil.healOverTime(this);
+        if(!level.isClientSide){
+            if(level.getGameTime() % 20 == 0 && !ownerLilyMap.containsValue(this.getUUID())){
+                this.remove(RemovalReason.DISCARDED);
+            }
+            if( wagTicks > 0 && isWagging()){
+                wagTicks--;
+                if(wagTicks <= 0){
+                    setWagging(false);
+                }
             }
         }
     }
@@ -112,7 +120,6 @@ public class Lily extends TamableAnimal implements IAnimatable {
         this.entityData.set(SIT, pOrderedToSit);
     }
 
-
     public boolean isWagging() {
         return this.entityData.get(WAG);
     }
@@ -126,7 +133,7 @@ public class Lily extends TamableAnimal implements IAnimatable {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.MAX_HEALTH, 40f).add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
     protected SoundEvent getAmbientSound() {
@@ -143,6 +150,14 @@ public class Lily extends TamableAnimal implements IAnimatable {
 
     protected SoundEvent getDeathSound() {
         return SoundEvents.WOLF_DEATH;
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if(!(pSource.getEntity() instanceof Player)){
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     /**
@@ -221,5 +236,22 @@ public class Lily extends TamableAnimal implements IAnimatable {
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        if(caster.getUUID().equals(this.getOwnerUUID())) {
+            this.remove(RemovalReason.DISCARDED);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void load(CompoundTag pCompound) {
+        super.load(pCompound);
+        if(!ownerLilyMap.containsKey(this.getOwnerUUID())) {
+            Lily.ownerLilyMap.put(this.getOwnerUUID(), this.getUUID());
+        }
     }
 }

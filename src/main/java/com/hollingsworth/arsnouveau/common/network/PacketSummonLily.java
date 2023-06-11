@@ -32,6 +32,7 @@ public class PacketSummonLily {
                 lily.setPos(player.getX(), player.getY(), player.getZ());
                 lily.setOwnerUUID(player.getUUID());
                 player.level.addFreshEntity(lily);
+                Lily.ownerLilyMap.put(player.getUUID(), lily.getUUID());
             }
         });
         ctx.get().setPacketHandled(true);
