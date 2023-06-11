@@ -37,7 +37,6 @@ public class WagGoal extends Goal {
         for(Player player : level.getPlayers(p -> true)) {
             if (player.distanceTo(lily) < 5 && lily.isLookingAtMe(player)) {
                 target = player;
-                System.out.println("do wag");
                 wagAtTicks = 100;
                 lily.setWagging(true);
                 lily.wagTicks = 100;
