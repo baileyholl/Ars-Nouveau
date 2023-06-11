@@ -4,9 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSummonLily;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +40,13 @@ public class GuiSettingsScreen extends BaseBook {
         });
         dynamicButton.isSelected = Config.DYNAMIC_LIGHTS_ENABLED.get();
         dynamicButton.withTooltip(this, Component.translatable(dynamicButton.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
+
+        Button lilyButton = new GuiImageButton(bookLeft + 40, bookTop + 34, 0, 0, 14, 14, 14, 14, new ResourceLocation(ArsNouveau.MODID, "textures/gui/settings_dynamic_light_off.png"), (b) -> {
+            Networking.sendToServer(new PacketSummonLily());
+        });
+
         addRenderableWidget(dynamicButton);
+        addRenderableWidget(lilyButton);
     }
 
     @Override

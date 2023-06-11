@@ -159,6 +159,7 @@ public class ClientHandler {
 
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.LILY.get(), LilyRenderer::new);
     }
 
     public static NamedGuiOverlay cameraOverlay = new NamedGuiOverlay(new ResourceLocation(ArsNouveau.MODID, "scry_camera"), (gui, pose, partialTick, width, height) -> {
