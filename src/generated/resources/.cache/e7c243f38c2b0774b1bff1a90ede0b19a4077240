@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-26T08:27:01.8104835	Patchouli
+// 1.19.2	2023-06-11T11:45:43.1912179	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -191,7 +191,7 @@ e797ff6d4a79504b65178376196d5442fed62f42 data/ars_nouveau/patchouli_books/worn_n
 9b4e79632022441481188de75ca691f0bdba400f data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mana_boost.json
 9504291ac23aa6afa832b57f78e357ced8776711 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mana_regen.json
 71b1f74e7cc2ad20e3a61b777a7b46ea53f93a02 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mod_news/mod_news.json
-be17c510f7fb5227c1180214064b81502a67b123 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mod_news/support_mod.json
+ef537c19f4d82731675ea19c6b24223bc44f97a1 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/mod_news/support_mod.json
 15aca30d2b0769add4852c5db9fec7b59d3a95af data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/multishot.json
 0cefd41fde33d02b5e267590e57bcdac8d99f061 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/piercing.json
 8db5d0ed0a7194aea0ea3472164d466ce5b45b3d data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/power.json

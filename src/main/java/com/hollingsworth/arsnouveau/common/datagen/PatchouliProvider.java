@@ -474,6 +474,7 @@ public class PatchouliProvider implements DataProvider {
         addPage(new PatchouliBuilder(MOD_NEWS, "support_mod")
                         .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
                         .withPage(new LinkPage("https://www.patreon.com/arsnouveau", "ars_nouveau.patreon_text", "ars_nouveau.patreon"))
+                        .withPage(new EntityPage(ModEntities.LILY.get()).withText("ars_nouveau.lily"))
                         .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")),
                 getPath(MOD_NEWS, "support_mod"));
 
