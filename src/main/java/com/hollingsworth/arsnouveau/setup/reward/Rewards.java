@@ -18,7 +18,7 @@ public class Rewards {
     public static List<UUID> CONTRIBUTORS = new ArrayList<>();
     public static void init(){
         try {
-            JsonObject object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/baileyholl/Ars-Nouveau/8708e138f88ced5dd9723fda583bbd8f28b10723/supporters.json"))).getAsJsonObject();
+            JsonObject object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/baileyholl/Ars-Nouveau/main/supporters.json"))).getAsJsonObject();
             JsonArray supporters = object.getAsJsonArray("uuids");
             for(JsonElement element : supporters){
                 String uuid = element.getAsString();
