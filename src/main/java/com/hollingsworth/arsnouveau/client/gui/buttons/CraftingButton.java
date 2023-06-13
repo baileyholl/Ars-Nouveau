@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CraftingButton extends GuiImageButton {
-    int slotNum;
+    public int slotNum;
     public ResourceLocation spellTag;
     public AbstractSpellPart abstractSpellPart;
     public List<SpellValidationError> validationErrors;

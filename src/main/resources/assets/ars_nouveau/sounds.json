@@ -56,5 +56,13 @@
         "volume": 0.4
       }
     ]
+  },
+  "firel_the_wild_hunt": {
+    "sounds": [
+      {
+        "name":"ars_nouveau:firel_the_wild_hunt",
+        "stream": true
+      }
+    ]
   }
 }
