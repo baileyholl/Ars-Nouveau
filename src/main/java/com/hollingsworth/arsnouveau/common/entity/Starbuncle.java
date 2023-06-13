@@ -626,7 +626,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnData, @org.jetbrains.annotations.Nullable CompoundTag pDataTag) {
         RandomSource randomSource = pLevel.getRandom();
-        if(randomSource.nextFloat() <= 0.05f && !Rewards.starbuncles.isEmpty()){
+        if(randomSource.nextFloat() <= 0.1f && !Rewards.starbuncles.isEmpty()){
             try {
                 Rewards.ContributorStarby contributorStarby = Rewards.starbuncles.get(randomSource.nextInt(Rewards.starbuncles.size()));
                 this.setColor(contributorStarby.color);
