@@ -1208,6 +1208,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adopter", "Adopted by %s");
         add("entity.ars_nouveau.lily", "Lily");
         add("ars_nouveau.lily", "Patrons may summon Lily, a faithful tail wagging companion.");
-
+        add("ars_nouveau.settings.summon_lily", "Summon Lily");
+        add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
     }
 }

@@ -28,7 +28,7 @@ public class ClientInfo {
 
     public static TextureTarget skyRenderTarget;
     public static ShaderInstance skyShader;
-
+    public static boolean isSupporter = false;
 
     public static Component[] storageTooltip = new Component[0];
     public static void setTooltip(Component... string) {
