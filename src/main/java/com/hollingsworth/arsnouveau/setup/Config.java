@@ -47,6 +47,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
 
     public static ForgeConfigSpec.BooleanValue DYNAMIC_LIGHTS_ENABLED;
+    public static ForgeConfigSpec.BooleanValue SHOW_SUPPORTER_MESSAGE;
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_LUMINANCE;
     public static ForgeConfigSpec.IntValue TOUCH_LIGHT_DURATION;
 
@@ -85,6 +86,7 @@ public class Config {
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
         CLIENT_BUILDER.comment("Lighting").push("lights");
+        SHOW_SUPPORTER_MESSAGE = CLIENT_BUILDER.comment("Show the supporter message. This is set to false after the first time.").define("showSupporterMessage", true);
         DYNAMIC_LIGHTS_ENABLED = CLIENT_BUILDER.comment("If dynamic lights are enabled").define("lightsEnabled", false);
         TOUCH_LIGHT_LUMINANCE = CLIENT_BUILDER.comment("How bright the touch light is").defineInRange("touchLightLuminance", 8, 0, 15);
         TOUCH_LIGHT_DURATION = CLIENT_BUILDER.comment("How long the touch light lasts in ticks").defineInRange("touchLightDuration", 8, 0, 40);

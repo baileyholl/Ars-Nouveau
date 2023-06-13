@@ -1210,5 +1210,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.lily", "Patrons may summon Lily, a faithful tail wagging companion.");
         add("ars_nouveau.settings.summon_lily", "Summon Lily");
         add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
+        add("ars_nouveau.rewards.enabled", "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.");
     }
 }

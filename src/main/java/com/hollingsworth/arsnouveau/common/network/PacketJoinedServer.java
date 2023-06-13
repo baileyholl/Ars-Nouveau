@@ -1,7 +1,10 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -32,6 +35,11 @@ public class PacketJoinedServer {
                 @Override
                 public void run() {
                     ClientInfo.isSupporter = message.isSupporter;
+                    if(Config.SHOW_SUPPORTER_MESSAGE.get()) {
+                        Minecraft.getInstance().player.sendSystemMessage(Component.translatable("ars_nouveau.rewards.enabled"));
+                        Config.SHOW_SUPPORTER_MESSAGE.set(false);
+                        Config.SHOW_SUPPORTER_MESSAGE.save();
+                    }
                 }
             });
             ctx.get().setPacketHandled(true);

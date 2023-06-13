@@ -196,7 +196,7 @@ public class EventHandler {
             return;
         if(e.getEntity() instanceof ServerPlayer serverPlayer) {
             boolean isContributor = Rewards.CONTRIBUTORS.contains(serverPlayer.getUUID());
-            if(true || isContributor) {
+            if(isContributor) {
                 Networking.sendToPlayerClient(new PacketJoinedServer(true), (ServerPlayer) e.getEntity());
             }
         }
