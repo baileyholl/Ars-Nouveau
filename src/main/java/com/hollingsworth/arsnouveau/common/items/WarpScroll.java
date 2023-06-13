@@ -227,5 +227,12 @@ public class WarpScroll extends ModItem {
             this.rotation = rotation;
             writeItem();
         }
+
+        public void copyFrom(WarpScrollData warpScrollData) {
+            this.pos = warpScrollData.pos;
+            this.dimension = warpScrollData.dimension;
+            this.rotation = warpScrollData.rotation;
+            writeItem();
+        }
     }
 }
