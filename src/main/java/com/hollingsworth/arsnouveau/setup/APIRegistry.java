@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.mob_jar.*;
 import com.hollingsworth.arsnouveau.common.perk.*;
@@ -274,6 +275,7 @@ public class APIRegistry {
         JarBehaviorRegistry.register(EntityType.ENDER_DRAGON, new DragonBehavior());
         JarBehaviorRegistry.register(EntityType.PUFFERFISH, new PufferfishBehavior());
         JarBehaviorRegistry.register(EntityType.ALLAY, new AllayBehavior());
+        JarBehaviorRegistry.register(ModEntities.ENTITY_DUMMY.get(), new DecoyBehavior());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

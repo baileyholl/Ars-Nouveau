@@ -30,6 +30,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
+    public ApparatusRecipeBuilder withResult(ItemLike result, int count) {
+        this.recipe.result = new ItemStack(result, count);
+        return this;
+    }
+
     public ApparatusRecipeBuilder withResult(RegistryObject<? extends ItemLike> result) {
         return withResult(result.get());
     }

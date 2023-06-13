@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
@@ -1064,6 +1065,15 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder().withResult(BlockRegistry.CRAFTING_LECTERN)
                 .withReagent(Blocks.LECTERN)
                 .withPedestalItem(4, Tags.Items.CHESTS).build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.WARP_SCROLL,2)
+                .withReagent(ItemsRegistry.WARP_SCROLL)
+                .withPedestalItem(ItemsRegistry.WARP_SCROLL)
+                .keepNbtOfReagent(true)
+                .withSourceCost(1000)
+                .withId(new ResourceLocation(ArsNouveau.MODID, "warp_scroll_copy"))
+                .build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

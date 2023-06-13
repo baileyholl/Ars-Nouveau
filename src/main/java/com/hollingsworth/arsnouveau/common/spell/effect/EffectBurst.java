@@ -60,7 +60,7 @@ public class EffectBurst extends AbstractEffect {
             }
         } else {
             for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius, radius, radius))) {
-                if (Sphere.test(entity.distanceToSqr(Vec3.atCenterOf(center)))) {
+                if (Sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
                     resolver.getNewResolver(newContext.clone()).onResolveEffect(world, new EntityHitResult(entity));
                 }
             }
