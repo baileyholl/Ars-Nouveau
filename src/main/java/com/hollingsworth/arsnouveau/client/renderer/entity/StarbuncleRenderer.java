@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
@@ -21,15 +20,9 @@ import software.bernie.geckolib3.util.RenderUtils;
 import javax.annotation.Nullable;
 
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
-    private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
-    private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
-    private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
     public StarbuncleRenderer(EntityRendererProvider.Context manager) {
         super(manager, new StarbuncleModel());
-//        this.addLayer(new CarbuncleHeldItemLayer(this));
-//        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
     }
 
     Starbuncle starbuncle;
@@ -78,7 +71,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
 
     @Override
     public ResourceLocation getTextureLocation(Starbuncle entity) {
-        return entity.isTamed() ? entity.getTexture(entity) : WILD_TEXTURE;
+        return entity.getTexture(entity);
     }
 
     @Override

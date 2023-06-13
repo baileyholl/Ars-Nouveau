@@ -247,6 +247,11 @@ public class ModEntities {
                     .sized(1.0f, 1.5f)
                     .noSave()
                     .setTrackingRange(10));
+    public static final RegistryObject<EntityType<Lily>> LILY = registerEntity(
+            LibEntityNames.LILY,
+            EntityType.Builder.<Lily>of(Lily::new, MobCategory.MISC)
+                    .sized(0.5F, 0.75F)
+                    .setTrackingRange(10));
 
     public static void registerPlacements() {
         SpawnPlacements.register(STARBUNCLE_TYPE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -317,7 +322,7 @@ public class ModEntities {
             event.put(GIFT_STARBY.get(), GiftStarbuncle.attributes().build());
             event.put(ANIMATED_BLOCK.get(), AnimBlockSummon.createAttributes().build());
             event.put(ANIMATED_HEAD.get(), AnimBlockSummon.createAttributes().build());
-
+            event.put(LILY.get(), Lily.createAttributes().build());
         }
     }
 

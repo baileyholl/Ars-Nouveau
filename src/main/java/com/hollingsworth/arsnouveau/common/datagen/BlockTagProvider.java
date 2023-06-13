@@ -20,6 +20,7 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     public static TagKey<Block> IGNORE_TILE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
     public static TagKey<Block> SUMMON_BED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+    public static TagKey<Block> SUMMON_SLEEPABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_sleepable"));
     public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
     public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
@@ -31,9 +32,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> FELLABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
     public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
-
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
-
     private final DataGenerator generator;
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
@@ -262,6 +261,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.ORANGE_SBED,
                 BlockRegistry.PURPLE_SBED
         );
+        this.tag(SUMMON_SLEEPABLE).addTag(SUMMON_BED).addTag(BlockTags.BEDS);
         this.tag(BREAK_BLACKLIST);
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK);

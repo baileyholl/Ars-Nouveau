@@ -627,7 +627,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.important", "Important");
         add("ars_nouveau.page1.starbuncle_charm", "Starbuncles naturally appear in wooded areas in search of golden nuggets. While Starbuncles are normally afraid of humans, they will allow someone to approach if they are holding a gold nugget. When a Starbuncle has picked up a golden nugget, it will vanish from this world and leave behind Starbuncle Shards.");
         add("ars_nouveau.page2.starbuncle_charm", "While wild Starbuncles cannot be tamed, their shards may be used to summon a Starbuncle.");
-        add("ars_nouveau.page3.starbuncle_charm", "To summon a Starbuncle, use a Starbuncle charm on the ground. Summoned Starbuncles will pickup nearby items and can move items between inventories such as chests. Starbuncles will harvest fully grown Source Berry bushes around it. A Starbuncle will drop its charm when Dispelled or when killed. You may dye them using purple, red, yellow, orange, blue, or green dye.");
+        add("ars_nouveau.page3.starbuncle_charm", "To summon a Starbuncle, use a Starbuncle charm on the ground. Summoned Starbuncles will pickup nearby items and can move items between inventories such as chests. Starbuncles will harvest fully grown Source Berry bushes around it. A Starbuncle will drop its charm when Dispelled or when killed. You may dye them any color.");
         add("ars_nouveau.page4.starbuncle_charm", "To bind a Starbuncle to place items into a chest, use the dominion wand on the Starbuncle and then the inventory. To take items from an inventory, use the wand on the inventory and then the Starbuncle. Starbuncles will move items between as many inventories as you desire. Looking at a Starbuncle will tell you how many chests are being taken from, and input to. Using the Dominion Wand on a Starbuncle while sneaking will reset them.");
         add("ars_nouveau.page5.starbuncle_charm", "You may dictate where items go and may be picked up by using Item Scrolls or Item Frames. A Starbuncle may be given an Item Scroll: Allow or Deny, and will only pickup and move items respecting that filter. Alternatively, you may place an Item Frame on the inventory a Starbuncle is interacting with. You may either place an Item Scroll or a single item directly on the frame. Starbuncle interacting with that inventory will respect item framed filters.");
         add("ars_nouveau.page6.starbuncle_charm", "Using a block on a Starbuncle will set them to prefer that block for pathing between areas, as long as it is on the way. They will also naturally prefer grass paths.");
@@ -763,7 +763,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.glyph_known", "You have unlocked this glyph.");
         add("tooltip.ars_nouveau.glyph_unknown", "You have not unlocked this glyph.");
         add("ars_nouveau.sounds.test", "Test");
-        add("ars_nouveau.gui.settings", "Settings for Dynamic Lighting");
+        add("ars_nouveau.gui.settings", "Settings and Rewards");
         add("ars_nouveau.settings.title", "Settings");
         add("ars_nouveau.dynamic_lights.button_on", "Dynamic lights are turned on.  This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine.");
         add("ars_nouveau.dynamic_lights.button_off", "Dynamic lights are turned off.");
@@ -798,7 +798,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.scryers_eye.no_scrolls", "Place a Scryer's Scroll on a nearby pedestal.");
         add("ars_nouveau.camera.not_loaded", "The block has been removed or is not chunk loaded.");
         add("ars_nouveau.page.support_mod", "Support Ars Nouveau!");
-        add("ars_nouveau.patreon", "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, and more!");
+        add("ars_nouveau.patreon", "Join the Ars Nouveau patreon and get a special Discord role, contribute a custom Tome, receive merchandise, summon a Lily dog, and more!");
         add("ars_nouveau.patreon_text", "Patreon");
         add("entity.ars_nouveau.summon_skeleton", "Summoned Skeleton");
         add("item.ars_nouveau.shapers_focus", "Focus of Block Shaping");
@@ -1205,5 +1205,11 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.clear_grid", "Clear");
         add("tooltip.ars_nouveau.open_recipe", "Recipe Book");
         add("ars_nouveau.color_gui.rainbow", "Rainbow");
+        add("ars_nouveau.adopter", "Adopted by %s");
+        add("entity.ars_nouveau.lily", "Lily");
+        add("ars_nouveau.lily", "Patrons may summon Lily, a faithful tail wagging companion.");
+        add("ars_nouveau.settings.summon_lily", "Summon Lily");
+        add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
+        add("ars_nouveau.rewards.enabled", "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.");
     }
 }

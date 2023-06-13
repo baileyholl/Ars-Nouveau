@@ -214,6 +214,9 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), PacketToggleFamiliar.class, PacketToggleFamiliar::toBytes, PacketToggleFamiliar::new, PacketToggleFamiliar::handle);
         INSTANCE.registerMessage(nextID(), PacketDispelFamiliars.class, PacketDispelFamiliars::toBytes, PacketDispelFamiliars::new, PacketDispelFamiliars::handle);
         INSTANCE.registerMessage(nextID(), NotEnoughManaPacket.class, NotEnoughManaPacket::encode, NotEnoughManaPacket::decode, NotEnoughManaPacket::handle);
+        INSTANCE.registerMessage(nextID(), PacketSummonLily.class, PacketSummonLily::toBytes, PacketSummonLily::new, PacketSummonLily::handle);
+        INSTANCE.registerMessage(nextID(), PacketJoinedServer.class, PacketJoinedServer::toBytes, PacketJoinedServer::new, PacketJoinedServer.Handler::handle);
+        INSTANCE.registerMessage(nextID(), PacketUnsummonLily.class, PacketUnsummonLily::toBytes, PacketUnsummonLily::new, PacketUnsummonLily::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
