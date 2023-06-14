@@ -2,7 +2,9 @@
   "uuids": ["facee59d-9953-4466-b8cb-eebe7297651d", "9df6acb3-6618-474a-a2b0-e2e74748ae05", "066cfcbc-3db0-4a97-aa02-650f3f3a71ea",
     "9d7278bc-8d30-4241-aa7e-08ac8398cf2e", "fefb153f-4ffc-4f5c-acd2-3291e73bdd4d", "7cc40d87-69a4-45e6-9fda-29fed94de4b3",
     "a31d8405-b45d-40de-9c89-6b8489cce509", "b1e428b5-bdad-44e5-b2eb-7f02dc08b57c", "2fd766b7-17d0-400e-bec5-8e760185e1e3",
-  "380df991-f603-344c-a090-369bad2a924a"],
+  "380df991-f603-344c-a090-369bad2a924a", "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7", "de4e108a-ed87-4e57-8033-8a7f7940ea27",
+  "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
+  "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff"],
   "starbuncleAdoptions": [
     {
       "name": "Xephyr",
@@ -51,6 +53,46 @@
       "adopter": "Sadie",
       "color": "black",
       "bio": "Infused by the void of the End, Nyx was born of an ill-fated experiment by Sadie to develop a spell to enable safe void travel.  It went wrong, and this Starbuncle's fur turned black.  Be careful, they've been caught peering over the shoulder of every wizard they meet to catch a peek at their notes!"
+    },
+    {
+      "name": "Chestnut",
+      "adopter": "Gootastic",
+      "color": "brown",
+      "bio": "Most confuse Chestnut for a squirrel rather than a magical hopper. She prefers it that way."
+    },{
+      "name": "Solstice",
+      "color": "lime",
+      "adopter": "Darkfira",
+      "bio": "Solstice likes to wander off and explore the unknown, usually leaving the task at hand unfinished. She will usually be found in someone's home relieving them of their gold and other valuables."
+    },
+    {
+      "name": "Aofie",
+      "color": "lime",
+      "adopter": "Sarenor",
+      "bio": "Sarenor was in desperate need of help automating his  Imbuement Stills when Aoife pranced through his automation basement on the search for adventure and food. After tossing a gold nugget at her, Aoife became Sarenors first and best Still Master. Today she enjoys a good dram, friends, and nice chair."
+    },
+    {
+      "name": "Ser Orstell",
+      "adopter": "Alex",
+      "color": "light_gray",
+      "bio": "Ser Orstell was once a knight of the Order of the Sacred Nug, keepers of the greatest gold nugget ever found. Orstell is now retired and wander in our world, from shrine to shrine to spread the myth of the Sacret Nug, and to seek a more quiet life in company of a wizard."
+    },
+    {
+      "name": "Carter",
+      "color": "red",
+      "adopter": "Nathan",
+      "bio": "Carter is a weird mix between loving and hating strangers, he is happy to jump at your legs and walk with you but is a ninja at dogdging hands, he enjoys Cuddles with his human."
+    },{
+      "name": "Peregrimm",
+      "color": "light_gray",
+      "adopter": "Dragon Verdantyr",
+      "bio": "A proud furry squire of Dragon's keeping up his moral with snuggles and cheering him on with squeaks and growls.  Also a brave protector from the little creepies and come for his companion in the night."
+    },
+    {
+      "name": "Litl",
+      "color": "cyan",
+      "adopter": "Relax",
+      "bio": "He's just a little, vibey guy!"
     }
   ]
 }
