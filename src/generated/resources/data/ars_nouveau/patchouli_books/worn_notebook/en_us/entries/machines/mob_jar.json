@@ -72,6 +72,11 @@
       "text": "mob_jar.panda"
     },
     {
+      "type": "patchouli:entity",
+      "entity": "ars_nouveau:dummy",
+      "text": "mob_jar.dummy"
+    },
+    {
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:mob_jar"
     },

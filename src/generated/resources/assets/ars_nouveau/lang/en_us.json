@@ -1339,6 +1339,7 @@
   "mob_jar.allay.title": "Allay Behavior",
   "mob_jar.chicken": "Will occasionally lay eggs.",
   "mob_jar.cow": "Can be milked.",
+  "mob_jar.dummy": "A player dummy in a jar will attract nearby mobs.",
   "mob_jar.ender_dragon": "Use a bottle to obtain Dragon's Breath.",
   "mob_jar.frog": "Will eat nearby slimes.",
   "mob_jar.mooshroom": "Can use a bowl to obtain mushroom stew. Can be sheared into a normal cow.",
