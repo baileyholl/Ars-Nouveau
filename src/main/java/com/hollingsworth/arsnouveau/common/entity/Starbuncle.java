@@ -251,11 +251,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             return;
         }
         if(level.isClientSide && level.getGameTime() % 5 == 0){
-            if(this.getBlockStateOn().is(BlockTagProvider.SUMMON_SLEEPABLE)){
-                this.canSleep = true;
-            }else{
-                this.canSleep = false;
-            }
+            this.canSleep = this.getBlockStateOn().is(BlockTagProvider.SUMMON_SLEEPABLE);
         }
         SummonUtil.healOverTime(this);
         if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
@@ -454,7 +450,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(TAMED, false);
-        this.entityData.define(COLOR, COLORS.ORANGE.name());
+        this.entityData.define(COLOR, DyeColor.ORANGE.getName());
         this.entityData.define(PATH_BLOCK, "");
         this.entityData.define(HEAD_COSMETIC, ItemStack.EMPTY);
         this.entityData.define(BEHAVIOR_TAG, new CompoundTag());
@@ -617,7 +613,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     @Override
     public ResourceLocation getTexture(Starbuncle entity) {
         String color = getColor(entity);
-        if (color.isEmpty()) color = COLORS.ORANGE.name();
+        if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
@@ -649,15 +645,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     public void setBackOff(int backOff) {
         this.backOff = backOff;
-    }
-
-    public enum COLORS {
-        ORANGE,
-        PURPLE,
-        GREEN,
-        BLUE,
-        RED,
-        YELLOW
     }
 
     @Override

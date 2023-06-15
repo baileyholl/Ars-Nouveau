@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.TagScryer;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -71,7 +73,15 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.set(COLOR, Starbuncle.COLORS.ORANGE.name());
+        this.entityData.set(COLOR, DyeColor.ORANGE.getName());
+    }
+
+    @Override
+    public ResourceLocation getTexture(FamiliarEntity entity) {
+        String color = getColor();
+        if (color.isEmpty()) color = DyeColor.ORANGE.getName();
+
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
 
     @Override

@@ -12,12 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable, IDispellable {
+public class MageBlockTile extends ModdedTile implements ITickable, IDispellable {
 
     int age;
     public boolean isPermanent;
@@ -57,17 +53,6 @@ public class MageBlockTile extends ModdedTile implements ITickable, IAnimatable,
         tag.put("lightColor", color.serialize());
         tag.putBoolean("permanent", isPermanent);
         tag.putDouble("modifier", lengthModifier);
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {
-    }
-
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
