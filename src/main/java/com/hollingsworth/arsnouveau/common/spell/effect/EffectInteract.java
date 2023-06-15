@@ -104,8 +104,12 @@ public class EffectInteract extends AbstractEffect {
     public void useOnEntity(Player player, SpellStats spellStats, Entity target) {
         if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
-            InteractionResult res = item.interactLivingEntity(player, (LivingEntity) target, getHand(player));
-            if (res != InteractionResult.SUCCESS) {
+            if(target instanceof  LivingEntity livingEntity) {
+                InteractionResult res = item.interactLivingEntity(player, livingEntity, getHand(player));
+                if (res != InteractionResult.SUCCESS) {
+                    target.interact(player, getHand(player));
+                }
+            }else{
                 target.interact(player, getHand(player));
             }
         } else {
