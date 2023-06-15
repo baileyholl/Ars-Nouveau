@@ -132,7 +132,7 @@ public class SpellStats {
 
         public SpellStats build(AbstractSpellPart spellPart, @Nullable HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
             for (AbstractAugment abstractAugment : spellStats.augments) {
-                abstractAugment.applyModifiers(this, spellPart);
+                abstractAugment.applyModifiers(this, spellPart, rayTraceResult, world, shooter, spellContext);
             }
 
             for (ItemStack stack : spellStats.modifierItems) {
