@@ -15,12 +15,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MirrorWeaveTile extends ModdedTile implements IAnimatable, ILightable {
+public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable {
     public BlockState mimicState;
     public BlockState nextState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
 
@@ -34,12 +34,12 @@ public class MirrorWeaveTile extends ModdedTile implements IAnimatable, ILightab
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

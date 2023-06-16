@@ -33,16 +33,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ScryCaster extends ModItem implements ICasterTool, IAnimatable {
+public class ScryCaster extends ModItem implements ICasterTool, GeoAnimatable {
 
     public ScryCaster(Properties properties) {
         super(properties);
@@ -120,13 +120,13 @@ public class ScryCaster extends ModItem implements ICasterTool, IAnimatable {
             }
         });
     }
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

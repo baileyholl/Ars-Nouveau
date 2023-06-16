@@ -32,21 +32,21 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable, ITooltipProvider, IPedestalMachine {
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -270,25 +270,25 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 1, this::idlePredicate));
-        data.addAnimationController(new AnimationController<>(this, "slowcraft_controller", 1, this::slowCraftPredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "controller", 1, this::idlePredicate));
+        data.add(new AnimationController<>(this, "slowcraft_controller", 1, this::slowCraftPredicate));
     }
 
-    private PlayState slowCraftPredicate(AnimationEvent<?> animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow"));
+    private PlayState slowCraftPredicate(AnimationState<?> AnimationState) {
+        AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("imbue_slow"));
         return PlayState.CONTINUE;
     }
 
-    private PlayState idlePredicate(AnimationEvent<?> animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("float"));
+    private PlayState idlePredicate(AnimationState<?> AnimationState) {
+        AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("float"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

@@ -33,16 +33,16 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class FlaskCannon extends ModItem implements IRadialProvider, IAnimatable {
+public abstract class FlaskCannon extends ModItem implements IRadialProvider, GeoAnimatable {
     public FlaskCannon(Properties properties) {
         super(properties);
     }
@@ -148,15 +148,15 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, IA
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.getStack(), posestack, positionx, posy, size, transparent), 3)));
     }
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
 
     public static class SplashLauncher extends FlaskCannon {
 

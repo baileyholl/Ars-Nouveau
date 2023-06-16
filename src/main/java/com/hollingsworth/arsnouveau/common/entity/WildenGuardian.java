@@ -24,17 +24,18 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class WildenGuardian extends Monster implements IAnimatable {
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+public class WildenGuardian extends Monster implements GeoAnimatable {
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public int armorCooldown;
     public int armorTimeRemaining;
     public static final EntityDataAccessor<Boolean> IS_ARMORED = SynchedEntityData.defineId(WildenGuardian.class, EntityDataSerializers.BOOLEAN);
@@ -142,25 +143,25 @@ public class WildenGuardian extends Monster implements IAnimatable {
         }
     }
 
-    private <T extends IAnimatable> PlayState runPredicate(AnimationEvent<T> tAnimationEvent) {
+    private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {
         if(this.isArmored()){
             return PlayState.STOP;
         }
-        if(tAnimationEvent.isMoving()){
-            tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+        if(tAnimationState.isMoving()){
+            tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
-    private <T extends IAnimatable> PlayState idlePredicate(AnimationEvent<T> tAnimationEvent) {
+    private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
         if(this.isArmored()){
             return PlayState.STOP;
         }
-        if(tAnimationEvent.isMoving()){
+        if(tAnimationState.isMoving()){
             return PlayState.STOP;
         }
-        tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
 
@@ -170,9 +171,9 @@ public class WildenGuardian extends Monster implements IAnimatable {
         this.entityData.define(IS_ARMORED, false);
     }
 
-    private PlayState defendPredicate(AnimationEvent<?> event) {
+    private PlayState defendPredicate(AnimationState<?> event) {
         if(this.isArmored()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("defending"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -182,13 +183,13 @@ public class WildenGuardian extends Monster implements IAnimatable {
     AnimationController<WildenGuardian> runController;
     AnimationController<WildenGuardian> idleController;
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
         controller = new AnimationController<>(this, "attackController", 1, this::defendPredicate);
         runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
         idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
-        animationData.addAnimationController(controller);
-        animationData.addAnimationController(runController);
-        animationData.addAnimationController(idleController);
+        animatableManager.ControllerRegistrar.add(controller);
+        animatableManager.ControllerRegistrar.add(runController);
+        animatableManager.ControllerRegistrar.add(idleController);
     }
 
     public int getAttackDuration() {
@@ -210,7 +211,7 @@ public class WildenGuardian extends Monster implements IAnimatable {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 

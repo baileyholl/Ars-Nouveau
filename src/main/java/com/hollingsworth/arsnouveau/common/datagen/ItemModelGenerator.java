@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
-
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
-
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;

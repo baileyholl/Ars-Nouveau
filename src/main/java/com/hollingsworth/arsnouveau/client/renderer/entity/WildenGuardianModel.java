@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
@@ -18,7 +18,7 @@ public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
 
 
     @Override
-    public void setCustomAnimations(WildenGuardian entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setCustomAnimations(WildenGuardian entity, int uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);

@@ -41,21 +41,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, IAnimatable, IVariantColorProvider<EntityBookwyrm> {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, IVariantColorProvider<EntityBookwyrm> {
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
@@ -258,19 +257,19 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "walkController", 1, this::idle));
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "walkController", 1, this::idle));
     }
 
-    public PlayState idle(AnimationEvent<?> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+    public PlayState idle(AnimationState<?> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

@@ -14,14 +14,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.Collection;
 
-public class EntityChimeraProjectile extends AbstractArrow implements IAnimatable {
+public class EntityChimeraProjectile extends AbstractArrow implements GeoAnimatable {
     int groundMax;
 
     public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, Level p_i48547_8_) {
@@ -56,7 +56,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
 
     @Override
     protected void onHitEntity(EntityHitResult rayTraceResult) {
@@ -136,10 +136,10 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         return !(entity instanceof WildenChimera) && super.canHitEntity(entity);
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

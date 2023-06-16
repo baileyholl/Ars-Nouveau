@@ -36,9 +36,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterTool {
+public class SpellCrossbow extends CrossbowItem implements GeoAnimatable, ICasterTool {
 
     public SpellCrossbow(Properties pProperties) {
         super(pProperties);
@@ -359,12 +359,12 @@ public class SpellCrossbow extends CrossbowItem implements IAnimatable, ICasterT
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 }

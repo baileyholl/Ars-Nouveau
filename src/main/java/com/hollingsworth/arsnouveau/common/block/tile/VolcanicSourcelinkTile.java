@@ -17,12 +17,12 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatable {
+public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimatable {
 
     public VolcanicSourcelinkTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.VOLCANIC_TILE, pos, state);

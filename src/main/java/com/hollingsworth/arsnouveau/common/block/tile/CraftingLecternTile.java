@@ -22,19 +22,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class CraftingLecternTile extends StorageLecternTile implements IAnimatable {
+public class CraftingLecternTile extends StorageLecternTile implements GeoBlockEntity {
 	private AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
 		@Override
 		public boolean stillValid(Player player) {
@@ -266,15 +266,15 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 	}
 
 	@Override
-	public void registerControllers(AnimationData data) {
-		data.addAnimationController(new AnimationController<>(this, "controller", 1, (event -> {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("ledger_float"));
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+		data.add(new AnimationController<>(this, "controller", 1, (event -> {
+			event.getController().setAnimation(RawAnimation.begin().thenPlay("ledger_float"));
 			return PlayState.CONTINUE;
 		})));
 	}
-	AnimationFactory animationFactory = GeckoLibUtil.createFactory(this);
+	software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
 	@Override
-	public AnimationFactory getFactory() {
-		return animationFactory;
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return AnimatableInstanceCache;
 	}
 }

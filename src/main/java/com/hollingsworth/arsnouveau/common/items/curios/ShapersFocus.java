@@ -17,8 +17,6 @@ import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem {
 
     public ShapersFocus(Properties properties) {

@@ -18,8 +18,6 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class CasterTome extends ModItem implements ICasterTool {
 
     public CasterTome(Properties properties) {

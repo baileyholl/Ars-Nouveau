@@ -60,17 +60,18 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 
-public class WildenChimera extends Monster implements IAnimatable {
+public class WildenChimera extends Monster implements GeoAnimatable {
     private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
     public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
@@ -147,10 +148,10 @@ public class WildenChimera extends Monster implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, e ->{
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "walkController", 1, e ->{
             if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
-                e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
 
@@ -158,69 +159,69 @@ public class WildenChimera extends Monster implements IAnimatable {
         }));
         crouchController = new AnimationController<>(this, "crouchController", 1, event -> {
             if (isDefensive() && !isFlying() && !this.isHowling()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("defending"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("defending"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         });
 
-        animationData.addAnimationController(crouchController);
-        animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, (event ->{
+        animatableManager.ControllerRegistrar.add(crouchController);
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "idleController", 1, (event ->{
             if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         })));
-        animationData.addAnimationController(new AnimationController<>(this, "flyController", 1, (event) ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "flyController", 1, (event) ->{
             if(isFlying() && !isDiving()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("fly_rising"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("fly_rising"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "diveController", 1, (event) ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "diveController", 1, (event) ->{
             if(isDiving()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("dive"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("dive"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "howlController", 1, e ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "howlController", 1, e ->{
             if (isHowling()) {
-                e.getController().setAnimation(new AnimationBuilder().addAnimation("roar"));
+                e.getController().setAnimation(RawAnimation.begin().thenPlay("roar"));
                 return PlayState.CONTINUE;
             }
-            e.getController().markNeedsReload();
+            e.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "swimController", 1, e ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "swimController", 1, e ->{
             if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
-                e.getController().setAnimation(new AnimationBuilder().addAnimation("swim"));
+                e.getController().setAnimation(RawAnimation.begin().thenPlay("swim"));
                 return PlayState.CONTINUE;
             }
 
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "ramController", 1, (event -> {
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "ramController", 1, (event -> {
             if(isRamming() && !isRamPrep()){
                 if(!this.hasWings()){
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("charge"));
+                    event.getController().setAnimation(RawAnimation.begin().thenPlay("charge"));
                 }
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         })));
-        animationData.addAnimationController(new AnimationController<>(this, "ramPrep", 1, (event -> {
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "ramPrep", 1, (event -> {
             if(isRamPrep() && !isRamming()){
                 if(this.hasWings()){
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("wing_charge_prep"));
+                    event.getController().setAnimation(RawAnimation.begin().thenPlay("wing_charge_prep"));
                 }else{
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("charge_prep"));
+                    event.getController().setAnimation(RawAnimation.begin().thenPlay("charge_prep"));
                 }
                 return PlayState.CONTINUE;
             }
-            event.getController().markNeedsReload();
+            event.getController().forceAnimationReset();
             return PlayState.STOP;
         })));
     }
@@ -530,10 +531,10 @@ public class WildenChimera extends Monster implements IAnimatable {
         return 300 / (getPhase() + 1);
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

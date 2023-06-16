@@ -18,8 +18,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-import net.minecraft.world.entity.Entity.RemovalReason;
-
 public class EntityFollowProjectile extends ColoredProjectile {
     public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
     public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);

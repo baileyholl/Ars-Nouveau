@@ -34,13 +34,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ import java.util.List;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
-public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener {
+public class ScribesTile extends ModdedTile implements GeoAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
@@ -291,7 +291,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         compound.putBoolean("crafting", crafting);
     }
 
-    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
         return PlayState.CONTINUE;
     }
 
@@ -300,14 +300,14 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if (controller == null) {
             return;
         }
-        controller.markNeedsReload();
-        controller.setAnimation(new AnimationBuilder().addAnimation("create_glyph"));
+        controller.forceAnimationReset();
+        controller.setAnimation(RawAnimation.begin().thenPlay("create_glyph"));
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         this.controller = new AnimationController<>(this, "controller", 1, this::idlePredicate);
-        data.addAnimationController(controller);
+        data.add(controller);
     }
 
     @Override
@@ -315,11 +315,11 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         return super.getRenderBoundingBox().inflate(2);
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     AnimationController<ScribesTile> controller;
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;

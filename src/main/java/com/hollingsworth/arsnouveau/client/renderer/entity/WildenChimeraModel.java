@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
@@ -19,7 +19,7 @@ public class WildenChimeraModel extends AnimatedGeoModel<WildenChimera> {
 
 
     @Override
-    public void setCustomAnimations(WildenChimera entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setCustomAnimations(WildenChimera entity, int uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         IBone head = this.getAnimationProcessor().getBone("head");

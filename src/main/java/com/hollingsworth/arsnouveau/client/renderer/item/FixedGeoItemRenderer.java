@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -19,7 +19,7 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 import java.util.Collections;
 
-public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemRenderer {
+public class FixedGeoItemRenderer<T extends Item & GeoAnimatable> extends GeoItemRenderer {
     public FixedGeoItemRenderer(AnimatedGeoModel modelProvider) {
         super(modelProvider);
     }
@@ -44,11 +44,11 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
     public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemTransforms.TransformType transformType) {
 //        super.render(animatable, stack, bufferIn, packedLightIn, itemStack, transformType);
         this.currentItemStack = itemStack;
-        GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelResource((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource(animatable));
-        AnimationEvent itemEvent = new AnimationEvent((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
+        GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelResource((GeoAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource(animatable));
+        AnimationState itemEvent = new AnimationState((GeoAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
         if (modelProvider == null)
             return;
-        modelProvider.setCustomAnimations((IAnimatable) animatable, this.getInstanceId(animatable), itemEvent);
+        modelProvider.setCustomAnimations((GeoAnimatable) animatable, this.getInstanceId(animatable), itemEvent);
         stack.pushPose();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0.5, 0.5);

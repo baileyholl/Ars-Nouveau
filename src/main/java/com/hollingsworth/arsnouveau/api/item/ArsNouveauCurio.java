@@ -6,9 +6,6 @@ import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-
-import net.minecraft.world.item.Item.Properties;
-
 public abstract class ArsNouveauCurio extends ModItem implements ICurioItem {
 
     public ArsNouveauCurio() {

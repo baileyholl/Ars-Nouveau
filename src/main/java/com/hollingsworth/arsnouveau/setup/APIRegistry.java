@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import com.hollingsworth.arsnouveau.api.ritual.*;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;

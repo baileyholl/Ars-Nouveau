@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +21,7 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     }
 
     @Override
-    public void setCustomAnimations(SpellBook entity, int uniqueID, @org.jetbrains.annotations.Nullable AnimationEvent customPredicate) {
+    public void setCustomAnimations(SpellBook entity, int uniqueID, @org.jetbrains.annotations.Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         this.getBone("tier3").setHidden(entity.tier.value < 3);
         this.getBone("tier1").setHidden(entity.tier.value != 1);

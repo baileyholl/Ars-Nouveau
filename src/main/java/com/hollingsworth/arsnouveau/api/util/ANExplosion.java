@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import net.minecraft.world.level.Explosion.BlockInteraction;
-
 public class ANExplosion extends Explosion {
     public double amps;
     public double baseDamage;

@@ -24,9 +24,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
@@ -35,14 +35,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, IAnimatable, IVariantColorProvider<ItemStack> {
+public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, GeoAnimatable, IVariantColorProvider<ItemStack> {
 
     public AnimatedMagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
     }
 
     @Override
@@ -110,10 +110,10 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
         return true;
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

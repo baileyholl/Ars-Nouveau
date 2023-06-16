@@ -23,8 +23,6 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-import net.minecraft.world.entity.Entity.RemovalReason;
-
 public class SummonHorse extends Horse implements ISummon {
     public int ticksLeft;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonHorse.class, EntityDataSerializers.OPTIONAL_UUID);

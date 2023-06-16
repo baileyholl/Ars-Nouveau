@@ -21,13 +21,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Wand extends ModItem implements IAnimatable, ICasterTool {
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public class Wand extends ModItem implements GeoAnimatable, ICasterTool {
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public Wand(Properties properties) {
         super(properties);
@@ -46,8 +46,8 @@ public class Wand extends ModItem implements IAnimatable, ICasterTool {
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
     }
 
-    private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("wand_gem_spin"));
+    private <P extends Item & GeoAnimatable> PlayState predicate(AnimationState<P> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("wand_gem_spin"));
         return PlayState.CONTINUE;
     }
 
@@ -59,12 +59,12 @@ public class Wand extends ModItem implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 20, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.factory;
     }
 

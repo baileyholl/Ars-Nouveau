@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancements;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.advancements.*;
+import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.List;

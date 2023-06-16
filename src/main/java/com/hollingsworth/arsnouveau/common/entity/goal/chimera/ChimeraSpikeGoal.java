@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
+import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.goal.Goal;
 

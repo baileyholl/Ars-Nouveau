@@ -11,8 +11,6 @@ import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
-import com.hollingsworth.arsnouveau.common.block.CraftingLecternBlock;
-import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;

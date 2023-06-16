@@ -21,7 +21,7 @@ import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidat
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;

@@ -34,18 +34,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable, IDecoratable, IVariantTextureProvider<FamiliarEntity> {
+public class FamiliarEntity extends PathfinderMob implements GeoAnimatable, IFamiliar, IDispellable, IDecoratable, IVariantTextureProvider<FamiliarEntity> {
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -123,16 +123,16 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
 
-    public PlayState walkPredicate(AnimationEvent<?> event) {
+    public PlayState walkPredicate(AnimationState<?> event) {
         return PlayState.CONTINUE;
     }
 
     public AnimationController<?> controller;
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         controller = new AnimationController<>(this, "walkController", 1, this::walkPredicate);
-        data.addAnimationController(controller);
+        data.add(controller);
     }
 
 
@@ -147,10 +147,10 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         return (LivingEntity) ((ServerLevel) level).getEntity(getOwnerID());
     }
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.mob_jar;
 
-import com.hollingsworth.arsnouveau.api.item.inv.InteractResult;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
@@ -13,12 +12,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IForgeShearable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

@@ -14,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class FamiliarScript extends ModItem {
     public AbstractFamiliarHolder familiar;
 

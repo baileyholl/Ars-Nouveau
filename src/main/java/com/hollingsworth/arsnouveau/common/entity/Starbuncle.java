@@ -67,12 +67,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -80,7 +81,7 @@ import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
+public class Starbuncle extends PathfinderMob implements GeoAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
 
     public enum StarbuncleGoalState {
@@ -114,7 +115,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     public StarbuncleData data = new StarbuncleData(new CompoundTag());
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
     public boolean canSleep;
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
@@ -159,31 +160,31 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, (event) ->{
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "walkController", 1, (event) ->{
             if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "danceController", 1, (event) ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "danceController", 1, (event) ->{
             if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("dance"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "sleepController", 1, (event) ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "sleepController", 1, (event) ->{
             if (!event.isMoving() && canSleep) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("resting"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animationData.addAnimationController(new AnimationController<>(this, "idleController", 1, (event) ->{
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "idleController", 1, (event) ->{
             if (!event.isMoving() && !canSleep) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -191,7 +192,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 

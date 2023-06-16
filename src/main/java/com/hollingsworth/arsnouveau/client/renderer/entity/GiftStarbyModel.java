@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.GiftStarbuncle;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
@@ -16,7 +16,7 @@ public class GiftStarbyModel extends AnimatedGeoModel<GiftStarbuncle> {
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");
 
     @Override
-    public void setCustomAnimations(GiftStarbuncle entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setCustomAnimations(GiftStarbuncle entity, int uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         if (entity.isTaming())
             return;

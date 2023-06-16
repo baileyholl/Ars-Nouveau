@@ -13,11 +13,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
@@ -56,14 +56,14 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         super.registerControllers(data);
-        data.addAnimationController(new AnimationController<>(this, "spinController", 0, this::spinPredicate));
+        data.add(new AnimationController<>(this, "spinController", 0, this::spinPredicate));
     }
 
 
-    public PlayState spinPredicate(AnimationEvent<?> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("key_rotation"));
+    public PlayState spinPredicate(AnimationState<?> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("key_rotation"));
         return PlayState.CONTINUE;
     }
 

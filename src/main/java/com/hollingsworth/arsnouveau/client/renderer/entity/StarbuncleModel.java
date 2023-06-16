@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     @Override
-    public void setCustomAnimations(Starbuncle entity, int uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setCustomAnimations(Starbuncle entity, int uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         if (entity.partyCarby)
             return;

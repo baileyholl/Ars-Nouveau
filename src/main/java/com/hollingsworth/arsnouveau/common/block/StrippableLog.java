@@ -10,8 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class StrippableLog extends RotatedPillarBlock {
     Supplier<Block> strippedState;
 

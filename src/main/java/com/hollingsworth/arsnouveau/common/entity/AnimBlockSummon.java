@@ -32,18 +32,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISummon, IDispellable {
+public class AnimBlockSummon extends TamableAnimal implements GeoAnimatable, ISummon, IDispellable {
 
     public BlockState blockState;
     public int color;
@@ -225,29 +225,29 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.setResetSpeedInTicks(0);
         String spawnAnim = "spawn";
-        data.addAnimationController(new AnimationController<>(this, spawnAnim, 0, (e) -> {
+        data.add(new AnimationController<>(this, spawnAnim, 0, (e) -> {
             if (!entityData.get(CAN_WALK)) {
-                e.getController().setAnimation(new AnimationBuilder().addAnimation(spawnAnim));
+                e.getController().setAnimation(RawAnimation.begin().thenPlay(spawnAnim));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.addAnimationController(new AnimationController<>(this, "run", 20, (e) -> {
+        data.add(new AnimationController<>(this, "run", 20, (e) -> {
             if (e.isMoving() && entityData.get(CAN_WALK)) {
-                e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
     }
 
-    final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

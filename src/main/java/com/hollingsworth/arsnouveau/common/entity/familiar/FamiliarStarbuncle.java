@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 
 import java.util.Arrays;
 
@@ -62,9 +62,9 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent<?> event) {
+    public PlayState walkPredicate(AnimationState<?> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

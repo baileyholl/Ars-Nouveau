@@ -21,7 +21,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,8 +84,8 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent<?> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+    public PlayState walkPredicate(AnimationState<?> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
         return PlayState.CONTINUE;
     }
 

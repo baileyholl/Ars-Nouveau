@@ -23,16 +23,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class WildenStalker extends Monster implements IAnimatable {
+public class WildenStalker extends Monster implements GeoAnimatable {
     int leapCooldown;
     public Vec3 orbitOffset = Vec3.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
@@ -118,19 +119,19 @@ public class WildenStalker extends Monster implements IAnimatable {
         return 0.4F;
     }
 
-    private PlayState flyPredicate(AnimationEvent<?> event) {
+    private PlayState flyPredicate(AnimationState<?> event) {
         if(isFlying()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
-    private PlayState groundPredicate(AnimationEvent<?> e) {
+    private PlayState groundPredicate(AnimationState<?> e) {
         if(isFlying()){
             return PlayState.STOP;
         }else if(e.isMoving()){
-            e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -140,28 +141,28 @@ public class WildenStalker extends Monster implements IAnimatable {
     AnimationController<WildenStalker> groundController;
     AnimationController<WildenStalker> idleController;
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
         flyController = new AnimationController<>(this, "flyController", 1, this::flyPredicate);
-        animationData.addAnimationController(flyController);
+        animatableManager.ControllerRegistrar.add(flyController);
         groundController = new AnimationController<>(this, "groundController", 1, this::groundPredicate);
-        animationData.addAnimationController(groundController);
+        animatableManager.ControllerRegistrar.add(groundController);
         idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
 
-        animationData.addAnimationController(idleController);
+        animatableManager.ControllerRegistrar.add(idleController);
     }
 
-    private <T extends IAnimatable> PlayState idlePredicate(AnimationEvent<T> tAnimationEvent) {
-        if(tAnimationEvent.isMoving() || isFlying()){
+    private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
+        if(tAnimationState.isMoving() || isFlying()){
             return PlayState.STOP;
         }
-        tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

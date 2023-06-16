@@ -28,17 +28,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Lily extends TamableAnimal implements IAnimatable, IDispellable {
+public class Lily extends TamableAnimal implements GeoAnimatable, IDispellable {
     // Owner UUID to Lily UUID
     public static BiMap<UUID, UUID> ownerLilyMap = HashBiMap.create();
 
@@ -192,49 +192,49 @@ public class Lily extends TamableAnimal implements IAnimatable, IDispellable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "walk", 1, (event) -> {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController(this, "walk", 1, (event) -> {
             if(event.isMoving()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.addAnimationController(new AnimationController(this, "idle", 1, (event) -> {
+        data.add(new AnimationController(this, "idle", 1, (event) -> {
             if(!event.isMoving() && !this.isWagging()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.addAnimationController(new AnimationController(this, "idle_wag", 1, (event) -> {
+        data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
             if(!event.isMoving() && this.isWagging()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("idle_wagging"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wagging"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        data.addAnimationController(new AnimationController(this, "rest", 1, (event) -> {
+        data.add(new AnimationController(this, "rest", 1, (event) -> {
             if(!event.isMoving() && this.isOrderedToSit() && !this.isWagging()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("resting"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        data.addAnimationController(new AnimationController(this, "rest_wag", 1, (event) -> {
+        data.add(new AnimationController(this, "rest_wag", 1, (event) -> {
             if(!event.isMoving() && this.isOrderedToSit() && this.isWagging()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("resting_wagging"));
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting_wagging"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
     }
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

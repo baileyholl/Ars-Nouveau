@@ -45,15 +45,15 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-public class EnchantedFallingBlock extends ColoredProjectile implements IAnimatable {
+public class EnchantedFallingBlock extends ColoredProjectile implements GeoAnimatable {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     public BlockState blockState = Blocks.SAND.defaultBlockState();
@@ -477,12 +477,12 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
 
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
 
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return GeckoLibUtil.createInstanceCache(this);
     }
 }

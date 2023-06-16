@@ -14,7 +14,10 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	protected StorageLecternTile te;

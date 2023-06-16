@@ -14,8 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
@@ -45,8 +45,8 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
 
     public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemTransforms.TransformType transformType) {
         this.currentItemStack = itemStack;
-        GeoModel model = modelProvider instanceof TransformAnimatedModel transformAnimatedModel ? modelProvider.getModel(transformAnimatedModel.getModelResource((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource((SpellBook) animatable));
-        AnimationEvent<?> itemEvent = new AnimationEvent<>((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
+        GeoModel model = modelProvider instanceof TransformAnimatedModel transformAnimatedModel ? modelProvider.getModel(transformAnimatedModel.getModelResource((GeoAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource((SpellBook) animatable));
+        AnimationState<?> itemEvent = new AnimationState<>((GeoAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
         modelProvider.setCustomAnimations((SpellBook) animatable, this.getInstanceId((SpellBook) animatable), itemEvent);
         stack.pushPose();
         stack.translate(0, 0.01f, 0);

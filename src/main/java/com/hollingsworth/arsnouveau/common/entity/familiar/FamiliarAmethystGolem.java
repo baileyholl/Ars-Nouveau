@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,9 +37,9 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
         return super.mobInteract(player, hand);
     }
     @Override
-    public PlayState walkPredicate(AnimationEvent<?> animationEvent) {
-        if (animationEvent.isMoving()) {
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+    public PlayState walkPredicate(AnimationState<?> AnimationState) {
+        if (AnimationState.isMoving()) {
+            AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

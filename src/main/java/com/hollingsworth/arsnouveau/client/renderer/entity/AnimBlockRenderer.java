@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -54,7 +54,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
             }
 
             @Override
-            public void setCustomAnimations(BOBBY animatable, int instanceId, AnimationEvent customPredicate) {
+            public void setCustomAnimations(BOBBY animatable, int instanceId, AnimationState customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
                 IBone head = this.getAnimationProcessor().getBone("block");
                 head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));

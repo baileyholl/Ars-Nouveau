@@ -8,8 +8,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class ModBlock extends Block {
 
     public ModBlock(Properties properties) {

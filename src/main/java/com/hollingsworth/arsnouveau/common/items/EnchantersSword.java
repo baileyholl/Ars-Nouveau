@@ -24,9 +24,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -36,7 +37,7 @@ import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
-public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
+public class EnchantersSword extends SwordItem implements ICasterTool, GeoAnimatable {
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
         this(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
@@ -91,13 +92,13 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
     }
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

@@ -12,16 +12,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
-public class EnchantersShield extends ShieldItem implements IAnimatable {
+public class EnchantersShield extends ShieldItem implements GeoAnimatable {
 
     public EnchantersShield() {
         super(defaultItemProperties().durability(500));
@@ -44,13 +45,13 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
     }
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

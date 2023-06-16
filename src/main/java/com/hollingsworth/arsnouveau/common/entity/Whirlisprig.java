@@ -57,13 +57,14 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
+import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -71,8 +72,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+public class Whirlisprig extends AbstractFlyingCreature implements GeoAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
 
     public int timeSinceBonemeal = 0;
@@ -87,22 +88,22 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     public int timeSinceGen;
     private boolean setBehaviors;
 
-    private PlayState idlePredicate(AnimationEvent<?> event) {
+    private PlayState idlePredicate(AnimationState<?> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
+        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 

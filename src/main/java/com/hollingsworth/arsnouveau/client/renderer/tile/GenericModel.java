@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class GenericModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
+public class GenericModel<T extends GeoAnimatable> extends AnimatedGeoModel<T> {
     public String path;
 
     public ResourceLocation modelLocation;
@@ -33,17 +33,17 @@ public class GenericModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
     }
 
     @Override
-    public ResourceLocation getModelResource(T iAnimatable) {
+    public ResourceLocation getModelResource(T GeoAnimatable) {
         return modelLocation;
     }
 
     @Override
-    public ResourceLocation getTextureResource(T iAnimatable) {
+    public ResourceLocation getTextureResource(T GeoAnimatable) {
         return textLoc;
     }
 
     @Override
-    public ResourceLocation getAnimationResource(T iAnimatable) {
+    public ResourceLocation getAnimationResource(T GeoAnimatable) {
         return animationLoc;
     }
 }

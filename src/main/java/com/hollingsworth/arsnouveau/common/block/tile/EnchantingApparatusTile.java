@@ -30,20 +30,21 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, IAnimatable, IAnimationListener {
+public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, GeoBlockEntity, IAnimationListener {
 
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
@@ -69,7 +70,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         if (level.isClientSide) {
             if (this.isCrafting) {
                 Level world = getLevel();
-                BlockPos pos = getBlockPos().offset(0, 0.5, 0);
+                BlockPos pos = getBlockPos().offset(0, 1, 0);
                 RandomSource rand = world.getRandom();
 
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
@@ -238,27 +239,26 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     AnimationController<EnchantingApparatusTile> idleController;
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         idleController = new AnimationController<>(this, "controller", 0, this::idlePredicate);
-        animationData.addAnimationController(idleController);
+        animatableManager.add(idleController);
         craftController = new AnimationController<>(this, "craft_controller", 0, this::craftPredicate);
-        animationData.addAnimationController(craftController);
-        animationData.setResetSpeedInTicks(0.0);
+        animatableManager.add(craftController);
     }
 
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 
-    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
+    private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
         return PlayState.CONTINUE;
     }
 
-    private <E extends BlockEntity & IAnimatable> PlayState craftPredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & GeoAnimatable> PlayState craftPredicate(AnimationState<E> event) {
         if (!this.isCrafting)
             return PlayState.STOP;
         return PlayState.CONTINUE;
@@ -268,8 +268,8 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     public void startAnimation(int arg) {
         try {
             if (craftController != null) {
-                craftController.markNeedsReload();
-                craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting"));
+                craftController.forceAnimationReset();
+                craftController.setAnimation(RawAnimation.begin().thenPlay("enchanting"));
             }
         }catch (Exception e){
             e.printStackTrace();

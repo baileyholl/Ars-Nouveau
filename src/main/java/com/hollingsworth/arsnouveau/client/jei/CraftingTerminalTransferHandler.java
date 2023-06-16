@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;

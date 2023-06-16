@@ -27,19 +27,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickable, IWandable, ITooltipProvider {
+public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITickable, IWandable, ITooltipProvider {
     int timeMixing;
     boolean isMixing;
     boolean hasSource;
@@ -48,7 +49,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     public List<BlockPos> fromJars = new ArrayList<>();
     public BlockPos toPos;
 
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public PotionMelderTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.POTION_MELDER_TYPE, pos, state);
@@ -219,19 +220,19 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
         return BlockUtil.distanceFrom(pos1, pos2) <= 3;
     }
 
-    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("stir"));
+    private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("stir"));
         return this.isMixing ? PlayState.CONTINUE : PlayState.STOP;
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
-        animationData.setResetSpeedInTicks(0.0);
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
+        animatableManager.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        animatableManager.setResetSpeedInTicks(0.0);
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 

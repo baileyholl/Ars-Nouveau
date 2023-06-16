@@ -19,19 +19,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
+public class RelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, GeoBlockEntity, ITickable {
 
     public RelayTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_RELAY_TILE, pos, state);
@@ -235,26 +236,26 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         }
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
-        data.addAnimationController(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        data.add(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
     }
 
-    private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
+    private <P extends GeoAnimatable> PlayState idlePredicate(AnimationState<P> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
         return PlayState.CONTINUE;
     }
 
-    private <P extends IAnimatable> PlayState floatPredicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation"));
+    private <P extends GeoAnimatable> PlayState floatPredicate(AnimationState<P> event) {
+        event.getController().setAnimation(RawAnimation.begin().thenPlay("rotation"));
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 }

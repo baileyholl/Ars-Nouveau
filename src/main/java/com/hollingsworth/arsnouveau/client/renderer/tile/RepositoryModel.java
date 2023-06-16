@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
@@ -34,8 +34,8 @@ public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
     }
 
     @Override
-    public void setCustomAnimations(RepositoryTile repo, int instanceId, AnimationEvent animationEvent) {
-        super.setCustomAnimations(repo, instanceId, animationEvent);
+    public void setCustomAnimations(RepositoryTile repo, int instanceId, AnimationState AnimationState) {
+        super.setCustomAnimations(repo, instanceId, AnimationState);
     }
 
     @Override

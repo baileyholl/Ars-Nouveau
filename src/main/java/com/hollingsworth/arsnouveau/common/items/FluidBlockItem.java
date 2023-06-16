@@ -12,8 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class FluidBlockItem extends BlockItem {
     public FluidBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);

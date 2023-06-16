@@ -13,9 +13,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.UUID;
 
-// Copy of EvokerFangsEntity with the ability to override damage
-import net.minecraft.world.entity.Entity.RemovalReason;
-
 public class EntityEvokerFangs extends EvokerFangs {
 
 

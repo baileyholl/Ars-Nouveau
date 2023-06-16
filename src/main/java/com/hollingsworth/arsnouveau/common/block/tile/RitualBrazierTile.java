@@ -39,16 +39,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable, IInvProvider, IDispellable, IWandable {
+public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, GeoAnimatable, ILightable, ITickable, IInvProvider, IDispellable, IWandable {
     public AbstractRitual ritual;
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public boolean isDecorative;
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean isOff;
@@ -291,11 +291,11 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, I
 
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 

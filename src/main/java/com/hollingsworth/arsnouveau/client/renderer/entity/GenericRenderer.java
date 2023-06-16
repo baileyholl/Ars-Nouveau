@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class GenericRenderer<T extends LivingEntity & IAnimatable> extends GeoEntityRenderer<T> {
+public class GenericRenderer<T extends LivingEntity & GeoAnimatable> extends GeoEntityRenderer<T> {
     public GenericRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> model) {
         super(renderManager, model);
     }

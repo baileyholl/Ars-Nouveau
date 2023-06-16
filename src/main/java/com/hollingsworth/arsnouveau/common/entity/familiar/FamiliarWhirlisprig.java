@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationState;
 
 public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener {
     public FamiliarWhirlisprig(EntityType<? extends PathfinderMob> ent, Level world) {
@@ -78,11 +78,11 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public PlayState walkPredicate(AnimationEvent<?> event) {
+    public PlayState walkPredicate(AnimationState<?> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("fly"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         }
         return PlayState.CONTINUE;
     }

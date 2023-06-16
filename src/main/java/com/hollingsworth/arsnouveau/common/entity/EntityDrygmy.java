@@ -49,14 +49,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider<EntityDrygmy> {
+public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<EntityDrygmy> {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -180,13 +180,13 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return false;
     }
 
-    private PlayState animationPredicate(AnimationEvent<?> event) {
+    private PlayState animationPredicate(AnimationState<?> event) {
         if (isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("channel"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("channel"));
             return PlayState.CONTINUE;
         }
         if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -279,9 +279,9 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "walkController", 20, this::animationPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
+        animatableManager.add(new AnimationController<>(this, "walkController", 20, this::animationPredicate));
+        animatableManager.add(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override
@@ -307,14 +307,14 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return this.isTamed();
     }
 
-    private PlayState idlePredicate(AnimationEvent<?> event) {
+    private PlayState idlePredicate(AnimationState<?> event) {
         return PlayState.CONTINUE;
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 

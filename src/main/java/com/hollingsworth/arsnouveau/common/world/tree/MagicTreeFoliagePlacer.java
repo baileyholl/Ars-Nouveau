@@ -11,8 +11,6 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerTy
 
 import java.util.function.BiConsumer;
 
-import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer.FoliageAttachment;
-
 public class MagicTreeFoliagePlacer extends FoliagePlacer {
     public MagicTreeFoliagePlacer(UniformInt p_i241999_1_, UniformInt p_i241999_2_) {
         super(p_i241999_1_, p_i241999_2_);

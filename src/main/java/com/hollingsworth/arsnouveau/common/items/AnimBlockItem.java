@@ -1,27 +1,26 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import net.minecraft.world.level.block.Block;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import net.minecraft.world.item.Item.Properties;
-import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class AnimBlockItem extends ModBlockItem implements IAnimatable {
-    AnimationFactory manager = GeckoLibUtil.createFactory(this);
+public class AnimBlockItem extends ModBlockItem implements GeoItem {
+    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public AnimBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
 
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
 }
