@@ -5,7 +5,7 @@
   "380df991-f603-344c-a090-369bad2a924a", "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7", "de4e108a-ed87-4e57-8033-8a7f7940ea27",
   "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
   "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff", "a337102a-eeb3-4967-9deb-a5263b5b6231",
-  "838dd85f-95b9-4a9d-a785-7694e8c7c8b1"],
+  "838dd85f-95b9-4a9d-a785-7694e8c7c8b1", "99a814a0-bff4-4526-bee6-4af5c74a6824"],
   "starbuncleAdoptions": [
     {
       "name": "Xephyr",
@@ -104,6 +104,11 @@
       "color": "red",
       "adopter": "Abandoned_Cat87",
       "bio": "Failed at becoming a mage because he wasn't able to hold the spell book so he went on a quest to find a smaller one."
+    },{
+      "name": "Fisher",
+      "color": "black",
+      "adopter": "PaprikaSu",
+      "bio": "A friendly, swishy lil' guy who likes to zip around at 100 kilometers an hour."
     }
   ]
 }
