@@ -138,7 +138,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		for(BlockPos pos : connectedInventories) {
 			BlockEntity tile = level.getBlockEntity(pos);
 			if(tile instanceof Nameable provider && provider.hasCustomName()) {
-				tabNames.add(provider.getDisplayName().getString());
+				String tabName = provider.getCustomName().getString().trim();
+				if(!tabName.isEmpty()) {
+					tabNames.add(provider.getDisplayName().getString());
+				}
 			}
 		}
 		return tabNames;
