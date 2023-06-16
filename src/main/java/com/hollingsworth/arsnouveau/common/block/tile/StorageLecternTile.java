@@ -526,6 +526,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 				bookwyrmUUIDs.add(NbtUtils.loadUUID(tag));
 			}
 		}
+		updateItems = true;
 		super.load(compound);
 	}
 
