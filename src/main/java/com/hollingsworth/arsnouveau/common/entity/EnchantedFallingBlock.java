@@ -25,7 +25,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
@@ -45,15 +44,15 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-public class EnchantedFallingBlock extends ColoredProjectile implements GeoAnimatable {
+public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     public BlockState blockState = Blocks.SAND.defaultBlockState();

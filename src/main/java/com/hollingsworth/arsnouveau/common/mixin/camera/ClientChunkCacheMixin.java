@@ -98,7 +98,7 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
                 chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
 
             level.onChunkLoaded(chunkPos);
-            MinecraftForge.EVENT_BUS.post(new ChunkEvent.Load(chunk));
+            MinecraftForge.EVENT_BUS.post(new ChunkEvent.Load(chunk, false));
             callback.setReturnValue(chunk);
         }
     }

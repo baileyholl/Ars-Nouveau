@@ -27,9 +27,10 @@ public class ANFakePlayer extends FakePlayer {
     public static final GameProfile PROFILE =
             new GameProfile(UUID.fromString("7400926d-1007-4e53-880f-b43e67f2bf29"), "Ars_Nouveau");
 
+
     @Override
-    public double getReachDistance() {
-        return 4.5; //Forge default
+    public double getBlockReach() {
+        return 4.5;
     }
 
     private ANFakePlayer(ServerLevel world) {

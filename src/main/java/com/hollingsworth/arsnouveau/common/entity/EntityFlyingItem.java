@@ -19,8 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import software.bernie.geckolib3.core.easing.EasingManager;
-import software.bernie.geckolib3.core.easing.EasingType;
+import software.bernie.geckolib.core.animation.EasingType;
 
 public class EntityFlyingItem extends ColoredProjectile {
     public static final EntityDataAccessor<Vec3> to = SynchedEntityData.defineId(EntityFlyingItem.class, DataSerializers.VEC3);

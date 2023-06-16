@@ -33,6 +33,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class FlaskCannon extends ModItem implements IRadialProvider, GeoAnimatable {
+public abstract class FlaskCannon extends ModItem implements IRadialProvider, GeoItem {
     public FlaskCannon(Properties properties) {
         super(properties);
     }

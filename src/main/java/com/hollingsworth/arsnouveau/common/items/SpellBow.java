@@ -24,10 +24,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class SpellBow extends BowItem implements GeoAnimatable, ICasterTool {
+public class SpellBow extends BowItem implements GeoItem, ICasterTool {
 
     public SpellBow(Properties properties) {
         super(properties);

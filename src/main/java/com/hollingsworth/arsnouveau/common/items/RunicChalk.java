@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Material;
 
 public class RunicChalk extends ModItem {
     public RunicChalk() {
@@ -21,7 +20,7 @@ public class RunicChalk extends ModItem {
         if (world.isClientSide)
             return super.useOn(context);
 
-        if (world.getBlockState(pos.above()).getMaterial() == Material.AIR) {
+        if (world.getBlockState(pos.above()).isAir()) {
             world.setBlockAndUpdate(pos.above(), BlockRegistry.RUNE_BLOCK.defaultBlockState());
             if (world.getBlockEntity(pos.above()) instanceof RuneTile) {
                 ((RuneTile) world.getBlockEntity(pos.above())).uuid = context.getPlayer().getUUID();

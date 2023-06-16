@@ -123,7 +123,7 @@ public class ScryEvents {
                     rand.nextInt(255));
             BlockPos renderPos = new BlockPos(p);
             if (Math.abs(yView - p.getY()) >= 30) {
-                renderPos = new BlockPos(p.getX(), p.getY() > yView ? yView + 20 : yView - 20, p.getZ());
+                renderPos = new BlockPos(p.getX(), (int) (p.getY() > yView ? yView + 20 : yView - 20), p.getZ());
                 color = new ParticleColor(
                         rand.nextInt(30),
                         rand.nextInt(255),
@@ -131,7 +131,7 @@ public class ScryEvents {
             }
 
             if (Math.abs(yView - p.getY()) >= 60) {
-                renderPos = new BlockPos(p.getX(), p.getY() > yView ? yView + 20 : yView - 20, p.getZ());
+                renderPos = new BlockPos(p.getX(), (int) (p.getY() > yView ? yView + 20 : yView - 20), p.getZ());
                 color = new ParticleColor(
                         rand.nextInt(50),
                         rand.nextInt(50),

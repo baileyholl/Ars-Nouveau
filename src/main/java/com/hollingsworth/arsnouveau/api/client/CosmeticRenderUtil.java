@@ -9,8 +9,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.util.RenderUtils;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.util.RenderUtils;
+
 
 public class CosmeticRenderUtil {
 

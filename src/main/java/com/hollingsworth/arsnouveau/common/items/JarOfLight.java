@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 
 public class JarOfLight extends ModItem {
 
@@ -84,7 +83,7 @@ public class JarOfLight extends ModItem {
     }
 
     public boolean placeLight(Level world, BlockPos pos, CompoundTag tag) {
-        if (world.getBlockState(pos).getMaterial() == Material.AIR) {
+        if (world.getBlockState(pos).isAir()) {
             world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState());
             setLightExists(tag, true);
             setLightLocation(tag, pos);

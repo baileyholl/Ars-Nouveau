@@ -39,7 +39,7 @@ public class MooshroomBehavior extends JarBehavior<MushroomCow> {
             cow.setInvulnerable(mooshroom.isInvulnerable());
             tile.setEntityData(cow);
 
-            Block mushroomType = mooshroom.getMushroomType().getBlockState().getBlock();
+            Block mushroomType = mooshroom.getVariant().getBlockState().getBlock();
             for(int i = 0; i < 5; ++i) {
                 world.addFreshEntity(new ItemEntity(world, mooshroom.getX(), mooshroom.getY(1.0D), mooshroom.getZ(), new ItemStack(mushroomType)));
             }

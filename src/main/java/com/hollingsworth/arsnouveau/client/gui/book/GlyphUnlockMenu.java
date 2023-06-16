@@ -14,11 +14,10 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -30,6 +29,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jline.reader.Widget;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -178,7 +179,7 @@ public class GlyphUnlockMenu extends BaseBook {
                 }
             }
 
-            for (Widget w : renderables) {
+            for (Renderable w : renderables) {
                 if (w instanceof GlyphButton glyphButton) {
                     if (glyphButton.abstractSpellPart.getRegistryName() != null) {
                         AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
@@ -192,7 +193,7 @@ public class GlyphUnlockMenu extends BaseBook {
             // Reset our book on clear
             searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
             displayedGlyphs = allParts;
-            for (Widget w : renderables) {
+            for (Renderable w : renderables) {
                 if (w instanceof GlyphButton) {
                     ((GlyphButton) w).visible = true;
                 }

@@ -20,7 +20,7 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.registries.*;
-import software.bernie.geckolib3.GeckoLib;
+import software.bernie.geckolib.GeckoLib;
 import top.theillusivec4.curios.Curios;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
@@ -41,7 +41,6 @@ public class ModSetup {
     }
 
     public static void initGeckolib() {
-        GeckoLib.DISABLE_NETWORKING = true;
         GeckoLib.initialize();
     }
 

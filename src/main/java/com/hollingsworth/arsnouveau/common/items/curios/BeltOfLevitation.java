@@ -6,7 +6,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -23,7 +22,7 @@ public class BeltOfLevitation extends ArsNouveauCurio {
             if (!player.isOnGround() && player.isShiftKeyDown() && !world.isClientSide()) {
                 boolean isTooHigh = true;
                 for (int i = 1; i < 6; i++) {
-                    if (world.getBlockState(player.blockPosition().below(i)).getMaterial() != Material.AIR) {
+                    if (!world.getBlockState(player.blockPosition().below(i)).isAir()) {
                         isTooHigh = false;
                         break;
                     }

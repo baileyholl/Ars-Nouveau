@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class AnimModItem extends ModItem implements GeoAnimatable {
+
+public class AnimModItem extends ModItem implements GeoItem {
 
     public AnimModItem(Properties properties) {
         super(properties);
