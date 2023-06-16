@@ -24,17 +24,17 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WildenGuardian extends Monster implements GeoAnimatable {
+public class WildenGuardian extends Monster implements GeoEntity {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public int armorCooldown;
     public int armorTimeRemaining;
@@ -183,13 +183,13 @@ public class WildenGuardian extends Monster implements GeoAnimatable {
     AnimationController<WildenGuardian> runController;
     AnimationController<WildenGuardian> idleController;
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         controller = new AnimationController<>(this, "attackController", 1, this::defendPredicate);
         runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
         idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
-        animatableManager.ControllerRegistrar.add(controller);
-        animatableManager.ControllerRegistrar.add(runController);
-        animatableManager.ControllerRegistrar.add(idleController);
+        animatableManager.add(controller);
+        animatableManager.add(runController);
+        animatableManager.add(idleController);
     }
 
     public int getAttackDuration() {

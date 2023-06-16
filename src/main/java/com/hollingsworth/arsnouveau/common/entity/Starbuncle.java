@@ -67,21 +67,20 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class Starbuncle extends PathfinderMob implements GeoAnimatable, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
+public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable, IVariantColorProvider<Starbuncle> {
 
 
     public enum StarbuncleGoalState {
@@ -160,29 +159,29 @@ public class Starbuncle extends PathfinderMob implements GeoAnimatable, IDecorat
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "walkController", 1, (event) ->{
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
+        animatableManager.add(new AnimationController<>(this, "walkController", 1, (event) ->{
             if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "danceController", 1, (event) ->{
+        animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) ->{
             if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "sleepController", 1, (event) ->{
+        animatableManager.add(new AnimationController<>(this, "sleepController", 1, (event) ->{
             if (!event.isMoving() && canSleep) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "idleController", 1, (event) ->{
+        animatableManager.add(new AnimationController<>(this, "idleController", 1, (event) ->{
             if (!event.isMoving() && !canSleep) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;

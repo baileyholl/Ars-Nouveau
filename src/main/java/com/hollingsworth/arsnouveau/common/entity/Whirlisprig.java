@@ -57,22 +57,21 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class Whirlisprig extends AbstractFlyingCreature implements GeoAnimatable, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
+public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
 
@@ -98,8 +97,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoAnimatable
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
+        animatableManager.add(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override

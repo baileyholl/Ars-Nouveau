@@ -42,10 +42,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -261,7 +262,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         data.add(new AnimationController<>(this, "walkController", 1, this::idle));
     }
 
-    public PlayState idle(AnimationState<?> event) {
+    public <P extends GeoAnimatable> PlayState idle(AnimationState<P> event) {
         event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
         return PlayState.CONTINUE;
     }

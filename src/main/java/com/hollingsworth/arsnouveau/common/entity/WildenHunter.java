@@ -20,17 +20,18 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WildenHunter extends Monster implements GeoAnimatable, IAnimationListener {
+
+public class WildenHunter extends Monster implements GeoEntity, IAnimationListener {
 
     public static final EntityDataAccessor<String> ANIM_STATE = SynchedEntityData.defineId(WildenHunter.class, EntityDataSerializers.STRING);
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
@@ -126,7 +127,7 @@ public class WildenHunter extends Monster implements GeoAnimatable, IAnimationLi
                 return;
             if (arg == Animations.HOWL.ordinal()) {
                 controller.forceAnimationReset();
-                controller.setAnimation(RawAnimation.begin().thenPlay("howl_master").addAnimation("idle"));
+                controller.setAnimation(RawAnimation.begin().thenPlay("howl_master").thenPlay("idle"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,13 +145,13 @@ public class WildenHunter extends Monster implements GeoAnimatable, IAnimationLi
     AnimationController<WildenHunter> idleController;
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         controller = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
         runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
         idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
-        animatableManager.ControllerRegistrar.add(controller);
-        animatableManager.ControllerRegistrar.add(runController);
-        animatableManager.ControllerRegistrar.add(idleController);
+        animatableManager.add(controller);
+        animatableManager.add(runController);
+        animatableManager.add(idleController);
     }
 
     private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {

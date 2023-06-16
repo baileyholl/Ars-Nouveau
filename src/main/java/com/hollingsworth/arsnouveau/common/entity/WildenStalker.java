@@ -23,17 +23,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WildenStalker extends Monster implements GeoAnimatable {
+public class WildenStalker extends Monster implements GeoEntity {
     int leapCooldown;
     public Vec3 orbitOffset = Vec3.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
@@ -141,14 +140,14 @@ public class WildenStalker extends Monster implements GeoAnimatable {
     AnimationController<WildenStalker> groundController;
     AnimationController<WildenStalker> idleController;
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         flyController = new AnimationController<>(this, "flyController", 1, this::flyPredicate);
-        animatableManager.ControllerRegistrar.add(flyController);
+        animatableManager.add(flyController);
         groundController = new AnimationController<>(this, "groundController", 1, this::groundPredicate);
-        animatableManager.ControllerRegistrar.add(groundController);
+        animatableManager.add(groundController);
         idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
 
-        animatableManager.ControllerRegistrar.add(idleController);
+        animatableManager.add(idleController);
     }
 
     private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {

@@ -60,18 +60,17 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 
-public class WildenChimera extends Monster implements GeoAnimatable {
+public class WildenChimera extends Monster implements GeoEntity {
     private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
     public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
@@ -148,8 +147,8 @@ public class WildenChimera extends Monster implements GeoAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "walkController", 1, e ->{
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
+        animatableManager.add(new AnimationController<>(this, "walkController", 1, e ->{
             if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()){
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
@@ -165,29 +164,29 @@ public class WildenChimera extends Monster implements GeoAnimatable {
             return PlayState.STOP;
         });
 
-        animatableManager.ControllerRegistrar.add(crouchController);
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "idleController", 1, (event ->{
+        animatableManager.add(crouchController);
+        animatableManager.add(new AnimationController<>(this, "idleController", 1, (event ->{
             if(!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         })));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "flyController", 1, (event) ->{
+        animatableManager.add(new AnimationController<>(this, "flyController", 1, (event) ->{
             if(isFlying() && !isDiving()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("fly_rising"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "diveController", 1, (event) ->{
+        animatableManager.add(new AnimationController<>(this, "diveController", 1, (event) ->{
             if(isDiving()){
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dive"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "howlController", 1, e ->{
+        animatableManager.add(new AnimationController<>(this, "howlController", 1, e ->{
             if (isHowling()) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("roar"));
                 return PlayState.CONTINUE;
@@ -195,7 +194,7 @@ public class WildenChimera extends Monster implements GeoAnimatable {
             e.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "swimController", 1, e ->{
+        animatableManager.add(new AnimationController<>(this, "swimController", 1, e ->{
             if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()){
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("swim"));
                 return PlayState.CONTINUE;
@@ -203,7 +202,7 @@ public class WildenChimera extends Monster implements GeoAnimatable {
 
             return PlayState.STOP;
         }));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "ramController", 1, (event -> {
+        animatableManager.add(new AnimationController<>(this, "ramController", 1, (event -> {
             if(isRamming() && !isRamPrep()){
                 if(!this.hasWings()){
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("charge"));
@@ -212,7 +211,7 @@ public class WildenChimera extends Monster implements GeoAnimatable {
             }
             return PlayState.STOP;
         })));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "ramPrep", 1, (event -> {
+        animatableManager.add(new AnimationController<>(this, "ramPrep", 1, (event -> {
             if(isRamPrep() && !isRamming()){
                 if(this.hasWings()){
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("wing_charge_prep"));

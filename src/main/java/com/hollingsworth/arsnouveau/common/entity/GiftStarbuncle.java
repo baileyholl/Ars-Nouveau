@@ -28,17 +28,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.manager.AnimatableInstanceCache;
-import software.bernie.geckolib3.core.manager.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GiftStarbuncle extends PathfinderMob implements GeoAnimatable {
+public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     int tamingTime;
     public static final EntityDataAccessor<Boolean> BEING_TAMED = SynchedEntityData.defineId(GiftStarbuncle.class, EntityDataSerializers.BOOLEAN);
 
@@ -122,9 +121,9 @@ public class GiftStarbuncle extends PathfinderMob implements GeoAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager.ControllerRegistrar) {
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
-        animatableManager.ControllerRegistrar.add(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
+        animatableManager.add(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
+        animatableManager.add(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
     }
 
     private PlayState animationPredicate(AnimationState<?> event) {
