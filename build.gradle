@@ -42,7 +42,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.19.2'
+archivesBaseName = 'ars_nouveau-1.20.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
@@ -64,7 +64,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
-    mappings channel: 'parchment', version: '2022.08.14-1.19.2'
+    mappings channel: 'parchment', version: '2022.11.27-1.19.2'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
@@ -177,7 +177,7 @@ dependencies {
     library fg.deobf("com.github.LlamaLad7:MixinExtras:0.1.1")
     annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
 
-    implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+//    implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
@@ -185,31 +185,30 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
-    shade fg.deobf("software.bernie.geckolib:geckolib-forge-1.19:${gecko_version}")
+    implementation fg.deobf("curse.maven:curios-309927:4583413")
+    shade fg.deobf("curse.maven:geckolib-388172:4573048")
+    implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
-    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-2.0.1.128")
+//    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
+//    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
+//    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental
+//    runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // ars elemental
 
-    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
-    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
-    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental
-    runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // ars elemental
-
-    implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
-    implementation fg.deobf("curse.maven:jade-324717:4318618")
-    runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
+//    implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
+//    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
+//    implementation fg.deobf("curse.maven:jade-324717:4318618")
+//    runtimeOnly fg.deobf("curse.maven:config-457570:4011355")
 //    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
 //    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
 //    implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
-    runtimeOnly fg.deobf("curse.maven:config-443900:4064952")
+/*    runtimeOnly fg.deobf("curse.maven:config-443900:4064952")
     runtimeOnly fg.deobf("curse.maven:config-314906:4229131") // ftb chunks
     runtimeOnly fg.deobf("curse.maven:config-419699:4147353") // arch
     runtimeOnly fg.deobf("curse.maven:config-404465:4210870") // ftb library
     runtimeOnly fg.deobf("curse.maven:config-404468:4229140") // ftb teams
     runtimeOnly fg.deobf("curse.maven:config-556861:4324174") // functional storage
     runtimeOnly fg.deobf("curse.maven:config-287342:4391554") // titanium
-    runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")
+    runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")*/
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 
