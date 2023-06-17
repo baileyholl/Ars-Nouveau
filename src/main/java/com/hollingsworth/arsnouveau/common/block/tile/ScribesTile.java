@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -49,7 +50,7 @@ import java.util.List;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
-public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener {
+public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider, IAnimationListener, IWandable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
@@ -58,7 +59,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     ResourceLocation recipeID; // Cached for after load
     public boolean crafting;
     public int craftingTicks;
-
+    public boolean autoYoink = true;
 
     public ScribesTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.SCRIBES_TABLE_TILE, pos, state);
@@ -98,8 +99,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                     break;
                 }
             }
-            if (!foundStack && level.getGameTime() % 20 == 0)
-                checkInventories();
+            if (!foundStack && level.getGameTime() % 20 == 0 && autoYoink) {
+                takeNearby();
+            }
 
             if (getRemainingRequired().isEmpty() && !crafting) {
                 crafting = true;
@@ -122,7 +124,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
     }
 
-    public void checkInventories() {
+    public void takeNearby() {
         for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
             if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).isPresent()) {
                 IItemHandler handler = level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).orElse(null);
@@ -261,6 +263,12 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     }
 
     @Override
+    public void onWanded(Player playerEntity) {
+        autoYoink = !autoYoink;
+        updateBlock();
+    }
+
+    @Override
     public void load(CompoundTag compound) {
         super.load(compound);
         stack = ItemStack.of((CompoundTag) compound.get("itemStack"));
@@ -272,6 +280,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         this.consumedStacks = NBTUtil.readItems(compound, "consumed");
         this.craftingTicks = compound.getInt("craftingTicks");
         this.crafting = compound.getBoolean("crafting");
+        this.autoYoink = compound.getBoolean("autoYoink");
     }
 
     @Override
@@ -289,6 +298,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         NBTUtil.writeItems(compound, "consumed", consumedStacks);
         compound.putInt("craftingTicks", craftingTicks);
         compound.putBoolean("crafting", crafting);
+        compound.putBoolean("autoYoink", autoYoink);
     }
 
     private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
@@ -398,6 +408,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if(recipe != null){
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.output.getHoverName()));
             tooltip.add(Component.translatable("ars_nouveau.scribes_table.throw_items").withStyle(ChatFormatting.GOLD));
+        }
+        if(!autoYoink){
+            tooltip.add(Component.translatable("ars_nouveau.scribes_table.auto_take_disabled").withStyle(ChatFormatting.GOLD));
         }
     }
 

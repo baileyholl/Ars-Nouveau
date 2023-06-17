@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGlyphCraft;
@@ -36,7 +37,7 @@ public class ScribesBlock extends TableBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
-            return InteractionResult.SUCCESS;
+            return InteractionResult.PASS;
         }
         if (player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()) {
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
@@ -52,6 +53,7 @@ public class ScribesBlock extends TableBlock {
         }
 
         if (!player.isShiftKeyDown()) {
+
             if (tile.consumeStack(player.getItemInHand(handIn))) {
                 return InteractionResult.SUCCESS;
             }
@@ -74,7 +76,9 @@ public class ScribesBlock extends TableBlock {
         }
         if (player.isShiftKeyDown()) {
             ItemStack stack = tile.getStack();
-
+            if(player.getItemInHand(handIn).getItem() instanceof DominionWand){
+                return InteractionResult.PASS;
+            }
             if (stack == null || stack.isEmpty())
                 return InteractionResult.SUCCESS;
 
@@ -116,7 +120,11 @@ public class ScribesBlock extends TableBlock {
             return;
         Level world = event.getLevel();
         BlockPos pos = event.getPos();
-        if (world.getBlockState(pos).getBlock() instanceof ScribesBlock) {
+
+        if (world.getBlockState(pos).getBlock() instanceof ScribesBlock ) {
+            if(event.getEntity().getItemInHand(event.getHand()).getItem() instanceof DominionWand){
+                return;
+            }
             BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
             event.setCanceled(true);
         }
