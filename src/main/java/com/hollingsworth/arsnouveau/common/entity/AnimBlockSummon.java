@@ -48,8 +48,8 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
     public BlockState blockState;
     public int color;
     private int ticksLeft;
-    protected static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
     public boolean isAlternateSpawn;
 
     public AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -235,7 +235,7 @@ public class AnimBlockSummon extends TamableAnimal implements IAnimatable, ISumm
             }
             return PlayState.STOP;
         }));
-        data.addAnimationController(new AnimationController<>(this, "run", 20, (e) -> {
+        data.addAnimationController(new AnimationController<>(this, "run", 1, (e) -> {
             if (e.isMoving() && entityData.get(CAN_WALK)) {
                 e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
                 return PlayState.CONTINUE;

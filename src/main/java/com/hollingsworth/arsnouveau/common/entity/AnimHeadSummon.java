@@ -29,6 +29,7 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
         this.head_data = head_data;
     }
 
+
     @Override
     public EntityType<?> getType() {
         return ModEntities.ANIMATED_HEAD.get();
@@ -44,13 +45,6 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
         level.addFreshEntity(fallingBlock);
     }
 
-    public void setHeadData(CompoundTag data) {
-        this.head_data = data;
-    }
-
-    public CompoundTag getHead_data() {
-        return head_data;
-    }
 
     @Override
     public Packet<?> getAddEntityPacket() {
@@ -76,6 +70,12 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
             stack.setTag(this.head_data);
         }
         return stack;
+    }
+
+    public static CompoundTag getHeadTagFromName(String playerName){
+        CompoundTag compoundtag = new CompoundTag();
+        compoundtag.putString("SkullOwner", playerName);
+        return compoundtag;
     }
 
     /**
