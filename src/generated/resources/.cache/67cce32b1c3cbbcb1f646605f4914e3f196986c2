@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-18T18:44:06.9199134	LootTables
+// 1.19.2	2023-06-17T12:50:06.8773523	LootTables
 d2e03e3c4f0549450774454a6592cf602f65d58e data/ars_nouveau/loot_tables/blocks/agronomic_sourcelink.json
 3c10d96f7ca01306c8b28d77f99cc15aa555f0b7 data/ars_nouveau/loot_tables/blocks/alchemical_sourcelink.json
 5989e056e242a821281ec28bc1fb6225f84ecbe1 data/ars_nouveau/loot_tables/blocks/alteration_table.json
@@ -67,6 +67,7 @@ ea75df43daf7c66f01c03f398a2e680b9304b22b data/ars_nouveau/loot_tables/blocks/rel
 278a30a722768d1ae569e17bdba1ce623bd5f242 data/ars_nouveau/loot_tables/blocks/relay_splitter.json
 e95d7189b9a2cfcf7ffdb654f0a696ff694a3f72 data/ars_nouveau/loot_tables/blocks/relay_warp.json
 4e4fb66a672842a28e7b37dafd9dbf496a7cd217 data/ars_nouveau/loot_tables/blocks/ritual_brazier.json
+c6452292d6c919b0548c0c9790686a16f62b3217 data/ars_nouveau/loot_tables/blocks/rotating_spell_turret.json
 30ef44838c85c45aa1bc6f976b42f794821c707d data/ars_nouveau/loot_tables/blocks/sconce.json
 2a9fdd642aa0f16af5ee973ab31fe48baf4b21c5 data/ars_nouveau/loot_tables/blocks/scribes_table.json
 f725a66b09ecd108a74e86916742e1aebfccf8ff data/ars_nouveau/loot_tables/blocks/scryers_crystal.json
