@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -190,7 +189,7 @@ public class CasterTomeProvider implements DataProvider {
                         .add(AugmentPierce.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
                 "For those who can't settle with just a tiny hut.",
-                new RainbowParticleColor(0, 0, 0))
+                new ParticleColor(255, 255, 255))
         );
 
 

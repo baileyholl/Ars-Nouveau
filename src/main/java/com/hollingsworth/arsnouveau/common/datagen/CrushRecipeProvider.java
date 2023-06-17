@@ -58,6 +58,7 @@ public class CrushRecipeProvider implements DataProvider {
 
         recipes.add(new CrushRecipe("terracotta", Ingredient.of(Items.TERRACOTTA)).withItems(Items.RED_SAND.getDefaultInstance()));
         recipes.add(new CrushRecipe("sugar_cane", Ingredient.of(Items.SUGAR_CANE)).withItems(new ItemStack(Items.SUGAR, 2)));
+        recipes.add(new CrushRecipe("sandstone_to_sand", Ingredient.of(Items.SANDSTONE)).withItems(Items.SAND.getDefaultInstance()));
         Path output = this.generator.getOutputFolder();
         for (CrushRecipe g : recipes) {
             Path path = getRecipePath(output, g.getId().getPath());
