@@ -24,9 +24,72 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         super(BlockRegistry.ROTATING_TURRET_TILE.get(), pos, state);
     }
 
-    private static final String TAG_ROTATION_X = "rotationX";
-    private static final String TAG_ROTATION_Y = "rotationY";
-    public float rotationX, rotationY;
+    public float rotationX;
+    public float rotationY;
+    public float neededRotationX;
+    public float neededRotationY;
+
+    // Step between current and needed rotation on the client each tick, smoothly animate with partials between
+    public float clientNeededX;
+    public float clientNeededY;
+    @Override
+    public void tick() {
+        super.tick();
+        // Animated in the renderer
+        if(level.isClientSide){
+            if(clientNeededX != neededRotationX){
+                float diff = neededRotationX - clientNeededX;
+                if(Math.abs(diff) < 0.1){
+                    clientNeededX = neededRotationX;
+                }else{
+                    clientNeededX += diff * 0.1f;
+                }
+            }
+            if(clientNeededY != neededRotationY){
+                float diff = neededRotationY - clientNeededY;
+                if(Math.abs(diff) < 0.1){
+                    clientNeededY = neededRotationY;
+                }else{
+                    clientNeededY += diff * 0.1f;
+                }
+            }
+            if(rotationX != clientNeededX){
+                float diff = clientNeededX - rotationX;
+                if(Math.abs(diff) < 0.1){
+                    rotationX = clientNeededX;
+                }else{
+                    rotationX += diff * 0.1f;
+                }
+            }
+            if(rotationY != clientNeededY){
+                float diff = clientNeededY - rotationY;
+                if(Math.abs(diff) < 0.1){
+                    rotationY = clientNeededY;
+                }else{
+                    rotationY += diff * 0.1f;
+                }
+            }
+            return;
+        }
+        if(rotationX != neededRotationX){
+            float diff = neededRotationX - rotationX;
+            if(Math.abs(diff) < 0.1){
+                setRotationX(neededRotationX);
+            }else{
+                setRotationX(rotationX + diff * 0.1f);
+            }
+            setChanged();
+        }
+        if(rotationY != neededRotationY){
+            float diff = neededRotationY - rotationY;
+            if(Math.abs(diff) < 0.1){
+                setRotationY(neededRotationY);
+            }else{
+                setRotationY(rotationY + diff * 0.1f);
+            }
+            setChanged();
+        }
+    }
 
     public void aim(@Nullable BlockPos blockPos, Player playerEntity) {
         if (blockPos == null) return;
@@ -37,20 +100,20 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         Vec3 diffVec = blockVec.subtract(thisVec);
         Vec3 diffVec2D = new Vec3(diffVec.x, diffVec.z, 0);
         Vec3 rotVec = new Vec3(0, 1, 0);
-        double angle = angleBetween(rotVec, diffVec2D) / Math.PI * 180.0;
+        float angle = (float) (angleBetween(rotVec, diffVec2D) / Math.PI * 180.0f);
 
         if (blockVec.x < thisVec.x) {
             angle = -angle;
         }
 
-        setRotationX((float) angle + 90);
+        neededRotationX = angle + 90f;
 
         rotVec = new Vec3(diffVec.x, 0, diffVec.z);
-        angle = angleBetween(diffVec, rotVec) * 180F / Math.PI;
+        angle = (float) (angleBetween(diffVec, rotVec) * 180F / (float)Math.PI);
         if (blockVec.y < thisVec.y) {
             angle = -angle;
         }
-        setRotationY((float) angle);
+        neededRotationY = angle;
 
         updateBlock();
         ParticleUtil.beam(blockPos, getBlockPos(), level);
@@ -70,15 +133,19 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putFloat(TAG_ROTATION_Y, rotationY);
-        tag.putFloat(TAG_ROTATION_X, rotationX);
+        tag.putFloat("rotationY", rotationY);
+        tag.putFloat("rotationX", rotationX);
+        tag.putFloat("neededRotationY", neededRotationY);
+        tag.putFloat("neededRotationX", neededRotationX);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        rotationX = tag.getFloat(TAG_ROTATION_X);
-        rotationY = tag.getFloat(TAG_ROTATION_Y);
+        rotationX = tag.getFloat("rotationX");
+        rotationY = tag.getFloat("rotationY");
+        neededRotationX = tag.getFloat("neededRotationX");
+        neededRotationY = tag.getFloat("neededRotationY");
     }
 
     public float getRotationX() {

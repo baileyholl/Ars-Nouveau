@@ -9,7 +9,8 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:basic_spell_turret"
+      "recipe": "ars_nouveau:basic_spell_turret",
+      "recipe2": "ars_nouveau:rotating_spell_turret"
     },
     {
       "type": "patchouli:text",

@@ -834,7 +834,7 @@ public class BlockRegistry {
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                 return BasicTurretRenderer::getISTER;
             }
-        });
+        }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
 
         ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
 

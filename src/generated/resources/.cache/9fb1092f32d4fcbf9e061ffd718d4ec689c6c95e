@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-24T19:04:49.9124641	Recipes
+// 1.19.2	2023-06-17T12:37:15.5551495	Recipes
 2f8defc056cb514d0403c026bd216faabe8c59b5 data/ars_nouveau/advancements/recipes/ars_nouveau/agronomic_sourcelink.json
 5b27f030ed9411ac9c3b4a160363aee9e4fd7454 data/ars_nouveau/advancements/recipes/ars_nouveau/alchemical_sourcelink.json
 24b2148fcda9c3b3704f9625a7d00338b764f512 data/ars_nouveau/advancements/recipes/ars_nouveau/allow_scroll.json
@@ -95,6 +95,8 @@ f40985e34947a6f9539f8a6fe7d72cac6078b0bc data/ars_nouveau/advancements/recipes/a
 4e3fde08d5d4a6daafcbad25ce59ef835183e180 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_sunrise.json
 4a3358370f992851f28c969be0fda2195b9178b3 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_warping.json
 3118abcb58c34b14b5ae9d6b15161101657033af data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_wilden_summon.json
+01d037b6488430db83afa4b9551570773796f988 data/ars_nouveau/advancements/recipes/ars_nouveau/rotating_spell_turret.json
+d2ceeb1260e926c94844a3b4617b40f4f9c2694d data/ars_nouveau/advancements/recipes/ars_nouveau/rotating_turret_to_basic_spell_turret.json
 9e320d6567d3325bc50646d683991493b92e3259 data/ars_nouveau/advancements/recipes/ars_nouveau/runic_chalk.json
 416d86a7769a45be7ea64c775d126ebb0cc6dc76 data/ars_nouveau/advancements/recipes/ars_nouveau/sconce.json
 53b472f4f8dfbc2fed0598c74f82cfc9914363b4 data/ars_nouveau/advancements/recipes/ars_nouveau/scribes_table.json
@@ -296,6 +298,8 @@ e614514958137f0d6bab68b6f2d4d011412dbea7 data/ars_nouveau/recipes/ritual_restora
 11f91be9c532eb584437c2799fb6fb1abf897c60 data/ars_nouveau/recipes/ritual_sunrise.json
 6e485573d1559126c99d5a0f13b5c15d0b9d7b23 data/ars_nouveau/recipes/ritual_warping.json
 52ee8e60a5bc9daf2b5e62f5cf920c0b47c5cdde data/ars_nouveau/recipes/ritual_wilden_summon.json
+32e3d788dc2ed9f3815ef7be9be7e3caa1b84f8d data/ars_nouveau/recipes/rotating_spell_turret.json
+6295a44bc95024604a28e65b3ffae9614357d19c data/ars_nouveau/recipes/rotating_turret_to_basic_spell_turret.json
 b3b409f0c4f2fa463b86df07383c8cb493876e62 data/ars_nouveau/recipes/runic_chalk.json
 da8dd3f92e29f6bae117e68ec89eb4d93206f98b data/ars_nouveau/recipes/sconce.json
 b044c72b12a393f205693e5f7d70fd9c85760738 data/ars_nouveau/recipes/scribes_table.json

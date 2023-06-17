@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-13T20:06:22.831211	Patchouli
+// 1.19.2	2023-06-17T12:37:15.5506361	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -27,7 +27,7 @@ c7d187c5baed53c4ddb63b6b6dc9ec9847c21a45 data/ars_nouveau/patchouli_books/worn_n
 6c48b4ea2dedda187ac31933c8d54e8c40744aff data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/drygmy_charm.json
 2aa6f0796e1c44db6a5f89ce86c71b51d30f55ab data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/mimic_scroll.json
 269964459879bd2f251da0caecebfdd380dd3c77 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/spell_prism.json
-205bd6e386e4653a4cecbedd025991bd17b4ee21 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/spell_turret.json
+c5c734978c587616db905cdcdd4da1bd054ab42b data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/spell_turret.json
 768776f5f17b7d6f60c684d3dd43b16d29e9692b data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/starbuncle_charm.json
 83400883b7c5713d903c1eff29a461751e6ed84c data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/starbuncle_shades.json
 2ea9c13e62cb450b8b22d140922ec1dc5647e7c0 data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/summon_bed.json

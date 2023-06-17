@@ -1212,5 +1212,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
         add("ars_nouveau.rewards.enabled", "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.");
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
+        add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
     }
 }

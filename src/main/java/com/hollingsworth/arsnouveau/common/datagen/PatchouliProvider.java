@@ -222,7 +222,7 @@ public class PatchouliProvider implements DataProvider {
 
         var turrets = addPage(new PatchouliBuilder(AUTOMATION, BlockRegistry.BASIC_SPELL_TURRET)
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.BASIC_SPELL_TURRET))
+                .withPage(new CraftingPage(BlockRegistry.BASIC_SPELL_TURRET).withRecipe2(BlockRegistry.ROTATING_TURRET))
                 .withLocalizedText()
                 .withPage(new ApparatusPage(BlockRegistry.ENCHANTED_SPELL_TURRET))
                 .withLocalizedText()

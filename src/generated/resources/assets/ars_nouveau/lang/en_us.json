@@ -851,6 +851,7 @@
   "ars_nouveau.totem_perk.active": "Thread of Undying is now active.",
   "ars_nouveau.totem_perk.trigger": "Thread of Undying will reactive the next time you sleep.",
   "ars_nouveau.true": "true",
+  "ars_nouveau.turret.tooltip": "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.",
   "ars_nouveau.unlocked": "Unlocked",
   "ars_nouveau.updated_codex": "You have updated the codex with %s glyphs",
   "ars_nouveau.wand.invalid": "Invalid spell. Wands accept Effects and Augments only.",
