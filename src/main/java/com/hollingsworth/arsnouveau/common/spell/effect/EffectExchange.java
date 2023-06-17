@@ -38,8 +38,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Set;
 
-import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafelyWithoutSound;
-
 public class EffectExchange extends AbstractEffect {
     public static EffectExchange INSTANCE = new EffectExchange();
 
@@ -103,8 +101,10 @@ public class EffectExchange extends AbstractEffect {
         BlockState placeState = item.getBlock().getStateForPlacement(context);
         if(placeState != null && placeState.getBlock() == world.getBlockState(pos1).getBlock())
             return;
-        Block.dropResources(world.getBlockState(pos1), world, pos1, world.getBlockEntity(pos1), shooter, tool);
-        destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
+
+        if(!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID())){
+            return;
+        }
         if(placeState == null)
             return;
         world.setBlock(pos1, placeState, 3);
