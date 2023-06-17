@@ -93,7 +93,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements IAnimata
     }
 
     public static boolean canFall(Level level, BlockPos pos, LivingEntity owner, SpellStats spellStats) {
-        if (level.isEmptyBlock(pos)  || !level.getFluidState(pos).isEmpty() || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
+        if (level.isEmptyBlock(pos)
+                || !level.getFluidState(pos).isEmpty()
+                || level.getBlockState(pos).is(BlockTagProvider.RELOCATION_NOT_SUPPORTED)
+                || (level.getBlockEntity(pos) != null && !(level.getBlockEntity(pos) instanceof MageBlockTile
+                || level.getBlockEntity(pos) instanceof SkullBlockEntity))) {
             return false;
         }
         return BlockUtil.canBlockBeHarvested(spellStats, level, pos) && BlockUtil.destroyRespectsClaim(owner, level, pos);

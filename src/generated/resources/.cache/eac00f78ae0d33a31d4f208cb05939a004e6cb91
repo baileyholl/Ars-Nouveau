@@ -1,10 +1,10 @@
-// 1.19.2	2023-06-10T10:08:33.6511376	AN tags
+// 1.19.2	2023-06-17T10:05:56.9718697	AN tags
 8b52a126cd132fc021ac006c61e6660474cacb17 data/ars_nouveau/tags/blocks/an_decorative.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
 d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/break_with_pickaxe.json
 a6a64805262317e89ec5a7353c2584f80b7a9ce8 data/ars_nouveau/tags/blocks/golem/budding.json
 d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/golem/cluster.json
-85a22980ce840a3f6faf10fa8711932d84090cc6 data/ars_nouveau/tags/blocks/gravity_blacklist.json
+9508afb5b4ebf137a32d3731f2be1d9bb3c21b33 data/ars_nouveau/tags/blocks/gravity_blacklist.json
 ca6ae04e3b5412d751537558230d824bfd86d7da data/ars_nouveau/tags/blocks/harvest/fellable.json
 df87c9e82c58b24ac8e979c73fc3be68bf25b4b0 data/ars_nouveau/tags/blocks/harvest/foliage.json
 7d78d30b1cc01fb43cfb8364ed31026ee0640387 data/ars_nouveau/tags/blocks/harvest/stems.json
@@ -22,6 +22,7 @@ f5e3f6895ab28e98f84db162bb5a7ec0d8484aae data/ars_nouveau/tags/blocks/summon_bed
 87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/forge/tags/blocks/fences/wooden.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/forge/tags/blocks/fence_gates.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/forge/tags/blocks/fence_gates/wooden.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/forge/tags/blocks/relocation_not_supported.json
 3737e6b65e87993bd971b233c3aca5088721eb32 data/minecraft/tags/blocks/bee_growables.json
 43a847dca5f71ae27537abc65fabcd8d3fdb1c72 data/minecraft/tags/blocks/buttons.json
 3737e6b65e87993bd971b233c3aca5088721eb32 data/minecraft/tags/blocks/crops.json

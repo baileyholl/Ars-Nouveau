@@ -33,6 +33,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
+    public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
     private final DataGenerator generator;
 
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
@@ -42,6 +43,7 @@ public class BlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
+        this.tag(RELOCATION_NOT_SUPPORTED);
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
@@ -264,7 +266,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(SUMMON_SLEEPABLE).addTag(SUMMON_BED).addTag(BlockTags.BEDS);
         this.tag(BREAK_BLACKLIST);
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
-        this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK);
+        this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
     }
 
