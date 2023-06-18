@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
@@ -54,7 +55,11 @@ public class PotionData implements Cloneable{
     }
 
     public ItemStack asPotionStack(){
-        ItemStack potionStack = new ItemStack(Items.POTION);
+        return asPotionStack(Items.POTION);
+    }
+
+    public ItemStack asPotionStack(Item item){
+        ItemStack potionStack = new ItemStack(item);
         if(this.getPotion() == Potions.EMPTY)
             return potionStack;
         PotionUtils.setPotion(potionStack, this.getPotion());
