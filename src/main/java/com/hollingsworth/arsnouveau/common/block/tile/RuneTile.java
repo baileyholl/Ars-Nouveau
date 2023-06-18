@@ -53,6 +53,7 @@ public class RuneTile extends ModdedTile implements IAnimatable, ITickable, IToo
 
     public void setSpell(Spell spell) {
         this.spell = spell;
+        updateBlock();
     }
 
     public void castSpell(Entity entity) {
