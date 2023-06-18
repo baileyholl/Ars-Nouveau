@@ -102,7 +102,7 @@ public class EffectExchange extends AbstractEffect {
         if(placeState != null && placeState.getBlock() == world.getBlockState(pos1).getBlock())
             return;
 
-        if(!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID())){
+        if(!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID(), true)){
             return;
         }
         if(placeState == null)

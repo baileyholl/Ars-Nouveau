@@ -315,7 +315,7 @@ public class BlockUtil {
      * @param source The UUID of the breaking player.
      * @return If the block was successfully broken.
      */
-    public static boolean breakExtraBlock(ServerLevel world, BlockPos pos, ItemStack mainhand, @Nullable UUID source) {
+    public static boolean breakExtraBlock(ServerLevel world, BlockPos pos, ItemStack mainhand, @Nullable UUID source, boolean bypassToolCheck) {
         BlockState blockstate = world.getBlockState(pos);
         FakePlayer player;
         if (source != null) {
@@ -326,7 +326,9 @@ public class BlockUtil {
         player.getInventory().items.set(player.getInventory().selected, mainhand);
         //player.setPos(pos.getX(), pos.getY(), pos.getZ());
 
-        if (blockstate.getDestroySpeed(world, pos) < 0 || !blockstate.canHarvestBlock(world, pos, player)) return false;
+        if (blockstate.getDestroySpeed(world, pos) < 0 || (!blockstate.canHarvestBlock(world, pos, player) && !bypassToolCheck)){
+            return false;
+        }
 
         GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
         int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(world, type, player, pos);
@@ -347,18 +349,21 @@ public class BlockUtil {
                     removeBlock(world, player, pos, false);
                     return true;
                 } else {
-                    ItemStack itemstack = player.getMainHandItem();
-                    ItemStack itemstack1 = itemstack.copy();
-                    boolean canHarvest = blockstate.canHarvestBlock(world, pos, player);
-                    itemstack.mineBlock(world, blockstate, pos, player);
-                    if (itemstack.isEmpty() && !itemstack1.isEmpty()) net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, itemstack1, InteractionHand.MAIN_HAND);
+                    ItemStack copyMain = mainhand.copy();
+                    boolean canHarvest = blockstate.canHarvestBlock(world, pos, player) || bypassToolCheck;
+                    mainhand.mineBlock(world, blockstate, pos, player);
+                    if (mainhand.isEmpty() && !copyMain.isEmpty()){
+                        net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, copyMain, InteractionHand.MAIN_HAND);
+                    }
                     boolean removed = removeBlock(world, player, pos, canHarvest);
 
                     if (removed && canHarvest) {
-                        block.playerDestroy(world, player, pos, blockstate, tileentity, itemstack1);
+                        block.playerDestroy(world, player, pos, blockstate, tileentity, copyMain);
                     }
 
-                    if (removed && exp > 0) blockstate.getBlock().popExperience(world, pos, exp);
+                    if (removed && exp > 0){
+                        blockstate.getBlock().popExperience(world, pos, exp);
+                    }
 
                     return true;
                 }
