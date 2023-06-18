@@ -17,7 +17,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditionalSpawnData {
 
-    CompoundTag head_data = new CompoundTag();
+    public CompoundTag head_data = new CompoundTag();
 
     public AnimHeadSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
