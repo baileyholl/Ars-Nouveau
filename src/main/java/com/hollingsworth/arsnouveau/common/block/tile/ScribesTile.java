@@ -280,7 +280,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         this.consumedStacks = NBTUtil.readItems(compound, "consumed");
         this.craftingTicks = compound.getInt("craftingTicks");
         this.crafting = compound.getBoolean("crafting");
-        this.autoYoink = compound.getBoolean("autoYoink");
+        this.autoYoink = !compound.contains("autoYoink") || compound.getBoolean("autoYoink");
     }
 
     @Override
