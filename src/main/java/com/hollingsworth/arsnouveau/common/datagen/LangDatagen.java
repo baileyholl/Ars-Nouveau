@@ -1218,7 +1218,7 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
-
+        add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
 
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;

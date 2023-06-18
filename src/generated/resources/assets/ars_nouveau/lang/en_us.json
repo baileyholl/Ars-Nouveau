@@ -83,6 +83,7 @@
   "ars_nouveau.alchemists_crown.no_flasks": "No flasks or potions equipped.",
   "ars_nouveau.alert.duplicate_method": "No duplicate cast methods are allowed.",
   "ars_nouveau.alert.spell_set": "Spell set.",
+  "ars_nouveau.alert.turret_needs_form": "Spell must have a form.",
   "ars_nouveau.alert.turret_type": "Selected form cannot be used by a turret.",
   "ars_nouveau.all_glyphs": "All Glyphs",
   "ars_nouveau.allow_set": "Starbuncle will only take these items.",

@@ -196,6 +196,10 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
         ItemStack stack = player.getItemInHand(handIn);
         Spell spell = CasterUtil.getCaster(stack).getSpell();
         if (!spell.isEmpty()) {
+            if(spell.getCastMethod() == null){
+                PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
+                return InteractionResult.SUCCESS;
+            }
             if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
                 return InteractionResult.SUCCESS;
