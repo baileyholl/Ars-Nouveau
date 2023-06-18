@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "ars_nouveau:blocks/sourcestone_basketweave",
+    "side": "ars_nouveau:blocks/sourcestone_basketweave",
+    "top": "ars_nouveau:blocks/sourcestone_basketweave"
+  }
+}

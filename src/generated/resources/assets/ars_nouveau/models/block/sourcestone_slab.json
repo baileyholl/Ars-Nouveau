@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "ars_nouveau:blocks/sourcestone",
+    "side": "ars_nouveau:blocks/sourcestone",
+    "top": "ars_nouveau:blocks/sourcestone"
+  }
+}

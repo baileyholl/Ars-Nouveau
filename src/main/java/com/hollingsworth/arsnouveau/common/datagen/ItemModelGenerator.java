@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
-
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
-
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -92,6 +90,8 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         stateUnchecked(LibBlockNames.POTION_DIFFUSER);
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
+            getBuilder(s + "_slab").parent(BlockStatesDatagen.getUncheckedModel(s + "_slab"));
+            getBuilder(s + "_stairs").parent(BlockStatesDatagen.getUncheckedModel(s + "_stairs"));
         }
         getBuilder(LibBlockNames.VOID_PRISM).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.VOID_PRISM));
         getBuilder(LibBlockNames.FALSE_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.FALSE_WEAVE));
@@ -101,6 +101,7 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
         getBuilder(LibBlockNames.RITUAL_BRAZIER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.RITUAL_BRAZIER));
         getBuilder(LibBlockNames.ITEM_DETECTOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ITEM_DETECTOR));
+
     }
 
     public void blockAsItem(String s){

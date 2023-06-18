@@ -6,16 +6,20 @@ import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
 
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 public class LangDatagen extends LanguageProvider {
     public LangDatagen(DataGenerator gen, String modid, String locale) {
         super(gen, modid, locale);
     }
-
+    private final Map<String, String> data = new TreeMap<>();
     @Override
     protected void addTranslations() {
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
@@ -1214,5 +1218,24 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
+
+
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            String key = "block.ars_nouveau." + s;
+            String val = data.get(key);
+            add(key + "_slab", val + " Slab");
+            add(key + "_stairs", val + " Stairs");
+        }
+    }
+
+    @Override
+    public void add(Item key, String name) {
+        super.add(key, name);
+    }
+
+    @Override
+    public void add(String key, String value) {
+        super.add(key, value);
+        data.put(key, value);
     }
 }

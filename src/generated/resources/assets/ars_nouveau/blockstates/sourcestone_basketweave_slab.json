@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "ars_nouveau:block/sourcestone_basketweave_slab"
+    },
+    "type=double": {
+      "model": "ars_nouveau:block/sourcestone_basketweave"
+    },
+    "type=top": {
+      "model": "ars_nouveau:block/sourcestone_basketweave_slab_top"
+    }
+  }
+}
