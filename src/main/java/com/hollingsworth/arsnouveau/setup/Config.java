@@ -55,6 +55,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue ALTERNATE_PORTAL_RENDER;
 
     public static ForgeConfigSpec.BooleanValue DISABLE_SKY_SHADER;
+    public static ForgeConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
     public static ForgeConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ForgeConfigSpec.IntValue TOOLTIP_X_OFFSET;
     public static ForgeConfigSpec.IntValue TOOLTIP_Y_OFFSET;
@@ -99,6 +100,7 @@ public class Config {
         TOOLTIP_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the tooltip").defineInRange("yTooltip", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
