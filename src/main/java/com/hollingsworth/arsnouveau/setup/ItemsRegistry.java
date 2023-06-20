@@ -278,6 +278,8 @@ public class ItemsRegistry {
     public static PerkItem BLANK_THREAD;
 
     public static RegistryWrapper<Item> FIREL_DISC = register(LibItemNames.FIREL_DISC, () -> new RecordItem(9, () -> SoundRegistry.ARIA_BIBLIO.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 240));
+    public static RegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new RecordItem(9, () -> SoundRegistry.SOUND_OF_GLASS.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 182));
+    public static RegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new RecordItem(9, () -> SoundRegistry.WILD_HUNT.get(), defaultItemProperties().stacksTo(1).rarity(Rarity.RARE), 20 * 121));
 
     public static RegistryWrapper<Item> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC)));
 

@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-17T22:09:56.5314701	Ars Nouveau Item Models
+// 1.19.2	2023-06-19T22:23:36.3430488	Ars Nouveau Item Models
 ecf86e39be560a9c1f232af399fcccf2c34a0a0b assets/ars_nouveau/models/item/alchemists_crown.json
 3b63734fc12c7c1711a2a607ed7af51e77bd7e1b assets/ars_nouveau/models/item/bastion_pod.json
 a4784e992d0d58f5808f3894b96d08fa5bc26395 assets/ars_nouveau/models/item/blank_thread.json
@@ -112,6 +112,8 @@ c13b5fce1911737c61f1a2400caf025584c6b0dc assets/ars_nouveau/models/item/glyph_wa
 6b4020f44475f6afeb58072fb014c8e53664a2c5 assets/ars_nouveau/models/item/magebloom_block.json
 4296f1fca7ce7fd990519d39def05883d1e95b82 assets/ars_nouveau/models/item/mendosteen_pod.json
 a869ede0c768f982722b00764902abac8e30fde9 assets/ars_nouveau/models/item/mirrorweave.json
+98c0761afb542a2f82fa1eee48e57a5fdd828922 assets/ars_nouveau/models/item/music_disc_firel_the_wild_hunt.json
+88afe5cda8790b0469e5e72eb4a4f1d980431863 assets/ars_nouveau/models/item/music_disc_thistle_the_sound_of_glass.json
 7f12abdda6ac867ceb9f3c3cca0b3529670ca9b4 assets/ars_nouveau/models/item/orange_sbed.json
 c556576b522dd93927e5ca14d62f6afb27005eb6 assets/ars_nouveau/models/item/potion_diffuser.json
 6ae8eae13ac3fc5ab7cc3f91cb303584faf53255 assets/ars_nouveau/models/item/purple_sbed.json

@@ -101,7 +101,8 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
         getBuilder(LibBlockNames.RITUAL_BRAZIER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.RITUAL_BRAZIER));
         getBuilder(LibBlockNames.ITEM_DETECTOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ITEM_DETECTOR));
-
+        itemUnchecked(ItemsRegistry.WILD_HUNT);
+        itemUnchecked(ItemsRegistry.SOUND_OF_GLASS);
     }
 
     public void blockAsItem(String s){

@@ -1219,7 +1219,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
         add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
         add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
-
+        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass", "Music Disc");
+        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
+        add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
+        add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

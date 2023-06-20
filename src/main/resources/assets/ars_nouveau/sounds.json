@@ -56,5 +56,13 @@
         "volume": 0.4
       }
     ]
-  }
+  },"thistle_the_sound_of_glass": {
+  "sounds": [
+    {
+      "name":"ars_nouveau:thistle_the_sound_of_glass",
+      "stream": true,
+      "volume": 0.4
+    }
+  ]
+}
 }
