@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -67,7 +68,7 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
     }
 
     public int getMaxCapacity() {
-        return 8;
+        return Config.FLASK_CAPACITY.get();
     }
 
     @Override

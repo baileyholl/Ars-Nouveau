@@ -38,6 +38,10 @@ public class Config {
     public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
 
+    public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
+    public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
+    public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
+    public static ForgeConfigSpec.IntValue FLASK_CAPACITY;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -128,8 +132,15 @@ public class Config {
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Items").push("item");
+        FLASK_CAPACITY = SERVER_BUILDER.comment("How many potions a potion flask can hold").defineInRange("flaskCapacity", 8, 1, Integer.MAX_VALUE);
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Blocks").push("block");
+        MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);
+        MELDER_OUTPUT = SERVER_BUILDER.comment("How much potion a melder outputs per cycle. 100 = 1 potion").defineInRange("melderOutput", 100, 100, Integer.MAX_VALUE);
+        MELDER_SOURCE_COST = SERVER_BUILDER.comment("How much source a melder takes per cycle").defineInRange("melderSourceCost", 300, 0, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+
         SERVER_BUILDER.comment("Debug").push("debug");
         MAX_LOG_EVENTS = SERVER_BUILDER.comment("Max number of log events to keep on entities. Lowering this number may make it difficult to debug why your entities are stuck.").defineInRange("maxLogEvents", 100, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
