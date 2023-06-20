@@ -18,7 +18,7 @@
     {
       "type": "patchouli:item",
       "item": "#reagent",
-      "framed": true,
+      "framed": false,
       "x": 49,
       "y": 53
     },
@@ -34,6 +34,15 @@
       "framed": true,
       "x": 49,
       "y": 116
+    },{
+      "type": "patchouli:image",
+      "image": "ars_nouveau:textures/gui/entries/item_frame_enchanting_apparatus.png",
+      "width": 32,
+      "height": 32,
+      "texture_width": 32,
+      "texture_height": 32,
+      "x": 42,
+      "y": 48
     }
   ]
 }
