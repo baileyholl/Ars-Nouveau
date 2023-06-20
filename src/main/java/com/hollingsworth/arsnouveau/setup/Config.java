@@ -41,7 +41,6 @@ public class Config {
     public static ForgeConfigSpec.IntValue MELDER_OUTPUT;
     public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
     public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
-    public static ForgeConfigSpec.IntValue FLASK_CAPACITY;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -132,7 +131,6 @@ public class Config {
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Items").push("item");
-        FLASK_CAPACITY = SERVER_BUILDER.comment("How many potions a potion flask can hold").defineInRange("flaskCapacity", 8, 1, Integer.MAX_VALUE);
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Blocks").push("block");

@@ -96,8 +96,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.amulet_of_mana_regen", "Amulet of Mana Regen");
         add("item.ars_nouveau.dominion_wand", "Dominion Wand");
         add("block.ars_nouveau.scribes_table", "Scribe's Table");
-        add("block.ars_nouveau.light_block", "Light");
-        add("block.ars_nouveau.temporary_light_block", "Temporary Light");
+        add("block.ars_nouveau.light_block", "Magelight");
+        add("block.ars_nouveau.temporary_light_block", "Temporary Magelight");
         add("block.ars_nouveau.mage_block", "Mage Block");
         add("block.ars_nouveau.agronomic_sourcelink", "Agronomic Sourcelink");
         add("block.ars_nouveau.source_jar", "Source Jar");
@@ -1028,8 +1028,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adv.desc.amethyst_golem_charm", "Acquire an Amethyst Golem Charm");
         add("ars_nouveau.adv.title.novice_spell_book", "Unbreaking X");
         add("ars_nouveau.adv.desc.novice_spell_book", "Acquire a Novice Spell Book");
-        add("ars_nouveau.adv.title.apprentice_spell_book", "Apprentice Spell Book");
-        add("ars_nouveau.adv.desc.apprentice_spell_book", "Acquire an Apprentice Spell Book");
+        add("ars_nouveau.adv.title.apprentice_spell_book", "Mage's Spell Book");
+        add("ars_nouveau.adv.desc.apprentice_spell_book", "Acquire a Mage's Spell Book");
         add("ars_nouveau.adv.title.archmage_spell_book", "Archmage Spell Book");
         add("ars_nouveau.adv.desc.archmage_spell_book", "Acquire an Archmage Spell Book");
         add("ars_nouveau.adv.title.shapers_focus", "Throw Another Rock!");
