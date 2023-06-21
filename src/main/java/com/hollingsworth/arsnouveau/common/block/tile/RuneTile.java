@@ -53,6 +53,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
     public void setSpell(Spell spell) {
         this.spell = spell;
+        updateBlock();
     }
 
     public void castSpell(Entity entity) {

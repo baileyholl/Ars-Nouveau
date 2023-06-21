@@ -488,6 +488,13 @@ public class BlockRegistry {
                 registry.register(s, new ModBlock());
             }
         }
+        for(String s : LibBlockNames.DECORATIVE_SLABS){
+            registry.register(s, new SlabBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        }
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)).defaultBlockState(), BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        }
+
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
@@ -747,6 +754,14 @@ public class BlockRegistry {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
+
+        for (String s : LibBlockNames.DECORATIVE_STAIRS) {
+            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+        }
+
+        for (String s : LibBlockNames.DECORATIVE_SLABS) {
+            registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+        }
         registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_TABLE, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -832,7 +847,7 @@ public class BlockRegistry {
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                 return BasicTurretRenderer::getISTER;
             }
-        });
+        }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
 
         ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
 

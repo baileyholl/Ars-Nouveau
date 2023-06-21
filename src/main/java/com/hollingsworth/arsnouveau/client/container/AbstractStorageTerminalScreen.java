@@ -62,6 +62,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	protected int controllMode;
 	protected int rowCount;
 	protected int searchType;
+	protected boolean expanded;
 	private String searchLast = "";
 	protected boolean loadedSearch = false;
 	private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
@@ -89,6 +90,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			buttonSortingType.state = s.sortType;
 			buttonDirection.state = s.reverseSort ? 1 : 0;
 			buttonSearchType.state = searchType;
+			expanded = s.expanded;
 		}
 		if(menu.tabNames != null && !menu.tabNames.isEmpty()){
 			for(StorageTabButton tabButton : tabButtons){
@@ -133,7 +135,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				controllMode,
 				comparator.isReversed(),
 				comparator.type(),
-				searchType
+				searchType,
+				expanded
 		);
 	}
 
@@ -143,7 +146,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		inventoryLabelY = imageHeight - 92;
 		super.init();
 
-		this.searchField = new NoShadowTextField(getFont(), this.leftPos + 114, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
+		this.searchField = new NoShadowTextField(getFont(), this.leftPos + 115, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
 		this.searchField.setMaxLength(100);
 		this.searchField.setBordered(false);
 		this.searchField.setVisible(true);

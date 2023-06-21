@@ -1,6 +1,7 @@
 {
   "values": [
     "minecraft:bedrock",
-    "ars_nouveau:mage_block"
+    "ars_nouveau:mage_block",
+    "#forge:relocation_not_supported"
   ]
 }

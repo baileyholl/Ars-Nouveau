@@ -8,7 +8,7 @@ public class AugmentFortune extends AbstractAugment {
     public static AugmentFortune INSTANCE = new AugmentFortune();
 
     private AugmentFortune() {
-        super(GlyphLib.AugmentFortuneID, "Fortune");
+        super(GlyphLib.AugmentFortuneID, "Luck");
     }
 
     @Override
@@ -23,6 +23,6 @@ public class AugmentFortune extends AbstractAugment {
 
     @Override
     public String getBookDescription() {
-        return "Increases the drop chance from mobs killed by Damage and blocks that are destroyed by Break. Cannot be combined with Extract";
+        return "Increases the drop chance from mobs killed by Damage and blocks that are destroyed by Break. Cannot be combined with Extract.";
     }
 }

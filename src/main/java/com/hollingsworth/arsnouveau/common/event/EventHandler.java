@@ -331,6 +331,7 @@ public class EventHandler {
         PathCommand.register(event.getDispatcher());
         ToggleLightCommand.register(event.getDispatcher());
         AddTomeCommand.register(event.getDispatcher());
+        SummonAnimHeadCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent

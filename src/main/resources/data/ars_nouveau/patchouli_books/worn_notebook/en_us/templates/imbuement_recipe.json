@@ -25,7 +25,7 @@
     {
       "type": "patchouli:item",
       "item": "#reagent",
-      "framed": true,
+      "framed": false,
       "x": 49,
       "y": 53
     },
@@ -34,6 +34,15 @@
       "text": "#footer",
       "x": -1,
       "y": 135
+    },{
+      "type": "patchouli:image",
+      "image": "ars_nouveau:textures/gui/entries/item_frame_imbuement_chamber.png",
+      "width": 32,
+      "height": 32,
+      "texture_width": 32,
+      "texture_height": 32,
+      "x": 42,
+      "y": 47
     }
   ]
 }

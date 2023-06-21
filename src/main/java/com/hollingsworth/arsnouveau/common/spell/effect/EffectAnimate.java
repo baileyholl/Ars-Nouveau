@@ -36,7 +36,7 @@ public class EffectAnimate extends AbstractEffect {
         BlockState state = world.getBlockState(pos);
         if (EnchantedFallingBlock.canFall(world, pos, shooter, spellStats)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            animateBlock(rayTraceResult, rayTraceResult.getLocation(), world, shooter, spellStats, spellContext, resolver, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata());
+            animateBlock(rayTraceResult, new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5), world, shooter, spellStats, spellContext, resolver, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata());
             world.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
         }
     }

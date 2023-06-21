@@ -6,16 +6,20 @@ import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
 
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 public class LangDatagen extends LanguageProvider {
     public LangDatagen(DataGenerator gen, String modid, String locale) {
         super(gen, modid, locale);
     }
-
+    private final Map<String, String> data = new TreeMap<>();
     @Override
     protected void addTranslations() {
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
@@ -92,8 +96,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.amulet_of_mana_regen", "Amulet of Mana Regen");
         add("item.ars_nouveau.dominion_wand", "Dominion Wand");
         add("block.ars_nouveau.scribes_table", "Scribe's Table");
-        add("block.ars_nouveau.light_block", "Light");
-        add("block.ars_nouveau.temporary_light_block", "Temporary Light");
+        add("block.ars_nouveau.light_block", "Magelight");
+        add("block.ars_nouveau.temporary_light_block", "Temporary Magelight");
         add("block.ars_nouveau.mage_block", "Mage Block");
         add("block.ars_nouveau.agronomic_sourcelink", "Agronomic Sourcelink");
         add("block.ars_nouveau.source_jar", "Source Jar");
@@ -204,7 +208,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.void_jar", "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.");
         add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.");
         add("ars_nouveau.wand.invalid", "Invalid spell. Wands accept Effects and Augments only.");
-        add("item.ars_nouveau.wand", "Casting Wand");
+        add("item.ars_nouveau.wand", "Enchanter's Wand");
         add("ars_nouveau.wixie.has_wixie", "This cauldron already has a wixie.");
         add("ars_nouveau.wixie.no_recipe", "No recipes found.");
         add("ars_nouveau.wixie.recipe_set", "Recipe set.");
@@ -454,14 +458,13 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.school.earth", "Elemental Earth");
         add("ars_nouveau.school.fire", "Elemental Fire");
         add("ars_nouveau.school.water", "Elemental Water");
-        add("block.agronomic_sourcelink.disabled", "Another Agronomic Sourcelink is nearby...");
         add("ars_nouveau.spell_set", "Spell set.");
         add("block.ars_nouveau.vitalic_sourcelink", "Vitalic Sourcelink");
         add("block.ars_nouveau.alchemical_sourcelink", "Alchemical Sourcelink");
         add("ars_nouveau.page1.armor", "Magical robes will increase the wearers mana regen and can be upgraded with special abilities using Threads. The Sorceror's set provides the lowest defence, but provides the most powerful set of slots for Threads. The Arcanist's and Battlemage's sets provide increasingly more defence, but fewer and less powerful Thread Slots. For more information on Threads, see the section on Armor and Perks.");
         add("ars_nouveau.page.potion_jar", "A jar that stores up to 100 potions. Potion can be removed by using an Empty Bottle, Potion Flask, or Arrows on the jar. Wixies will use these jars during Potion Autocrafting. The jar may be locked by using a Dominion Wand while sneaking. Locked Jars will only receive the potion it is locked to from Wixies. Can be used with a Comparator.");
         add("ars_nouveau.glyph_crafting", "Glyph Crafting");
-        add("ars_nouveau.page1.scribes_table", "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories.");
+        add("ars_nouveau.page1.scribes_table", "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories. Using the dominion wand on the table will disable auto-pull.");
         add("ars_nouveau.page2.scribes_table", "You may also inscribe a spell onto Spell Parchment or Enchanters Items. To do this, place a Blank Parchment on the table. Then, with your spell book in hand, change your spell book to your desired spell as if you were going to cast it. Then, use the book on the table while sneaking. Your item will now contain that spell. Using Manipulation Essence will permanently hide the scribed spell.");
         add("ars_nouveau.page1.lava_lily", "A decorative block that can be placed on any liquid or block. The texture of this block varies if it is placed on Lava, a Magma Block, or any other block.");
         add("ars_nouveau.page1.wilden", "Wilden are hostile creatures that can be commonly found at night around Wilden Dens. While Wilden Defenders may only be found in cold biomes, Stalker and Hunter Dens can be found in any forest biome.");
@@ -585,16 +588,16 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_schools", "Spell Schools");
         add("ars_nouveau.casting_cost", "Casting Cost");
         add("ars_nouveau.tier", "Tier %s");
-        add("ars_nouveau.page.agronomic_sourcelink", "The Agronomic Sourcelink generates source from nearby crop and tree growth. Bonus mana is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.");
+        add("ars_nouveau.page.agronomic_sourcelink", "The Agronomic Sourcelink generates source from crop and tree growth within 15 blocks. Bonus source is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.");
         add("ars_nouveau.page.source_jar", "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Imbuement Chamber and Enchanting Apparatus. Source may be moved using a bucket, or the jar can be picked up and moved. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.");
-        add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus mana, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
-        add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of mana and a moderate amount of $(item)heat$(). The Volcanic Sourcelink will also take items from surrounding pedestals.");
+        add("ars_nouveau.page1.volcanic_sourcelink", "The Volcanic Sourcelink generates Source by consuming burnable items. Archwood logs will generate bonus Source, with Blazing Archwood generating the most. As the Volcanic Sourcelink produces Source, it also produces $(item)heat$(), used for spawning Lava Lilies and converting stone into lava. The Volcanic Sourcelink automatically outputs to nearby jars, starting with the one closest to it.");
+        add("ars_nouveau.page2.volcanic_sourcelink", "Nearby Blazing Archwood items will be burned up in exchange for a chunk of Source and a moderate amount of $(item)heat$(). The Volcanic Sourcelink will also take items from surrounding pedestals.");
         add("ars_nouveau.page3.volcanic_sourcelink", "The Volcanic Sourcelink will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of $(item)heat$() it has produced over time. The Volcanic Sourcelink will also spawn a Lava Lily adjacent to it given that there is nothing covering the lava. Lava Lilys may be harvested and used for decoration.");
         add("ars_nouveau.page4.volcanic_sourcelink", "The color of a Lava Lily changes if it is placed above lava, magma, or other blocks.");
         add("ars_nouveau.active_generation", "Active Generation");
         add("ars_nouveau.heat", "Heat");
         add("ars_nouveau.page.alchemical_sourcelink", "Generates source by consuming potions from adjacent potion jars. The amount of source varies per potion and is dependent on the complexity of the potion. Bonus source is given for the length and level of the potion with multipliers for each effect a potion contains. Utilizing Wixies and Potion Melders is recommended for creating highly complex potions.");
-        add("ars_nouveau.page.vitalic_sourcelink", "Generates a moderate amount of source from nearby mob death and animal breeding. Additionally, the Vitalic Sourcelink will generate passive mana from nearby baby animals and will accelerate their growth.");
+        add("ars_nouveau.page.vitalic_sourcelink", "Generates a moderate amount of source from nearby mob death and animal breeding. Additionally, the Vitalic Sourcelink will generate passive Source from nearby baby animals and will accelerate their growth.");
         add("ars_nouveau.page.mycelial_sourcelink", "Generates a moderate amount of source from nearby food, generating more for more nourishing food. Source Berry food is worth far more than other mundane foods. Additionally, the Mycelial Sourcelink will convert Grass or Dirt in the 3x3 below it into Mycelium and will grow mushrooms around it given that the space is empty. The Sourcelink will also pull items from nearby pedestals.");
         add("block.ars_nouveau.relay", "Source Relay");
         add("block.ars_nouveau.relay_splitter", "Source Relay: Splitter");
@@ -665,7 +668,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.automation", "Automation");
         add("ars_nouveau.automation_desc", "Magical Automation");
         add("ars_nouveau.enchanting", "Enchanting");
-        add("ars_nouveau.enchanting_desc", "Once you have acquired a jar of Mana and an Enchanting Apparatus, you may begin enchanting items. For more information, see the section on the Enchanting Apparatus.");
+        add("ars_nouveau.enchanting_desc", "Once you have acquired a jar of Source and an Enchanting Apparatus, you may begin enchanting items. For more information, see the section on the Enchanting Apparatus.");
         add("ars_nouveau.equipment", "Magical Equipment");
         add("ars_nouveau.equipment_desc", "Magical Equipment");
         add("ars_nouveau.familiars", "Familiars");
@@ -687,7 +690,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.category.source", "Source");
         add("ars_nouveau.source_desc", "Source can be used to power rituals, summons, and machines.");
         add("ars_nouveau.page.how_to_enchant", "How to Enchant");
-        add("ars_nouveau.page1.how_to_enchant", "The Enchanting Apparatus may add new enchantments or upgrade existing ones by using Mana and items. To begin, select a level 1 enchantment and add its items to the pedestals. Place a jar of mana nearby, and use the item you want to enchant on the apparatus. The apparatus may only apply enchantments that are valid to the item you have given it.");
+        add("ars_nouveau.page1.how_to_enchant", "The Enchanting Apparatus may add new enchantments or upgrade existing ones by using Source and items. To begin, select a level 1 enchantment and add its items to the pedestals. Place a jar of Source nearby, and use the item you want to enchant on the apparatus. The apparatus may only apply enchantments that are valid to the item you have given it.");
         add("ars_nouveau.page2.how_to_enchant", "To apply a level 2 or higher enchantment, the item must already have the previous level. For example, to apply Smite 3, the item must already have Smite 2.");
         add("ars_nouveau.mod_news", "Mod News");
         add("ars_nouveau.mod_news_desc", "The latest releases and news");
@@ -1024,8 +1027,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adv.desc.amethyst_golem_charm", "Acquire an Amethyst Golem Charm");
         add("ars_nouveau.adv.title.novice_spell_book", "Unbreaking X");
         add("ars_nouveau.adv.desc.novice_spell_book", "Acquire a Novice Spell Book");
-        add("ars_nouveau.adv.title.apprentice_spell_book", "Apprentice Spell Book");
-        add("ars_nouveau.adv.desc.apprentice_spell_book", "Acquire an Apprentice Spell Book");
+        add("ars_nouveau.adv.title.apprentice_spell_book", "Mage's Spell Book");
+        add("ars_nouveau.adv.desc.apprentice_spell_book", "Acquire a Mage's Spell Book");
         add("ars_nouveau.adv.title.archmage_spell_book", "Archmage Spell Book");
         add("ars_nouveau.adv.desc.archmage_spell_book", "Acquire an Archmage Spell Book");
         add("ars_nouveau.adv.title.shapers_focus", "Throw Another Rock!");
@@ -1212,5 +1215,29 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.settings.unsummon_lily", "Unsummon Lily");
         add("ars_nouveau.rewards.enabled", "Ars Nouveau supporter rewards enabled, thank you! Rewards can be accessed in the Settings page of the spell book.");
         add("mob_jar.dummy", "A player dummy in a jar will attract nearby mobs.");
+        add("ars_nouveau.turret.tooltip", "Can be rotated to face any direction. Use a dominion wand on the turret, and then on the target block.");
+        add("ars_nouveau.scribes_table.auto_take_disabled", "Auto Take Disabled");
+        add("ars_nouveau.alert.turret_needs_form", "Spell must have a form.");
+        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass", "Music Disc");
+        add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
+        add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
+        add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            String key = "block.ars_nouveau." + s;
+            String val = data.get(key);
+            add(key + "_slab", val + " Slab");
+            add(key + "_stairs", val + " Stairs");
+        }
+    }
+
+    @Override
+    public void add(Item key, String name) {
+        super.add(key, name);
+    }
+
+    @Override
+    public void add(String key, String value) {
+        super.add(key, value);
+        data.put(key, value);
     }
 }

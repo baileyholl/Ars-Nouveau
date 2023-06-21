@@ -17,7 +17,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditionalSpawnData {
 
-    CompoundTag head_data = new CompoundTag();
+    public CompoundTag head_data = new CompoundTag();
 
     public AnimHeadSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -29,12 +29,16 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
         this.head_data = head_data;
     }
 
+
     @Override
     public EntityType<?> getType() {
         return ModEntities.ANIMATED_HEAD.get();
     }
 
     public void returnToFallingBlock(BlockState blockState) {
+        if(level.isClientSide || !this.dropItem){
+            return;
+        }
         EnchantedFallingBlock fallingBlock = new EnchantedSkull(level, blockPosition(), blockState);
         fallingBlock.setOwner(this.getOwner());
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
@@ -44,13 +48,6 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
         level.addFreshEntity(fallingBlock);
     }
 
-    public void setHeadData(CompoundTag data) {
-        this.head_data = data;
-    }
-
-    public CompoundTag getHead_data() {
-        return head_data;
-    }
 
     @Override
     public Packet<?> getAddEntityPacket() {
@@ -76,6 +73,12 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
             stack.setTag(this.head_data);
         }
         return stack;
+    }
+
+    public static CompoundTag getHeadTagFromName(String playerName){
+        CompoundTag compoundtag = new CompoundTag();
+        compoundtag.putString("SkullOwner", playerName);
+        return compoundtag;
     }
 
     /**

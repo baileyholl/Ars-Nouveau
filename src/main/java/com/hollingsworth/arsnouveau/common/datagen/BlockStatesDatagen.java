@@ -7,6 +7,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -42,6 +44,15 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.FALSE_WEAVE, LibBlockNames.FALSE_WEAVE);
         registerNormalCube(BlockRegistry.GHOST_WEAVE, LibBlockNames.GHOST_WEAVE);
         registerNormalCube(BlockRegistry.MIRROR_WEAVE, LibBlockNames.MIRROR_WEAVE);
+
+        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+            ResourceLocation tex = new ResourceLocation(ArsNouveau.MODID, "blocks/" + s);
+            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+            stairsBlock((StairBlock) block, tex);
+
+            Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+            slabBlock((SlabBlock) slab, new ResourceLocation(ArsNouveau.MODID, s), tex);
+        }
     }
 
     private void registerOnlyState(Block block, String registry) {
@@ -52,6 +63,8 @@ public class BlockStatesDatagen extends BlockStateProvider {
     private void registerDoor(DoorBlock door, String reg) {
         doorBlock(door, reg, getBlockLoc(reg + "_bottom"), getBlockLoc(reg + "_top"));
     }
+
+
 
     //will it work? idk
     public void signBlock(Block sign, String reg) {

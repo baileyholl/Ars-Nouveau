@@ -696,7 +696,8 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("yxy").define('x', ARCHWOOD_LOG).define('y', Tags.Items.NUGGETS_GOLD).save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.SANCTUARY)).requires(BlockRegistry.CASCADING_LOG).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.SEA_LANTERN).save(consumer);
-
+            shapelessBuilder(BlockRegistry.ROTATING_TURRET).requires(BlockRegistry.BASIC_SPELL_TURRET).save(consumer);
+            shapelessBuilder(BlockRegistry.BASIC_SPELL_TURRET).requires(BlockRegistry.ROTATING_TURRET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "rotating_turret_to_basic_spell_turret"));
 
         }
     }

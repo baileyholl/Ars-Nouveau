@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.lib;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LibBlockNames {
@@ -164,6 +165,21 @@ public class LibBlockNames {
             GILDED_SOURCESTONE_MOSAIC, GILDED_SOURCESTONE_BASKET, GILDED_SOURCESTONE_ALTERNATING, GILDED_SOURCESTONE_LARGE_BRICKS, GILDED_SOURCESTONE_SMALL_BRICKS,
             SMOOTH_GILDED_SOURCESTONE_MOSAIC, SMOOTH_GILDED_SOURCESTONE_BASKET, SMOOTH_GILDED_SOURCESTONE_ALTERNATING, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_SMALL_BRICKS,
     };
+
+    public static final List<String> DECORATIVE_STAIRS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
+    public static final List<String> DECORATIVE_SLABS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
+//    public static final List<String> DECORATIVE_WALLS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
+    static {
+        for(String s : DECORATIVE_SOURCESTONE) {
+            DECORATIVE_STAIRS.add(s + "_stairs");
+        }
+        for(String s : DECORATIVE_SOURCESTONE) {
+            DECORATIVE_SLABS.add(s + "_slab");
+        }
+//        for(String s : DECORATIVE_SOURCESTONE) {
+//            DECORATIVE_WALLS.add(s + "_wall");
+//        }
+    }
 
     public static final List<String> DIRECTIONAL_SOURCESTONE = List.of(GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS);
 

@@ -66,8 +66,10 @@ public class DungeonLootTables {
         });
 
         RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.FIREL_DISC.get()));
+        RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.SOUND_OF_GLASS.get()));
+        RARE_LOOT.add(() -> new ItemStack(ItemsRegistry.WILD_HUNT.get()));
 
-        }
+    }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool) {
         return pool.isEmpty() ? ItemStack.EMPTY : pool.get(r.nextInt(pool.size())).get();

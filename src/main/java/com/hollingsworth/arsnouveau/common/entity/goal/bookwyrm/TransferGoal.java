@@ -61,7 +61,7 @@ public class TransferGoal extends Goal {
                 if(task != null){
                     bookwyrm.setHeldStack(task.stack);
                     bookwyrm.level.playSound(null, bookwyrm.getX(), bookwyrm.getY(), bookwyrm.getZ(),
-                            SoundEvents.ITEM_PICKUP, bookwyrm.getSoundSource(), 1.0F, 1.0F);
+                            SoundEvents.ITEM_PICKUP, bookwyrm.getSoundSource(), 0.5f, 1.0F);
                     if (bookwyrm.level instanceof ServerLevel serverLevel) {
                         OpenChestEvent event = new OpenChestEvent(serverLevel, new BlockPos(task.from.subtract(0, 1, 0)), 20);
                         event.open();

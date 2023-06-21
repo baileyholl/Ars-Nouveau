@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -190,9 +189,20 @@ public class CasterTomeProvider implements DataProvider {
                         .add(AugmentPierce.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
                 "For those who can't settle with just a tiny hut.",
-                new RainbowParticleColor(0, 0, 0))
+                new ParticleColor(255, 255, 255))
         );
 
+        tomes.add(buildTome("poseidon", "Poseidon's Refuge", new Spell(MethodProjectile.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(EffectLight.INSTANCE)
+                        .add(EffectBurst.INSTANCE)
+                        .add(AugmentAOE.INSTANCE, 2)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(EffectFreeze.INSTANCE)
+                        .add(EffectBreak.INSTANCE)
+                        .add(EffectFreeze.INSTANCE)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
+                , "Fire at a body of water to create a Ice bubble in the depths.", new ParticleColor(0,0,255)));
 
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {

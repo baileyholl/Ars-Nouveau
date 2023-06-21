@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
-
 public class EffectBreak extends AbstractEffect {
     public static EffectBreak INSTANCE = new EffectBreak();
 
@@ -72,11 +70,10 @@ public class EffectBreak extends AbstractEffect {
                 continue;
             }
 
-            state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-            if (!state.is(BlockTagProvider.NO_BREAK_DROP))
-                destroyBlockSafely(world, pos1, false, shooter);
+            if(!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, stack, shooter.getUUID(), true)){
+                continue;
+            }
 
-            state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, world.getRandom(), pos1, numFortune, numSilkTouch));
 
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false

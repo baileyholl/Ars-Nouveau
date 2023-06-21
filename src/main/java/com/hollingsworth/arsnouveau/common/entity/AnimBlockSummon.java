@@ -48,10 +48,10 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     public BlockState blockState;
     public int color;
     private int ticksLeft;
-    protected static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
     public boolean isAlternateSpawn;
-
+    public boolean dropItem = true;
     public AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         isAlternateSpawn = random.nextBoolean();
@@ -145,10 +145,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
         fallingBlock.setOwner(this.getOwner());
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
+        fallingBlock.setColor(ParticleColor.fromInt(color));
+        fallingBlock.dropItem = this.dropItem;
         if (blockState.getBlock() == BlockRegistry.MAGE_BLOCK) {
-            fallingBlock.setColor(ParticleColor.fromInt(color));
             fallingBlock.dropItem = false;
         }
+
         level.addFreshEntity(fallingBlock);
     }
 
@@ -235,7 +237,8 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController<>(this, "run", 20, (e) -> {
+
+        data.addAnimationController(new AnimationController<>(this, "run", 1, (e) -> {
             if (e.isMoving() && entityData.get(CAN_WALK)) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
@@ -295,6 +298,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.blockState = Block.stateById(pCompound.getInt("blockState"));
         this.getEntityData().set(AGE, pCompound.getInt("ticksAlive"));
         this.getEntityData().set(CAN_WALK, pCompound.getBoolean("canWalk"));
+        this.dropItem = !pCompound.contains("dropItem") || pCompound.getBoolean("dropItem");
     }
 
     @Override
@@ -305,6 +309,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         pCompound.putInt("blockState", Block.getId(blockState));
         pCompound.putInt("ticksAlive", this.getEntityData().get(AGE));
         pCompound.putBoolean("canWalk", this.getEntityData().get(CAN_WALK));
+        pCompound.putBoolean("dropItem", this.dropItem);
     }
 
     public int getColor() {

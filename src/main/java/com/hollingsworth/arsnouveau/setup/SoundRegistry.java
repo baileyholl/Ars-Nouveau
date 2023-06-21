@@ -31,6 +31,9 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> FIRE_FAMILY = SOUND_REG.register(FIRE_SOUND_LIB, () -> makeSound(FIRE_SOUND_LIB));
     public static RegistryObject<SoundEvent> ARIA_BIBLIO = SOUND_REG.register("aria_biblio", () -> makeSound("aria_biblio"));
     public static RegistryObject<SoundEvent> WILD_HUNT = SOUND_REG.register("firel_the_wild_hunt", () -> makeSound("firel_the_wild_hunt"));
+    public static RegistryObject<SoundEvent> SOUND_OF_GLASS = SOUND_REG.register("thistle_the_sound_of_glass", () -> makeSound("thistle_the_sound_of_glass"));
+
+
     public static SpellSound DEFAULT_SPELL_SOUND;
     public static SpellSound EMPTY_SPELL_SOUND;
     public static SpellSound GAIA_SPELL_SOUND;

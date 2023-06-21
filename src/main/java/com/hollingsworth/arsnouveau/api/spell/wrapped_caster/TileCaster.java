@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class TileCaster implements IWrappedCaster{
     protected SpellContext.CasterType casterType;
@@ -40,5 +41,16 @@ public class TileCaster implements IWrappedCaster{
             return tile.getBlockState().getValue(BlockStateProperties.FACING);
         }
         return Direction.NORTH;
+    }
+
+    @Override
+    public BlockEntity getNearbyBlockEntity(Predicate<BlockEntity> predicate) {
+        for(Direction dir : Direction.values()){
+            BlockEntity tile = this.tile.getLevel().getBlockEntity(this.tile.getBlockPos().relative(dir));
+            if(tile != null && predicate.test(tile)){
+                return tile;
+            }
+        }
+        return null;
     }
 }
