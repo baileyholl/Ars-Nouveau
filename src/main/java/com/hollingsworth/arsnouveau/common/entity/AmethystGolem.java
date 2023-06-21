@@ -281,36 +281,35 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "run_controller", 1.0f, this::runController));
-        data.add(new AnimationController<>(this, "attack_controller", 5f, this::attackController));
+        data.add(new AnimationController<>(this, "run_controller", 1, e ->{
+            AnimationController controller = e.getController();
+            if (isStomping()) {
+                controller.setAnimation(RawAnimation.begin().thenPlay("harvest2"));
+                return PlayState.CONTINUE;
+            }
+
+            if (isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+                controller.setAnimation(RawAnimation.begin().thenPlay("tending_master"));
+                return PlayState.CONTINUE;
+            }
+            if (e.isMoving()) {
+                String anim = getHeldStack().isEmpty() ? "run" : "run_carry";
+                controller.setAnimation(RawAnimation.begin().thenPlay(anim));
+                return PlayState.CONTINUE;
+            }
+
+            if (!getHeldStack().isEmpty()) {
+                controller.setAnimation(RawAnimation.begin().thenPlay("carry_idle"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        data.add(new AnimationController<>(this, "attack_controller", 5, e ->{
+            return PlayState.CONTINUE;
+        }));
     }
 
-    private PlayState attackController(AnimationState<?> AnimationState) {
-        return PlayState.CONTINUE;
-    }
 
-    private PlayState runController(AnimationState<?> AnimationState) {
-        if (isStomping()) {
-            AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("harvest2"));
-            return PlayState.CONTINUE;
-        }
-
-        if (isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-            AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("tending_master"));
-            return PlayState.CONTINUE;
-        }
-        if (AnimationState.isMoving()) {
-            String anim = getHeldStack().isEmpty() ? "run" : "run_carry";
-            AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay(anim));
-            return PlayState.CONTINUE;
-        }
-
-        if (!getHeldStack().isEmpty()) {
-            AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("carry_idle"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
 
     public void setHome(BlockPos home) {
         this.entityData.set(HOME, Optional.of(home));

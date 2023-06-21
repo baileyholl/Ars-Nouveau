@@ -24,13 +24,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
-    public static AnimatedGeoModel model = new GenericModel<>("scribes_table");
+    public static GeoModel model = new GenericModel<>("scribes_table");
 
     public ScribesRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
@@ -122,7 +122,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         matrixStack.translate(-0.7, 0, 0);
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(itemToRender, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemToRender, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
         if (tile.recipe != null && !tile.crafting) {
             List<Ingredient> inputs = tile.getRemainingRequired();
@@ -143,7 +143,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
                 // This rotates the individual stacks, with every 2nd stack rotating a different direction
                 matrixStack.mulPose((i % 2 == 0 ? Vector3f.ZP : Vector3f.XP).rotationDegrees(ticks));
                 RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
                 matrixStack.popPose();
             }
         }

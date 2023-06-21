@@ -4,12 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-public abstract class ArsGeoBlockRenderer<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
-    public ArsGeoBlockRenderer(BlockEntityRendererProvider.Context rendererProvider, AnimatedGeoModel<T> modelProvider) {
+public abstract class ArsGeoBlockRenderer<T extends BlockEntity & GeoBlockEntity> extends GeoBlockRenderer<T> {
+    public ArsGeoBlockRenderer(BlockEntityRendererProvider.Context rendererProvider, GeoModel<T> modelProvider) {
         super(rendererProvider, modelProvider);
     }
 

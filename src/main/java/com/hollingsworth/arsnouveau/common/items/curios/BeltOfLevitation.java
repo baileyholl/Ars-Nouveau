@@ -19,7 +19,7 @@ public class BeltOfLevitation extends ArsNouveauCurio {
         if (context.entity() instanceof Player player && !player.abilities.flying) {
             Level world = player.getCommandSenderWorld();
 
-            if (!player.isOnGround() && player.isShiftKeyDown() && !world.isClientSide()) {
+            if (!player.onGround() && player.isShiftKeyDown() && !world.isClientSide()) {
                 boolean isTooHigh = true;
                 for (int i = 1; i < 6; i++) {
                     if (!world.getBlockState(player.blockPosition().below(i)).isAir()) {

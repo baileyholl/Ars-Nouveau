@@ -12,7 +12,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmorStandArmorModel;
@@ -21,7 +20,6 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -31,15 +29,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraftforge.client.ForgeHooksClient;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.util.RenderUtils;
+import org.joml.Vector3f;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.util.RenderUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -99,7 +99,7 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
 
             this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
         }else {
-            Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemTransforms.TransformType.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         }
         matrixStack.popPose();
     }
@@ -130,7 +130,7 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
             GeoBone locBone = (GeoBone) getGeoModelProvider().getBone("top_" + (i + 1));
             RenderUtils.translateToPivotPoint(matrixStack, locBone);
             matrixStack.scale(0.18f, 0.18f, 0.18f);
-            Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemTransforms.TransformType.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
             matrixStack.popPose();
         }
     }

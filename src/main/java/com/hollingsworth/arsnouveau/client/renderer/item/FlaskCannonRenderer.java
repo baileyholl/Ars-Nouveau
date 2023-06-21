@@ -11,18 +11,19 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
+
 
 public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
 
 
-    public FlaskCannonRenderer(AnimatedGeoModel<FlaskCannon> modelProvider) {
+    public FlaskCannonRenderer(GeoModel<FlaskCannon> modelProvider) {
         super(modelProvider);
     }
 
-    public FlaskCannonRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet, AnimatedGeoModel<FlaskCannon> modelProvider) {
+    public FlaskCannonRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet, GeoModel<FlaskCannon> modelProvider) {
         super(dispatcher, modelSet, modelProvider);
     }
 

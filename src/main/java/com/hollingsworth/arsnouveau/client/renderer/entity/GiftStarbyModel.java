@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.entity.GiftStarbuncle;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class GiftStarbyModel extends AnimatedGeoModel<GiftStarbuncle> {
+public class GiftStarbyModel extends GeoModel<GiftStarbuncle> {
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/gift_starby.png");
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/gift_starby.geo.json");
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");

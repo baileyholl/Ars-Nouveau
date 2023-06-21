@@ -3,28 +3,28 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WildenStalkerModel extends AnimatedGeoModel<WildenStalker> {
+public class WildenStalkerModel extends GeoModel<WildenStalker> {
 
     @Override
-    public void setCustomAnimations(WildenStalker entity, int uniqueID, @Nullable AnimationState customPredicate) {
+    public void setCustomAnimations(WildenStalker entity, long uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.017453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        head.setRotX(extraData.headPitch() * 0.017453292F);
+        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
 
-        this.getBone("wing_fly_left").setHidden(!entity.isFlying());
-        this.getBone("wing_fly_right").setHidden(!entity.isFlying());
+        this.getBone("wing_fly_left").get().setHidden(!entity.isFlying());
+        this.getBone("wing_fly_right").get().setHidden(!entity.isFlying());
 
-        this.getBone("wing_run_left").setHidden(entity.isFlying());
-        this.getBone("wing_run_right").setHidden(entity.isFlying());
+        this.getBone("wing_run_left").get().setHidden(entity.isFlying());
+        this.getBone("wing_run_right").get().setHidden(entity.isFlying());
     }
 
     @Override

@@ -58,7 +58,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             if (starbuncle.dynamicBehavior != null) {
                 itemstack = starbuncle.dynamicBehavior.getStackForRender();
             }
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }

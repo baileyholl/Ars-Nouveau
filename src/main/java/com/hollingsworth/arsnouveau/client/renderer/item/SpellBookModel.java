@@ -13,8 +13,8 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     ResourceLocation CLOSED = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_closed.geo.json");
 
     @Override
-    public ResourceLocation getModelResource(SpellBook book, @Nullable ItemTransforms.TransformType transformType) {
-        if (transformType == ItemTransforms.TransformType.GUI || transformType == ItemTransforms.TransformType.FIXED) {
+    public ResourceLocation getModelResource(SpellBook book, @Nullable ItemDisplayContext transformType) {
+        if (transformType == ItemDisplayContext.GUI || transformType == ItemDisplayContext.FIXED) {
             return CLOSED;
         }
         return OPEN;

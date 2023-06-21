@@ -49,7 +49,7 @@ public class ArchwoodChest extends ChestBlock {
                         private final BlockEntity tile = new ArchwoodChestTile(BlockPos.ZERO, getBlock().defaultBlockState());
 
                         @Override
-                        public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack pose, MultiBufferSource buffer, int x, int y) {
+                        public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack pose, MultiBufferSource buffer, int x, int y) {
                             mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
                         }
 

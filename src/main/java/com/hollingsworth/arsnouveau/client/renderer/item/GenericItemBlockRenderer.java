@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 import javax.annotation.Nullable;
@@ -15,7 +15,7 @@ public class GenericItemBlockRenderer extends GeoItemRenderer<AnimBlockItem> {
 
     public boolean isTranslucent;
 
-    public GenericItemBlockRenderer(AnimatedGeoModel modelProvider) {
+    public GenericItemBlockRenderer(GeoModel modelProvider) {
         super(new GenericItemModel(modelProvider));
     }
 

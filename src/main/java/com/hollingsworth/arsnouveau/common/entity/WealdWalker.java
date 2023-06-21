@@ -24,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -42,6 +43,7 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -222,7 +224,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
+        if (source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.DROWN))
             return false;
         return super.hurt(source, amount);
     }
@@ -242,19 +244,19 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "run_controller", 1.0f, this::runController));
-        attackController = new AnimationController<>(this, "attack_controller", 5f, this::attackController);
+        data.add(new AnimationController<>(this, "run_controller", 1, this::runController));
+        attackController = new AnimationController<>(this, "attack_controller", 5, this::attackController);
         data.add(attackController);
     }
 
-    private PlayState attackController(AnimationState<?> AnimationState) {
+    private PlayState attackController(software.bernie.geckolib.core.animation.AnimationState<?> AnimationState) {
         return PlayState.CONTINUE;
     }
 
-    private PlayState runController(AnimationState<?> AnimationState) {
+    private PlayState runController(AnimationState AnimationState) {
         if (entityData.get(SMASHING) || entityData.get(CASTING))
             return PlayState.STOP;
-        if (AnimationState.getController().getCurrentAnimation() != null && !(AnimationState.getController().getCurrentAnimation().animationName.equals("run_master"))) {
+        if (AnimationState.getController().getCurrentAnimation() != null && !(AnimationState.getController().getCurrentAnimation().animation().name().equals("run_master"))) {
             return PlayState.STOP;
         }
         if (AnimationState.isMoving()) {
@@ -276,19 +278,19 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         try {
             if (arg == Animations.SMASH.ordinal()) {
 
-                if (attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("smash"))) {
+                if (attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animation().name().equals("smash"))) {
                     return;
                 }
                 attackController.forceAnimationReset();
-                attackController.setAnimation(RawAnimation.begin().thenPlay("smash").addAnimation("idle"));
+                attackController.setAnimation(RawAnimation.begin().thenPlay("smash").thenPlay("idle"));
             }
 
             if (arg == Animations.CAST.ordinal()) {
-                if (attackController.getCurrentAnimation() != null && attackController.getCurrentAnimation().animationName.equals("cast")) {
+                if (attackController.getCurrentAnimation() != null && attackController.getCurrentAnimation().animation().name().equals("cast")) {
                     return;
                 }
                 attackController.forceAnimationReset();
-                attackController.setAnimation(RawAnimation.begin().thenPlay("cast").addAnimation("idle"));
+                attackController.setAnimation(RawAnimation.begin().thenPlay("cast").thenPlay("idle"));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class ChimeraProjectileModel extends AnimatedGeoModel<EntityChimeraProjectile> {
+public class ChimeraProjectileModel extends GeoModel<EntityChimeraProjectile> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/spike.png");
 

@@ -28,8 +28,8 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if (transformType == ItemTransforms.TransformType.GUI) {
+    public void renderByItem(ItemStack itemStack, ItemDisplayContext transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
+        if (transformType == ItemDisplayContext.GUI) {
             stack.pushPose();
             MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
             Lighting.setupForFlatItems();
@@ -43,7 +43,7 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
         }
     }
 
-    public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemDisplayContext transformType) {
         this.currentItemStack = itemStack;
         GeoModel model = modelProvider instanceof TransformAnimatedModel transformAnimatedModel ? modelProvider.getModel(transformAnimatedModel.getModelResource((GeoAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource((SpellBook) animatable));
         AnimationState<?> itemEvent = new AnimationState<>((GeoAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));

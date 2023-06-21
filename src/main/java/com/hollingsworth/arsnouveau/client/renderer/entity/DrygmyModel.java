@@ -6,12 +6,12 @@ import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class DrygmyModel<T extends LivingEntity & GeoAnimatable> extends AnimatedGeoModel<T> {
+public class DrygmyModel<T extends LivingEntity & GeoAnimatable> extends GeoModel<T> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy.png");
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/drygmy.geo.json");

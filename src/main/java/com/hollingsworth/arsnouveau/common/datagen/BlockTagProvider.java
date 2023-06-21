@@ -268,6 +268,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
+        this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK);
     }
 
     protected Path getPath(ResourceLocation p_126514_) {

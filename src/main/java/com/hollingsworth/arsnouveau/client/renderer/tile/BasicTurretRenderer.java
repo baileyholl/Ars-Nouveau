@@ -9,19 +9,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
 import javax.annotation.Nullable;
 
 public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTile> {
-    public static AnimatedGeoModel model = new GenericModel("basic_spell_turret");
+    public static GeoModel model = new GenericModel("basic_spell_turret");
 
     public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         this(rendererDispatcherIn, model);
     }
 
-    public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, AnimatedGeoModel<BasicSpellTurretTile> modelProvider) {
+    public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, GeoModel<BasicSpellTurretTile> modelProvider) {
         super(rendererDispatcherIn, modelProvider);
     }
 

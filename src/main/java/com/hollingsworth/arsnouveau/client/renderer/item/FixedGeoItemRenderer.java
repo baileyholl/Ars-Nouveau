@@ -9,24 +9,23 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.util.Color;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.object.Color;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import java.util.Collections;
 
 public class FixedGeoItemRenderer<T extends Item & GeoAnimatable> extends GeoItemRenderer {
-    public FixedGeoItemRenderer(AnimatedGeoModel modelProvider) {
+    public FixedGeoItemRenderer(GeoModel modelProvider) {
         super(modelProvider);
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if (transformType == ItemTransforms.TransformType.GUI) {
+    public void renderByItem(ItemStack itemStack, ItemDisplayContext transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
+        if (transformType == ItemDisplayContext.GUI) {
 
             stack.pushPose();
             MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -41,7 +40,7 @@ public class FixedGeoItemRenderer<T extends Item & GeoAnimatable> extends GeoIte
         }
     }
 
-    public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public void render(Item animatable, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn, ItemStack itemStack, ItemDisplayContext transformType) {
 //        super.render(animatable, stack, bufferIn, packedLightIn, itemStack, transformType);
         this.currentItemStack = itemStack;
         GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelResource((GeoAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelResource(animatable));

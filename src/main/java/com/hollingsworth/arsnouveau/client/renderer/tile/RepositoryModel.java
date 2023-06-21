@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class RepositoryModel extends AnimatedGeoModel<RepositoryTile> {
+public class RepositoryModel extends GeoModel<RepositoryTile> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/repository.png");
     public static final ResourceLocation MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/repository.geo.json");

@@ -63,7 +63,7 @@ public class EffectKnockback extends AbstractEffect {
             entity.hasImpulse = true;
             Vec3 vec3 = entity.getDeltaMovement();
             Vec3 vec31 = (new Vec3(xRatio, 0.0D, zRatio)).normalize().scale(strength);
-            entity.setDeltaMovement(vec3.x / 2.0D - vec31.x, entity.isOnGround() ? Math.min(0.4D, vec3.y / 2.0D + strength) : vec3.y, vec3.z / 2.0D - vec31.z);
+            entity.setDeltaMovement(vec3.x / 2.0D - vec31.x, entity.onGround() ? Math.min(0.4D, vec3.y / 2.0D + strength) : vec3.y, vec3.z / 2.0D - vec31.z);
         }
     }
 

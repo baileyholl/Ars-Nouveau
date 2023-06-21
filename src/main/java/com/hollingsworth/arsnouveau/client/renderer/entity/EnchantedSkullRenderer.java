@@ -23,7 +23,7 @@ public class EnchantedSkullRenderer extends EnchantedFallingBlockRenderer<Enchan
 
     public static void renderSkull(ItemStack stack, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         Minecraft.getInstance().getItemRenderer().renderStatic(stack,
-                ItemTransforms.TransformType.HEAD,
+                ItemDisplayContext.HEAD,
                 pPackedLight,
                 pPackedLight,
                 pMatrixStack,

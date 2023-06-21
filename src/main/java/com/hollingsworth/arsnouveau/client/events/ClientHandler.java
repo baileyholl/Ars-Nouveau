@@ -57,7 +57,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import static com.hollingsworth.arsnouveau.client.events.ClientForgeHandler.localize;
 

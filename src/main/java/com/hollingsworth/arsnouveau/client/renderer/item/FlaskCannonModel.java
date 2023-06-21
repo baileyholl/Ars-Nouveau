@@ -3,9 +3,10 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.FlaskCannon;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class FlaskCannonModel extends AnimatedGeoModel<FlaskCannon> {
+
+public class FlaskCannonModel extends GeoModel<FlaskCannon> {
     @Override
     public ResourceLocation getModelResource(FlaskCannon object) {
         return new ResourceLocation(ArsNouveau.MODID, "geo/lingering_flask_cannon.geo.json");

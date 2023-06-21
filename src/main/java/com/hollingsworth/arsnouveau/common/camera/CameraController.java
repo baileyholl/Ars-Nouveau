@@ -81,7 +81,7 @@ public class CameraController {
                 double xRotChange = player.getXRot() - player.xRotLast;
 
                 if (yRotChange != 0.0D || xRotChange != 0.0D)
-                    player.connection.send(new ServerboundMovePlayerPacket.Rot(player.getYRot(), player.getXRot(), player.isOnGround()));
+                    player.connection.send(new ServerboundMovePlayerPacket.Rot(player.getYRot(), player.getXRot(), player.onGround()));
             }
         }
     }

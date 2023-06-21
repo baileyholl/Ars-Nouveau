@@ -59,7 +59,7 @@ public class ChimeraRageGoal extends Goal {
         chimera.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100 + 100 * chimera.getPhase(), 3));
         chimera.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300 + 300 * chimera.getPhase(), chimera.getPhase()));
         LivingEntity target = chimera.getTarget();
-        if (target != null && !target.isOnGround()) {
+        if (target != null && !target.onGround()) {
             target.removeEffect(MobEffects.SLOW_FALLING);
         }
         if (target != null) {

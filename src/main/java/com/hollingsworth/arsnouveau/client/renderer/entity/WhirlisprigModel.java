@@ -6,12 +6,12 @@ import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WhirlisprigModel<T extends LivingEntity & GeoAnimatable> extends AnimatedGeoModel<T> {
+public class WhirlisprigModel<T extends LivingEntity & GeoAnimatable> extends GeoModel<T> {
 
     @Override
     public void setCustomAnimations(T entity, int uniqueID, @Nullable AnimationState customPredicate) {

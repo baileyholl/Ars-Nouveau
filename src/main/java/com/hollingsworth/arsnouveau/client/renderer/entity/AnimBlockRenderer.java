@@ -23,7 +23,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
@@ -37,7 +37,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
     protected MultiBufferSource bufferSource;
 
     public AnimBlockRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new AnimatedGeoModel<>() {
+        super(renderManager, new GeoModel<>() {
             @Override
             public ResourceLocation getModelResource(AnimBlockSummon object) {
                 return BASE_MODEL;

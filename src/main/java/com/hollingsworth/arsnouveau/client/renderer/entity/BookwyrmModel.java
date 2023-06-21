@@ -3,15 +3,14 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;// Made with Blockbe
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class BookwyrmModel<T extends LivingEntity & GeoAnimatable> extends AnimatedGeoModel<T> {
+public class BookwyrmModel<T extends LivingEntity & GeoAnimatable> extends GeoModel<T> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
     public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/book_wyrm.geo.json");

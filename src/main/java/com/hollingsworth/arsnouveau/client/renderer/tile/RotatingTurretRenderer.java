@@ -8,11 +8,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
 @SuppressWarnings("rawtypes")
 public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTile> {
-    public static AnimatedGeoModel model = new GenericModel("basic_spell_turret") {
+    public static GeoModel model = new GenericModel("basic_spell_turret") {
         @Override
         public void setCustomAnimations(Object animatable, int instanceId, AnimationState event) {
             if (animatable instanceof RotatingTurretTile tile) {

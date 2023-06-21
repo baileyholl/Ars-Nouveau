@@ -3,11 +3,11 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
 import javax.annotation.Nullable;
 
-public abstract class TransformAnimatedModel<T extends GeoAnimatable> extends AnimatedGeoModel<T> {
+public abstract class TransformAnimatedModel<T extends GeoAnimatable> extends GeoModel<T> {
 
 
     public ResourceLocation getModelResource(T object) {
@@ -15,6 +15,6 @@ public abstract class TransformAnimatedModel<T extends GeoAnimatable> extends An
     }
 
 
-    public abstract ResourceLocation getModelResource(T object, @Nullable ItemTransforms.TransformType transformType);
+    public abstract ResourceLocation getModelResource(T object, @Nullable ItemDisplayContext transformType);
 
 }

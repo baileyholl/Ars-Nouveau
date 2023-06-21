@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -23,51 +23,56 @@ public class NoShadowTextField extends EditBox {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if (this.isVisible()) {
-            int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
-            int j = this.cursorPos - this.displayPos;
-            int k = this.highlightPos - this.displayPos;
-            String s = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
-            boolean flag = j >= 0 && j <= s.length();
-            boolean flag1 = this.isFocused() && this.frame / 6 % 2 == 0 && flag;
-            int l = this.bordered ? this.x + 4 : this.x;
-            int i1 = this.bordered ? this.y + (this.height - 8) / 2 : this.y;
-            int j1 = l;
-            if (k > s.length()) {
-                k = s.length();
-            }
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        PoseStack matrixStack = graphics.pose();
+        if(!this.visible){
+            return;
+        }
 
-            if (!s.isEmpty()) {
-                String s1 = flag ? s.substring(0, j) : s;
-                j1 = this.font.draw(matrixStack, s1, (float) l, (float) i1, -8355712);
-            }
+        int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
+        int j = this.cursorPos - this.displayPos;
+        int k = this.highlightPos - this.displayPos;
+        String s = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
+        boolean flag = j >= 0 && j <= s.length();
+        boolean flag1 = this.isFocused() && this.frame / 6 % 2 == 0 && flag;
+        int l = this.bordered ? this.x + 4 : this.x;
+        int i1 = this.bordered ? this.y + (this.height - 8) / 2 : this.y;
+        int j1 = l;
+        if (k > s.length()) {
+            k = s.length();
+        }
 
-            boolean flag2 = this.cursorPos < this.value.length() || this.value.length() >= 32;
-            int k1 = j1;
-            if (!flag) {
-                k1 = j > 0 ? l + this.width : l;
-            } else if (flag2) {
-                k1 = j1 - 1;
-                --j1;
-            }
+        if (!s.isEmpty()) {
+            String s1 = flag ? s.substring(0, j) : s;
+            j1 = graphics.drawString(font, this.formatter.apply(s1, this.displayPos),  l,  i1, -8355712);
 
-            if (!s.isEmpty() && flag && j < s.length()) {
-                this.font.draw(matrixStack, s.substring(j), (float) j1, (float) i1, i2);
-            }
+        }
 
-            if (!flag2 && this.suggestion != null) {
-                this.font.draw(matrixStack, this.suggestion, (float) (k1 - 1), (float) i1, -8355712);
-            }
+        boolean flag2 = this.cursorPos < this.value.length() || this.value.length() >= 32;
+        int k1 = j1;
+        if (!flag) {
+            k1 = j > 0 ? l + this.width : l;
+        } else if (flag2) {
+            k1 = j1 - 1;
+            --j1;
+        }
 
-            if (flag1) {
-                if (flag2) {
-                    GuiComponent.fill(matrixStack, k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
-                } else {
-                    this.font.draw(matrixStack, "_", (float) k1, (float) i1, i2);
-                }
+        if (!s.isEmpty() && flag && j < s.length()) {
+            graphics.drawString(font, this.formatter.apply(s.substring(j), this.cursorPos), j1, i1, i2);
+        }
+
+        if (!flag2 && this.suggestion != null) {
+            graphics.drawString(this.font, this.suggestion, k1 - 1, i1, -8355712);
+        }
+
+        if (flag1) {
+            if (flag2) {
+                graphics.fill(k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
+            } else {
+                graphics.drawString(this.font, "_", k1, i1, i2);
             }
         }
+
     }
 
     @Override
@@ -77,7 +82,7 @@ public class NoShadowTextField extends EditBox {
         } else {
             boolean clickedThis = clickedX >= (double) this.x && clickedX < (double) (this.x + this.width) && clickedY >= (double) this.y && clickedY < (double) (this.y + this.height);
             if (this.canLoseFocus) {
-                this.setFocus(clickedThis);
+                this.setFocused(clickedThis);
             }
 
             if (this.isFocused() && clickedThis && mouseButton == 0) {
@@ -102,17 +107,5 @@ public class NoShadowTextField extends EditBox {
                 return false;
             }
         }
-    }
-
-    public void setY(int i) {
-        y = i;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 }

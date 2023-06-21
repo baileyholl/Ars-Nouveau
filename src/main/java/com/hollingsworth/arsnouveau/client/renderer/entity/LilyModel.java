@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.entity.Lily;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class LilyModel extends AnimatedGeoModel<Lily> {
+public class LilyModel extends GeoModel<Lily> {
 
     @Override
     public void setCustomAnimations(Lily entity, int uniqueID, @Nullable AnimationState customPredicate) {

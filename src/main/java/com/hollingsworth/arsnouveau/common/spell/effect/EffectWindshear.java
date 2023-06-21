@@ -32,7 +32,7 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!rayTraceResult.getEntity().isOnGround() && !(rayTraceResult.getEntity() instanceof ItemEntity)) {
+        if (!rayTraceResult.getEntity().onGround() && !(rayTraceResult.getEntity() instanceof ItemEntity)) {
             int numBlocks = 0;
             BlockPos pos = rayTraceResult.getEntity().blockPosition();
             while (!world.getBlockState(pos.below()).getMaterial().blocksMotion() && numBlocks <= 10) {

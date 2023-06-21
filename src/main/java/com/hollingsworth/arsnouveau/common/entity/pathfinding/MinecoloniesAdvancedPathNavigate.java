@@ -190,7 +190,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
             } else if (this.path != null && !this.path.isDone()) {
                 Vec3 vector3d = this.getTempMobPos();
                 Vec3 vector3d1 = this.path.getNextEntityPos(this.mob);
-                if (vector3d.y > vector3d1.y && !this.mob.isOnGround() && Mth.floor(vector3d.x) == Mth.floor(vector3d1.x) && Mth.floor(vector3d.z) == Mth.floor(vector3d1.z)) {
+                if (vector3d.y > vector3d1.y && !this.mob.onGround() && Mth.floor(vector3d.x) == Mth.floor(vector3d1.x) && Mth.floor(vector3d.z) == Mth.floor(vector3d1.z)) {
                     this.path.advance();
                 }
             }
@@ -198,7 +198,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
             DebugPackets.sendPathFindingPacket(this.level, this.mob, this.path, this.maxDistanceToWaypoint);
             if (!this.isDone()) {
                 Vec3 vector3d2 = this.path.getNextEntityPos(this.mob);
-                BlockPos blockpos = new BlockPos(vector3d2);
+                BlockPos blockpos = BlockPos.containing(vector3d2);
                 if (level.isLoaded(blockpos)) {
                     this.mob.getMoveControl()
                             .setWantedPosition(vector3d2.x,
@@ -307,7 +307,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     @Override
     protected boolean canMoveDirectly(Vec3 start, Vec3 end) {
         //  special path blocks go into the false as !specialPathBlocks
-        return getPathingOptions().getIsRoad().apply(level.getBlockState(new BlockPos(start.x, start.y - 1, start.z))) && super.canMoveDirectly(start, end);
+        return getPathingOptions().getIsRoad().apply(level.getBlockState(BlockPos.containing(start.x, start.y - 1, start.z))) && super.canMoveDirectly(start, end);
     }
 
     public double getSpeedFactor() {
@@ -492,7 +492,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     private boolean handlePathPointOnLadder(final PathPointExtended pEx) {
         Vec3 vec3 = this.getPath().getNextEntityPos(this.ourEntity);
-        final BlockPos entityPos = new BlockPos(this.ourEntity.position());
+        final BlockPos entityPos = BlockPos.containing(this.ourEntity.position());
         if (vec3.distanceToSqr(ourEntity.getX(), vec3.y, ourEntity.getZ()) < Math.random() * 0.1) {
             //This way he is less nervous and gets up the ladder
             double newSpeed = 0.3;

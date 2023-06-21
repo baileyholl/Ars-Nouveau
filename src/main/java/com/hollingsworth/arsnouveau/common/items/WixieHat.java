@@ -9,13 +9,13 @@ import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyPotionBehavior;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
@@ -73,7 +73,7 @@ public class WixieHat extends AnimModItem implements ICosmeticItem {
     }
 
     @Override
-    public ItemTransforms.TransformType getTransformType() {
-        return ItemTransforms.TransformType.NONE;
+    public ItemDisplayContext getTransformType() {
+        return ItemDisplayContext.NONE;
     }
 }

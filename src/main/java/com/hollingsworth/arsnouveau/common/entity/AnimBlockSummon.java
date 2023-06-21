@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -228,7 +229,6 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.setResetSpeedInTicks(0);
         String spawnAnim = "spawn";
         data.add(new AnimationController<>(this, spawnAnim, 0, (e) -> {
             if (!entityData.get(CAN_WALK)) {
@@ -238,7 +238,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
             return PlayState.STOP;
         }));
 
-        data.addAnimationController(new AnimationController<>(this, "run", 1, (e) -> {
+        data.add(new AnimationController<>(this, "run", 1, (e) -> {
             if (e.isMoving() && entityData.get(CAN_WALK)) {
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
@@ -255,7 +255,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this, Block.getId(this.getBlockState()));
     }
 

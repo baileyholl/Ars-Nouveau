@@ -6,12 +6,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WealdWalkerModel<W extends WealdWalker> extends AnimatedGeoModel<W> {
+public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
     String type;
 
     public WealdWalkerModel(String type) {

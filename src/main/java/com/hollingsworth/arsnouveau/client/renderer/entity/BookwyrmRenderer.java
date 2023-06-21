@@ -41,7 +41,7 @@ public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = starbuncle.getHeldStack();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }

@@ -111,7 +111,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         if (level.getGameTime() % 20 == 0) {
             if (!(level.getBlockEntity(lecternPos) instanceof StorageLecternTile)) {
                 if (!level.isClientSide) {
-                    this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
+                    this.hurt(level.damageSources().playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
                 }
             }
         }
@@ -259,12 +259,10 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "walkController", 1, this::idle));
-    }
-
-    public <P extends GeoAnimatable> PlayState idle(AnimationState<P> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
-        return PlayState.CONTINUE;
+        data.add(new AnimationController<>(this, "walkController", 1, event ->{
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
+            return PlayState.CONTINUE;
+        }));
     }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);

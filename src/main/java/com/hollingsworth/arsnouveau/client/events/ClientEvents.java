@@ -19,7 +19,7 @@ public class ClientEvents {
     public static void TooltipEvent(RenderTooltipEvent.Pre e){
         try {
             // Uses patchouli internals, don't crash if they change something :)
-            PatchouliTooltipEvent.onTooltip(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+            PatchouliTooltipEvent.onTooltip(e.getGraphics().pose(), e.getItemStack(), e.getX(), e.getY());
         }catch (Exception ex){
             ex.printStackTrace();
         }

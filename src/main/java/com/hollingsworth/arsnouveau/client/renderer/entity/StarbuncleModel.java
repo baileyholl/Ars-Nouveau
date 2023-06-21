@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
+public class StarbuncleModel extends GeoModel<Starbuncle> {
 
     @Override
     public void setCustomAnimations(Starbuncle entity, int uniqueID, @Nullable AnimationState customPredicate) {

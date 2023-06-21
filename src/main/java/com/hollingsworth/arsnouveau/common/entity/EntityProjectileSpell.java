@@ -13,8 +13,10 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -101,7 +103,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
         Vec3 thisPosition = this.position();
         Vec3 nextPosition = getNextHitPosition();
         traceAnyHit(getHitResult(), thisPosition, nextPosition);
-
         tickNextPosition();
 
         if (level.isClientSide && this.age > getParticleDelay()) {
@@ -138,7 +139,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         }
         if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
                 && canTraversePortals()) {
-            BlockRegistry.PORTAL_BLOCK.onProjectileHit(level, level.getBlockState(new BlockPos(raytraceresult.getLocation())),
+            BlockRegistry.PORTAL_BLOCK.onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
                     blockHitResult, this);
 
         }
@@ -262,8 +263,8 @@ public class EntityProjectileSpell extends ColoredProjectile {
             if (entityHitResult.getEntity().equals(this.getOwner())) return;
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
-                Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        new BlockPos(result.getLocation()), getParticleColorWrapper()));
+                Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                        BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
                 attemptRemoval();
             }
         }
@@ -277,7 +278,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 return;
             }
 
-            if (state.getMaterial() == Material.PORTAL) {
+            if (state.is(BlockTags.PORTALS)) {
                 state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
                 return;
             }
@@ -291,7 +292,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
+                    BlockPos.containing(result.getLocation()).below(), getParticleColorWrapper()));
             attemptRemoval();
         }
     }
@@ -306,7 +307,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

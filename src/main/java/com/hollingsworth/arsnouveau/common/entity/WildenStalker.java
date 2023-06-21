@@ -31,6 +31,7 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimationState;
 
 public class WildenStalker extends Monster implements GeoEntity {
     int leapCooldown;
@@ -76,7 +77,7 @@ public class WildenStalker extends Monster implements GeoEntity {
             if (leapCooldown > 0)
                 leapCooldown--;
 
-            if (this.isFlying() && this.isOnGround())
+            if (this.isFlying() && this.onGround())
                 this.setFlying(false);
 
             if (this.isFlying()) {
@@ -118,7 +119,7 @@ public class WildenStalker extends Monster implements GeoEntity {
         return 0.4F;
     }
 
-    private PlayState flyPredicate(AnimationState<?> event) {
+    private PlayState flyPredicate(software.bernie.geckolib.core.animation.AnimationState event) {
         if(isFlying()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
@@ -126,7 +127,7 @@ public class WildenStalker extends Monster implements GeoEntity {
         return PlayState.STOP;
     }
 
-    private PlayState groundPredicate(AnimationState<?> e) {
+    private PlayState groundPredicate(software.bernie.geckolib.core.animation.AnimationState e) {
         if(isFlying()){
             return PlayState.STOP;
         }else if(e.isMoving()){
@@ -187,24 +188,24 @@ public class WildenStalker extends Monster implements GeoEntity {
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
         } else {
-            BlockPos ground = new BlockPos(this.getX(), this.getY() - 1.0D, this.getZ());
+            BlockPos ground = BlockPos.containing(this.getX(), this.getY() - 1.0D, this.getZ());
             float f = 0.91F;
-            if (this.onGround) {
+            if (this.onGround()) {
                 f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
             }
 
             float f1 = 0.16277137F / (f * f * f);
             f = 0.91F;
-            if (this.onGround) {
+            if (this.onGround()) {
                 f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
             }
 
-            this.moveRelative(this.onGround ? 0.1F * f1 : 0.02F, travelVector);
+            this.moveRelative(this.onGround() ? 0.1F * f1 : 0.02F, travelVector);
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(f));
         }
 
-        this.calculateEntityAnimation(this, false);
+        this.calculateEntityAnimation( false);
     }
 
     public static AttributeSupplier.Builder getModdedAttributes() {

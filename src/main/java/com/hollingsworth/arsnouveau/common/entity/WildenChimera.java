@@ -388,7 +388,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         if(withWings != hasWings()){
             return false;
         }
-        return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().isOnGround() && this.isOnGround();
+        return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().onGround() && this.onGround();
     }
 
     public boolean canSummon() {
@@ -772,7 +772,7 @@ public class WildenChimera extends Monster implements GeoEntity {
                     return;
                 }
                 float f1;
-                if (this.mob.isOnGround()) {
+                if (this.mob.onGround()) {
                     f1 = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 } else {
                     f1 = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.FLYING_SPEED));

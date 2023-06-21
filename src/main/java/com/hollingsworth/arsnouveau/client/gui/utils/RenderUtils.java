@@ -55,9 +55,9 @@ public class RenderUtils {
             Lighting.setupForFlatItems();
         }
         if (renderTransparent) {
-            itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, poseStack, transparentBuffer(multibuffersource$buffersource), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, itemBakedModel);
+            itemRenderer.render(itemStack, ItemDisplayContext.GUI, false, poseStack, transparentBuffer(multibuffersource$buffersource), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, itemBakedModel);
         } else {
-            itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, poseStack, multibuffersource$buffersource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, itemBakedModel);
+            itemRenderer.render(itemStack, ItemDisplayContext.GUI, false, poseStack, multibuffersource$buffersource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, itemBakedModel);
         }
         multibuffersource$buffersource.endBatch();
         if (flag) {

@@ -50,8 +50,8 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
-        if (transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND) {
+    public void renderByItem(ItemStack itemStack, ItemDisplayContext transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
+        if (transformType == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
             Player player = Minecraft.getInstance().player;
             Vec3 playerPos = player.position().add(0, player.getEyeHeight(), 0);
             Vec3 look = player.getLookAngle(); // or getLook(partialTicks)

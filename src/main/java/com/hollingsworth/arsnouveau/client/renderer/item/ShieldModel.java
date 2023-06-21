@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.EnchantersShield;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class ShieldModel extends AnimatedGeoModel<EnchantersShield> {
+public class ShieldModel extends GeoModel<EnchantersShield> {
 
     @Override
     public ResourceLocation getModelResource(EnchantersShield wand) {

@@ -10,15 +10,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.model.GeoModel;
+
 
 public class GenericFamiliarRenderer<T extends FamiliarEntity> extends GenericRenderer<T> {
 
     private T familiar;
     private MultiBufferSource buffer;
 
-    public GenericFamiliarRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> modelProvider) {
+    public GenericFamiliarRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 

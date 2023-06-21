@@ -32,9 +32,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,7 +110,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState<?> event) {
+    public PlayState walkPredicate(AnimationState event) {
         return PlayState.CONTINUE;
     }
 

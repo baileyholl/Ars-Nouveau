@@ -6,9 +6,9 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class ScryersEyeModel extends AnimatedGeoModel<ScryersOculusTile> {
+public class ScryersEyeModel extends GeoModel<ScryersOculusTile> {
     public static ResourceLocation SQUINTING = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_squinting.png");
     public static ResourceLocation ALERT = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_alert.png");
     public static ResourceLocation IDLE = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_idle.png");

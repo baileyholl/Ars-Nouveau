@@ -41,7 +41,7 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
             stack.translate(0, +0.35, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = tile.renderEntity.getItem();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) tile.getBlockPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) tile.getBlockPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }

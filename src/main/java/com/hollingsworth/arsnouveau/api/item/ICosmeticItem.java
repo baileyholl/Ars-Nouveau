@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item;
 
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,8 +41,8 @@ public interface ICosmeticItem {
      * the items look in inventory and when it's dropped.
      */
     @OnlyIn(Dist.CLIENT)
-    default ItemTransforms.TransformType getTransformType() {
-        return ItemTransforms.TransformType.GROUND;
+    default ItemDisplayContext getTransformType() {
+        return ItemDisplayContext.GROUND;
     }
 
 }

@@ -5,11 +5,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
 public class TextureVariantRenderer<T extends LivingEntity & IVariantTextureProvider & GeoAnimatable> extends GenericRenderer<T> {
 
-    public TextureVariantRenderer(EntityRendererProvider.Context renderManager, AnimatedGeoModel<T> modelProvider) {
+    public TextureVariantRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 

@@ -11,14 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import java.util.Optional;
 
 public class ArmorRenderer extends GeoArmorRenderer<AnimatedMagicArmor> {
 
-    public ArmorRenderer(AnimatedGeoModel<AnimatedMagicArmor> modelProvider) {
+    public ArmorRenderer(GeoModel<AnimatedMagicArmor> modelProvider) {
         super(modelProvider);
     }
 

@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class PotionMelderModel extends AnimatedGeoModel<PotionMelderTile> {
+public class PotionMelderModel extends GeoModel<PotionMelderTile> {
 
     public static final ResourceLocation model = new ResourceLocation(ArsNouveau.MODID, "geo/potion_melder.geo.json");
     public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/potion_stirrer.png");

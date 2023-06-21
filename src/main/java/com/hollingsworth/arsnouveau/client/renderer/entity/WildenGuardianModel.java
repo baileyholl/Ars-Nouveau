@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationState;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
+public class WildenGuardianModel extends GeoModel<WildenGuardian> {
 
     public static final ResourceLocation WARDER_NEUTRAL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_guardian.geo.json");
     public static final ResourceLocation TEXT = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_guardian.png");

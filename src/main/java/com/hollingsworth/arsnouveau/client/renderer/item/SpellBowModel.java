@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.SpellBow;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class SpellBowModel extends AnimatedGeoModel<SpellBow> {
+public class SpellBowModel extends GeoModel<SpellBow> {
 
     @Override
     public ResourceLocation getModelResource(SpellBow wand) {

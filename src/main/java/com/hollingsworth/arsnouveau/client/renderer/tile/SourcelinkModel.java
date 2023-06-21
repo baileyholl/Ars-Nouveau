@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class SourcelinkModel<T extends SourcelinkTile> extends AnimatedGeoModel<SourcelinkTile> {
+public class SourcelinkModel<T extends SourcelinkTile> extends GeoModel<SourcelinkTile> {
 
     public ResourceLocation modelLocation;
     public ResourceLocation textLoc;
