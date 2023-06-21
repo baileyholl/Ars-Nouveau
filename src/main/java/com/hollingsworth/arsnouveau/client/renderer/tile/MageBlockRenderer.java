@@ -9,10 +9,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class MageBlockRenderer extends GeoProjectilesRenderer<EnchantedMageblock> {
+public class MageBlockRenderer extends GeoEntityRenderer<EnchantedMageblock> {
 
     public static GenericModel model = new GenericModel("mage_block");
 

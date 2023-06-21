@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -88,7 +88,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
         } else if (aboveFluidstate.getType() == Fluids.FLOWING_LAVA && aboveState.getBlock() instanceof LiquidBlock) {
             world.setBlockAndUpdate(p.above(), Blocks.COBBLESTONE.defaultBlockState());
             return p.above();
-        } else if (aboveState.getMaterial() == Material.FIRE) {
+        } else if (aboveState.is(BlockTags.FIRE)) {
             world.destroyBlock(p.above(), false);
             return p.above();
         } else if (hitState.getBlock() == Blocks.ICE) {

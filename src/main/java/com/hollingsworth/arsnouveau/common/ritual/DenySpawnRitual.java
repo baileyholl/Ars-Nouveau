@@ -9,19 +9,18 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 
 public class DenySpawnRitual extends RangeRitual {
     public int radius = 32;
     public boolean deniedSpawn;
 
-    public boolean denySpawn(LivingSpawnEvent.CheckSpawn checkSpawn){
-        boolean shouldDeny = checkSpawn.getSpawnReason() == MobSpawnType.NATURAL
-                && !checkSpawn.isSpawner()
+    public boolean denySpawn(MobSpawnEvent.FinalizeSpawn checkSpawn){
+        boolean shouldDeny = checkSpawn.getSpawnType() == MobSpawnType.NATURAL
                 && checkSpawn.getEntity() instanceof Enemy
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if(shouldDeny){
-            checkSpawn.setResult(LivingSpawnEvent.CheckSpawn.Result.DENY);
+            checkSpawn.setSpawnCancelled(true);
             deniedSpawn = true;
         }
         return shouldDeny;

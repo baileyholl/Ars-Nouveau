@@ -2,14 +2,11 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-
-import javax.annotation.Nullable;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WildenChimeraRenderer extends GeoEntityRenderer<WildenChimera> {
     public WildenChimeraRenderer(EntityRendererProvider.Context renderManager) {
@@ -22,7 +19,7 @@ public class WildenChimeraRenderer extends GeoEntityRenderer<WildenChimera> {
     }
 
     @Override
-    public RenderType getRenderType(WildenChimera animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
+    public RenderType getRenderType(WildenChimera animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityCutoutNoCull(texture);
     }
 }

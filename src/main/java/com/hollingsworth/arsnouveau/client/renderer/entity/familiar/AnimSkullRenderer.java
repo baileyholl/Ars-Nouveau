@@ -5,16 +5,19 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.EnchantedSkullRendere
 import com.hollingsworth.arsnouveau.common.entity.AnimHeadSummon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.util.RenderUtils;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.util.RenderUtils;
+
 
 public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
     public AnimSkullRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
+
+
 
     @Override
     public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
@@ -23,7 +26,7 @@ public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
             if (animBlock == null) return;
             poseStack.pushPose();
             RenderUtils.translateToPivotPoint(poseStack, bone);
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+            poseStack.mulPose(Axis.YP.rotationDegrees(180));
             poseStack.translate(0,0.2,0);
             poseStack.scale(1.4F, 1.4F, 1.4F);
             EnchantedSkullRenderer.renderSkull(animBlock.getStack(), poseStack, bufferSource, packedLight);

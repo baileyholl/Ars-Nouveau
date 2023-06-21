@@ -31,8 +31,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.*;
 
 import java.util.HashMap;
@@ -52,9 +52,9 @@ public class BlockRegistry {
     static final String BlockEntityRegistryKey = "minecraft:block_entity_type";
     static final String prepend = ArsNouveau.MODID + ":";
 
-    public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
+    public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0F, 3.0F).ignitedByLava().sound(SoundType.WOOD);
 
-    public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS);
+    public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY);
 
     @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey)
     public static MageBlock MAGE_BLOCK;
@@ -173,7 +173,7 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_PLANK, registryName = BlockRegistryKey)
     public static ModBlock ARCHWOOD_PLANK;
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_BUTTON, registryName = BlockRegistryKey)
-    public static WoodButtonBlock ARCHWOOD_BUTTON;
+    public static ButtonBlock ARCHWOOD_BUTTON;
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_STAIRS, registryName = BlockRegistryKey)
     public static StairBlock ARCHWOOD_STAIRS;
     @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_SLABS, registryName = BlockRegistryKey)
@@ -420,20 +420,20 @@ public class BlockRegistry {
 
 
         registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
-        registry.register(LibBlockNames.CASCADING_LEAVES, createLeavesBlock(MaterialColor.COLOR_BLUE));
+        registry.register(LibBlockNames.CASCADING_LEAVES, createLeavesBlock(MapColor.COLOR_BLUE));
         registry.register(LibBlockNames.BLAZING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_RED));
-        registry.register(LibBlockNames.BLAZING_LEAVES, createLeavesBlock(MaterialColor.COLOR_RED));
+        registry.register(LibBlockNames.BLAZING_LEAVES, createLeavesBlock(MapColor.COLOR_RED));
         registry.register(LibBlockNames.FLOURISHING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_GREEN));
-        registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock(MaterialColor.COLOR_LIGHT_GREEN));
+        registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock(MapColor.COLOR_LIGHT_GREEN));
         registry.register(LibBlockNames.VEXING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_PURPLE));
-        registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock(MaterialColor.COLOR_PURPLE));
+        registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock(MapColor.COLOR_PURPLE));
 
         registry.register(LibBlockNames.VEXING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_PURPLE));
         registry.register(LibBlockNames.CASCADING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_BLUE));
         registry.register(LibBlockNames.FLOURISHING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_GREEN));
         registry.register(LibBlockNames.BLAZING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_RED));
         registry.register(LibBlockNames.ARCHWOOD_PLANK, new ModBlock(LOG_PROP));
-        registry.register(LibBlockNames.ARCHWOOD_BUTTON, new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
+        registry.register(LibBlockNames.ARCHWOOD_BUTTON, new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD)));
         registry.register(LibBlockNames.ARCHWOOD_STAIRS, new StairBlock(() -> ARCHWOOD_PLANK.defaultBlockState(), woodProp));
         registry.register(LibBlockNames.ARCHWOOD_SLABS, new SlabBlock(woodProp));
         registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, new FenceGateBlock(woodProp));
@@ -489,10 +489,10 @@ public class BlockRegistry {
             }
         }
         for(String s : LibBlockNames.DECORATIVE_SLABS){
-            registry.register(s, new SlabBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+            registry.register(s, new SlabBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)).defaultBlockState(), BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+            registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)).defaultBlockState(), BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
 
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
@@ -500,10 +500,10 @@ public class BlockRegistry {
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
 
         registry.register(LibBlockNames.REPOSITORY, new RepositoryBlock());
-        registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-        registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-        registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
-        registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, MaterialColor.COLOR_PINK).strength(0.1F).sound(SoundType.WOOL)));
+        registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
+        registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
+        registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
+        registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
 
         registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP));
         registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING));
@@ -513,9 +513,9 @@ public class BlockRegistry {
 
     }
 
-    public static MagicLeaves createLeavesBlock(MaterialColor color) {
-        return new MagicLeaves(BlockBehaviour.Properties.of(Material.LEAVES).color(color).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn(
-                BlockRegistry::allowsSpawnOnLeaves).isSuffocating(BlockRegistry::isntSolid).isViewBlocking(BlockRegistry::isntSolid));
+    public static MagicLeaves createLeavesBlock(MapColor color) {
+        return new MagicLeaves(BlockBehaviour.Properties.of().mapColor(color).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn(
+                BlockRegistry::allowsSpawnOnLeaves).isSuffocating(BlockRegistry::isntSolid).isViewBlocking(BlockRegistry::isntSolid).pushReaction(PushReaction.DESTROY).ignitedByLava());
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -800,7 +800,7 @@ public class BlockRegistry {
         return false;
     }
 
-    static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
+    static Block.Properties woodProp = BlockBehaviour.Properties.of().strength(2.0F, 3.0F).ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD);
 
 
     public static Block getBlock(String s) {
@@ -838,8 +838,8 @@ public class BlockRegistry {
         ARCANE_PEDESTAL = registerBlock(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
         BRAZIER_RELAY = registerBlock(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
         RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
-        SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of(Material.CLOTH_DECORATION).strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-        TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.5F, 6.0F).sound(SoundType.STONE)));
+        SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
+        TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         CRAFTING_LECTERN = registerBlock(LibBlockNames.STORAGE_LECTERN, CraftingLecternBlock::new);
         ITEM_DETECTOR = registerBlock(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
         ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
@@ -883,7 +883,7 @@ public class BlockRegistry {
     public static final Map<Supplier<ResourceLocation>, FlowerPotBlock> flowerPots = new HashMap<>();
 
     public static FlowerPotBlock createPottedBlock(Supplier<? extends Block> block) {
-        FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock)Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion());
+        FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock)Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of().instabreak().noOcclusion());
         flowerPots.put(() -> ForgeRegistries.BLOCKS.getKey(block.get()), pot);
         return pot;
     }

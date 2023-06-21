@@ -8,12 +8,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     @Override
     public void tick() {
         if (!level.isClientSide) {
-            boolean isOnGround = level.getBlockState(blockPosition()).getMaterial().blocksMotion();
+            boolean isOnGround = level.getBlockState(blockPosition()).blocksMotion();
             this.setLanded(isOnGround);
         }
         super.tick();
@@ -128,7 +129,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     protected void onHit(HitResult result) {
         if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
-            if (state.getMaterial() == Material.PORTAL) {
+            if (state.is(BlockTags.PORTALS)) {
                 state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(), this);
                 return;
             }

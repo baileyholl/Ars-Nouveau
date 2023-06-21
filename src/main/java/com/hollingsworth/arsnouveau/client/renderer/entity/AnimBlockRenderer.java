@@ -19,13 +19,14 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.core.util.Color;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-import software.bernie.geckolib3.util.RenderUtils;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.RenderUtils;
+
 
 public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY> {
 
@@ -37,26 +38,26 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
     protected MultiBufferSource bufferSource;
 
     public AnimBlockRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new GeoModel<>() {
+        super(renderManager, new GeoModel<BOBBY>() {
             @Override
-            public ResourceLocation getModelResource(AnimBlockSummon object) {
+            public ResourceLocation getModelResource(BOBBY object) {
                 return BASE_MODEL;
             }
 
             @Override
-            public ResourceLocation getTextureResource(AnimBlockSummon object) {
+            public ResourceLocation getTextureResource(BOBBY object) {
                 return TEXTURE;
             }
 
             @Override
-            public ResourceLocation getAnimationResource(AnimBlockSummon animatable) {
+            public ResourceLocation getAnimationResource(BOBBY animatable) {
                 return ANIMATIONS;
             }
 
             @Override
-            public void setCustomAnimations(BOBBY animatable, int instanceId, AnimationState customPredicate) {
+            public void setCustomAnimations(BOBBY animatable, long instanceId, AnimationState<BOBBY> customPredicate) {
                 super.setCustomAnimations(animatable, instanceId, customPredicate);
-                IBone head = this.getAnimationProcessor().getBone("block");
+                CoreGeoBone head = this.getAnimationProcessor().getBone("block");
                 head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));
             }
         });

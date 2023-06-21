@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 
@@ -17,33 +18,31 @@ import software.bernie.geckolib.model.GeoModel;
 public class GenericFamiliarRenderer<T extends FamiliarEntity> extends GenericRenderer<T> {
 
     private T familiar;
-    private MultiBufferSource buffer;
+    private MultiBufferSource bufferSource;
 
     public GenericFamiliarRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
     @Override
-    public void renderEarly(T familiar, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        this.familiar = familiar;
-        this.buffer = renderTypeBuffer;
-        super.renderEarly(familiar, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        this.familiar = animatable;
+        this.bufferSource = bufferSource;
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-
+    public void renderRecursively(PoseStack stack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (this.familiar.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
-            CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, familiar, packedLightIn);
-            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(familiar)));
+            CosmeticRenderUtil.renderCosmetic(bone, stack, this.bufferSource, familiar, packedLight);
+            buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(familiar)));
         }
-
-        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
         return entity.getTexture(entity) == null ? super.getTextureLocation(entity) : entity.getTexture(entity);
     }
-
 }

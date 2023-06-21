@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -41,7 +42,7 @@ public class RitualUtil {
     }
 
     public static void changeBiome(Level level, BlockPos pos, ResourceKey<Biome> target) {
-        Holder<Biome> biome = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getHolderOrThrow(target);
+        Holder<Biome> biome = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(target);
         BlockPos dPos = pos;
 
         if (level.getBiome(dPos).is(target))

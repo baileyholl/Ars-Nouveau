@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 
 public class ModBlock extends Block {
 
@@ -19,7 +19,7 @@ public class ModBlock extends Block {
     }
 
     public static Block.Properties defaultProperties() {
-        return Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 6.0f);
+        return Block.Properties.of().sound(SoundType.STONE).strength(2.0f, 6.0f).mapColor(MapColor.STONE);
     }
 
     @Override

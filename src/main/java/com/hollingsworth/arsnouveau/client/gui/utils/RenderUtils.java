@@ -6,21 +6,19 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
 
 public class RenderUtils {
 
@@ -81,19 +79,19 @@ public class RenderUtils {
         return renderType -> new TintedVertexConsumer(buffer.getBuffer(TRANSLUCENT), 1.0f, 1.0f, 1.0f, 0.25f);
     }
 
-    public static void drawTextureFromResourceLocation(ResourceLocation providedResourceLocation, PoseStack stack, int x, int y, int size, boolean renderTransparent) {
-        RenderSystem.enableBlend();
-        if (renderTransparent) {
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
-        } else {
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        }
-
-        RenderSystem.setShaderTexture(0, providedResourceLocation);
-        GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableBlend();
-    }
+//    public static void drawTextureFromResourceLocation(ResourceLocation providedResourceLocation, PoseStack stack, int x, int y, int size, boolean renderTransparent) {
+//        RenderSystem.enableBlend();
+//        if (renderTransparent) {
+//            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
+//        } else {
+//            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        }
+//
+//        RenderSystem.setShaderTexture(0, providedResourceLocation);
+//        GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
+//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+//        RenderSystem.disableBlend();
+//    }
 
     /*
     * Adapted from Eidolon, Elucent

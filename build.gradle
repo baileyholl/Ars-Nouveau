@@ -189,6 +189,8 @@ dependencies {
     shade fg.deobf("curse.maven:geckolib-388172:4573048")
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
+    implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
+    implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
 //    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental

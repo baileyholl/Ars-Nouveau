@@ -29,7 +29,7 @@ public class RandomTreeFeature implements IPlaceableFeature {
     @Override
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
         BlockState treeState = treeStates.get(level.random.nextInt(treeStates.size()));
-        if(level.getBlockState(pos).getMaterial().isReplaceable() && treeState.canSurvive(level, pos)){
+        if(level.getBlockState(pos).canBeReplaced() && treeState.canSurvive(level, pos)){
             level.setBlock(pos, treeState, 3);
             if(level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock){
                 saplingBlock.advanceTree((ServerLevel) level, pos, level.getBlockState(pos), level.random);

@@ -11,7 +11,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -19,7 +20,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class IntangibleAirBlock extends TickableModBlock implements LiquidBlockContainer {
 
     public IntangibleAirBlock() {
-        super(Block.Properties.of(Material.DECORATION).noCollission().noLootTable());
+        super(Block.Properties.of().noCollission().noLootTable().pushReaction(PushReaction.BLOCK).mapColor(MapColor.NONE));
     }
 
     public RenderShape getRenderShape(BlockState state) {

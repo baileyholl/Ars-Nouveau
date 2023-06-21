@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -69,7 +69,7 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
             ms.pushPose();
             float f = blockstate.getValue(ChestBlock.FACING).toYRot();
             ms.translate(0.5D, 0.5D, 0.5D);
-            ms.mulPose(Vector3f.YP.rotationDegrees(-f));
+            ms.mulPose(Axis.YP.rotationDegrees(-f));
             ms.translate(-0.5D, -0.5D, -0.5D);
             DoubleBlockCombiner.NeighborCombineResult<? extends ChestBlockEntity> icallbackwrapper;
             if (flag) {

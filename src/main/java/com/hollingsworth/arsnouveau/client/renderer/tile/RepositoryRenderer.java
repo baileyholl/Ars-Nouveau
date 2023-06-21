@@ -12,10 +12,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.util.Color;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
+import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib3.util.EModelRenderCycle;
 
 public class RepositoryRenderer extends ArsGeoBlockRenderer<RepositoryTile> {
     public static GeoModel<RepositoryTile> model = new RepositoryModel();
@@ -23,16 +21,6 @@ public class RepositoryRenderer extends ArsGeoBlockRenderer<RepositoryTile> {
         super(rendererProvider, model);
     }
 
-    @Override
-    public void render(RepositoryTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(tile, partialTick, poseStack, bufferSource, packedLight);
-
-    }
-
-    @Override
-    public void render(GeoModel model, RepositoryTile repo, float partialTick, RenderType type, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.render(model, repo, partialTick, type, poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
 
     public static GenericItemBlockRenderer getISTER() {
             return new GenericItemBlockRenderer(model) {

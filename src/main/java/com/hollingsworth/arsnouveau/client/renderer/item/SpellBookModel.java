@@ -2,36 +2,36 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-
-import javax.annotation.Nullable;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.core.animation.AnimationState;
 
 public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     ResourceLocation OPEN = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_open.geo.json");
     ResourceLocation CLOSED = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_closed.geo.json");
 
-    @Override
-    public ResourceLocation getModelResource(SpellBook book, @Nullable ItemDisplayContext transformType) {
-        if (transformType == ItemDisplayContext.GUI || transformType == ItemDisplayContext.FIXED) {
-            return CLOSED;
-        }
-        return OPEN;
-    }
 
     @Override
-    public void setCustomAnimations(SpellBook entity, int uniqueID, @org.jetbrains.annotations.Nullable AnimationState customPredicate) {
+    public void setCustomAnimations(SpellBook entity, long uniqueID, @org.jetbrains.annotations.Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        this.getBone("tier3").setHidden(entity.tier.value < 3);
-        this.getBone("tier1").setHidden(entity.tier.value != 1);
-        this.getBone("tier2").setHidden(entity.tier.value != 2);
+        this.getBone("tier3").get().setHidden(entity.tier.value < 3);
+        this.getBone("tier1").get().setHidden(entity.tier.value != 1);
+        this.getBone("tier2").get().setHidden(entity.tier.value != 2);
 
     }
 
     @Override
     public ResourceLocation getModelResource(SpellBook object) {
         return getModelResource(object, null);
+    }
+
+    @Override
+    public ResourceLocation getModelResource(SpellBook object, @Nullable ItemDisplayContext transformType) {
+        if (transformType == ItemDisplayContext.GUI || transformType == ItemDisplayContext.FIXED) {
+            return CLOSED;
+        }
+        return OPEN;
     }
 
 

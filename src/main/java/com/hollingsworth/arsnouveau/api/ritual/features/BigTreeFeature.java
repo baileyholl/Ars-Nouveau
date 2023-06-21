@@ -48,7 +48,7 @@ public class BigTreeFeature implements IPlaceableFeature {
     }
 
     public boolean validPos(Level level, BlockPos pos){
-        return level.getBlockState(pos).getMaterial().isReplaceable() && tree.canSurvive(level, pos);
+        return level.getBlockState(pos).canBeReplaced() && tree.canSurvive(level, pos);
     }
 
     @Override

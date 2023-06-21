@@ -50,7 +50,7 @@ public abstract class StructureRitual extends AbstractRitual {
         StructureTemplateManager manager = getWorld().getServer().getStructureManager();
         StructureTemplate structureTemplate = manager.getOrCreate(structure);
         List<StructureTemplate.StructureBlockInfo> infoList = structureTemplate.palettes.get(0).blocks();
-        blocks = new ArrayList<>(infoList.stream().filter(b -> !b.state.isAir()).toList());
+        blocks = new ArrayList<>(infoList.stream().filter(b -> !b.state().isAir()).toList());
         blocks.sort(new StructureComparator(getPos(), offset));
         entityInfoList = new ArrayList<>(((StructureTemplateAccessor) structureTemplate).getEntityInfoList());
     }
@@ -85,18 +85,18 @@ public abstract class StructureRitual extends AbstractRitual {
                 return;
             }
             StructureTemplate.StructureBlockInfo blockInfo = blocks.get(index);
-            BlockPos translatedPos = getPos().offset(blockInfo.pos.getX(), blockInfo.pos.getY(), blockInfo.pos.getZ()).offset(offset);
-            if (getWorld().getBlockState(translatedPos).getMaterial().isReplaceable()) {
-                getWorld().setBlock(translatedPos, blockInfo.state, 2);
+            BlockPos translatedPos = getPos().offset(blockInfo.pos().getX(), blockInfo.pos().getY(), blockInfo.pos().getZ()).offset(offset);
+            if (getWorld().getBlockState(translatedPos).canBeReplaced()) {
+                getWorld().setBlock(translatedPos, blockInfo.state(), 2);
                 BlockEntity blockentity1 = getWorld().getBlockEntity(translatedPos);
                 if (blockentity1 != null) {
                     if (blockentity1 instanceof RandomizableContainerBlockEntity) {
-                        blockInfo.nbt.putLong("LootTableSeed", getWorld().random.nextLong());
+                        blockInfo.nbt().putLong("LootTableSeed", getWorld().random.nextLong());
                     }
 
-                    blockentity1.load(blockInfo.nbt);
+                    blockentity1.load(blockInfo.nbt());
                 }
-                getWorld().playSound(null, translatedPos, blockInfo.state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                getWorld().playSound(null, translatedPos, blockInfo.state().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 placeCount++;
                 if(biome != null){
                     RitualUtil.changeBiome(getWorld(), translatedPos, biome);

@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,7 @@ import java.util.List;
 public class CraftingLecternBlock extends TickableModBlock {
 
 	public CraftingLecternBlock() {
-		super(Properties.of(Material.WOOD).strength(3).noOcclusion());
+		super(Properties.of().strength(3).noOcclusion().pushReaction(PushReaction.BLOCK).ignitedByLava().sound(SoundType.WOOD));
 	}
 
 	@Override
@@ -41,11 +40,6 @@ public class CraftingLecternBlock extends TickableModBlock {
 	@Override
 	public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip,
 			TooltipFlag flagIn) {
-	}
-
-	@Override
-	public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
-		return PushReaction.BLOCK;
 	}
 
 	@NotNull

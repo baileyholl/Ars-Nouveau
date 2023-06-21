@@ -17,7 +17,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
-import software.bernie.geckolib3.core.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;

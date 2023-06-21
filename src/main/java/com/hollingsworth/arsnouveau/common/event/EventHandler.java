@@ -47,6 +47,7 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -162,7 +163,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void livingAttackEvent(LivingAttackEvent e) {
-        if (e.getSource() == DamageSource.HOT_FLOOR && e.getEntity() != null && !e.getEntity().getCommandSenderWorld().isClientSide) {
+        if (e.getSource().is(DamageTypes.HOT_FLOOR) && e.getEntity() != null && !e.getEntity().getCommandSenderWorld().isClientSide) {
             Level world = e.getEntity().level;
             if (world.getBlockState(e.getEntity().blockPosition()).getBlock() instanceof LavaLily) {
                 e.setCanceled(true);
@@ -171,11 +172,9 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void livingSpawnEvent(LivingSpawnEvent.CheckSpawn checkSpawn) {
+    public static void livingSpawnEvent(MobSpawnEvent.FinalizeSpawn checkSpawn) {
         if(checkSpawn.getLevel() instanceof Level level && !level.isClientSide){
-            if(RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn)) != null){
-                checkSpawn.setResult(Event.Result.DENY);
-            }
+             RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn));
         }
     }
 

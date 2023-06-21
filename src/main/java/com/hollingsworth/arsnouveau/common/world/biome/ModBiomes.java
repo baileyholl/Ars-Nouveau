@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.world.DefaultFeatures;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
@@ -28,7 +28,7 @@ public class ModBiomes {
     public static final ResourceKey<Biome> ARCHWOOD_FOREST = register("archwood_forest");
 
     public static ResourceKey<Biome> register(String name) {
-        return ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(ArsNouveau.MODID, name));
+        return ResourceKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, name));
     }
 
     public static void registerBiomes(IForgeRegistry<Biome> registry) {
@@ -40,8 +40,7 @@ public class ModBiomes {
 
     @SuppressWarnings("SameParameterValue")
     public static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, int waterColor, int waterFogColor, int skyColor, int grassColor, int foliageColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder, Supplier<Music> music) {
-        return new Biome.BiomeBuilder().
-                precipitation(precipitation)
+        return new Biome.BiomeBuilder()
                 .temperature(temperature)
                 .downfall(downfall)
                 .specialEffects((new BiomeSpecialEffects.Builder())
@@ -96,9 +95,9 @@ public class ModBiomes {
 
         BiomeDefaultFeatures.addDefaultMushrooms(biomeBuilder);
         BiomeDefaultFeatures.addDefaultExtraVegetation(biomeBuilder);
-
-        biomeBuilder.addFeature(GenerationStep.Decoration.LOCAL_MODIFICATIONS, BuiltinRegistries.PLACED_FEATURE.getHolderOrThrow(
-                ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "placed_lights"))));
+        // TODO: restore placed lights
+//        biomeBuilder.addFeature(GenerationStep.Decoration.LOCAL_MODIFICATIONS, BuiltinRegistries.PLACED_FEATURE.getHolderOrThrow(
+//                ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(ArsNouveau.MODID, "placed_lights"))));
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.COMMON_ARCHWOOD);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.ArtisanalMojangGrassTM);
         biomeBuilder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WorldEvent.ArtisanalMojangFlowersTM);

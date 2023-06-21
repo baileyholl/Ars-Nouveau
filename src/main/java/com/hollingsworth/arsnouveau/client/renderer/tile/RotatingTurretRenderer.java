@@ -6,19 +6,21 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import software.bernie.geckolib3.core.event.predicate.AnimationState;
-import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 @SuppressWarnings("rawtypes")
 public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTile> {
     public static GeoModel model = new GenericModel("basic_spell_turret") {
         @Override
-        public void setCustomAnimations(Object animatable, int instanceId, AnimationState event) {
+        public void setCustomAnimations(GeoAnimatable animatable, long instanceId, AnimationState animationState) {
+            super.setCustomAnimations(animatable, instanceId, animationState);
             if (animatable instanceof RotatingTurretTile tile) {
-                IBone master = this.getAnimationProcessor().getBone("spell_turret");
-                master.setRotationY((tile.getRotationX() + 90) * Mth.DEG_TO_RAD);
-                master.setRotationX(tile.getRotationY() * Mth.DEG_TO_RAD);
+                CoreGeoBone master = this.getAnimationProcessor().getBone("spell_turret");
+                master.setRotY((tile.getRotationX() + 90) * Mth.DEG_TO_RAD);
+                master.setRotX(tile.getRotationY() * Mth.DEG_TO_RAD);
             }
         }
     };

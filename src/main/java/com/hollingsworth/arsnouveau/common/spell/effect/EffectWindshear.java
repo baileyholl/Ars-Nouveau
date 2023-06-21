@@ -10,7 +10,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -35,7 +34,7 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
         if (!rayTraceResult.getEntity().onGround() && !(rayTraceResult.getEntity() instanceof ItemEntity)) {
             int numBlocks = 0;
             BlockPos pos = rayTraceResult.getEntity().blockPosition();
-            while (!world.getBlockState(pos.below()).getMaterial().blocksMotion() && numBlocks <= 10) {
+            while (!world.getBlockState(pos.below()).blocksMotion() && numBlocks <= 10) {
                 pos = pos.below();
                 numBlocks++;
             }
@@ -48,9 +47,10 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
         }
     }
 
+    // TODO: Restore windshear damage type?
     @Override
     public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return new EntityDamageSource("fall", getPlayer(shooter, (ServerLevel) world)).bypassArmor().setIsFall();
+        return world.damageSources().fall();
     }
 
     @Override

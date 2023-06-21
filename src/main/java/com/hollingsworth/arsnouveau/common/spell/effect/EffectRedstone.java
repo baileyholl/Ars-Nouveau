@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ public class EffectRedstone extends AbstractEffect {
             signalModifier = 15;
         state = state.setValue(RedstoneAir.POWER, signalModifier);
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-        if (!(world.getBlockState(pos).getMaterial() == Material.AIR && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)) {
+        if (!(world.getBlockState(pos).isAir() && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)) {
             return;
         }
         int timeBonus = (int) spellStats.getDurationMultiplier();

@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-import net.minecraft.world.level.material.Material;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,14 +81,14 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     public void start() {
         Level world = sylph.level;
         int range = 4;
-        if (this.IS_GRASS.test(world.getBlockState(sylph.blockPosition().below())) && world.getBlockState(sylph.blockPosition()).getMaterial() == Material.AIR) {
+        if (this.IS_GRASS.test(world.getBlockState(sylph.blockPosition().below())) && world.getBlockState(sylph.blockPosition()).isAir()) {
             this.growPos = sylph.blockPosition().below();
 
         } else {
             List<BlockPos> list = new ArrayList<>();
             BlockPos.betweenClosedStream(sylph.blockPosition().offset(range, range, range), sylph.blockPosition().offset(-range, -range, -range)).forEach(bp -> {
                 bp = bp.immutable();
-                if (IS_GRASS.test(world.getBlockState(bp)) && world.getBlockState(bp.above()).getMaterial() == Material.AIR)
+                if (IS_GRASS.test(world.getBlockState(bp)) && world.getBlockState(bp.above()).isAir())
                     list.add(bp);
             });
             Collections.shuffle(list);

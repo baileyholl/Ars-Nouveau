@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
@@ -268,7 +267,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         BlockState bs = level.getBlockState(pos);
         // 1 Up when we're standing within this collision shape
         final VoxelShape collisionShape = bs.getCollisionShape(level, pos);
-        if (bs.getMaterial().blocksMotion() && collisionShape.max(Direction.Axis.Y) > 0) {
+        if (bs.blocksMotion() && collisionShape.max(Direction.Axis.Y) > 0) {
             final double relPosX = Math.abs(entity.getX() % 1);
             final double relPosZ = Math.abs(entity.getZ() % 1);
 
@@ -284,7 +283,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         }
 
         BlockState down = level.getBlockState(pos.below());
-        while (!bs.getMaterial().blocksMotion() && !down.getMaterial().blocksMotion() && !down.getBlock().isLadder(down, level, pos.below(), entity) && down.getFluidState()
+        while (!bs.blocksMotion() && !down.blocksMotion() && !down.getBlock().isLadder(down, level, pos.below(), entity) && down.getFluidState()
                 .isEmpty()) {
             pos.move(Direction.DOWN, 1);
             bs = down;
@@ -302,7 +301,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
                 pos.set(pos.getX(), pos.getY() + 1, pos.getZ());
                 bs = level.getBlockState(pos);
             }
-        } else if (b instanceof FenceBlock || b instanceof WallBlock || bs.getMaterial().isSolid()) {
+        } else if (b instanceof FenceBlock || b instanceof WallBlock || bs.isSolid()) {
             //Push away from fence
             final double dX = entity.getX() - Math.floor(entity.getX());
             final double dZ = entity.getZ() - Math.floor(entity.getZ());
@@ -664,7 +663,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @return true if so.
      */
     public boolean isLiquid(final BlockState state) {
-        return state.getMaterial().isLiquid() || (!state.getMaterial().blocksMotion() && !state.getFluidState().isEmpty());
+        return state.liquid() || (!state.blocksMotion() && !state.getFluidState().isEmpty());
     }
 
     /**
@@ -1008,7 +1007,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
             if (SurfaceType.getSurfaceType(world, below, pos) == SurfaceType.WALKABLE && i <= 3 || isLiquid(below)) {
                 //  Level path
                 return pos.getY() - i + 1;
-            } else if (below.getMaterial() != Material.AIR) {
+            } else if (!below.isAir()) {
                 return -100;
             }
         }
@@ -1156,9 +1155,9 @@ public abstract class AbstractPathJob implements Callable<Path> {
             return false;
         }
 
-        if (block.getMaterial() != Material.AIR) {
+        if (!block.isAir()) {
             final VoxelShape shape = block.getCollisionShape(world, pos);
-            if (block.getMaterial().blocksMotion() && !(shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)) {
+            if (block.blocksMotion() && !(shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)) {
                 if (block.getBlock() instanceof TrapDoorBlock) {
                     BlockPos parentPos = parent == null ? start : parent.pos;
                     if (head) {

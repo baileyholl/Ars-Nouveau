@@ -5,7 +5,8 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.tile.ScryersOculusTile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ScryersEyeModel extends GeoModel<ScryersOculusTile> {
@@ -31,11 +32,10 @@ public class ScryersEyeModel extends GeoModel<ScryersOculusTile> {
         return anim;
     }
 
-
     @Override
-    public void setCustomAnimations(ScryersOculusTile pBlockEntity, int uniqueID) {
-        super.setCustomAnimations(pBlockEntity, uniqueID);
-        IBone eye = this.getAnimationProcessor().getBone("eye");
+    public void setCustomAnimations(ScryersOculusTile pBlockEntity, long instanceId, AnimationState<ScryersOculusTile> animationState) {
+        super.setCustomAnimations(pBlockEntity, instanceId, animationState);
+        CoreGeoBone eye = this.getAnimationProcessor().getBone("eye");
         if (eye == null)
             return;
         // Taken from enchantment table
@@ -47,7 +47,8 @@ public class ScryersEyeModel extends GeoModel<ScryersOculusTile> {
             f1 += ((float) Math.PI * 2F);
         }
         float f2 = pBlockEntity.oRot + f1 * ClientInfo.partialTicks - 4.7f;
-        eye.setRotationY(-f2);
-        eye.setPositionY((Mth.sin((ClientInfo.ticksInGame + ClientInfo.partialTicks) / 10.0f)) / 2f);
+        eye.setRotY(-f2);
+        eye.setPosY((Mth.sin((ClientInfo.ticksInGame + ClientInfo.partialTicks) / 10.0f)) / 2f);
     }
+
 }

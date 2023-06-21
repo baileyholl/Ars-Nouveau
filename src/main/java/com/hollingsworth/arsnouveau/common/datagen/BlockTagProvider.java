@@ -3,14 +3,15 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -41,8 +42,16 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.generator = generatorIn;
     }
 
+    protected Path getPath(ResourceLocation p_126514_) {
+        return this.generator.getOutputFolder().resolve("data/" + p_126514_.getNamespace() + "/tags/blocks/" + p_126514_.getPath() + ".json");
+    }
+
+    public String getName() {
+        return "AN tags";
+    }
+
     @Override
-    protected void addTags() {
+    protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(RELOCATION_NOT_SUPPORTED);
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
@@ -178,13 +187,13 @@ public class BlockTagProvider extends BlockTagsProvider {
         );
 
         this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
-                        BlockRegistry.SOURCEBERRY_BUSH,
-                        BlockRegistry.MAGE_BLOOM_CROP,
-                        BlockRegistry.FROSTAYA_POD,
-                        BlockRegistry.MENDOSTEEN_POD,
-                        BlockRegistry.BASTION_POD,
-                        BlockRegistry.BOMBEGRANTE_POD
-                );
+                BlockRegistry.SOURCEBERRY_BUSH,
+                BlockRegistry.MAGE_BLOOM_CROP,
+                BlockRegistry.FROSTAYA_POD,
+                BlockRegistry.MENDOSTEEN_POD,
+                BlockRegistry.BASTION_POD,
+                BlockRegistry.BOMBEGRANTE_POD
+        );
 
         this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
         this.tag(Tags.Blocks.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE);
@@ -269,13 +278,5 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK);
-    }
-
-    protected Path getPath(ResourceLocation p_126514_) {
-        return this.generator.getOutputFolder().resolve("data/" + p_126514_.getNamespace() + "/tags/blocks/" + p_126514_.getPath() + ".json");
-    }
-
-    public String getName() {
-        return "AN tags";
     }
 }

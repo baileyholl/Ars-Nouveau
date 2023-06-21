@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
 
     public boolean hasVisibleSide(BlockPos pos) {
         for (Direction d : Direction.values()) {
-            if (entity.level.getBlockState(pos.relative(d)).getMaterial() == Material.AIR)
+            if (entity.level.getBlockState(pos.relative(d)).isAir())
                 return true;
         }
         return false;
