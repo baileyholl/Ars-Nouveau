@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -103,9 +104,8 @@ public class CrushRecipe implements Recipe<Container> {
         return this.input.test(i);
     }
 
-   @NotNull
     @Override
-    public ItemStack assemble(Container inventory) {
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
         return ItemStack.EMPTY;
     }
 
@@ -114,13 +114,12 @@ public class CrushRecipe implements Recipe<Container> {
         return true;
     }
 
-   @NotNull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
         return ItemStack.EMPTY;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public ResourceLocation getId() {
         return id;

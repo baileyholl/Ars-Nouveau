@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -44,7 +45,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         }
         matrixStack.translate(xOffset, yOffset, zOffset);
         matrixStack.scale(0.5f, 0.5f, 0.5f);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees((pPartialTick + (float) ClientInfo.ticksInGame) * 3f));
+        matrixStack.mulPose(Axis.YP.rotationDegrees((pPartialTick + (float) ClientInfo.ticksInGame) * 3f));
         Minecraft.getInstance().getItemRenderer().renderStatic(tileEntityIn.getStack(),
                 ItemDisplayContext.FIXED,
                 pPackedLight,

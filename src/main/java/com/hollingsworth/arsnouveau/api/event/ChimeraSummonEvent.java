@@ -88,7 +88,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
 
     public BlockPos getPos() {
         double spawnArea = 2.5 + phase * 2;
-        return new BlockPos(pos.getX() + ParticleUtil.inRange(-spawnArea, spawnArea), pos.getY() + 2, pos.getZ() + ParticleUtil.inRange(-spawnArea, spawnArea));
+        return BlockPos.containing(pos.getX() + ParticleUtil.inRange(-spawnArea, spawnArea), pos.getY() + 2, pos.getZ() + ParticleUtil.inRange(-spawnArea, spawnArea));
     }
 
     @Override

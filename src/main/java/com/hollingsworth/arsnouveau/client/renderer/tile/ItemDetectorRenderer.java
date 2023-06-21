@@ -29,7 +29,7 @@ public class ItemDetectorRenderer implements BlockEntityRenderer<ItemDetectorTil
         matrixStack.pushPose();
         matrixStack.translate(xOffset, yOffset, zOffset);
         matrixStack.scale(0.5f, 0.5f, 0.5f);
-        matrixStack.mulPose( Vector3f.YP.rotationDegrees(ticks * 2f));
+        matrixStack.mulPose( Axis.YP.rotationDegrees(ticks * 2f));
         Minecraft.getInstance().getItemRenderer().renderStatic(tileEntityIn.filterStack, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, matrixStack, pBufferSource, (int) tileEntityIn.getBlockPos().asLong());
 
         matrixStack.popPose();

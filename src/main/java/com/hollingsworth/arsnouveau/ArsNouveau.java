@@ -164,7 +164,8 @@ public class ArsNouveau {
 
     public void clientSetup(final FMLClientSetupEvent event) {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(TextureEvent::textEvent);
+        // TODO: restore chest event
+//        FMLJavaModLoadingContext.get().getModEventBus().addListener(TextureEvent::textEvent);
         event.enqueueWork(() ->{
             MenuScreens.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
         });

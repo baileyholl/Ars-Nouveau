@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -58,7 +59,7 @@ public class SummonRitualRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer) {
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
         return ItemStack.EMPTY;
     }
 
@@ -68,7 +69,7 @@ public class SummonRitualRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
         return ItemStack.EMPTY;
     }
 

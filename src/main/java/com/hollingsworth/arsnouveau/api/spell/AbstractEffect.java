@@ -171,9 +171,9 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         if (entity instanceof LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
             Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, DamageSource.playerAttack(playerContext));
+            LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
-            LootTable loottable = server.getServer().getLootTables().get(lootTable);
+            LootTable loottable = server.getServer().getLootData().getLootTable(lootTable);
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
             items.forEach(mob::spawnAtLocation);
         }
@@ -265,7 +265,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     @Deprecated(forRemoval = true, since = "3.4.0")
     public ItemStack getItemFromCaster(@NotNull LivingEntity shooter, SpellContext spellContext, Item item) {
-        return getItemFromCaster(shooter, spellContext, (i) -> i.sameItem(new ItemStack(item)));
+        return getItemFromCaster(shooter, spellContext, (i) -> ItemStack.isSameItem(i, new ItemStack(item)));
     }
 
     @Deprecated(forRemoval = true, since = "3.4.0")

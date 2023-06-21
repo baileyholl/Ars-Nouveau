@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -58,13 +59,13 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
 
         Direction direction = pBlockEntity.getBlockState().getValue(MobJar.FACING);
         if(direction == Direction.EAST) {
-            pPoseStack.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
+            pPoseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
         }else if(direction == Direction.WEST){
-            pPoseStack.mulPose(Vector3f.ZP.rotationDegrees(-90.0F));
+            pPoseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
         }else if(direction == Direction.NORTH){
-            pPoseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+            pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         }else if(direction == Direction.SOUTH){
-            pPoseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
+            pPoseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
         }
         pPoseStack.mulPose(pBlockEntity.getBlockState().getValue(MobJar.FACING).getRotation());
         entity.setDeltaMovement(0,0,0);

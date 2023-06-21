@@ -88,7 +88,7 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
     }
 
     private void spawnFangs(Level world, double xAngle, double zAngle, double yStart, double yEnd, float rotationYaw, int tickDelay, LivingEntity caster, float damage) {
-        BlockPos blockpos = new BlockPos(xAngle, yEnd, zAngle);
+        BlockPos blockpos = BlockPos.containing(xAngle, yEnd, zAngle);
         boolean flag = false;
         double d0 = 0.0D;
 

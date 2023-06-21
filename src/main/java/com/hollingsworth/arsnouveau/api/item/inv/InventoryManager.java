@@ -162,7 +162,7 @@ public class InventoryManager {
         IItemHandler itemHandler = filterableItemHandler.getHandler();
         for(int i = 0; i < itemHandler.getSlots(); i++){
             ItemStack stack = itemHandler.getStackInSlot(i);
-            if (!ItemStack.isSame(stack, desiredStack) || !ItemStack.tagMatches(stack, desiredStack)) {
+            if (!ItemStack.isSameItem(stack, desiredStack) || !ItemStack.isSameItemSameTags(stack, desiredStack)) {
                 continue;
             }
             int toExtract = Math.min(stack.getCount(), remaining);

@@ -63,9 +63,9 @@ public interface IDamageEffect {
         if (entity instanceof LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
             Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, DamageSource.playerAttack(playerContext));
+            LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
-            LootTable loottable = server.getServer().getLootTables().get(lootTable);
+            LootTable loottable = server.getServer().getLootData().getLootTable(lootTable);
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
             items.forEach(mob::spawnAtLocation);
         }
@@ -80,7 +80,7 @@ public interface IDamageEffect {
      */
     default DamageSource buildDamageSource(Level world, LivingEntity shooter) {
         shooter = !(shooter instanceof Player) ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
-        return DamageSource.playerAttack((Player) shooter);
+        return world.damageSources().playerAttack((Player) shooter);
     }
 
 }

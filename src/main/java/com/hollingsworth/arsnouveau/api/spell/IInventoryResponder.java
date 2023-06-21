@@ -28,7 +28,7 @@ public interface IInventoryResponder {
      */
    @NotNull
     default ItemStack getItem(ItemStack stack) {
-        return getItem((i) -> i.sameItem(stack));
+        return getItem((i) -> ItemStack.isSameItem(i, stack));
     }
 
    @NotNull

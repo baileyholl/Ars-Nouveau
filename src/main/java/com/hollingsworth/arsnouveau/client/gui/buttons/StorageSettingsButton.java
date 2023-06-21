@@ -12,11 +12,6 @@ public class StorageSettingsButton extends StateButton{
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-    }
-
-    @Override
     public void renderButton(PoseStack st, int mouseX, int mouseY, float pt) {
         if(this.visible){
             RenderSystem.setShader(GameRenderer::getPositionTexShader);

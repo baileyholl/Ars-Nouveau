@@ -6,19 +6,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import java.util.Collections;
 
-public class FixedGeoItemRenderer<T extends Item & GeoAnimatable> extends GeoItemRenderer {
+public class FixedGeoItemRenderer<T extends Item & GeoItem> extends GeoItemRenderer<T> {
     public FixedGeoItemRenderer(GeoModel modelProvider) {
         super(modelProvider);
     }

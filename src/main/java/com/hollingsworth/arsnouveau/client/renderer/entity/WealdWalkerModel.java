@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -19,17 +20,18 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
     }
 
     @Override
-    public void setCustomAnimations(W entity, int uniqueID, @Nullable AnimationState customPredicate) {
+    public void setCustomAnimations(W entity, long uniqueID, @Nullable AnimationState<W> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.010453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.015453292F);
+
+        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        head.setRotX(extraData.headPitch() * 0.010453292F);
+        head.setRotY(extraData.netHeadYaw() * 0.015453292F);
         if (entity.getEntityData().get(WealdWalker.CASTING)) {
-            IBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
-            IBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
-            frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
-            frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
+            CoreGeoBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
+            CoreGeoBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
+            frontLeftLeg.setRotX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+            frontRightLeg.setRotX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
         }
     }
 

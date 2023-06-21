@@ -162,7 +162,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
             float f1 = (float) p_225621_1_.getFallFlyingTicks() + p_225621_5_;
             float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!p_225621_1_.isAutoSpinAttack()) {
-                p_225621_2_.mulPose(Vector3f.XP.rotationDegrees(f2 * (-90.0F - p_225621_1_.getXRot())));
+                p_225621_2_.mulPose(Axis.XP.rotationDegrees(f2 * (-90.0F - p_225621_1_.getXRot())));
             }
 
             Vec3 vector3d = p_225621_1_.getViewVector(p_225621_5_);
@@ -172,13 +172,13 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
             if (d0 > 0.0D && d1 > 0.0D) {
                 double d2 = (vector3d1.x * vector3d.x + vector3d1.z * vector3d.z) / Math.sqrt(d0 * d1);
                 double d3 = vector3d1.x * vector3d.z - vector3d1.z * vector3d.x;
-                p_225621_2_.mulPose(Vector3f.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
+                p_225621_2_.mulPose(Axis.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
             super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);
             float f3 = p_225621_1_.isInWater() ? -90.0F - p_225621_1_.getXRot() : -90.0F;
             float f4 = Mth.lerp(f, 0.0F, f3);
-            p_225621_2_.mulPose(Vector3f.XP.rotationDegrees(f4));
+            p_225621_2_.mulPose(Axis.XP.rotationDegrees(f4));
             if (p_225621_1_.isVisuallySwimming()) {
                 p_225621_2_.translate(0.0D, -1.0D, 0.3F);
             }

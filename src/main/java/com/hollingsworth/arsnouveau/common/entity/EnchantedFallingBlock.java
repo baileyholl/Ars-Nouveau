@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -175,7 +176,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 }
             }
 
-            if (!this.onGround && !isConcreteInWater) {
+            if (!this.onGround() && !isConcreteInWater) {
                 if (!this.level.isClientSide && (this.time > 100 && (blockpos.getY() <= this.level.getMinBuildHeight() || blockpos.getY() > this.level.getMaxBuildHeight()) || this.time > 600)) {
                     if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                         this.spawnAtLocation(block);
@@ -348,7 +349,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         return true;
     }
 
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this, Block.getId(this.getBlockState()));
     }
 

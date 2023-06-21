@@ -1,15 +1,11 @@
 package com.hollingsworth.arsnouveau.common.world.tree;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.LevelSimulatedReader;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
-
-import java.util.function.BiConsumer;
 
 public class MagicTreeFoliagePlacer extends FoliagePlacer {
     public MagicTreeFoliagePlacer(UniformInt p_i241999_1_, UniformInt p_i241999_2_) {
@@ -22,9 +18,10 @@ public class MagicTreeFoliagePlacer extends FoliagePlacer {
     }
 
     @Override
-    protected void createFoliage(LevelSimulatedReader p_161422_, BiConsumer<BlockPos, BlockState> p_161423_, RandomSource p_161424_, TreeConfiguration p_161425_, int p_161426_, FoliageAttachment p_161427_, int p_161428_, int p_161429_, int p_161430_) {
+    protected void createFoliage(LevelSimulatedReader p_225613_, FoliageSetter p_273598_, RandomSource p_225615_, TreeConfiguration p_225616_, int p_225617_, FoliageAttachment p_225618_, int p_225619_, int p_225620_, int p_225621_) {
 
     }
+
 
     @Override
     public int foliageHeight(RandomSource p_230374_1_, int p_230374_2_, TreeConfiguration p_230374_3_) {

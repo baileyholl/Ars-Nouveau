@@ -41,7 +41,7 @@ import static java.lang.Math.abs;
 public class BlockUtil {
 
     public static BlockPos toPos(Vec3 vec) {
-        return new BlockPos(vec.x, vec.y, vec.z);
+        return BlockPos.containing(vec.x, vec.y, vec.z);
     }
 
     public static boolean isTreeBlock(BlockState block) {
@@ -52,7 +52,7 @@ public class BlockUtil {
         for (double x = start.getX() - radius; x <= start.getX() + radius; x++) {
             for (double y = start.getY() - radius; y <= start.getY() + radius; y++) {
                 for (double z = start.getZ() - radius; z <= start.getZ() + radius; z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockPos pos = BlockPos.containing(x, y, z);
                     if (!pos.equals(start) && world.getBlockState(pos).getBlock().getClass().equals(clazz)) {
                         return true;
                     }
@@ -238,7 +238,7 @@ public class BlockUtil {
                     if (wontSuffocate(world, i, j, k, height)) {
                         BlockPos tempCoords = new BlockPos(i, j, k);
 
-                        if (world.getBlockState(tempCoords.below()).getMaterial().isSolid() || world.getBlockState(tempCoords.below(2)).getMaterial().isSolid()) {
+                        if (world.getBlockState(tempCoords.below()).isSolid() || world.getBlockState(tempCoords.below(2)).isSolid()) {
                             final double distance = getDistanceSquared(tempCoords, point);
                             if (closestCoords == null || distance < minDistance) {
                                 closestCoords = tempCoords;
@@ -265,7 +265,7 @@ public class BlockUtil {
     private static boolean wontSuffocate(Level world, final int x, final int y, final int z, final int height) {
         for (int dy = 0; dy < height; dy++) {
             final BlockState state = world.getBlockState(new BlockPos(x, y + dy, z));
-            if (state.getMaterial().blocksMotion()) {
+            if (state.blocksMotion()) {
                 return false;
             }
         }
@@ -306,7 +306,7 @@ public class BlockUtil {
     }
 
     /**
-     * Vanilla Copy: {@link PlayerInteractionManager#tryHarvestBlock} <br>
+     * Vanilla Copy:  <br>
      * Attempts to harvest a block as if the player with the given uuid
      * harvested it while holding the passed item.
      * @param world The world the block is in.
@@ -372,7 +372,7 @@ public class BlockUtil {
     }
 
     /**
-     * Vanilla Copy: {@link PlayerInteractionManager#removeBlock}
+     * Vanilla Copy:
      * @param world The world
      * @param player The removing player
      * @param pos The block location

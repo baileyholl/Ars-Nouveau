@@ -5,11 +5,8 @@ import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.loading.json.raw.Bone;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
-
-import javax.annotation.Nullable;
 
 public class WildenHunterModel extends GeoModel<WildenHunter> {
 
@@ -17,9 +14,9 @@ public class WildenHunterModel extends GeoModel<WildenHunter> {
     public void setCustomAnimations(WildenHunter entity, long uniqueID, AnimationState<WildenHunter> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.017453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        head.setRotX(extraData.headPitch() * 0.017453292F);
+        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 
 
 import java.util.Random;
@@ -30,11 +31,11 @@ public class FamiliarWhirlisprigRenderer<T extends FamiliarWhirlisprig> extends 
         Random rand = ParticleUtil.r;
         Vec3 particlePos = entityIn.position();
 
-        IBone sylph = ((WhirlisprigModel<T>) getGeoModelProvider()).getBone("sylph");
-        IBone propellers = ((WhirlisprigModel<T>) getGeoModelProvider()).getBone("propellers");
+        CoreGeoBone sylph = getGeoModel().getBone("sylph").get();
+        CoreGeoBone propellers = getGeoModel().getBone("propellers").get();
 
-        float offsetY = sylph.getPositionY() / 9f;
-        float roteAngle = propellers.getRotationY() / 4;
+        float offsetY = sylph.getPosY() / 9f;
+        float roteAngle = propellers.getRotY() / 4;
 
         if (rand.nextInt(5) == 0) {
             for (int i = 0; i < 5; i++) {

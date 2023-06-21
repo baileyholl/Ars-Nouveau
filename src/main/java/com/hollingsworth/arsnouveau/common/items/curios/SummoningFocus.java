@@ -96,7 +96,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
         if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))) {
             DamageSource source = event.source;
             if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner((ServerLevel) event.world)) {
-                source.getEntity().hurt(DamageSource.thorns(source.getEntity()).bypassArmor(), 5.0f);
+                source.getEntity().hurt(source.getEntity().level.damageSources().thorns(source.getEntity()), 5.0f);
             }
         }
     }

@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.jei;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -11,9 +10,9 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
 
@@ -47,8 +46,8 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
     }
 
     @Override
-    public void draw(GlyphRecipe recipe,@NotNull IRecipeSlotsView slotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(GlyphRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        renderer.draw(matrixStack, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f, 100f, 10);
+        guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 10);
     }
 }

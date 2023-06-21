@@ -44,7 +44,7 @@ public class NBTUtil {
 
     @Deprecated
     public static BlockPos getBlockPos(CompoundTag tag, String prefix) {
-        return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
+        return BlockPos.containing(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
 
     public static Vec3 getVec(CompoundTag tag, String prefix){
@@ -57,7 +57,7 @@ public class NBTUtil {
     public static @Nullable BlockPos getNullablePos(CompoundTag tag, String prefix) {
         if(!tag.contains(prefix + "_x"))
             return null;
-        return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
+        return BlockPos.containing(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
 
 

@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -109,7 +110,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		if(!loadedSearch && menu.search != null) {
 			loadedSearch = true;
 			searchField.setValue(menu.search);
-			searchField.setFocus(true);
+			searchField.setFocused(true);
 			if (searchField.getValue().isEmpty()) {
 				searchField.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
 			}else{
@@ -278,7 +279,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	@Override
-	public void render(PoseStack st, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack st = graphics.pose();
 		boolean flag = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_RELEASE;
 		int i = this.leftPos;
 		int j = this.topPos;
@@ -319,7 +321,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
 			getMenu().scrollTo(this.currentScroll);
 		}
-		super.render(st, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -361,7 +363,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	}
 
 	@Override
-	protected void renderLabels(PoseStack st, int mouseX, int mouseY) {
+	protected void renderLabels(GuiGraphics p_281635_, int mouseX, int mouseY) {
+		PoseStack st = p_281635_.pose();
 		st.pushPose();
 		slotIDUnderMouse = drawSlots(st, mouseX, mouseY);
 		st.popPose();

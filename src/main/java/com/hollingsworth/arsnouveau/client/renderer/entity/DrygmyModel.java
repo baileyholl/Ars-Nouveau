@@ -18,12 +18,12 @@ public class DrygmyModel<T extends LivingEntity & GeoAnimatable> extends GeoMode
     public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/drygmy_animations.json");
 
     @Override
-    public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState customPredicate) {
+    public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.017453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        head.setRotX(extraData.headPitch() * 0.017453292F);
+        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
     }
 
     @Override

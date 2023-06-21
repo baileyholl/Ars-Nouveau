@@ -3,12 +3,12 @@ package com.hollingsworth.arsnouveau.api.scrying;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.RegistryHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class SingleBlockScryer implements IScryer {
     public static SingleBlockScryer INSTANCE = new SingleBlockScryer(null);
@@ -29,7 +29,7 @@ public class SingleBlockScryer implements IScryer {
     @Override
     public IScryer fromTag(CompoundTag tag) {
         SingleBlockScryer scryer = new SingleBlockScryer(null);
-        scryer.block = tag.contains("block") ? Registry.BLOCK.get(new ResourceLocation(tag.getString("block"))) : null;
+        scryer.block = tag.contains("block") ? ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("block"))) : null;
         return scryer;
     }
 

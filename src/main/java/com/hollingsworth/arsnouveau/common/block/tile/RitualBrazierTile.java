@@ -39,14 +39,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, GeoAnimatable, ILightable, ITickable, IInvProvider, IDispellable, IWandable {
+public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, ILightable, ITickable, IInvProvider, IDispellable, IWandable {
     public AbstractRitual ritual;
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public boolean isDecorative;

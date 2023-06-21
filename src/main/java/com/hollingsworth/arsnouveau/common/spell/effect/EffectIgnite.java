@@ -46,7 +46,7 @@ public class EffectIgnite extends AbstractEffect {
             return;
         }
 
-        if (world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial().isReplaceable()) {
+        if (world.getBlockState((rayTraceResult).getBlockPos().above()).canBeReplaced()) {
             Direction face = (rayTraceResult).getDirection();
             for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
                 BlockPos blockpos1 = pos.relative(face);

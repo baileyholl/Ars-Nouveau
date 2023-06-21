@@ -33,15 +33,15 @@ public abstract class AbstractFlyingCreature extends PathfinderMob {
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
         } else {
-            BlockPos ground = new BlockPos(this.getX(), this.getY() - 1.0D, this.getZ());
+            BlockPos ground = BlockPos.containing(this.getX(), this.getY() - 1.0D, this.getZ());
             float f = 0.91F;
-            if (this.onGround) {
+            if (this.onGround()) {
                 f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
             }
 
             float f1 = 0.16277137F / (f * f * f);
             f = 0.91F;
-            if (this.onGround) {
+            if (this.onGround()) {
                 f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
             }
 

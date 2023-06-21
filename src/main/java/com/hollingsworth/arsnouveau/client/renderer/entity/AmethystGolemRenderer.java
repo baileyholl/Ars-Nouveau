@@ -46,7 +46,7 @@ public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
             RenderUtils.translateToPivotPoint(stack, bone);
             stack.translate(0, -0.10, 0);
             ItemStack itemstack = golem.getHeldStack();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) golem.getOnPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, this.buffer, animatable.level, (int) golem.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
         }

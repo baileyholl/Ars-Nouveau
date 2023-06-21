@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.WorldGenRegion;
@@ -37,8 +37,8 @@ import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class Deferred {
     public static final DeferredRegister<Feature<?>> FEAT_REG = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
-    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFG_REG = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, MODID);
-    public static final DeferredRegister<PlacedFeature> PLACED_FEAT_REG = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, MODID);
+    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFG_REG = DeferredRegister.create(Registries.CONFIGURED_FEATURE, MODID);
+    public static final DeferredRegister<PlacedFeature> PLACED_FEAT_REG = DeferredRegister.create(Registries.PLACED_FEATURE, MODID);
 
 
     public static final RegistryObject<Feature<BlockStateConfiguration>> LIGHT_FEATURE = FEAT_REG.register("lights", () -> new SingleBlockFeature(BlockStateConfiguration.CODEC) {

@@ -100,11 +100,11 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         }
 
         public boolean containsStack(ItemStack stack){
-            return items.stream().anyMatch(s -> s.sameItem(stack));
+            return items.stream().anyMatch(s -> ItemStack.isSameItem(s, stack));
         }
 
         public boolean remove(ItemStack stack){
-            boolean didRemove = items.removeIf(s -> s.sameItem(stack));
+            boolean didRemove = items.removeIf(s -> ItemStack.isSameItem(s, stack));
             writeItem();
             return didRemove;
         }

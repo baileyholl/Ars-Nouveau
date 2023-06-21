@@ -88,7 +88,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
             //hide the block and render the blockstate
             if (!(blockstate.getBlock() instanceof MageBlock)) {
                 try {
-                    Level level = animatable.getLevel();
+                    Level level = animatable.level();
                     if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                         poseStack.pushPose();
                         BlockPos blockpos = animBlock.blockPosition().above();

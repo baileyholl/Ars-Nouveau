@@ -24,6 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, GeoAnimatable, IVariantColorProvider<ItemStack> {
+public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, GeoItem, IVariantColorProvider<ItemStack> {
 
     public AnimatedMagicArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
         super(materialIn, slot, builder);

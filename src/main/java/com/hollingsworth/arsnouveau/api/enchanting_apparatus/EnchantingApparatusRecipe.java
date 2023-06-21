@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -171,7 +172,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     }
 
     @Override
-    public ItemStack assemble(EnchantingApparatusTile inv) {
+    public ItemStack assemble(EnchantingApparatusTile p_44001_, RegistryAccess p_267165_) {
         return this.result;
     }
 
@@ -181,9 +182,10 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return this.result == null ? ItemStack.EMPTY : result;
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
+        return ItemStack.EMPTY;
     }
+
 
     @Override
     public ResourceLocation getId() {
@@ -197,7 +199,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTING_APPARATUS_RECIPE_ID));
+        return ForgeRegistries.RECIPE_TYPES.getValue(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTING_APPARATUS_RECIPE_ID));
     }
 
 

@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmorStandArmorModel;
@@ -91,10 +92,10 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
                 float percentage = Mth.abs( tile.newPerkTimer - 20) / 20f;
                 double smooooooooth = Mth.smoothstep(percentage);
                 double perkYOffset = 0.625 - (smooooooooth * 0.625);
-                matrixStack.mulPose(Vector3f.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
+                matrixStack.mulPose(Axis.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
                 matrixStack.translate(0, perkYOffset, 0);
             }
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
             matrixStack.translate(0, yOffset + rotForSlot(armorItem.getSlot()), 0);
 
             this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
@@ -117,15 +118,15 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
             matrixStack.translate(-0.25, 0.74 - (0.175 * i),-0.3 - (0.175 * i));
             GeoBone bone = (GeoBone) getGeoModelProvider().getBone("display");
             if (bone.getRotationZ() != 0.0F) {
-                matrixStack.mulPose(Vector3f.ZP.rotation(-bone.getRotationZ()));
+                matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotationZ()));
             }
 
             if (bone.getRotationY() != 0.0F) {
-                matrixStack.mulPose(Vector3f.YP.rotation(-bone.getRotationY()));
+                matrixStack.mulPose(Axis.YP.rotation(-bone.getRotationY()));
             }
 
             if (bone.getRotationX() != 0.0F) {
-                matrixStack.mulPose(Vector3f.XP.rotation(-bone.getRotationX()));
+                matrixStack.mulPose(Axis.XP.rotation(-bone.getRotationX()));
             }
             GeoBone locBone = (GeoBone) getGeoModelProvider().getBone("top_" + (i + 1));
             RenderUtils.translateToPivotPoint(matrixStack, locBone);
@@ -215,23 +216,23 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
             stack.pushPose();
 
             if (direction == Direction.NORTH) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+                stack.mulPose(Axis.YP.rotationDegrees(-90));
                 stack.translate(1, 0, -1);
             }
 
             if (direction == Direction.SOUTH) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(270));
+                stack.mulPose(Axis.YP.rotationDegrees(270));
                 stack.translate(-1, 0, -1);
             }
 
             if (direction == Direction.WEST) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(270));
+                stack.mulPose(Axis.YP.rotationDegrees(270));
 
                 stack.translate(0, 0, -2);
             }
 
             if (direction == Direction.EAST) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+                stack.mulPose(Axis.YP.rotationDegrees(-90));
                 stack.translate(0, 0, 0);
 
             }
@@ -286,12 +287,12 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
     }
 
     @Override
-    public RenderType getRenderType(AlterationTile animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(textureLocation);
+    public RenderType getRenderType(AlterationTile animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
+        return  RenderType.entityTranslucent(texture);
     }
 
     @Override
-    public boolean shouldRenderOffScreen(BlockEntity p_188185_1_) {
+    public boolean shouldRenderOffScreen(AlterationTile pBlockEntity) {
         return false;
     }
 }

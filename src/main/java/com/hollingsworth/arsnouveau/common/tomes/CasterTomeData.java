@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -75,13 +76,18 @@ public class CasterTomeData implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer) {
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
         return ItemStack.EMPTY;
     }
 
     @Override
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
         return false;
+    }
+
+    @Override
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
+        return null;
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -68,23 +69,23 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
             stack.pushPose();
 
             if (direction == Direction.NORTH) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+                stack.mulPose(Axis.YP.rotationDegrees(-90));
                 stack.translate(1, 0, -1);
             }
 
             if (direction == Direction.SOUTH) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(270));
+                stack.mulPose(Axis.YP.rotationDegrees(270));
                 stack.translate(-1, 0, -1);
             }
 
             if (direction == Direction.WEST) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(270));
+                stack.mulPose(Axis.YP.rotationDegrees(270));
 
                 stack.translate(0, 0, -2);
             }
 
             if (direction == Direction.EAST) {
-                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+                stack.mulPose(Axis.YP.rotationDegrees(-90));
                 stack.translate(0, 0, 0);
 
             }
@@ -106,18 +107,18 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         if (!(state.getBlock() instanceof ScribesBlock))
             return;
         float y = state.getValue(ScribesBlock.FACING).getClockWise().toYRot();
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-y + 90f));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(90f));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-y + 90f));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(90f));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
 
         if (direction == Direction.WEST) {
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90f));
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(90f));
         }
         if (direction == Direction.EAST) {
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-90f));
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(-90f));
         }
         if (direction == Direction.SOUTH) {
-            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
         }
         matrixStack.translate(-0.7, 0, 0);
         matrixStack.scale(0.6f, 0.6f, 0.6f);
@@ -137,11 +138,11 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
                 matrixStack.translate(-0.5, 2.0, 0);
                 matrixStack.scale(0.25f, 0.25f, 0.25f);
                 // This spaces them out from each other
-                matrixStack.mulPose(Vector3f.YP.rotationDegrees(ticks + (i * angleBetweenEach)));
+                matrixStack.mulPose(Axis.YP.rotationDegrees(ticks + (i * angleBetweenEach)));
                 // Controls the distance from the center, also makes them float up and down
                 matrixStack.translate(distanceVec.x(), distanceVec.y() + ((i % 2 == 0 ? -i : i) * Mth.sin(ticks / 60) * 0.0625), distanceVec.z());
                 // This rotates the individual stacks, with every 2nd stack rotating a different direction
-                matrixStack.mulPose((i % 2 == 0 ? Vector3f.ZP : Vector3f.XP).rotationDegrees(ticks));
+                matrixStack.mulPose((i % 2 == 0 ? Axis.ZP : Axis.XP).rotationDegrees(ticks));
                 RenderSystem.setShaderColor(1, 1, 1, 0.5f);
                 Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
                 matrixStack.popPose();
@@ -158,10 +159,6 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         return RenderType.entityTranslucent(textureLocation);
     }
 
-    @Override
-    public boolean shouldRenderOffScreen(BlockEntity p_188185_1_) {
-        return false;
-    }
 
 
 }

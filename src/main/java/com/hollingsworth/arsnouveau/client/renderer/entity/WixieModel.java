@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -15,12 +16,12 @@ public class WixieModel<T extends LivingEntity & GeoAnimatable> extends GeoModel
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie.png");
 
     @Override
-    public void setCustomAnimations(T entity, int uniqueID, @Nullable AnimationState customPredicate) {
+    public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.010453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.015453292F);
+        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        head.setRotX(extraData.headPitch() * 0.010453292F);
+        head.setRotY(extraData.netHeadYaw() * 0.015453292F);
     }
 
     @Override

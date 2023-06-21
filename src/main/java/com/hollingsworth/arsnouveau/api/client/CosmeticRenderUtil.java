@@ -28,7 +28,7 @@ public class CosmeticRenderUtil {
         Vec3 scaling = cosmetic.getScaling(entity);
         matrix.translate(translations.x, translations.y, translations.z);
         matrix.scale((float) scaling.x, (float) scaling.y, (float) scaling.z);
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, cosmetic.getTransformType(), packedLightIn, OverlayTexture.NO_OVERLAY, matrix, buffer, (int) entity.getOnPos().asLong());
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, cosmetic.getTransformType(), packedLightIn, OverlayTexture.NO_OVERLAY, matrix, buffer, entity.level, (int) entity.getOnPos().asLong());
 
         matrix.popPose();
     }

@@ -33,7 +33,7 @@ public class EffectPickup extends AbstractEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos pos = new BlockPos(rayTraceResult.getLocation());
+        BlockPos pos = BlockPos.containing(rayTraceResult.getLocation());
         double expansion = 2 + spellStats.getAoeMultiplier();
         Vec3 posVec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
 

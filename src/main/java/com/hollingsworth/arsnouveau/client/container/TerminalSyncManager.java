@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -193,11 +193,11 @@ public class TerminalSyncManager {
 	}
 
 	public static void writeItemId(FriendlyByteBuf buf, Item item) {
-		buf.writeId(Registry.ITEM, item);
+		buf.writeId(BuiltInRegistries.ITEM, item);
 	}
 
 	public static Item readItemId(FriendlyByteBuf buf) {
-		return buf.readById(Registry.ITEM);
+		return buf.readById(BuiltInRegistries.ITEM);
 	}
 
 	public static CompoundTag getSyncTag(ItemStack stack) {

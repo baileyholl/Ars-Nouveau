@@ -81,7 +81,7 @@ public class BuildPortalEvent implements ITimedEvent {
         if(placingFrame){
             BlockPos pos = framePos.get(0);
             framePos.remove(pos);
-            if(level.getBlockState(pos).getMaterial().isReplaceable()) {
+            if(level.getBlockState(pos).canBeReplaced()) {
                 level.setBlock(pos, BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState(), 3);
                 if(level.getBlockEntity(pos) instanceof TemporaryTile tile){
                     tile.mimicState = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).defaultBlockState();
@@ -101,7 +101,7 @@ public class BuildPortalEvent implements ITimedEvent {
         boolean placingPortal = !portalPos.isEmpty() && framePos.isEmpty() && !destroyPortal;
         if(placingPortal){
             for(BlockPos pos : portalPos) {
-                if (level.getBlockState(pos).getMaterial().isReplaceable()) {
+                if (level.getBlockState(pos).canBeReplaced()) {
                     level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState(), 2);
                     level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     placedBlocks.add(pos);

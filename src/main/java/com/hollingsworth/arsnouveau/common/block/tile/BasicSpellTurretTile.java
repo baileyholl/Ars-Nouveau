@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -61,8 +60,7 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
 
     public PlayState walkPredicate(AnimationState<?> event) {
         if (playRecoil) {
-            // TODO what the heck is this
-            event.getController().clearAnimationCache();
+            event.getController().forceAnimationReset();
             event.getController().setAnimation(RawAnimation.begin().thenPlay("recoil"));
             playRecoil = false;
         }

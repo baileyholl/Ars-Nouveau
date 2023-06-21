@@ -103,7 +103,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             return false;
         if (ignoreItems == null || ignoreItems.isEmpty())
             return true;
-        return ignoreItems.stream().noneMatch(i -> i.sameItem(stack));
+        return ignoreItems.stream().noneMatch(i -> ItemStack.isSameItem(i, stack));
     }
 
     public int getDropsByDiversity() {
@@ -164,7 +164,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
 
     public static int getScore(BlockState state) {
 
-        if (state.getMaterial() == Material.AIR)
+        if (state.isAir())
             return 0;
 
         if (state == Blocks.WATER.defaultBlockState() || state == Blocks.GRASS_BLOCK.defaultBlockState() || state == Blocks.PODZOL.defaultBlockState() || state == Blocks.DIRT_PATH.defaultBlockState())
@@ -183,8 +183,9 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
         if (state.is(BlockTags.LEAVES) || state.getBlock() instanceof LeavesBlock)
             return 1;
 
-        if (state.getMaterial() == Material.PLANT || state.getMaterial() == Material.REPLACEABLE_PLANT)
-            return 1;
+        // TODO: fix whirlisprig scoring
+//        if (state.getMaterial() == Material.PLANT || state.getMaterial() == Material.REPLACEABLE_PLANT)
+//            return 1;
 
         if (state.getBlock() instanceof BonemealableBlock)
             return 1;

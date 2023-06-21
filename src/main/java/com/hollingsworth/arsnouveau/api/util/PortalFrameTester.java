@@ -100,6 +100,6 @@ public abstract class PortalFrameTester {
     }
 
     public static boolean validStateInsidePortal(BlockState blockState, Predicate<BlockState> foundations) {
-        return blockState.isAir() || blockState.getMaterial().isReplaceable() || blockState.getBlock() instanceof PortalBlock;
+        return blockState.isAir() || blockState.canBeReplaced() || blockState.getBlock() instanceof PortalBlock;
     }
 }

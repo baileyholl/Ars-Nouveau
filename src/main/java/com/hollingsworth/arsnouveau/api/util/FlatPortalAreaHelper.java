@@ -102,12 +102,12 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     private void fillAirAroundPortal(Level world, BlockPos pos) {
-        if (world.getBlockState(pos).getMaterial().isSolid())
+        if (world.getBlockState(pos).isSolid())
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
     }
 
     private void placeLandingPad(Level world, BlockPos pos, BlockState frameBlock) {
-        if (!world.getBlockState(pos).getMaterial().isSolid())
+        if (!world.getBlockState(pos).isSolid())
             world.setBlockAndUpdate(pos, frameBlock);
     }
 
