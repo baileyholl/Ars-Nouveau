@@ -25,7 +25,7 @@
     {
       "type": "patchouli:item",
       "item": "#reagent",
-      "framed": true,
+      "framed": false,
       "x": 49,
       "y": 53
     },
