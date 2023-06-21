@@ -36,6 +36,9 @@ public class AnimHeadSummon extends AnimBlockSummon implements IEntityAdditional
     }
 
     public void returnToFallingBlock(BlockState blockState) {
+        if(level.isClientSide || !this.dropItem){
+            return;
+        }
         EnchantedFallingBlock fallingBlock = new EnchantedSkull(level, blockPosition(), blockState);
         fallingBlock.setOwner(this.getOwner());
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
