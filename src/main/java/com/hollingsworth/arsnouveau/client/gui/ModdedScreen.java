@@ -42,15 +42,9 @@ public class ModdedScreen extends Screen {
     }
 
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
-        if (tooltip != null && !tooltip.isEmpty()) {
-            this.renderComponentTooltip(stack, tooltip, mouseX, mouseY, font);
-        }
-    }
-
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+//        if (tooltip != null && !tooltip.isEmpty()) {
+////            this.renderComponentTooltip(stack, tooltip, mouseX, mouseY, font);
+//        }
     }
 
     public final void resetTooltip() {

@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -33,7 +34,7 @@ public class GlyphButton extends Button {
     GuiSpellBook parent;
 
     public GlyphButton(GuiSpellBook parent, int x, int y, boolean isCraftingSlot, AbstractSpellPart abstractSpellPart) {
-        super(x, y, 16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
+        super(x, y, 16, 16, Component.nullToEmpty(""), parent::onGlyphClick, Button.DEFAULT_NARRATION);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -50,7 +51,8 @@ public class GlyphButton extends Button {
     }
 
     @Override
-    public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        PoseStack ms = graphics.pose();
         if (visible) {
             RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x, y, 16, !validationErrors.isEmpty());
 
@@ -81,9 +83,7 @@ public class GlyphButton extends Button {
                     parent.tooltip = tip;
                 }
             }
-
         }
-        //super.render(mouseX, mouseY, partialTicks);
     }
 
 }

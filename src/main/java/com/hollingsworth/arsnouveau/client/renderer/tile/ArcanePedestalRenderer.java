@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.joml.Vector3f;
 
 public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedestalTile> {
     private final EntityRenderDispatcher entityRenderer;
@@ -52,6 +51,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
                 pPackedOverlay,
                 matrixStack,
                 pBufferSource,
+                tileEntityIn.getLevel(),
                 (int) tileEntityIn.getBlockPos().asLong());
 
         matrixStack.popPose();

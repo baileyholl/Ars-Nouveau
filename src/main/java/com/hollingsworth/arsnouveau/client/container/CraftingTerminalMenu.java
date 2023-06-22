@@ -64,7 +64,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 	public CraftingTerminalMenu(int id, Inventory inv) {
 		super(MenuRegistry.STORAGE.get(), id, inv);
-		craftMatrix = new CraftingContainer(this, 3, 3);
+		craftMatrix = new TransientCraftingContainer(this, 3, 3);
 		craftResult = new ResultContainer();
 		init();
 		this.addPlayerSlots(inv, 13, 157);
@@ -275,7 +275,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			}
 
 			@Override
-			protected void clearGrid(boolean bool) {
+			protected void clearGrid() {
 				((CraftingLecternTile) te).clear(selectedTab);
 				this.menu.clearCraftingContent();
 			}

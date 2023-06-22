@@ -11,10 +11,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -54,7 +51,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		}
 	};
 	private CraftingRecipe currentRecipe;
-	private final CraftingContainer craftMatrix = new CraftingContainer(craftingContainer, 3, 3);
+	private final CraftingContainer craftMatrix = new TransientCraftingContainer(craftingContainer, 3, 3);
 	private ResultContainer craftResult = new ResultContainer();
 	private HashSet<CraftingTerminalMenu> craftingListeners = new HashSet<>();
 

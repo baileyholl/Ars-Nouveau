@@ -85,12 +85,6 @@ public class PathingStuckHandler implements IStuckHandler {
     private boolean canTeleportGoal = false;
 
     /**
-     * Whether take damage on stuck is enabled
-     */
-    private boolean takeDamageOnCompleteStuck = false;
-    private float damagePct = 0.2f;
-
-    /**
      * BLock break range on complete stuck
      */
     private int completeStuckBlockBreakRange = 0;
@@ -223,15 +217,12 @@ public class PathingStuckHandler implements IStuckHandler {
                 entity.teleportTo(tpPos.getX() + 0.5, tpPos.getY(), tpPos.getZ() + 0.5);
             }
         }
-        if (takeDamageOnCompleteStuck) {
-            entity.hurt(new EntityDamageSource("Stuck-damage", entity), entity.getMaxHealth() * damagePct);
-        }
 
         if (completeStuckBlockBreakRange > 0) {
             final Direction facing = getFacing(BlockPos.containing(entity.position()), navigator.getDesiredPos());
 
             for (int i = 1; i <= completeStuckBlockBreakRange; i++) {
-                if (!world.isEmptyBlock(BlockPos.containing(entity.position()).relative(facing, i)) || !world.isEmptyBlock(new BlockPos(entity.position()).relative(facing, i).above())) {
+                if (!world.isEmptyBlock(BlockPos.containing(entity.position()).relative(facing, i)) || !world.isEmptyBlock(BlockPos.containing(entity.position()).relative(facing, i).above())) {
                     breakBlocksAhead(world, BlockPos.containing(entity.position()).relative(facing, i - 1), facing);
                     break;
                 }
@@ -494,12 +485,6 @@ public class PathingStuckHandler implements IStuckHandler {
 
     public PathingStuckHandler withTeleportOnFullStuck() {
         canTeleportGoal = true;
-        return this;
-    }
-
-    public PathingStuckHandler withTakeDamageOnStuck(float damagePct) {
-        this.damagePct = damagePct;
-        takeDamageOnCompleteStuck = true;
         return this;
     }
 

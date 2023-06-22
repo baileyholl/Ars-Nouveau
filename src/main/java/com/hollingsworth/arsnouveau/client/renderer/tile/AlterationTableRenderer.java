@@ -38,6 +38,7 @@ import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Vector3f;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.util.RenderUtils;
@@ -61,19 +62,15 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
     }
 
     @Override
-    public void renderEarly(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        try {
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
-                return;
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-                return;
+    public void preRender(PoseStack poseStack, AlterationTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.preRender(poseStack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
+            return;
+        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
+            return;
 
-            this.renderArmorStack(tile, matrixStack, ticks, iRenderTypeBuffer, bufferIn, packedLightIn, packedOverlayIn, partialTicks);
-            this.renderPerks(tile, matrixStack, ticks, iRenderTypeBuffer, bufferIn, packedLightIn, packedOverlayIn, partialTicks);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            // Mercy for HORRIBLE RENDER CHANGING MODS
-        }
+        this.renderArmorStack(tile, poseStack, ClientInfo.ticksInGame, bufferSource, buffer, packedLight, packedOverlay, partialTick);
+        this.renderPerks(tile, poseStack,  ClientInfo.ticksInGame, bufferSource, buffer, packedLight, packedOverlay, partialTick);
     }
 
     public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks) {
@@ -100,7 +97,7 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
 
             this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
         }else {
-            Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
         }
         matrixStack.popPose();
     }
@@ -117,16 +114,16 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
             matrixStack.pushPose();
             matrixStack.translate(-0.25, 0.74 - (0.175 * i),-0.3 - (0.175 * i));
             GeoBone bone = (GeoBone) getGeoModelProvider().getBone("display");
-            if (bone.getRotationZ() != 0.0F) {
-                matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotationZ()));
+            if (bone.getRotZ() != 0.0F) {
+                matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotZ()));
             }
 
-            if (bone.getRotationY() != 0.0F) {
-                matrixStack.mulPose(Axis.YP.rotation(-bone.getRotationY()));
+            if (bone.getRotY() != 0.0F) {
+                matrixStack.mulPose(Axis.YP.rotation(-bone.getRotY()));
             }
 
-            if (bone.getRotationX() != 0.0F) {
-                matrixStack.mulPose(Axis.XP.rotation(-bone.getRotationX()));
+            if (bone.getRotX()  != 0.0F) {
+                matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
             }
             GeoBone locBone = (GeoBone) getGeoModelProvider().getBone("top_" + (i + 1));
             RenderUtils.translateToPivotPoint(matrixStack, locBone);

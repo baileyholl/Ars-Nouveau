@@ -56,15 +56,4 @@ public class EnchantingApparatusRenderer extends ArsGeoBlockRenderer<EnchantingA
         this.text = this.getTextureLocation(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
-
-    @Override
-    public void render(BlockEntity tile, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int lightIn, int overlayIn) {
-        try {
-            super.render(tile, v, matrixStack, iRenderTypeBuffer, lightIn, overlayIn);
-            EnchantingApparatusTile tileEntityIn = (EnchantingApparatusTile) tile;
-            this.tile = tileEntityIn;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 }

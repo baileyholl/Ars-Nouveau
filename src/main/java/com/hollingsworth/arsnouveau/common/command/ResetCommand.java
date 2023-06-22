@@ -34,7 +34,7 @@ public class ResetCommand {
             CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(iPlayerCap -> iPlayerCap.setKnownGlyphs(new ArrayList<>()));
             CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
         }
-        source.sendSuccess(Component.translatable("ars_nouveau.reset.cleared"), true);
+        source.sendSuccess(() -> Component.translatable("ars_nouveau.reset.cleared"), true);
         return 1;
     }
 }

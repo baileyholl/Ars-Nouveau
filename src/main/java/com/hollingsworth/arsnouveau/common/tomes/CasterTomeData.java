@@ -87,11 +87,6 @@ public class CasterTomeData implements Recipe<Container> {
 
     @Override
     public ItemStack getResultItem(RegistryAccess p_267052_) {
-        return null;
-    }
-
-    @Override
-    public ItemStack getResultItem() {
         Item tomeType = ForgeRegistries.ITEMS.getValue(this.type);
         if (tomeType == null) tomeType = ItemsRegistry.CASTER_TOME.asItem();
         Spell spell = new Spell();

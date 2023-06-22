@@ -32,11 +32,6 @@ public class ItemButton extends GuiImageButton {
     }
 
     @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        super.renderToolTip(pPoseStack, pMouseX, pMouseY);
-    }
-
-    @Override
     public void render(PoseStack ms, int parX, int parY, float partialTicks) {
         if (visible) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

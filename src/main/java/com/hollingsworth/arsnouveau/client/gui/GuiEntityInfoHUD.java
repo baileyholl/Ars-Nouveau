@@ -8,7 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -38,8 +40,9 @@ public class GuiEntityInfoHUD {
     public static int hoverTicks = 0;
     public static Object lastHovered = null;
 
-    public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width,
+    public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width,
                                      int height) {
+        PoseStack poseStack = graphics.pose();
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
             return;
@@ -144,16 +147,15 @@ public class GuiEntityInfoHUD {
                 font);
     }
 
-    public static void drawHoveringText(@NotNull final ItemStack stack, PoseStack pStack,
+    public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics graphics,
                                         List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
                                         int maxTextWidth, int backgroundColor, int borderColorStart, int borderColorEnd, Font font) {
         if (textLines.isEmpty())
             return;
-
-        List<ClientTooltipComponent> list = ForgeHooksClient.gatherTooltipComponents(stack, textLines,
-                stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font, font);
+        PoseStack pStack = graphics.pose();
+        List<ClientTooltipComponent> list = ForgeHooksClient.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
         RenderTooltipEvent.Pre event =
-                new RenderTooltipEvent.Pre(stack, pStack, mouseX, mouseY, screenWidth, screenHeight, font, list);
+                new RenderTooltipEvent.Pre(stack, graphics, mouseX, mouseY, screenWidth, screenHeight, font, list, DefaultTooltipPositioner.INSTANCE);
         if (MinecraftForge.EVENT_BUS.post(event))
             return;
 

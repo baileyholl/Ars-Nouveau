@@ -33,6 +33,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -55,6 +56,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
@@ -377,11 +379,11 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public boolean canDive() {
-        return !isRamGoal && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround && !isDefensive();
+        return !isRamGoal && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround() && !isDefensive();
     }
 
     public boolean canSpike() {
-        return !isRamGoal && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround && this.getTarget() != null;
+        return !isRamGoal && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround() && this.getTarget() != null;
     }
 
     public boolean canRam(boolean withWings) {
@@ -392,7 +394,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public boolean canSummon() {
-        return !isRamGoal && getTarget() != null && summonCooldown <= 0 && !isFlying() && !getPhaseSwapping() && !isDefensive() && this.onGround;
+        return !isRamGoal && getTarget() != null && summonCooldown <= 0 && !isFlying() && !getPhaseSwapping() && !isDefensive() && this.onGround();
     }
 
     public boolean canAttack() {
@@ -443,9 +445,9 @@ public class WildenChimera extends Monster implements GeoEntity {
 
         Entity entity = source.getEntity();
         if (entity instanceof LivingEntity entity1 && !entity.equals(this)) {
-            if (isDefensive() && !source.msgId.equals("thorns")) {
-                if (!source.isBypassArmor() && BlockUtil.distanceFrom(entity.position, position) <= 3) {
-                    entity.hurt(DamageSource.thorns(this), 6.0f);
+            if (isDefensive() && !source.type().msgId().equals("thorns")) {
+                if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && BlockUtil.distanceFrom(entity.position, position) <= 3) {
+                    entity.hurt(level.damageSources().thorns(this), 6.0f);
                 }
             }
 
@@ -798,7 +800,7 @@ public class WildenChimera extends Monster implements GeoEntity {
             double motionX = mob.getDeltaMovement().x;
             double motionY = mob.getDeltaMovement().y;
             double motionZ = mob.getDeltaMovement().z;
-            BlockPos dest = new BlockPos(mob.orbitOffset);
+            BlockPos dest = BlockPos.containing(mob.orbitOffset);
 
             double speedMod = 1.3;
             if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0) {
@@ -818,7 +820,7 @@ public class WildenChimera extends Monster implements GeoEntity {
                 motionZ = (0.9 - weight) * motionZ + (speedMod + weight) * targetVector.z;
             }
             mob.setDeltaMovement(motionX, motionY, motionZ);
-            faceBlock(new BlockPos(mob.orbitOffset), mob);
+            faceBlock(BlockPos.containing(mob.orbitOffset), mob);
         }
     }
 

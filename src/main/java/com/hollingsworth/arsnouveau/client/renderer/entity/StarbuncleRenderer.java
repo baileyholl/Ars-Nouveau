@@ -13,11 +13,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtils;
-
-import javax.annotation.Nullable;
 
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
 
@@ -35,11 +34,11 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     }
 
     @Override
-    public void renderEarly(Starbuncle animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
+    public void preRender(PoseStack poseStack, Starbuncle animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         this.starbuncle = animatable;
-        this.buffer = renderTypeBuffer;
+        this.buffer = bufferSource;
         this.text = this.getTextureLocation(animatable);
-        super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack stack, Starbuncle animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtils.translateToPivotPoint(stack, bone);
@@ -58,15 +57,15 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             if (starbuncle.dynamicBehavior != null) {
                 itemstack = starbuncle.dynamicBehavior.getStackForRender();
             }
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) starbuncle.getOnPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, this.buffer, animatable.level, (int) starbuncle.getOnPos().asLong());
             stack.popPose();
-            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
+            buffer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(text));
         }
         if (this.starbuncle.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
-            CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, this.starbuncle, packedLightIn);
-            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
+            CosmeticRenderUtil.renderCosmetic(bone, stack, this.buffer, this.starbuncle, packedLight);
+            buffer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(text));
         }
-        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     }
 
     @Override
-    public RenderType getRenderType(Starbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
+    public RenderType getRenderType(Starbuncle animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityCutoutNoCull(texture);
     }
 }

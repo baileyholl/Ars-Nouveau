@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -27,8 +28,9 @@ public class StateButton extends ANButton{
      * Draws this button to the screen.
      */
     @Override
-    public void renderButton(PoseStack st, int mouseX, int mouseY, float pt) {
+    public void renderWidget(GuiGraphics p_281670_, int mouseX, int mouseY, float pt) {
         if (this.visible) {
+            PoseStack st = p_281670_.pose();
             int x = getX();
             int y = getY();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -38,7 +40,7 @@ public class StateButton extends ANButton{
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            blit(st, x, y, texX + state * width, texY + tile * height, this.width, this.height, imageWidth, imageHeight);
+            p_281670_.blit(texture, x, y, texX + state * width, texY + tile * height, this.width, this.height, imageWidth, imageHeight);
         }
     }
 }

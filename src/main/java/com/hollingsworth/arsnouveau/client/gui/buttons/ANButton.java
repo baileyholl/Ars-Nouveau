@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 public class ANButton extends Button {
 
 	public ANButton(int x, int y, int w, int h, Component text, OnPress onPress) {
-		super(x, y, w, h, text, onPress);
+		super(x, y, w, h, text, onPress, Button.DEFAULT_NARRATION);
 	}
 
 	public void setX(int i) {

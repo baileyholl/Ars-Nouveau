@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -12,6 +13,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -24,13 +26,12 @@ public class DyeRecipe extends ShapelessRecipe {
 
 
     public DyeRecipe(ResourceLocation idIn, String groupIn, ItemStack recipeOutputIn, NonNullList<Ingredient> recipeItemsIn) {
-        super(idIn, groupIn, recipeOutputIn, recipeItemsIn);
+        super(idIn, groupIn, CraftingBookCategory.MISC, recipeOutputIn, recipeItemsIn);
     }
 
     @Override
-    public ItemStack assemble(final CraftingContainer inv) {
-        final ItemStack output = super.assemble(inv); // Get the default output
-
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess p_266797_) {
+        ItemStack output = super.assemble(inv, p_266797_);
         if (!output.isEmpty()) {
             for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
                 final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
@@ -48,8 +49,7 @@ public class DyeRecipe extends ShapelessRecipe {
                 }
             }
         }
-
-        return output; // Return the modified output
+        return output;
     }
 
     @Override

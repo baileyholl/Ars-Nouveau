@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -52,13 +52,9 @@ public class GuiImageButton extends ANButton {
     }
 
     @Override
-    protected void renderBg(PoseStack p_230441_1_, Minecraft p_230441_2_, int p_230441_3_, int p_230441_4_) {
-
-    }
-
-    @Override
-    public void render(PoseStack ms, int parX, int parY, float partialTicks) {
+    public void render(GuiGraphics p_282421_,int parX, int parY, float partialTicks) {
 //        super.render(ms, parX, parY, partialTicks);
+        PoseStack ms = p_282421_.pose();
         if (visible) {
             if (parent != null && parent.isMouseInRelativeRange(parX, parY, x, y, width, height) && toolTip != null) {
                 if (!toolTip.toString().isEmpty()) {

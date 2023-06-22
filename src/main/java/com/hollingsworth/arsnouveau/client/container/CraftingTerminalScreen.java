@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -145,19 +146,25 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	}
 
 	@Override
-	public void render(PoseStack st, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(st);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack st = graphics.pose();
+		this.renderBackground(graphics);
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
 			this.renderBg(st, partialTicks, mouseX, mouseY);
-			this.recipeBookGui.render(st, mouseX, mouseY, partialTicks);
+			this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
 		} else {
-			this.recipeBookGui.render(st, mouseX, mouseY, partialTicks);
-			super.render(st, mouseX, mouseY, partialTicks);
-			this.recipeBookGui.renderGhostRecipe(st, this.leftPos, this.topPos, true, partialTicks);
+			this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
+			super.render(graphics, mouseX, mouseY, partialTicks);
+			this.recipeBookGui.renderGhostRecipe(graphics, this.leftPos, this.topPos, true, partialTicks);
 		}
-		this.renderTooltip(st, mouseX, mouseY);
-		this.recipeBookGui.renderTooltip(st, this.leftPos, this.topPos, mouseX, mouseY);
+		this.renderTooltip(graphics, mouseX, mouseY);
+		this.recipeBookGui.renderTooltip(graphics, this.leftPos, this.topPos, mouseX, mouseY);
 		this.setInitialFocus(this.recipeBookGui);
+	}
+
+	@Override
+	protected void renderBg(GuiGraphics p_283065_, float p_97788_, int p_97789_, int p_97790_) {
+
 	}
 
 	@Override
@@ -218,7 +225,7 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 			}
 			if(itemstack != null) {
 				super.searchField.setValue(itemstack.getHoverName().getString());
-				super.searchField.setFocus(false);
+				super.searchField.setFocused(false);
 				return true;
 			}
 		}

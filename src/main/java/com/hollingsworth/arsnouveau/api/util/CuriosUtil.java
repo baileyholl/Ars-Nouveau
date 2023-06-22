@@ -21,7 +21,7 @@ public class CuriosUtil {
         IItemHandlerModifiable items = CuriosUtil.getAllWornItems(entity).orElse(null);
         if (items != null) {
             for (int i = 0; i < items.getSlots(); i++) {
-                if (stack.sameItem(items.getStackInSlot(i))) {
+                if (ItemStack.isSameItem(stack, items.getStackInSlot(i))) {
                     return true;
                 }
             }

@@ -166,7 +166,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         super.tick();
         if (--this.limitedLifeTicks <= 0) {
             this.limitedLifeTicks = 20;
-            this.hurt(DamageSource.STARVE, 20.0F);
+            this.hurt(level.damageSources().starve(), 20.0F);
         }
     }
 

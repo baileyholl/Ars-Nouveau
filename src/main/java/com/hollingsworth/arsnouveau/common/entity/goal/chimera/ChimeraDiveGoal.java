@@ -6,11 +6,10 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -122,11 +121,8 @@ public class ChimeraDiveGoal extends Goal {
     }
 
     public void makeExplosion() {
-        Explosion.BlockInteraction mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP;
-        if(!Config.CHIMERA_DIVE_DESTRUCTIVE.get()){
-            mode = Explosion.BlockInteraction.KEEP;
-        }
-        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, mode);
+        //TODO: restore destructive chimera config
+        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, Level.ExplosionInteraction.MOB);
         if(boss.hasSpikes()) {
             ChimeraSpikeGoal.spawnAOESpikes(boss);
         }
