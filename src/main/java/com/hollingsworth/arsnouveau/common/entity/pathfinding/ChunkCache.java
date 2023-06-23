@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.common.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -141,6 +143,16 @@ public class ChunkCache implements LevelReader {
     public boolean isEmptyBlock(BlockPos pos) {
         BlockState state = this.getBlockState(pos);
         return state.isAir();
+    }
+
+    @Override
+    public RegistryAccess registryAccess() {
+        return this.world.registryAccess();
+    }
+
+    @Override
+    public FeatureFlagSet enabledFeatures() {
+        return FeatureFlagSet.of();
     }
 
     @Nullable

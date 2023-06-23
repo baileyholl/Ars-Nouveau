@@ -12,8 +12,7 @@ import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
-import com.hollingsworth.arsnouveau.common.world.WorldEvent;
-import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
+
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -30,6 +29,8 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -412,11 +413,11 @@ public class BlockRegistry {
 
         //Trees & co
         registry.register(LibBlockNames.LAVA_LILY, new LavaLily());
-        registry.register(LibBlockNames.SOURCEBERRY_BUSH, new SourceBerryBush(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
-        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.CASCADING_TREE), SAP_PROP));
-        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.BLAZING_TREE), SAP_PROP));
-        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.VEXING_TREE), SAP_PROP));
-        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.FLOURISHING_TREE), SAP_PROP));
+        registry.register(LibBlockNames.SOURCEBERRY_BUSH, new SourceBerryBush(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
+//        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.CASCADING_TREE), SAP_PROP));
+//        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.BLAZING_TREE), SAP_PROP));
+//        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.VEXING_TREE), SAP_PROP));
+//        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.FLOURISHING_TREE), SAP_PROP));
 
 
         registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
@@ -433,14 +434,14 @@ public class BlockRegistry {
         registry.register(LibBlockNames.FLOURISHING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_GREEN));
         registry.register(LibBlockNames.BLAZING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_RED));
         registry.register(LibBlockNames.ARCHWOOD_PLANK, new ModBlock(LOG_PROP));
-        registry.register(LibBlockNames.ARCHWOOD_BUTTON, new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD)));
+        registry.register(LibBlockNames.ARCHWOOD_BUTTON, new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD), BlockSetType.OAK, 30, true));
         registry.register(LibBlockNames.ARCHWOOD_STAIRS, new StairBlock(() -> ARCHWOOD_PLANK.defaultBlockState(), woodProp));
         registry.register(LibBlockNames.ARCHWOOD_SLABS, new SlabBlock(woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, new FenceGateBlock(woodProp));
+        registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, new FenceGateBlock(woodProp, WoodType.OAK));
         registry.register(LibBlockNames.ARCHWOOD_FENCE, new FenceBlock(woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_DOOR, new DoorBlock(woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_TRAPDOOR, new TrapDoorBlock(woodProp));
+        registry.register(LibBlockNames.ARCHWOOD_DOOR, new DoorBlock(woodProp, BlockSetType.OAK));
+        registry.register(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProp, BlockSetType.OAK));
+        registry.register(LibBlockNames.ARCHWOOD_TRAPDOOR, new TrapDoorBlock(woodProp, BlockSetType.OAK));
         registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest());
 
         registry.register(LibBlockNames.STRIPPED_AWLOG_BLUE, new RotatedPillarBlock(LOG_PROP));

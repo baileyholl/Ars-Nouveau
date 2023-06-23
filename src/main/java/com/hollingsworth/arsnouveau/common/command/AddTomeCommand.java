@@ -25,7 +25,7 @@ public class AddTomeCommand {
     private static int spawnTome(CommandSourceStack source, String tome) {
         Optional<CasterTomeData> data = CasterTomeRegistry.getTomeData().stream().filter(t -> t.getId().toString().equals(tome)).findFirst();
         if (data.isPresent() && source.getPlayer() != null){
-            source.getPlayer().addItem(data.get().getResultItem().copy());
+            source.getPlayer().addItem(data.get().getResultItem(source.getLevel().registryAccess()).copy());
         }
         return 1;
     }

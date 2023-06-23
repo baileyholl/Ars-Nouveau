@@ -46,7 +46,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -103,7 +102,7 @@ public class EventHandler {
                     @Override
                     public void tickEvent(TickEvent event) {
                         if(event instanceof TickEvent.ServerTickEvent serverTickEvent){
-                            CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager());
+                            CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), ((TickEvent.ServerTickEvent) event).getServer().getLevel(Level.OVERWORLD));
                         }
                         expired = true;
                     }
@@ -250,13 +249,13 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void entityHurt(LivingHurtEvent e) {
-        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT.get()) && (e.getSource() == DamageSource.MAGIC || e.getSource() == level.damageSources().GENERIC || e.getSource() instanceof EntityDamageSource)) {
+        if (e.getEntity() != null && e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT.get()) && (e.getSource().is(DamageTypes.MAGIC) || e.getSource().is(DamageTypes.GENERIC) || e.getSource().is(DamageTypes.MOB_ATTACK))) {
             if (e.getAmount() > 0.5) {
                 e.setAmount((float) Math.max(0.5, e.getAmount() - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT.get()).getAmplifier()));
             }
         }
 
-        if (e.getEntity() != null && e.getSource() == level.damageSources().LIGHTNING_BOLT && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT.get())) {
+        if (e.getEntity() != null && e.getSource().is(DamageTypes.LIGHTNING_BOLT) && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT.get())) {
             float damage = e.getAmount() + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT.get()).getAmplifier();
             e.setAmount(Math.max(0, damage));
         }
@@ -269,11 +268,11 @@ public class EventHandler {
             return;
         double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING.get());
         double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER.get());
-        if (e.getSource().isMagic()) {
+        if (e.getSource().is(DamageTypes.MAGIC)) {
             e.setAmount((float) (e.getAmount() - warding));
         }
 
-        if (e.getSource().isFall()) {
+        if (e.getSource().is(DamageTypes.FALL)) {
             e.setAmount((float) (e.getAmount() - (e.getAmount() * feather)));
         }
     }

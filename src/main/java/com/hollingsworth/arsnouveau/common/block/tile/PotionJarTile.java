@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +14,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
         // Include a sorted list of potion names so quests can check the jar's contents
         Set<Potion> potionSet = this.data.getIncludedPotions();
-        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> Registry.POTION.getKey(potion).toString()).toList());
+        List<String> potionNames = new ArrayList<>(potionSet.stream().map(potion -> ForgeRegistries.POTIONS.getKey(potion).toString()).toList());
         potionNames.sort(String::compareTo);
         tag.putString("potionNames", String.join(",", potionNames));
 

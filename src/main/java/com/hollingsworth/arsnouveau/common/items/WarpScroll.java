@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -170,9 +171,9 @@ public class WarpScroll extends ModItem {
         }
 
         public @Nullable ServerLevel getDimension(ServerLevel serverLevel){
-            DimensionType type = BuiltinRegistries.DIMENSION_TYPE.get(new ResourceLocation(this.dimension));
+            DimensionType type = Registries.DIMENSION_TYPE.get(new ResourceLocation(this.dimension));
             if(type != null) {
-                ResourceKey<Level> resourcekey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimension));
+                ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimension));
                 return serverLevel.getServer().getLevel(resourcekey);
             }
             return null;

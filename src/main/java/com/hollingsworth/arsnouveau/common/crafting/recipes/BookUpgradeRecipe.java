@@ -77,7 +77,7 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
                 ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItem(recipe.getResultItem());
+            buffer.writeItem(recipe.getResultItem(null));
         }
     }
 

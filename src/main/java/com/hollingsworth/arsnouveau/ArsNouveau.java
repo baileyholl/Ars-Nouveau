@@ -24,6 +24,7 @@ import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -106,7 +107,7 @@ public class ArsNouveau {
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
-        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager()));
+        MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD)));
     }
 
     public void postModLoadEvent(final FMLLoadCompleteEvent event) {

@@ -168,7 +168,7 @@ public class CasterTomeData implements Recipe<Container> {
 
         @Override
         public void toNetwork(FriendlyByteBuf buf, CasterTomeData recipe) {
-            buf.writeItemStack(recipe.getResultItem(), false);
+            buf.writeItemStack(recipe.getResultItem(null), false);
         }
 
         @Nullable

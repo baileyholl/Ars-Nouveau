@@ -71,7 +71,7 @@ public class EffectSmelt extends AbstractEffect {
         Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(new ItemStack(state.getBlock().asItem(), 1)),
                 world);
         if (optional.isPresent()) {
-            ItemStack itemstack = optional.get().getResultItem();
+            ItemStack itemstack = optional.get().getResultItem(world.registryAccess());
             if (!itemstack.isEmpty()) {
                 if (itemstack.getItem() instanceof BlockItem) {
                     world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
@@ -96,7 +96,7 @@ public class EffectSmelt extends AbstractEffect {
             Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemEntity.getItem()),
                     world);
             if (optional.isPresent()) {
-                ItemStack result = optional.get().getResultItem().copy();
+                ItemStack result = optional.get().getResultItem(world.registryAccess()).copy();
                 if (result.isEmpty())
                     continue;
                 while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {

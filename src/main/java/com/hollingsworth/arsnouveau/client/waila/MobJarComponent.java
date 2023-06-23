@@ -20,8 +20,9 @@ public enum MobJarComponent implements IBlockComponentProvider {
                     .level(blockAccessor.getLevel())
                     .serverConnected(blockAccessor.isServerConnected())
                     .showDetails(blockAccessor.showDetails())
-                    .build()
-                    ._gatherComponents(($) -> tooltip);
+                    .build();
+
+//                    ._gatherComponents(($) -> tooltip);
             tooltip.remove(Identifiers.CORE_MOD_NAME);
         }
     }

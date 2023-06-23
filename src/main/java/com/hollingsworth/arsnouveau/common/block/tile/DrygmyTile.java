@@ -26,7 +26,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -155,8 +155,8 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
                 continue;
             }
 
-            LootTable loottable = this.level.getServer().getLootTables().get(entity.getLootTable());
-            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(level.getRandom())
+            LootTable loottable = this.level.getServer().getLootData().getLootTable(entity.getLootTable());
+            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
                     .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer)
@@ -164,8 +164,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             lootcontext$builder = lootcontext$builder.withParameter(LootContextParams.LAST_DAMAGE_PLAYER, fakePlayer)
                     .withLuck(fakePlayer.getLuck());
 
-            LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
-            stacks.addAll(loottable.getRandomItems(ctx));
+            stacks.addAll(loottable.getRandomItems(lootcontext$builder.create(LootContextParamSets.ENTITY)));
             int oldExp = 0;
             if (entity instanceof Mob mob) {
                 oldExp = mob.xpReward;

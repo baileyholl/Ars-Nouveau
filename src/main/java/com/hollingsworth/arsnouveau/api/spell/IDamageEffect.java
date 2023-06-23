@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,10 +63,10 @@ public interface IDamageEffect {
         if (entity instanceof LivingEntity mob && mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)) {
             Player playerContext = shooter instanceof Player player ? player : ANFakePlayer.getPlayer(server);
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootContext.Builder lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext));
+            LootParams lootContext = LootUtil.getLootingContext(server, shooter, mob, looting, world.damageSources().playerAttack(playerContext)).create(LootContextParamSets.ENTITY);
             ResourceLocation lootTable = mob.getLootTable();
             LootTable loottable = server.getServer().getLootData().getLootTable(lootTable);
-            List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
+            List<ItemStack> items = loottable.getRandomItems(lootContext);
             items.forEach(mob::spawnAtLocation);
         }
 

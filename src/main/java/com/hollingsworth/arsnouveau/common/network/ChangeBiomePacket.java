@@ -3,7 +3,10 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.QuartPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -14,7 +17,6 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -58,10 +60,10 @@ public class ChangeBiomePacket {
 
                     for (LevelChunkSection section : chunkAt.getSections()) {
                         for (int sy = 0; sy < 16; sy += 4) {
-                            int y = Mth.clamp(QuartPos.fromBlock(section.bottomBlockY() + sy), minY, maxY);
+                            int y = Mth.clamp(QuartPos.fromBlock(chunkAt.getMinSection() + sy), minY, maxY);
                             if (section.getBiomes() instanceof PalettedContainer<Holder<Biome>> container)
                                 container.set(x & 3, y & 3, z & 3, biome);
-                            SectionPos pos = SectionPos.of(message.pos.getX() >> 4, (section.bottomBlockY() >> 4) + sy, message.pos.getZ() >> 4);
+                            SectionPos pos = SectionPos.of(message.pos.getX() >> 4, (chunkAt.getMinSection() >> 4) + sy, message.pos.getZ() >> 4);
                             world.setSectionDirtyWithNeighbors(pos.x(), pos.y(), pos.z());
                         }
                     }

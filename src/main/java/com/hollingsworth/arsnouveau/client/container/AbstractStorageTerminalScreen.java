@@ -337,26 +337,26 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 				if (slot.stack.getQuantity() > 9999) {
 					ClientInfo.setTooltip(Component.translatable("tooltip.ars_nouveau.amount", slot.stack.getQuantity()));
 				}
-				renderTooltip(st, slot.stack.getActualStack(), mouseX, mouseY);
+				graphics.renderTooltip(font, slot.stack.getActualStack(), mouseX, mouseY);
 				ClientInfo.setTooltip();
 			}
 		} else
-			this.renderTooltip(st, mouseX, mouseY);
+			this.renderTooltip(graphics, mouseX, mouseY);
 
 		if (buttonSortingType.isHoveredOrFocused()) {
-			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
+			graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
 		}
 		if (buttonSearchType.isHoveredOrFocused()) {
-			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+			graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
 		if(buttonDirection.isHoveredOrFocused()){
-			renderTooltip(st, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+			graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
 		}
 		for(StorageTabButton tabButton : tabButtons) {
 			if(tabButton.isHoveredOrFocused() && tabButton.isAll){
-				renderTooltip(st, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
+				graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
 			}else if (tabButton.isHoveredOrFocused() && tabButton.highlightText != null) {
-				renderTooltip(st, Component.literal(tabButton.highlightText), mouseX, mouseY);
+				graphics.renderTooltip(font, Component.literal(tabButton.highlightText), mouseX, mouseY);
 			}
 		}
 	}
@@ -527,7 +527,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		graphics.blit(getGui(), this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-		BaseBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15, st);
+		BaseBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15, graphics);
 	}
 
 	protected void onUpdateSearch(String text) {}

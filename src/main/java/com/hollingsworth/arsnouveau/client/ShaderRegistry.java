@@ -28,6 +28,6 @@ public class ShaderRegistry {
 
     @SubscribeEvent
     public static void shaderRegistry(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceManager(), new ResourceLocation(ArsNouveau.MODID, "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(ArsNouveau.MODID, "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
     }
 }
