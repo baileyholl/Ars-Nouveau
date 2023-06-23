@@ -42,7 +42,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (player.getItemInHand(handIn).getItem() instanceof WarpScroll) {
             BlockPos aimPos = new WarpScroll.WarpScrollData(player.getItemInHand(handIn)).getPos();
-            if (player.getLevel().getBlockEntity(pos) instanceof RotatingTurretTile tile) {
+            if (player.level().getBlockEntity(pos) instanceof RotatingTurretTile tile) {
                 tile.aim(aimPos, player);
             }
         }
@@ -176,7 +176,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                   resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, new BlockPos(aimVec.x(), aimVec.y(), aimVec.z()), true));
+                   resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, BlockPos.containing(aimVec.x(), aimVec.y(), aimVec.z()), true));
                 }
             }
         });

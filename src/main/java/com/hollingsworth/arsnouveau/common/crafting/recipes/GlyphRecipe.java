@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -104,8 +105,8 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     }
 
     @Override
-    public ItemStack assemble(ScribesTile pContainer) {
-        return ItemStack.EMPTY;
+    public ItemStack assemble(ScribesTile p_44001_, RegistryAccess p_267165_) {
+        return output.copy();
     }
 
     @Override
@@ -114,7 +115,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
         return output.copy();
     }
 

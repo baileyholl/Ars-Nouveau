@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -44,16 +44,15 @@ public class Materials {
         private final SoundEvent soundEvent;
         private final float toughness;
         private final LazyLoadedValue<Ingredient> repairMaterial;
-
-
+        
         @Override
-        public int getDurabilityForSlot(EquipmentSlot slotIn) {
-            return Max_Damage_Array[slotIn.getIndex()] * maxDamageFactor;
+        public int getDurabilityForType(ArmorItem.Type p_266807_) {
+            return Max_Damage_Array[p_266807_.getSlot().getIndex()] * maxDamageFactor;
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlot slotIn) {
-            return damageReductionAmountArray[slotIn.getIndex()];
+        public int getDefenseForType(ArmorItem.Type p_267168_) {
+            return damageReductionAmountArray[p_267168_.getSlot().getIndex()];
         }
 
         @Override

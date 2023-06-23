@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
@@ -28,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -226,28 +224,28 @@ public class ItemsRegistry {
 
     public static RegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1)));
 
-    public static RegistryWrapper<LightArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new LightArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<LightArmor> NOVICE_BOOTS = register(LibItemNames.NOVICE_BOOTS, () -> new LightArmor(ArmorItem.Type.BOOTS));
 
-    public static RegistryWrapper<LightArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new LightArmor(EquipmentSlot.LEGS));
+    public static RegistryWrapper<LightArmor> NOVICE_LEGGINGS = register(LibItemNames.NOVICE_LEGGINGS, () -> new LightArmor(ArmorItem.Type.LEGGINGS));
 
-    public static RegistryWrapper<LightArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new LightArmor(EquipmentSlot.CHEST));
+    public static RegistryWrapper<LightArmor> NOVICE_ROBES = register(LibItemNames.NOVICE_ROBES, () -> new LightArmor(ArmorItem.Type.CHESTPLATE));
 
-    public static RegistryWrapper<LightArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new LightArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<LightArmor> NOVICE_HOOD = register(LibItemNames.NOVICE_HOOD, () -> new LightArmor(ArmorItem.Type.HELMET));
 
-    public static RegistryWrapper<MediumArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new MediumArmor(EquipmentSlot.FEET));
-    public static RegistryWrapper<MediumArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new MediumArmor(EquipmentSlot.LEGS));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_BOOTS = register(LibItemNames.APPRENTICE_BOOTS, () -> new MediumArmor(ArmorItem.Type.BOOTS));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_LEGGINGS = register(LibItemNames.APPRENTICE_LEGGINGS, () -> new MediumArmor(ArmorItem.Type.LEGGINGS));
 
-    public static RegistryWrapper<MediumArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new MediumArmor(EquipmentSlot.CHEST));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_ROBES = register(LibItemNames.APPRENTICE_ROBES, () -> new MediumArmor(ArmorItem.Type.CHESTPLATE));
 
-    public static RegistryWrapper<MediumArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new MediumArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<MediumArmor> APPRENTICE_HOOD = register(LibItemNames.APPRENTICE_HOOD, () -> new MediumArmor(ArmorItem.Type.HELMET));
 
-    public static RegistryWrapper<HeavyArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new HeavyArmor(EquipmentSlot.FEET));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_BOOTS = register(LibItemNames.ARCHMAGE_BOOTS, () -> new HeavyArmor(ArmorItem.Type.BOOTS));
 
-    public static RegistryWrapper<HeavyArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new HeavyArmor(EquipmentSlot.LEGS));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_LEGGINGS = register(LibItemNames.ARCHMAGE_LEGGINGS, () -> new HeavyArmor(ArmorItem.Type.LEGGINGS));
 
-    public static RegistryWrapper<HeavyArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new HeavyArmor(EquipmentSlot.CHEST));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_ROBES = register(LibItemNames.ARCHMAGE_ROBES, () -> new HeavyArmor(ArmorItem.Type.CHESTPLATE));
 
-    public static RegistryWrapper<HeavyArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new HeavyArmor(EquipmentSlot.HEAD));
+    public static RegistryWrapper<HeavyArmor> ARCHMAGE_HOOD = register(LibItemNames.ARCHMAGE_HOOD, () -> new HeavyArmor(ArmorItem.Type.HELMET));
 
 
     public static RegistryWrapper<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, () -> new DowsingRod().withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod")));
@@ -334,7 +332,7 @@ public class ItemsRegistry {
 
 
     public static Item.Properties defaultItemProperties() {
-        return new Item.Properties().tab(ArsNouveau.itemGroup);
+        return new Item.Properties();
     }
 }
 

@@ -49,7 +49,7 @@ public class DepositAmethystGoal extends Goal {
     }
 
     public void deposit() {
-        BlockEntity tileEntity = golem.getLevel().getBlockEntity(golem.getHome());
+        BlockEntity tileEntity = golem.level().getBlockEntity(golem.getHome());
         if (tileEntity == null)
             return;
         IItemHandler iItemHandler = tileEntity.getCapability(ITEM_HANDLER).orElse(null);
@@ -86,7 +86,7 @@ public class DepositAmethystGoal extends Goal {
     public boolean canUse() {
         if (golem.getHome() == null || golem.getHeldStack().isEmpty())
             return false;
-        BlockEntity entity = golem.getLevel().getBlockEntity(golem.getHome());
+        BlockEntity entity = golem.level().getBlockEntity(golem.getHome());
         return canUse.get() && entity != null && entity.getCapability(ITEM_HANDLER).isPresent();
     }
 }

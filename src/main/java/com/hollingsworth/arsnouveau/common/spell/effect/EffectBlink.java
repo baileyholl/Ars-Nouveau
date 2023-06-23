@@ -112,7 +112,7 @@ public class EffectBlink extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 vec = rayTraceResult.getLocation();
         if (isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))) {
-            warpEntity(shooter, new BlockPos(vec));
+            warpEntity(shooter, BlockPos.containing(vec));
         }
     }
 
@@ -120,7 +120,7 @@ public class EffectBlink extends AbstractEffect {
         Vec3 lookVec = new Vec3(shooter.getLookAngle().x(), 0, shooter.getLookAngle().z());
         Vec3 vec = shooter.position().add(lookVec.scale(distance));
 
-        BlockPos pos = new BlockPos(vec);
+        BlockPos pos = BlockPos.containing(vec);
         if (!isValidTeleport(world, pos)) {
             pos = getForward(world, pos, shooter, distance) == null ? getForward(world, pos.above(2), shooter, distance) : getForward(world, pos, shooter, distance);
         }
@@ -136,7 +136,7 @@ public class EffectBlink extends AbstractEffect {
         BlockPos sendPos;
         for (double i = distance; i >= 0; i--) {
             vec = oldVec.add(lookVec.scale(i));
-            sendPos = new BlockPos(vec);
+            sendPos = BlockPos.containing(vec);
 
             if (i <= 0) {
                 return null;

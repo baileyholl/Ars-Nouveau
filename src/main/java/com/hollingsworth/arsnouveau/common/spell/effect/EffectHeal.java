@@ -35,7 +35,8 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             if (entity.isInvertedHealAndHarm()) {
-                attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter).setMagic(), healVal);
+                // TODO: use magic damage source
+                attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter), healVal);
             } else {
                 if(entity instanceof Player player){
                     player.causeFoodExhaustion(2.5f);

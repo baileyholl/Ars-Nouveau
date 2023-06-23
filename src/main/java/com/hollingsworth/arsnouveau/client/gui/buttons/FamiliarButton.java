@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiFamiliarScreen;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ public class FamiliarButton extends Button {
     public AbstractFamiliarHolder familiarHolder;
 
     public FamiliarButton(GuiFamiliarScreen parent, int x, int y, AbstractFamiliarHolder familiar) {
-        super(x, y, 16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
+        super(x, y, 16, 16, Component.nullToEmpty(""), parent::onGlyphClick, Button.DEFAULT_NARRATION);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -28,9 +28,9 @@ public class FamiliarButton extends Button {
     }
 
     @Override
-    public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem().getItem(), ms, x, y, 16, false);
+            RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem().getItem(), graphics, x, y, 16, false);
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 List<Component> tip = new ArrayList<>();
                 if (Screen.hasShiftDown()) {

@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -19,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.BushBlock;
@@ -84,7 +84,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
                 double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
                 if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
-                    entityIn.hurt(DamageSource.SWEET_BERRY_BUSH, 1.0F);
+                    entityIn.hurt(worldIn.damageSources().sweetBerryBush(), 1.0F);
                 }
             }
         }
@@ -112,12 +112,10 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
         builder.add(AGE);
     }
 
-    /**
-     * Whether this IGrowable can grow
-     */
+
     @Override
-    public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return state.getValue(AGE) < 3;
+    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
+        return pState.getValue(AGE) < 3;
     }
 
     @Override

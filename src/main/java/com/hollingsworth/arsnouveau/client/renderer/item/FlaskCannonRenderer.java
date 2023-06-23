@@ -28,15 +28,14 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if(currentItemStack == null){
-            super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void renderRecursively(PoseStack poseStack, FlaskCannon animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if(currentItemStack == null) {
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
             return;
         }
         FlaskCannon.PotionLauncherData flask = new FlaskCannon.PotionLauncherData(currentItemStack);
         if(bone == null)
             return;
-
         if(bone.getName().equalsIgnoreCase("full")){
             bone.setHidden(flask.amountLeft < 8);
         }else if(bone.getName().equalsIgnoreCase("75")){
@@ -49,16 +48,16 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
             bone.setHidden(flask.amountLeft != 1);
         }
 
-        if(bone.getName().equals("potion_levels") || (bone.getParent() != null && bone.getParent().getName().equals("potion_levels"))){
+        if(bone.getName().equals("potion_levels") || (bone.getParent() != null && bone.getParent().getName().equals("potion_levels"))) {
             ParticleColor color = ParticleColor.fromInt(PotionUtils.getColor(flask.getLastDataForRender().asPotionStack()));
-            super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, color.getRed(), color.getGreen(), color.getBlue(), 0.1f);
-        }else {
-            super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.getRed(), color.getGreen(), color.getBlue(), alpha);
+        }else{
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
 
     @Override
-    public RenderType getRenderType(FlaskCannon animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityCutoutNoCull(textureLocation);
+    public RenderType getRenderType(FlaskCannon animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityCutoutNoCull(texture);
     }
 }

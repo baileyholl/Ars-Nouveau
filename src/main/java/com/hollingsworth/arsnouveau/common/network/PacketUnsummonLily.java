@@ -31,7 +31,7 @@ public class PacketUnsummonLily {
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getSender() != null) {
                 ServerPlayer serverPlayer = ctx.get().getSender();
-                ServerLevel level = serverPlayer.getLevel();
+                ServerLevel level = (ServerLevel) serverPlayer.level();
                 UUID lilyUuid = Lily.ownerLilyMap.get(ctx.get().getSender().getUUID());
                 if (lilyUuid != null) {
                     Lily lily = (Lily) level.getEntity(lilyUuid);

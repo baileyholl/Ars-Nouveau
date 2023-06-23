@@ -6,7 +6,6 @@ import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -19,6 +18,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,15 +63,15 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void draw(CrushRecipe recipe,@NotNull IRecipeSlotsView slotsView,@NotNull PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(CrushRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw(matrixStack, 22, 6);
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs.size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs.get(i);
-            renderer.draw(matrixStack, Math.round(100 * output.chance - 0.5f) + "%", 98f, 11f + 17f * i, 10);
+            matrixStack.drawString(renderer, Math.round(100 * output.chance - 0.5f) + "%", 98, 11 + 17 * i, 10);
             if(output.maxRange > 1) {
-                renderer.draw(matrixStack, "1-" + output.maxRange, 75f, 11f + 17f * i, 10);
+                matrixStack.drawString(renderer, "1-" + output.maxRange, 75, 11 + 17 * i, 10);
             }
         }
     }

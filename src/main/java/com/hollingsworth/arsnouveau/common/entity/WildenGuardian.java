@@ -9,8 +9,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -85,11 +87,11 @@ public class WildenGuardian extends Monster implements GeoEntity {
             armorTimeRemaining = 100;
             this.navigation.stop();
         }
-        if (!level.isClientSide && isArmored() && !damageSrc.isBypassArmor()) {
+        if (!level.isClientSide && isArmored() && !damageSrc.is(DamageTypeTags.BYPASSES_ARMOR)) {
             damageAmount *= 0.75;
 
-            if (damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.msgId.equals("thorns")) {
-                damageSrc.getEntity().hurt(DamageSource.thorns(this), 3.0f);
+            if (damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.type().msgId().equals("thorns")) {
+                damageSrc.getEntity().hurt(level.damageSources().thorns(this), 3.0f);
             }
 
         }
@@ -98,7 +100,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(pSource == DamageSource.DROWN){
+        if(pSource.is(DamageTypes.DROWN)){
             return false;
         }
         return super.hurt(pSource, pAmount);

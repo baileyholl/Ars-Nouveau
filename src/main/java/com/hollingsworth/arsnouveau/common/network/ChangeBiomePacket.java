@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.network;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -27,7 +29,7 @@ public class ChangeBiomePacket {
 
     public ChangeBiomePacket(FriendlyByteBuf buf) {
         this.pos = new BlockPos(buf.readInt(), 0, buf.readInt());
-        this.biomeId = ResourceKey.create(Registry.BIOME_REGISTRY, buf.readResourceLocation());
+        this.biomeId = ResourceKey.create(Registries.BIOME, buf.readResourceLocation());
     }
 
     public void encode(FriendlyByteBuf buf) {
@@ -46,7 +48,7 @@ public class ChangeBiomePacket {
                     ClientLevel world = Minecraft.getInstance().level;
                     LevelChunk chunkAt = (LevelChunk) world.getChunk(message.pos);
 
-                    Holder<Biome> biome = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getHolderOrThrow(message.biomeId);
+                    Holder<Biome> biome = world.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(message.biomeId);
 
                     int minY = QuartPos.fromBlock(world.getMinBuildHeight());
                     int maxY = minY + QuartPos.fromBlock(world.getHeight()) - 1;

@@ -10,8 +10,8 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.SoundButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
 import com.hollingsworth.arsnouveau.setup.SoundRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -120,13 +120,13 @@ public class SoundScreen extends BaseBook {
     }
 
     @Override
-    public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104, stack);
+    public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104, graphics);
         int color = -8355712;
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color);
+        graphics.drawString(font, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color);
+        graphics.drawString(font, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color);
 
     }
 

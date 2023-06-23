@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,7 +46,7 @@ public class ShockedEffect extends MobEffect {
             if (entity instanceof Player) {
                 CompoundTag tag = entity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
             }
-            entity.hurt(DamageSource.LIGHTNING_BOLT, 20 * multiplier * (amp + 1));
+            entity.hurt(entity.level.damageSources().lightningBolt(), 20 * multiplier * (amp + 1));
 
         }
     }

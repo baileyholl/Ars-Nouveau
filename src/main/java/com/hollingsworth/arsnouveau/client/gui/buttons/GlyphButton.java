@@ -54,7 +54,7 @@ public class GlyphButton extends Button {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         PoseStack ms = graphics.pose();
         if (visible) {
-            RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x, y, 16, !validationErrors.isEmpty());
+            RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty());
 
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {

@@ -229,7 +229,6 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         animatableManager.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
-        animatableManager.setResetSpeedInTicks(0.0);
     }
 
     @Override

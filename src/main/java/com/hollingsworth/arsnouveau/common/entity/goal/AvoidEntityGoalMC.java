@@ -54,7 +54,7 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
             } else if (this.toAvoid.distanceToSqr(vector3d.x, vector3d.y, vector3d.z) < this.toAvoid.distanceToSqr(this.mob)) {
                 return false;
             } else {
-                this.mob.getNavigation().tryMoveToBlockPos(new BlockPos(vector3d.x, vector3d.y, vector3d.z), sprintSpeedModifier);
+                this.mob.getNavigation().tryMoveToBlockPos(BlockPos.containing(vector3d.x, vector3d.y, vector3d.z), sprintSpeedModifier);
                 return true;
             }
         }

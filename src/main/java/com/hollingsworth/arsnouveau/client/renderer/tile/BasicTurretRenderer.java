@@ -9,9 +9,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
-
-import javax.annotation.Nullable;
 
 public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTile> {
     public static GeoModel model = new GenericModel("basic_spell_turret");
@@ -25,17 +24,16 @@ public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTil
     }
 
     @Override
-    public void render(GeoModel model, BasicSpellTurretTile animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        matrixStackIn.pushPose();
+    public void actuallyRender(PoseStack poseStack, BasicSpellTurretTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.pushPose();
         Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);
         if (direction == Direction.UP) {
-            matrixStackIn.translate(0, -0.5, -0.5);
+            poseStack.translate(0, -0.5, -0.5);
         } else if (direction == Direction.DOWN) {
-            matrixStackIn.translate(0, -0.5, 0.5);
+            poseStack.translate(0, -0.5, 0.5);
         }
-        super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-
-        matrixStackIn.popPose();
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        poseStack.popPose();
     }
 
     public static GenericItemBlockRenderer getISTER() {

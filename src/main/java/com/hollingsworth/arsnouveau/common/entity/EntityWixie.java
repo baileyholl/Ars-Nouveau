@@ -133,7 +133,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         super.tick();
         SummonUtil.healOverTime(this);
         if (!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.hurt(DamageSource.playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
+            this.hurt(level.damageSources().playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
         if (!level.isClientSide && inventoryBackoff > 0) {
             inventoryBackoff--;
         }

@@ -4,11 +4,13 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -17,12 +19,12 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 public class BookUpgradeRecipe extends ShapelessRecipe {
 
     private BookUpgradeRecipe(final ResourceLocation id, final String group, final ItemStack recipeOutput, final NonNullList<Ingredient> ingredients) {
-        super(id, group, recipeOutput, ingredients);
+        super(id, group, CraftingBookCategory.MISC, recipeOutput, ingredients);
     }
 
     @Override
-    public ItemStack assemble(final CraftingContainer inv) {
-        final ItemStack output = super.assemble(inv); // Get the default output
+    public ItemStack assemble(final CraftingContainer inv, RegistryAccess p_266797_) {
+        final ItemStack output = super.assemble(inv, p_266797_); // Get the default output
 
         if (!output.isEmpty()) {
             for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,

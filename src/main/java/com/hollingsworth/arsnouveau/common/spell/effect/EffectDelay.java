@@ -39,7 +39,7 @@ public class EffectDelay extends AbstractEffect {
         duration -= decreasedTime;
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration, newSpell, rayTraceResult, world, shooter, newContext));
-        Networking.sendToNearby(world, new BlockPos(safelyGetHitPos(rayTraceResult)),
+        Networking.sendToNearby(world, BlockPos.containing(safelyGetHitPos(rayTraceResult)),
                 new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity));
     }
 

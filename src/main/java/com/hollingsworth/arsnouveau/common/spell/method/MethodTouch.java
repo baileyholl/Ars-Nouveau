@@ -51,7 +51,7 @@ public class MethodTouch extends AbstractCastMethod {
     public CastResolveType onCastOnBlock(BlockHitResult res, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), res);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.getColors().toWrapper()));
-        addFadingLight(caster.getLevel(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
+        addFadingLight(caster.level(), res.getBlockPos().getX() + 0.5, res.getBlockPos().getY() + 0.5, res.getBlockPos().getZ() + 0.5);
         return CastResolveType.SUCCESS;
     }
 
@@ -59,12 +59,12 @@ public class MethodTouch extends AbstractCastMethod {
     public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(target));
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.getColors().toWrapper()));
-        addFadingLight(caster.getLevel(), target.blockPosition().getX() + 0.5, target.blockPosition().getY() + 0.5, target.blockPosition().getZ() + 0.5);
+        addFadingLight(caster.level(), target.blockPosition().getX() + 0.5, target.blockPosition().getY() + 0.5, target.blockPosition().getZ() + 0.5);
         return spellContext.getType() != SpellContext.CasterType.RUNE ? CastResolveType.SUCCESS : CastResolveType.SUCCESS_NO_EXPEND;
     }
 
     public void addFadingLight(Level level, double x, double y, double z) {
-        Networking.sendToNearby(level, new BlockPos(x, y, z), new PacketAddFadingLight(x, y, z));
+        Networking.sendToNearby(level, BlockPos.containing(x, y, z), new PacketAddFadingLight(x, y, z));
     }
 
    @NotNull

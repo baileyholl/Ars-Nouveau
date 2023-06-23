@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmorStandArmorModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -32,31 +31,25 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.util.RenderUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile> {
+public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     private static final Map<String, ResourceLocation> ARMOR_LOCATION_CACHE = Maps.newHashMap();
 
     public final ArmorStandArmorModel innerModel;
     public final ArmorStandArmorModel outerModel;
 
-    public static final PerlinSimplexNoise noise = new PerlinSimplexNoise(new LegacyRandomSource(2906), IntList.of( 1, 2,3,4,5));
-
     public AlterationTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
-        super(p_i226006_1_, new GenericModel<>("alteration_table").withEmptyAnim());
+        super(new GenericModel<>("alteration_table").withEmptyAnim());
         innerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR));
         outerModel =  new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
     }
@@ -93,9 +86,9 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
                 matrixStack.translate(0, perkYOffset, 0);
             }
             matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-            matrixStack.translate(0, yOffset + rotForSlot(armorItem.getSlot()), 0);
+            matrixStack.translate(0, yOffset + rotForSlot(armorItem.getEquipmentSlot()), 0);
 
-            this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getSlot()));
+            this.renderArmorPiece(tile, tile.armorStack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
         }else {
             Minecraft.getInstance().getItemRenderer().renderStatic(tile.armorStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
         }
@@ -113,7 +106,7 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
             }
             matrixStack.pushPose();
             matrixStack.translate(-0.25, 0.74 - (0.175 * i),-0.3 - (0.175 * i));
-            GeoBone bone = (GeoBone) getGeoModelProvider().getBone("display");
+            GeoBone bone = model.getBone("display").get();
             if (bone.getRotZ() != 0.0F) {
                 matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotZ()));
             }
@@ -125,10 +118,10 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
             if (bone.getRotX()  != 0.0F) {
                 matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
             }
-            GeoBone locBone = (GeoBone) getGeoModelProvider().getBone("top_" + (i + 1));
+            GeoBone locBone = model.getBone("top_" + (i + 1)).get();
             RenderUtils.translateToPivotPoint(matrixStack, locBone);
             matrixStack.scale(0.18f, 0.18f, 0.18f);
-            Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
             matrixStack.popPose();
         }
     }
@@ -151,7 +144,7 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
         if(!(itemstack.getItem() instanceof ArmorItem armoritem))
             return;
 
-        EquipmentSlot pSlot = armoritem.getSlot();
+        EquipmentSlot pSlot = armoritem.getEquipmentSlot();
         Model model = getArmorModelHook(itemstack, pSlot, armorModel);
         boolean flag1 = itemstack.hasFoil();
         if (armoritem instanceof DyeableLeatherItem dyeableLeatherItem) {
@@ -202,53 +195,47 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
         return pSlot == EquipmentSlot.LEGS;
     }
 
+
     @Override
-    public void render(AlterationTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
-        try {
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
-                return;
-            if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-                return;
-            Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.FACING);
-            stack.pushPose();
+    public void actuallyRender(PoseStack stack, AlterationTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
+            return;
+        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
+            return;
+        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.FACING);
+        stack.pushPose();
 
-            if (direction == Direction.NORTH) {
-                stack.mulPose(Axis.YP.rotationDegrees(-90));
-                stack.translate(1, 0, -1);
-            }
-
-            if (direction == Direction.SOUTH) {
-                stack.mulPose(Axis.YP.rotationDegrees(270));
-                stack.translate(-1, 0, -1);
-            }
-
-            if (direction == Direction.WEST) {
-                stack.mulPose(Axis.YP.rotationDegrees(270));
-
-                stack.translate(0, 0, -2);
-            }
-
-            if (direction == Direction.EAST) {
-                stack.mulPose(Axis.YP.rotationDegrees(-90));
-                stack.translate(0, 0, 0);
-
-            }
-
-            super.render(tile, partialTicks, stack, bufferIn, packedLightIn);
-            stack.popPose();
-        } catch (Throwable t) {
-            t.printStackTrace();
-            // why must people change the rendering order of tesrs
+        if (direction == Direction.NORTH) {
+            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.translate(1, 0, -1);
         }
+
+        if (direction == Direction.SOUTH) {
+            stack.mulPose(Axis.YP.rotationDegrees(270));
+            stack.translate(-1, 0, -1);
+        }
+
+        if (direction == Direction.WEST) {
+            stack.mulPose(Axis.YP.rotationDegrees(270));
+
+            stack.translate(0, 0, -2);
+        }
+
+        if (direction == Direction.EAST) {
+            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.translate(0, 0, 0);
+
+        }
+        super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
-    public void render(GeoModel model, AlterationTile animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        renderSlate(model, animatable, partialTicks, matrixStackIn, renderTypeBuffer, packedLightIn);
-        super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void renderFinal(PoseStack poseStack, AlterationTile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        renderSlate(model, animatable);
+        super.renderFinal(poseStack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-    public void renderSlate(GeoModel model, AlterationTile tile, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn){
+    public void renderSlate(BakedGeoModel model, AlterationTile tile){
         String[] rowNames = new String[]{"top", "mid", "bot"};
         if(tile.armorStack.isEmpty()){
             for(String s : rowNames){
@@ -268,7 +255,7 @@ public class AlterationTableRenderer extends ArsGeoBlockRenderer<AlterationTile>
         remainingRows.subList(perks.size(), remainingRows.size()).forEach(s -> setSlateRow(model, s, 0));
     }
 
-    public void setSlateRow(GeoModel model, String loc, int tier){
+    public void setSlateRow(BakedGeoModel model, String loc, int tier){
         for(int i = 0; i < 4; i++){
             if(tier != i){
                 model.getBone(loc + "_" + i).ifPresent(bone -> bone.setHidden(true));

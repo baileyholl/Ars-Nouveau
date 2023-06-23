@@ -15,10 +15,10 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class CasterTomeProvider implements DataProvider {
 
@@ -30,7 +30,7 @@ public class CasterTomeProvider implements DataProvider {
     }
 
     @Override
-    public void run(CachedOutput cache) throws IOException {
+    public CompletableFuture<?> run(CachedOutput cache) {
 
         tomes.add(buildTome("glow", "Glow Trap", new Spell()
                         .add(MethodTouch.INSTANCE)
@@ -204,11 +204,12 @@ public class CasterTomeProvider implements DataProvider {
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
                 , "Fire at a body of water to create a Ice bubble in the depths.", new ParticleColor(0,0,255)));
 
-        Path output = this.generator.getOutputFolder();
-        for (CasterTomeData g : tomes) {
-            Path path = getRecipePath(output, g.getId().getPath());
-            DataProvider.saveStable(cache, g.toJson(), path);
-        }
+//        Path output = this.generator.getOutputFolder();
+//        for (CasterTomeData g : tomes) {
+//            Path path = getRecipePath(output, g.getId().getPath());
+//            DataProvider.saveStable(cache, g.toJson(), path);
+//        }
+        return null;
     }
 
     protected Path getRecipePath(Path pathIn, String str) {

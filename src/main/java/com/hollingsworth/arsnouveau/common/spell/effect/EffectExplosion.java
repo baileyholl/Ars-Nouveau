@@ -39,8 +39,9 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         double intensity = BASE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + AOE_BONUS.get() * spellStats.getAoeMultiplier();
         int dampen = spellStats.getBuffCount(AugmentDampen.INSTANCE);
         intensity -= 0.5 * dampen;
-        Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.NONE : Explosion.BlockInteraction.DESTROY;
-        mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.BREAK : mode;
+        //TODO: check explosion augment functionality
+        Explosion.BlockInteraction mode = dampen > 0 ? Explosion.BlockInteraction.KEEP : Explosion.BlockInteraction.DESTROY;
+        mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.BlockInteraction.DESTROY_WITH_DECAY : mode;
         explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }
 
@@ -52,7 +53,7 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
         explosion.explode();
         explosion.finalizeExplosion(false);
-        if (p_230546_12_ == Explosion.BlockInteraction.NONE) {
+        if (p_230546_12_ == Explosion.BlockInteraction.KEEP) {
             explosion.clearToBlow();
         }
 

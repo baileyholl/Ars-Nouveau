@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.loot;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -75,7 +74,7 @@ public class DungeonLootTables {
         return pool.isEmpty() ? ItemStack.EMPTY : pool.get(r.nextInt(pool.size())).get();
     }
 
-    public static List<ItemStack> getRandomRoll(DungeonLootGenerator.DungeonLootEnhancerModifier modifier) {
+    public static List<ItemStack> getRandomRoll(DungeonLootEnhancerModifier modifier) {
         List<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < modifier.commonRolls; i++) {

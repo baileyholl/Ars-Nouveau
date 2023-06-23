@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class StorageTabButton extends StateButton{
@@ -21,15 +19,10 @@ public class StorageTabButton extends StateButton{
     }
 
     @Override
-    public void renderButton(PoseStack st, int mouseX, int mouseY, float pt) {
+    public void renderWidget(GuiGraphics p_281670_, int mouseX, int mouseY, float pt) {
         if(this.visible){
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-
-            RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/storage_tab2" + (isSelected ? "_selected" : "")  + ".png"));
-
-            blit(st, x , y, 0, 0, 18, 13, 18, 13);
+            p_281670_.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/storage_tab2" + (isSelected ? "_selected" : "")  + ".png"), x , y, 0, 0, 18, 13, 18, 13);
         }
-        super.renderButton(st, mouseX, mouseY, pt);
-
+        super.renderWidget(p_281670_, mouseX, mouseY, pt);
     }
 }

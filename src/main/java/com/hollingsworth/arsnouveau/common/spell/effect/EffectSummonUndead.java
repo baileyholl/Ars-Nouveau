@@ -36,7 +36,7 @@ public class EffectSummonUndead extends AbstractEffect {
 
         Vec3 vector3d = safelyGetHitPos(rayTraceResult);
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
-        BlockPos pos = new BlockPos(vector3d);
+        BlockPos pos = BlockPos.containing(vector3d);
         if (ticks <= 0) return;
         int count = 3 + spellStats.getBuffCount(AugmentSplit.INSTANCE);
         for (int i = 0; i < count; ++i) {

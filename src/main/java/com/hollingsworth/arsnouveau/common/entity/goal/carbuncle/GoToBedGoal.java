@@ -69,7 +69,7 @@ public class GoToBedGoal extends Goal {
 
 
     public void setPath(double x, double y, double z, double speedIn) {
-        starbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
+        starbuncle.getNavigation().tryMoveToBlockPos(BlockPos.containing(x, y, z), 1.3);
         if (starbuncle.getNavigation().getPath() != null && !starbuncle.getNavigation().getPath().canReach()) {
             starbuncle.addGoalDebug(this, new DebugEvent("BedUnreachable", "Unreachable"));
             unreachable = true;
@@ -99,7 +99,7 @@ public class GoToBedGoal extends Goal {
     }
 
     public boolean isOnBed(){
-        return starbuncle.level.getBlockState(new BlockPos(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
+        return starbuncle.level.getBlockState(BlockPos.containing(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ManaCapEvents {
         if (mana == null)
             return;
         // Force sync mana to client because client caps vanish on world change
-        boolean shouldIgnoreMax = e.player.getLevel().getGameTime() % 60 == 0;
+        boolean shouldIgnoreMax = e.player.level().getGameTime() % 60 == 0;
         if (mana.getCurrentMana() != mana.getMaxMana() || shouldIgnoreMax) {
             double regenPerSecond = ManaUtil.getManaRegen(e.player) / Math.max(1, ((int) MEAN_TPS / ServerConfig.REGEN_INTERVAL.get()));
             mana.addMana(regenPerSecond);

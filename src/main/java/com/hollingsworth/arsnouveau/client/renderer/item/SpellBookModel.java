@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animation.AnimationState;
 
 public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
-    ResourceLocation OPEN = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_open.geo.json");
-    ResourceLocation CLOSED = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_closed.geo.json");
+    public static final ResourceLocation OPEN = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_open.geo.json");
+    public static final ResourceLocation CLOSED = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_closed.geo.json");
 
 
     @Override

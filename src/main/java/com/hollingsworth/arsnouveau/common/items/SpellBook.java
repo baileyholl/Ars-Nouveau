@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -42,7 +41,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -58,7 +56,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public SpellBook(SpellTier tier) {
-        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
+        super(new Item.Properties().stacksTo(1));
         this.tier = tier;
     }
 

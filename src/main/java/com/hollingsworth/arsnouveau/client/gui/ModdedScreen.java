@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -41,7 +41,7 @@ public class ModdedScreen extends Screen {
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
 
-    public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
+    public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {
 //        if (tooltip != null && !tooltip.isEmpty()) {
 ////            this.renderComponentTooltip(stack, tooltip, mouseX, mouseY, font);
 //        }

@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
@@ -15,6 +14,7 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -142,8 +142,8 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 		}
 
 		@Override
-		public void showError(PoseStack matrixStack, int mouseX, int mouseY, IRecipeSlotsView recipeLayout, int recipeX,
-				int recipeY) {
+		public void showError(GuiGraphics matrixStack, int mouseX, int mouseY, IRecipeSlotsView recipeLayout, int recipeX,
+							  int recipeY) {
 			this.parent.showError(matrixStack, mouseX, mouseY, recipeLayout, recipeX, recipeY);
 		}
 	}

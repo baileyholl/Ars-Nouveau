@@ -15,7 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -78,7 +77,7 @@ public class MobJarRenderer implements BlockEntityRenderer<MobJarTile> {
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.yBodyRotO = livingEntity.yBodyRot;
                 livingEntity.yHeadRotO = livingEntity.yHeadRot;
-                livingEntity.animationSpeedOld = livingEntity.animationSpeed;
+                // TODO: readd old animation speed for allay?
             }
         }else{
             pPartialTick = 0;

@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -44,7 +43,7 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     public Wand() {
-        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
+        super(new Item.Properties().stacksTo(1));
     }
 
     private <P extends Item & GeoAnimatable> PlayState predicate(AnimationState<P> event) {

@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.loot.DungeonLootEnhancerModifier;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
-import com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -46,7 +46,7 @@ public class Present extends ModItem{
             return super.use(pLevel, pPlayer, pUsedHand);
         PresentData presentData = new PresentData(pPlayer.getItemInHand(pUsedHand));
         int bonusRolls = presentData.uuid != null && !presentData.uuid.equals(pPlayer.getUUID()) ? 2 : 0;
-        DungeonLootGenerator.DungeonLootEnhancerModifier modifier = new DungeonLootGenerator.DungeonLootEnhancerModifier(new LootItemCondition[]{},
+        DungeonLootEnhancerModifier modifier = new DungeonLootEnhancerModifier(new LootItemCondition[]{},
                 0.5, 0.2, 0.1,3 + bonusRolls, 1 + bonusRolls, 1 + bonusRolls);
         List<ItemStack> stacks = DungeonLootTables.getRandomRoll(modifier);
         if(stacks.isEmpty()){

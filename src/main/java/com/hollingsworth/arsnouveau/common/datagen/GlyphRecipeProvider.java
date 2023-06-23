@@ -21,10 +21,10 @@ import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
@@ -40,8 +40,8 @@ public class GlyphRecipeProvider implements DataProvider {
     }
 
     @Override
-    public void run(CachedOutput cache) throws IOException {
-        Path output = this.generator.getOutputFolder();
+    public CompletableFuture<?> run(CachedOutput cache)  {
+        Path output = null;// this.generator.getOutputFolder();
 
         add(get(AugmentAccelerate.INSTANCE).withItem(Items.POWERED_RAIL).withItem(Items.SUGAR).withItem(Items.CLOCK));
         add(get(AugmentDecelerate.INSTANCE).withItem(Items.SOUL_SAND).withItem(Items.COBWEB).withItem(Items.CLOCK));
@@ -133,6 +133,7 @@ public class GlyphRecipeProvider implements DataProvider {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
             DataProvider.saveStable(cache, recipe.asRecipe(), path);
         }
+        return null;
     }
 
     public void add(GlyphRecipe recipe) {

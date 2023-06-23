@@ -64,7 +64,7 @@ public class GuiImageButton extends ANButton {
                 }
             }
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, ms);
+            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, p_282421_);
         }
     }
 

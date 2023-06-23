@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +21,7 @@ public class SelectableButton extends GuiImageButton {
     }
 
     @Override
-    public void render(PoseStack ms, int parX, int parY, float partialTicks) {
+    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
 //        super.render(ms, parX, parY, partialTicks);
         if (visible) {
             if (parent != null && parent.isMouseInRelativeRange(parX, parY, x, y, width, height) && toolTip != null) {
@@ -32,7 +33,7 @@ public class SelectableButton extends GuiImageButton {
             }
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             ResourceLocation renderImage = isSelected ? secondImage : image;
-            GuiSpellBook.drawFromTexture(renderImage, x, y, u, v, width, height, image_width, image_height, ms);
+            GuiSpellBook.drawFromTexture(renderImage, x, y, u, v, width, height, image_width, image_height, graphics);
         }
     }
 

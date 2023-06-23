@@ -146,7 +146,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public void generateItems() {
         List<ItemStack> stacks = new ArrayList<>();
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) level);
-        DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
+        DamageSource damageSource = level.damageSources().playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
         // Create the loot table and exp count

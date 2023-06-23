@@ -17,11 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.object.Color;
-import software.bernie.geckolib.model.GeoModel;
-
-import javax.annotation.Nullable;
 
 public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
     public SpellCrossbowRenderer() {
@@ -29,13 +28,12 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        //we override the color getter for a specific bone, this means the other ones need to use the neutral color
+    public void renderRecursively(PoseStack poseStack, SpellCrossbow animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (bone.getName().equals("gem")) {
             //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-            super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         } else {
-            super.renderRecursively(bone, poseStack, buffer, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
         }
     }
 
@@ -89,10 +87,10 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
     }
 
     @Override
-    public void render(GeoModel model, Object animatable, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        IBone right = model.getBone("bow_right").get();
-        IBone gem = model.getBone("gem").get();
-        IBone left = model.getBone("bow_left").get();
+    public void actuallyRender(PoseStack poseStack, SpellCrossbow animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        CoreGeoBone right = model.getBone("bow_right").get();
+        CoreGeoBone gem = model.getBone("gem").get();
+        CoreGeoBone left = model.getBone("bow_left").get();
         float outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 10.0f) % 360;
 
 
@@ -100,36 +98,33 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
             int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks() + partialTicks);
 
             if (SpellCrossbow.isCharged(currentItemStack)) {
-                right.setRotationY((float) (right.getRotationY() - Math.toRadians(35)));
-                left.setRotationY((float) (left.getRotationY() + Math.toRadians(35)));
+                right.setRotY((float) (right.getRotY() - Math.toRadians(35)));
+                left.setRotY((float) (left.getRotY() + Math.toRadians(35)));
                 outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;
             }else if (timeHeld != 0 && timeHeld != 72000 && Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
                 var offset = 40;
                 timeHeld = Math.min(timeHeld, 72000);
-                right.setRotationY((float) (right.getRotationY() - Math.toRadians(30) - Math.toRadians(timeHeld)));
-                left.setRotationY((float) (left.getRotationY() + Math.toRadians(30) + Math.toRadians(timeHeld)));
+                right.setRotY((float) (right.getRotY() - Math.toRadians(30) - Math.toRadians(timeHeld)));
+                left.setRotY((float) (left.getRotY() + Math.toRadians(30) + Math.toRadians(timeHeld)));
                 outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 5.0f) % 360;
             }
         }
-        gem.setRotationX(outerAngle);
-        gem.setRotationY(outerAngle);
-
-        super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        gem.setRotX(outerAngle);
+        gem.setRotY(outerAngle);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTicks, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-
-
     @Override
-    public Color getRenderColor(Object animatable, float partialTick, PoseStack poseStack, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, int packedLight) {
+    public Color getRenderColor(SpellCrossbow animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
         if (currentItemStack.hasTag()) {
-            color = ((SpellCrossbow) animatable).getSpellCaster(currentItemStack).getColor();
+            color = animatable.getSpellCaster(currentItemStack).getColor();
         }
         return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);
     }
 
     @Override
-    public RenderType getRenderType(Object animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(textureLocation);
+    public RenderType getRenderType(SpellCrossbow animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(texture);
     }
 }

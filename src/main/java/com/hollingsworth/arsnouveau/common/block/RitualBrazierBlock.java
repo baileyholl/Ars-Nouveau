@@ -57,7 +57,7 @@ public class RitualBrazierBlock extends TickableModBlock {
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public RitualBrazierBlock() {
-        super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
+        super(defaultProperties().noOcclusion().pushReaction(PushReaction.BLOCK).lightLevel((b) -> b.getValue(LIT) ? 15 : 0));
         registerDefaultState(defaultBlockState().setValue(LIT, false));
     }
 
@@ -75,11 +75,6 @@ public class RitualBrazierBlock extends TickableModBlock {
             tile.tryBurnStack(heldStack);
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
-        return PushReaction.BLOCK;
     }
 
     @Override

@@ -30,8 +30,8 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
         if (entity.getEntityData().get(WealdWalker.CASTING)) {
             CoreGeoBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
             CoreGeoBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
-            frontLeftLeg.setRotX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
-            frontRightLeg.setRotX(Mth.cos(entity.animationPosition * 0.6662F + (float) Math.PI) * 1.4F * entity.animationSpeed);
+            frontLeftLeg.setRotX(Mth.cos(entity.walkAnimation.position() * 0.6662F) * 1.4F * entity.walkAnimation.speed());
+            frontRightLeg.setRotX(Mth.cos(entity.walkAnimation.position() * 0.6662F + (float) Math.PI) * 1.4F * entity.walkAnimation.speed());
         }
     }
 

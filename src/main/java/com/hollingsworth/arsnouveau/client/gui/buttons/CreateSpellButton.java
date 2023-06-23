@@ -5,8 +5,8 @@ import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +23,7 @@ public class CreateSpellButton extends GuiImageButton {
     }
 
     @Override
-    public void render(PoseStack ms, int parX, int parY, float partialTicks) {
+    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
         if (visible) {
             if (parent.validationErrors.isEmpty()) {
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -31,7 +31,7 @@ public class CreateSpellButton extends GuiImageButton {
                 RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
             }
 
-            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, ms);
+            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, graphics);
 
             if (parent.isMouseInRelativeRange(parX, parY, x, y, width, height)) {
                 if (!parent.validationErrors.isEmpty()) {

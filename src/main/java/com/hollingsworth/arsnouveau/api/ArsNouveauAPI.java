@@ -300,6 +300,6 @@ public class ArsNouveauAPI {
 
     static {
         //think we just gotta ensure the path exists once
-        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID), ArsNouveau.MODID);
+        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve(ArsNouveau.MODID));
     }
 }

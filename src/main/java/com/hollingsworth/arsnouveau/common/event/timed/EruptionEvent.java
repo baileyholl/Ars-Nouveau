@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 
 public class EruptionEvent implements ITimedEvent {
@@ -56,7 +55,7 @@ public class EruptionEvent implements ITimedEvent {
 
         }
         if (serverSide && delay <= 0) {
-            world.explode(null, origin.getX(), origin.getY(), origin.getZ(), 5.0f, Explosion.BlockInteraction.NONE);
+            world.explode(null, origin.getX(), origin.getY(), origin.getZ(), 5.0f, Level.ExplosionInteraction.NONE);
         }
 
     }

@@ -809,7 +809,7 @@ public class BlockRegistry {
 
     //Somebody need to start it
     public static final RegistryWrapper<Block> ROTATING_TURRET;
-    public static final RegistryObject<BlockEntityType<?>> ROTATING_TURRET_TILE;
+    public static final RegistryObject<BlockEntityType<RotatingTurretTile>> ROTATING_TURRET_TILE;
     public static final RegistryWrapper<ArcanePlatform> ARCANE_PLATFORM;
     public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH;
     public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY;

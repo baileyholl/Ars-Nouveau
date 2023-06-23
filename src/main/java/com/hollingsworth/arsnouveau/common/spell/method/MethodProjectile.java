@@ -82,7 +82,8 @@ public class MethodProjectile extends AbstractCastMethod {
             if (i % 2 == 0) offset = offset.getOpposite();
             // Alternate sides
             BlockPos projPos = pos.relative(offset, i);
-            projPos = projPos.offset(0, 1.5, 0);
+            // TODO: check split projectile
+            projPos = projPos.offset(0, 2, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);

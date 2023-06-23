@@ -166,7 +166,7 @@ public class ANAdvancementBuilder implements net.minecraftforge.common.extension
                 this.requirements = this.requirementsStrategy.createRequirements(this.criteria.keySet());
             }
 
-            return new Advancement(pId, this.parent, this.display, this.rewards, this.criteria, this.requirements);
+            return new Advancement(pId, this.parent, this.display, this.rewards, this.criteria, this.requirements, false);
         }
     }
 

@@ -145,8 +145,8 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (((EntityHitResult) result).getEntity().equals(this.getOwner())) return;
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
-                Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        new BlockPos(result.getLocation()), getParticleColorWrapper()));
+                Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                        BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
                 attemptRemoval();
             }
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
@@ -154,7 +154,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
+                    BlockPos.containing(result.getLocation()).below(), getParticleColorWrapper()));
             attemptRemoval();
         }
     }

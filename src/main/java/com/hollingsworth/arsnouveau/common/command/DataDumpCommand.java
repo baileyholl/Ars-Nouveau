@@ -101,7 +101,7 @@ public class DataDumpCommand {
             throw ex;
         }
 
-        context.getSource().sendSuccess(Component.literal("Dumped data to " + file), true);
+        context.getSource().sendSuccess(() -> Component.literal("Dumped data to " + file), true);
         return 1;
     }
 }

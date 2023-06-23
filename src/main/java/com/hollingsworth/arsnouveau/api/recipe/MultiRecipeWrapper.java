@@ -49,18 +49,18 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
                 return RECIPE_CACHE.get(stack.getItem());
             }
             for (Recipe r : level.getServer().getRecipeManager().getRecipes()) {
-                if (r.getResultItem() == null || r.getResultItem().getItem() != stack.getItem())
+                if (r.getResultItem(level.registryAccess()) == null || r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
                     continue;
 
                 if (r instanceof ShapedRecipe) {
                     ShapedHelper helper = new ShapedHelper((ShapedRecipe) r);
                     for (List<Ingredient> iList : helper.getPossibleRecipes()) {
-                        wrapper.addRecipe(iList, r.getResultItem(), r);
+                        wrapper.addRecipe(iList, r.getResultItem(level.registryAccess()), r);
                     }
                 }
 
                 if (r instanceof ShapelessRecipe)
-                    wrapper.addRecipe(r.getIngredients(), r.getResultItem(), r);
+                    wrapper.addRecipe(r.getIngredients(), r.getResultItem(level.registryAccess()), r);
 
             }
             RECIPE_CACHE.put(stack.getItem(), wrapper);

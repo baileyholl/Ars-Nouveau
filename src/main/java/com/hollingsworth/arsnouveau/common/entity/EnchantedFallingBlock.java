@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
@@ -289,10 +290,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
         Entity owner = this.getOwner();
         DamageSource damagesource;
+        // TODO: check falling block sources
         if (owner == null) {
-            damagesource = new IndirectEntityDamageSource("an_enchantedBlock", this, owner);
+            damagesource = level.damageSources().thrown(this, owner);
         } else {
-            damagesource = new IndirectEntityDamageSource("an_enchantedBlock", this, owner);
+            damagesource = level.damageSources().thrown(this, owner);
             if (owner instanceof LivingEntity livingOwner) {
                 livingOwner.setLastHurtMob(entity);
             }
@@ -379,14 +381,13 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             if (i < 0) {
                 return false;
             } else {
-                Predicate<Entity> predicate;
+                Predicate<Entity> predicate = EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE);;
                 DamageSource damagesource;
                 if (this.blockState.getBlock() instanceof Fallable fallable) {
-                    predicate = fallable.getHurtsEntitySelector();
-                    damagesource = fallable.getFallDamageSource();
+                    damagesource = fallable.getFallDamageSource(this);
                 } else {
-                    predicate = EntitySelector.NO_SPECTATORS;
-                    damagesource = DamageSource.FALLING_BLOCK;
+
+                    damagesource = level.damageSources().fallingBlock(this);
                 }
 
                 float f = (float) Math.min(Mth.floor((float) i * this.fallDamagePerDistance), this.fallDamageMax);
@@ -430,7 +431,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
      */
     protected void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.blockState = NbtUtils.readBlockState(pCompound.getCompound("BlockState"));
+        this.blockState = NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), pCompound.getCompound("BlockState"));
         this.time = pCompound.getInt("Time");
         if (pCompound.contains("HurtEntities", 99)) {
             this.hurtEntities = pCompound.getBoolean("HurtEntities");

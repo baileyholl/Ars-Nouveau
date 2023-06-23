@@ -116,7 +116,7 @@ public class GuiEntityInfoHUD {
             colorBorderBot.scaleAlpha(fade);
         }
 
-        drawHoveringText(ItemStack.EMPTY, poseStack, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
+        drawHoveringText(ItemStack.EMPTY, graphics, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
         poseStack.popPose();
     }
@@ -125,21 +125,21 @@ public class GuiEntityInfoHUD {
     public static final Color VANILLA_TOOLTIP_BACKGROUND =  new Color(0xf0_100010, true);
 
 
-    public static void drawHoveringText(PoseStack mStack, List<? extends FormattedText> textLines, int mouseX,
+    public static void drawHoveringText(GuiGraphics mStack, List<? extends FormattedText> textLines, int mouseX,
                                         int mouseY, int screenWidth, int screenHeight, int maxTextWidth, Font font) {
         drawHoveringText(mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
                 ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
                 font);
     }
 
-    public static void drawHoveringText(PoseStack mStack, List<? extends FormattedText> textLines, int mouseX,
+    public static void drawHoveringText(GuiGraphics mStack, List<? extends FormattedText> textLines, int mouseX,
                                         int mouseY, int screenWidth, int screenHeight, int maxTextWidth, int backgroundColor, int borderColorStart,
                                         int borderColorEnd, Font font) {
         drawHoveringText(ItemStack.EMPTY, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
                 backgroundColor, borderColorStart, borderColorEnd, font);
     }
 
-    public static void drawHoveringText(@NotNull final ItemStack stack, PoseStack mStack,
+    public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics mStack,
                                         List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
                                         int maxTextWidth, Font font) {
         drawHoveringText(stack, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
@@ -237,7 +237,7 @@ public class GuiEntityInfoHUD {
             tooltipY = screenHeight - tooltipHeight - 4;
 
         final int zLevel = 400;
-        RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, pStack, tooltipX, tooltipY,
+        RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, graphics, tooltipX, tooltipY,
                 font, backgroundColor, borderColorStart, borderColorEnd, list);
         MinecraftForge.EVENT_BUS.post(colorEvent);
         backgroundColor = colorEvent.getBackgroundStart();

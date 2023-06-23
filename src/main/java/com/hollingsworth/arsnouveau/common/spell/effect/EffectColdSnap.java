@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -67,12 +66,13 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
         livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT.get(), 20 * snareTime));
     }
-
+    // TODO: restore damage source?
     @Override
     public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
-        damageSource.setMagic();
-        return damageSource;
+        return world.damageSources().freeze();
+//        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
+//        damageSource.setMagic();
+//        return damageSource;
     }
 
     @Override

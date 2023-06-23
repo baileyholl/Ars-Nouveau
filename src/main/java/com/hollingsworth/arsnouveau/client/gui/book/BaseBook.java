@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -27,11 +27,9 @@ public class BaseBook extends ModdedScreen {
     public int bookBottom;
     public List<SpellValidationError> validationErrors = new ArrayList<>();
     public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-    public ItemRenderer itemre;
 
     public BaseBook() {
         super(Component.literal(""));
-        itemre = this.itemRenderer;
     }
 
     public static Comparator<AbstractSpellPart> COMPARE_GLYPH_BY_TYPE = Comparator.comparingInt(AbstractSpellPart::getTypeIndex);
@@ -42,7 +40,8 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        // TODO: need this?
+//        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
@@ -50,42 +49,43 @@ public class BaseBook extends ModdedScreen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        PoseStack matrixStack = graphics.pose();
         matrixStack.pushPose();
         if (scaleFactor != 1) {
             matrixStack.scale(scaleFactor, scaleFactor, scaleFactor);
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
-        drawScreenAfterScale(matrixStack, mouseX, mouseY, partialTicks);
+        drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
         matrixStack.popPose();
     }
 
-    public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        drawFromTexture(background, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
+    public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        drawFromTexture(background, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, graphics);
     }
 
-    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int uOffset, int vOffset, int width, int height, int fileWidth, int fileHeight, PoseStack stack) {
-        RenderSystem.setShaderTexture(0, resourceLocation);
-        blit(stack, x, y, uOffset, vOffset, width, height, fileWidth, fileHeight);
+    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int uOffset, int vOffset, int width, int height, int fileWidth, int fileHeight, GuiGraphics graphics) {
+        graphics.blit(resourceLocation, x, y, uOffset, vOffset, width, height, fileWidth, fileHeight);
     }
 
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public void drawScreenAfterScale(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
-        renderBackground(stack);
-        stack.pushPose();
-        stack.translate(bookLeft, bookTop, 0);
+        renderBackground(graphics);
+        PoseStack poseStack = graphics.pose();
+        poseStack.pushPose();
+        poseStack.translate(bookLeft, bookTop, 0);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
+        drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
-        stack.popPose();
-        super.render(stack, mouseX, mouseY, partialTicks);
-        drawTooltip(stack, mouseX, mouseY);
+        poseStack.popPose();
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        drawTooltip(graphics, mouseX, mouseY);
     }
 
     public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal) {

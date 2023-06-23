@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +39,8 @@ public class CraftingButton extends GuiImageButton {
     }
 
     @Override
-    public void render(PoseStack ms, int parX, int parY, float partialTicks) {
+    public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
+            PoseStack ms = graphics.pose();
         if (visible) {
             if (validationErrors.isEmpty()) {
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -47,7 +49,7 @@ public class CraftingButton extends GuiImageButton {
             }
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
             if (this.abstractSpellPart != null) {
-                RenderUtils.drawSpellPart(this.abstractSpellPart, ms, x + 3, y + 2, 16, !validationErrors.isEmpty());
+                RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty());
             }
             if (parent.isMouseInRelativeRange(parX, parY, x, y, width, height)) {
 
@@ -61,6 +63,6 @@ public class CraftingButton extends GuiImageButton {
                 }
             }
         }
-        super.render(ms, parX, parY, partialTicks);
+        super.render(graphics, parX, parY, partialTicks);
     }
 }

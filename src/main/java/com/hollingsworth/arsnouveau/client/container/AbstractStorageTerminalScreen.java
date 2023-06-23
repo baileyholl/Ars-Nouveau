@@ -325,11 +325,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, scrollBall);
 		i = k;
 		j = l;
 		k = j1;
-		blit(st, i, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
+		graphics.blit(scrollBall, i, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
 
 
 		if(this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
@@ -366,11 +365,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	protected void renderLabels(GuiGraphics p_281635_, int mouseX, int mouseY) {
 		PoseStack st = p_281635_.pose();
 		st.pushPose();
-		slotIDUnderMouse = drawSlots(st, mouseX, mouseY);
+		slotIDUnderMouse = drawSlots(p_281635_, mouseX, mouseY);
 		st.popPose();
 	}
 
-	protected int drawSlots(PoseStack st, int mouseX, int mouseY) {
+	protected int drawSlots(GuiGraphics st, int mouseX, int mouseY) {
 		StorageTerminalMenu term = getMenu();
 		int slotHover = -1;
 		for (int i = 0;i < term.storageSlotList.size();i++) {
@@ -381,7 +380,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		return slotHover;
 	}
 
-	protected boolean drawSlot(PoseStack st, SlotStorage slot, int mouseX, int mouseY) {
+	protected boolean drawSlot(GuiGraphics st, SlotStorage slot, int mouseX, int mouseY) {
 		if (slot.stack != null) {
 			this.setBlitOffset(100);
 			this.itemRenderer.blitOffset = 100.0F;
@@ -407,18 +406,19 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 		return false;
 	}
 
-	private void drawStackSize(PoseStack st, Font fr, long size, int x, int y) {
+	private void drawStackSize(GuiGraphics graphics, Font fr, long size, int x, int y) {
 		float scaleFactor = 0.6f;
 		RenderSystem.disableDepthTest();
 		RenderSystem.disableBlend();
 		String stackSize = NumberFormatUtil.formatNumber(size);
+		PoseStack st = graphics.pose();
 		st.pushPose();
 		st.scale(scaleFactor, scaleFactor, scaleFactor);
 		st.translate(0, 0, 450);
 		float inverseScaleFactor = 1.0f / scaleFactor;
 		int X = (int) (((float) x + 0 + 16.0f - fr.width(stackSize) * scaleFactor) * inverseScaleFactor);
 		int Y = (int) (((float) y + 0 + 16.0f - 7.0f * scaleFactor) * inverseScaleFactor);
-		fr.drawShadow(st, stackSize, X, Y, 16777215);
+		graphics.drawString(font, stackSize, X, Y, 16777215);
 		st.popPose();
 		RenderSystem.enableDepthTest();
 	}
@@ -524,12 +524,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	public abstract ResourceLocation getGui();
 
 	@Override
-	protected void renderBg(PoseStack st, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, getGui());
-		this.blit(st, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+		graphics.blit(getGui(), this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 		BaseBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15, st);
-
 	}
 
 	protected void onUpdateSearch(String text) {}

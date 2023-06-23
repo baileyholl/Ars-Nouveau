@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
@@ -29,7 +28,7 @@ public class Glyph extends ModItem {
     public AbstractSpellPart spellPart;
 
     public Glyph(AbstractSpellPart part) {
-        super(new Item.Properties().tab(ArsNouveau.glyphGroup));
+        super(new Item.Properties());
         this.spellPart = part;
     }
 

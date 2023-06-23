@@ -8,8 +8,8 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketDispelFamiliars;
 import com.hollingsworth.arsnouveau.common.network.PacketSummonFamiliar;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -57,13 +57,13 @@ public class GuiFamiliarScreen extends BaseBook {
     }
 
     @Override
-    public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, stack);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 156, 179, 0, 0, 56, 15, 56, 15, stack);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.close"), 232, 183, -8355712);
-        minecraft.font.draw(stack, Component.translatable("ars_nouveau.spell_book_gui.dispel"), 172, 183, -8355712);
+    public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, graphics);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 156, 179, 0, 0, 56, 15, 56, 15, graphics);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 232, 183, -8355712);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.dispel"), 172, 183, -8355712);
     }
 
     public void onGlyphClick(Button button) {

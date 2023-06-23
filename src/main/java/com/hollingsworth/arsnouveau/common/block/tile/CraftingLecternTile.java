@@ -202,7 +202,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 		if (currentRecipe == null) {
 			craftResult.setItem(0, ItemStack.EMPTY);
 		} else {
-			craftResult.setItem(0, currentRecipe.assemble(craftMatrix));
+			craftResult.setItem(0, currentRecipe.assemble(craftMatrix, level.registryAccess()));
 		}
 
 		craftingListeners.forEach(CraftingTerminalMenu::onCraftMatrixChanged);

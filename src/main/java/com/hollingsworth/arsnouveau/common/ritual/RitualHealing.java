@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
@@ -40,7 +39,7 @@ public class RitualHealing extends AbstractRitual {
                     if (a.getHealth() < a.getMaxHealth() || a.isInvertedHealAndHarm()) {
                         if (a.isInvertedHealAndHarm()) {
                             FakePlayer player1 = ANFakePlayer.getPlayer((ServerLevel) getWorld());
-                            a.hurt(DamageSource.playerAttack(player1).setMagic(), 10.0f);
+                            a.hurt(getWorld().damageSources().playerAttack(player1), 10.0f);
                         } else {
                             a.heal(10.0f);
                         }

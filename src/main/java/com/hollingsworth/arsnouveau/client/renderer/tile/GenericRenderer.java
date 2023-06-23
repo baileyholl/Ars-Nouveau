@@ -3,15 +3,18 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.function.Supplier;
 
-public class GenericRenderer extends ArsGeoBlockRenderer {
+public class GenericRenderer<T extends BlockEntity & GeoAnimatable> extends GeoBlockRenderer<T> {
 
     public static GenericModel model = new GenericModel("source_relay");
 
     public GenericRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn, String loc) {
-        super(rendererDispatcherIn, new GenericModel(loc));
+        super(new GenericModel(loc));
     }
 
     public static Supplier<BlockEntityWithoutLevelRenderer> getISTER(String loc) {

@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.container;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.setup.Config;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
@@ -147,10 +146,9 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		PoseStack st = graphics.pose();
 		this.renderBackground(graphics);
 		if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
-			this.renderBg(st, partialTicks, mouseX, mouseY);
+			this.renderBg(graphics, partialTicks, mouseX, mouseY);
 			this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
 		} else {
 			this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
