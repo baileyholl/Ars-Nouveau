@@ -377,7 +377,7 @@
   "ars_nouveau.light_message": "Ars Nouveau добавляет встроенное динамическое освещение. Включите с помощью `/ars-light on`. Это больше не появится!",
   "ars_nouveau.lights_off": "Вы выключили динамическое освещение.",
   "ars_nouveau.lights_on": "Вы включили динамическое освещение. Это может привести к лагам для пользователей со слабыми процессорами, малой ОП, и неожиданным результатам с модами на производительность, такими как Optifine. Запустите эту команду или измените конфигурацию ars_nouveau-client, чтобы отключить это.",
-  "ars_nouveau.lily": "Patrons may summon Lily, a faithful tail wagging companion.",
+  "ars_nouveau.lily": "Покровители могут позвать Лилию, верную спутницу, виляющую хвостом.",
   "ars_nouveau.locked": "Заблокировано",
   "ars_nouveau.machines": "Машины",
   "ars_nouveau.machines_desc": "Магические Машины",
