@@ -1,7 +1,7 @@
 {
   "alert.core": "Под этим блоком должно быть размещено тайное ядро.",
   "ars_nouveau.active_generation": "Активное генерирование",
-  "ars_nouveau.adopter": "Adopted by %s",
+  "ars_nouveau.adopter": "Принято %s",
   "ars_nouveau.adv.desc.alteration_table": "Получите Стол для преобразования",
   "ars_nouveau.adv.desc.amethyst_golem_charm": "Получите Талисман Аметистового Голема",
   "ars_nouveau.adv.desc.apprentice_spell_book": "Приобретите Книгу Заклинаний",
@@ -706,7 +706,7 @@
   "ars_nouveau.schools": "Школы: ",
   "ars_nouveau.scribe.item_added": "Предмет добавлен",
   "ars_nouveau.scribe.item_removed": "Предмет удален.",
-  "ars_nouveau.scribes_table.auto_take_disabled": "Auto Take Disabled",
+  "ars_nouveau.scribes_table.auto_take_disabled": "Автоподбор выключен",
   "ars_nouveau.scribes_table.started_crafting": "Бросайте предметы так, как они отображаются выше, чтобы завершить крафт.",
   "ars_nouveau.scribes_table.throw_items": "Бросьте оставшиеся предметы на стол.",
   "ars_nouveau.scribing": "Начертание Заклинаний",
