@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ public class GuiRadialMenu<T> extends Screen {
      * Zero-Based index
      */
     private int selectedItem;
-
+    public ItemRenderer itemRenderer;
 
     public GuiRadialMenu(RadialMenu<T> radialMenu) {
         super(Component.literal(""));
@@ -45,6 +46,7 @@ public class GuiRadialMenu<T> extends Screen {
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
         this.selectedItem = -1;
+        itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
     public GuiRadialMenu() {
@@ -175,7 +177,7 @@ public class GuiRadialMenu<T> extends Screen {
                     drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
                 }
             }
-            drawSliceName(String.valueOf(i + 1), stack, (int) posX, (int) posY);
+            drawSliceName(graphics, String.valueOf(i + 1), stack, (int) posX, (int) posY);
         }
 
         if (mousedOverSlot != -1) {
@@ -211,11 +213,11 @@ public class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    public void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(GuiGraphics graphics, String sliceName, ItemStack stack, int posX, int posY) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
-            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY, sliceName);
+            graphics.renderItemDecorations(font, stack, posX + 5, posY, sliceName);
         } else {
-            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
+            graphics.renderItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
         }
     }
 

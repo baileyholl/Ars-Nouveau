@@ -79,7 +79,7 @@ public class AllayBehavior extends JarBehavior<Allay> {
                 InventoryManager manager = new InventoryManager(inventories);
                 for(ItemEntity entity : level.getEntitiesOfClass(ItemEntity.class, new AABB(tile.getBlockPos()).inflate(5.0D))){
                     if(entity.isAlive() && !entity.getItem().isEmpty()){
-                        if (heldStack.isEmpty() || heldStack.getItem() instanceof ItemScroll || entity.getItem().sameItemStackIgnoreDurability(heldStack)) {
+                        if (heldStack.isEmpty() || heldStack.getItem() instanceof ItemScroll || ItemStack.isSameItem(entity.getItem(), heldStack)) {
                             MultiInsertReference reference = manager.insertStackWithReference(entity.getItem());
                             if(!reference.isEmpty()) {
                                 ItemStack remainder = reference.getRemainder();

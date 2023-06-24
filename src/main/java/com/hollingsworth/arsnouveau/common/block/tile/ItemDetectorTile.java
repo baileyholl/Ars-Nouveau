@@ -75,7 +75,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
                 return stack.getCount();
             }
         }
-        if (!ItemStack.isSame(stack, filterStack) || !ItemStack.tagMatches(stack, filterStack)) {
+        if (!ItemStack.isSameItem(stack, filterStack) || !ItemStack.matches(stack, filterStack)) {
             return 0;
         }
         return (filterStack.isEmpty() && stack.isEmpty()) ? 1 : stack.getCount();

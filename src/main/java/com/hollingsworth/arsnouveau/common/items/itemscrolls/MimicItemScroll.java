@@ -29,7 +29,7 @@ public class MimicItemScroll extends ItemScroll {
             ItemStack inventoryStack = inventory.getStackInSlot(i);
             if(inventoryStack.isEmpty())
                 continue;
-            if (inventory.getStackInSlot(i).sameItemStackIgnoreDurability(stackToStore)) {
+            if (ItemStack.isSameItem(inventory.getStackInSlot(i), stackToStore)) {
                 return SortPref.HIGHEST;
             }
         }

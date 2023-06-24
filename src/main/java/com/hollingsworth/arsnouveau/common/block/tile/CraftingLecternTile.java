@@ -117,7 +117,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 			craft(player, tab);
 			craftedItemsList.add(crafted.copy());
 			amountCrafted += crafted.getCount();
-		} while(ItemStack.isSame(crafted, craftResult.getItem(0)) && (amountCrafted+crafted.getCount()) <= crafted.getMaxStackSize());
+		} while(ItemStack.isSameItem(crafted, craftResult.getItem(0)) && (amountCrafted+crafted.getCount()) <= crafted.getMaxStackSize());
 
 		for (ItemStack craftedItem : craftedItemsList) {
 			if (!player.getInventory().add(craftedItem.copy())) {
@@ -149,7 +149,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 					if(is == null) {
 						for(int j = 0;j<thePlayer.getInventory().getContainerSize();j++) {
 							ItemStack st = thePlayer.getInventory().getItem(j);
-							if(ItemStack.isSame(oldItem, st) && ItemStack.tagMatches(oldItem, st)) {
+							if(ItemStack.isSameItem(oldItem, st) && ItemStack.matches(oldItem, st)) {
 								st = thePlayer.getInventory().removeItem(j, 1);
 								if(!st.isEmpty()) {
 									is = new StoredItemStack(st, 1);
@@ -171,7 +171,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 					craftMatrix.setItem(i, rem);
 					continue;
 				}
-				if (ItemStack.isSame(slot, rem) && ItemStack.tagMatches(slot, rem)) {
+				if (ItemStack.isSameItem(slot, rem) && ItemStack.matches(slot, rem)) {
 					rem.grow(slot.getCount());
 					craftMatrix.setItem(i, rem);
 					continue;
@@ -238,7 +238,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 					for (int j = 0;j < items[i].length;j++) {
 						boolean br = false;
 						for (int k = 0;k < player.getInventory().getContainerSize();k++) {
-							if(ItemStack.isSame(player.getInventory().getItem(k), items[i][j])) {
+							if(ItemStack.isSameItem(player.getInventory().getItem(k), items[i][j])) {
 								stack = player.getInventory().removeItem(k, 1);
 								br = true;
 								break;

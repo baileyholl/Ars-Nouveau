@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -171,7 +170,7 @@ public class WarpScroll extends ModItem {
         }
 
         public @Nullable ServerLevel getDimension(ServerLevel serverLevel){
-            DimensionType type = Registries.DIMENSION_TYPE.get(new ResourceLocation(this.dimension));
+            DimensionType type = serverLevel.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).get(new ResourceLocation(this.dimension));
             if(type != null) {
                 ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimension));
                 return serverLevel.getServer().getLevel(resourcekey);

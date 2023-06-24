@@ -20,7 +20,7 @@ public class BeltOfUnstableGifts extends ArsNouveauCurio {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        ArrayList<MobEffect> effectTable = PotionEffectTags.getEffects(PotionEffectTags.UNSTABLE_GIFTS);
+        ArrayList<MobEffect> effectTable = PotionEffectTags.getEffects(slotContext.entity().level, PotionEffectTags.UNSTABLE_GIFTS);
         if (effectTable == null || effectTable.size() == 0) return;
         LivingEntity wearer = slotContext.entity();
         if (wearer == null) return;

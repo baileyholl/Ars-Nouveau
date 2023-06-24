@@ -382,25 +382,26 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected boolean drawSlot(GuiGraphics st, SlotStorage slot, int mouseX, int mouseY) {
 		if (slot.stack != null) {
-			this.setBlitOffset(100);
-			this.itemRenderer.blitOffset = 100.0F;
+//			this.setBlitOffset(100);
+//			this.itemRenderer.blitOffset = 100.0F;
 
 			ItemStack stack = slot.stack.getStack().copy().split(1);
 			int i = slot.xDisplayPosition, j = slot.yDisplayPosition;
 
-			this.itemRenderer.renderAndDecorateItem(this.minecraft.player, stack, i, j, 0);
-			this.itemRenderer.renderGuiItemDecorations(this.font, stack, i, j, null);
+			st.renderItem(stack, i, j);
+			st.renderItemDecorations(this.font, stack, i, j, null);
 
 			drawStackSize(st, getFont(), slot.stack.getQuantity(), i, j);
 
-			this.itemRenderer.blitOffset = 0.0F;
-			this.setBlitOffset(0);
+//			this.itemRenderer.blitOffset = 0.0F;
+//			this.setBlitOffset(0);
 		}
 
 		if (mouseX >= getGuiLeft() + slot.xDisplayPosition - 1 && mouseY >= getGuiTop() + slot.yDisplayPosition - 1 && mouseX < getGuiLeft() + slot.xDisplayPosition + 17 && mouseY < getGuiTop() + slot.yDisplayPosition + 17) {
 			int l = slot.xDisplayPosition;
 			int t = slot.yDisplayPosition;
-			renderSlotHighlight(st, l, t, this.getBlitOffset());
+
+			renderSlotHighlight(st, l, t, 0);
 			return true;
 		}
 		return false;

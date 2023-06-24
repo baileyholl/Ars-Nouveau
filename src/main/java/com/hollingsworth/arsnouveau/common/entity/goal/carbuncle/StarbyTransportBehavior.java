@@ -70,7 +70,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             if (itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                 break;
             int maxTake = starbuncle.getHeldStack().getMaxStackSize() - starbuncle.getHeldStack().getCount();
-            if (i.getItem().sameItem(starbuncle.getHeldStack())) {
+            if (i.getItem().is(starbuncle.getHeldStack().getItem())) {
                 int toTake = Math.min(i.getItem().getCount(), maxTake);
                 i.getItem().shrink(toTake);
                 starbuncle.getHeldStack().grow(toTake);

@@ -162,7 +162,7 @@ public class StoredItemStack {
 		StoredItemStack other = (StoredItemStack) obj;
 		if (stack == null) {
 			return other.stack == null;
-		} else return ItemStack.isSame(stack, other.stack) && ItemStack.tagMatches(stack, other.stack);
+		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
 	}
 
 	public boolean equals(StoredItemStack other) {
@@ -171,7 +171,7 @@ public class StoredItemStack {
 		if (count != other.count) return false;
 		if (stack == null) {
 			return other.stack == null;
-		} else return ItemStack.isSame(stack, other.stack) && ItemStack.tagMatches(stack, other.stack);
+		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
 	}
 
 	public void grow(long c) {
