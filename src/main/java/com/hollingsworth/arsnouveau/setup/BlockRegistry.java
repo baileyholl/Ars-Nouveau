@@ -12,7 +12,6 @@ import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
-
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -27,6 +26,7 @@ import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.grower.OakTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -414,10 +414,10 @@ public class BlockRegistry {
         //Trees & co
         registry.register(LibBlockNames.LAVA_LILY, new LavaLily());
         registry.register(LibBlockNames.SOURCEBERRY_BUSH, new SourceBerryBush(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
-//        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.CASCADING_TREE), SAP_PROP));
-//        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.BLAZING_TREE), SAP_PROP));
-//        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.VEXING_TREE), SAP_PROP));
-//        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(() -> WorldEvent.FLOURISHING_TREE), SAP_PROP));
+        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
+        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
+        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
+        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
 
 
         registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
