@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -24,7 +25,7 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
 
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
         head.setRotX(extraData.headPitch() * 0.010453292F);
         head.setRotY(extraData.netHeadYaw() * 0.015453292F);
         if (entity.getEntityData().get(WealdWalker.CASTING)) {

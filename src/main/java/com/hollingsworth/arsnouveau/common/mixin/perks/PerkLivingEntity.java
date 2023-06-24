@@ -26,11 +26,11 @@ public class PerkLivingEntity {
     }
 
     @Inject(method = "getJumpBoostPower", at = @At("RETURN"), cancellable = true)
-    protected void getJumpPower(CallbackInfoReturnable<Double> cir) {
+    protected void getJumpPower(CallbackInfoReturnable<Float> cir) {
         LivingEntity thisEntity = (LivingEntity) (Object) this;
         if(!(thisEntity instanceof Player player)){
             return;
         }
-        cir.setReturnValue(cir.getReturnValueD() + PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, player) * 0.1);
+        cir.setReturnValue(cir.getReturnValueF() + PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, player) * 0.1f);
     }
 }

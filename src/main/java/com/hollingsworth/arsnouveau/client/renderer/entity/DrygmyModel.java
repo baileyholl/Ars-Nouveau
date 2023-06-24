@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -21,7 +22,7 @@ public class DrygmyModel<T extends LivingEntity & GeoAnimatable> extends GeoMode
     public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(0);
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
         head.setRotX(extraData.headPitch() * 0.017453292F);
         head.setRotY(extraData.netHeadYaw() * 0.017453292F);
     }
