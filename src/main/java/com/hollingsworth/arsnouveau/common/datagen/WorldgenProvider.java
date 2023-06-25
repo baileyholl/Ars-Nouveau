@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.world.WorldgenRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistrySetBuilder;
@@ -15,6 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
@@ -26,8 +29,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap)
-            .add(Registries.CONFIGURED_FEATURE, WorldgenRegistry::bootstrapConfiguredFeatures);
+            .add(Registries.CONFIGURED_FEATURE, WorldgenRegistry::bootstrapConfiguredFeatures)
+            .add(Registries.PLACED_FEATURE, WorldgenRegistry::bootstrapPlacedFeatures)
+            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap);
 
     public WorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(ArsNouveau.MODID));
@@ -48,6 +52,9 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
 
         public static void bootstrap(BootstapContext<BiomeModifier> context) {
             HolderSet<Biome> OVERWORLD_TAG = context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_OVERWORLD);
+            HolderSet.Named<Biome> BERRY_BIOMES = context.lookup(Registries.BIOME).getOrThrow(BiomeTagProvider.BERRY_SPAWN);
+            Holder.Reference<PlacedFeature> BERRY_SET = context.lookup(Registries.PLACED_FEATURE).get(WorldgenRegistry.PLACED_BERRY_BUSH).get();
+            Holder.Reference<PlacedFeature> TREE_SET = context.lookup(Registries.PLACED_FEATURE).get(WorldgenRegistry.PLACED_MIX_ARCHWOODS).get();
             context.register(STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG, new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(),
                     5, 1, 2)));
 
@@ -57,6 +64,9 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
                     3, 1, 2)));
             context.register(WHIRLISPRIG_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG, new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE.get(),
                     5, 1, 2)));
+
+            context.register(BERRY_COMMON, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(BERRY_BIOMES, HolderSet.direct(BERRY_SET), GenerationStep.Decoration.VEGETAL_DECORATION));
+            context.register(ARCHWOOD_MIX_RARE, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(OVERWORLD_TAG, HolderSet.direct(TREE_SET), GenerationStep.Decoration.VEGETAL_DECORATION));
         }
 
         @NotNull

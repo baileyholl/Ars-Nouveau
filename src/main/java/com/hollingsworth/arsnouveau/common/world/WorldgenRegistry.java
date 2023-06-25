@@ -1,22 +1,39 @@
 package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
@@ -31,6 +48,25 @@ public class WorldgenRegistry {
     public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_VEXING_TREE = registerConfKey("vexing_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_FLOURISHING_TREE = registerConfKey("flourishing_tree");
 
+    public static final ResourceKey<ConfiguredFeature<?, ?>> NATURAL_CONFIGURED_CASCADING_TREE = registerConfKey("natural_cascading_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> NATURAL_CONFIGURED_BLAZING_TREE = registerConfKey("natural_blazing_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> NATURAL_CONFIGURED_VEXING_TREE = registerConfKey("natural_vexing_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> NATURAL_CONFIGURED_FLOURISHING_TREE = registerConfKey("natural_flourishing_tree");
+
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BERRY_BUSH = registerConfKey("patch_berry");
+
+
+    public static final ResourceKey<PlacedFeature> PLACED_NATURAL_CASCADING_TREE = registerPlacedKey("placed_cascading_tree");
+    public static final ResourceKey<PlacedFeature> PLACED_NATURAL_BLAZING_TREE = registerPlacedKey("placed_blazing_tree");
+    public static final ResourceKey<PlacedFeature> PLACED_NATURAL_VEXING_TREE = registerPlacedKey("placed_vexing_tree");
+    public static final ResourceKey<PlacedFeature> PLACED_NATURAL_FLOURISHING_TREE = registerPlacedKey("placed_flourishing_tree");
+
+    public static final ResourceKey<PlacedFeature> PLACED_BERRY_BUSH = registerPlacedKey("placed_berry_bush");
+
+    public static final ResourceKey<PlacedFeature> PLACED_MIX_ARCHWOODS = registerPlacedKey("placed_mixed_archwoods");
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MIXED_ARCHWOODS = registerConfKey("mixed_archwoods");
     public static ResourceKey<Feature<?>> registerFeatureKey(String name) {
         return ResourceKey.create(Registries.FEATURE, new ResourceLocation(MODID, name));
     }
@@ -39,15 +75,38 @@ public class WorldgenRegistry {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(MODID, name));
     }
 
+    public static ResourceKey<PlacedFeature> registerPlacedKey(String name) {
+        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(MODID, name));
+    }
+
+
     public static void boostrapFeatures(BootstapContext<Feature<?>> context){
 
     }
 
     public static void bootstrapConfiguredFeatures(BootstapContext<ConfiguredFeature<?, ?>> context) {
+        HolderGetter<PlacedFeature> placed = context.lookup(Registries.PLACED_FEATURE);
         context.register(CONFIGURED_CASCADING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.FROSTAYA_POD))));
         context.register(CONFIGURED_BLAZING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BOMBEGRANATE_POD))));
         context.register(CONFIGURED_VEXING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BASTION_POD))));
         context.register(CONFIGURED_FLOURISHING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.MENDOSTEEN_POD))));
+
+        context.register(NATURAL_CONFIGURED_CASCADING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.FROSTAYA_POD))));
+        context.register(NATURAL_CONFIGURED_BLAZING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BOMBEGRANATE_POD))));
+        context.register(NATURAL_CONFIGURED_VEXING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BASTION_POD))));
+        context.register(NATURAL_CONFIGURED_FLOURISHING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.MENDOSTEEN_POD))));
+        context.register(PATCH_BERRY_BUSH, new ConfiguredFeature<>(Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.SOURCEBERRY_BUSH)).defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK))));
+        context.register(MIXED_ARCHWOODS, new ConfiguredFeature<>(Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(placed.getOrThrow(PLACED_NATURAL_CASCADING_TREE), placed.getOrThrow(PLACED_NATURAL_BLAZING_TREE), placed.getOrThrow(PLACED_NATURAL_VEXING_TREE), placed.getOrThrow(PLACED_NATURAL_FLOURISHING_TREE)))));
+    }
+
+    public static void bootstrapPlacedFeatures(BootstapContext<PlacedFeature> context) {
+        HolderGetter<ConfiguredFeature<?, ?>> features = context.lookup(Registries.CONFIGURED_FEATURE);
+        context.register(PLACED_BERRY_BUSH, new PlacedFeature(features.get(PATCH_BERRY_BUSH).get(), List.of(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome())));
+        context.register(PLACED_NATURAL_CASCADING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_CASCADING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING))));
+        context.register(PLACED_NATURAL_BLAZING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_BLAZING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING))));
+        context.register(PLACED_NATURAL_VEXING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_VEXING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING))));
+        context.register(PLACED_NATURAL_FLOURISHING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_FLOURISHING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING))));
+        context.register(PLACED_MIX_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE))));
     }
 
     public static TreeConfiguration buildTree(String leaves, String log, boolean natural, ResourceLocation podRegistryName) {

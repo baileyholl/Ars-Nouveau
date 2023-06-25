@@ -1,0 +1,17 @@
+{
+  "feature": "ars_nouveau:natural_cascading_tree",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "ars_nouveau:blue_archwood_sapling",
+          "Properties": {
+            "stage": "0"
+          }
+        }
+      }
+    }
+  ]
+}
