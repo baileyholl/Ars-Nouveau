@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
@@ -19,10 +20,9 @@ public class ArchwoodRegion extends Region {
 
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
-        //todo: restore biome region
-//        this.addModifiedVanillaOverworldBiomes(mapper, (builder -> {
-//            builder.replaceBiome(Biomes.FOREST, ModBiomes.ARCHWOOD_FOREST);
-//        }));
+        this.addModifiedVanillaOverworldBiomes(mapper, (builder -> {
+            builder.replaceBiome(Biomes.FOREST, BiomeRegistry.ARCHWOOD_FOREST);
+        }));
     }
 
 }

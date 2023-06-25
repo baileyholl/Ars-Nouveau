@@ -7,12 +7,10 @@ import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldgenRegistry;
-import com.hollingsworth.arsnouveau.common.world.biome.ModBiomes;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
@@ -62,8 +60,6 @@ public class ModSetup {
         PerkAttributes.ATTRIBUTES.register(modEventBus);
         TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register(modEventBus);
         WorldgenRegistry.FEAT_REG.register(modEventBus);
-        WorldgenRegistry.CONFG_REG.register(modEventBus);
-        WorldgenRegistry.PLACED_FEAT_REG.register(modEventBus);
         LootRegistry.GLM.register(modEventBus);
         SoundRegistry.SOUND_REG.register(modEventBus);
         StructureRegistry.STRUCTURES.register(modEventBus);
@@ -91,10 +87,7 @@ public class ModSetup {
             IForgeRegistry<BlockEntityType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.onTileEntityRegistry(registry);
         }
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BIOMES)) {
-            IForgeRegistry<Biome> registry = Objects.requireNonNull(event.getForgeRegistry());
-            ModBiomes.registerBiomes(registry);
-        }
+
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_STATE_PROVIDER_TYPES)) {
             IForgeRegistry<BlockStateProviderType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.registerBlockProvider(registry);

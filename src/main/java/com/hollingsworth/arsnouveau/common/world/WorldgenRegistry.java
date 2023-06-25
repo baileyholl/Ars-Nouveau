@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.world;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.world.feature.LightFeature;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -12,6 +13,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
@@ -20,6 +22,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -32,15 +35,16 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
+import static net.minecraft.data.worldgen.placement.VegetationPlacements.worldSurfaceSquaredWithCount;
 
 public class WorldgenRegistry {
     public static final DeferredRegister<Feature<?>> FEAT_REG = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
-    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFG_REG = DeferredRegister.create(Registries.CONFIGURED_FEATURE, MODID);
-    public static final DeferredRegister<PlacedFeature> PLACED_FEAT_REG = DeferredRegister.create(Registries.PLACED_FEATURE, MODID);
+    public static final RegistryObject<Feature<BlockStateConfiguration>> LIGHT_FEATURE = FEAT_REG.register("light_feature", () -> new LightFeature(BlockStateConfiguration.CODEC));
 
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_CASCADING_TREE = registerConfKey("cascading_tree");
@@ -55,7 +59,7 @@ public class WorldgenRegistry {
 
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BERRY_BUSH = registerConfKey("patch_berry");
-
+    public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_LIGHTS = registerConfKey("lights");
 
     public static final ResourceKey<PlacedFeature> PLACED_NATURAL_CASCADING_TREE = registerPlacedKey("placed_cascading_tree");
     public static final ResourceKey<PlacedFeature> PLACED_NATURAL_BLAZING_TREE = registerPlacedKey("placed_blazing_tree");
@@ -65,8 +69,14 @@ public class WorldgenRegistry {
     public static final ResourceKey<PlacedFeature> PLACED_BERRY_BUSH = registerPlacedKey("placed_berry_bush");
 
     public static final ResourceKey<PlacedFeature> PLACED_MIX_ARCHWOODS = registerPlacedKey("placed_mixed_archwoods");
+    public static final ResourceKey<PlacedFeature> PLACED_DENSE_ARCHWOODS = registerPlacedKey("placed_dense_archwoods");
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> MIXED_ARCHWOODS = registerConfKey("mixed_archwoods");
+
+    public static final ResourceKey<PlacedFeature> PLACED_MOJANK_GRASS = registerPlacedKey("mojang_grass");
+    public static final ResourceKey<PlacedFeature> PLACED_MOJANK_FLOWERS = registerPlacedKey("mojang_flowers");
+    public static final ResourceKey<PlacedFeature> PLACED_LIGHTS = registerPlacedKey("placed_lights");
+
     public static ResourceKey<Feature<?>> registerFeatureKey(String name) {
         return ResourceKey.create(Registries.FEATURE, new ResourceLocation(MODID, name));
     }
@@ -77,11 +87,6 @@ public class WorldgenRegistry {
 
     public static ResourceKey<PlacedFeature> registerPlacedKey(String name) {
         return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(MODID, name));
-    }
-
-
-    public static void boostrapFeatures(BootstapContext<Feature<?>> context){
-
     }
 
     public static void bootstrapConfiguredFeatures(BootstapContext<ConfiguredFeature<?, ?>> context) {
@@ -97,6 +102,7 @@ public class WorldgenRegistry {
         context.register(NATURAL_CONFIGURED_FLOURISHING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.MENDOSTEEN_POD))));
         context.register(PATCH_BERRY_BUSH, new ConfiguredFeature<>(Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.SOURCEBERRY_BUSH)).defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK))));
         context.register(MIXED_ARCHWOODS, new ConfiguredFeature<>(Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(placed.getOrThrow(PLACED_NATURAL_CASCADING_TREE), placed.getOrThrow(PLACED_NATURAL_BLAZING_TREE), placed.getOrThrow(PLACED_NATURAL_VEXING_TREE), placed.getOrThrow(PLACED_NATURAL_FLOURISHING_TREE)))));
+        context.register(CONFIGURED_LIGHTS, new ConfiguredFeature<>(WorldgenRegistry.LIGHT_FEATURE.get(),  new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.defaultBlockState())));
     }
 
     public static void bootstrapPlacedFeatures(BootstapContext<PlacedFeature> context) {
@@ -107,6 +113,10 @@ public class WorldgenRegistry {
         context.register(PLACED_NATURAL_VEXING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_VEXING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING))));
         context.register(PLACED_NATURAL_FLOURISHING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_FLOURISHING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING))));
         context.register(PLACED_MIX_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE))));
+        context.register(PLACED_MOJANK_GRASS, new PlacedFeature(features.get(VegetationFeatures.PATCH_GRASS).get(),worldSurfaceSquaredWithCount(2)));
+        context.register(PLACED_MOJANK_FLOWERS, new PlacedFeature(features.get(VegetationFeatures.FLOWER_DEFAULT).get(), List.of(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome())));
+        context.register(PLACED_LIGHTS, new PlacedFeature(features.get(CONFIGURED_LIGHTS).get(), VegetationPlacements.worldSurfaceSquaredWithCount(1)));
+        context.register(PLACED_DENSE_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(PlacementUtils.countExtra(7, 0.01f, 1))));
     }
 
     public static TreeConfiguration buildTree(String leaves, String log, boolean natural, ResourceLocation podRegistryName) {
@@ -116,39 +126,13 @@ public class WorldgenRegistry {
                 new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
                 new TwoLayersFeatureSize(2, 0, 2)).build();
     }
-//
-//
-//    public static final RegistryObject<Feature<BlockStateConfiguration>> LIGHT_FEATURE = FEAT_REG.register("lights", () -> new SingleBlockFeature(BlockStateConfiguration.CODEC) {
-//        @Override
-//        public boolean place(FeaturePlaceContext<BlockStateConfiguration> pContext) {
-//            return false;
-//        }
-//
-//        @Override
-//        public void onStatePlace(WorldGenLevel seed, ChunkGenerator chunkGenerator, RandomSource rand, BlockPos pos, BlockStateConfiguration config) {
-//            if (seed instanceof WorldGenRegion world) {
-//                RandomSource random = world.getRandom();
-//                if (world.getBlockEntity(pos) instanceof LightTile tile) {
-//                    tile.color = new ParticleColor(
-//                            Math.max(10, random.nextInt(255)),
-//                            Math.max(10, random.nextInt(255)),
-//                            Math.max(10, random.nextInt(255))
-//                    );
-//                }
-//            }
-//        }
-//    });
+
 //    public static final RegistryObject<Feature<DiskConfiguration>> DISK = FEAT_REG.register("disk", () -> new DiskFeature(DiskConfiguration.CODEC));
 //
 //
 //    public static final RegistryObject<ConfiguredFeature<?, ?>> DISK_CLAY = CONFG_REG.register("disk_clay", () ->new ConfiguredFeature<>(DISK.get(), new DiskConfiguration(RuleBasedBlockStateProvider.simple(Blocks.CLAY), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, Blocks.CLAY)), UniformInt.of(2, 3), 1)));
 //    public static final RegistryObject<ConfiguredFeature<?, ?>> DISK_SAND = CONFG_REG.register("disk_sand", () ->new ConfiguredFeature<>(DISK.get(), new DiskConfiguration(new RuleBasedBlockStateProvider(BlockStateProvider.simple(Blocks.SAND), List.of(new RuleBasedBlockStateProvider.Rule(BlockPredicate.matchesBlocks(Direction.DOWN.getNormal(), Blocks.AIR), BlockStateProvider.simple(Blocks.SANDSTONE)))), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, Blocks.GRASS_BLOCK)), UniformInt.of(2, 6), 2)));
 //    public static final RegistryObject<ConfiguredFeature<?, ?>> DISK_GRAVEL = CONFG_REG.register("disk_gravel", () ->new ConfiguredFeature<>(DISK.get(), new DiskConfiguration(RuleBasedBlockStateProvider.simple(Blocks.GRAVEL), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, Blocks.GRASS_BLOCK)), UniformInt.of(2, 5), 2)));
-//
-//
-//    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_LIGHTS = CONFG_REG.register("configured_lights",
-//            () -> new ConfiguredFeature<>(LIGHT_FEATURE.get(), new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.defaultBlockState())));
-//
 //
 //
 //    public static final RegistryObject<PlacedFeature> DISK_CLAY_PLACED = PLACED_FEAT_REG.register("placed_disk_clay", () -> new
@@ -158,8 +142,6 @@ public class WorldgenRegistry {
 //    public static final RegistryObject<PlacedFeature> DISK_GRAVEL_PLACED = PLACED_FEAT_REG.register("placed_disk_gravel", () -> new
 //            PlacedFeature(Holder.direct(DISK_GRAVEL.get()), List.of(InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome())));
 //
-//
-//    public static final RegistryObject<PlacedFeature> PLACED_LIGHTS = PLACED_FEAT_REG.register("placed_lights", () ->
-//            new PlacedFeature(Holder.direct(CONFIGURED_LIGHTS.get()), VegetationPlacements.worldSurfaceSquaredWithCount(1)));
+
 
 }
