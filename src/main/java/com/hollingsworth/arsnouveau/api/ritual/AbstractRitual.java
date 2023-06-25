@@ -33,19 +33,6 @@ public abstract class AbstractRitual {
     public AbstractRitual() {
     }
 
-    @Deprecated(forRemoval = true) // TODO: Remove in 1.20
-    public AbstractRitual(RitualBrazierTile tile, RitualContext context) {
-        super();
-        this.tile = tile;
-        this.setContext(context);
-    }
-
-    // TODO: remove 1.20
-    @Deprecated(forRemoval = true)
-    public void tryTick() {
-        tryTick(tile);
-    }
-
     public void tryTick(RitualBrazierTile tickingTile){
         if (tickingTile == null || !getContext().isStarted || getContext().isDone) {
             return;

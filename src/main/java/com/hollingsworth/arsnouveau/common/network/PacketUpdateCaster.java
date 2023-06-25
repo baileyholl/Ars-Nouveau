@@ -19,14 +19,6 @@ public class PacketUpdateCaster {
     String spellName;
     boolean mainHand;
 
-    public PacketUpdateCaster() {
-    }
-
-    @Deprecated // TODO: remove 1.20
-    public PacketUpdateCaster(Spell spellRecipe, int cast_slot, String spellName) {
-        this(spellRecipe, cast_slot, spellName, true);
-    }
-
     public PacketUpdateCaster(Spell spellRecipe, int cast_slot, String spellName, boolean mainHand) {
         this.spellRecipe = spellRecipe;
         this.cast_slot = cast_slot;

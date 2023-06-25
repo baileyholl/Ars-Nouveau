@@ -45,7 +45,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                         .add(EffectDelay.INSTANCE)
                         .add(EffectExplosion.INSTANCE)
                         .add(AugmentAmplify.INSTANCE)
-                , "To the MOOn")); //TODO FlavourText here?
+                , "To the MOOn"));
 
         tomes.add(buildTome("arachne", "Arachne's Weaving", new Spell()
                         .add(MethodProjectile.INSTANCE)

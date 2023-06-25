@@ -80,10 +80,6 @@ public class GuiSpellBook extends BaseBook {
     public int maxManaCache = 0;
     int currentCostCache = 0;
 
-    @Deprecated(forRemoval = true) // TODO: remove in 1.20
-    public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
-        this(InteractionHand.MAIN_HAND);
-    }
 
     public GuiSpellBook(InteractionHand hand){
         super();

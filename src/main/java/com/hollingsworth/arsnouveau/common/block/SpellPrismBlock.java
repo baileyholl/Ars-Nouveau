@@ -33,14 +33,6 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
-    // TODO: Remove old spell prism static method
-    @Deprecated(forRemoval = true, since = "3.4.0")
-    public static void redirectSpell(ServerLevel world, BlockPos pos, EntityProjectileSpell spell) {
-        if(world.getBlockState(pos).getBlock() instanceof IPrismaticBlock block){
-            block.onHit(world, pos, spell);
-        }
-    }
-
 
     public static Position getDispensePosition(BlockSource coords) {
         Direction direction = coords.getBlockState().getValue(FACING);

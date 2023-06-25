@@ -18,12 +18,6 @@ public class PacketSummonFamiliar {
 
     ResourceLocation familiarID;
 
-    // TODO: 1.20 remove entityID
-    @Deprecated(forRemoval = true)
-    public PacketSummonFamiliar(ResourceLocation id, int entityID) {
-        this.familiarID = id;
-    }
-
     public PacketSummonFamiliar(ResourceLocation id) {
         this.familiarID = id;
     }

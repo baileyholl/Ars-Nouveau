@@ -18,11 +18,7 @@ public class SpellResolveEvent extends Event {
     public SpellContext context;
     public SpellResolver resolver;
 
-    /**
-     * TODO: Becoming private as this is no longer used 1.20
-     */
-    @Deprecated(forRemoval = true)
-    public SpellResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
+    private SpellResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, SpellResolver resolver) {
         this.world = world;
         this.shooter = shooter;
         this.rayTraceResult = result;
