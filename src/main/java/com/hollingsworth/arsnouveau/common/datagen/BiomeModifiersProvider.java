@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 
-public class BiomeModifiersProvider {
+import net.minecraftforge.common.world.BiomeModifier;
+
+public class BiomeModifiersProvider extends BiomeMo {
 //    static void datagenModifiers(GatherDataEvent event) {
 //        final RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
 //

@@ -677,11 +677,11 @@ public class PatchouliProvider extends SimpleDataProvider{
     }
 
     public Path getPath(ResourceLocation category, ResourceLocation fileName) {
-        return this.output.resolve("data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + category.getPath() + "/" + fileName.getPath() + ".json");
+        return this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + category.getPath() + "/" + fileName.getPath() + ".json");
     }
 
     public Path getPath(ResourceLocation category, String fileName) {
-        return this.output.resolve("data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + category.getPath() + "/" + fileName + ".json");
+        return this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + category.getPath() + "/" + fileName + ".json");
     }
 
     @Override
@@ -730,7 +730,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withIcon("ars_nouveau:" + familiarHolder.getRegistryName().getPath())
                 .withTextPage("ars_nouveau.familiar_desc." + familiarHolder.getRegistryName().getPath())
                 .withPage(new EntityPage(familiarHolder.getRegistryName().toString()));
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("data/" + familiarHolder.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/familiars/" + familiarHolder.getRegistryName().getPath() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + familiarHolder.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/familiars/" + familiarHolder.getRegistryName().getPath() + ".json")));
     }
 
     public void addRitualPage(AbstractRitual ritual) {
@@ -739,7 +739,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withTextPage(ritual.getDescriptionKey())
                 .withPage(new CraftingPage(ritual.getRegistryName().toString()));
 
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("data/" + ritual.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/rituals/" + ritual.getRegistryName().getPath() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + ritual.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/rituals/" + ritual.getRegistryName().getPath() + ".json")));
     }
 
     public void addEnchantmentPage(Enchantment enchantment) {
@@ -748,7 +748,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
             builder.withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(enchantment).getPath() + "_" + i));
         }
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("data/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + getRegistryName(enchantment).getPath() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + getRegistryName(enchantment).getPath() + ".json")));
     }
 
     public void addPerkPage(IPerk perk){
@@ -757,7 +757,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withIcon(perkItem)
                 .withTextPage(perk.getDescriptionKey())
                 .withPage(new ApparatusPage(perkItem)).withSortNum(99);
-        this.pages.add(new PatchouliPage(builder, this.output.resolve("data/" + perk.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/armor/" + perk.getRegistryName().getPath() + ".json")));
+        this.pages.add(new PatchouliPage(builder, this.output.resolve("assets/" + perk.getRegistryName().getNamespace() + "/patchouli_books/worn_notebook/en_us/entries/armor/" + perk.getRegistryName().getPath() + ".json")));
     }
 
     List<Enchantment> enchants = Arrays.asList(
