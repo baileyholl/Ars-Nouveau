@@ -29,20 +29,20 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
 //        event.getGenerator().addProvider(event.includeServer(), new LootTableProvider(event.getGenerator()));
-////        event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(event.getGenerator()));
-////        event.getGenerator().addProvider(event.includeServer(), new DungeonLootGenerator(event.getGenerator(), MODID));
+        event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output));
+//        event.getGenerator().addProvider(event.includeServer(), new DungeonLootGenerator(event.getGenerator(), MODID));
         event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new EntityTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(output, provider, event.getExistingFileHelper()));
-////        event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ANAdvancements(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
-//        event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, event.getExistingFileHelper()));
 //        BiomeModifiersProvider.datagenModifiers(event);
     }
 

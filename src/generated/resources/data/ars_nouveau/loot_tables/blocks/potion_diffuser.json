@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "ars_nouveau:potion_diffuser"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ars_nouveau:blocks/potion_diffuser"
+}

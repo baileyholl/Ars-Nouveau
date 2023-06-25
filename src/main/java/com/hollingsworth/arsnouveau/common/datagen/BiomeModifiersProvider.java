@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-//
-//public class BiomeModifiersProvider {
+
+public class BiomeModifiersProvider {
 //    static void datagenModifiers(GatherDataEvent event) {
 //        final RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
 //
@@ -29,18 +29,6 @@ package com.hollingsworth.arsnouveau.common.datagen;
 //                new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE.get(),
 //                        5, 1, 2)
 //        ));
-////        modifierMap.put(WILDEN_HUNTER_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(WILDEN_TAG,
-////                new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_HUNTER.get(),
-////                        50, 1, 1)
-////        ));
-////        modifierMap.put(WILDEN_STALKER_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(WILDEN_TAG,
-////                new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_STALKER.get(),
-////                        50, 3, 3)
-////        ));
-////        modifierMap.put(WILDEN_GUARDIAN_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(COLD,
-////                new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_GUARDIAN.get(),
-////                        50, 1, 1)
-////        ));
 //        modifierMap.put(NO_SPAWN, new ForgeBiomeModifiers.RemoveSpawnsBiomeModifier(NO_SPAWN_HOSTILE, HOSTILE));
 //
 //        HolderSet<PlacedFeature> TREESET = new HolderSet.Named<>(ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow(), PlacedFeatureTagProvider.ARCHWOOD_TREES);
@@ -75,4 +63,4 @@ package com.hollingsworth.arsnouveau.common.datagen;
 //    private static ResourceLocation prefix(String path) {
 //        return new ResourceLocation(MODID, path);
 //    }
-//}
+}
