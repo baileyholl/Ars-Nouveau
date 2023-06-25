@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "ars_nouveau:magebloom_fiber"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "ars_nouveau:orange_sbed"
-  }
+  },
+  "show_notification": true
 }

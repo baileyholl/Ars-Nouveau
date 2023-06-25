@@ -30,5 +30,6 @@
     "recipes": [
       "ars_nouveau:air_essence_to_snow_bucket"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

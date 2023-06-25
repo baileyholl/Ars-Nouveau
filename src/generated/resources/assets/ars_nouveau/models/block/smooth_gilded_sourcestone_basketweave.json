@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/smooth_gilded_sourcestone_basketweave"
+    "all": "ars_nouveau:block/smooth_gilded_sourcestone_basketweave"
   }
 }

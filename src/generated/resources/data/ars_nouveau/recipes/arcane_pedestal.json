@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "ars_nouveau:sourcestone"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "ars_nouveau:arcane_pedestal"
-  }
+  },
+  "show_notification": true
 }

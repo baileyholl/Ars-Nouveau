@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "minecraft:tinted_glass"
@@ -13,5 +14,6 @@
   ],
   "result": {
     "item": "ars_nouveau:starbuncle_shades"
-  }
+  },
+  "show_notification": true
 }

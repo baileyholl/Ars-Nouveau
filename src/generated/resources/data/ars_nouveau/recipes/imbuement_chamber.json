@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "ars_nouveau:archwood_planks"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "ars_nouveau:imbuement_chamber"
-  }
+  },
+  "show_notification": true
 }

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "tag": "forge:gems/source"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "ars_nouveau:basic_spell_turret"
-  }
+  },
+  "show_notification": true
 }

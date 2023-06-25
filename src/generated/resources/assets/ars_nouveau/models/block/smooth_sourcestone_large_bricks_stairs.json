@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/stairs",
   "textures": {
-    "bottom": "ars_nouveau:blocks/smooth_sourcestone_large_bricks",
-    "side": "ars_nouveau:blocks/smooth_sourcestone_large_bricks",
-    "top": "ars_nouveau:blocks/smooth_sourcestone_large_bricks"
+    "bottom": "ars_nouveau:block/smooth_sourcestone_large_bricks",
+    "side": "ars_nouveau:block/smooth_sourcestone_large_bricks",
+    "top": "ars_nouveau:block/smooth_sourcestone_large_bricks"
   }
 }

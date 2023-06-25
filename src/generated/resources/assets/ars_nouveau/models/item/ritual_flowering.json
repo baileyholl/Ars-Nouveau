@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/ritual_flowering"
+    "layer0": "ars_nouveau:item/ritual_flowering"
   }
 }

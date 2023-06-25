@@ -30,5 +30,6 @@
     "recipes": [
       "ars_nouveau:water_essence_to_bucket"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

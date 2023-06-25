@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/sense_magic"
+    "layer0": "ars_nouveau:item/sense_magic"
   }
 }

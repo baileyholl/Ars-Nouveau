@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/smooth_sourcestone_small_bricks"
+    "all": "ars_nouveau:block/smooth_sourcestone_small_bricks"
   }
 }

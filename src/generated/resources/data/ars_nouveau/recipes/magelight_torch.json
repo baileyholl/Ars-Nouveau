@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "tag": "forge:nuggets/gold"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "ars_nouveau:magelight_torch"
-  }
+  },
+  "show_notification": true
 }

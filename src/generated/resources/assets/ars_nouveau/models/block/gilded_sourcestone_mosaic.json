@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/gilded_sourcestone_mosaic"
+    "all": "ars_nouveau:block/gilded_sourcestone_mosaic"
   }
 }

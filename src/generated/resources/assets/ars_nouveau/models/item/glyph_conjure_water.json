@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/conjure_water"
+    "layer0": "ars_nouveau:item/conjure_water"
   }
 }

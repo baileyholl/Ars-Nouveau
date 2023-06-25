@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/familiar_amethyst_golem"
+    "layer0": "ars_nouveau:item/familiar_amethyst_golem"
   }
 }

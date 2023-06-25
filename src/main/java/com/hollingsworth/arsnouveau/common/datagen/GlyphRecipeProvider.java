@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
@@ -12,36 +10,28 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
-public class GlyphRecipeProvider implements DataProvider {
+public class GlyphRecipeProvider extends SimpleDataProvider {
 
-    public final DataGenerator generator;
-    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger();
     public List<GlyphRecipe> recipes = new ArrayList<>();
 
     public GlyphRecipeProvider(DataGenerator generatorIn) {
-        this.generator = generatorIn;
+        super(generatorIn);
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput cache)  {
-        Path output = null;// this.generator.getOutputFolder();
+    public void collectJsons(CachedOutput pOutput) {
 
         add(get(AugmentAccelerate.INSTANCE).withItem(Items.POWERED_RAIL).withItem(Items.SUGAR).withItem(Items.CLOCK));
         add(get(AugmentDecelerate.INSTANCE).withItem(Items.SOUL_SAND).withItem(Items.COBWEB).withItem(Items.CLOCK));
@@ -131,9 +121,8 @@ public class GlyphRecipeProvider implements DataProvider {
         add(get(EffectBurst.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT, 5).withItem(Items.FIREWORK_STAR));
         for (GlyphRecipe recipe : recipes) {
             Path path = getScribeGlyphPath(output, recipe.output.getItem());
-            DataProvider.saveStable(cache, recipe.asRecipe(), path);
+            saveStable(pOutput, recipe.asRecipe(), path);
         }
-        return null;
     }
 
     public void add(GlyphRecipe recipe) {

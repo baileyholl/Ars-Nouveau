@@ -1,13 +1,24 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.versions.forge.ForgeVersion;
 
-public class ItemTagProvider {
+import java.util.concurrent.CompletableFuture;
+
+public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> SUMMON_BED_ITEMS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
     public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(new ResourceLocation("forge:gems/source"));
     public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(new ResourceLocation("forge:storage_blocks/source"));
@@ -19,172 +30,171 @@ public class ItemTagProvider {
     public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_shards"));
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_jar_blacklist"));
 
-//    public ItemTagProvider(DataGenerator p_126530_, BlockTagsProvider p_126531_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
-//        super(p_126530_, p_126531_, modId, existingFileHelper);
-//    }
-//
-//    @Override
-//    protected void addTags(HolderLookup.Provider pProvider) {
-//
-//        this.tag(SUMMON_SHARDS_TAG)
-//                .add(ItemsRegistry.DRYGMY_SHARD.get(),
-//                        ItemsRegistry.STARBUNCLE_SHARD.get(),
-//                        ItemsRegistry.WIXIE_SHARD.get(),
-//                        ItemsRegistry.WHIRLISPRIG_SHARDS.get());
-//
-//        this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
-//
-//        this.tag(ItemTags.MUSIC_DISCS).add(ItemsRegistry.FIREL_DISC.get(), ItemsRegistry.WILD_HUNT.get(), ItemsRegistry.SOUND_OF_GLASS.get());
-//        this.tag(MAGIC_FOOD)
-//                .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
-//                        ItemsRegistry.SOURCE_BERRY_ROLL.get());
-//        this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
-//                .add(Items.DIRT).addTag(Tags.Items.SEEDS);
-//
-//        this.tag(Tags.Items.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
-//        this.tag(Tags.Items.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
-//        this.tag(Tags.Items.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
-//        this.tag(Tags.Items.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
-//        this.tag(SOURCE_GEM_TAG)
-//                .add(ItemsRegistry.SOURCE_GEM.get());
-//        this.tag(SHARD_TAG).add(Items.AMETHYST_SHARD);
-//        this.tag(ARCHWOOD_LOG_TAG)
-//                .add(BlockRegistry.BLAZING_LOG.asItem(),
-//                        BlockRegistry.CASCADING_LOG.asItem(),
-//                        BlockRegistry.VEXING_LOG.asItem(),
-//                        BlockRegistry.FLOURISHING_LOG.asItem(),
-//                        BlockRegistry.BLAZING_WOOD.asItem(),
-//                        BlockRegistry.CASCADING_WOOD.asItem(),
-//                        BlockRegistry.FLOURISHING_WOOD.asItem(),
-//                        BlockRegistry.VEXING_WOOD.asItem(),
-//                        BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
-//                        BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
-//                        BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
-//                        BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
-//                        BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
-//                        BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
-//                        BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
-//                        BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem());
-//        this.tag(ItemTags.LOGS).add(
-//                BlockRegistry.BLAZING_LOG.asItem(),
-//                BlockRegistry.CASCADING_LOG.asItem(),
-//                BlockRegistry.VEXING_LOG.asItem(),
-//                BlockRegistry.FLOURISHING_LOG.asItem(),
-//                BlockRegistry.BLAZING_WOOD.asItem(),
-//                BlockRegistry.CASCADING_WOOD.asItem(),
-//                BlockRegistry.FLOURISHING_WOOD.asItem(),
-//                BlockRegistry.VEXING_WOOD.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
-//        );
-//        this.tag(ItemTags.LEAVES).add(BlockRegistry.VEXING_LEAVES.asItem(),
-//                BlockRegistry.CASCADING_LEAVE.asItem(),
-//                BlockRegistry.BLAZING_LEAVES.asItem(),
-//                BlockRegistry.FLOURISHING_LEAVES.asItem());
-//        this.tag(ItemTags.LOGS_THAT_BURN).add(
-//                BlockRegistry.BLAZING_LOG.asItem(),
-//                BlockRegistry.CASCADING_LOG.asItem(),
-//                BlockRegistry.VEXING_LOG.asItem(),
-//                BlockRegistry.FLOURISHING_LOG.asItem(),
-//                BlockRegistry.BLAZING_WOOD.asItem(),
-//                BlockRegistry.CASCADING_WOOD.asItem(),
-//                BlockRegistry.FLOURISHING_WOOD.asItem(),
-//                BlockRegistry.VEXING_WOOD.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
-//                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
-//                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
-//
-//
-//        );
-//        this.tag(ItemTags.create(new ResourceLocation("forge", "planks/archwood")))
-//                .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
-//        this.tag(Tags.Items.SEEDS)
-//                .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());
-//        this.tag(Tags.Items.CROPS).add(ItemsRegistry.MAGE_BLOOM.asItem());
-//        this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
-//        this.tag(SOURCE_GEM_BLOCK_TAG)
-//                .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
-//        this.tag(Tags.Items.GEMS).add(ItemsRegistry.SOURCE_GEM.get());
-//
-//        this.tag(ItemTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK.asItem());
-//        this.tag(ItemTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
-//        this.tag(ItemTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
-//        this.tag(ItemTags.BEACON_PAYMENT_ITEMS).add(ItemsRegistry.SOURCE_GEM.get());
-//        this.tag(ItemTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
-//        this.tag(ItemTags.WOODEN_BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
-//        this.tag(ItemTags.DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
-//        this.tag(ItemTags.WOODEN_DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
-//        this.tag(ItemTags.SAPLINGS).add(BlockRegistry.BLAZING_SAPLING.asItem(),
-//                BlockRegistry.CASCADING_SAPLING.asItem(),
-//                BlockRegistry.FLOURISHING_SAPLING.asItem(),
-//                BlockRegistry.VEXING_SAPLING.asItem());
-//        this.tag(ItemTags.SLABS).add(BlockRegistry.ARCHWOOD_SLABS.asItem());
-//        this.tag(ItemTags.WOODEN_SLABS).add(BlockRegistry.ARCHWOOD_SLABS.asItem());
-//        this.tag(ItemTags.STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.asItem());
-//        this.tag(ItemTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.asItem());
-//        this.tag(ItemTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
-//        this.tag(ItemTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
-//        this.tag(ItemTags.WOODEN_PRESSURE_PLATES).add(BlockRegistry.ARCHWOOD_PPlate.asItem());
-//
-//        this.tag(WILDEN_DROP_TAG).add(ItemsRegistry.WILDEN_HORN.get(),
-//                ItemsRegistry.WILDEN_SPIKE.get(),
-//                ItemsRegistry.WILDEN_WING.get());
-//
-//        this.tag(SUMMON_BED_ITEMS).add(BlockRegistry.RED_SBED.asItem(),
-//                BlockRegistry.GREEN_SBED.asItem(),
-//                BlockRegistry.YELLOW_SBED.asItem(),
-//                BlockRegistry.BLUE_SBED.asItem(),
-//                BlockRegistry.ORANGE_SBED.asItem(),
-//                BlockRegistry.PURPLE_SBED.asItem());
-//
-//        this.tag(ItemTags.LECTERN_BOOKS).add(ItemsRegistry.WORN_NOTEBOOK.asItem(),
-//                ItemsRegistry.NOVICE_SPELLBOOK.asItem(),
-//                ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
-//                ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
-//                ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
-//
-//        this.tag(Tags.Items.ARMORS).add(ItemsRegistry.NOVICE_ROBES.asItem(),
-//                ItemsRegistry.APPRENTICE_ROBES.asItem(),
-//                ItemsRegistry.ARCHMAGE_ROBES.asItem(),
-//                ItemsRegistry.NOVICE_BOOTS.asItem(),
-//                ItemsRegistry.APPRENTICE_BOOTS.asItem(),
-//                ItemsRegistry.ARCHMAGE_BOOTS.asItem(),
-//                ItemsRegistry.NOVICE_LEGGINGS.asItem(),
-//                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
-//                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem(),
-//                ItemsRegistry.NOVICE_HOOD.asItem(),
-//                ItemsRegistry.APPRENTICE_HOOD.asItem(),
-//                ItemsRegistry.ARCHMAGE_HOOD.asItem());
-//
-//        this.tag(Tags.Items.ARMORS_BOOTS)
-//                .add(ItemsRegistry.NOVICE_BOOTS.asItem(),
-//                        ItemsRegistry.APPRENTICE_BOOTS.asItem(),
-//                        ItemsRegistry.ARCHMAGE_BOOTS.asItem());
-//        this.tag(Tags.Items.ARMORS_CHESTPLATES)
-//                .add(ItemsRegistry.NOVICE_ROBES.asItem(),
-//                        ItemsRegistry.APPRENTICE_ROBES.asItem(),
-//                        ItemsRegistry.ARCHMAGE_ROBES.asItem());
-//        this.tag(Tags.Items.ARMORS_HELMETS)
-//                .add(ItemsRegistry.NOVICE_HOOD.asItem(),
-//                        ItemsRegistry.APPRENTICE_HOOD.asItem(),
-//                        ItemsRegistry.ARCHMAGE_HOOD.asItem());
-//        this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.NOVICE_LEGGINGS.asItem(),
-//                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
-//                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem());
-//
-//        this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
-//        this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
-//        this.tag(JAR_ITEM_BLACKLIST);
-//    }
+    public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
+        super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
+    }
+
+    @Override
+    protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(SUMMON_SHARDS_TAG)
+                .add(ItemsRegistry.DRYGMY_SHARD.get(),
+                        ItemsRegistry.STARBUNCLE_SHARD.get(),
+                        ItemsRegistry.WIXIE_SHARD.get(),
+                        ItemsRegistry.WHIRLISPRIG_SHARDS.get());
+
+        this.tag(BERRY_TAG).add(BlockRegistry.SOURCEBERRY_BUSH.asItem());
+
+        this.tag(ItemTags.MUSIC_DISCS).add(ItemsRegistry.FIREL_DISC.get(), ItemsRegistry.WILD_HUNT.get(), ItemsRegistry.SOUND_OF_GLASS.get());
+        this.tag(MAGIC_FOOD)
+                .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
+                        ItemsRegistry.SOURCE_BERRY_ROLL.get());
+        this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
+                .add(Items.DIRT).addTag(Tags.Items.SEEDS);
+
+        this.tag(Tags.Items.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
+        this.tag(Tags.Items.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
+        this.tag(Tags.Items.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
+        this.tag(Tags.Items.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.asItem());
+        this.tag(SOURCE_GEM_TAG)
+                .add(ItemsRegistry.SOURCE_GEM.get());
+        this.tag(SHARD_TAG).add(Items.AMETHYST_SHARD);
+        this.tag(ARCHWOOD_LOG_TAG)
+                .add(BlockRegistry.BLAZING_LOG.asItem(),
+                        BlockRegistry.CASCADING_LOG.asItem(),
+                        BlockRegistry.VEXING_LOG.asItem(),
+                        BlockRegistry.FLOURISHING_LOG.asItem(),
+                        BlockRegistry.BLAZING_WOOD.asItem(),
+                        BlockRegistry.CASCADING_WOOD.asItem(),
+                        BlockRegistry.FLOURISHING_WOOD.asItem(),
+                        BlockRegistry.VEXING_WOOD.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem());
+        this.tag(ItemTags.LOGS).add(
+                BlockRegistry.BLAZING_LOG.asItem(),
+                BlockRegistry.CASCADING_LOG.asItem(),
+                BlockRegistry.VEXING_LOG.asItem(),
+                BlockRegistry.FLOURISHING_LOG.asItem(),
+                BlockRegistry.BLAZING_WOOD.asItem(),
+                BlockRegistry.CASCADING_WOOD.asItem(),
+                BlockRegistry.FLOURISHING_WOOD.asItem(),
+                BlockRegistry.VEXING_WOOD.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
+        );
+        this.tag(ItemTags.LEAVES).add(BlockRegistry.VEXING_LEAVES.asItem(),
+                BlockRegistry.CASCADING_LEAVE.asItem(),
+                BlockRegistry.BLAZING_LEAVES.asItem(),
+                BlockRegistry.FLOURISHING_LEAVES.asItem());
+        this.tag(ItemTags.LOGS_THAT_BURN).add(
+                BlockRegistry.BLAZING_LOG.asItem(),
+                BlockRegistry.CASCADING_LOG.asItem(),
+                BlockRegistry.VEXING_LOG.asItem(),
+                BlockRegistry.FLOURISHING_LOG.asItem(),
+                BlockRegistry.BLAZING_WOOD.asItem(),
+                BlockRegistry.CASCADING_WOOD.asItem(),
+                BlockRegistry.FLOURISHING_WOOD.asItem(),
+                BlockRegistry.VEXING_WOOD.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
+
+
+        );
+        this.tag(ItemTags.create(new ResourceLocation("forge", "planks/archwood")))
+                .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
+        this.tag(Tags.Items.SEEDS)
+                .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());
+        this.tag(Tags.Items.CROPS).add(ItemsRegistry.MAGE_BLOOM.asItem());
+        this.tag(Tags.Items.STORAGE_BLOCKS).add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
+        this.tag(SOURCE_GEM_BLOCK_TAG)
+                .add(BlockRegistry.SOURCE_GEM_BLOCK.asItem());
+        this.tag(Tags.Items.GEMS).add(ItemsRegistry.SOURCE_GEM.get());
+
+        this.tag(ItemTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK.asItem());
+        this.tag(ItemTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
+        this.tag(ItemTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());
+        this.tag(ItemTags.BEACON_PAYMENT_ITEMS).add(ItemsRegistry.SOURCE_GEM.get());
+        this.tag(ItemTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
+        this.tag(ItemTags.WOODEN_BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.asItem());
+        this.tag(ItemTags.DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
+        this.tag(ItemTags.WOODEN_DOORS).add(BlockRegistry.ARCHWOOD_DOOR.asItem());
+        this.tag(ItemTags.SAPLINGS).add(BlockRegistry.BLAZING_SAPLING.asItem(),
+                BlockRegistry.CASCADING_SAPLING.asItem(),
+                BlockRegistry.FLOURISHING_SAPLING.asItem(),
+                BlockRegistry.VEXING_SAPLING.asItem());
+        this.tag(ItemTags.SLABS).add(BlockRegistry.ARCHWOOD_SLABS.asItem());
+        this.tag(ItemTags.WOODEN_SLABS).add(BlockRegistry.ARCHWOOD_SLABS.asItem());
+        this.tag(ItemTags.STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.asItem());
+        this.tag(ItemTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.asItem());
+        this.tag(ItemTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
+        this.tag(ItemTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.asItem());
+        this.tag(ItemTags.WOODEN_PRESSURE_PLATES).add(BlockRegistry.ARCHWOOD_PPlate.asItem());
+
+        this.tag(WILDEN_DROP_TAG).add(ItemsRegistry.WILDEN_HORN.get(),
+                ItemsRegistry.WILDEN_SPIKE.get(),
+                ItemsRegistry.WILDEN_WING.get());
+
+        this.tag(SUMMON_BED_ITEMS).add(BlockRegistry.RED_SBED.asItem(),
+                BlockRegistry.GREEN_SBED.asItem(),
+                BlockRegistry.YELLOW_SBED.asItem(),
+                BlockRegistry.BLUE_SBED.asItem(),
+                BlockRegistry.ORANGE_SBED.asItem(),
+                BlockRegistry.PURPLE_SBED.asItem());
+
+        this.tag(ItemTags.LECTERN_BOOKS).add(ItemsRegistry.WORN_NOTEBOOK.asItem(),
+                ItemsRegistry.NOVICE_SPELLBOOK.asItem(),
+                ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
+                ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
+                ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
+
+        this.tag(Tags.Items.ARMORS).add(ItemsRegistry.NOVICE_ROBES.asItem(),
+                ItemsRegistry.APPRENTICE_ROBES.asItem(),
+                ItemsRegistry.ARCHMAGE_ROBES.asItem(),
+                ItemsRegistry.NOVICE_BOOTS.asItem(),
+                ItemsRegistry.APPRENTICE_BOOTS.asItem(),
+                ItemsRegistry.ARCHMAGE_BOOTS.asItem(),
+                ItemsRegistry.NOVICE_LEGGINGS.asItem(),
+                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
+                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem(),
+                ItemsRegistry.NOVICE_HOOD.asItem(),
+                ItemsRegistry.APPRENTICE_HOOD.asItem(),
+                ItemsRegistry.ARCHMAGE_HOOD.asItem());
+
+        this.tag(Tags.Items.ARMORS_BOOTS)
+                .add(ItemsRegistry.NOVICE_BOOTS.asItem(),
+                        ItemsRegistry.APPRENTICE_BOOTS.asItem(),
+                        ItemsRegistry.ARCHMAGE_BOOTS.asItem());
+        this.tag(Tags.Items.ARMORS_CHESTPLATES)
+                .add(ItemsRegistry.NOVICE_ROBES.asItem(),
+                        ItemsRegistry.APPRENTICE_ROBES.asItem(),
+                        ItemsRegistry.ARCHMAGE_ROBES.asItem());
+        this.tag(Tags.Items.ARMORS_HELMETS)
+                .add(ItemsRegistry.NOVICE_HOOD.asItem(),
+                        ItemsRegistry.APPRENTICE_HOOD.asItem(),
+                        ItemsRegistry.ARCHMAGE_HOOD.asItem());
+        this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.NOVICE_LEGGINGS.asItem(),
+                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
+                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem());
+
+        this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
+        this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
+        this.tag(JAR_ITEM_BLACKLIST);
+    }
 }

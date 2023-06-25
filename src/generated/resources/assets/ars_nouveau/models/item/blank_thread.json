@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/blank_thread"
+    "layer0": "ars_nouveau:item/blank_thread"
   }
 }

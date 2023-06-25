@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/familiar_wixie"
+    "layer0": "ars_nouveau:item/familiar_wixie"
   }
 }

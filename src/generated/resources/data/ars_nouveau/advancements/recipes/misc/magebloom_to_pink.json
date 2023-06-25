@@ -30,5 +30,6 @@
     "recipes": [
       "ars_nouveau:magebloom_to_pink"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

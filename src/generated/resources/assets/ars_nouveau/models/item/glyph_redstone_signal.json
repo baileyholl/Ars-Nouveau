@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/redstone_signal"
+    "layer0": "ars_nouveau:item/redstone_signal"
   }
 }

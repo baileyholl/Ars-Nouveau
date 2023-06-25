@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "a": {
       "item": "ars_nouveau:archwood_planks"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "ars_nouveau:dowsing_rod"
-  }
+  },
+  "show_notification": true
 }

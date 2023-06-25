@@ -30,5 +30,6 @@
     "recipes": [
       "ars_nouveau:spike_to_dye"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

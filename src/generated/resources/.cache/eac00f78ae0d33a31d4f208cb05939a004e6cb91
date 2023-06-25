@@ -1,4 +1,4 @@
-// 1.19.2	2023-06-17T10:05:56.9718697	AN tags
+// 1.20.1	2023-06-24T12:04:42.4997618	AN tags
 8b52a126cd132fc021ac006c61e6660474cacb17 data/ars_nouveau/tags/blocks/an_decorative.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
 d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/break_with_pickaxe.json
@@ -37,6 +37,7 @@ e8c6b8b119d79bc393cacf55b78f9847be95731a data/minecraft/tags/blocks/mineable/axe
 09d25939216754a32aee1e0e3278aa55cc5b770c data/minecraft/tags/blocks/mineable/hoe.json
 17283e9f3fff053371f4e28b97dea4f628479df1 data/minecraft/tags/blocks/mineable/pickaxe.json
 f898aac12b01b598949701b1f6e45aa0cd1d9a25 data/minecraft/tags/blocks/planks.json
+5a18f153ac2947c6cea854e2fa5be21d85eb6766 data/minecraft/tags/blocks/portals.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/minecraft/tags/blocks/saplings.json
 70afef6fe4926a8dbf1205248dc1371974ef3037 data/minecraft/tags/blocks/slabs.json
 e5d97b748b59672ba4baec9c3f1093370adf0332 data/minecraft/tags/blocks/stairs.json

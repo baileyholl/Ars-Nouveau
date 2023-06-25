@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/stairs",
   "textures": {
-    "bottom": "ars_nouveau:blocks/sourcestone_alternating",
-    "side": "ars_nouveau:blocks/sourcestone_alternating",
-    "top": "ars_nouveau:blocks/sourcestone_alternating"
+    "bottom": "ars_nouveau:block/sourcestone_alternating",
+    "side": "ars_nouveau:block/sourcestone_alternating",
+    "top": "ars_nouveau:block/sourcestone_alternating"
   }
 }

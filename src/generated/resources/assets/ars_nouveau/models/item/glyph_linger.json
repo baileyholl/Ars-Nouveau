@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/linger"
+    "layer0": "ars_nouveau:item/linger"
   }
 }

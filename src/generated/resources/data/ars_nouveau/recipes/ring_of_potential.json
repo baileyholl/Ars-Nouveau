@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "tag": "forge:nuggets/iron"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "ars_nouveau:ring_of_potential"
-  }
+  },
+  "show_notification": true
 }

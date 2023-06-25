@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "M": {
       "tag": "forge:storage_blocks/source"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "ars_nouveau:relay"
-  }
+  },
+  "show_notification": true
 }

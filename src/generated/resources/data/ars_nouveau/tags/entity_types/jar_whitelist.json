@@ -1,9 +1,5 @@
 {
   "values": [
-    {
-      "id": "create:contraption",
-      "required": false
-    },
     "minecraft:item",
     "minecraft:end_crystal",
     "minecraft:boat",
@@ -17,6 +13,10 @@
     "minecraft:armor_stand",
     "minecraft:lightning_bolt",
     "ars_nouveau:an_lightning",
-    "minecraft:trident"
+    "minecraft:trident",
+    {
+      "id": "create:contraption",
+      "required": false
+    }
   ]
 }

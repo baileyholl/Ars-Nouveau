@@ -30,5 +30,6 @@
     "recipes": [
       "ars_nouveau:horn_to_bonemeal"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

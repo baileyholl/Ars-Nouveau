@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/summon_steed"
+    "layer0": "ars_nouveau:item/summon_steed"
   }
 }

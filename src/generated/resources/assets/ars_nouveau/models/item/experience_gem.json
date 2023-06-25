@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/experience_gem"
+    "layer0": "ars_nouveau:item/experience_gem"
   }
 }

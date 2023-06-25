@@ -30,5 +30,6 @@
     "recipes": [
       "ars_nouveau:fire_essence_to_charge"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

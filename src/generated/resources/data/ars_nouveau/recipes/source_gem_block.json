@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "tag": "forge:gems/source"
@@ -11,5 +12,6 @@
   ],
   "result": {
     "item": "ars_nouveau:source_gem_block"
-  }
+  },
+  "show_notification": true
 }

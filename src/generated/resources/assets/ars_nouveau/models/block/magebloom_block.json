@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/magebloom_block"
+    "all": "ars_nouveau:block/magebloom_block"
   }
 }

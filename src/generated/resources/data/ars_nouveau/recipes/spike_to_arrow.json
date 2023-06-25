@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "ars_nouveau:wilden_spike"
@@ -19,5 +20,6 @@
   "result": {
     "count": 32,
     "item": "minecraft:arrow"
-  }
+  },
+  "show_notification": true
 }

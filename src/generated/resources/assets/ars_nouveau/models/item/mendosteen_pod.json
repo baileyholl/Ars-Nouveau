@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/mendosteen_pod"
+    "layer0": "ars_nouveau:item/mendosteen_pod"
   }
 }

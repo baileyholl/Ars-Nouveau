@@ -12,25 +12,23 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-public class CasterTomeProvider implements DataProvider {
+public class CasterTomeProvider extends SimpleDataProvider {
 
-    public final DataGenerator generator;
+
     public List<CasterTomeData> tomes = new ArrayList<>();
 
     public CasterTomeProvider(DataGenerator generatorIn) {
-        this.generator = generatorIn;
+        super(generatorIn);
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput cache) {
+    public void collectJsons(CachedOutput pOutput) {
 
         tomes.add(buildTome("glow", "Glow Trap", new Spell()
                         .add(MethodTouch.INSTANCE)
@@ -193,8 +191,8 @@ public class CasterTomeProvider implements DataProvider {
         );
 
         tomes.add(buildTome("poseidon", "Poseidon's Refuge", new Spell(MethodProjectile.INSTANCE)
-                .add(AugmentSensitive.INSTANCE)
-                .add(EffectLight.INSTANCE)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(EffectLight.INSTANCE)
                         .add(EffectBurst.INSTANCE)
                         .add(AugmentAOE.INSTANCE, 2)
                         .add(AugmentSensitive.INSTANCE)
@@ -203,13 +201,10 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectFreeze.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
                 , "Fire at a body of water to create a Ice bubble in the depths.", new ParticleColor(0,0,255)));
-
-//        Path output = this.generator.getOutputFolder();
-//        for (CasterTomeData g : tomes) {
-//            Path path = getRecipePath(output, g.getId().getPath());
-//            DataProvider.saveStable(cache, g.toJson(), path);
-//        }
-        return null;
+        for (CasterTomeData g : tomes) {
+            Path path = getRecipePath(output, g.getId().getPath());
+            saveStable(pOutput, g.toJson(), path);
+        }
     }
 
     protected Path getRecipePath(Path pathIn, String str) {

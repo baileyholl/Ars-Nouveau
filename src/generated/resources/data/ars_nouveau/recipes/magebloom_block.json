@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "ars_nouveau:magebloom_fiber"
@@ -11,5 +12,6 @@
   ],
   "result": {
     "item": "ars_nouveau:magebloom_block"
-  }
+  },
+  "show_notification": true
 }

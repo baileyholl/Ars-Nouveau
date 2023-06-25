@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "tag": "forge:stone"
@@ -16,5 +17,6 @@
   "result": {
     "count": 8,
     "item": "minecraft:end_stone"
-  }
+  },
+  "show_notification": true
 }

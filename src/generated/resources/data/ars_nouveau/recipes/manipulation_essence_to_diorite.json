@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "x": {
       "item": "minecraft:andesite"
@@ -16,5 +17,6 @@
   "result": {
     "count": 8,
     "item": "minecraft:diorite"
-  }
+  },
+  "show_notification": true
 }
