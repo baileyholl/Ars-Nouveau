@@ -39,7 +39,7 @@ public class ModDatagen {
 ////        event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));
-//        event.getGenerator().addProvider(event.includeServer(), new Advancements(event.getGenerator(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new ANAdvancements(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
 //        event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(event.getGenerator(), MODID, event.getExistingFileHelper()));
