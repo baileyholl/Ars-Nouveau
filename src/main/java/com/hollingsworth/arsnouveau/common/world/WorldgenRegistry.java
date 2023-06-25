@@ -1,18 +1,62 @@
 package com.hollingsworth.arsnouveau.common.world;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
+import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
-public class Deferred {
+public class WorldgenRegistry {
     public static final DeferredRegister<Feature<?>> FEAT_REG = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
     public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFG_REG = DeferredRegister.create(Registries.CONFIGURED_FEATURE, MODID);
     public static final DeferredRegister<PlacedFeature> PLACED_FEAT_REG = DeferredRegister.create(Registries.PLACED_FEATURE, MODID);
+
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_CASCADING_TREE = registerConfKey("cascading_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_BLAZING_TREE = registerConfKey("blazing_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_VEXING_TREE = registerConfKey("vexing_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> CONFIGURED_FLOURISHING_TREE = registerConfKey("flourishing_tree");
+
+    public static ResourceKey<Feature<?>> registerFeatureKey(String name) {
+        return ResourceKey.create(Registries.FEATURE, new ResourceLocation(MODID, name));
+    }
+
+    public static ResourceKey<ConfiguredFeature<?, ?>> registerConfKey(String name) {
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(MODID, name));
+    }
+
+    public static void boostrapFeatures(BootstapContext<Feature<?>> context){
+
+    }
+
+    public static void bootstrapConfiguredFeatures(BootstapContext<ConfiguredFeature<?, ?>> context) {
+        context.register(CONFIGURED_CASCADING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.CASCADING_LEAVES, LibBlockNames.CASCADING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.FROSTAYA_POD))));
+        context.register(CONFIGURED_BLAZING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BOMBEGRANATE_POD))));
+        context.register(CONFIGURED_VEXING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.BASTION_POD))));
+        context.register(CONFIGURED_FLOURISHING_TREE,new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, false, new ResourceLocation(ArsNouveau.MODID, LibBlockNames.MENDOSTEEN_POD))));
+    }
+
+    public static TreeConfiguration buildTree(String leaves, String log, boolean natural, ResourceLocation podRegistryName) {
+        return new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(log),
+                new MagicTrunkPlacer(9, 1, 0, natural, podRegistryName.toString()),
+                new SupplierBlockStateProvider(leaves),
+                new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
+                new TwoLayersFeatureSize(2, 0, 2)).build();
+    }
 //
 //
 //    public static final RegistryObject<Feature<BlockStateConfiguration>> LIGHT_FEATURE = FEAT_REG.register("lights", () -> new SingleBlockFeature(BlockStateConfiguration.CODEC) {

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.world.WorldgenRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistrySetBuilder;
@@ -23,11 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class BiomeModifiersProvider extends DatapackBuiltinEntriesProvider {
+public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap);
+            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap)
+            .add(Registries.CONFIGURED_FEATURE, WorldgenRegistry::bootstrapConfiguredFeatures);
 
-    public BiomeModifiersProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+    public WorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(ArsNouveau.MODID));
     }
 
@@ -71,24 +73,6 @@ public class BiomeModifiersProvider extends DatapackBuiltinEntriesProvider {
 //        HolderSet.Named<Biome> COLD = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), Tags.Biomes.IS_COLD_OVERWORLD);
 //        HolderSet.Named<Biome> BERRY_BIOMES = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).orElseThrow(), BiomeTagProvider.BERRY_SPAWN);
 //        HolderSet.Named<EntityType<?>> HOSTILE = new HolderSet.Named<>(ops.registry(Registry.ENTITY_TYPE_REGISTRY).orElseThrow(), EntityTags.HOSTILE_MOBS);
-//
-//        modifierMap.put(STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
-//                new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(),
-//                        5, 1, 2)
-//        ));
-//        modifierMap.put(GIFT_STARBUNCLE_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
-//                new MobSpawnSettings.SpawnerData(ModEntities.GIFT_STARBY.get(),
-//                        1, 1, 1)
-//        ));
-//        modifierMap.put(DRYGMY_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
-//                new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY.get(),
-//                        3, 1, 2)
-//        ));
-//        modifierMap.put(WHIRLISPRIG_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(OVERWORLD_TAG,
-//                new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE.get(),
-//                        5, 1, 2)
-//        ));
-//        modifierMap.put(NO_SPAWN, new ForgeBiomeModifiers.RemoveSpawnsBiomeModifier(NO_SPAWN_HOSTILE, HOSTILE));
 //
 //        HolderSet<PlacedFeature> TREESET = new HolderSet.Named<>(ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow(), PlacedFeatureTagProvider.ARCHWOOD_TREES);
 //

@@ -12,6 +12,8 @@ import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.common.world.WorldgenRegistry;
+import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -26,7 +28,6 @@ import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.grower.OakTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -395,7 +396,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.PORTAL, new PortalBlock());
         registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
 
-        //Relay and turrets
+
         registry.register(LibBlockNames.RELAY, new Relay());
         registry.register(LibBlockNames.RELAY_SPLITTER, new RelaySplitter());
         registry.register(LibBlockNames.RELAY_DEPOSIT, new RelayDepositBlock());
@@ -405,19 +406,19 @@ public class BlockRegistry {
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, new TimerSpellTurret());
         registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, new EnchantedSpellTurret());
 
-        //Misc
+
         registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
         registry.register(LibBlockNames.REDSTONE_AIR, new RedstoneAir());
         registry.register(LibBlockNames.INTANGIBLE_AIR, new IntangibleAirBlock());
 
-        //Trees & co
+
         registry.register(LibBlockNames.LAVA_LILY, new LavaLily());
         registry.register(LibBlockNames.SOURCEBERRY_BUSH, new SourceBerryBush(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
-        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
-        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
-        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
-        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new OakTreeGrower(), SAP_PROP));
+        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_CASCADING_TREE), SAP_PROP));
+        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_BLAZING_TREE), SAP_PROP));
+        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_VEXING_TREE), SAP_PROP));
+        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_FLOURISHING_TREE), SAP_PROP));
 
 
         registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
@@ -456,20 +457,20 @@ public class BlockRegistry {
         registry.register(LibBlockNames.POTION_JAR_BLOCK, new PotionJar(ModBlock.defaultProperties().noOcclusion()));
         registry.register(LibBlockNames.POTION_MELDER_BLOCK, new PotionMelder(ModBlock.defaultProperties().noOcclusion()));
 
-        //Sourcelinks
+
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
         registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new AgronomicSourcelinkBlock());
         registry.register(LibBlockNames.VITALIC_SOURCELINK, new VitalicSourcelinkBlock());
         registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new MycelialSourcelinkBlock());
         registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new VolcanicSourcelinkBlock());
 
-        //SummonBlocks
+
         registry.register(LibBlockNames.WIXIE_CAULDRON, new WixieCauldron());
         registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
         registry.register(LibBlockNames.SCONCE, new SconceBlock());
         registry.register(LibBlockNames.DRYGMY_STONE, new DrygmyStone());
 
-        //Beds
+
         registry.register(LibBlockNames.RED_SBED, new SummonBed());
         registry.register(LibBlockNames.BLUE_SBED, new SummonBed());
         registry.register(LibBlockNames.GREEN_SBED, new SummonBed());

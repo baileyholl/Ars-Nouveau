@@ -1,16 +1,23 @@
 package com.hollingsworth.arsnouveau.common.world.tree;
 
-//public class MagicTree extends AbstractTreeGrower {
-//
-//    Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature;
-//
-//    public MagicTree(Supplier<Holder<ConfiguredFeature<TreeConfiguration, ?>>> configConfiguredFeature) {
-//        this.configConfiguredFeature = configConfiguredFeature;
-//    }
-//
-//    @Override
-//    protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(RandomSource randomIn, boolean largeHive) {
-//        return configConfiguredFeature.get();
-//    }
-//
-//}
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import org.jetbrains.annotations.Nullable;
+
+public class MagicTree extends AbstractTreeGrower {
+
+    ResourceKey<ConfiguredFeature<?, ?>> configConfiguredFeature;
+
+    public MagicTree(ResourceKey<ConfiguredFeature<?, ?>> configConfiguredFeature) {
+        this.configConfiguredFeature = configConfiguredFeature;
+    }
+
+
+    @Nullable
+    @Override
+    protected ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource pRandom, boolean pHasFlowers) {
+        return configConfiguredFeature;
+    }
+}
