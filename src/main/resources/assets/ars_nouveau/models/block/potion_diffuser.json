@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "ars_nouveau:blocks/potion_diffuser",
-		"particle":"ars_nouveau:blocks/potion_diffuser"
+		"1": "ars_nouveau:block/potion_diffuser",
+		"particle":"ars_nouveau:block/potion_diffuser"
 	},
 	"elements": [
 		{

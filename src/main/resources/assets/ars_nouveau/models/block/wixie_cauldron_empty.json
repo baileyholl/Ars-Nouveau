@@ -7,8 +7,8 @@
   ],
   "render_type": "cutout",
   "textures": {
-    "3": "ars_nouveau:blocks/wixie_cauldron",
-    "particle": "ars_nouveau:blocks/wixie_cauldron"
+    "3": "ars_nouveau:block/wixie_cauldron",
+    "particle": "ars_nouveau:block/wixie_cauldron"
   },
   "elements": [
     {

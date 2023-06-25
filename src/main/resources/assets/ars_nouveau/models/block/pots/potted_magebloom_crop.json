@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/flower_pot_cross",
   "textures": {
-    "plant": "ars_nouveau:blocks/manabloom/stage4"
+    "plant": "ars_nouveau:block/manabloom/stage4"
   },
   "render_type": "cutout"
 }

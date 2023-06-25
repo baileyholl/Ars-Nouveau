@@ -2,8 +2,8 @@
   "credit": "Made with Blockbench",
   "render_type": "cutout",
   "textures": {
-    "4": "ars_nouveau:blocks/volcanic/lily_magma",
-    "particle": "ars_nouveau:blocks/volcanic/lily_magma"
+    "4": "ars_nouveau:block/volcanic/lily_magma",
+    "particle": "ars_nouveau:block/volcanic/lily_magma"
   },
   "elements": [
     {

@@ -1,8 +1,8 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "0": "ars_nouveau:blocks/mage_block",
-    "particle": "ars_nouveau:blocks/mage_block"
+    "0": "ars_nouveau:block/mage_block",
+    "particle": "ars_nouveau:block/mage_block"
   },
   "render_type": "cutout",
   "elements": [

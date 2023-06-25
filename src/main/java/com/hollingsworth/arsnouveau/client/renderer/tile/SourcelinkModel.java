@@ -13,7 +13,7 @@ public class SourcelinkModel<T extends SourcelinkTile> extends GeoModel<Sourceli
 
     public SourcelinkModel(String name) {
         this.modelLocation = new ResourceLocation(ArsNouveau.MODID, "geo/" + name + "_sourcelink.geo.json");
-        this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/" + name + "_sourcelink.png");
+        this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/block/" + name + "_sourcelink.png");
     }
 
     @Override

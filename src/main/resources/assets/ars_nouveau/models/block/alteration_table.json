@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/cube_all",
 	"textures": {
-		"particle": "ars_nouveau:blocks/alteration_table"
+		"particle": "ars_nouveau:block/alteration_table"
 	},
 	"elements": [
 		{

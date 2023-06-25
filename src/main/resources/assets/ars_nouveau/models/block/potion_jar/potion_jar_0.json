@@ -3,8 +3,8 @@
   "parent": "block/cube_all",
   "render_type": "cutout",
   "textures": {
-    "4": "ars_nouveau:blocks/potion_jar",
-    "particle": "ars_nouveau:blocks/potion_jar"
+    "4": "ars_nouveau:block/potion_jar",
+    "particle": "ars_nouveau:block/potion_jar"
   },
   "elements": [
     {

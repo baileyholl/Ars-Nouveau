@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
- 	"layer0": "ars_nouveau:items/heavy_armor/battlemages_gambeson_tint",
-	"layer1": "ars_nouveau:items/heavy_armor/battlemages_gambeson_gold"
+ 	"layer0": "ars_nouveau:item/heavy_armor/battlemages_gambeson_tint",
+	"layer1": "ars_nouveau:item/heavy_armor/battlemages_gambeson_gold"
   }
 }

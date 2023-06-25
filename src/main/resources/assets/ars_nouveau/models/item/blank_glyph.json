@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ars_nouveau:items/glyph_template"
+        "layer0": "ars_nouveau:item/glyph_template"
     }
 }

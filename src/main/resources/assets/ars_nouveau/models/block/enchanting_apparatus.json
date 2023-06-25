@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/enchanting_apparatus"
+    "all": "ars_nouveau:block/enchanting_apparatus"
   },
   "render_type": "cutout"
 }

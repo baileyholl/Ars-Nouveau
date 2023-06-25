@@ -10,10 +10,10 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ScryersEyeModel extends GeoModel<ScryersOculusTile> {
-    public static ResourceLocation SQUINTING = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_squinting.png");
-    public static ResourceLocation ALERT = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_alert.png");
-    public static ResourceLocation IDLE = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_idle.png");
-    public static ResourceLocation SLEEPING = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/scryers_eye_sleeping.png");
+    public static ResourceLocation SQUINTING = new ResourceLocation(ArsNouveau.MODID, "textures/block/scryers_eye_squinting.png");
+    public static ResourceLocation ALERT = new ResourceLocation(ArsNouveau.MODID, "textures/block/scryers_eye_alert.png");
+    public static ResourceLocation IDLE = new ResourceLocation(ArsNouveau.MODID, "textures/block/scryers_eye_idle.png");
+    public static ResourceLocation SLEEPING = new ResourceLocation(ArsNouveau.MODID, "textures/block/scryers_eye_sleeping.png");
     public static final ResourceLocation anim = new ResourceLocation(ArsNouveau.MODID, "animations/scryers_eye_animations.json");
     public static final ResourceLocation model = new ResourceLocation(ArsNouveau.MODID, "geo/scryers_eye.geo.json");
 

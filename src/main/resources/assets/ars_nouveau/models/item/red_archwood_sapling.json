@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:blocks/red_archwood_sapling"
+    "layer0": "ars_nouveau:block/red_archwood_sapling"
   }
 }

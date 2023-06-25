@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/whirlisprig_charm"
+    "layer0": "ars_nouveau:item/whirlisprig_charm"
   }
 }

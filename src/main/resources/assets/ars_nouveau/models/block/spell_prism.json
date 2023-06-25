@@ -3,8 +3,8 @@
 	"texture_size": [64, 64],
 	"parent": "block/cube_all",
 	"textures": {
-		"6": "ars_nouveau:blocks/spell_prism",
-		"particle": "ars_nouveau:blocks/spell_prism"
+		"6": "ars_nouveau:block/spell_prism",
+		"particle": "ars_nouveau:block/spell_prism"
 	},
 	"elements": [
 		{

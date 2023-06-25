@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/empty"
+    "all": "ars_nouveau:block/empty"
   }
 }

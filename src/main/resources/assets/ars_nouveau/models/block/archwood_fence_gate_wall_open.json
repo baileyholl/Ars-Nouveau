@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/template_fence_gate_wall_open",
   "textures": {
-    "texture": "ars_nouveau:blocks/archwood_planks"
+    "texture": "ars_nouveau:block/archwood_planks"
   }
 }

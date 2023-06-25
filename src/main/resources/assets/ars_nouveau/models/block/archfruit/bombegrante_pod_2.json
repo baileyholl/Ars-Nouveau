@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"3": "ars_nouveau:blocks/archfruit/blazing_archfruit_pod_2",
-		"particle": "ars_nouveau:blocks/archfruit/blazing_archfruit_pod_2"
+		"3": "ars_nouveau:block/archfruit/blazing_archfruit_pod_2",
+		"particle": "ars_nouveau:block/archfruit/blazing_archfruit_pod_2"
 	},
 	  "render_type": "cutout",
 	"elements": [

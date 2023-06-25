@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "ars_nouveau:blocks/sourceberry/sourceberry0"
+    "cross": "ars_nouveau:block/sourceberry/sourceberry0"
   },
   "render_type": "cutout"
 }

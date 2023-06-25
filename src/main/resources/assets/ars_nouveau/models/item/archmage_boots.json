@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-	"layer0": "ars_nouveau:items/heavy_armor/battlemages_boots_tint"
+	"layer0": "ars_nouveau:item/heavy_armor/battlemages_boots_tint"
   }
 }

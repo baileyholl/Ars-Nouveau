@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "ars_nouveau:blocks/magelight_torch",
-		"particle": "ars_nouveau:blocks/magelight_torch"
+		"1": "ars_nouveau:block/magelight_torch",
+		"particle": "ars_nouveau:block/magelight_torch"
 	},
 	"elements": [
 		{

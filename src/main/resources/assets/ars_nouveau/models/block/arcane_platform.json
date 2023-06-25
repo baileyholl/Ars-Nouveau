@@ -3,8 +3,8 @@
 	"texture_size": [32, 32],
 	"render_type": "cutout",
 	"textures": {
-		"2": "ars_nouveau:blocks/arcane_platform",
-		"particle": "ars_nouveau:blocks/arcane_platform"
+		"2": "ars_nouveau:block/arcane_platform",
+		"particle": "ars_nouveau:block/arcane_platform"
 	},
 	"elements": [
 		{

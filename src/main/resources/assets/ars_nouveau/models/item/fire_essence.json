@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/fire_essence"
+    "layer0": "ars_nouveau:item/fire_essence"
   }
 }

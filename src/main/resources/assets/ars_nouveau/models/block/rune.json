@@ -2,10 +2,10 @@
 "parent": "block/cube_all",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "ars_nouveau:blocks/active_inner",
-		"1": "ars_nouveau:blocks/active_middle",
-		"2": "ars_nouveau:blocks/active_outer",
-		"particle": "ars_nouveau:blocks/rune"
+		"0": "ars_nouveau:block/active_inner",
+		"1": "ars_nouveau:block/active_middle",
+		"2": "ars_nouveau:block/active_outer",
+		"particle": "ars_nouveau:block/rune"
 	},
 	"elements": [
 		{

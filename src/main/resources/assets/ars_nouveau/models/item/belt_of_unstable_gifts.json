@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/belt_of_unstable_gifts"
+    "layer0": "ars_nouveau:item/belt_of_unstable_gifts"
   }
 }

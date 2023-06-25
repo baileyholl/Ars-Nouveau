@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/cube_all",
 	"textures": {
-		"3": "ars_nouveau:blocks/potion_jar",
-		"particle": "ars_nouveau:blocks/scribes_table"
+		"3": "ars_nouveau:block/potion_jar",
+		"particle": "ars_nouveau:block/scribes_table"
 	},
 	"elements": [
 		{

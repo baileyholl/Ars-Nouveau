@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "ars_nouveau:blocks/greater_rune_unpowered",
-		"particle": "ars_nouveau:blocks/greater_rune_unpowered"
+		"0": "ars_nouveau:block/greater_rune_unpowered",
+		"particle": "ars_nouveau:block/greater_rune_unpowered"
 	},
 	"elements": [
 		{

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ars_nouveau:items/ring_of_greater_discount"
+        "layer0": "ars_nouveau:item/ring_of_greater_discount"
     }
 }

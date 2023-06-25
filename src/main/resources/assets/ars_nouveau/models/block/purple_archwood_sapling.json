@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "ars_nouveau:blocks/purple_archwood_sapling"
+    "cross": "ars_nouveau:block/purple_archwood_sapling"
   },
   "render_type": "cutout"
 }

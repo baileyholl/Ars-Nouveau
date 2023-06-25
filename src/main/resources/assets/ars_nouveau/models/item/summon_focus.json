@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/summon_focus"
+    "layer0": "ars_nouveau:item/summon_focus"
   }
 }

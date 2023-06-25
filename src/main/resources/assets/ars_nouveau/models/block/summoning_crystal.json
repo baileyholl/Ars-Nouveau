@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/cube_all",
 	"textures": {
-		"1": "ars_nouveau:blocks/ars_nouveau_gold",
-		"3": "ars_nouveau:blocks/mana16"
+		"1": "ars_nouveau:block/ars_nouveau_gold",
+		"3": "ars_nouveau:block/mana16"
 	},
 	"elements": [
 		{

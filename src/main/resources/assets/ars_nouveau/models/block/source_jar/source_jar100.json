@@ -7,9 +7,9 @@
 		64
 	],
 	"textures": {
-		"0": "ars_nouveau:blocks/mana_still",
-		"2": "ars_nouveau:blocks/source_jar",
-		"particle": "ars_nouveau:blocks/mana_still"
+		"0": "ars_nouveau:block/mana_still",
+		"2": "ars_nouveau:block/source_jar",
+		"particle": "ars_nouveau:block/mana_still"
 	},
 	"elements": [
 		{

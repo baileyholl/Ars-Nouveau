@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ars_nouveau:items/magebloom_seed"
+        "layer0": "ars_nouveau:item/magebloom_seed"
     }
 }

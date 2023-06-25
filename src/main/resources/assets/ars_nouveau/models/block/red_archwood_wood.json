@@ -1,7 +1,7 @@
 {
 	"parent":"block/cube_all",
 	"textures":{
-		"all":"ars_nouveau:blocks/red_archwood_log",
-		"particle":"ars_nouveau:blocks/red_archwood_log"
+		"all":"ars_nouveau:block/red_archwood_log",
+		"particle":"ars_nouveau:block/red_archwood_log"
 	}
 }

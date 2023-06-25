@@ -3,8 +3,8 @@
   "credit": "Made with Blockbench",
   "render_type": "cutout",
   "textures": {
-    "4": "ars_nouveau:blocks/volcanic/lily_stone",
-    "particle": "ars_nouveau:blocks/volcanic/lily_stone"
+    "4": "ars_nouveau:block/volcanic/lily_stone",
+    "particle": "ars_nouveau:block/volcanic/lily_stone"
   },
   "elements": [
     {

@@ -37,7 +37,7 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getTextureResource(SpellBook object) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/items/spellbook_purple.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/item/spellbook_purple.png");
     }
 
     @Override

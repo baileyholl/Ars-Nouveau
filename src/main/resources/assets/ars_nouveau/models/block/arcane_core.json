@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "ars_nouveau:blocks/arcane_core"
+    "all": "ars_nouveau:block/arcane_core"
   },
   "render_type": "cutout"
 }

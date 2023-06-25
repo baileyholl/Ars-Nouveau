@@ -22,7 +22,7 @@ public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
 
             @Override
             public ResourceLocation getTextureResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_sword.png");
+                return new ResourceLocation(ArsNouveau.MODID, "textures/item/enchanters_sword.png");
             }
 
             @Override

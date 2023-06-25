@@ -3,8 +3,8 @@
 	"texture_size": [64, 64],
 	"render_type": "cutout",
 	"textures": {
-		"1": "ars_nouveau:blocks/item_detector",
-		"particle": "ars_nouveau:blocks/item_detector"
+		"1": "ars_nouveau:block/item_detector",
+		"particle": "ars_nouveau:block/item_detector"
 	},
 	"elements": [
 		{

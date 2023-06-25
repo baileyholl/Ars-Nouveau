@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/runic_chalk"
+    "layer0": "ars_nouveau:item/runic_chalk"
   }
 }

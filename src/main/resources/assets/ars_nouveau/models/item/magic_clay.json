@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/magic_clay"
+    "layer0": "ars_nouveau:item/magic_clay"
   }
 }

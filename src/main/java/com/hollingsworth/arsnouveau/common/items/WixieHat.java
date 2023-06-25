@@ -47,7 +47,7 @@ public class WixieHat extends AnimModItem implements ICosmeticItem {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("witch_hat", "items")).withTranslucency();
+            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("witch_hat", "item")).withTranslucency();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {

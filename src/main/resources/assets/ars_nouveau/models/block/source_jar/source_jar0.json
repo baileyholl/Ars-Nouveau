@@ -7,8 +7,8 @@
   "render_type": "cutout",
   "parent": "block/cube_all",
   "textures": {
-    "2": "ars_nouveau:blocks/source_jar",
-    "particle": "ars_nouveau:blocks/mana_still"
+    "2": "ars_nouveau:block/source_jar",
+    "particle": "ars_nouveau:block/mana_still"
   },
   "elements": [
     {

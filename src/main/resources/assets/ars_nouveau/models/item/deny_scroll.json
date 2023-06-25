@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/deny_scroll"
+    "layer0": "ars_nouveau:item/deny_scroll"
   }
 }

@@ -40,7 +40,7 @@ public class ItemButton extends GuiImageButton {
 
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
             if (!this.resourceIcon.equals("")) {
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon), x + 3, y + 2, u, v, 16, 16, 16, 16, graphics);
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/item/" + resourceIcon), x + 3, y + 2, u, v, 16, 16, 16, 16, graphics);
             }
             if (ingredient != null && ingredient.getItems().length != 0) {
                 ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];

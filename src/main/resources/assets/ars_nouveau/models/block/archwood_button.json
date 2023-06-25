@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/button",
   "textures": {
-    "texture": "ars_nouveau:blocks/archwood_planks"
+    "texture": "ars_nouveau:block/archwood_planks"
   }
 }

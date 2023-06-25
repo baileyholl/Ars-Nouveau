@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ars_nouveau:items/flask_overlay",
-        "layer1": "ars_nouveau:items/potion_flask"
+        "layer0": "ars_nouveau:item/flask_overlay",
+        "layer1": "ars_nouveau:item/potion_flask"
     }
 }

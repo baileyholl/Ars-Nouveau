@@ -14,7 +14,7 @@ public class ShieldModel extends GeoModel<EnchantersShield> {
 
     @Override
     public ResourceLocation getTextureResource(EnchantersShield wand) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_shield.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/item/enchanters_shield.png");
     }
 
     @Override

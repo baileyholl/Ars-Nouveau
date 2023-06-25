@@ -15,7 +15,7 @@ public class ScryCasterRenderer extends FixedGeoItemRenderer<ScryCaster>{
 
             @Override
             public ResourceLocation getTextureResource(ScryCaster wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "textures/items/enchanters_eye.png");
+                return new ResourceLocation(ArsNouveau.MODID, "textures/item/enchanters_eye.png");
             }
 
             @Override

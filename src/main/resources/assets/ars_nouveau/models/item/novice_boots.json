@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
- 	"layer0": "ars_nouveau:items/light_armor/sorcerers_footpads_tint"
+ 	"layer0": "ars_nouveau:item/light_armor/sorcerers_footpads_tint"
   }
 }

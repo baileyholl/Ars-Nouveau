@@ -7,8 +7,8 @@
   ],
   "render_type": "cutout",
   "textures": {
-    "particle": "ars_nouveau:blocks/sconce",
-    "4": "ars_nouveau:blocks/sconce"
+    "particle": "ars_nouveau:block/sconce",
+    "4": "ars_nouveau:block/sconce"
   },
   "elements": [
     {

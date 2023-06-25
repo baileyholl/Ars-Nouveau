@@ -3,8 +3,8 @@
 	"render_type": "cutout",
 	"parent": "block/cube_all",
 	"textures": {
-		"1": "ars_nouveau:blocks/scry_crystal_occupied",
-		"particle": "ars_nouveau:blocks/scry_crystal_occupied"
+		"1": "ars_nouveau:block/scry_crystal_occupied",
+		"particle": "ars_nouveau:block/scry_crystal_occupied"
 	},
 	"elements": [
 		{

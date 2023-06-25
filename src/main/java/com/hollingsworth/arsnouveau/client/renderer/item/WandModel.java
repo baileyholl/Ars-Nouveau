@@ -14,7 +14,7 @@ public class WandModel extends GeoModel<Wand> {
 
     @Override
     public ResourceLocation getTextureResource(Wand wand) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/items/wand.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/item/wand.png");
     }
 
     @Override

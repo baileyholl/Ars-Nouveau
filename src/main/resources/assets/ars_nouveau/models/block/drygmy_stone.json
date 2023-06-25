@@ -7,8 +7,8 @@
   "parent": "block/cube_all",
   "render_type": "cutout",
   "textures": {
-    "1": "ars_nouveau:blocks/drygmy_stone",
-    "particle": "ars_nouveau:blocks/drygmy_stone"
+    "1": "ars_nouveau:block/drygmy_stone",
+    "particle": "ars_nouveau:block/drygmy_stone"
   },
   "elements": [
     {

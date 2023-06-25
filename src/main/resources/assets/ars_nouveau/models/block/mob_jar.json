@@ -3,8 +3,8 @@
 	"texture_size": [64, 64],
 	"render_type": "cutout",
 	"textures": {
-		"2": "ars_nouveau:blocks/mob_jar",
-		"particle": "ars_nouveau:blocks/mob_jar"
+		"2": "ars_nouveau:block/mob_jar",
+		"particle": "ars_nouveau:block/mob_jar"
 	},
 	"elements": [
 		{

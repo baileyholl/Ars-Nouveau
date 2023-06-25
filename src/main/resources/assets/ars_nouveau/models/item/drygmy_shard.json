@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/drygmy_shard"
+    "layer0": "ars_nouveau:item/drygmy_shard"
   }
 }

@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "ars_nouveau:blocks/ritual_brazier",
-		"particle": "ars_nouveau:blocks/ritual_brazier"
+		"1": "ars_nouveau:block/ritual_brazier",
+		"particle": "ars_nouveau:block/ritual_brazier"
 	},
 	"render_type": "cutout",
 	"elements": [

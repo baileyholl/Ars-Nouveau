@@ -6,8 +6,8 @@
     32
   ],
   "textures": {
-    "2": "ars_nouveau:blocks/green_sbed",
-    "particle": "ars_nouveau:blocks/green_sbed"
+    "2": "ars_nouveau:block/green_sbed",
+    "particle": "ars_nouveau:block/green_sbed"
   },
   "elements": [
     {

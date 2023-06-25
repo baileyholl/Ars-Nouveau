@@ -1,7 +1,7 @@
 {
     "textures": {
-        "particle": "ars_nouveau:blocks/warp_portal",
-        "portal": "ars_nouveau:blocks/warp_portal"
+        "particle": "ars_nouveau:block/warp_portal",
+        "portal": "ars_nouveau:block/warp_portal"
     },
     "elements": [
         {   "from": [ 0, 0, 6 ],

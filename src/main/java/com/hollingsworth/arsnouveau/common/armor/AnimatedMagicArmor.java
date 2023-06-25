@@ -133,17 +133,8 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
     }
     // TODO: fix armor models
     public GeoModel getArmorModel() {
-        return new GenericModel<>("light_armor", "items/light_armor").withEmptyAnim();
+        return new GenericModel<>("light_armor", "item/light_armor").withEmptyAnim();
     }
-
-//    @SuppressWarnings({ "rawtypes", "unchecked" })
-//    @Nullable
-//    @Override
-//    public final String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-//        Class<? extends ArmorItem> clazz = this.getClass();
-//        GeoArmorRenderer renderer = GeoArmorRenderer.getRenderer(clazz, entity);
-//        return renderer.getTextureLocation((ArmorItem) stack.getItem()).toString();
-//    }
 
     @Override
     public void setColor(String color, ItemStack armor) {

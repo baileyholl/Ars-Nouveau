@@ -55,7 +55,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("starbuncle_shades", "items")).withTranslucency();
+            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("starbuncle_shades", "item")).withTranslucency();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {

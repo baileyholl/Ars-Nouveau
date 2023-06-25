@@ -1,6 +1,6 @@
 {
   "render_type": "cutout",
   "textures": {
-    "particle": "ars_nouveau:blocks/repository"
+    "particle": "ars_nouveau:block/repository"
   }
 }

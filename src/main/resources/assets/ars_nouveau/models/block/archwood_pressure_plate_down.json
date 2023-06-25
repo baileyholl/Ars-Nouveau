@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/pressure_plate_down",
   "textures": {
-    "texture": "ars_nouveau:blocks/archwood_planks"
+    "texture": "ars_nouveau:block/archwood_planks"
   }
 }

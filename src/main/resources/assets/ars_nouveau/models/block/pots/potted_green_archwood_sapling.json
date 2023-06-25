@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/flower_pot_cross",
   "textures": {
-    "plant": "ars_nouveau:blocks/green_archwood_sapling"
+    "plant": "ars_nouveau:block/green_archwood_sapling"
   },
   "render_type": "cutout"
 }

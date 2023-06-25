@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/source_berry_pie"
+    "layer0": "ars_nouveau:item/source_berry_pie"
   }
 }

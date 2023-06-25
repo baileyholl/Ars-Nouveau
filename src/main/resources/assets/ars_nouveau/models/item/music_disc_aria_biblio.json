@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ars_nouveau:items/music_disc_aria_biblio"
+    "layer0": "ars_nouveau:item/music_disc_aria_biblio"
   }
 }

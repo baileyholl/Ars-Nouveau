@@ -6,7 +6,7 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class MirrorRenderer extends GeoItemRenderer<EnchantersMirror> {
-    public static GeoModel model = new GenericModel("enchanters_mirror", "items");
+    public static GeoModel model = new GenericModel("enchanters_mirror", "item");
 
     public MirrorRenderer() {
         super(model);

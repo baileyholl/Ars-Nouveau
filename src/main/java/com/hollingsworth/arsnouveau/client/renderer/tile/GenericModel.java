@@ -12,7 +12,7 @@ public class GenericModel<T extends GeoAnimatable> extends GeoModel<T> {
     public ResourceLocation modelLocation;
     public ResourceLocation textLoc;
     public ResourceLocation animationLoc;
-    public String textPathRoot = "blocks";
+    public String textPathRoot = "block";
     public String name;
 
     public GenericModel(String name) {

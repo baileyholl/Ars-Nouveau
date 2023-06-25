@@ -14,7 +14,7 @@ public class SpellBowModel extends GeoModel<SpellBow> {
 
     @Override
     public ResourceLocation getTextureResource(SpellBow wand) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/items/spellbow.png");
+        return new ResourceLocation(ArsNouveau.MODID, "textures/item/spellbow.png");
     }
 
     @Override
