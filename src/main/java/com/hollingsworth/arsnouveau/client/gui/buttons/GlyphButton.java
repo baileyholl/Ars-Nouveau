@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -50,40 +49,43 @@ public class GlyphButton extends Button {
         return id;
     }
 
+
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        PoseStack ms = graphics.pose();
-        if (visible) {
-            RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty());
+        if(!visible){
+            return;
+        }
 
-            if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
-                if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
-                    List<Component> tip = new ArrayList<>();
-                    AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
-                    tip.add(Component.translatable(spellPart.getLocalizationKey()));
-                    for (SpellValidationError ve : validationErrors) {
-                        tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
-                    }
-                    if (Screen.hasShiftDown()) {
-                        tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-                        tip.add(Component.translatable("ars_nouveau.schools"));
-                        for (SpellSchool s : spellPart.spellSchools) {
-                            tip.add(s.getTextComponent());
-                        }
-                        tip.add(spellPart.getBookDescLang());
-                    } else {
-                        tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
-                        var modName = ModList.get()
-                                .getModContainerById(spellPart.getRegistryName().getNamespace())
-                                .map(ModContainer::getModInfo)
-                                .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
-                        tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
-                    }
-
-                    parent.tooltip = tip;
+        RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty());
+        if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
+            if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
+                List<Component> tip = new ArrayList<>();
+                AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
+                tip.add(Component.translatable(spellPart.getLocalizationKey()));
+                for (SpellValidationError ve : validationErrors) {
+                    tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
                 }
+                if (Screen.hasShiftDown()) {
+                    tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+                    tip.add(Component.translatable("ars_nouveau.schools"));
+                    for (SpellSchool s : spellPart.spellSchools) {
+                        tip.add(s.getTextComponent());
+                    }
+                    tip.add(spellPart.getBookDescLang());
+                } else {
+                    tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
+                    var modName = ModList.get()
+                            .getModContainerById(spellPart.getRegistryName().getNamespace())
+                            .map(ModContainer::getModInfo)
+                            .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
+                    tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
+                }
+
+                parent.tooltip = tip;
             }
         }
+
     }
 
 }

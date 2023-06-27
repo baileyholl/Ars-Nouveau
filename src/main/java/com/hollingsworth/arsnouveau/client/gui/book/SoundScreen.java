@@ -129,9 +129,4 @@ public class SoundScreen extends BaseBook {
         graphics.drawString(font, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color);
 
     }
-
-    @Override
-    public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-        super.drawForegroundElements(mouseX, mouseY, partialTicks);
-    }
 }

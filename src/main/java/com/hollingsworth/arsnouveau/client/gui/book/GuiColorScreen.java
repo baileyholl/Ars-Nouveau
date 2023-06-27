@@ -106,23 +106,18 @@ public class GuiColorScreen extends BaseBook {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104, graphics);
         int color = -8355712;
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.title").getString(), 51, 24, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.presets").getString(), 159, 24, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.default").getString(), 170, 46, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.purple").getString(), 170, 70, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.blue").getString(), 170, 94, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.red").getString(), 170, 118, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.green").getString(), 170, 142, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.yellow").getString(), 228, 46, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.white").getString(), 228, 70, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.orange").getString(), 228, 94, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.cyan").getString(), 228, 118, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.rainbow").getString(), 228, 142, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 67, 160, color);
-    }
-
-    @Override
-    public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-        super.drawForegroundElements(mouseX, mouseY, partialTicks);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.title").getString(), 51, 24, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.presets").getString(), 159, 24, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.default").getString(), 170, 46, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.purple").getString(), 170, 70, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.blue").getString(), 170, 94, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.red").getString(), 170, 118, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.green").getString(), 170, 142, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.yellow").getString(), 228, 46, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.white").getString(), 228, 70, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.orange").getString(), 228, 94, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.cyan").getString(), 228, 118, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.rainbow").getString(), 228, 142, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 67, 160, color, false);
     }
 }

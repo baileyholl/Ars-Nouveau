@@ -473,11 +473,6 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    @Deprecated // todo: remove 1.20
-    public static void open(ItemStack stack, int tier) {
-        open(InteractionHand.MAIN_HAND);
-    }
-
     public static void open(InteractionHand hand) {
         Minecraft.getInstance().setScreen(new GuiSpellBook(hand));
     }
@@ -485,28 +480,28 @@ public class GuiSpellBook extends BaseBook {
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         if (formTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20, 5 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20, 5 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712, false);
         }
         if (effectTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow + 1), -8355712);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20, 5 + 18 * (effectTextRow + 1), -8355712, false);
         }
         if (augmentTextRow >= 1) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + 1), -8355712);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20, 5 + 18 * (augmentTextRow + 1), -8355712, false);
         }
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15, 109, 15, graphics);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15, graphics);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15, 47, 15, graphics);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, graphics);
         if (validationErrors.isEmpty()) {
-            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712);
+            graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712, false);
         } else {
             // Color code chosen to match GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
             Component textComponent = Component.translatable("ars_nouveau.spell_book_gui.create")
                     .withStyle(s -> s.withStrikethrough(true).withColor(TextColor.parseColor("#FFB2B2")));
             // The final argument to draw desaturates the above color from the text component
-            graphics.drawString(font, textComponent, 233, 183, -8355712);
+            graphics.drawString(font, textComponent, 233, 183, -8355712, false);
         }
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.clear").getString(), 177, 183, -8355712);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.clear").getString(), 177, 183, -8355712, false);
 
         //manabar
         int manaLength = 96;
@@ -539,7 +534,7 @@ public class GuiSpellBook extends BaseBook {
             int maxWidth = minecraft.font.width(maxManaCache + "  /  " + maxManaCache);
             int offset = offsetLeft - maxWidth / 2 + (maxWidth - minecraft.font.width(text));
 
-            graphics.drawString(minecraft.font, text,  offset + 55, yOffset - 10, 0xFFFFFF);
+            graphics.drawString(minecraft.font, text,  offset + 55, yOffset - 10, 0xFFFFFF, false);
         }
 
         graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);

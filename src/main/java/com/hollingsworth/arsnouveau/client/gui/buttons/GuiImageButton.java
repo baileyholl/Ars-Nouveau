@@ -4,8 +4,6 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
@@ -53,8 +51,6 @@ public class GuiImageButton extends ANButton {
 
     @Override
     public void render(GuiGraphics p_282421_,int parX, int parY, float partialTicks) {
-//        super.render(ms, parX, parY, partialTicks);
-        PoseStack ms = p_282421_.pose();
         if (visible) {
             if (parent != null && parent.isMouseInRelativeRange(parX, parY, x, y, width, height) && toolTip != null) {
                 if (!toolTip.toString().isEmpty()) {
@@ -63,7 +59,6 @@ public class GuiImageButton extends ANButton {
                     parent.tooltip = tip;
                 }
             }
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, p_282421_);
         }
     }

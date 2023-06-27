@@ -40,8 +40,6 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
-        // TODO: need this?
-//        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
@@ -50,7 +48,6 @@ public class BaseBook extends ModdedScreen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
         PoseStack matrixStack = graphics.pose();
         matrixStack.pushPose();
         if (scaleFactor != 1) {

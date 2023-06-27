@@ -2,23 +2,25 @@ package com.hollingsworth.arsnouveau.client.gui.utils;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.Color;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.MatrixUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.joml.Matrix4f;
 
 public class RenderUtils {
@@ -34,66 +36,80 @@ public class RenderUtils {
     }
 
     public static void drawItemAsIcon(ItemStack itemStack, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent) {
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        //Code stolen from ItemRenderer.renderGuiItem and changed to suit scaled items instead of fixing size to 16
-        BakedModel itemBakedModel = itemRenderer.getModel(itemStack, null, null, 0);
-
-        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(positionX, positionY, 100.0F);
-        poseStack.translate(8.0D, 8.0D, 0.0D);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(size, size, size);
-        RenderSystem.applyModelViewMatrix();
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-        boolean flag = !itemBakedModel.usesBlockLight();
+        if(itemStack.isEmpty()) return;
+        PoseStack pose = graphics.pose();
+        BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getModel(itemStack, null, null, 0);
+        pose.pushPose();
+        pose.translate(positionX, positionY, 0);
+        pose.translate(8.0D, 8.0D, 0.0D);
+        pose.mulPoseMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
+        pose.scale(size, size, size);
+        boolean flag = !bakedModel.usesBlockLight();
         if (flag) {
             Lighting.setupForFlatItems();
         }
+
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+
+        // == copied from ItemRenderer.render
+        ItemDisplayContext displayContext = ItemDisplayContext.GUI;
+        MultiBufferSource bufferSource =  Minecraft.getInstance().renderBuffers().bufferSource();
+        int light = 15728880;
+        int overlay = OverlayTexture.NO_OVERLAY;
+        boolean lefthandTransform = false;
+        pose.pushPose();
         if (renderTransparent) {
-            itemRenderer.render(itemStack, ItemDisplayContext.GUI, false, poseStack, transparentBuffer(multibuffersource$buffersource), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, itemBakedModel);
-        } else {
-            itemRenderer.render(itemStack, ItemDisplayContext.GUI, false, poseStack, multibuffersource$buffersource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, itemBakedModel);
+            bufferSource = transparentBuffer(bufferSource);
         }
-        multibuffersource$buffersource.endBatch();
+        if (itemStack.is(Items.TRIDENT)) {
+            bakedModel = itemRenderer.getItemModelShaper().getModelManager().getModel(ModelResourceLocation.vanilla("trident", "inventory"));
+        } else if (itemStack.is(Items.SPYGLASS)) {
+            bakedModel = itemRenderer.getItemModelShaper().getModelManager().getModel(ModelResourceLocation.vanilla("spyglass", "inventory"));
+        }
+
+
+        bakedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(pose, bakedModel, displayContext, lefthandTransform);
+        pose.translate(-0.5F, -0.5F, -0.5F);
+        if (!bakedModel.isCustomRenderer() && (!itemStack.is(Items.TRIDENT) || flag)) {
+            for (var model : bakedModel.getRenderPasses(itemStack, true)) {
+                for (var rendertype : model.getRenderTypes(itemStack, true)) {
+                    VertexConsumer vertexconsumer;
+                    if (itemStack.is(ItemTags.COMPASSES) || itemStack.is(Items.CLOCK) && itemStack.hasFoil()) {
+                        pose.pushPose();
+                        PoseStack.Pose posestack$pose = pose.last();
+                        MatrixUtil.mulComponentWise(posestack$pose.pose(), 0.5F);
+
+
+                        vertexconsumer = ItemRenderer.getCompassFoilBufferDirect(bufferSource, rendertype, posestack$pose);
+
+                        pose.popPose();
+                    } else {
+                        vertexconsumer = ItemRenderer.getFoilBufferDirect(bufferSource, rendertype, true, itemStack.hasFoil());
+                    }
+
+                    itemRenderer.renderModelLists(model, itemStack, light, overlay, pose, vertexconsumer);
+                }
+            }
+        } else {
+            net.minecraftforge.client.extensions.common.IClientItemExtensions.of(itemStack).getCustomRenderer().renderByItem(itemStack, displayContext, pose, bufferSource, light, overlay);
+        }
+        pose.popPose();
+        graphics.flush();
         if (flag) {
             Lighting.setupFor3DItems();
         }
 
         if (renderTransparent) {
             RenderSystem.depthMask(true);
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
-        poseStack.popPose();
-        RenderSystem.applyModelViewMatrix();
-        if (renderTransparent) {
-            RenderSystem.disableBlend();
-            RenderSystem.defaultBlendFunc();
-        }
+        pose.popPose();
     }
+
 
     private static MultiBufferSource transparentBuffer(MultiBufferSource buffer) {
         return renderType -> new TintedVertexConsumer(buffer.getBuffer(TRANSLUCENT), 1.0f, 1.0f, 1.0f, 0.25f);
     }
-
-//    public static void drawTextureFromResourceLocation(ResourceLocation providedResourceLocation, PoseStack stack, int x, int y, int size, boolean renderTransparent) {
-//        RenderSystem.enableBlend();
-//        if (renderTransparent) {
-//            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5f);
-//        } else {
-//            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-//        }
-//
-//        RenderSystem.setShaderTexture(0, providedResourceLocation);
-//        GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
-//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-//        RenderSystem.disableBlend();
-//    }
 
     /*
     * Adapted from Eidolon, Elucent

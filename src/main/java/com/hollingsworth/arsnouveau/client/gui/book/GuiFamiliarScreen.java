@@ -61,9 +61,9 @@ public class GuiFamiliarScreen extends BaseBook {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, graphics);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 156, 179, 0, 0, 56, 15, 56, 15, graphics);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 232, 183, -8355712);
-        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.dispel"), 172, 183, -8355712);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 232, 183, -8355712, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.dispel"), 172, 183, -8355712, false);
     }
 
     public void onGlyphClick(Button button) {

@@ -44,7 +44,7 @@ public class NoShadowTextField extends EditBox {
 
         if (!s.isEmpty()) {
             String s1 = flag ? s.substring(0, j) : s;
-            j1 = graphics.drawString(font, this.formatter.apply(s1, this.displayPos),  l,  i1, -8355712);
+            j1 = graphics.drawString(font, this.formatter.apply(s1, this.displayPos),  l,  i1, -8355712, false);
 
         }
 
@@ -62,14 +62,14 @@ public class NoShadowTextField extends EditBox {
         }
 
         if (!flag2 && this.suggestion != null) {
-            graphics.drawString(this.font, this.suggestion, k1 - 1, i1, -8355712);
+            graphics.drawString(this.font, this.suggestion, k1 - 1, i1, -8355712, false);
         }
 
         if (flag1) {
             if (flag2) {
                 graphics.fill(k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
             } else {
-                graphics.drawString(this.font, "_", k1, i1, i2);
+                graphics.drawString(this.font, "_", k1, i1, i2, false);
             }
         }
 

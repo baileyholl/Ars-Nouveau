@@ -161,11 +161,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics p_283065_, float p_97788_, int p_97789_, int p_97790_) {
-
-	}
-
-	@Override
 	protected boolean isHovering(int x, int y, int width, int height, double mouseX, double mouseY) {
 		return (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) && super.isHovering(x, y, width, height, mouseX, mouseY);
 	}
