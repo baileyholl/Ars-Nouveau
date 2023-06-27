@@ -49,25 +49,22 @@ public class GuiRadialMenu<T> extends Screen {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
-    public GuiRadialMenu() {
-        super(Component.literal(""));
-    }
-
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
 
             Options settings = Minecraft.getInstance().options;
             Input eInput = event.getInput();
-            eInput.up = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
-            eInput.down = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
-            eInput.left = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
-            eInput.right = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
+            long window = Minecraft.getInstance().getWindow().getWindow();
+            eInput.up = InputConstants.isKeyDown(window, settings.keyUp.getKey().getValue());
+            eInput.down = InputConstants.isKeyDown(window, settings.keyDown.getKey().getValue());
+            eInput.left = InputConstants.isKeyDown(window, settings.keyLeft.getKey().getValue());
+            eInput.right = InputConstants.isKeyDown(window, settings.keyRight.getKey().getValue());
 
             eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
             eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
-            eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
-            eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
+            eInput.jumping = InputConstants.isKeyDown(window, settings.keyJump.getKey().getValue());
+            eInput.shiftKeyDown = InputConstants.isKeyDown(window, settings.keyShift.getKey().getValue());
             if (Minecraft.getInstance().player.isMovingSlowly()) {
                 eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
                 eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
@@ -112,7 +109,6 @@ public class GuiRadialMenu<T> extends Screen {
 
         ms.pushPose();
         RenderSystem.enableBlend();
-//        RenderSystem.disableTexture();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -149,7 +145,6 @@ public class GuiRadialMenu<T> extends Screen {
         }
 
         tessellator.end();
-//        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
@@ -166,9 +161,9 @@ public class GuiRadialMenu<T> extends Screen {
             }
             float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
-
             RenderSystem.disableDepthTest();
 
+//            graphics.renderItem(new ItemStack(Items.DIAMOND_PICKAXE), (int) posX, (int) posY);
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
@@ -177,7 +172,10 @@ public class GuiRadialMenu<T> extends Screen {
                     drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
                 }
             }
+            ms.pushPose();
+            ms.translate(0, 0, 9999);
             drawSliceName(graphics, String.valueOf(i + 1), stack, (int) posX, (int) posY);
+            ms.popPose();
         }
 
         if (mousedOverSlot != -1) {

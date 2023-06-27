@@ -57,7 +57,7 @@ public class GlyphButton extends Button {
             return;
         }
 
-        RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty());
+        RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty(), 0);
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
             if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
                 List<Component> tip = new ArrayList<>();

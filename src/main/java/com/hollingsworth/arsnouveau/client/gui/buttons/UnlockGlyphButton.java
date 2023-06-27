@@ -59,7 +59,7 @@ public class UnlockGlyphButton extends Button {
         PoseStack ms = graphics.pose();
         if (visible) {
             if (this.spellPart != null) {
-                RenderUtils.drawSpellPart(this.spellPart, graphics, x, y, 16, !playerKnows);
+                RenderUtils.drawSpellPart(this.spellPart, graphics, x, y, 16, !playerKnows, 0);
                 if (selected)
                     GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16, graphics);
             }

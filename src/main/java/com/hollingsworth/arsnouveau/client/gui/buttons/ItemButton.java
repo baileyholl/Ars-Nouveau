@@ -51,7 +51,7 @@ public class ItemButton extends GuiImageButton {
                         menu.renderTooltipInternal(graphics, components, parX, parY);
                     }
                 }
-                RenderUtils.drawItemAsIcon(stack.getItem(), graphics, x + 3, y + 2, 16, false);
+                RenderUtils.drawItemAsIcon(stack, graphics, x + 3, y + 2, 16, false);
             }
         }
 

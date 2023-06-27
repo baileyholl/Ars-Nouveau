@@ -49,7 +49,7 @@ public class CraftingButton extends GuiImageButton {
             }
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
             if (this.abstractSpellPart != null) {
-                RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty());
+                RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty(), 0);
             }
             if (parent.isMouseInRelativeRange(parX, parY, x, y, width, height)) {
 

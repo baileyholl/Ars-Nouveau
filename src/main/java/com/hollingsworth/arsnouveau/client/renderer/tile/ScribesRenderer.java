@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRendere
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 
@@ -36,18 +37,36 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK)
             return;
         if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
             return;
-        if (tile.getStack() == null) {
-            return;
+        stack.pushPose();
+        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
+        if (direction == Direction.NORTH) {
+            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.translate(1, 0, -1);
         }
-        renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(),
-                poseStack, bufferSource, packedLight, packedOverlay, ClientInfo.ticksInGame + partialTick);
 
-        super.preRender(poseStack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        if (direction == Direction.SOUTH) {
+            stack.mulPose(Axis.YP.rotationDegrees(270));
+            stack.translate(-1, 0, -1);
+        }
+
+        if (direction == Direction.WEST) {
+            stack.mulPose(Axis.YP.rotationDegrees(270));
+
+            stack.translate(0, 0, -2);
+        }
+
+        if (direction == Direction.EAST) {
+            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.translate(0, 0, 0);
+
+        }
+        super.preRender(stack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        stack.popPose();
     }
 
     @Override
@@ -58,8 +77,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
             return;
         Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
         stack.pushPose();
-
-        if (direction == Direction.NORTH) {
+         if (direction == Direction.NORTH) {
             stack.mulPose(Axis.YP.rotationDegrees(-90));
             stack.translate(1, 0, -1);
         }
@@ -82,6 +100,19 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         }
         super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         stack.popPose();
+//        if(!isReRender)
+//            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), stack, bufferSource, packedLight, packedOverlay, ClientInfo.ticksInGame + partialTick);
+    }
+
+
+    @Override
+    public void renderFinal(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK)
+            return;
+        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
+            return;
+
+        renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), stack, bufferSource, packedLight, packedOverlay, ClientInfo.ticksInGame + partialTick);
     }
 
     public void renderPressedItem(ScribesTile tile, ItemStack itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight, int packedOverlay, float partialTicks) {
@@ -92,24 +123,37 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (!(state.getBlock() instanceof ScribesBlock))
             return;
+        Quaternionf quat = Axis.ZP.rotationDegrees(90f);
+        Vec3 translationOffset = new Vec3(0, 0, 0);
+        if (direction == Direction.WEST) {
+            matrixStack.translate(1, 0, 0.5f);
+            quat = Axis.ZP.rotationDegrees(90f);
+
+            translationOffset = new Vec3(1, 0, 0.5f);
+        }
+        if (direction == Direction.EAST) {
+            matrixStack.translate(0, 0, 0.5f);
+            quat = Axis.ZP.rotationDegrees(180);
+            translationOffset = new Vec3(0, 0, 0.5f);
+        }
+        if (direction == Direction.SOUTH) {
+            matrixStack.translate(0.5f, 0, 0);
+            quat = Axis.ZP.rotationDegrees(180);
+            translationOffset = new Vec3(0.5f, 0, 0);
+        }
+        if (direction == Direction.NORTH) {
+            matrixStack.translate(0.5f, 0, 1);
+            quat = Axis.ZP.rotationDegrees(90f);
+            translationOffset = new Vec3(0.5f, 0, 1);
+        }
+
         float y = state.getValue(ScribesBlock.FACING).getClockWise().toYRot();
         matrixStack.mulPose(Axis.YP.rotationDegrees(-y + 90f));
         matrixStack.mulPose(Axis.XP.rotationDegrees(90f));
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-
-        if (direction == Direction.WEST) {
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(90f));
-        }
-        if (direction == Direction.EAST) {
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(-90f));
-        }
-        if (direction == Direction.SOUTH) {
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-        }
-        matrixStack.translate(-0.7, 0, 0);
-        matrixStack.scale(0.6f, 0.6f, 0.6f);
-
-        Minecraft.getInstance().getItemRenderer().renderStatic(itemToRender, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
+        matrixStack.mulPose(quat);
+        matrixStack.scale(0.6f, 0.6f, 0.3f);
+        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(MethodProjectile.INSTANCE.glyphItem), ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, Minecraft.getInstance().renderBuffers().bufferSource(), tile.getLevel(), (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
         if (tile.recipe != null && !tile.crafting) {
             List<Ingredient> inputs = tile.getRemainingRequired();
@@ -121,7 +165,8 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
                 Ingredient ingredient = inputs.get(i);
                 ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];
                 matrixStack.pushPose();
-                matrixStack.translate(-0.5, 2.0, 0);
+                matrixStack.translate(0,2, 0);
+                matrixStack.translate(translationOffset.x, translationOffset.y, translationOffset.z);
                 matrixStack.scale(0.25f, 0.25f, 0.25f);
                 // This spaces them out from each other
                 matrixStack.mulPose(Axis.YP.rotationDegrees(ticks + (i * angleBetweenEach)));
@@ -129,9 +174,9 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
                 matrixStack.translate(distanceVec.x(), distanceVec.y() + ((i % 2 == 0 ? -i : i) * Mth.sin(ticks / 60) * 0.0625), distanceVec.z());
                 // This rotates the individual stacks, with every 2nd stack rotating a different direction
                 matrixStack.mulPose((i % 2 == 0 ? Axis.ZP : Axis.XP).rotationDegrees(ticks));
-                RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer,  tile.getLevel(), (int) tile.getBlockPos().asLong());
+                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack,  Minecraft.getInstance().renderBuffers().bufferSource(),  tile.getLevel(), (int) tile.getBlockPos().asLong());
                 matrixStack.popPose();
+
             }
         }
     }

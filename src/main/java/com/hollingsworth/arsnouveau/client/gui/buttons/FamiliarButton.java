@@ -30,7 +30,7 @@ public class FamiliarButton extends Button {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem().getItem(), graphics, x, y, 16, false);
+            RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem(), graphics, x, y, 16, false);
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
                 List<Component> tip = new ArrayList<>();
                 if (Screen.hasShiftDown()) {

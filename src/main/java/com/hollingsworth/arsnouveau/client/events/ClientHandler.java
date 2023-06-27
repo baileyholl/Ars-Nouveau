@@ -170,7 +170,7 @@ public class ClientHandler {
                 Font font = Minecraft.getInstance().font;
                 Options settings = Minecraft.getInstance().options;
                 Component lookAround = localize("ars_nouveau.camera.move", settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage());
-                Component exit = localize("ars_nouveau.camera.exit", settings.keyShift.getTranslatedKeyMessage());
+                Component exit = Component.translatable("ars_nouveau.camera.exit", settings.keyShift.getTranslatedKeyMessage().getString());
                 pose.drawString(font, lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40, 0xFFFFFF);
                 pose.drawString(font, exit, 10, mc.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
             }

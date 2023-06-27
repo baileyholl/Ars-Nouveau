@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Bound Script: %s",
   "ars_nouveau.bow.invalid": "This tool may only accept spells that do not contain a form.",
   "ars_nouveau.brazier_relay.connected": "Brazier connected.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "The block has been removed or is not chunk loaded.",
   "ars_nouveau.casting_cost": "Casting Cost",
