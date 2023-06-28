@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Сувій Зв'якзу: %s",
   "ars_nouveau.bow.invalid": "Лук може приймати тільки закляття, що не мають гліф Форми.",
   "ars_nouveau.brazier_relay.connected": "Мангал підключений.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Вийти",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Огляд",
   "ars_nouveau.camera.not_loaded": "Кристал було зруйновано, або чанк не завантажений.",
   "ars_nouveau.casting_cost": "Витрата Мани",
