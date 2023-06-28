@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Δεσμευμένο σενάριο: %s",
   "ars_nouveau.bow.invalid": "Αυτό το εργαλείο μπορεί να δέχεται μόνο ξόρκια που δεν περιέχουν φόρμα.",
   "ars_nouveau.brazier_relay.connected": "Το Brazier συνδεδεμένο.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Έξοδος",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Μετακίνηση",
   "ars_nouveau.camera.not_loaded": "Το μπλοκ έχει αφαιρεθεί ή δεν έχει φορτωθεί κομμάτι.",
   "ars_nouveau.casting_cost": "Κόστος χύτευσης",
