@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Script enllaçat: %s",
   "ars_nouveau.bow.invalid": "Aquesta eina només pot acceptar encanteris que no continguin un formulari.",
   "ars_nouveau.brazier_relay.connected": "Brasero connectat.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Sortida",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Moure",
   "ars_nouveau.camera.not_loaded": "El bloc s'ha eliminat o no s'ha carregat un tros.",
   "ars_nouveau.casting_cost": "Cost de càsting",
