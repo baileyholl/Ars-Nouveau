@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Sidottu kirjoitus: %s",
   "ars_nouveau.bow.invalid": "Tämä työkalu voi hyväksyä vain loitsuja, jotka eivät sisällä lomaketta.",
   "ars_nouveau.brazier_relay.connected": "Brazier kytketty.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s span> - Poistu",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s span> - Siirrä",
   "ars_nouveau.camera.not_loaded": "Lohko on poistettu tai sitä ei ole ladattu.",
   "ars_nouveau.casting_cost": "Casting kustannukset",
