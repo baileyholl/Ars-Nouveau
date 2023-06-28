@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Bound Script: %s",
   "ars_nouveau.bow.invalid": "Dit gereedschap kan alleen spreuken krijgen die geen vorm hebben.",
   "ars_nouveau.brazier_relay.connected": "Kookplaat verbonden.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "Dit blok is verwijderd of de Chunk is niet geladen.",
   "ars_nouveau.casting_cost": "Uitvoeringskosten",
