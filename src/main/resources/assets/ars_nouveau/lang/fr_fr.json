@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Script lié : %s",
   "ars_nouveau.bow.invalid": "Cet outil ne peut accepter que les sorts qui ne contiennent pas de forme.",
   "ars_nouveau.brazier_relay.connected": "Brasero connecté.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Quitter",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Déplacement",
   "ars_nouveau.camera.not_loaded": "Le bloc a été supprimé ou n'est pas dans un chunk chargé.",
   "ars_nouveau.casting_cost": "Coût de lancement",
