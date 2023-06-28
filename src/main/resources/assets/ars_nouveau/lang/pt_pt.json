@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Script vinculado: %s",
   "ars_nouveau.bow.invalid": "Esta ferramenta só pode aceitar feitiços que não contenham um formulário.",
   "ars_nouveau.brazier_relay.connected": "Braseiro conectado.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Sair",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Mover",
   "ars_nouveau.camera.not_loaded": "O bloco foi removido ou o fragmento não foi carregado.",
   "ars_nouveau.casting_cost": "Custo de fundição",
