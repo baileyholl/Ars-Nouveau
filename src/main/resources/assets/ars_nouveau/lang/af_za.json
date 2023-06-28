@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Gebonde skrif: %s",
   "ars_nouveau.bow.invalid": "Hierdie instrument mag slegs towerspreuke aanvaar wat nie 'n vorm bevat nie.",
   "ars_nouveau.brazier_relay.connected": "Brazier gekoppel.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s span> - Verlaat",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s span> - Beweeg",
   "ars_nouveau.camera.not_loaded": "Die blok is verwyder of is nie stuk gelaai nie.",
   "ars_nouveau.casting_cost": "Gietkoste",
