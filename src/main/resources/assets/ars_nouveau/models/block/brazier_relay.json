@@ -3,8 +3,8 @@
 	"texture_size": [32, 32],
 	"render_type": "cutout",
 	"textures": {
-		"0": "ars_nouveau:/block/brazier_relay",
-		"particle": "ars_nouveau:/block/brazier_relay"
+		"0": "ars_nouveau:block/brazier_relay",
+		"particle": "ars_nouveau:block/brazier_relay"
 	},
 	"elements": [
 		{

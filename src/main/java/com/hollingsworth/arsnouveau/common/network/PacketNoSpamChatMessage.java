@@ -1,14 +1,18 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.mixin.ChatComponentAccessor;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignature;
+import net.minecraft.network.chat.Style;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -23,8 +27,16 @@ public class PacketNoSpamChatMessage {
      * Base channel for messages sent via this packet. Must be unique among users of this feature.
      */
     private static final int MESSAGE_ID = ArsNouveau.MODID.hashCode(); // -643241190
-    private static MessageSignature AN_SIGNATURE = new MessageSignature(new byte[]{(byte) 0xC0, (byte) 0xDE, (byte) 0xC0, (byte) 0xDE});
+    private static final MessageSignature AN_SIGNATURE;
 
+    static {
+        byte[] bytes = new byte[256];
+        Random random = new Random();
+        for (int i = 0; i < 256; i++) {
+            bytes[i] = (byte) random.nextInt(127);
+        }
+        AN_SIGNATURE = new MessageSignature(bytes);
+    }
     /**
      * Creates a new packet to send a no-spam message to a player.
      * <p>
@@ -67,8 +79,12 @@ public class PacketNoSpamChatMessage {
                 }
             } else {
                 ChatComponent gui = Minecraft.getInstance().gui.getChat();
-                gui.deleteMessage(AN_SIGNATURE);
-                gui.addMessage(message, AN_SIGNATURE, GuiMessageTag.system());
+                ChatComponentAccessor chatComponentAccessor = (ChatComponentAccessor) gui;
+                chatComponentAccessor.getAllMessages().removeIf(m -> m.signature() != null && m.signature().equals(AN_SIGNATURE));
+                gui.rescaleChat();
+//                chatComponentAccessor.getTrimmedMessages().removeIf(m -> m.signature() != null && m.signature().equals(AN_SIGNATURE));
+//                gui.deleteMessage(AN_SIGNATURE);
+                gui.addMessage(message.plainCopy().setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), AN_SIGNATURE, GuiMessageTag.system());
 
             }
         });

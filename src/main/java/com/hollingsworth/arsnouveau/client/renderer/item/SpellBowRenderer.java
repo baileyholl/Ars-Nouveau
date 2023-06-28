@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.renderer.ANGeoModel;
 import com.hollingsworth.arsnouveau.common.items.SpellBow;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -24,7 +24,7 @@ import software.bernie.geckolib.core.object.Color;
 
 public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     public SpellBowRenderer() {
-        super(new SpellBowModel());
+        super(new ANGeoModel<SpellBow>("geo/spellbow.geo.json", "textures/item/spellbow.png", "animations/wand_animation.json"));
     }
 
     @Override
@@ -83,11 +83,12 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, SpellBow animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderFinal(PoseStack poseStack, SpellBow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         CoreGeoBone top = model.getBone("bow_top").get();
         CoreGeoBone gem = model.getBone("gem").get();
         CoreGeoBone bottom = model.getBone("bow_bot").get();
-        float outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 10.0f) % 360;
+        double ticks = animatable.getTick(animatable);
+        float outerAngle = (float) (((ticks + partialTicks) / 10.0f) % 360);
         top.setRotZ((float) Math.toRadians(-10.0));
         top.setRotY(0.0f);
         top.setRotX(0.0f);
@@ -99,22 +100,21 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
 
         if (Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
             // System.out.println(72000 - Minecraft.getInstance().player.getItemInUseCount());
-            int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks() + partialTicks);
+            int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks());
 
             if (timeHeld != 0 && timeHeld != 72000) {
                 top.setRotZ((float) (Math.toRadians(-10) - Math.toRadians(timeHeld) * 2.0f));
                 bottom.setRotZ((float) (Math.toRadians(-10f) + Math.toRadians(timeHeld) * 2.0f));
-                outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 5.0f) % 360;
+                outerAngle = (float) (((ticks + partialTicks) / 5.0f) % 360);
                 if (timeHeld >= 19) {
                     top.setRotZ((float) (Math.toRadians(-10) - Math.toRadians(19) * 2.0f));
                     bottom.setRotZ((float) (Math.toRadians(-10) + Math.toRadians(19) * 2.0f));
-                    outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;
+                    outerAngle = (float) (((ticks + partialTicks) / 3.0f) % 360);
                 }
             }
         }
         gem.setRotX(outerAngle);
         gem.setRotY(outerAngle);
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTicks, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override

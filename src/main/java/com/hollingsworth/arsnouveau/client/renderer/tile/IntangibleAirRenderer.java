@@ -36,8 +36,7 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
         public static final RenderType RenderBlock = create("IntangibleRenderBlock",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
-//                    .setShaderState(SMOOTH_SHADE)
-                        .setShaderState(ShaderStateShard.POSITION_COLOR_LIGHTMAP_SHADER) // TODO: check intangible shader
+                        .setShaderState(ShaderStateShard.RENDERTYPE_CRUMBLING_SHADER)
                         .setLightmapState(LIGHTMAP)
                         .setTextureState(BLOCK_SHEET_MIPPED)
                         .setLayeringState(VIEW_OFFSET_Z_LAYERING)

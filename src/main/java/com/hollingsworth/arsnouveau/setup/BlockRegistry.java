@@ -743,7 +743,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCRYERS_OCULUS, new RendererBlockItem(BlockRegistry.SCRYERS_OCULUS, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return ScryerEyeRenderer::getISTER;
+                return ScryerOculusRenderer::getISTER;
             }
         }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
 

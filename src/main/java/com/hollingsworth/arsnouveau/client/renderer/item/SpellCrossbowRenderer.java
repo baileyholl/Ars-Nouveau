@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.renderer.ANGeoModel;
 import com.hollingsworth.arsnouveau.common.items.SpellCrossbow;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -24,7 +24,7 @@ import software.bernie.geckolib.core.object.Color;
 
 public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
     public SpellCrossbowRenderer() {
-        super(new SpellCrossbowModel());
+        super(new ANGeoModel<SpellCrossbow>("geo/spell_crossbow.geo.json", "textures/item/spell_crossbow.png", "animations/wand_animation.json"));
     }
 
     @Override
@@ -36,6 +36,34 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
             super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.getRed() / 255f, Color.WHITE.getGreen() / 255f, Color.WHITE.getBlue() / 255f, Color.WHITE.getAlpha() / 255f);
         }
     }
+
+    @Override
+    public void renderFinal(PoseStack poseStack, SpellCrossbow animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        CoreGeoBone right = model.getBone("bow_right").get();
+        CoreGeoBone gem = model.getBone("gem").get();
+        CoreGeoBone left = model.getBone("bow_left").get();
+        double ticks = animatable.getTick(animatable);
+        float outerAngle = (float) (((ticks + partialTicks) / 10.0f) % 360);
+
+        int speedOffset = 72000;
+        if (currentItemStack.getItem() instanceof SpellCrossbow spellCrossbow) {
+            int timeHeld = speedOffset - (int) (Minecraft.getInstance().player.getUseItemRemainingTicks());
+            if (SpellCrossbow.isCharged(currentItemStack) || Minecraft.getInstance().player.getUseItemRemainingTicks() <= 0 && Minecraft.getInstance().player.isUsingItem()) {
+                right.setRotY((float) (-Math.toRadians(35)));
+                left.setRotY((float) (Math.toRadians(35)));
+                outerAngle = (float) (((ticks + partialTicks) / 3.0f) % 360);
+            } else if (timeHeld != 0 && timeHeld != speedOffset && Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
+                timeHeld = Math.min(timeHeld, speedOffset);
+                right.setRotY((float) (-Math.toRadians(30) - Math.toRadians(timeHeld)));
+                left.setRotY((float) (Math.toRadians(30) + Math.toRadians(timeHeld)));
+                outerAngle = (float) (((ticks + partialTicks) / 5.0f) % 360);
+            }
+        }
+        gem.setRotX(outerAngle);
+        gem.setRotY(outerAngle);
+
+    }
+
 
     @Override
     public void renderByItem(ItemStack itemStack, ItemDisplayContext transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
@@ -80,38 +108,8 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
                     }
                 }
             }
-
-
         }
         super.renderByItem(itemStack, transformType, stack, bufferIn, combinedLightIn, p_239207_6_);
-    }
-
-    @Override
-    public void actuallyRender(PoseStack poseStack, SpellCrossbow animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTicks, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        CoreGeoBone right = model.getBone("bow_right").get();
-        CoreGeoBone gem = model.getBone("gem").get();
-        CoreGeoBone left = model.getBone("bow_left").get();
-        float outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 10.0f) % 360;
-
-
-        if (currentItemStack.getItem() instanceof SpellCrossbow spellCrossbow) {
-            int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks() + partialTicks);
-
-            if (SpellCrossbow.isCharged(currentItemStack)) {
-                right.setRotY((float) (right.getRotY() - Math.toRadians(35)));
-                left.setRotY((float) (left.getRotY() + Math.toRadians(35)));
-                outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 3.0f) % 360;
-            }else if (timeHeld != 0 && timeHeld != 72000 && Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
-                var offset = 40;
-                timeHeld = Math.min(timeHeld, 72000);
-                right.setRotY((float) (right.getRotY() - Math.toRadians(30) - Math.toRadians(timeHeld)));
-                left.setRotY((float) (left.getRotY() + Math.toRadians(30) + Math.toRadians(timeHeld)));
-                outerAngle = ((ClientInfo.ticksInGame + partialTicks) / 5.0f) % 360;
-            }
-        }
-        gem.setRotX(outerAngle);
-        gem.setRotY(outerAngle);
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTicks, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override

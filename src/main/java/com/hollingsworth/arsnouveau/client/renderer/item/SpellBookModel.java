@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.Nullable;
@@ -11,14 +12,16 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     public static final ResourceLocation OPEN = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_open.geo.json");
     public static final ResourceLocation CLOSED = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_closed.geo.json");
 
+    public ResourceLocation modelLoc;
+
+    public SpellBookModel(ResourceLocation modelLocation) {
+        this.modelLoc = modelLocation;
+    }
+
 
     @Override
     public void setCustomAnimations(SpellBook entity, long uniqueID, @org.jetbrains.annotations.Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);
-        this.getBone("tier3").get().setHidden(entity.tier.value < 3);
-        this.getBone("tier1").get().setHidden(entity.tier.value != 1);
-        this.getBone("tier2").get().setHidden(entity.tier.value != 2);
-
     }
 
     @Override
@@ -28,10 +31,11 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getModelResource(SpellBook object, @Nullable ItemDisplayContext transformType) {
+//        return modelLoc;
         if (transformType == ItemDisplayContext.GUI || transformType == ItemDisplayContext.FIXED) {
             return CLOSED;
         }
-        return OPEN;
+        return modelLoc;
     }
 
 
@@ -43,5 +47,10 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     @Override
     public ResourceLocation getAnimationResource(SpellBook animatable) {
         return new ResourceLocation(ArsNouveau.MODID, "animations/empty.json");
+    }
+
+    @Override
+    public RenderType getRenderType(SpellBook animatable, ResourceLocation texture) {
+        return RenderType.entityCutoutNoCull(texture);
     }
 }
