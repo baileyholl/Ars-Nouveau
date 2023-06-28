@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Script legat: %s",
   "ars_nouveau.bow.invalid": "Acest instrument poate accepta doar vrăji care nu conțin un formular.",
   "ars_nouveau.brazier_relay.connected": "Brazier conectat.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Ieșire",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Mutare",
   "ars_nouveau.camera.not_loaded": "Blocul a fost eliminat sau nu este încărcat în bucăți.",
   "ars_nouveau.casting_cost": "Costul de turnare",
