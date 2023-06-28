@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "סקריפט קשור: %s",
   "ars_nouveau.bow.invalid": "כלי זה יכול לקבל רק לחשים שאינם מכילים טופס.",
   "ars_nouveau.brazier_relay.connected": "Brazier מחובר.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s span> - יציאה",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s span> - העבר",
   "ars_nouveau.camera.not_loaded": "הבלוק הוסר או שהוא לא נטען.",
   "ars_nouveau.casting_cost": "עלות ליהוק",
