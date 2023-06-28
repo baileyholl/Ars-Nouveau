@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Innbundet skript: %s",
   "ars_nouveau.bow.invalid": "Dette verktøyet kan bare godta staver som ikke inneholder et skjema.",
   "ars_nouveau.brazier_relay.connected": "Brazier koblet til.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s span> - Avslutt",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s span> - Flytt",
   "ars_nouveau.camera.not_loaded": "Blokken er fjernet eller er ikke lastet inn.",
   "ars_nouveau.casting_cost": "Støpekostnad",
