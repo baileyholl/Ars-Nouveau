@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Skrypt związany: %s",
   "ars_nouveau.bow.invalid": "To narzędzie może akceptować tylko zaklęcia, które nie zawierają formy.",
   "ars_nouveau.brazier_relay.connected": "Kocioł podłączony.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "Blok został usunięty lub nie został załadowany fragment.",
   "ars_nouveau.casting_cost": "Koszt odlewu",
