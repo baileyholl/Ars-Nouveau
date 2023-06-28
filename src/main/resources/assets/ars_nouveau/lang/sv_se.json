@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Bunden Skript: %s",
   "ars_nouveau.bow.invalid": "Detta verktyg kan bara acceptera formler som inte innehåller en form.",
   "ars_nouveau.brazier_relay.connected": "Glödpanna ansluten.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Avsluta",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Rörelse",
   "ars_nouveau.camera.not_loaded": "Blocket har tagits bort eller är inte chunk-laddad.",
   "ars_nouveau.casting_cost": "Kastning Kostnad",
