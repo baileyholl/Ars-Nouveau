@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "绑定手稿：%s",
   "ars_nouveau.bow.invalid": "弓只接受不含法术形态的法术。",
   "ars_nouveau.brazier_relay.connected": "仪式火盆已连接。",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - 退出",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - 移动",
   "ars_nouveau.camera.not_loaded": "水晶方块已被移除，或者区块未加载。",
   "ars_nouveau.casting_cost": "施法消耗",
