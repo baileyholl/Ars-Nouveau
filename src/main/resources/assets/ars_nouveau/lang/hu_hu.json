@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Kötött szkript: %s",
   "ars_nouveau.bow.invalid": "Ez az eszköz csak olyan varázslatokat fogadhat el, amelyek nem tartalmaznak űrlapot.",
   "ars_nouveau.brazier_relay.connected": "Brazier csatlakoztatva.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s span> – Kilépés",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s span> – Mozgás",
   "ars_nouveau.camera.not_loaded": "A blokkot eltávolították, vagy nincs betöltött darab.",
   "ars_nouveau.casting_cost": "Öntés költsége",
