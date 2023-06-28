@@ -788,7 +788,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.ars_nouveau.scryer_scroll", "Use on a Scryer's Crystal to bind the location to this scroll.");
         add("tooltip.ars_nouveau.dowsing_rod", "Grants Magic Find and Scrying on use, causing magical creatures to glow and Amethyst to be revealed through blocks. Can be used on Imbuement Chamber and Enchanting Apparatus to highlight linked pedestals.");
         add("ars_nouveau.camera.move", "%1$s%2$s%3$s%4$s - Move");
-        add("ars_nouveau.camera.exit", "%1$s%2$s%3$s%4$s - Exit");
+        add("ars_nouveau.camera.exit", "%s - Exit");
         add("ars_nouveau.tooltip.scryers_oculus", "If you stare into the eye, the Starbuncle stares back at you.");
         add("ars_nouveau.page.scryers_crystal", "Can be used to look through as if you were standing there. Right click to enter the camera, or bind the camera to a Scryer's Scroll by using Blank Parchment on the block. A Scryer's Scroll will let you remotely access the block via a Scryer's Oculus. ");
         add("ars_nouveau.page.scryer_scroll", "Stores the location of a Scryer's Crystal. To create one, use a Blank Parchment on a Scry Crystal. You can remotely access the stored position by placing this item on a pedestal near a Scryer's Oculus. Naming this item will allow you to easily recognize it in the Scryer's Oculus interface.");
