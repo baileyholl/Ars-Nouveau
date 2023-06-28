@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Bound Script: %s",
   "ars_nouveau.bow.invalid": "Овај алат може прихватити само чаролије које не садрже образац.",
   "ars_nouveau.brazier_relay.connected": "Бразиер повезан.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "Блок је уклоњен или није учитан у комадима.",
   "ars_nouveau.casting_cost": "Цастинг Цост",
