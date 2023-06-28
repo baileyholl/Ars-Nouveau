@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Bağlı Komut Dosyası: %s",
   "ars_nouveau.bow.invalid": "Bu araç yalnızca bir biçim içermeyen büyüleri kabul edebilir.",
   "ars_nouveau.brazier_relay.connected": "Mangal bağlı.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "Blok kaldırıldı veya yığın yüklenmedi.",
   "ars_nouveau.casting_cost": "Döküm Maliyeti",
