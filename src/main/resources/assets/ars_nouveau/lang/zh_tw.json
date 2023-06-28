@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "綁定腳本： %s",
   "ars_nouveau.bow.invalid": "弓箭只能接受沒有形態的法術。",
   "ars_nouveau.brazier_relay.connected": "火盆相連。",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "該塊已被刪除或未加載塊。",
   "ars_nouveau.casting_cost": "鑄造成本",
