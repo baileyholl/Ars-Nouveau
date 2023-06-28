@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Скрипт привязки: %s",
   "ars_nouveau.bow.invalid": "Лук может принимать только те заклинания, которые не содержат форму.",
   "ars_nouveau.brazier_relay.connected": "Мангал подключен.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Выход",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Движение",
   "ars_nouveau.camera.not_loaded": "Блок был удален или не загружен в чанке.",
   "ars_nouveau.casting_cost": "Стоимость каста",
