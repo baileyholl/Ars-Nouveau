@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "バウンドスクリプト: %s",
   "ars_nouveau.bow.invalid": "弓はフォームを受け付けません。",
   "ars_nouveau.brazier_relay.connected": "火鉢を接続しました。",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - やめる",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - 視界移動",
   "ars_nouveau.camera.not_loaded": "対象のブロックが壊されたか、チャンクが読み込まれていません。",
   "ars_nouveau.casting_cost": "鋳造コスト",
