@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Vázaný skript: %s",
   "ars_nouveau.bow.invalid": "Tento nástroj může přijímat pouze kouzla, která neobsahují formulář.",
   "ars_nouveau.brazier_relay.connected": "Brazier připojen.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Konec",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Pohyb",
   "ars_nouveau.camera.not_loaded": "Blok byl odstraněn nebo není načten blok.",
   "ars_nouveau.casting_cost": "Náklady na casting",
