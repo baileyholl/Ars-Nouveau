@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Indbundet script: %s",
   "ars_nouveau.bow.invalid": "Dette værktøj kan kun acceptere besværgelser, der ikke indeholder en form.",
   "ars_nouveau.brazier_relay.connected": "Brazier tilsluttet.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s span> - Afslut",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s span> - Flyt",
   "ars_nouveau.camera.not_loaded": "Blokken er blevet fjernet eller er ikke chunk loaded.",
   "ars_nouveau.casting_cost": "Støbeomkostninger",
