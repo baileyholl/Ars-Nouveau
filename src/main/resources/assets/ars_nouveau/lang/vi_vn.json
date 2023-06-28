@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Tập lệnh giới hạn: %s",
   "ars_nouveau.bow.invalid": "Công cụ này chỉ có thể chấp nhận các câu thần chú không chứa biểu mẫu.",
   "ars_nouveau.brazier_relay.connected": "Brazier kết nối.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Exit",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Move",
   "ars_nouveau.camera.not_loaded": "Khối đã bị xóa hoặc không được tải khối.",
   "ars_nouveau.casting_cost": "Chi phí đúc",
