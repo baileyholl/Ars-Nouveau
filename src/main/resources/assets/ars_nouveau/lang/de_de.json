@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Gebundenes Skript: %s",
   "ars_nouveau.bow.invalid": "Dieses Tool akzeptiert möglicherweise nur Zaubersprüche, die keine Form enthalten.",
   "ars_nouveau.brazier_relay.connected": "Kohlenbecken angeschlossen.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Beenden",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Verschieben",
   "ars_nouveau.camera.not_loaded": "Der Block wurde entfernt oder ist nicht blockgeladen.",
   "ars_nouveau.casting_cost": "Casting-Kosten",
