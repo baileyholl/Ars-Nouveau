@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "Script associato: %s",
   "ars_nouveau.bow.invalid": "Questo strumento può accettare solo incantesimi che non contengono una forma.",
   "ars_nouveau.brazier_relay.connected": "Braciere collegato.",
-  "ars_nouveau.camera.exit": "%1$s%2$s%3$s%4$s - Esci",
+  "ars_nouveau.camera.exit": "%s - Exit",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - Sposta",
   "ars_nouveau.camera.not_loaded": "Il blocco è stato rimosso o non è stato caricato a blocchi.",
   "ars_nouveau.casting_cost": "Costo del casting",
