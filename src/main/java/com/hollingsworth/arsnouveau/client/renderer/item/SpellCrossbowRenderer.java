@@ -51,7 +51,6 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
             Vec3 forward = look;
             Vec3 down = right.cross(forward);
             int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
-            System.out.println(Minecraft.getInstance().player.getUseItemRemainingTicks());
             //These are used to calculate where the particles are going. We want them going into the laser, so we move the destination right, down, and forward a bit.
             if(timeHeld > 72000){
                 right = right.scale(+0.1 - player.attackAnim);
