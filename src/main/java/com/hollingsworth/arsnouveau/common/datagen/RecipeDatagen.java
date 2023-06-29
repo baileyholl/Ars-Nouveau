@@ -18,6 +18,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
@@ -608,6 +609,20 @@ public class RecipeDatagen extends RecipeProvider {
                     continue;
                 makeStonecutter(consumer, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE), BlockRegistry.getBlock(s), LibBlockNames.SOURCESTONE);
                 shapelessBuilder(SOURCESTONE).requires(BlockRegistry.getBlock(s)).save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_to_sourcestone"));
+
+                Block stair = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+                Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+                SingleItemRecipeBuilder.stonecutting(Ingredient.of(BlockRegistry.getBlock(s)), RecipeCategory.BUILDING_BLOCKS, stair)
+                        .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                        .save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_stonecutter_stair"));
+
+                SingleItemRecipeBuilder.stonecutting(Ingredient.of(BlockRegistry.getBlock(s)),RecipeCategory.BUILDING_BLOCKS, slab, 2)
+                        .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                        .save(consumer, new ResourceLocation(ArsNouveau.MODID, s + "_stone_cutterslab"));
+
+                shapedWoodenStairs(consumer, stair, BlockRegistry.getBlock(s), s + "_stairs");
+                shapedWoodenSlab(consumer, slab, BlockRegistry.getBlock(s), s + "_slab");
+
             }
 
             shapelessBuilder(getRitualItem(RitualLib.HARVEST)).requires(BlockRegistry.FLOURISHING_LOG).requires(ItemsRegistry.EARTH_ESSENCE).requires(Items.IRON_HOE).save(consumer);
@@ -728,7 +743,6 @@ public class RecipeDatagen extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, trapdoor, 2).define('#', input).pattern("###").pattern("###").group("wooden_trapdoor")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(recipeConsumer);
     }
-
     public static void shapedWoodenStairs(Consumer<FinishedRecipe> recipeConsumer, ItemLike stairs, ItemLike input) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, stairs, 4)
                 .define('#', input)
@@ -738,47 +752,62 @@ public class RecipeDatagen extends RecipeProvider {
                 .save(recipeConsumer);
 
     }
+    public static void shapedWoodenStairs(Consumer<FinishedRecipe> recipeConsumer, ItemLike stairs, ItemLike input, String name) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,stairs, 4)
+                .define('#', input)
+                .pattern("#  ")
+                .pattern("## ")
+                .pattern("###").unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                .save(recipeConsumer, new ResourceLocation(ArsNouveau.MODID, name));
+
+    }
 
     private static void shapelessWoodenButton(Consumer<FinishedRecipe> recipeConsumer, ItemLike button, ItemLike input) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, button).requires(input)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, button).requires(input)
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
     }
 
     private static void strippedLogToWood(Consumer<FinishedRecipe> recipeConsumer, ItemLike stripped, ItemLike output) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output, 3).define('#', stripped).pattern("##").pattern("##").group("bark")
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 3).define('#', stripped).pattern("##").pattern("##").group("bark")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
     }
 
     private static void shapedWoodenDoor(Consumer<FinishedRecipe> recipeConsumer, ItemLike door, ItemLike input) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, door, 3).define('#', input).pattern("##").pattern("##").pattern("##").group("wooden_door")
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, door, 3).define('#', input).pattern("##").pattern("##").pattern("##").group("wooden_door")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
     }
 
     private static void shapedWoodenFence(Consumer<FinishedRecipe> recipeConsumer, ItemLike fence, ItemLike input) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, fence, 3).define('#', Items.STICK).define('W', input).pattern("W#W").pattern("W#W").group("wooden_fence")
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, fence, 3).define('#', Items.STICK).define('W', input).pattern("W#W").pattern("W#W").group("wooden_fence")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
     }
 
     private static void shapedWoodenFenceGate(Consumer<FinishedRecipe> recipeConsumer, ItemLike fenceGate, ItemLike input) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, fenceGate).define('#', Items.STICK).define('W', input).pattern("#W#").pattern("#W#").group("wooden_fence_gate")
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, fenceGate).define('#', Items.STICK).define('W', input).pattern("#W#").pattern("#W#").group("wooden_fence_gate")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
     }
 
     private static void shapedWoodenPressurePlate(Consumer<FinishedRecipe> recipeConsumer, ItemLike pressurePlate, ItemLike input) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, pressurePlate).define('#', input).pattern("##").group("wooden_pressure_plate")
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, pressurePlate).define('#', input).pattern("##").group("wooden_pressure_plate")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
     }
 
     private static void shapedWoodenSlab(Consumer<FinishedRecipe> recipeConsumer, ItemLike slab, ItemLike input) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, slab, 6).define('#', input).pattern("###").group("wooden_slab")
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, slab, 6).define('#', input).pattern("###").group("wooden_slab")
                 .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                 .save(recipeConsumer);
+    }
+
+    private static void shapedWoodenSlab(Consumer<FinishedRecipe> recipeConsumer, ItemLike slab, ItemLike input, String name) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, slab, 6).define('#', input).pattern("###").group("wooden_slab")
+                .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                .save(recipeConsumer, new ResourceLocation(ArsNouveau.MODID, name));
     }
 
     public ShapelessRecipeBuilder shapelessBuilder(ItemLike result) {
