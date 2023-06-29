@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
@@ -57,35 +57,39 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 			List<IRecipeSlotView> views = recipeSlots.getSlotViews();
 			List<ItemStack[]> inputs = new ArrayList<>();
 			Set<StoredItemStack> stored = new HashSet<>(term.getStoredItems());
+
 			for (IRecipeSlotView view : views) {
 				if(view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {
-					ItemStack[] list = view.getIngredients(VanillaTypes.ITEM_STACK).toArray(ItemStack[]::new);
-					if(list.length == 0)inputs.add(null);
-					else {
-						inputs.add(list);
+					ItemStack[] possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toArray(ItemStack[]::new);
+					if(possibleStacks.length == 0){
+						inputs.add(null);
+						continue;
+					}
 
-						boolean found = false;
-						for (ItemStack stack : list) {
-							if (stack != null && player.getInventory().findSlotMatchingItem(stack) != -1) {
+					inputs.add(possibleStacks);
+
+					boolean found = false;
+					for (ItemStack stack : possibleStacks) {
+						if (stack != null && player.getInventory().findSlotMatchingItem(stack) != -1) {
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						for (ItemStack stack : possibleStacks) {
+							StoredItemStack s = new StoredItemStack(stack);
+							if(stored.contains(s)) {
 								found = true;
 								break;
 							}
 						}
-
-						if (!found) {
-							for (ItemStack stack : list) {
-								StoredItemStack s = new StoredItemStack(stack);
-								if(stored.contains(s)) {
-									found = true;
-									break;
-								}
-							}
-						}
-
-						if (!found) {
-							missing.add(view);
-						}
 					}
+
+					if (!found) {
+						missing.add(view);
+					}
+
 				}
 			}
 			if (doTransfer) {

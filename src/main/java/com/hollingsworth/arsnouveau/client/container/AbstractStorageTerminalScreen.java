@@ -426,6 +426,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
 		if (slotIDUnderMouse > -1) {
 			if (isPullOne(mouseButton)) {
 				if (getMenu().getSlotByID(slotIDUnderMouse).stack != null && getMenu().getSlotByID(slotIDUnderMouse).stack.getQuantity() > 0) {
@@ -456,13 +457,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			}
 		} else if (GLFW.glfwGetKey(mc.getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
 			storageSlotClick(null, SPACE_CLICK, false);
-		} else {
-			if(this.searchField.mouseClicked(mouseX, mouseY, mouseButton))
-				return true;
-			else
-				return super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
-		return true;
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {

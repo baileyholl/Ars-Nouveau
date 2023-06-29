@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -30,9 +31,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class CraftingLecternTile extends StorageLecternTile implements IAnimatable {
 	private AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
@@ -225,35 +224,43 @@ public class CraftingLecternTile extends StorageLecternTile implements IAnimatab
 		onCraftingMatrixChanged();
 	}
 
-	public void handlerItemTransfer(Player player, ItemStack[][] items, @Nullable String tab) {
+	public void transferToGrid(Player player, ItemStack[][] ingredients, @Nullable String tab) {
 		clear(tab);
-		for (int i = 0;i < 9;i++) {
-			if (items[i] != null) {
-				ItemStack stack = ItemStack.EMPTY;
-				for (int j = 0;j < items[i].length;j++) {
-					ItemStack pulled = pullStack(items[i][j], tab);
-					if (!pulled.isEmpty()) {
-						stack = pulled;
-						break;
-					}
+		for (int i = 0; i < 9; i++) {
+			ItemStack[] ingredient = ingredients[i];
+			if (ingredient == null) {
+				continue;
+			}
+			Map<Item, Long> inv = itemCounts;
+			// sort ingredient by the amount of items in the inv map
+			ingredient = Arrays.stream(ingredient).filter(Objects::nonNull).sorted(Comparator.comparingLong(a -> inv.getOrDefault(((ItemStack)a).getItem(), 0L)).reversed()).toArray(ItemStack[]::new);
+
+			// Sort ingredient by the amount of items in this inventory
+			ItemStack stack = ItemStack.EMPTY;
+			for (ItemStack itemStack : ingredient) {
+				ItemStack pulled = pullStack(itemStack, tab);
+				if (!pulled.isEmpty()) {
+					stack = pulled;
+					break;
 				}
-				if (stack.isEmpty()) {
-					for (int j = 0;j < items[i].length;j++) {
-						boolean br = false;
-						for (int k = 0;k < player.getInventory().getContainerSize();k++) {
-							if(ItemStack.isSame(player.getInventory().getItem(k), items[i][j])) {
-								stack = player.getInventory().removeItem(k, 1);
-								br = true;
-								break;
-							}
-						}
-						if (br)
+			}
+			if (stack.isEmpty()) {
+				for (ItemStack itemStack : ingredient) {
+					boolean br = false;
+					Inventory playerInv = player.getInventory();
+					for (int k = 0; k < playerInv.getContainerSize(); k++) {
+						if (ItemStack.isSame(playerInv.getItem(k), itemStack)) {
+							stack = playerInv.removeItem(k, 1);
+							br = true;
 							break;
+						}
 					}
+					if (br)
+						break;
 				}
-				if (!stack.isEmpty()) {
-					craftMatrix.setItem(i, stack);
-				}
+			}
+			if (!stack.isEmpty()) {
+				craftMatrix.setItem(i, stack);
 			}
 		}
 		onCraftingMatrixChanged();
