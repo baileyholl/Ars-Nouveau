@@ -82,7 +82,9 @@ public class SkyTextureHandler {
     }
 
     public static void setupRenderTarget(int width, int height) {
-        final Minecraft instance = Minecraft.getInstance();
+        if(skyRenderTarget != null){
+            skyRenderTarget.destroyBuffers();
+        }
         skyRenderTarget = new TextureTarget(width, height, true, Minecraft.ON_OSX);
     }
 }
