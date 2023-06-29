@@ -127,8 +127,10 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
-            this.tag(DECORATIVE_AN).add(block);
-            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+            Block stair = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+            Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+            this.tag(DECORATIVE_AN).add(block, stair, slab);
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block, stair, slab);
         }
 
         this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE, BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
