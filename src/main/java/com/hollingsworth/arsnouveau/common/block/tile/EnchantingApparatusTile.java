@@ -24,18 +24,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -44,10 +38,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, GeoBlockEntity, IAnimationListener {
-
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-
+public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, GeoBlockEntity {
     private int counter;
     public boolean isCrafting;
     public static final int craftingLength = 210;
@@ -235,44 +226,32 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         attemptCraft(stack, null);
     }
 
-    AnimationController<EnchantingApparatusTile> craftController;
-    AnimationController<EnchantingApparatusTile> idleController;
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        idleController = new AnimationController<>(this, "controller", 0, this::idlePredicate);
-        animatableManager.add(idleController);
-        craftController = new AnimationController<>(this, "craft_controller", 0, this::craftPredicate);
-        animatableManager.add(craftController);
+        animatableManager.add(new AnimationController<>(this, "controller", 0, event ->{
+            event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
+            return PlayState.CONTINUE;
+        }));
+        animatableManager.add(new AnimationController<>(this, "craft_controller", 0, event ->{
+            if (!this.isCrafting) {
+                event.getController().forceAnimationReset();
+                return PlayState.STOP;
+            }else{
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("enchanting"));
+            }
+            return PlayState.CONTINUE;
+        }));
     }
 
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return manager;
-    }
-
-    private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
-        return PlayState.CONTINUE;
-    }
-
-    private <E extends BlockEntity & GeoAnimatable> PlayState craftPredicate(AnimationState<E> event) {
-        if (!this.isCrafting)
-            return PlayState.STOP;
-        return PlayState.CONTINUE;
+    public double getBoneResetTime() {
+        return 0;
     }
 
     @Override
-    public void startAnimation(int arg) {
-        try {
-            if (craftController != null) {
-                craftController.forceAnimationReset();
-                craftController.setAnimation(RawAnimation.begin().thenPlay("enchanting"));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return manager;
     }
 }

@@ -118,6 +118,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
+        //TODO: check if this still works after AT
         maxUpStep = 1.1f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         reloadGoals();

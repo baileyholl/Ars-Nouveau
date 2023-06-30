@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -19,33 +20,21 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtils;
 
 public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
+    public static MultiBufferSource.BufferSource cosmeticBuffer = MultiBufferSource.immediate(new BufferBuilder(256));
 
     public StarbuncleRenderer(EntityRendererProvider.Context manager) {
         super(manager, new StarbuncleModel());
     }
 
-    public MultiBufferSource bufferSource;
-    @Override
-    public void preRender(PoseStack poseStack, Starbuncle animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.bufferSource = bufferSource;
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
 
     @Override
     public void renderFinal(PoseStack poseStack, Starbuncle animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.renderFinal(poseStack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-//        if (animatable.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic) {
-//            Optional<GeoBone> bone = model.getBone(cosmetic.getBone());
-//            bone.ifPresent(geoBone -> {
-//                poseStack.pushPose();
-//                CosmeticRenderUtil.renderCosmetic(geoBone, poseStack, this.bufferSource, animatable, packedLight);
-//                poseStack.popPose();
-//            });
-//        }
     }
 
     @Override
     public void renderRecursively(PoseStack stack, Starbuncle animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtils.translateToPivotPoint(stack, bone);
@@ -56,15 +45,15 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
                 itemstack = animatable.dynamicBehavior.getStackForRender();
             }
             if(!itemstack.isEmpty()) {
-                Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferSource, animatable.level, (int) animatable.getOnPos().asLong());
+                Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack,
+                        cosmeticBuffer, animatable.level, (int) animatable.getOnPos().asLong());
             }
             stack.popPose();
         }
-
         if (animatable.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
-            CosmeticRenderUtil.renderCosmetic(bone, stack, this.bufferSource, animatable, packedLight);
+            CosmeticRenderUtil.renderCosmetic(bone, stack, cosmeticBuffer, animatable, packedLight);
+            cosmeticBuffer.endBatch();
         }
-        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override

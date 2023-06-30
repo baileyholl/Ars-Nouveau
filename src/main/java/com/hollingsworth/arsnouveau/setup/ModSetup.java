@@ -39,7 +39,7 @@ public class ModSetup {
     }
 
     public static void initGeckolib() {
-        GeckoLib.initialize();
+        GeckoLib.shadowInit();
     }
 
     public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.createOptional(Registries.TRUNK_PLACER_TYPE, MODID);
