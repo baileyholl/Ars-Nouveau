@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm;
 
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.core.BlockPos;
@@ -61,7 +62,7 @@ public class TransferGoal extends Goal {
                 if(task != null){
                     bookwyrm.setHeldStack(task.stack);
                     bookwyrm.level.playSound(null, bookwyrm.getX(), bookwyrm.getY(), bookwyrm.getZ(),
-                            SoundEvents.ITEM_PICKUP, bookwyrm.getSoundSource(), 0.5f, 1.0F);
+                            SoundEvents.ITEM_PICKUP, bookwyrm.getSoundSource(), 0.3f + (float) ParticleUtil.inRange(-0.1, 0.1), 1.0F + (float) ParticleUtil.inRange(-0.1, 0.1));
                     if (bookwyrm.level instanceof ServerLevel serverLevel) {
                         OpenChestEvent event = new OpenChestEvent(serverLevel, new BlockPos(task.from.subtract(0, 1, 0)), 20);
                         event.open();

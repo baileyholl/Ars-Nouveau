@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -10,15 +11,27 @@ import org.jetbrains.annotations.Nullable;
 
 public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior> {
     public PotionTakeGoal(Starbuncle starbuncle, StarbyPotionBehavior behavior) {
-        super(starbuncle, behavior, () -> {
-            return behavior.getHeldPotion().getPotion() == Potions.EMPTY;
-        });
+        super(starbuncle, behavior, () -> behavior.getHeldPotion().getPotion() == Potions.EMPTY);
     }
 
     @Override
     public void start() {
         super.start();
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
+    }
+
+    @Override
+    public boolean canUse() {
+        boolean superCan = super.canUse();
+        if(!superCan){
+            return false;
+        }
+        if(behavior.isBedPowered()){
+            starbuncle.setBackOff(20);
+            starbuncle.addDebugEvent(new DebugEvent("BED_POWERED", "Cannot take potion, bed is powered"));
+            return false;
+        }
+        return true;
     }
 
     @Nullable
