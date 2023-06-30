@@ -611,7 +611,7 @@
   "ars_nouveau.page6.whirlisprig_charm": "ドロップ率は、幸福度、多様性、ワールスプリッグの家のブロックの割合によって決まります。例えば、たくさんの丸太を生成するには、より多くの木を育てます。より多くの種や作物を収穫するには、より多くの作物を植えてください。",
   "ars_nouveau.page6.wilden": "ウィルデン召喚の儀式で召喚できるキメラは、強力で破壊力のある中級ボスです。",
   "ars_nouveau.page6.wixie_charm": "複数のウィクシーを使用する際、大瓶に特定のポーションのみを入れさせたい時があるかもしれない。ウィクシーは生産したポーションと同じものが入っている大瓶か、ロックされていない空の大瓶にポーションを入れる。クラフトするごとにソースを消費する。ポーションの大瓶の項目に詳しい情報が載っている。",
-  "ars_nouveau.page7.starbuncle_charm": "スターバンクルは主権の杖を使ってメイジブルームのベッドと結びつけることができます。結びつけられたスターバンクルは他にやることが無い時にそのベッドの上で休むようになります。道を開けておく時や物がドロップする所で待機させる場合などに便利です。",
+  "ars_nouveau.page7.starbuncle_charm": "Starbuncles may be bound to a Magebloom Bed using the Dominion Wand and will rest on the bed when there are no other tasks to be done. Useful for keeping them out of the way, or returning them to a spot where items drop. Providing a redstone signal to the bed will disable starbuncles and go back to their beds.",
   "ars_nouveau.page7.wilden": "キメラはティアー2のスペルと装備を持つ術者に相応しい強敵となる。キメラは冷気ダメージに耐性があり、バフ、ディスペル、移動力を提供する様々なスペルが推奨される。",
   "ars_nouveau.page7.wixie_charm": "主権の杖を保管ブロック -> 大釜の順で使うことで、ウィクシーが材料を取り出す保管ブロックを指定することができる。保管ブロックを指定した後は、ウィクシーはそれ以外の保管ブロックからアイテムを取り出さなくなる。",
   "ars_nouveau.pathing": "パッチング",
