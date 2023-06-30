@@ -33,6 +33,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
+    public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "storage/autopull_disabled"));
     public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
     private final DataGenerator generator;
 
@@ -270,6 +271,7 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
+        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK, BlockRegistry.ALTERATION_TABLE);
     }
 
     protected Path getPath(ResourceLocation p_126514_) {

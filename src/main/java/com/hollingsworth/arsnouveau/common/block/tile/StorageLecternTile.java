@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -417,6 +418,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			return;
 		for(Direction dir : Direction.values()){
 			BlockPos pos = this.worldPosition.relative(dir);
+			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)){
+				continue;
+			}
 			BlockEntity tile = this.level.getBlockEntity(pos);
 			if(tile == null || mainLectern.connectedInventories.contains(pos))
 				continue;
