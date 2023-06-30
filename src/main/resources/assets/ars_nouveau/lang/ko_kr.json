@@ -611,7 +611,7 @@
   "ars_nouveau.page6.whirlisprig_charm": "드롭률은 행복도, 다양성, 월스프링 집에 있는 블록의 비율에 따라 결정됩니다. 예를 들어 통나무를 많이 생산하려면 나무를 더 많이 키우고, 더 많은 씨앗과 작물 수확량을 얻으려면 더 많은 작물을 심으세요.",
   "ars_nouveau.page6.wilden": "키메라는 2단계 주문과 장비를 갖춘 시전자에게 가치 있는 전투입니다. 키메라는 냉기 피해에 저항하며 버프, 디스펠, 이동성 등 다양한 주문이 요구됩니다.",
   "ars_nouveau.page6.wixie_charm": "여러 마리의 윅시를 사용할 때 특정 물약 단지를 잠그고 싶은 경우가 있습니다. 윅시는 동일한 물약 또는 잠금 해제된 빈 물약 단지에만 물약을 내보냅니다. 각 제작에는 마력 비용이 들며 자세한 내용은 물약 단지의 항목을 참조해 주세요.",
-  "ars_nouveau.page7.starbuncle_charm": "별다람쥐는 만능 지팡이를 사용해 마법꽃 침대에 묶을 수 있으며, 다른 작업이 없을 때는 침대에서 쉬게 됩니다. 방해가 되지 않게 하거나 아이템이 떨어지는 장소로 돌려보낼 때 유용합니다.",
+  "ars_nouveau.page7.starbuncle_charm": "Starbuncles may be bound to a Magebloom Bed using the Dominion Wand and will rest on the bed when there are no other tasks to be done. Useful for keeping them out of the way, or returning them to a spot where items drop. Providing a redstone signal to the bed will disable starbuncles and go back to their beds.",
   "ars_nouveau.page7.wilden": "키메라는 티어 2 주문과 장비를 사용하는 플레이어가 싸울 만한 가치가 있는 적입니다. 키메라는 냉기 피해에 강하며 버프, 디스펠, 이동 등 다양한 주문을 사용할 수 있습니다.",
   "ars_nouveau.page7.wixie_charm": "창고에 만능 지팡이를 사용한 다음 가마솥에 사용해 윅시가 사용할 특정 창고를 선택할 수 있습니다. 창고를 선택하면 해당 창고만 사용할 수 있으며, 윅시는 기본적으로 주변의 모든 창고에서 물건을 가져오진 않습니다.",
   "ars_nouveau.pathing": "경로",
