@@ -611,7 +611,7 @@
   "ars_nouveau.page6.whirlisprig_charm": "自然材料的掉落率由幸福度、多样性和风转草家中方块的比例决定。例如，要产生许多原木，你需要种多点树。要得到更多种子和作物，只需要种多点作物。",
   "ars_nouveau.page6.wilden": "奇美拉是一种强大且具有破坏性的中级Boss，需要通过荒野供物仪式召唤。",
   "ars_nouveau.page6.wixie_charm": "当使用复数的薇克精时，你也许会想要将一个罐子锁定为接受特定的药水种类。薇克精只会将药水放进已有相同种类药水的罐子，或者锁定为此种类药水的空罐子。每次合成都会消耗魔源。查看药水罐章节获得更多信息。",
-  "ars_nouveau.page7.starbuncle_charm": "使用支配之杖还能将星宝石兽绑定到魔花床上。被绑定后，它们没有任务时就会在床上休息。这一绑定有两个用途：避免它们挡路，或者让它们能在空闲时主动回到物品掉落的地点。",
+  "ars_nouveau.page7.starbuncle_charm": "Starbuncles may be bound to a Magebloom Bed using the Dominion Wand and will rest on the bed when there are no other tasks to be done. Useful for keeping them out of the way, or returning them to a spot where items drop. Providing a redstone signal to the bed will disable starbuncles and go back to their beds.",
   "ars_nouveau.page7.wilden": "对于带有2级法术和装备的施法者来说，奇美拉是一个相称的对手。奇美拉具有寒冷抗性，建议使用能带来正面增益、解除魔法和增加移动性的法术。",
   "ars_nouveau.page7.wixie_charm": "你可以对库存和坩埚使用支配之杖来为薇克精进行指定。如果有指定的库存，薇克精将不再从附近的未指定库存拿取物品，而是仅和指定的库存进行交互。",
   "ars_nouveau.pathing": "寻路",
