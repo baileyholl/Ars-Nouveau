@@ -611,7 +611,7 @@
   "ars_nouveau.page6.whirlisprig_charm": "掉落率取決於 Whirlisprig 房屋中的幸福度、多樣性和方塊比例。例如，要生成大量日誌，請種植更多的樹。要獲得更多種子和農作物收成，請種植更多農作物。",
   "ars_nouveau.page6.wilden": "奇美拉是通過野性祭祀儀式召喚出來的，是一個強大且具有破壞性的中級首領。",
   "ars_nouveau.page6.wixie_charm": "使用多個 Wixies 時，您可能希望將一個罐子鎖定到特定的藥水。 Wixies 只會將藥水輸出到裝有相同藥水或未解鎖的空藥水的罐子中。每種工藝都需要源頭。有關更多信息，請參閱有關藥水罐的部分。",
-  "ars_nouveau.page7.starbuncle_charm": "Starbuncles 可以使用 Dominion 魔杖綁定到 Magebloom 床上，當沒有其他任務可做時，它們會在床上休息。用於讓它們遠離，或將它們返回到物品掉落的地方。",
+  "ars_nouveau.page7.starbuncle_charm": "Starbuncles may be bound to a Magebloom Bed using the Dominion Wand and will rest on the bed when there are no other tasks to be done. Useful for keeping them out of the way, or returning them to a spot where items drop. Providing a redstone signal to the bed will disable starbuncles and go back to their beds.",
   "ars_nouveau.page7.wilden": "對於擁有第 2 層法術和裝備的施法者來說，奇美拉是一場值得戰鬥的戰鬥。 Chimera 可抵抗寒冷傷害，並建議使用各種法術，包括增益、驅散和機動性。",
   "ars_nouveau.page7.wixie_charm": "您可以通過在庫存上使用統治魔杖然後使用大鍋來為 wixie 選擇特定的庫存。如果選擇了任何庫存，則只能使用這些庫存，默認情況下 Wixie 將不再從附近的所有庫存中提取。",
   "ars_nouveau.pathing": "路徑",
