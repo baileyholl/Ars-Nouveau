@@ -15,7 +15,6 @@ public class ModDatagen {
 
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
-        //TODO: restore datagen
         APIRegistry.postInit();
         PackOutput output = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
@@ -28,9 +27,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator()));
-//        event.getGenerator().addProvider(event.includeServer(), new LootTableProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output));
-//        event.getGenerator().addProvider(event.includeServer(), new DungeonLootGenerator(event.getGenerator(), MODID));
         event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(output, provider, event.getExistingFileHelper()));

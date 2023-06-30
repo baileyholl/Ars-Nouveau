@@ -57,6 +57,7 @@ public class ArsNouveau {
     public static boolean caelusLoaded = false;
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
+    public static boolean sodiumLoaded = false;
 
     public static CreativeModeTab itemGroup = CreativeModeTab.builder()
             .icon(() -> ItemsRegistry.CREATIVE_SPELLBOOK.get().getDefaultInstance())
@@ -70,6 +71,7 @@ public class ArsNouveau {
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
+        sodiumLoaded = ModList.get().isLoaded("rubidium");
         APIRegistry.setup();
         ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(),MODID + "-server");
         ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);

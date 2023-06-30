@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.utils;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.mojang.blaze3d.platform.Lighting;
@@ -65,7 +66,7 @@ public class RenderUtils {
                 ItemDisplayContext.GUI,
                 false,
                 poseStack,
-                transparent ? transparentBuffer(buffer) : buffer,
+                transparent && !ArsNouveau.sodiumLoaded ? transparentBuffer(buffer) : buffer, // TODO: remove sodium check when sodium is fixed https://github.com/CaffeineMC/sodium-fabric/pull/1842/files
                 LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY,
                 model
@@ -80,73 +81,6 @@ public class RenderUtils {
 
         poseStack.popPose();
     }
-
-
-//    public static void drawItemAsIcon(ItemStack itemStack, GuiGraphics graphics, int positionX, int positionY, int size, boolean renderTransparent, int zIndex) {
-//        if(itemStack.isEmpty()) return;
-//        PoseStack pose = graphics.pose();
-//        BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getModel(itemStack, null, null, 0);
-//        pose.pushPose();
-//        pose.translate(positionX, positionY, zIndex);
-//        pose.translate(8.0D, 8.0D, zIndex);
-//        pose.mulPoseMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
-//        pose.scale(size, size, size);
-//        boolean flag = !bakedModel.usesBlockLight();
-//        if (flag) {
-//            Lighting.setupForFlatItems();
-//        }
-//
-//        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-//
-//        // == copied from ItemRenderer.render
-//        ItemDisplayContext displayContext = ItemDisplayContext.GUI;
-//        MultiBufferSource bufferSource =  graphics.bufferSource();
-//        int light = 15728880;
-//        int overlay = OverlayTexture.NO_OVERLAY;
-//        boolean lefthandTransform = false;
-//        pose.pushPose();
-//        if (renderTransparent) {
-//            bufferSource = transparentBuffer(bufferSource);
-//        }
-//        if (itemStack.is(Items.TRIDENT)) {
-//            bakedModel = itemRenderer.getItemModelShaper().getModelManager().getModel(ModelResourceLocation.vanilla("trident", "inventory"));
-//        } else if (itemStack.is(Items.SPYGLASS)) {
-//            bakedModel = itemRenderer.getItemModelShaper().getModelManager().getModel(ModelResourceLocation.vanilla("spyglass", "inventory"));
-//        }
-//
-//
-//        bakedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(pose, bakedModel, displayContext, lefthandTransform);
-//        pose.translate(-0.5F, -0.5F, -0.5F);
-//        if (!bakedModel.isCustomRenderer() && (!itemStack.is(Items.TRIDENT) || flag)) {
-//            for (var model : bakedModel.getRenderPasses(itemStack, true)) {
-//                for (var rendertype : model.getRenderTypes(itemStack, true)) {
-//                    VertexConsumer vertexconsumer;
-//                    if (itemStack.is(ItemTags.COMPASSES) || itemStack.is(Items.CLOCK) && itemStack.hasFoil()) {
-//                        pose.pushPose();
-//                        PoseStack.Pose posestack$pose = pose.last();
-//                        MatrixUtil.mulComponentWise(posestack$pose.pose(), 0.5F);
-//
-//
-//                        vertexconsumer = ItemRenderer.getCompassFoilBufferDirect(bufferSource, rendertype, posestack$pose);
-//
-//                        pose.popPose();
-//                    } else {
-//                        vertexconsumer = ItemRenderer.getFoilBufferDirect(bufferSource, rendertype, true, itemStack.hasFoil());
-//                    }
-//
-//                    itemRenderer.renderModelLists(model, itemStack, light, overlay, pose, vertexconsumer);
-//                }
-//            }
-//        } else {
-//            net.minecraftforge.client.extensions.common.IClientItemExtensions.of(itemStack).getCustomRenderer().renderByItem(itemStack, displayContext, pose, bufferSource, light, overlay);
-//        }
-//        pose.popPose();
-//        graphics.flush();
-//        if (flag) {
-//            Lighting.setupFor3DItems();
-//        }
-//        pose.popPose();
-//    }
 
 
     private static MultiBufferSource transparentBuffer(MultiBufferSource buffer) {
