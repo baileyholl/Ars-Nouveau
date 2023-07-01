@@ -17,9 +17,6 @@ buildscript {
 
 }
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -34,8 +31,6 @@ version = '4.0.2'
 
 configurations {
     library
-    shade // <- Create a 'shade' configuration
-    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
 }
 
 if (System.getenv('BUILD_NUMBER') != null) {
@@ -64,7 +59,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
-    mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
+    mappings channel: 'parchment', version: '2023.07.02-1.20.1'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
@@ -168,14 +163,23 @@ repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
 }
+
+jarJar.enable()
+
 dependencies {
 
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
-    shade fg.deobf("com.github.LlamaLad7:MixinExtras:0.1.1")
-    library fg.deobf("com.github.LlamaLad7:MixinExtras:0.1.1")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
+    library fg.deobf("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+
+    implementation(jarJar("com.github.llamalad7:MixinExtras:${mixin_extras_version}")) {
+        jarJar.ranged(it, "[${mixin_extras_version},)")
+    }
+
+    jarJar(group: 'software.bernie.geckolib', name: 'geckolib-forge-1.20', version: "[4.0,)") {
+        jarJar.pin(it, "4.2.1")
+    }
 
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
@@ -186,7 +190,9 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
     implementation fg.deobf("curse.maven:curios-309927:4583413")
-    shade fg.deobf("curse.maven:geckolib-388172:4627674")
+    
+    implementation fg.deobf("curse.maven:geckolib-388172:4627674")
+
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
     implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
@@ -194,7 +200,7 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
 //    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental
-//    runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // ars elemental
+//    runtimeOnly fg.deobf("curse.maven:tmg-560595:4001247") // toomanyglyphs
 
 //    implementation fg.deobf("curse.maven:cyanide-541676:3832812") // Cyanide
 //    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.19-3.0.0.3:api")
@@ -212,6 +218,8 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:config-287342:4391554") // titanium
     runtimeOnly fg.deobf("curse.maven:commandstructures-565119:3823785")*/
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+
 }
 
 
@@ -236,27 +244,10 @@ jar {
 // and then declare that to be published
 // Note you'll need to add a repository here
 
-shadowJar {
-    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
-    exclude 'software/bernie/example/**'
-    exclude 'assets/geckolib3/**'
-    exclude '**/*.java'
-
-    classifier ''
-    relocate 'com.llamalad7', 'shadowed.llamalad7'
-    relocate 'software.bernie.shadowed', 'software.bernie.ars_nouveau.shadowed'
-    relocate 'software.bernie.geckolib', 'software.bernie.ars_nouveau.geckolib'
-    finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
-    mergeServiceFiles()
-}
 
 
 artifacts {
     archives sourcesJar
-}
-
-reobf { // <- Add the output of shadowJar to reobfuscation, so shadowed content is reobfuscated
-    shadowJar {}
 }
 
 publishing {
@@ -288,7 +279,6 @@ publishing {
 // metadata includes mapped dependencies which are not reasonably consumable by
 // other mod developers.
 tasks.withType(GenerateModuleMetadata) {
-
     enabled = false
 }
 
@@ -300,7 +290,7 @@ mixin {
 // Copied from Botania
 if (System.getProperty("idea.sync.active") == "true") {
     afterEvaluate {
-        tasks.withType(JavaCompile).all {
+        tasks.withType(JavaCompile).configureEach {
             it.options.annotationProcessorPath = files()
         }
     }
@@ -309,3 +299,14 @@ tasks.withType(JavaCompile).configureEach({
     options.encoding = 'UTF-8'
     options.compilerArgs.addAll(["-Xmaxerrs", "100000"])
 })
+
+tasks.register('jarJarRelease') {
+    doLast {
+        tasks.jarJar {
+            classifier = ''
+        }
+    }
+    finalizedBy tasks.jarJar
+}
+tasks.jarJar.finalizedBy('reobfJarJar')
+
