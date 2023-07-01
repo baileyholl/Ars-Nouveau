@@ -28,11 +28,6 @@ apply plugin: 'maven-publish'
 
 version = '4.0.2'
 
-
-configurations {
-    library
-}
-
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -41,14 +36,6 @@ archivesBaseName = 'ars_nouveau-1.20.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
-
-// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
-// If you have any module issues, check these files to make sure there are no duplicate dependencies
-minecraft.runs.configureEach {
-    lazyToken('minecraft_classpath') {
-        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-    }
-}
 
 minecraft {
 
@@ -171,9 +158,9 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     implementation 'org.jetbrains:annotations:23.0.0'
-    library fg.deobf("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
 
-    implementation(jarJar("com.github.llamalad7:MixinExtras:${mixin_extras_version}")) {
+    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
+    implementation(jarJar("com.github.llamalad7.mixinextras:mixinextras-forge:${mixin_extras_version}")) {
         jarJar.ranged(it, "[${mixin_extras_version},)")
     }
 
