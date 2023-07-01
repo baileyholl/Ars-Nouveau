@@ -1,4 +1,4 @@
-// 1.20.1	2023-06-28T22:14:33.5823131	Tags for minecraft:item mod id ars_nouveau
+// 1.20.1	2023-07-01T12:07:35.1347163	Tags for minecraft:item mod id ars_nouveau
 bde6ca31173d1f22d5f6fe355dc90c9faa35b239 data/ars_nouveau/tags/items/golem/shard.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/items/interact_jar_blacklist.json
 a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/items/magic_food.json
@@ -6,11 +6,11 @@ a0800fbffa0e00aecb2e86a1e991d42904427191 data/ars_nouveau/tags/items/magic_food.
 f5e3f6895ab28e98f84db162bb5a7ec0d8484aae data/ars_nouveau/tags/items/summon_bed.json
 69048d53b29588f52e6e47c61ac0b01697fdad03 data/ars_nouveau/tags/items/whirlisprig/denied_drop.json
 efd77219e54deb73b590435b014edcbb9c0f5ee1 data/ars_nouveau/tags/items/wilden_drop.json
-1570fe5de45f59af4dfde9132a7f423f4aa8ef2a data/forge/tags/items/armors.json
-49c75654b2dce014e9d340eb6c93a0c7c16a0f02 data/forge/tags/items/armors/boots.json
-db104a7ab9ac56dda7d8662811c47622fba6de4c data/forge/tags/items/armors/chestplates.json
-da4665fd166ddba7d16ba80eaef3090a829d8151 data/forge/tags/items/armors/helmets.json
-002cae1ab032b1deb42e519cd947acb33856e323 data/forge/tags/items/armors/leggings.json
+aa16961d2b945c22363c452b360f56d9b4b01e32 data/forge/tags/items/armors.json
+c417d25dbf09fa35316563dab44086ea9c57398f data/forge/tags/items/armors/boots.json
+debde73c045884d2f3335478b8e70e443135fe48 data/forge/tags/items/armors/chestplates.json
+b11f943ffa45a788b39c9d51e5bd83e321044249 data/forge/tags/items/armors/helmets.json
+4106122c7c1fbe11b433269a6ae8ce58fe1926d5 data/forge/tags/items/armors/leggings.json
 2f9b7e099208b0e404e0f81c89f2a368e5d909da data/forge/tags/items/chests.json
 2f9b7e099208b0e404e0f81c89f2a368e5d909da data/forge/tags/items/chests/wooden.json
 d975e125845630962d46be3215fd2bf3c557e5dc data/forge/tags/items/crops.json

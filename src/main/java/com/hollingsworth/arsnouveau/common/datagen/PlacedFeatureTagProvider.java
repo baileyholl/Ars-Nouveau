@@ -24,10 +24,7 @@ public class PlacedFeatureTagProvider extends TagsProvider<PlacedFeature> {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        // TODO: restore feature tags
         this.tag(ARCHWOOD_TREES);
         this.tag(SOURCE_BERRIES);
-//        this.tag(ARCHWOOD_TREES).add(WorldEvent.PLACED_MIXED.get());
-//        this.tag(SOURCE_BERRIES).add(WorldEvent.BERRY_BUSH_PATCH_CONFIG.get());
     }
 }

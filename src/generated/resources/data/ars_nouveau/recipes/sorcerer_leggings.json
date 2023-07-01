@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
   "output": {
-    "item": "ars_nouveau:archmage_hood"
+    "item": "ars_nouveau:sorcerer_leggings"
   },
   "pedestalItems": [
     {
@@ -20,7 +20,7 @@
   ],
   "reagent": [
     {
-      "item": "minecraft:diamond_helmet"
+      "item": "minecraft:golden_leggings"
     }
   ],
   "sourceCost": 0

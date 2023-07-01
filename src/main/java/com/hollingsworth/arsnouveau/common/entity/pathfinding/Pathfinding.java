@@ -88,7 +88,7 @@ public final class Pathfinding {
 //
 //        matrixStack.pushPose();
 //        matrixStack.translate(-dx, -dy, -dz);
-//        //TODO: restore lighting
+//
 //        RenderSystem.enableDepthTest();
 //        RenderSystem.disableTexture();
 //        RenderSystem.disableBlend();
@@ -212,7 +212,7 @@ public final class Pathfinding {
 //
 //        matrixStack.pushPose();
 //        matrixStack.translate(0.0F, 0.75F, 0.0F);
-//        //TODO: restore normal?
+//
 //        //RenderSystem.normal3f(0.0F, 1.0F, 0.0F);
 //
 //        final EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();

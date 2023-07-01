@@ -127,7 +127,7 @@ public class PatchouliProvider extends SimpleDataProvider{
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "better_casting")
                 .withSortNum(7)
-                .withIcon(ItemsRegistry.NOVICE_ROBES)
+                .withIcon(ItemsRegistry.SORCERER_ROBES)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(MACHINES, "enchanting_apparatus")), getPath(GETTING_STARTED, "better_casting"));
 
@@ -492,7 +492,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new ApparatusPage(ItemsRegistry.LINGERING_LAUNCHER)), getPath(EQUIPMENT, "flask_launcher"));
 
         PatchouliBuilder ARMOR_ENTRY = new PatchouliBuilder(EQUIPMENT, "armor")
-                .withIcon(ItemsRegistry.NOVICE_ROBES)
+                .withIcon(ItemsRegistry.SORCERER_ROBES)
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER))
                 .withPage(new TextPage("ars_nouveau.page.threads").withTitle("ars_nouveau.threads"))
@@ -501,25 +501,25 @@ public class PatchouliProvider extends SimpleDataProvider{
                         .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/battlemage_diagram.png"))
                         .withBorder().withTitle("ars_nouveau.thread_layout")
                         .withText("ars_nouveau.page.layout_desc"))
-                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_HOOD))
-                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_ROBES))
-                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_LEGGINGS))
-                .withPage(new ApparatusPage(ItemsRegistry.NOVICE_BOOTS))
-                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_HOOD))
-                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_ROBES))
-                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_LEGGINGS))
-                .withPage(new ApparatusPage(ItemsRegistry.APPRENTICE_BOOTS))
-                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_HOOD))
-                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_ROBES))
-                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_LEGGINGS))
-                .withPage(new ApparatusPage(ItemsRegistry.ARCHMAGE_BOOTS))
+                .withPage(new ApparatusPage(ItemsRegistry.SORCERER_HOOD))
+                .withPage(new ApparatusPage(ItemsRegistry.SORCERER_ROBES))
+                .withPage(new ApparatusPage(ItemsRegistry.SORCERER_LEGGINGS))
+                .withPage(new ApparatusPage(ItemsRegistry.SORCERER_BOOTS))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCANIST_HOOD))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCANIST_ROBES))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCANIST_LEGGINGS))
+                .withPage(new ApparatusPage(ItemsRegistry.ARCANIST_BOOTS))
+                .withPage(new ApparatusPage(ItemsRegistry.BATTLEMAGE_HOOD))
+                .withPage(new ApparatusPage(ItemsRegistry.BATTLEMAGE_ROBES))
+                .withPage(new ApparatusPage(ItemsRegistry.BATTLEMAGE_LEGGINGS))
+                .withPage(new ApparatusPage(ItemsRegistry.BATTLEMAGE_BOOTS))
                 .withPage(new RelationsPage().withEntry(ARMOR, "armor_upgrade"));
         addPage(ARMOR_ENTRY.withCategory(ARMOR), getPath(ARMOR, "armor"));
 
         addPage(new PatchouliBuilder(ARMOR, "armor_upgrading")
                 .withLocalizedText()
                 .withPage(new TextPage(getLangPath("armor_upgrading", 2)).withTitle("ars_nouveau.armor_tiers"))
-                .withIcon(ItemsRegistry.APPRENTICE_HOOD)
+                .withIcon(ItemsRegistry.ARCANIST_HOOD)
                 .withPage(new ApparatusTextPage("ars_nouveau:upgrade_1"))
                 .withPage(new ApparatusTextPage("ars_nouveau:upgrade_2"))
                 .withPage(new RelationsPage().withEntry(ARMOR, "armor").withEntry(ARMOR, "alteration_table"))

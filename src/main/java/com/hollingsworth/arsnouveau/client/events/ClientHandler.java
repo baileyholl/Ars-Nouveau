@@ -257,53 +257,53 @@ public class ClientHandler {
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.NOVICE_ROBES);
+                ItemsRegistry.SORCERER_ROBES);
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.NOVICE_BOOTS);
+                ItemsRegistry.SORCERER_BOOTS);
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.NOVICE_HOOD);
+                ItemsRegistry.SORCERER_HOOD);
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.NOVICE_LEGGINGS);
-
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_ROBES);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_BOOTS);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_HOOD);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.APPRENTICE_LEGGINGS);
+                ItemsRegistry.SORCERER_LEGGINGS);
 
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_ROBES);
+                ItemsRegistry.ARCANIST_ROBES);
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_BOOTS);
+                ItemsRegistry.ARCANIST_BOOTS);
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_HOOD);
+                ItemsRegistry.ARCANIST_HOOD);
 
         event.register((stack, color) -> color > 0 ? -1 :
                         colorFromArmor(stack),
-                ItemsRegistry.ARCHMAGE_LEGGINGS);
+                ItemsRegistry.ARCANIST_LEGGINGS);
+
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.BATTLEMAGE_ROBES);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.BATTLEMAGE_BOOTS);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.BATTLEMAGE_HOOD);
+
+        event.register((stack, color) -> color > 0 ? -1 :
+                        colorFromArmor(stack),
+                ItemsRegistry.BATTLEMAGE_LEGGINGS);
 
 
         event.getItemColors().register((stack, color) -> {

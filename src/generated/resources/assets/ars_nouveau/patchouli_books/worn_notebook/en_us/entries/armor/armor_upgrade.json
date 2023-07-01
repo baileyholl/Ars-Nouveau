@@ -1,6 +1,6 @@
 {
   "category": "ars_nouveau:armor",
-  "icon": "ars_nouveau:apprentice_hood",
+  "icon": "ars_nouveau:arcanist_hood",
   "name": "ars_nouveau.page.armor_upgrading",
   "pages": [
     {

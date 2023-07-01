@@ -986,20 +986,20 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .build());
 
 
-        makeArmor(ItemsRegistry.NOVICE_BOOTS, Items.GOLDEN_BOOTS);
-        makeArmor(ItemsRegistry.NOVICE_LEGGINGS, Items.GOLDEN_LEGGINGS);
-        makeArmor(ItemsRegistry.NOVICE_ROBES, Items.GOLDEN_CHESTPLATE);
-        makeArmor(ItemsRegistry.NOVICE_HOOD, Items.GOLDEN_HELMET);
+        makeArmor(ItemsRegistry.SORCERER_BOOTS, Items.GOLDEN_BOOTS);
+        makeArmor(ItemsRegistry.SORCERER_LEGGINGS, Items.GOLDEN_LEGGINGS);
+        makeArmor(ItemsRegistry.SORCERER_ROBES, Items.GOLDEN_CHESTPLATE);
+        makeArmor(ItemsRegistry.SORCERER_HOOD, Items.GOLDEN_HELMET);
 
-        makeArmor(ItemsRegistry.APPRENTICE_HOOD, Items.IRON_HELMET);
-        makeArmor(ItemsRegistry.APPRENTICE_ROBES, Items.IRON_CHESTPLATE);
-        makeArmor(ItemsRegistry.APPRENTICE_LEGGINGS, Items.IRON_LEGGINGS);
-        makeArmor(ItemsRegistry.APPRENTICE_BOOTS, Items.IRON_BOOTS);
+        makeArmor(ItemsRegistry.ARCANIST_HOOD, Items.IRON_HELMET);
+        makeArmor(ItemsRegistry.ARCANIST_ROBES, Items.IRON_CHESTPLATE);
+        makeArmor(ItemsRegistry.ARCANIST_LEGGINGS, Items.IRON_LEGGINGS);
+        makeArmor(ItemsRegistry.ARCANIST_BOOTS, Items.IRON_BOOTS);
 
-        makeArmor(ItemsRegistry.ARCHMAGE_BOOTS, Items.DIAMOND_BOOTS);
-        makeArmor(ItemsRegistry.ARCHMAGE_LEGGINGS, Items.DIAMOND_LEGGINGS);
-        makeArmor(ItemsRegistry.ARCHMAGE_ROBES, Items.DIAMOND_CHESTPLATE);
-        makeArmor(ItemsRegistry.ARCHMAGE_HOOD, Items.DIAMOND_HELMET);
+        makeArmor(ItemsRegistry.BATTLEMAGE_BOOTS, Items.DIAMOND_BOOTS);
+        makeArmor(ItemsRegistry.BATTLEMAGE_LEGGINGS, Items.DIAMOND_LEGGINGS);
+        makeArmor(ItemsRegistry.BATTLEMAGE_ROBES, Items.DIAMOND_CHESTPLATE);
+        makeArmor(ItemsRegistry.BATTLEMAGE_HOOD, Items.DIAMOND_HELMET);
 
         addRecipe(builder().withResult(getPerkItem(IgnitePerk.INSTANCE.getRegistryName()))
                 .withReagent(ItemsRegistry.BLANK_THREAD)

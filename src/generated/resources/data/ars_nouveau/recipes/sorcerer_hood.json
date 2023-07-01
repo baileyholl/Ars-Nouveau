@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
   "output": {
-    "item": "ars_nouveau:novice_boots"
+    "item": "ars_nouveau:sorcerer_hood"
   },
   "pedestalItems": [
     {
@@ -20,7 +20,7 @@
   ],
   "reagent": [
     {
-      "item": "minecraft:golden_boots"
+      "item": "minecraft:golden_helmet"
     }
   ],
   "sourceCost": 0

@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
   "output": {
-    "item": "ars_nouveau:novice_leggings"
+    "item": "ars_nouveau:sorcerer_robes"
   },
   "pedestalItems": [
     {
@@ -20,7 +20,7 @@
   ],
   "reagent": [
     {
-      "item": "minecraft:golden_leggings"
+      "item": "minecraft:golden_chestplate"
     }
   ],
   "sourceCost": 0

@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.renderer.item.ArmorRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.perk.RepairingPerk;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
@@ -37,9 +38,27 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDyeable, GeoItem, IVariantColorProvider<ItemStack> {
+    public GeoModel<AnimatedMagicArmor> model;
 
-    public AnimatedMagicArmor(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builder) {
+    public AnimatedMagicArmor(ArmorMaterial materialIn, ArmorItem.Type slot, Properties builder, GeoModel<AnimatedMagicArmor> model) {
         super(materialIn, slot, builder);
+        this.model = model;
+    }
+
+    public AnimatedMagicArmor(ArmorMaterial materialIn, ArmorItem.Type slot, GeoModel<AnimatedMagicArmor> model) {
+        this(materialIn, slot, ItemsRegistry.defaultItemProperties().stacksTo(1), model);
+    }
+
+    public static AnimatedMagicArmor light(ArmorItem.Type slot) {
+        return new AnimatedMagicArmor(Materials.LIGHT, slot, new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
+    }
+
+    public static AnimatedMagicArmor medium(ArmorItem.Type slot) {
+        return new AnimatedMagicArmor(Materials.MEDIUM, slot, new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
+    }
+
+    public static AnimatedMagicArmor heavy(ArmorItem.Type slot) {
+        return new AnimatedMagicArmor(Materials.HEAVY, slot, new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
     }
 
     @Override
@@ -131,9 +150,9 @@ public class AnimatedMagicArmor extends ArmorItem implements IManaEquipment, IDy
             }
         });
     }
-    // TODO: fix armor models
-    public GeoModel getArmorModel() {
-        return new GenericModel<>("light_armor", "item/light_armor").withEmptyAnim();
+
+    public GeoModel<AnimatedMagicArmor> getArmorModel() {
+        return model;
     }
 
     @Override

@@ -5,10 +5,10 @@
       "tag": "forge:dyes"
     },
     {
-      "item": "ars_nouveau:apprentice_robes"
+      "item": "ars_nouveau:battlemage_hood"
     }
   ],
   "result": {
-    "item": "ars_nouveau:apprentice_robes"
+    "item": "ars_nouveau:battlemage_hood"
   }
 }

@@ -5,10 +5,10 @@
       "tag": "forge:dyes"
     },
     {
-      "item": "ars_nouveau:apprentice_boots"
+      "item": "ars_nouveau:sorcerer_robes"
     }
   ],
   "result": {
-    "item": "ars_nouveau:apprentice_boots"
+    "item": "ars_nouveau:sorcerer_robes"
   }
 }

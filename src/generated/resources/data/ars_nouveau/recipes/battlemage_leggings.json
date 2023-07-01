@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
   "output": {
-    "item": "ars_nouveau:archmage_leggings"
+    "item": "ars_nouveau:battlemage_leggings"
   },
   "pedestalItems": [
     {

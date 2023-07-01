@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": true,
   "output": {
-    "item": "ars_nouveau:archmage_robes"
+    "item": "ars_nouveau:battlemage_boots"
   },
   "pedestalItems": [
     {
@@ -20,7 +20,7 @@
   ],
   "reagent": [
     {
-      "item": "minecraft:diamond_chestplate"
+      "item": "minecraft:diamond_boots"
     }
   ],
   "sourceCost": 0

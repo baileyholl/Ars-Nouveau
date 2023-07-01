@@ -5,10 +5,10 @@
       "tag": "forge:dyes"
     },
     {
-      "item": "ars_nouveau:novice_robes"
+      "item": "ars_nouveau:arcanist_robes"
     }
   ],
   "result": {
-    "item": "ars_nouveau:novice_robes"
+    "item": "ars_nouveau:arcanist_robes"
   }
 }

@@ -1,7 +1,7 @@
 {
   "values": [
-    "ars_nouveau:novice_hood",
-    "ars_nouveau:apprentice_hood",
-    "ars_nouveau:archmage_hood"
+    "ars_nouveau:sorcerer_hood",
+    "ars_nouveau:arcanist_hood",
+    "ars_nouveau:battlemage_hood"
   ]
 }

@@ -164,34 +164,34 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
                 ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
 
-        this.tag(Tags.Items.ARMORS).add(ItemsRegistry.NOVICE_ROBES.asItem(),
-                ItemsRegistry.APPRENTICE_ROBES.asItem(),
-                ItemsRegistry.ARCHMAGE_ROBES.asItem(),
-                ItemsRegistry.NOVICE_BOOTS.asItem(),
-                ItemsRegistry.APPRENTICE_BOOTS.asItem(),
-                ItemsRegistry.ARCHMAGE_BOOTS.asItem(),
-                ItemsRegistry.NOVICE_LEGGINGS.asItem(),
-                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
-                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem(),
-                ItemsRegistry.NOVICE_HOOD.asItem(),
-                ItemsRegistry.APPRENTICE_HOOD.asItem(),
-                ItemsRegistry.ARCHMAGE_HOOD.asItem());
+        this.tag(Tags.Items.ARMORS).add(ItemsRegistry.SORCERER_ROBES.asItem(),
+                ItemsRegistry.ARCANIST_ROBES.asItem(),
+                ItemsRegistry.BATTLEMAGE_ROBES.asItem(),
+                ItemsRegistry.SORCERER_BOOTS.asItem(),
+                ItemsRegistry.ARCANIST_BOOTS.asItem(),
+                ItemsRegistry.BATTLEMAGE_BOOTS.asItem(),
+                ItemsRegistry.SORCERER_LEGGINGS.asItem(),
+                ItemsRegistry.ARCANIST_LEGGINGS.asItem(),
+                ItemsRegistry.BATTLEMAGE_LEGGINGS.asItem(),
+                ItemsRegistry.SORCERER_HOOD.asItem(),
+                ItemsRegistry.ARCANIST_HOOD.asItem(),
+                ItemsRegistry.BATTLEMAGE_HOOD.asItem());
 
         this.tag(Tags.Items.ARMORS_BOOTS)
-                .add(ItemsRegistry.NOVICE_BOOTS.asItem(),
-                        ItemsRegistry.APPRENTICE_BOOTS.asItem(),
-                        ItemsRegistry.ARCHMAGE_BOOTS.asItem());
+                .add(ItemsRegistry.SORCERER_BOOTS.asItem(),
+                        ItemsRegistry.ARCANIST_BOOTS.asItem(),
+                        ItemsRegistry.BATTLEMAGE_BOOTS.asItem());
         this.tag(Tags.Items.ARMORS_CHESTPLATES)
-                .add(ItemsRegistry.NOVICE_ROBES.asItem(),
-                        ItemsRegistry.APPRENTICE_ROBES.asItem(),
-                        ItemsRegistry.ARCHMAGE_ROBES.asItem());
+                .add(ItemsRegistry.SORCERER_ROBES.asItem(),
+                        ItemsRegistry.ARCANIST_ROBES.asItem(),
+                        ItemsRegistry.BATTLEMAGE_ROBES.asItem());
         this.tag(Tags.Items.ARMORS_HELMETS)
-                .add(ItemsRegistry.NOVICE_HOOD.asItem(),
-                        ItemsRegistry.APPRENTICE_HOOD.asItem(),
-                        ItemsRegistry.ARCHMAGE_HOOD.asItem());
-        this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.NOVICE_LEGGINGS.asItem(),
-                ItemsRegistry.APPRENTICE_LEGGINGS.asItem(),
-                ItemsRegistry.ARCHMAGE_LEGGINGS.asItem());
+                .add(ItemsRegistry.SORCERER_HOOD.asItem(),
+                        ItemsRegistry.ARCANIST_HOOD.asItem(),
+                        ItemsRegistry.BATTLEMAGE_HOOD.asItem());
+        this.tag(Tags.Items.ARMORS_LEGGINGS).add(ItemsRegistry.SORCERER_LEGGINGS.asItem(),
+                ItemsRegistry.ARCANIST_LEGGINGS.asItem(),
+                ItemsRegistry.BATTLEMAGE_LEGGINGS.asItem());
 
         this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
