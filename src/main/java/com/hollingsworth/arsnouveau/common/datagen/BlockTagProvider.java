@@ -16,7 +16,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
@@ -49,16 +48,16 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
-                BlockRegistry.RELAY,
+                BlockRegistry.RELAY.get(),
                 BlockRegistry.ARCANE_CORE_BLOCK,
-                BlockRegistry.ENCHANTING_APP_BLOCK,
+                BlockRegistry.ENCHANTING_APP_BLOCK.get(),
                 BlockRegistry.ARCANE_PEDESTAL.get(),
                 BlockRegistry.ARCANE_PLATFORM.get(),
                 BlockRegistry.MAGELIGHT_TORCH.get(),
                 BlockRegistry.CREATIVE_SOURCE_JAR,
-                BlockRegistry.RUNE_BLOCK,
+                BlockRegistry.RUNE_BLOCK.get(),
                 BlockRegistry.IMBUEMENT_BLOCK,
-                BlockRegistry.SOURCE_JAR,
+                BlockRegistry.SOURCE_JAR.get(),
                 BlockRegistry.RELAY_SPLITTER,
                 BlockRegistry.ENCHANTED_SPELL_TURRET,
                 BlockRegistry.VOLCANIC_BLOCK,
@@ -87,7 +86,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         );
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
-                BlockRegistry.SCRIBES_BLOCK,
+                BlockRegistry.SCRIBES_BLOCK.get(),
                 BlockRegistry.CASCADING_LOG,
                 BlockRegistry.CASCADING_WOOD,
                 BlockRegistry.BLAZING_LOG,
@@ -183,7 +182,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
                 BlockRegistry.SOURCEBERRY_BUSH,
-                BlockRegistry.MAGE_BLOOM_CROP,
+                BlockRegistry.MAGE_BLOOM_CROP.get(),
                 BlockRegistry.FROSTAYA_POD,
                 BlockRegistry.MENDOSTEEN_POD,
                 BlockRegistry.BASTION_POD,
@@ -236,9 +235,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.BLAZING_LEAVES,
                 BlockRegistry.FLOURISHING_LEAVES);
 
-        this.tag(BlockTags.BEE_GROWABLES).add(BlockRegistry.MAGE_BLOOM_CROP);
+        this.tag(BlockTags.BEE_GROWABLES).add(BlockRegistry.MAGE_BLOOM_CROP.get());
         this.tag(BlockTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON);
-        this.tag(BlockTags.CROPS).add(BlockRegistry.MAGE_BLOOM_CROP);
+        this.tag(BlockTags.CROPS).add(BlockRegistry.MAGE_BLOOM_CROP.get());
         this.tag(BlockTags.SLABS).add(BlockRegistry.ARCHWOOD_SLABS);
         this.tag(BlockTags.STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS);
         this.tag(BlockTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR);
@@ -252,28 +251,29 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR,
                 BlockRegistry.REDSTONE_AIR,
-                BlockRegistry.MAGE_BLOCK,
+                BlockRegistry.MAGE_BLOCK.get(),
                 BlockRegistry.SCONCE_BLOCK,
-                BlockRegistry.LIGHT_BLOCK,
+                BlockRegistry.LIGHT_BLOCK.get(),
+                BlockRegistry.T_LIGHT_BLOCK.get(),
                 BlockRegistry.GHOST_WEAVE,
                 BlockRegistry.SKY_WEAVE.get()
         );
 
         this.tag(SUMMON_BED).add(
-                BlockRegistry.RED_SBED,
-                BlockRegistry.GREEN_SBED,
-                BlockRegistry.YELLOW_SBED,
-                BlockRegistry.BLUE_SBED,
-                BlockRegistry.ORANGE_SBED,
-                BlockRegistry.PURPLE_SBED
+                BlockRegistry.RED_SBED.get(),
+                BlockRegistry.GREEN_SBED.get(),
+                BlockRegistry.YELLOW_SBED.get(),
+                BlockRegistry.BLUE_SBED.get(),
+                BlockRegistry.ORANGE_SBED.get(),
+                BlockRegistry.PURPLE_SBED.get()
         );
         this.tag(SUMMON_SLEEPABLE).addTag(SUMMON_BED).addTag(BlockTags.BEDS);
         this.tag(BREAK_BLACKLIST);
         this.tag(NO_BREAK_DROP).add(Blocks.TURTLE_EGG);
-        this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK).addTag(RELOCATION_NOT_SUPPORTED);
+        this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK.get()).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
-        this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK);
-        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK, BlockRegistry.ALTERATION_TABLE);
+        this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK.get());
+        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE);
     }
 
     public String getName() {

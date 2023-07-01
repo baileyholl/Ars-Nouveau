@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.source;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -15,6 +16,10 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     public AbstractSourceMachine(BlockEntityType<?> manaTile, BlockPos pos, BlockState state) {
         super(manaTile, pos, state);
+    }
+
+    public AbstractSourceMachine(RegistryWrapper< ? extends BlockEntityType<?>> manaTile, BlockPos pos, BlockState state) {
+        this(manaTile.get(), pos, state);
     }
 
     @Override

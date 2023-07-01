@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -54,6 +55,10 @@ public class BlockStatesDatagen extends BlockStateProvider {
             Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
             slabBlock((SlabBlock) slab, new ResourceLocation(ArsNouveau.MODID, s), tex);
         }
+    }
+
+    private void registerOnlyState(RegistryWrapper<? extends Block> block, String registry) {
+        registerOnlyState(block.get(), registry);
     }
 
     private void registerOnlyState(Block block, String registry) {

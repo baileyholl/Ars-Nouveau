@@ -19,7 +19,7 @@ public class LightTile extends ModdedTile implements ITickable {
     public static RandomSource random = RandomSource.createNewThreadLocalInstance();
 
     public LightTile(BlockPos pos, BlockState state) {
-        this(BlockRegistry.LIGHT_TILE, pos, state);
+        this(BlockRegistry.LIGHT_TILE.get(), pos, state);
     }
 
     public LightTile(BlockEntityType<?> lightTile, BlockPos pos, BlockState state) {

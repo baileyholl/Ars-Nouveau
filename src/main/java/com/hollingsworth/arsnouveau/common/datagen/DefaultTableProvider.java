@@ -128,7 +128,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_MELDER);
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
             registerDropSelf(BlockRegistry.SCONCE_BLOCK);
-            registerBedCondition(BlockRegistry.SCRIBES_BLOCK, ScribesBlock.PART, ThreePartBlock.HEAD);
+            registerBedCondition(BlockRegistry.SCRIBES_BLOCK.get(), ScribesBlock.PART, ThreePartBlock.HEAD);
             registerDrop(BlockRegistry.DRYGMY_BLOCK, Items.MOSSY_COBBLESTONE);
 
             registerDropSelf(BlockRegistry.VITALIC_BLOCK);
@@ -184,7 +184,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SKY_WEAVE);
             registerDropSelf(BlockRegistry.ROTATING_TURRET);
 
-            add(BlockRegistry.SOURCE_JAR, createManaManchineTable(BlockRegistry.SOURCE_JAR));
+            add(BlockRegistry.SOURCE_JAR.get(), createManaManchineTable(BlockRegistry.SOURCE_JAR.get()));
 
             LootPool.Builder potionJarBuilder = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
@@ -237,6 +237,16 @@ public class DefaultTableProvider extends LootTableProvider {
             super.add(pBlock, pFactory);
         }
 
+
+        protected void add(RegistryWrapper<Block> pBlock, LootTable.Builder pBuilder) {
+            add(pBlock.get(), pBuilder);
+        }
+
+
+        protected void add(RegistryWrapper<Block> pBlock, Function<Block, LootTable.Builder> pFactory) {
+            add(pBlock.get(), pFactory);
+        }
+
         public LootPool.Builder POD_BUILDER(Item item, Block block) {
             return LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                     .add(LootItem.lootTableItem(item)
@@ -253,7 +263,7 @@ public class DefaultTableProvider extends LootTableProvider {
                             .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                     .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE) //addOperation
                                     .copy("source", "BlockEntityTag.source", CopyNbtFunction.MergeStrategy.REPLACE))
-                            .apply(SetContainerContents.setContents(BlockRegistry.SOURCE_JAR_TILE)
+                            .apply(SetContainerContents.setContents(BlockRegistry.SOURCE_JAR_TILE.get())
                                     .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                     );
             return LootTable.lootTable().withPool(builder);

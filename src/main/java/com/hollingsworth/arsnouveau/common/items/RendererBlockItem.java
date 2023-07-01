@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -12,6 +13,10 @@ public abstract class RendererBlockItem extends AnimBlockItem {
 
     public RendererBlockItem(Block block, Properties props) {
         super(block, props);
+    }
+
+    public RendererBlockItem(RegistryWrapper<? extends Block> block, Properties props) {
+        this(block.get(), props);
     }
 
     public abstract Supplier<BlockEntityWithoutLevelRenderer> getRenderer();

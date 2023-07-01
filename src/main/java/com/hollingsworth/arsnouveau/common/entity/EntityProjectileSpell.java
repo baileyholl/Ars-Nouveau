@@ -139,7 +139,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         }
         if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
                 && canTraversePortals()) {
-            BlockRegistry.PORTAL_BLOCK.onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
+            BlockRegistry.PORTAL_BLOCK.get().onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
                     blockHitResult, this);
 
         }

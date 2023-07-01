@@ -12,7 +12,7 @@ public class TempLightTile extends LightTile{
     public double lengthModifier;
 
     public TempLightTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.T_LIGHT_TILE, pos, state);
+        super(BlockRegistry.T_LIGHT_TILE.get(), pos, state);
     }
 
     @Override

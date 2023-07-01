@@ -39,6 +39,7 @@ import net.minecraftforge.registries.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.ITEMS;
@@ -55,52 +56,55 @@ public class BlockRegistry {
     static final String prepend = ArsNouveau.MODID + ":";
 
     public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0F, 3.0F).ignitedByLava().sound(SoundType.WOOD);
-
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY);
 
-    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockRegistryKey)
-    public static MageBlock MAGE_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<MageBlockTile> MAGE_BLOCK_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockRegistryKey)
-    public static LightBlock LIGHT_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<LightTile> LIGHT_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.T_LIGHT_BLOCK, registryName = BlockRegistryKey)
-    public static LightBlock T_LIGHT_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.T_LIGHT_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<LightTile> T_LIGHT_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.AGRONOMIC_SOURCELINK, registryName = BlockRegistryKey)
-    public static AgronomicSourcelinkBlock AGRONOMIC_SOURCELINK;
-    @ObjectHolder(value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ENCHANTING_APPARATUS, registryName = BlockRegistryKey)
-    public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
+    public static RegistryWrapper<MageBlock> MAGE_BLOCK = registerBlockAndItem(LibBlockNames.MAGE_BLOCK, MageBlock::new);
+    public static RegistryWrapper<BlockEntityType<MageBlockTile>> MAGE_BLOCK_TILE = registerTile(LibBlockNames.MAGE_BLOCK, MageBlockTile::new, MAGE_BLOCK);
+    public static RegistryWrapper<LightBlock> LIGHT_BLOCK = registerBlockAndItem(LibBlockNames.LIGHT_BLOCK, LightBlock::new);
+    public static RegistryWrapper<BlockEntityType<LightTile>> LIGHT_TILE = registerTile(LibBlockNames.LIGHT_BLOCK, LightTile::new, LIGHT_BLOCK);
 
-    @ObjectHolder(value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockRegistryKey)
-    public static SourceJar SOURCE_JAR;
-    @ObjectHolder(value = prepend + LibBlockNames.SOURCE_JAR, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.MAGE_BLOOM, registryName = BlockRegistryKey)
-    public static MageBloomCrop MAGE_BLOOM_CROP;
-    @ObjectHolder(value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockRegistryKey)
-    public static ScribesBlock SCRIBES_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.SCRIBES_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY, registryName = BlockRegistryKey)
-    public static Relay RELAY;
-    @ObjectHolder(value = prepend + LibBlockNames.RUNE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RuneTile> RUNE_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.RUNE, registryName = BlockRegistryKey)
-    public static RuneBlock RUNE_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.PORTAL, registryName = BlockRegistryKey)
-    public static PortalBlock PORTAL_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.PORTAL, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
+    public static RegistryWrapper<TempLightBlock> T_LIGHT_BLOCK = registerBlockAndItem(LibBlockNames.T_LIGHT_BLOCK, TempLightBlock::new);
+    public static RegistryWrapper<BlockEntityType<TempLightTile>> T_LIGHT_TILE = registerTile(LibBlockNames.T_LIGHT_BLOCK, TempLightTile::new, T_LIGHT_BLOCK);
+    public static RegistryWrapper<AgronomicSourcelinkBlock> AGRONOMIC_SOURCELINK = registerBlockAndItem(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkBlock::new, (reg) ->  new RendererBlockItem(reg.get(), defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return AgronomicRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<AgronomicSourcelinkTile>> AGRONOMIC_SOURCELINK_TILE = registerTile(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkTile::new, AGRONOMIC_SOURCELINK);
+
+
+    public static RegistryWrapper<EnchantingApparatusBlock> ENCHANTING_APP_BLOCK = registerBlockAndItem(LibBlockNames.ENCHANTING_APPARATUS, EnchantingApparatusBlock::new, (reg) -> new RendererBlockItem(reg.get(), defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("enchanting_apparatus");
+        }
+    });
+
+    public static RegistryWrapper<BlockEntityType<EnchantingApparatusTile>> ENCHANTING_APP_TILE = registerTile(LibBlockNames.ENCHANTING_APPARATUS, EnchantingApparatusTile::new, ENCHANTING_APP_BLOCK);
+
+    public static RegistryWrapper<SourceJar> SOURCE_JAR = registerBlockAndItem(LibBlockNames.SOURCE_JAR, SourceJar::new);
+    public static RegistryWrapper<BlockEntityType<SourceJarTile>> SOURCE_JAR_TILE = registerTile(LibBlockNames.SOURCE_JAR, SourceJarTile::new, SOURCE_JAR);
+
+    public static RegistryWrapper<Relay> RELAY = registerBlockAndItem(LibBlockNames.RELAY, Relay::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("source_relay");
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<RelayTile>> ARCANE_RELAY_TILE = registerTile(LibBlockNames.RELAY, RelayTile::new, RELAY);
+    public static RegistryWrapper<MageBloomCrop> MAGE_BLOOM_CROP = registerBlockAndItem(LibBlockNames.MAGE_BLOOM, MageBloomCrop::new);
+    public static RegistryWrapper<ScribesBlock> SCRIBES_BLOCK = registerBlockAndItem(LibBlockNames.SCRIBES_BLOCK, ScribesBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return ScribesRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<ScribesTile>> SCRIBES_TABLE_TILE = registerTile(LibBlockNames.SCRIBES_BLOCK, ScribesTile::new, SCRIBES_BLOCK);
+    public static RegistryWrapper<RuneBlock> RUNE_BLOCK = registerBlockAndItem(LibBlockNames.RUNE, RuneBlock::new);
+    public static RegistryWrapper<BlockEntityType<RuneTile>> RUNE_TILE = registerTile(LibBlockNames.RUNE, RuneTile::new, RUNE_BLOCK);
+    public static RegistryWrapper<PortalBlock> PORTAL_BLOCK = registerBlockAndItem(LibBlockNames.PORTAL, PortalBlock::new);
+    public static RegistryWrapper<BlockEntityType<PortalTile>> PORTAL_TILE_TYPE = registerTile(LibBlockNames.PORTAL, PortalTile::new, PORTAL_BLOCK);
 
     @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockRegistryKey)
     public static ImbuementBlock IMBUEMENT_BLOCK;
@@ -287,23 +291,12 @@ public class BlockRegistry {
     @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockEntityRegistryKey)
     public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
 
-    @ObjectHolder(value = prepend + LibBlockNames.RED_SBED, registryName = BlockRegistryKey)
-    public static SummonBed RED_SBED;
-
-    @ObjectHolder(value = prepend + LibBlockNames.BLUE_SBED, registryName = BlockRegistryKey)
-    public static SummonBed BLUE_SBED;
-
-    @ObjectHolder(value = prepend + LibBlockNames.GREEN_SBED, registryName = BlockRegistryKey)
-    public static SummonBed GREEN_SBED;
-
-    @ObjectHolder(value = prepend + LibBlockNames.ORANGE_SBED, registryName = BlockRegistryKey)
-    public static SummonBed ORANGE_SBED;
-
-    @ObjectHolder(value = prepend + LibBlockNames.YELLOW_SBED, registryName = BlockRegistryKey)
-    public static SummonBed YELLOW_SBED;
-
-    @ObjectHolder(value = prepend + LibBlockNames.PURPLE_SBED, registryName = BlockRegistryKey)
-    public static SummonBed PURPLE_SBED;
+    public static RegistryWrapper<SummonBed> RED_SBED = registerBlockAndItem(LibBlockNames.RED_SBED, SummonBed::new);
+    public static RegistryWrapper<SummonBed> BLUE_SBED = registerBlockAndItem(LibBlockNames.BLUE_SBED, SummonBed::new);
+    public static RegistryWrapper<SummonBed> GREEN_SBED = registerBlockAndItem(LibBlockNames.GREEN_SBED, SummonBed::new);
+    public static RegistryWrapper<SummonBed> ORANGE_SBED = registerBlockAndItem(LibBlockNames.ORANGE_SBED, SummonBed::new);
+    public static RegistryWrapper<SummonBed> YELLOW_SBED = registerBlockAndItem(LibBlockNames.YELLOW_SBED, SummonBed::new);
+    public static RegistryWrapper<SummonBed> PURPLE_SBED = registerBlockAndItem(LibBlockNames.PURPLE_SBED, SummonBed::new);
 
     @ObjectHolder(value = prepend + LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
     public static BlockStateProviderType<?> stateProviderType;
@@ -380,24 +373,12 @@ public class BlockRegistry {
     public static ModBlock MAGEBLOOM_BLOCK;
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
-
-        //blocks
-        registry.register(LibBlockNames.MAGE_BLOCK, new MageBlock());
-        registry.register(LibBlockNames.LIGHT_BLOCK, new LightBlock());
-        registry.register(LibBlockNames.T_LIGHT_BLOCK, new TempLightBlock());
-        registry.register(LibBlockNames.SOURCE_JAR, new SourceJar());
         registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new CreativeSourceJar());
-        registry.register(LibBlockNames.SCRIBES_BLOCK, new ScribesBlock());
-        registry.register(LibBlockNames.MAGE_BLOOM, new MageBloomCrop());
         registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new ImbuementBlock());
-        registry.register(LibBlockNames.ENCHANTING_APPARATUS, new EnchantingApparatusBlock());
         registry.register(LibBlockNames.ARCANE_CORE, new ArcaneCore());
-        registry.register(LibBlockNames.RUNE, new RuneBlock());
-        registry.register(LibBlockNames.PORTAL, new PortalBlock());
         registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
 
 
-        registry.register(LibBlockNames.RELAY, new Relay());
         registry.register(LibBlockNames.RELAY_SPLITTER, new RelaySplitter());
         registry.register(LibBlockNames.RELAY_DEPOSIT, new RelayDepositBlock());
         registry.register(LibBlockNames.RELAY_WARP, new RelayWarpBlock());
@@ -459,7 +440,6 @@ public class BlockRegistry {
 
 
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
-        registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new AgronomicSourcelinkBlock());
         registry.register(LibBlockNames.VITALIC_SOURCELINK, new VitalicSourcelinkBlock());
         registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new MycelialSourcelinkBlock());
         registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new VolcanicSourcelinkBlock());
@@ -470,13 +450,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCONCE, new SconceBlock());
         registry.register(LibBlockNames.DRYGMY_STONE, new DrygmyStone());
 
-
-        registry.register(LibBlockNames.RED_SBED, new SummonBed());
-        registry.register(LibBlockNames.BLUE_SBED, new SummonBed());
-        registry.register(LibBlockNames.GREEN_SBED, new SummonBed());
-        registry.register(LibBlockNames.ORANGE_SBED, new SummonBed());
-        registry.register(LibBlockNames.YELLOW_SBED, new SummonBed());
-        registry.register(LibBlockNames.PURPLE_SBED, new SummonBed());
 
         registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG));
         registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG));
@@ -507,7 +480,7 @@ public class BlockRegistry {
         registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
         registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
 
-        registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP));
+        registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING));
         registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING));
         registry.register(LibBlockNames.Pot(LibBlockNames.FLOURISHING_SAPLING), createPottedBlock(() -> FLOURISHING_SAPLING));
@@ -522,17 +495,6 @@ public class BlockRegistry {
 
     @SuppressWarnings("ConstantConditions")
     public static void onTileEntityRegistry(IForgeRegistry<BlockEntityType<?>> registry) {
-
-        registry.register(LibBlockNames.MAGE_BLOCK, BlockEntityType.Builder.of(MageBlockTile::new, BlockRegistry.MAGE_BLOCK).build(null));
-        registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, BlockEntityType.Builder.of(AgronomicSourcelinkTile::new, BlockRegistry.AGRONOMIC_SOURCELINK).build(null));
-        registry.register(LibBlockNames.SOURCE_JAR, BlockEntityType.Builder.of(SourceJarTile::new, BlockRegistry.SOURCE_JAR).build(null));
-        registry.register(LibBlockNames.LIGHT_BLOCK, BlockEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null));
-        registry.register(LibBlockNames.T_LIGHT_BLOCK, BlockEntityType.Builder.of(TempLightTile::new, BlockRegistry.T_LIGHT_BLOCK).build(null));
-        registry.register(LibBlockNames.ENCHANTING_APPARATUS, BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null));
-        registry.register(LibBlockNames.SCRIBES_BLOCK, BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null));
-        registry.register(LibBlockNames.RELAY, BlockEntityType.Builder.of(RelayTile::new, BlockRegistry.RELAY).build(null));
-        registry.register(LibBlockNames.RUNE, BlockEntityType.Builder.of(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null));
-        registry.register(LibBlockNames.PORTAL, BlockEntityType.Builder.of(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null));
         registry.register(LibBlockNames.RELAY_SPLITTER, BlockEntityType.Builder.of(RelaySplitterTile::new, BlockRegistry.RELAY_SPLITTER).build(null));
         registry.register(LibBlockNames.ARCANE_CORE, BlockEntityType.Builder.of(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null));
         registry.register(LibBlockNames.IMBUEMENT_CHAMBER, BlockEntityType.Builder.of(ImbuementTile::new, BlockRegistry.IMBUEMENT_BLOCK).build(null));
@@ -568,38 +530,6 @@ public class BlockRegistry {
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
-
-        registry.register(LibItemNames.SOURCE_BERRY, new BlockItem(BlockRegistry.SOURCEBERRY_BUSH, defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)));
-        registry.register(LibBlockNames.MAGE_BLOCK, new BlockItem(BlockRegistry.MAGE_BLOCK, defaultItemProperties()));
-        registry.register(LibBlockNames.LIGHT_BLOCK, new BlockItem(BlockRegistry.LIGHT_BLOCK, new Item.Properties()));
-        registry.register(LibBlockNames.AGRONOMIC_SOURCELINK, new RendererBlockItem(BlockRegistry.AGRONOMIC_SOURCELINK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return AgronomicRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.SOURCE_JAR, new BlockItem(BlockRegistry.SOURCE_JAR, defaultItemProperties()));
-        registry.register(LibBlockNames.MAGE_BLOOM, new BlockItem(BlockRegistry.MAGE_BLOOM_CROP, defaultItemProperties()));
-        registry.register(LibBlockNames.ENCHANTING_APPARATUS, new RendererBlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("enchanting_apparatus");
-            }
-        });
-
-        registry.register(LibBlockNames.SCRIBES_BLOCK, new RendererBlockItem(BlockRegistry.SCRIBES_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return ScribesRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.RELAY, new RendererBlockItem(BlockRegistry.RELAY, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("source_relay");
-            }
-        });
-        //registry.register(LibBlockNames.PORTAL, new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()));
         registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -624,6 +554,8 @@ public class BlockRegistry {
                 return VolcanicRenderer::getISTER;
             }
         });
+        registry.register(LibItemNames.SOURCE_BERRY, new BlockItem(BlockRegistry.SOURCEBERRY_BUSH, defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)));
+
         registry.register(LibBlockNames.LAVA_LILY, new FluidBlockItem(BlockRegistry.LAVA_LILY, defaultItemProperties().fireResistant()));
         registry.register(LibBlockNames.WIXIE_CAULDRON, new BlockItem(BlockRegistry.WIXIE_CAULDRON, defaultItemProperties()));
         registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new BlockItem(BlockRegistry.CREATIVE_SOURCE_JAR, defaultItemProperties()));
@@ -733,12 +665,6 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("source_collector");
             }
         });
-        registry.register(LibBlockNames.RED_SBED, getDefaultBlockItem(BlockRegistry.RED_SBED));
-        registry.register(LibBlockNames.BLUE_SBED, getDefaultBlockItem(BlockRegistry.BLUE_SBED));
-        registry.register(LibBlockNames.GREEN_SBED, getDefaultBlockItem(BlockRegistry.GREEN_SBED));
-        registry.register(LibBlockNames.YELLOW_SBED, getDefaultBlockItem(BlockRegistry.YELLOW_SBED));
-        registry.register(LibBlockNames.PURPLE_SBED, getDefaultBlockItem(BlockRegistry.PURPLE_SBED));
-        registry.register(LibBlockNames.ORANGE_SBED, getDefaultBlockItem(BlockRegistry.ORANGE_SBED));
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, getDefaultBlockItem(BlockRegistry.SCRYERS_CRYSTAL));
         registry.register(LibBlockNames.SCRYERS_OCULUS, new RendererBlockItem(BlockRegistry.SCRYERS_OCULUS, defaultItemProperties()) {
             @Override
@@ -878,8 +804,20 @@ public class BlockRegistry {
         ITEM_DETECTOR_TILE = BLOCK_ENTITIES.register(LibBlockNames.ITEM_DETECTOR, () -> BlockEntityType.Builder.of(ItemDetectorTile::new, ITEM_DETECTOR.get()).build(null));
     }
 
-    static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
+    public static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
         return new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
+    }
+
+    public static RegistryWrapper registerBlockAndItem(String name, Supplier<Block> blockSupp) {
+        RegistryWrapper<Block> blockReg = new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
+        ITEMS.register(name, () -> getDefaultBlockItem(blockReg.get()));
+        return blockReg;
+    }
+
+    public static RegistryWrapper registerBlockAndItem(String name, Supplier<Block> blockSupp, Function<RegistryWrapper<Block>, Item> blockItemFunc) {
+        RegistryWrapper<Block> blockReg = new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
+        ITEMS.register(name, () -> blockItemFunc.apply(blockReg));
+        return blockReg;
     }
 
     public static final Map<Supplier<ResourceLocation>, FlowerPotBlock> flowerPots = new HashMap<>();
@@ -888,5 +826,13 @@ public class BlockRegistry {
         FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock)Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of().instabreak().noOcclusion());
         flowerPots.put(() -> ForgeRegistries.BLOCKS.getKey(block.get()), pot);
         return pot;
+    }
+
+    public static BlockEntityType<?> buildTile(BlockEntityType.BlockEntitySupplier<?> supplier, Block... blocks) {
+        return BlockEntityType.Builder.of(supplier, blocks).build(null);
+    }
+
+    public static RegistryWrapper registerTile(String regName, BlockEntityType.BlockEntitySupplier<?> tile, RegistryWrapper<? extends Block> block){
+        return new RegistryWrapper<>(BLOCK_ENTITIES.register(regName, () -> buildTile(tile, block.get())));
     }
 }

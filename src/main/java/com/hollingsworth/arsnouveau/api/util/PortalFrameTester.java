@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -95,7 +94,7 @@ public abstract class PortalFrameTester {
     protected void countExistingPortalBlocks(Direction.Axis axis1, Direction.Axis axis2, int size1, int size2) {
         for (int i = 0; i < size1; i++)
             for (int j = 0; j < size2; j++)
-                if (world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j)).getBlock() == BlockRegistry.PORTAL_BLOCK)
+                if (world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j)).getBlock() instanceof PortalBlock)
                     foundPortalBlocks++;
     }
 

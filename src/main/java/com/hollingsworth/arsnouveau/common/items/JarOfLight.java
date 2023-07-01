@@ -84,7 +84,7 @@ public class JarOfLight extends ModItem {
 
     public boolean placeLight(Level world, BlockPos pos, CompoundTag tag) {
         if (world.getBlockState(pos).isAir()) {
-            world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState());
+            world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.get().defaultBlockState());
             setLightExists(tag, true);
             setLightLocation(tag, pos);
             return true;

@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.util;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,5 +32,12 @@ public class RegistryWrapper<T> implements Supplier<T>, ItemLike {
 
     public String getRegistryName() {
         return registryObject.getId().getPath();
+    }
+
+    public BlockState defaultBlockState(){
+        if(registryObject.get() instanceof Block block){
+            return block.defaultBlockState();
+        }
+        throw new IllegalStateException("RegistryWrapper is not a Block");
     }
 }

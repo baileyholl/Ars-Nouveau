@@ -302,7 +302,7 @@ public class PortalBlock extends TickableModBlock {
                     }
 
                     Block block = blockstate.getBlock();
-                    if (block == BlockRegistry.PORTAL_BLOCK) {
+                    if (block instanceof PortalBlock) {
                         ++this.portalBlockCount;
                     }
 
@@ -340,7 +340,7 @@ public class PortalBlock extends TickableModBlock {
 
         protected boolean canReplace(BlockState pos) {
             Block block = pos.getBlock();
-            return pos.isAir() || block == Blocks.FIRE || block == BlockRegistry.PORTAL_BLOCK;
+            return pos.isAir() || block == Blocks.FIRE || block instanceof PortalBlock;
         }
 
         public boolean isValid() {

@@ -125,7 +125,7 @@ public class ScribesBlock extends TableBlock {
             if(event.getEntity().getItemInHand(event.getHand()).getItem() instanceof DominionWand){
                 return;
             }
-            BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
+            BlockRegistry.SCRIBES_BLOCK.get().use(world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), null);
             event.setCanceled(true);
         }
     }

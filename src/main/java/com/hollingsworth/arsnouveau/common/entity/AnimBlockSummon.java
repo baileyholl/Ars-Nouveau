@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.MageBlock;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLeapGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -148,7 +149,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
         fallingBlock.setColor(ParticleColor.fromInt(color));
         fallingBlock.dropItem = this.dropItem;
-        if (blockState.getBlock() == BlockRegistry.MAGE_BLOCK) {
+        if (blockState.getBlock() instanceof MageBlock) {
             fallingBlock.dropItem = false;
         }
 
@@ -260,7 +261,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     public BlockState getBlockState() {
-        return blockState != null ? blockState : BlockRegistry.MAGE_BLOCK.defaultBlockState();
+        return blockState != null ? blockState : BlockRegistry.MAGE_BLOCK.get().defaultBlockState();
     }
 
     @Override

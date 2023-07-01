@@ -104,7 +104,7 @@ public class BuildPortalEvent implements ITimedEvent {
             for(BlockPos pos : portalPos) {
                 if (level.getBlockState(pos).canBeReplaced()) {
                     level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, direction.getAxis()), 2);
-                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.get().getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     placedBlocks.add(pos);
                 } else {
                     destroyPortal = true;

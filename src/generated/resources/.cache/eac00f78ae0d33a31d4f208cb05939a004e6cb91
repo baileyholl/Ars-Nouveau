@@ -1,4 +1,4 @@
-// 1.20.1	2023-06-30T20:34:45.1344879	AN tags
+// 1.20.1	2023-07-01T16:33:09.6426494	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/blocks/an_decorative.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
 d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/break_with_pickaxe.json
@@ -8,7 +8,7 @@ d4330c0670a8ff0476a64cff8c8e30d9e6d5d760 data/ars_nouveau/tags/blocks/golem/clus
 ca6ae04e3b5412d751537558230d824bfd86d7da data/ars_nouveau/tags/blocks/harvest/fellable.json
 df87c9e82c58b24ac8e979c73fc3be68bf25b4b0 data/ars_nouveau/tags/blocks/harvest/foliage.json
 7d78d30b1cc01fb43cfb8364ed31026ee0640387 data/ars_nouveau/tags/blocks/harvest/stems.json
-22f80663103b158505c1a87a528c67e98dab5d8e data/ars_nouveau/tags/blocks/ignore_tile.json
+b9f0a0b31b44be0347533cee0528b8c2767ac6ba data/ars_nouveau/tags/blocks/ignore_tile.json
 bf1a44f8a79b447f1e7b6541e8c3d93e4ef6f71f data/ars_nouveau/tags/blocks/magic_plants.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/ars_nouveau/tags/blocks/magic_saplings.json
 6429b3e3e4f89e7bb44af0c2ab98368717674afc data/ars_nouveau/tags/blocks/no_break_drop.json

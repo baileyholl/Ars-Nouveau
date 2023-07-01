@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,6 +36,10 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     public SourcelinkTile(BlockEntityType<?> sourceLinkTile, BlockPos pos, BlockState state) {
         super(sourceLinkTile, pos, state);
+    }
+
+    public SourcelinkTile(RegistryWrapper<? extends BlockEntityType<?>> sourceLinkTile, BlockPos pos, BlockState state) {
+        super(sourceLinkTile.get(), pos, state);
     }
 
     @Override

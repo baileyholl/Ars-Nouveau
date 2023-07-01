@@ -87,7 +87,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        context.getLevel().scheduleTick(context.getClickedPos(), BlockRegistry.SOURCE_JAR, 1);
+        context.getLevel().scheduleTick(context.getClickedPos(), BlockRegistry.SOURCE_JAR.get(), 1);
         return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 

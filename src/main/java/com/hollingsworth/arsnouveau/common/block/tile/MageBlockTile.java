@@ -21,7 +21,7 @@ public class MageBlockTile extends ModdedTile implements ITickable, IDispellable
     public ParticleColor color = ParticleColor.defaultParticleColor();
 
     public MageBlockTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.MAGE_BLOCK_TILE, pos, state);
+        super(BlockRegistry.MAGE_BLOCK_TILE.get(), pos, state);
     }
 
     @Override
