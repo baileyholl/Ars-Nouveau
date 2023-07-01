@@ -24,10 +24,20 @@ public class TakeItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoal
         if(!superCan)
             return false;
         if(getDestination() == null){
+            starbuncle.addGoalDebug(this, new DebugEvent("NoTakeDestination", "No valid take destination"));
             starbuncle.setBackOff(20);
             return false;
         }
+        if(behavior.isBedPowered()){
+            starbuncle.addGoalDebug(this, new DebugEvent("BedPowered", "Bed Powered, cannot take items"));
+            return false;
+        }
         return true;
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return super.canContinueToUse() && !behavior.isBedPowered();
     }
 
     @Override

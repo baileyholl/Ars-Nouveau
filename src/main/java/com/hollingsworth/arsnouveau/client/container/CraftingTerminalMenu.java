@@ -35,10 +35,24 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			return super.isActive() && active;
 		}
 	}
+
+	public static class ActiveResultSlot extends ResultSlot{
+		public boolean active;
+
+		public ActiveResultSlot(Player pPlayer, CraftingContainer pCraftSlots, Container pContainer, int pSlot, int pXPosition, int pYPosition) {
+			super(pPlayer, pCraftSlots, pContainer, pSlot, pXPosition, pYPosition);
+			active = true;
+		}
+
+		@Override
+		public boolean isActive() {
+			return active;
+		}
+	}
 	protected List<SlotCrafting> craftSlotList = new ArrayList<>();
 	private final CraftingContainer craftMatrix;
 	private final ResultContainer craftResult;
-	private Slot craftingResultSlot;
+	private ActiveResultSlot craftingResultSlot;
 	private final List<ContainerListener> listeners = Lists.newArrayList();
 
 	@Override
@@ -81,7 +95,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	private void init() {
 		int x = -4;
 		int y = 70;
-		this.addSlot(craftingResultSlot = new ResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
+		this.addSlot(craftingResultSlot = new ActiveResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
 			@Override
 			public void onTake(Player thePlayer, ItemStack stack) {
 				if (thePlayer.level.isClientSide)
@@ -115,6 +129,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			for(SlotCrafting slot : craftSlotList){
 				slot.active = !terminalData.expanded;
 			}
+			craftingResultSlot.active = !terminalData.expanded;
 		}
 	}
 
@@ -298,7 +313,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 					stacks[slot][j] = ItemStack.of(tag);
 				}
 			}
-			((CraftingLecternTile) te).handlerItemTransfer(pinv.player, stacks, selectedTab);
+			((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, selectedTab);
 		}
 	}
 

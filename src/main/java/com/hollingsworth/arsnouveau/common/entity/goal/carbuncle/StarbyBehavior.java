@@ -16,6 +16,8 @@ import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 public class StarbyBehavior extends ChangeableBehavior {
@@ -32,6 +34,17 @@ public class StarbyBehavior extends ChangeableBehavior {
 
     public boolean canGoToBed(){
         return true;
+    }
+
+    public boolean isBedPowered(){
+        if(starbuncle.data.bedPos == null || !starbuncle.level.isLoaded(starbuncle.data.bedPos)){
+            return false;
+        }
+        BlockState state = starbuncle.level.getBlockState(starbuncle.data.bedPos);
+        if(!state.is(BlockTagProvider.SUMMON_SLEEPABLE)){
+            return false;
+        }
+        return state.hasProperty(BlockStateProperties.POWERED) && state.getValue(BlockStateProperties.POWERED);
     }
 
     @Override

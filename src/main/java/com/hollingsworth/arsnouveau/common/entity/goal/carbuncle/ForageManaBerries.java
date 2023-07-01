@@ -55,6 +55,11 @@ public class ForageManaBerries extends Goal {
         this.pos = getNearbyManaBerry();
         if(pos == null){
             entity.addGoalDebug(this, new DebugEvent("NoBerries", "No Berries Nearby"));
+            return false;
+        }
+        if(behavior.isBedPowered()){
+            entity.addGoalDebug(this, new DebugEvent("Bed Powered", "Bed powered, no berry pickin"));
+            return false;
         }
         return pos != null;
     }

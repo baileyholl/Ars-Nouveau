@@ -78,6 +78,9 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        if(starbuncle.level.random.nextInt(2) == 0){
+            return false;
+        }
         bedPos = starbuncle.data.bedPos;
         if (starbuncle.getBedBackoff() > 0
                 || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE

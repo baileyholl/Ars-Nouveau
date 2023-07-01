@@ -116,7 +116,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             setChanged();
         }
         if (!level.isClientSide && crafting && craftingTicks == 0 && recipe != null) {
-            level.addFreshEntity(new ItemEntity(level, getX(), getY() + 1, getZ(), recipe.output.copy()));
+            level.addFreshEntity(new ItemEntity(level, getX() + 0.5, getY() + 1.1, getZ() + 0.5, recipe.output.copy()));
             recipe = null;
             recipeID = new ResourceLocation("");
             crafting = false;

@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.util.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -33,6 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -48,9 +50,10 @@ import java.util.*;
 
 
 public class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider {
-	private Map<String, InventoryManager> tabManagerMap = new HashMap<>();
-	protected Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
-	private String lastSearch = "";
+	public Map<String, InventoryManager> tabManagerMap = new HashMap<>();
+	public Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
+	public Map<Item, Long> itemCounts = new HashMap<>();
+	public String lastSearch = "";
 	public boolean updateItems;
 	public List<BlockPos> connectedInventories = new ArrayList<>();
 	public List<String> tabNames = new ArrayList<>();
@@ -384,6 +387,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			}
 			tabManagerMap.put(tabName, new InventoryManager(mappedFilterables.get(tabName)));
 		}
+		itemCounts = new HashMap<>();
+		Map<StoredItemStack, Long> allItems = itemsByTab.get(TAB_ALL);
+		for(StoredItemStack stack : allItems.keySet()){
+			itemCounts.put(stack.getStack().getItem(), allItems.get(stack));
+		}
 	}
 
 	public List<EntityBookwyrm> getBookwyrmEntities(){
@@ -410,6 +418,9 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 			return;
 		for(Direction dir : Direction.values()){
 			BlockPos pos = this.worldPosition.relative(dir);
+			if(level.getBlockState(pos).is(BlockTagProvider.AUTOPULL_DISABLED)){
+				continue;
+			}
 			BlockEntity tile = this.level.getBlockEntity(pos);
 			if(tile == null || mainLectern.connectedInventories.contains(pos))
 				continue;

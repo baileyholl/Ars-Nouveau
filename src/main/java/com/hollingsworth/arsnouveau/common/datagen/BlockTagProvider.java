@@ -16,6 +16,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
@@ -35,14 +36,11 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
+    public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "storage/autopull_disabled"));
     public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
-    }
-
-    public String getName() {
-        return "AN tags";
     }
 
     @Override
@@ -131,8 +129,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
-            this.tag(DECORATIVE_AN).add(block);
-            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+            Block stair = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+            Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+            this.tag(DECORATIVE_AN).add(block, stair, slab);
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block, stair, slab);
         }
 
         this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE, BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
@@ -273,5 +273,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK);
+        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK, BlockRegistry.ALTERATION_TABLE);
+    }
+
+    public String getName() {
+        return "AN tags";
     }
 }

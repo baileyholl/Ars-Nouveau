@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.event.timed;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TemporaryTile;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
@@ -102,7 +103,7 @@ public class BuildPortalEvent implements ITimedEvent {
         if(placingPortal){
             for(BlockPos pos : portalPos) {
                 if (level.getBlockState(pos).canBeReplaced()) {
-                    level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState(), 2);
+                    level.setBlock(pos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, direction.getAxis()), 2);
                     level.playSound(null, pos, BlockRegistry.PORTAL_BLOCK.getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     placedBlocks.add(pos);
                 } else {
