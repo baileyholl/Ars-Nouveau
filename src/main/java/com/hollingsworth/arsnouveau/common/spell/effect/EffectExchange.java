@@ -7,13 +7,13 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.IntangibleAirBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -66,7 +66,7 @@ public class EffectExchange extends AbstractEffect {
             BlockState state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock() ||
-                    !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR
+                    !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
                     || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }

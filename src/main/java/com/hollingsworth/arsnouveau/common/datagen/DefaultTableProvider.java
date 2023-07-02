@@ -87,14 +87,14 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.FLOURISHING_SAPLING);
             registerDropSelf(BlockRegistry.ARCHWOOD_PLANK);
 
-            registerDrop(BlockRegistry.WIXIE_CAULDRON, Items.CAULDRON);
+            registerDrop(BlockRegistry.WIXIE_CAULDRON.get(), Items.CAULDRON);
             for (FlowerPotBlock pot : BlockRegistry.flowerPots.values()) {
                 list.add(pot);
                 dropPottedContents(pot);
             }
 
-            registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES, BlockRegistry.BLAZING_SAPLING);
-            registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE, BlockRegistry.CASCADING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES.get(), BlockRegistry.BLAZING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE.get(), BlockRegistry.CASCADING_SAPLING.get());
             registerLeavesAndSticks(BlockRegistry.FLOURISHING_LEAVES, BlockRegistry.FLOURISHING_SAPLING);
             registerLeavesAndSticks(BlockRegistry.VEXING_LEAVES, BlockRegistry.VEXING_SAPLING);
 

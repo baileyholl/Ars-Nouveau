@@ -19,7 +19,7 @@ public class VillagerRegistry {
 
     public static final DeferredRegister<PoiType> POIs = DeferredRegister.create(ForgeRegistries.POI_TYPES, ArsNouveau.MODID);
 
-    public static final RegistryObject<PoiType> ARCANE_POI = POIs.register("arcane_poi", () -> new PoiType(ImmutableSet.copyOf(BlockRegistry.ARCANE_CORE_BLOCK.getStateDefinition().getPossibleStates()),1,1));
+    public static final RegistryObject<PoiType> ARCANE_POI = POIs.register("arcane_poi", () -> new PoiType(ImmutableSet.copyOf(BlockRegistry.ARCANE_CORE_BLOCK.get().getStateDefinition().getPossibleStates()),1,1));
     public static final RegistryObject<VillagerProfession> SHARDS_TRADER = VILLAGERS.register(ARS_TRADER, () -> new VillagerProfession(ARS_TRADER, (x) -> x.get() == ARCANE_POI.get(), (x) -> x.get() == ARCANE_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
 
 }

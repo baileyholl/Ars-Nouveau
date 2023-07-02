@@ -38,7 +38,7 @@ public class EffectRedstone extends AbstractEffect {
             signalModifier = 15;
         state = state.setValue(RedstoneAir.POWER, signalModifier);
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-        if (!(world.getBlockState(pos).isAir() && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)) {
+        if (!(world.getBlockState(pos).isAir() && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR.get())) {
             return;
         }
         int timeBonus = (int) spellStats.getDurationMultiplier();

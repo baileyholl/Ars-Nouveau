@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.TurretSpellCaster;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +30,11 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
 
     public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
+    }
+
+
+    public BasicSpellTurretTile(RegistryWrapper<? extends BlockEntityType<?>> p_i48289_1_, BlockPos pos, BlockState state) {
+        super(p_i48289_1_.get(), pos, state);
     }
 
     public BasicSpellTurretTile(BlockPos pos, BlockState state) {

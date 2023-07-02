@@ -108,7 +108,7 @@ public class WorldgenRegistry {
     public static void bootstrapPlacedFeatures(BootstapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> features = context.lookup(Registries.CONFIGURED_FEATURE);
         context.register(PLACED_BERRY_BUSH, new PlacedFeature(features.get(PATCH_BERRY_BUSH).get(), List.of(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome())));
-        context.register(PLACED_NATURAL_CASCADING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_CASCADING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING))));
+        context.register(PLACED_NATURAL_CASCADING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_CASCADING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING.get()))));
         context.register(PLACED_NATURAL_BLAZING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_BLAZING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING))));
         context.register(PLACED_NATURAL_VEXING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_VEXING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING))));
         context.register(PLACED_NATURAL_FLOURISHING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_FLOURISHING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING))));

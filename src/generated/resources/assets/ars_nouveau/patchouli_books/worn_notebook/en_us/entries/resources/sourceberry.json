@@ -1,11 +1,11 @@
 {
   "category": "ars_nouveau:resources",
-  "icon": "ars_nouveau:source_berry",
+  "icon": "ars_nouveau:sourceberry_bush",
   "name": "block.ars_nouveau.sourceberry_bush",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "ars_nouveau.page1.source_berry"
+      "text": "ars_nouveau.page1.sourceberry_bush"
     },
     {
       "type": "patchouli:crafting",

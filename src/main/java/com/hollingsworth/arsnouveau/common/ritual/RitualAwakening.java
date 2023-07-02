@@ -40,7 +40,7 @@ public class RitualAwakening extends AbstractRitual {
 
     public void findTargets(Level world) {
         for (BlockPos p : BlockPos.withinManhattan(getPos(), 3, 1, 3)) {
-            Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG || b.getBlock() == BlockRegistry.BLAZING_LEAVES);
+            Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG.get() || b.getBlock() == BlockRegistry.BLAZING_LEAVES.get());
             if (blazing.size() >= 50) {
                 entity = ModEntities.ENTITY_BLAZING_WEALD.get();
                 foundPos = p;
@@ -62,7 +62,7 @@ public class RitualAwakening extends AbstractRitual {
                 return;
             }
 
-            Set<BlockPos> cascading = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.CASCADING_LOG || b.getBlock() == BlockRegistry.CASCADING_LEAVE);
+            Set<BlockPos> cascading = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.CASCADING_LOG.get() || b.getBlock() == BlockRegistry.CASCADING_LEAVE.get());
             if (cascading.size() >= 50) {
                 entity = ModEntities.ENTITY_CASCADING_WEALD.get();
                 foundPos = p;

@@ -101,7 +101,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
         AtomicBoolean set = new AtomicBoolean(false);
         BlockPos.withinManhattanStream(worldPosition, 1, 0, 1).forEach(p -> {
             if (!set.get() && level.getBlockState(p).isAir() && (level.getFluidState(p.below()).getType() == Fluids.LAVA || level.getFluidState(p.below()).getType() == Fluids.FLOWING_LAVA)) {
-                level.setBlockAndUpdate(p, BlockRegistry.LAVA_LILY.getState(level, p));
+                level.setBlockAndUpdate(p, BlockRegistry.LAVA_LILY.get().getState(level, p));
                 set.set(true);
             }
         });

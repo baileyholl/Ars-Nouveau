@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,6 +17,10 @@ public class SummoningTile extends ModdedTile implements ITickable {
 
     public SummoningTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public SummoningTile(RegistryWrapper<? extends BlockEntityType<?>> type, BlockPos pos, BlockState state) {
+        this(type.get(), pos, state);
     }
 
     @Override

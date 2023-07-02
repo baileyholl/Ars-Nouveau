@@ -49,20 +49,20 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 BlockRegistry.RELAY.get(),
-                BlockRegistry.ARCANE_CORE_BLOCK,
+                BlockRegistry.ARCANE_CORE_BLOCK.get(),
                 BlockRegistry.ENCHANTING_APP_BLOCK.get(),
                 BlockRegistry.ARCANE_PEDESTAL.get(),
                 BlockRegistry.ARCANE_PLATFORM.get(),
                 BlockRegistry.MAGELIGHT_TORCH.get(),
-                BlockRegistry.CREATIVE_SOURCE_JAR,
+                BlockRegistry.CREATIVE_SOURCE_JAR.get(),
                 BlockRegistry.RUNE_BLOCK.get(),
-                BlockRegistry.IMBUEMENT_BLOCK,
+                BlockRegistry.IMBUEMENT_BLOCK.get(),
                 BlockRegistry.SOURCE_JAR.get(),
-                BlockRegistry.RELAY_SPLITTER,
-                BlockRegistry.ENCHANTED_SPELL_TURRET,
-                BlockRegistry.VOLCANIC_BLOCK,
-                BlockRegistry.LAVA_LILY,
-                BlockRegistry.WIXIE_CAULDRON,
+                BlockRegistry.RELAY_SPLITTER.get(),
+                BlockRegistry.ENCHANTED_SPELL_TURRET.get(),
+                BlockRegistry.VOLCANIC_BLOCK.get(),
+                BlockRegistry.LAVA_LILY.get(),
+                BlockRegistry.WIXIE_CAULDRON.get(),
                 BlockRegistry.SOURCE_GEM_BLOCK,
                 BlockRegistry.RITUAL_BLOCK.get(),
                 BlockRegistry.POTION_JAR,
@@ -87,9 +87,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).add(
                 BlockRegistry.SCRIBES_BLOCK.get(),
-                BlockRegistry.CASCADING_LOG,
-                BlockRegistry.CASCADING_WOOD,
-                BlockRegistry.BLAZING_LOG,
+                BlockRegistry.CASCADING_LOG.get(),
+                BlockRegistry.CASCADING_WOOD.get(),
+                BlockRegistry.BLAZING_LOG.get(),
                 BlockRegistry.BLAZING_WOOD,
                 BlockRegistry.VEXING_LOG,
                 BlockRegistry.VEXING_WOOD,
@@ -119,8 +119,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.REPOSITORY
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
-                BlockRegistry.CASCADING_LEAVE,
-                BlockRegistry.BLAZING_LEAVES,
+                BlockRegistry.CASCADING_LEAVE.get(),
+                BlockRegistry.BLAZING_LEAVES.get(),
                 BlockRegistry.FLOURISHING_LEAVES,
                 BlockRegistry.VEXING_LEAVES
         );
@@ -169,19 +169,19 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(MAGIC_SAPLINGS).add(
                 BlockRegistry.BLAZING_SAPLING,
-                BlockRegistry.CASCADING_SAPLING,
+                BlockRegistry.CASCADING_SAPLING.get(),
                 BlockRegistry.FLOURISHING_SAPLING,
                 BlockRegistry.VEXING_SAPLING
         );
         this.tag(BlockTags.SAPLINGS).add(
                 BlockRegistry.BLAZING_SAPLING,
-                BlockRegistry.CASCADING_SAPLING,
+                BlockRegistry.CASCADING_SAPLING.get(),
                 BlockRegistry.FLOURISHING_SAPLING,
                 BlockRegistry.VEXING_SAPLING
         );
 
         this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
-                BlockRegistry.SOURCEBERRY_BUSH,
+                BlockRegistry.SOURCEBERRY_BUSH.get(),
                 BlockRegistry.MAGE_BLOOM_CROP.get(),
                 BlockRegistry.FROSTAYA_POD,
                 BlockRegistry.MENDOSTEEN_POD,
@@ -197,9 +197,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(BlockTags.LOGS).add(
                 BlockRegistry.VEXING_LOG,
-                BlockRegistry.CASCADING_LOG,
+                BlockRegistry.CASCADING_LOG.get(),
                 BlockRegistry.FLOURISHING_LOG,
-                BlockRegistry.BLAZING_LOG,
+                BlockRegistry.BLAZING_LOG.get(),
                 BlockRegistry.STRIPPED_AWLOG_BLUE,
                 BlockRegistry.STRIPPED_AWWOOD_BLUE,
                 BlockRegistry.STRIPPED_AWLOG_GREEN,
@@ -209,9 +209,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.STRIPPED_AWLOG_PURPLE,
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE);
         this.tag(BlockTags.LOGS_THAT_BURN).add(BlockRegistry.VEXING_LOG,
-                BlockRegistry.CASCADING_LOG,
+                BlockRegistry.CASCADING_LOG.get(),
                 BlockRegistry.FLOURISHING_LOG,
-                BlockRegistry.BLAZING_LOG,
+                BlockRegistry.BLAZING_LOG.get(),
                 BlockRegistry.STRIPPED_AWLOG_BLUE,
                 BlockRegistry.STRIPPED_AWWOOD_BLUE,
                 BlockRegistry.STRIPPED_AWLOG_GREEN,
@@ -227,12 +227,12 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves"));
         this.tag(ARCHWOOD_LEAVES)
                 .add(BlockRegistry.VEXING_LEAVES,
-                        BlockRegistry.CASCADING_LEAVE,
-                        BlockRegistry.BLAZING_LEAVES,
+                        BlockRegistry.CASCADING_LEAVE.get(),
+                        BlockRegistry.BLAZING_LEAVES.get(),
                         BlockRegistry.FLOURISHING_LEAVES);
         this.tag(BlockTags.LEAVES).add(BlockRegistry.VEXING_LEAVES,
-                BlockRegistry.CASCADING_LEAVE,
-                BlockRegistry.BLAZING_LEAVES,
+                BlockRegistry.CASCADING_LEAVE.get(),
+                BlockRegistry.BLAZING_LEAVES.get(),
                 BlockRegistry.FLOURISHING_LEAVES);
 
         this.tag(BlockTags.BEE_GROWABLES).add(BlockRegistry.MAGE_BLOOM_CROP.get());
@@ -249,8 +249,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR);
 
         this.tag(IGNORE_TILE).add(
-                BlockRegistry.INTANGIBLE_AIR,
-                BlockRegistry.REDSTONE_AIR,
+                BlockRegistry.INTANGIBLE_AIR.get(),
+                BlockRegistry.REDSTONE_AIR.get(),
                 BlockRegistry.MAGE_BLOCK.get(),
                 BlockRegistry.SCONCE_BLOCK,
                 BlockRegistry.LIGHT_BLOCK.get(),

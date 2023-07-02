@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.common.world.WorldgenRegistry;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
@@ -106,56 +105,59 @@ public class BlockRegistry {
     public static RegistryWrapper<PortalBlock> PORTAL_BLOCK = registerBlockAndItem(LibBlockNames.PORTAL, PortalBlock::new);
     public static RegistryWrapper<BlockEntityType<PortalTile>> PORTAL_TILE_TYPE = registerTile(LibBlockNames.PORTAL, PortalTile::new, PORTAL_BLOCK);
 
-    @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockRegistryKey)
-    public static ImbuementBlock IMBUEMENT_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.IMBUEMENT_CHAMBER, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ImbuementTile> IMBUEMENT_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_SPLITTER, registryName = BlockRegistryKey)
-    public static RelaySplitter RELAY_SPLITTER;
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_SPLITTER, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RelaySplitterTile> RELAY_SPLITTER_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCANE_CORE, registryName = BlockRegistryKey)
-    public static ArcaneCore ARCANE_CORE_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCANE_CORE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockRegistryKey)
-    public static EnchantedSpellTurret ENCHANTED_SPELL_TURRET;
-    @ObjectHolder(value = prepend + LibBlockNames.ENCHANTED_SPELL_TURRET, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<EnchantedTurretTile> ENCHANTED_SPELL_TURRET_TYPE;
-    @ObjectHolder(value = prepend + LibBlockNames.REDSTONE_AIR, registryName = BlockRegistryKey)
-    public static RedstoneAir REDSTONE_AIR;
-    @ObjectHolder(value = prepend + LibBlockNames.INTANGIBLE_AIR, registryName = BlockRegistryKey)
-    public static IntangibleAirBlock INTANGIBLE_AIR;
-    @ObjectHolder(value = prepend + LibBlockNames.INTANGIBLE_AIR, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
-    @ObjectHolder(value = prepend + LibBlockNames.VOLCANIC_SOURCELINK, registryName = BlockRegistryKey)
-    public static VolcanicSourcelinkBlock VOLCANIC_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.VOLCANIC_SOURCELINK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<VolcanicSourcelinkTile> VOLCANIC_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.LAVA_LILY, registryName = BlockRegistryKey)
-    public static LavaLily LAVA_LILY;
-    @ObjectHolder(value = prepend + LibBlockNames.SOURCEBERRY_BUSH, registryName = BlockRegistryKey)
-    public static SourceBerryBush SOURCEBERRY_BUSH;
-    @ObjectHolder(value = prepend + LibBlockNames.WIXIE_CAULDRON, registryName = BlockRegistryKey)
-    public static WixieCauldron WIXIE_CAULDRON;
-    @ObjectHolder(value = prepend + LibBlockNames.WIXIE_CAULDRON, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
-    @ObjectHolder(value = prepend + LibBlockNames.CREATIVE_SOURCE_JAR, registryName = BlockRegistryKey)
-    public static CreativeSourceJar CREATIVE_SOURCE_JAR;
-    @ObjectHolder(value = prepend + LibBlockNames.CREATIVE_SOURCE_JAR, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<CreativeSourceJarTile> CREATIVE_SOURCE_JAR_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.CASCADING_LOG, registryName = BlockRegistryKey)
-    public static StrippableLog CASCADING_LOG;
-    @ObjectHolder(value = prepend + LibBlockNames.CASCADING_LEAVES, registryName = BlockRegistryKey)
-    public static MagicLeaves CASCADING_LEAVE;
-    @ObjectHolder(value = prepend + LibBlockNames.CASCADING_SAPLING, registryName = BlockRegistryKey)
-    public static SaplingBlock CASCADING_SAPLING;
-    @ObjectHolder(value = prepend + LibBlockNames.CASCADING_WOOD, registryName = BlockRegistryKey)
-    public static StrippableLog CASCADING_WOOD;
-    @ObjectHolder(value = prepend + LibBlockNames.BLAZING_LOG, registryName = BlockRegistryKey)
-    public static StrippableLog BLAZING_LOG;
-    @ObjectHolder(value = prepend + LibBlockNames.BLAZING_LEAVES, registryName = BlockRegistryKey)
-    public static MagicLeaves BLAZING_LEAVES;
+
+    public static RegistryWrapper<ImbuementBlock> IMBUEMENT_BLOCK = registerBlockAndItem(LibBlockNames.IMBUEMENT_CHAMBER, ImbuementBlock::new, (reg) -> new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("imbuement_chamber");
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<ImbuementTile>> IMBUEMENT_TILE = registerTile(LibBlockNames.IMBUEMENT_CHAMBER, ImbuementTile::new, IMBUEMENT_BLOCK);
+    public static RegistryWrapper<RelaySplitter> RELAY_SPLITTER = registerBlockAndItem(LibBlockNames.RELAY_SPLITTER, RelaySplitter::new, (reg) -> new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("source_splitter");
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<RelaySplitterTile>> RELAY_SPLITTER_TILE = registerTile(LibBlockNames.RELAY_SPLITTER, RelaySplitterTile::new, RELAY_SPLITTER);
+    public static RegistryWrapper<ArcaneCore> ARCANE_CORE_BLOCK = registerBlockAndItem(LibBlockNames.ARCANE_CORE, ArcaneCore::new, (reg) -> new RendererBlockItem(BlockRegistry.ARCANE_CORE_BLOCK, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return ArcaneCoreRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<ArcaneCoreTile>> ARCANE_CORE_TILE = registerTile(LibBlockNames.ARCANE_CORE, ArcaneCoreTile::new, ARCANE_CORE_BLOCK);
+    public static RegistryWrapper<EnchantedSpellTurret> ENCHANTED_SPELL_TURRET = registerBlockAndItem(LibBlockNames.ENCHANTED_SPELL_TURRET, EnchantedSpellTurret::new, (reg) -> new RendererBlockItem(BlockRegistry.ENCHANTED_SPELL_TURRET, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return ReducerTurretRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<EnchantedTurretTile>> ENCHANTED_SPELL_TURRET_TYPE = registerTile(LibBlockNames.ENCHANTED_SPELL_TURRET, EnchantedTurretTile::new, ENCHANTED_SPELL_TURRET);
+    public static RegistryWrapper<RedstoneAir> REDSTONE_AIR = registerBlock(LibBlockNames.REDSTONE_AIR, RedstoneAir::new);
+    public static RegistryWrapper<IntangibleAirBlock> INTANGIBLE_AIR = registerBlock(LibBlockNames.INTANGIBLE_AIR, IntangibleAirBlock::new);
+    public static RegistryWrapper<BlockEntityType<IntangibleAirTile>> INTANGIBLE_AIR_TYPE = registerTile(LibBlockNames.INTANGIBLE_AIR, IntangibleAirTile::new, INTANGIBLE_AIR);
+    public static RegistryWrapper<VolcanicSourcelinkBlock> VOLCANIC_BLOCK = registerBlockAndItem(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkBlock::new, (reg) -> new RendererBlockItem(BlockRegistry.VOLCANIC_BLOCK, defaultItemProperties().fireResistant()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return VolcanicRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<VolcanicSourcelinkTile>> VOLCANIC_TILE = registerTile(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkTile::new, VOLCANIC_BLOCK);
+
+    public static RegistryWrapper<LavaLily> LAVA_LILY = registerBlockAndItem(LibBlockNames.LAVA_LILY, LavaLily::new, (reg) ->new FluidBlockItem(reg.get(), defaultItemProperties().fireResistant()));
+
+    public static RegistryWrapper<SourceBerryBush> SOURCEBERRY_BUSH = registerBlockAndItem(LibBlockNames.SOURCEBERRY_BUSH, () -> new SourceBerryBush(BlockBehaviour.Properties.of().randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)), (reg) -> new BlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)));
+    public static RegistryWrapper<WixieCauldron> WIXIE_CAULDRON = registerBlockAndItem(LibBlockNames.WIXIE_CAULDRON, WixieCauldron::new);
+    public static RegistryWrapper<BlockEntityType<WixieCauldronTile>> WIXIE_CAULDRON_TYPE = registerTile(LibBlockNames.WIXIE_CAULDRON, WixieCauldronTile::new, WIXIE_CAULDRON);
+    public static RegistryWrapper<CreativeSourceJar> CREATIVE_SOURCE_JAR = registerBlockAndItem(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJar::new);
+    public static RegistryWrapper<BlockEntityType<CreativeSourceJarTile>> CREATIVE_SOURCE_JAR_TILE = registerTile(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJarTile::new, CREATIVE_SOURCE_JAR);
+    public static RegistryWrapper<StrippableLog> CASCADING_LOG = registerBlockAndItem(LibBlockNames.CASCADING_LOG, () ->  new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
+    public static RegistryWrapper<MagicLeaves> CASCADING_LEAVE = registerBlockAndItem(LibBlockNames.CASCADING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_BLUE));
+    public static RegistryWrapper<SaplingBlock> CASCADING_SAPLING = registerBlockAndItem(LibBlockNames.CASCADING_SAPLING, () -> new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_CASCADING_TREE), SAP_PROP));
+    public static RegistryWrapper<StrippableLog> CASCADING_WOOD = registerBlockAndItem(LibBlockNames.CASCADING_WOOD, () -> new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_BLUE));
+    public static RegistryWrapper<StrippableLog> BLAZING_LOG = registerBlockAndItem(LibBlockNames.BLAZING_LOG, () -> new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_RED));
+    public static RegistryWrapper<MagicLeaves> BLAZING_LEAVES = registerBlockAndItem(LibBlockNames.BLAZING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_RED));
     @ObjectHolder(value = prepend + LibBlockNames.BLAZING_SAPLING, registryName = BlockRegistryKey)
     public static SaplingBlock BLAZING_SAPLING;
     @ObjectHolder(value = prepend + LibBlockNames.BLAZING_WOOD, registryName = BlockRegistryKey)
@@ -373,46 +375,30 @@ public class BlockRegistry {
     public static ModBlock MAGEBLOOM_BLOCK;
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
-        registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new CreativeSourceJar());
-        registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new ImbuementBlock());
-        registry.register(LibBlockNames.ARCANE_CORE, new ArcaneCore());
         registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
 
 
-        registry.register(LibBlockNames.RELAY_SPLITTER, new RelaySplitter());
         registry.register(LibBlockNames.RELAY_DEPOSIT, new RelayDepositBlock());
         registry.register(LibBlockNames.RELAY_WARP, new RelayWarpBlock());
         registry.register(LibBlockNames.RELAY_COLLECTOR, new RelayCollectorBlock());
         registry.register(LibBlockNames.BASIC_SPELL_TURRET, new BasicSpellTurret());
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, new TimerSpellTurret());
-        registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, new EnchantedSpellTurret());
 
 
         registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
-        registry.register(LibBlockNames.REDSTONE_AIR, new RedstoneAir());
-        registry.register(LibBlockNames.INTANGIBLE_AIR, new IntangibleAirBlock());
 
 
-        registry.register(LibBlockNames.LAVA_LILY, new LavaLily());
-        registry.register(LibBlockNames.SOURCEBERRY_BUSH, new SourceBerryBush(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
-        registry.register(LibBlockNames.CASCADING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_CASCADING_TREE), SAP_PROP));
         registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_BLAZING_TREE), SAP_PROP));
         registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_VEXING_TREE), SAP_PROP));
         registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_FLOURISHING_TREE), SAP_PROP));
 
-
-        registry.register(LibBlockNames.CASCADING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
-        registry.register(LibBlockNames.CASCADING_LEAVES, createLeavesBlock(MapColor.COLOR_BLUE));
-        registry.register(LibBlockNames.BLAZING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_RED));
-        registry.register(LibBlockNames.BLAZING_LEAVES, createLeavesBlock(MapColor.COLOR_RED));
         registry.register(LibBlockNames.FLOURISHING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_GREEN));
         registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock(MapColor.COLOR_LIGHT_GREEN));
         registry.register(LibBlockNames.VEXING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_PURPLE));
         registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock(MapColor.COLOR_PURPLE));
 
         registry.register(LibBlockNames.VEXING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_PURPLE));
-        registry.register(LibBlockNames.CASCADING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_BLUE));
         registry.register(LibBlockNames.FLOURISHING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_GREEN));
         registry.register(LibBlockNames.BLAZING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_RED));
         registry.register(LibBlockNames.ARCHWOOD_PLANK, new ModBlock(LOG_PROP));
@@ -442,10 +428,8 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
         registry.register(LibBlockNames.VITALIC_SOURCELINK, new VitalicSourcelinkBlock());
         registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new MycelialSourcelinkBlock());
-        registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new VolcanicSourcelinkBlock());
 
 
-        registry.register(LibBlockNames.WIXIE_CAULDRON, new WixieCauldron());
         registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
         registry.register(LibBlockNames.SCONCE, new SconceBlock());
         registry.register(LibBlockNames.DRYGMY_STONE, new DrygmyStone());
@@ -453,8 +437,8 @@ public class BlockRegistry {
 
         registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG));
         registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG));
-        registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG));
-        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG));
+        registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG.get()));
+        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG.get()));
         registry.register(LibBlockNames.POTION_DIFFUSER, new PotionDiffuserBlock());
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
@@ -482,7 +466,7 @@ public class BlockRegistry {
 
         registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING));
-        registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING));
+        registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.FLOURISHING_SAPLING), createPottedBlock(() -> FLOURISHING_SAPLING));
         registry.register(LibBlockNames.Pot(LibBlockNames.VEXING_SAPLING), createPottedBlock(() -> VEXING_SAPLING));
 
@@ -495,14 +479,6 @@ public class BlockRegistry {
 
     @SuppressWarnings("ConstantConditions")
     public static void onTileEntityRegistry(IForgeRegistry<BlockEntityType<?>> registry) {
-        registry.register(LibBlockNames.RELAY_SPLITTER, BlockEntityType.Builder.of(RelaySplitterTile::new, BlockRegistry.RELAY_SPLITTER).build(null));
-        registry.register(LibBlockNames.ARCANE_CORE, BlockEntityType.Builder.of(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null));
-        registry.register(LibBlockNames.IMBUEMENT_CHAMBER, BlockEntityType.Builder.of(ImbuementTile::new, BlockRegistry.IMBUEMENT_BLOCK).build(null));
-        registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, BlockEntityType.Builder.of(EnchantedTurretTile::new, BlockRegistry.ENCHANTED_SPELL_TURRET).build(null));
-        registry.register(LibBlockNames.INTANGIBLE_AIR, BlockEntityType.Builder.of(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null));
-        registry.register(LibBlockNames.VOLCANIC_SOURCELINK, BlockEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null));
-        registry.register(LibBlockNames.WIXIE_CAULDRON, BlockEntityType.Builder.of(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null));
-        registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, BlockEntityType.Builder.of(CreativeSourceJarTile::new, BlockRegistry.CREATIVE_SOURCE_JAR).build(null));
         registry.register(LibBlockNames.POTION_JAR_BLOCK, BlockEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null));
         registry.register(LibBlockNames.POTION_MELDER_BLOCK, BlockEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null));
         registry.register(LibBlockNames.SCONCE, BlockEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null));
@@ -530,35 +506,6 @@ public class BlockRegistry {
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
-        registry.register(LibBlockNames.RELAY_SPLITTER, new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("source_splitter");
-            }
-        });
-        registry.register(LibBlockNames.IMBUEMENT_CHAMBER, new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("imbuement_chamber");
-            }
-        });
-        registry.register(LibBlockNames.ARCANE_CORE, new RendererBlockItem(BlockRegistry.ARCANE_CORE_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return ArcaneCoreRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.VOLCANIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VOLCANIC_BLOCK, defaultItemProperties().fireResistant()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return VolcanicRenderer::getISTER;
-            }
-        });
-        registry.register(LibItemNames.SOURCE_BERRY, new BlockItem(BlockRegistry.SOURCEBERRY_BUSH, defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)));
-
-        registry.register(LibBlockNames.LAVA_LILY, new FluidBlockItem(BlockRegistry.LAVA_LILY, defaultItemProperties().fireResistant()));
-        registry.register(LibBlockNames.WIXIE_CAULDRON, new BlockItem(BlockRegistry.WIXIE_CAULDRON, defaultItemProperties()));
-        registry.register(LibBlockNames.CREATIVE_SOURCE_JAR, new BlockItem(BlockRegistry.CREATIVE_SOURCE_JAR, defaultItemProperties()));
         registry.register(LibBlockNames.RELAY_WARP, new RendererBlockItem(BlockRegistry.RELAY_WARP, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -571,11 +518,6 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("source_deposit");
             }
         });
-
-        registry.register(LibBlockNames.CASCADING_LEAVES, getDefaultBlockItem(BlockRegistry.CASCADING_LEAVE));
-        registry.register(LibBlockNames.CASCADING_LOG, getDefaultBlockItem(BlockRegistry.CASCADING_LOG));
-        registry.register(LibBlockNames.CASCADING_SAPLING, getDefaultBlockItem(BlockRegistry.CASCADING_SAPLING));
-        registry.register(LibBlockNames.CASCADING_WOOD, getDefaultBlockItem(BlockRegistry.CASCADING_WOOD));
         registry.register(LibBlockNames.VEXING_LEAVES, getDefaultBlockItem(BlockRegistry.VEXING_LEAVES));
         registry.register(LibBlockNames.VEXING_LOG, getDefaultBlockItem(BlockRegistry.VEXING_LOG));
         registry.register(LibBlockNames.VEXING_SAPLING, getDefaultBlockItem(BlockRegistry.VEXING_SAPLING));
@@ -584,8 +526,6 @@ public class BlockRegistry {
         registry.register(LibBlockNames.FLOURISHING_LOG, getDefaultBlockItem(BlockRegistry.FLOURISHING_LOG));
         registry.register(LibBlockNames.FLOURISHING_SAPLING, getDefaultBlockItem(BlockRegistry.FLOURISHING_SAPLING));
         registry.register(LibBlockNames.FLOURISHING_WOOD, getDefaultBlockItem(BlockRegistry.FLOURISHING_WOOD));
-        registry.register(LibBlockNames.BLAZING_LEAVES, getDefaultBlockItem(BlockRegistry.BLAZING_LEAVES));
-        registry.register(LibBlockNames.BLAZING_LOG, getDefaultBlockItem(BlockRegistry.BLAZING_LOG));
         registry.register(LibBlockNames.BLAZING_SAPLING, getDefaultBlockItem(BlockRegistry.BLAZING_SAPLING));
         registry.register(LibBlockNames.BLAZING_WOOD, getDefaultBlockItem(BlockRegistry.BLAZING_WOOD));
         registry.register(LibBlockNames.ARCHWOOD_PLANK, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK));
@@ -643,12 +583,6 @@ public class BlockRegistry {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                 return BasicTurretRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.ENCHANTED_SPELL_TURRET, new RendererBlockItem(BlockRegistry.ENCHANTED_SPELL_TURRET, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return ReducerTurretRenderer::getISTER;
             }
         });
         registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest.Item(BlockRegistry.ARCHWOOD_CHEST, defaultItemProperties()));

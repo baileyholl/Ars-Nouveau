@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:source_berry"
+          "name": "ars_nouveau:sourceberry_bush"
         }
       ],
       "conditions": [
@@ -42,7 +42,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:source_berry"
+          "name": "ars_nouveau:sourceberry_bush"
         }
       ],
       "conditions": [
