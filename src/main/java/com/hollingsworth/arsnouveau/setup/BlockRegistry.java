@@ -196,37 +196,29 @@ public class BlockRegistry {
     public static RegistryWrapper<SconceBlock> SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SCONCE, SconceBlock::new);
     public static RegistryWrapper<BlockEntityType<SconceTile>> SCONCE_TILE = registerTile(LibBlockNames.SCONCE, SconceTile::new, SCONCE_BLOCK);
 
-    @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockRegistryKey)
-    public static DrygmyStone DRYGMY_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<DrygmyTile> DRYGMY_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockRegistryKey)
-    public static AlchemicalSourcelinkBlock ALCHEMICAL_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.ALCHEMICAL_SOURCELINK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<AlchemicalSourcelinkTile> ALCHEMICAL_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.VITALIC_SOURCELINK, registryName = BlockRegistryKey)
-    public static VitalicSourcelinkBlock VITALIC_BLOCK;
 
-    @ObjectHolder(value = prepend + LibBlockNames.VITALIC_SOURCELINK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<VitalicSourcelinkTile> VITALIC_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockRegistryKey)
-    public static MycelialSourcelinkBlock MYCELIAL_BLOCK;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MYCELIAL_SOURCELINK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<MycelialSourcelinkTile> MYCELIAL_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_DEPOSIT, registryName = BlockRegistryKey)
-    public static RelayDepositBlock RELAY_DEPOSIT;
-
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_DEPOSIT, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RelayDepositTile> RELAY_DEPOSIT_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockRegistryKey)
-    public static RelayWarpBlock RELAY_WARP;
-
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_WARP, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RelayWarpTile> RELAY_WARP_TILE;
+    public static RegistryWrapper<DrygmyStone> DRYGMY_BLOCK = registerBlockAndItem(LibBlockNames.DRYGMY_STONE, DrygmyStone::new);
+    public static RegistryWrapper<BlockEntityType<DrygmyTile>> DRYGMY_TILE = registerTile(LibBlockNames.DRYGMY_STONE, DrygmyTile::new, DRYGMY_BLOCK);
+    public static RegistryWrapper<AlchemicalSourcelinkBlock> ALCHEMICAL_BLOCK = registerBlockAndItem(LibBlockNames.ALCHEMICAL_SOURCELINK, AlchemicalSourcelinkBlock::new);
+    public static RegistryWrapper<BlockEntityType<AlchemicalSourcelinkTile>> ALCHEMICAL_TILE = registerTile(LibBlockNames.ALCHEMICAL_SOURCELINK, AlchemicalSourcelinkTile::new, ALCHEMICAL_BLOCK);
+    public static RegistryWrapper<VitalicSourcelinkBlock> VITALIC_BLOCK = registerBlockAndItem(LibBlockNames.VITALIC_SOURCELINK, VitalicSourcelinkBlock::new);
+    public static RegistryWrapper<BlockEntityType<VitalicSourcelinkTile>> VITALIC_TILE = registerTile(LibBlockNames.VITALIC_SOURCELINK, VitalicSourcelinkTile::new, VITALIC_BLOCK);
+    public static RegistryWrapper<MycelialSourcelinkBlock> MYCELIAL_BLOCK = registerBlockAndItem(LibBlockNames.MYCELIAL_SOURCELINK, MycelialSourcelinkBlock::new);
+    public static RegistryWrapper<BlockEntityType<MycelialSourcelinkTile>> MYCELIAL_TILE = registerTile(LibBlockNames.MYCELIAL_SOURCELINK, MycelialSourcelinkTile::new, MYCELIAL_BLOCK);
+    public static RegistryWrapper<RelayDepositBlock> RELAY_DEPOSIT = registerBlockAndItem(LibBlockNames.RELAY_DEPOSIT, RelayDepositBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("source_deposit");
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<RelayDepositTile>> RELAY_DEPOSIT_TILE = registerTile(LibBlockNames.RELAY_DEPOSIT, RelayDepositTile::new, RELAY_DEPOSIT);
+    public static RegistryWrapper<RelayWarpBlock> RELAY_WARP = registerBlockAndItem(LibBlockNames.RELAY_WARP, RelayWarpBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("source_warp");
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<RelayWarpTile>> RELAY_WARP_TILE = registerTile(LibBlockNames.RELAY_WARP, RelayWarpTile::new, RELAY_WARP);
 
 
 
@@ -345,32 +337,15 @@ public class BlockRegistry {
     public static ModBlock MAGEBLOOM_BLOCK;
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
+        registry.register(LibBlockNames.SCRIBES_BLOCK, new ScribesBlock());
         registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
-
-
-        registry.register(LibBlockNames.RELAY_DEPOSIT, new RelayDepositBlock());
-        registry.register(LibBlockNames.RELAY_WARP, new RelayWarpBlock());
         registry.register(LibBlockNames.RELAY_COLLECTOR, new RelayCollectorBlock());
         registry.register(LibBlockNames.BASIC_SPELL_TURRET, new BasicSpellTurret());
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, new TimerSpellTurret());
-
-
         registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
-
         registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest());
-
-
-
-        registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
-        registry.register(LibBlockNames.VITALIC_SOURCELINK, new VitalicSourcelinkBlock());
-        registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new MycelialSourcelinkBlock());
-
-
         registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
-        registry.register(LibBlockNames.DRYGMY_STONE, new DrygmyStone());
-
-
         registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG.get()));
         registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG.get()));
         registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG.get()));
@@ -393,13 +368,11 @@ public class BlockRegistry {
         registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
         registry.register(LibBlockNames.MOB_JAR, new MobJar());
         registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
-
         registry.register(LibBlockNames.REPOSITORY, new RepositoryBlock());
         registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
         registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
         registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
-
         registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING.get()));
@@ -415,12 +388,6 @@ public class BlockRegistry {
 
     @SuppressWarnings("ConstantConditions")
     public static void onTileEntityRegistry(IForgeRegistry<BlockEntityType<?>> registry) {
-        registry.register(LibBlockNames.DRYGMY_STONE, BlockEntityType.Builder.of(DrygmyTile::new, BlockRegistry.DRYGMY_BLOCK).build(null));
-        registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, BlockEntityType.Builder.of(AlchemicalSourcelinkTile::new, BlockRegistry.ALCHEMICAL_BLOCK).build(null));
-        registry.register(LibBlockNames.VITALIC_SOURCELINK, BlockEntityType.Builder.of(VitalicSourcelinkTile::new, BlockRegistry.VITALIC_BLOCK).build(null));
-        registry.register(LibBlockNames.MYCELIAL_SOURCELINK, BlockEntityType.Builder.of(MycelialSourcelinkTile::new, BlockRegistry.MYCELIAL_BLOCK).build(null));
-        registry.register(LibBlockNames.RELAY_DEPOSIT, BlockEntityType.Builder.of(RelayDepositTile::new, BlockRegistry.RELAY_DEPOSIT).build(null));
-        registry.register(LibBlockNames.RELAY_WARP, BlockEntityType.Builder.of(RelayWarpTile::new, BlockRegistry.RELAY_WARP).build(null));
         registry.register(LibBlockNames.BASIC_SPELL_TURRET, BlockEntityType.Builder.of(BasicSpellTurretTile::new, BlockRegistry.BASIC_SPELL_TURRET).build(null));
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, BlockEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null));
         registry.register(LibBlockNames.ARCHWOOD_CHEST, BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null));
@@ -439,37 +406,6 @@ public class BlockRegistry {
     }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
-        registry.register(LibBlockNames.RELAY_WARP, new RendererBlockItem(BlockRegistry.RELAY_WARP, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("source_warp");
-            }
-        });
-        registry.register(LibBlockNames.RELAY_DEPOSIT, new RendererBlockItem(BlockRegistry.RELAY_DEPOSIT, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("source_deposit");
-            }
-        });
-        registry.register(LibBlockNames.DRYGMY_STONE, getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK));
-        registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new RendererBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return AlchemicalRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.VITALIC_SOURCELINK, new RendererBlockItem(BlockRegistry.VITALIC_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return VitalicRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.MYCELIAL_SOURCELINK, new RendererBlockItem(BlockRegistry.MYCELIAL_BLOCK, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return MycelialRenderer::getISTER;
-            }
-        });
         registry.register(LibBlockNames.TIMER_SPELL_TURRET, new RendererBlockItem(BlockRegistry.TIMER_SPELL_TURRET, defaultItemProperties()) {
             @Override
             public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {

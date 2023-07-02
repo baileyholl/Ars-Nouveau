@@ -16,7 +16,7 @@ public class RelayWarpTile extends RelaySplitterTile {
     }
 
     public RelayWarpTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.RELAY_WARP_TILE, pos, state);
+        super(BlockRegistry.RELAY_WARP_TILE.get(), pos, state);
     }
 
     @Override

@@ -129,7 +129,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
             registerDropSelf(BlockRegistry.SCONCE_BLOCK);
             registerBedCondition(BlockRegistry.SCRIBES_BLOCK.get(), ScribesBlock.PART, ThreePartBlock.HEAD);
-            registerDrop(BlockRegistry.DRYGMY_BLOCK, Items.MOSSY_COBBLESTONE);
+            registerDrop(BlockRegistry.DRYGMY_BLOCK.get(), Items.MOSSY_COBBLESTONE);
 
             registerDropSelf(BlockRegistry.VITALIC_BLOCK);
             registerDropSelf(BlockRegistry.ALCHEMICAL_BLOCK);

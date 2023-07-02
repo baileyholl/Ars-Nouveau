@@ -6,6 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -22,7 +23,7 @@ public class SourceManager {
         posMap.get(key).add(pos);
     }
 
-    public Set<ISpecialSourceProvider> getSetForLevel(Level world){
+    public @NotNull Set<ISpecialSourceProvider> getSetForLevel(Level world){
         String key = world.dimension().location().toString();
         return posMap.computeIfAbsent(key, k -> new HashSet<>());
     }

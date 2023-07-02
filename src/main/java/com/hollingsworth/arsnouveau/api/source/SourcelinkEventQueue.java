@@ -7,10 +7,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SourcelinkEventQueue {
 
-    public static Map<String, Set<BlockPos>> posMap = new HashMap<>();
+    public static Map<String, Set<BlockPos>> posMap = new ConcurrentHashMap<>();
 
     public static void addPosition(Level world, BlockPos pos) {
         String key = world.dimension().location().toString();

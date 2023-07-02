@@ -72,11 +72,11 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE.get(), VolcanicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.IMBUEMENT_TILE.get(), ImbuementRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE.get(), PotionMelderRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.RELAY_DEPOSIT_TILE, (t) -> new GenericRenderer(t, "source_deposit"));
-        event.registerBlockEntityRenderer(BlockRegistry.RELAY_WARP_TILE, (t) -> new GenericRenderer(t, "source_warp"));
+        event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE.get(), AlchemicalRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE.get(), VitalicRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE.get(), MycelialRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_DEPOSIT_TILE.get(), (t) -> new GenericRenderer(t, "source_deposit"));
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_WARP_TILE.get(), (t) -> new GenericRenderer(t, "source_warp"));
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE.get(), (t) -> new GenericRenderer(t, "source_relay"));
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_SPLITTER_TILE.get(), (t) -> new GenericRenderer(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
