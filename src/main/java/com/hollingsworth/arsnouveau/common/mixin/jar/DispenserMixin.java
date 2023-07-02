@@ -38,11 +38,11 @@ public abstract class DispenserMixin {
     )
     public void onDispenseFromInject(ServerLevel level, BlockPos pos, CallbackInfo ci, BlockSourceImpl source, DispenserBlockEntity dispenser, int slot, ItemStack stack) {
         BlockState inFront = level.getBlockState(pos.relative(source.getBlockState().getValue(DispenserBlock.FACING)));
-        if (inFront.is(BlockRegistry.MOB_JAR) && stack.getItem() instanceof ShearsItem) {
+        if (inFront.is(BlockRegistry.MOB_JAR.get()) && stack.getItem() instanceof ShearsItem) {
             BlockPos relativePos = pos.relative(source.getBlockState().getValue(DispenserBlock.FACING));
             ANFakePlayer fakePlayer = ANFakePlayer.getPlayer(level);
             fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            BlockRegistry.MOB_JAR.use(inFront, level, relativePos, fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(relativePos.getX(), relativePos.getY(), relativePos.getZ()), source.getBlockState().getValue(DispenserBlock.FACING), relativePos, false));
+            BlockRegistry.MOB_JAR.get().use(inFront, level, relativePos, fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(relativePos.getX(), relativePos.getY(), relativePos.getZ()), source.getBlockState().getValue(DispenserBlock.FACING), relativePos, false));
             dispenser.setItem(slot, stack);
             ci.cancel();
         }

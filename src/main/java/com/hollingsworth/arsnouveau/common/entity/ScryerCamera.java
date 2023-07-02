@@ -108,28 +108,11 @@ public class ScryerCamera extends Entity {
             if (this.toggleNightVisionCooldown > 0) {
                 --this.toggleNightVisionCooldown;
             }
-
-//            if (this.shouldProvideNightVision) {
-//                SecurityCraft.channel.sendToServer(new GiveNightVision());
-//            }
-        } else if (this.level.getBlockState(this.blockPosition()).getBlock() != BlockRegistry.SCRYERS_CRYSTAL) {
+        } else if (this.level.getBlockState(this.blockPosition()).getBlock() != BlockRegistry.SCRYERS_CRYSTAL.get()) {
             this.discard();
         }
 
     }
-
-//    public void toggleRedstonePower() {
-////        BlockPos pos = this.blockPosition();
-////        if (((IModuleInventory)this.level.getBlockEntity(pos)).hasModule(ModuleType.REDSTONE)) {
-////            SecurityCraft.channel.sendToServer(new SetCameraPowered(pos, !(Boolean)this.level.getBlockState(pos).getValue(SecurityCameraBlock.POWERED)));
-////        }
-//
-//    }
-//
-//    public void toggleNightVision() {
-//        this.toggleNightVisionCooldown = 30;
-//        this.shouldProvideNightVision = !this.shouldProvideNightVision;
-//    }
 
     public float getZoomAmount() {
         return this.zoomAmount;

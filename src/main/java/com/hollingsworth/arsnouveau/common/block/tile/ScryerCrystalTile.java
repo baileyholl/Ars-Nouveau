@@ -19,18 +19,13 @@ public class ScryerCrystalTile extends ModdedTile implements ITickable, ICameraM
     public int playersViewing = 0;
     double rotationSpeed = 0.018D;
     boolean shouldRotate = true;
-//
-//    private Option.DoubleOption rotationSpeedOption = new Option.DoubleOption(this::getBlockPos, "rotationSpeed", 0.018D, 0.01D, 0.025D, 0.001D, true);
-//    private Option.BooleanOption shouldRotateOption = new Option.BooleanOption("shouldRotate", true);
-//    private Option.DoubleOption customRotationOption;
 
     public ScryerCrystalTile(BlockPos pos, BlockState state) {
-        this(BlockRegistry.SCRYER_CRYSTAL_TILE, pos, state);
+        this(BlockRegistry.SCRYER_CRYSTAL_TILE.get(), pos, state);
     }
 
     public ScryerCrystalTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
-//        this.customRotationOption = new Option.DoubleOption(this::getBlockPos, "customRotation", this.cameraRotation, 1.55D, -1.55D, (Double)this.rotationSpeedOption.get(), true);
     }
 
 

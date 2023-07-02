@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,6 +33,10 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     public MirrorWeave(BlockBehaviour.Properties properties) {
         super(properties.lightLevel((b) -> b.getValue(LIGHT_LEVEL)));
+    }
+
+    public MirrorWeave(){
+        this(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion());
     }
 
     @Override

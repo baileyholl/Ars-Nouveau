@@ -74,14 +74,14 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.MYCELIAL_BLOCK.get(),
                 BlockRegistry.RELAY_DEPOSIT.get(),
                 BlockRegistry.RELAY_WARP.get(),
-                BlockRegistry.BASIC_SPELL_TURRET,
-                BlockRegistry.TIMER_SPELL_TURRET,
-                BlockRegistry.SPELL_PRISM,
-                BlockRegistry.SCRYERS_CRYSTAL,
-                BlockRegistry.SCRYERS_OCULUS,
-                BlockRegistry.POTION_DIFFUSER,
-                BlockRegistry.MOB_JAR,
-                BlockRegistry.VOID_PRISM,
+                BlockRegistry.BASIC_SPELL_TURRET.get(),
+                BlockRegistry.TIMER_SPELL_TURRET.get(),
+                BlockRegistry.SPELL_PRISM.get(),
+                BlockRegistry.SCRYERS_CRYSTAL.get(),
+                BlockRegistry.SCRYERS_OCULUS.get(),
+                BlockRegistry.POTION_DIFFUSER.get(),
+                BlockRegistry.MOB_JAR.get(),
+                BlockRegistry.VOID_PRISM.get(),
                 BlockRegistry.BRAZIER_RELAY.get()
         );
 
@@ -113,10 +113,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE.get(),
                 BlockRegistry.CRAFTING_LECTERN.get(),
-                BlockRegistry.ARCHWOOD_CHEST,
-                BlockRegistry.ALTERATION_TABLE,
+                BlockRegistry.ARCHWOOD_CHEST.get(),
+                BlockRegistry.ALTERATION_TABLE.get(),
                 BlockRegistry.ITEM_DETECTOR.get(),
-                BlockRegistry.REPOSITORY
+                BlockRegistry.REPOSITORY.get()
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE.get(),
@@ -124,8 +124,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.FLOURISHING_LEAVES.get(),
                 BlockRegistry.VEXING_LEAVES.get()
         );
-        this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST);
-        this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST);
+        this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.get());
+        this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.get());
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
             Block stair = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
@@ -134,7 +134,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block, stair, slab);
         }
 
-        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE, BlockRegistry.MIRROR_WEAVE, BlockRegistry.GHOST_WEAVE, BlockRegistry.MAGEBLOOM_BLOCK);
+        this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.MAGEBLOOM_BLOCK.get());
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
                 Blocks.BROWN_MUSHROOM_BLOCK,
@@ -183,10 +183,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
                 BlockRegistry.SOURCEBERRY_BUSH.get(),
                 BlockRegistry.MAGE_BLOOM_CROP.get(),
-                BlockRegistry.FROSTAYA_POD,
-                BlockRegistry.MENDOSTEEN_POD,
-                BlockRegistry.BASTION_POD,
-                BlockRegistry.BOMBEGRANTE_POD
+                BlockRegistry.FROSTAYA_POD.get(),
+                BlockRegistry.MENDOSTEEN_POD.get(),
+                BlockRegistry.BASTION_POD.get(),
+                BlockRegistry.BOMBEGRANTE_POD.get()
         );
 
         this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
@@ -255,7 +255,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.SCONCE_BLOCK.get(),
                 BlockRegistry.LIGHT_BLOCK.get(),
                 BlockRegistry.T_LIGHT_BLOCK.get(),
-                BlockRegistry.GHOST_WEAVE,
+                BlockRegistry.GHOST_WEAVE.get(),
                 BlockRegistry.SKY_WEAVE.get()
         );
 
@@ -273,7 +273,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(GRAVITY_BLACKLIST).add(Blocks.BEDROCK, BlockRegistry.MAGE_BLOCK.get()).addTag(RELOCATION_NOT_SUPPORTED);
         this.tag(BREAK_WITH_PICKAXE).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK.get());
-        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE);
+        this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE.get());
     }
 
     public String getName() {

@@ -22,6 +22,8 @@ public class TemporaryBlock extends MirrorWeave implements EntityBlock, ITickabl
         super(properties.lightLevel((b) -> b.getValue(LIGHT_LEVEL)));
     }
 
+
+
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         return InteractionResult.SUCCESS;

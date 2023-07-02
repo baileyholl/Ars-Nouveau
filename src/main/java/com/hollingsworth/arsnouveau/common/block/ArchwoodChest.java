@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 public class ArchwoodChest extends ChestBlock {
     public ArchwoodChest() {
-        super(BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.WOOD), () -> BlockRegistry.ARCHWOOD_CHEST_TILE);
+        super(BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.WOOD), () -> BlockRegistry.ARCHWOOD_CHEST_TILE.get());
     }
 
     @Override

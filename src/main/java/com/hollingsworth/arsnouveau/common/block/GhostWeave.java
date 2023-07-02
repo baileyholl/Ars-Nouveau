@@ -14,6 +14,10 @@ public class GhostWeave extends MirrorWeave {
         super(properties);
     }
 
+    public GhostWeave(){
+        super();
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {

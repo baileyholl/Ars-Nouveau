@@ -174,7 +174,7 @@ public class DefaultTableProvider extends LootTableProvider {
                 registerDropSelf(slab);
 
             }
-            registerBedCondition(BlockRegistry.ALTERATION_TABLE, AlterationTable.PART, ThreePartBlock.HEAD);
+            registerBedCondition(BlockRegistry.ALTERATION_TABLE.get(), AlterationTable.PART, ThreePartBlock.HEAD);
             registerDropSelf(BlockRegistry.VOID_PRISM);
             registerDropSelf(BlockRegistry.MAGEBLOOM_BLOCK);
             registerDropSelf(BlockRegistry.GHOST_WEAVE);
@@ -200,10 +200,10 @@ public class DefaultTableProvider extends LootTableProvider {
                                     .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                     );
             add(BlockRegistry.POTION_JAR.get(), LootTable.lootTable().withPool(potionJarBuilder));
-            add(BlockRegistry.BASTION_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD)));
-            add(BlockRegistry.MENDOSTEEN_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.MENDOSTEEN_POD.asItem(), BlockRegistry.MENDOSTEEN_POD)));
-            add(BlockRegistry.FROSTAYA_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.FROSTAYA_POD.asItem(), BlockRegistry.FROSTAYA_POD)));
-            add(BlockRegistry.BOMBEGRANTE_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BOMBEGRANTE_POD.asItem(), BlockRegistry.BOMBEGRANTE_POD)));
+            add(BlockRegistry.BASTION_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD.get())));
+            add(BlockRegistry.MENDOSTEEN_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.MENDOSTEEN_POD.asItem(), BlockRegistry.MENDOSTEEN_POD.get())));
+            add(BlockRegistry.FROSTAYA_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.FROSTAYA_POD.asItem(), BlockRegistry.FROSTAYA_POD.get())));
+            add(BlockRegistry.BOMBEGRANTE_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BOMBEGRANTE_POD.asItem(), BlockRegistry.BOMBEGRANTE_POD.get())));
 
             LootPool.Builder mobJarBuilder = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
@@ -212,16 +212,16 @@ public class DefaultTableProvider extends LootTableProvider {
                             .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                     .copy("entityTag", "BlockEntityTag.entityTag", CopyNbtFunction.MergeStrategy.REPLACE)
                                     .copy("entityId", "entityId", CopyNbtFunction.MergeStrategy.REPLACE))
-                            .apply(SetContainerContents.setContents(BlockRegistry.MOB_JAR_TILE)
+                            .apply(SetContainerContents.setContents(BlockRegistry.MOB_JAR_TILE.get())
                                     .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                     );
-            add(BlockRegistry.MOB_JAR, LootTable.lootTable().withPool(mobJarBuilder));
+            add(BlockRegistry.MOB_JAR.get(), LootTable.lootTable().withPool(mobJarBuilder));
             //CustomName
             LootPool.Builder repository = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.REPOSITORY)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
-            add(BlockRegistry.REPOSITORY, LootTable.lootTable().withPool(repository));
+            add(BlockRegistry.REPOSITORY.get(), LootTable.lootTable().withPool(repository));
 
         }
 

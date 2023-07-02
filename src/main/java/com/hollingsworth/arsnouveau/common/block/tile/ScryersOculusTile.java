@@ -34,7 +34,7 @@ public class ScryersOculusTile extends ModdedTile implements GeoBlockEntity, ITi
     }
 
     public ScryersOculusTile(BlockPos pos, BlockState state) {
-        this(BlockRegistry.SCRYERS_OCULUS_TILE, pos, state);
+        this(BlockRegistry.SCRYERS_OCULUS_TILE.get(), pos, state);
     }
 
     @Override

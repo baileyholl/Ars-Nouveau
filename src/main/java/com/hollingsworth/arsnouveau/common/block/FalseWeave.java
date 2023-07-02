@@ -17,6 +17,10 @@ public class FalseWeave extends MirrorWeave {
         super(properties);
     }
 
+    public FalseWeave(){
+        super();
+    }
+
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return Shapes.empty();

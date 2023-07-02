@@ -45,15 +45,17 @@ import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.ITEMS;
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
 public class BlockRegistry {
+
     public static Block.Properties woodProp = BlockBehaviour.Properties.of().strength(2.0F, 3.0F).ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD);
 
     //TODO Switch to these for 1.20
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ArsNouveau.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ArsNouveau.MODID);
 
-    static final String BlockRegistryKey = "minecraft:block";
-    static final String BlockEntityRegistryKey = "minecraft:block_entity_type";
     static final String prepend = ArsNouveau.MODID + ":";
+
+    @ObjectHolder(value = prepend + LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
+    public static BlockStateProviderType<?> stateProviderType;
 
     public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0F, 3.0F).ignitedByLava().sound(SoundType.WOOD);
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY);
@@ -221,39 +223,37 @@ public class BlockRegistry {
     public static RegistryWrapper<BlockEntityType<RelayWarpTile>> RELAY_WARP_TILE = registerTile(LibBlockNames.RELAY_WARP, RelayWarpTile::new, RELAY_WARP);
 
 
-
-    @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockRegistryKey)
-    public static BasicSpellTurret BASIC_SPELL_TURRET;
-
-    @ObjectHolder(value = prepend + LibBlockNames.BASIC_SPELL_TURRET, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<BasicSpellTurretTile> BASIC_SPELL_TURRET_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockRegistryKey)
-    public static TimerSpellTurret TIMER_SPELL_TURRET;
-
-    @ObjectHolder(value = prepend + LibBlockNames.TIMER_SPELL_TURRET, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_CHEST, registryName = BlockRegistryKey)
-    public static ArchwoodChest ARCHWOOD_CHEST;
-
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_CHEST, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ArchwoodChestTile> ARCHWOOD_CHEST_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.SPELL_PRISM, registryName = BlockRegistryKey)
-    public static SpellPrismBlock SPELL_PRISM;
-
-    @ObjectHolder(value = prepend + LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.WHIRLISPRIG_BLOCK, registryName = BlockRegistryKey)
-    public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
-
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockRegistryKey)
-    public static RelayCollectorBlock RELAY_COLLECTOR;
-
-    @ObjectHolder(value = prepend + LibBlockNames.RELAY_COLLECTOR, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
+    public static RegistryWrapper<BasicSpellTurret> BASIC_SPELL_TURRET = registerBlockAndItem(LibBlockNames.BASIC_SPELL_TURRET, BasicSpellTurret::new, (reg) ->new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return BasicTurretRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<BasicSpellTurretTile>> BASIC_SPELL_TURRET_TILE = registerTile(LibBlockNames.BASIC_SPELL_TURRET, BasicSpellTurretTile::new, BASIC_SPELL_TURRET);
+    public static RegistryWrapper<TimerSpellTurret> TIMER_SPELL_TURRET = registerBlockAndItem(LibBlockNames.TIMER_SPELL_TURRET, TimerSpellTurret::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return TimerTurretRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<TimerSpellTurretTile>> TIMER_SPELL_TURRET_TILE = registerTile(LibBlockNames.TIMER_SPELL_TURRET, TimerSpellTurretTile::new, TIMER_SPELL_TURRET);
+    public static RegistryWrapper<ArchwoodChest> ARCHWOOD_CHEST = registerBlockAndItem(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChest::new, (reg) -> new ArchwoodChest.Item(reg.get(), defaultItemProperties()));
+    public static RegistryWrapper<BlockEntityType<ArchwoodChestTile>> ARCHWOOD_CHEST_TILE = registerTile(LibBlockNames.ARCHWOOD_CHEST, ArchwoodChestTile::new, ARCHWOOD_CHEST);
+    public static RegistryWrapper<SpellPrismBlock> SPELL_PRISM = registerBlockAndItem(LibBlockNames.SPELL_PRISM, SpellPrismBlock::new);
+    public static RegistryWrapper<WhirlisprigFlower> WHIRLISPRIG_FLOWER = registerBlockAndItem(LibBlockNames.WHIRLISPRIG_BLOCK, WhirlisprigFlower::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return WhirlisprigFlowerRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<WhirlisprigTile>> WHIRLISPRIG_TILE = registerTile(LibBlockNames.WHIRLISPRIG_BLOCK, WhirlisprigTile::new, WHIRLISPRIG_FLOWER);
+    public static RegistryWrapper<RelayCollectorBlock> RELAY_COLLECTOR = registerBlockAndItem(LibBlockNames.RELAY_COLLECTOR, RelayCollectorBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericRenderer.getISTER("source_collector");
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<RelayCollectorTile>> RELAY_COLLECTOR_TILE = registerTile(LibBlockNames.RELAY_COLLECTOR, RelayCollectorTile::new, RELAY_COLLECTOR);
 
     public static RegistryWrapper<SummonBed> RED_SBED = registerBlockAndItem(LibBlockNames.RED_SBED, SummonBed::new);
     public static RegistryWrapper<SummonBed> BLUE_SBED = registerBlockAndItem(LibBlockNames.BLUE_SBED, SummonBed::new);
@@ -262,95 +262,48 @@ public class BlockRegistry {
     public static RegistryWrapper<SummonBed> YELLOW_SBED = registerBlockAndItem(LibBlockNames.YELLOW_SBED, SummonBed::new);
     public static RegistryWrapper<SummonBed> PURPLE_SBED = registerBlockAndItem(LibBlockNames.PURPLE_SBED, SummonBed::new);
 
-    @ObjectHolder(value = prepend + LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
-    public static BlockStateProviderType<?> stateProviderType;
 
-    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_OCULUS, registryName = BlockRegistryKey)
-    public static ScryersOculus SCRYERS_OCULUS;
-
-    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_OCULUS, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ScryersOculusTile> SCRYERS_OCULUS_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockRegistryKey)
-    public static ScryerCrystal SCRYERS_CRYSTAL;
-
-    @ObjectHolder(value = prepend + LibBlockNames.SCRYERS_CRYSTAL, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<ScryerCrystalTile> SCRYER_CRYSTAL_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MENDOSTEEN_POD, registryName = BlockRegistryKey)
-    public static ArchfruitPod MENDOSTEEN_POD;
-
-    @ObjectHolder(value = prepend + LibBlockNames.BASTION_POD, registryName = BlockRegistryKey)
-    public static ArchfruitPod BASTION_POD;
-
-    @ObjectHolder(value = prepend + LibBlockNames.FROSTAYA_POD, registryName = BlockRegistryKey)
-    public static ArchfruitPod FROSTAYA_POD;
-
-    @ObjectHolder(value = prepend + LibBlockNames.BOMBEGRANATE_POD, registryName = BlockRegistryKey)
-    public static ArchfruitPod BOMBEGRANTE_POD;
-
-    @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockRegistryKey)
-    public static PotionDiffuserBlock POTION_DIFFUSER;
-
-    @ObjectHolder(value = prepend + LibBlockNames.POTION_DIFFUSER, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<PotionDiffuserTile> POTION_DIFFUSER_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<AlterationTile> ARMOR_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.ALTERATION_TABLE, registryName = BlockRegistryKey)
-    public static AlterationTable ALTERATION_TABLE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<MobJarTile> MOB_JAR_TILE;
-    @ObjectHolder(value = prepend + LibBlockNames.MOB_JAR, registryName = BlockRegistryKey)
-    public static MobJar MOB_JAR;
-
-    @ObjectHolder(value = prepend + LibBlockNames.VOID_PRISM, registryName = BlockRegistryKey)
-    public static VoidPrism VOID_PRISM;
-
-
-    @ObjectHolder(value = prepend + LibBlockNames.REPOSITORY, registryName = BlockRegistryKey)
-    public static RepositoryBlock REPOSITORY;
-
-    @ObjectHolder(value = prepend + LibBlockNames.REPOSITORY, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<RepositoryTile> REPOSITORY_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.FALSE_WEAVE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<FalseWeaveTile> FALSE_WEAVE_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.FALSE_WEAVE, registryName = BlockRegistryKey)
-    public static FalseWeave FALSE_WEAVE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MIRROR_WEAVE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<MirrorWeaveTile> MIRROR_WEAVE_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MIRROR_WEAVE, registryName = BlockRegistryKey)
-    public static MirrorWeave MIRROR_WEAVE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.GHOST_WEAVE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<GhostWeaveTile> GHOST_WEAVE_TILE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.GHOST_WEAVE, registryName = BlockRegistryKey)
-    public static GhostWeave GHOST_WEAVE;
-
-    @ObjectHolder(value = prepend + LibBlockNames.MAGEBLOOM_BLOCK, registryName = BlockRegistryKey)
-    public static ModBlock MAGEBLOOM_BLOCK;
+    public static RegistryWrapper<ScryersOculus> SCRYERS_OCULUS = registerBlockAndItem(LibBlockNames.SCRYERS_OCULUS, ScryersOculus::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return ScryerOculusRenderer::getISTER;
+        }
+    }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
+    public static RegistryWrapper<BlockEntityType<ScryersOculusTile>> SCRYERS_OCULUS_TILE = registerTile(LibBlockNames.SCRYERS_OCULUS, ScryersOculusTile::new, SCRYERS_OCULUS);
+    public static RegistryWrapper<ScryerCrystal> SCRYERS_CRYSTAL = registerBlockAndItem(LibBlockNames.SCRYERS_CRYSTAL, ScryerCrystal::new);
+    public static RegistryWrapper<BlockEntityType<ScryerCrystalTile>> SCRYER_CRYSTAL_TILE = registerTile(LibBlockNames.SCRYERS_CRYSTAL, ScryerCrystalTile::new, SCRYERS_CRYSTAL);
+    public static RegistryWrapper<ArchfruitPod> MENDOSTEEN_POD = registerBlockAndItem(LibBlockNames.MENDOSTEEN_POD, () -> new ArchfruitPod(() -> FLOURISHING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.MENDOSTEEN_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> BASTION_POD = registerBlockAndItem(LibBlockNames.BASTION_POD, () -> new ArchfruitPod(() -> VEXING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.BASTION_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> FROSTAYA_POD = registerBlockAndItem(LibBlockNames.FROSTAYA_POD, () -> new ArchfruitPod(() -> CASCADING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
+    public static RegistryWrapper<ArchfruitPod> BOMBEGRANTE_POD = registerBlockAndItem(LibBlockNames.BOMBEGRANATE_POD, () -> new ArchfruitPod(() -> BLAZING_LOG.get()), (reg) -> new ItemNameBlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
+    public static RegistryWrapper<PotionDiffuserBlock> POTION_DIFFUSER = registerBlockAndItem(LibBlockNames.POTION_DIFFUSER, PotionDiffuserBlock::new);
+    public static RegistryWrapper<BlockEntityType<PotionDiffuserTile>> POTION_DIFFUSER_TILE = registerTile(LibBlockNames.POTION_DIFFUSER, PotionDiffuserTile::new, POTION_DIFFUSER);
+    public static RegistryWrapper<AlterationTable> ALTERATION_TABLE = registerBlockAndItem(LibBlockNames.ALTERATION_TABLE, AlterationTable::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return AlterationTableRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<AlterationTile>> ARMOR_TILE = registerTile(LibBlockNames.ALTERATION_TABLE, AlterationTile::new, ALTERATION_TABLE);
+    public static RegistryWrapper<MobJar> MOB_JAR = registerBlockAndItem(LibBlockNames.MOB_JAR, MobJar::new, (reg) -> new MobJarItem(reg.get(), defaultItemProperties()));
+    public static RegistryWrapper<BlockEntityType<MobJarTile>> MOB_JAR_TILE = registerTile(LibBlockNames.MOB_JAR, MobJarTile::new, MOB_JAR);
+    public static RegistryWrapper<VoidPrism> VOID_PRISM = registerBlockAndItem(LibBlockNames.VOID_PRISM, VoidPrism::new);
+    public static RegistryWrapper<RepositoryBlock> REPOSITORY = registerBlockAndItem(LibBlockNames.REPOSITORY, RepositoryBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return RepositoryRenderer::getISTER;
+        }
+    });
+    public static RegistryWrapper<BlockEntityType<RepositoryTile>> REPOSITORY_TILE = registerTile(LibBlockNames.REPOSITORY, RepositoryTile::new, REPOSITORY);
+    public static RegistryWrapper<FalseWeave> FALSE_WEAVE = registerBlockAndItem(LibBlockNames.FALSE_WEAVE, FalseWeave::new);
+    public static RegistryWrapper<BlockEntityType<FalseWeaveTile>> FALSE_WEAVE_TILE = registerTile(LibBlockNames.FALSE_WEAVE, FalseWeaveTile::new, FALSE_WEAVE);
+    public static RegistryWrapper<MirrorWeave> MIRROR_WEAVE = registerBlockAndItem(LibBlockNames.MIRROR_WEAVE, MirrorWeave::new);
+    public static RegistryWrapper<BlockEntityType<MirrorWeaveTile>> MIRROR_WEAVE_TILE = registerTile(LibBlockNames.MIRROR_WEAVE, MirrorWeaveTile::new, MIRROR_WEAVE);
+    public static RegistryWrapper<GhostWeave> GHOST_WEAVE = registerBlockAndItem(LibBlockNames.GHOST_WEAVE, GhostWeave::new);
+    public static RegistryWrapper<BlockEntityType<GhostWeaveTile>> GHOST_WEAVE_TILE = registerTile(LibBlockNames.GHOST_WEAVE, GhostWeaveTile::new, GHOST_WEAVE);
+    public static RegistryWrapper<ModBlock> MAGEBLOOM_BLOCK = registerBlockAndItem(LibBlockNames.MAGEBLOOM_BLOCK, () -> new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
-        registry.register(LibBlockNames.SCRIBES_BLOCK, new ScribesBlock());
-        registry.register(LibBlockNames.SPELL_PRISM, new SpellPrismBlock());
-        registry.register(LibBlockNames.RELAY_COLLECTOR, new RelayCollectorBlock());
-        registry.register(LibBlockNames.BASIC_SPELL_TURRET, new BasicSpellTurret());
-        registry.register(LibBlockNames.TIMER_SPELL_TURRET, new TimerSpellTurret());
-        registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
-        registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
-        registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest());
-        registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
-        registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG.get()));
-        registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG.get()));
-        registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG.get()));
-        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG.get()));
-        registry.register(LibBlockNames.POTION_DIFFUSER, new PotionDiffuserBlock());
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             if (LibBlockNames.DIRECTIONAL_SOURCESTONE.contains(s)) {
                 registry.register(s, new DirectionalModBlock());
@@ -364,15 +317,6 @@ public class BlockRegistry {
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)).defaultBlockState(), BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
-
-        registry.register(LibBlockNames.ALTERATION_TABLE, new AlterationTable());
-        registry.register(LibBlockNames.MOB_JAR, new MobJar());
-        registry.register(LibBlockNames.VOID_PRISM, new VoidPrism());
-        registry.register(LibBlockNames.REPOSITORY, new RepositoryBlock());
-        registry.register(LibBlockNames.MIRROR_WEAVE, new MirrorWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-        registry.register(LibBlockNames.GHOST_WEAVE, new GhostWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-        registry.register(LibBlockNames.FALSE_WEAVE, new FalseWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion().noCollission()));
-        registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
         registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING.get()));
@@ -386,66 +330,8 @@ public class BlockRegistry {
                 BlockRegistry::allowsSpawnOnLeaves).isSuffocating(BlockRegistry::isntSolid).isViewBlocking(BlockRegistry::isntSolid).pushReaction(PushReaction.DESTROY).ignitedByLava());
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public static void onTileEntityRegistry(IForgeRegistry<BlockEntityType<?>> registry) {
-        registry.register(LibBlockNames.BASIC_SPELL_TURRET, BlockEntityType.Builder.of(BasicSpellTurretTile::new, BlockRegistry.BASIC_SPELL_TURRET).build(null));
-        registry.register(LibBlockNames.TIMER_SPELL_TURRET, BlockEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null));
-        registry.register(LibBlockNames.ARCHWOOD_CHEST, BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null));
-        registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, BlockEntityType.Builder.of(WhirlisprigTile::new, BlockRegistry.WHIRLISPRIG_FLOWER).build(null));
-        registry.register(LibBlockNames.RELAY_COLLECTOR, BlockEntityType.Builder.of(RelayCollectorTile::new, BlockRegistry.RELAY_COLLECTOR).build(null));
-        registry.register(LibBlockNames.SCRYERS_OCULUS, BlockEntityType.Builder.of(ScryersOculusTile::new, BlockRegistry.SCRYERS_OCULUS).build(null));
-        registry.register(LibBlockNames.SCRYERS_CRYSTAL, BlockEntityType.Builder.of(ScryerCrystalTile::new, BlockRegistry.SCRYERS_CRYSTAL).build(null));
-        registry.register(LibBlockNames.POTION_DIFFUSER, BlockEntityType.Builder.of(PotionDiffuserTile::new, BlockRegistry.POTION_DIFFUSER).build(null));
-        registry.register(LibBlockNames.ALTERATION_TABLE, BlockEntityType.Builder.of(AlterationTile::new, BlockRegistry.ALTERATION_TABLE).build(null));
-        registry.register(LibBlockNames.MOB_JAR, BlockEntityType.Builder.of(MobJarTile::new, BlockRegistry.MOB_JAR).build(null));
-        registry.register(LibBlockNames.REPOSITORY, BlockEntityType.Builder.of(RepositoryTile::new, BlockRegistry.REPOSITORY).build(null));
-        registry.register(LibBlockNames.FALSE_WEAVE, BlockEntityType.Builder.of(FalseWeaveTile::new, BlockRegistry.FALSE_WEAVE).build(null));
-        registry.register(LibBlockNames.MIRROR_WEAVE, BlockEntityType.Builder.of(MirrorWeaveTile::new, BlockRegistry.MIRROR_WEAVE).build(null));
-        registry.register(LibBlockNames.GHOST_WEAVE, BlockEntityType.Builder.of(GhostWeaveTile::new, BlockRegistry.GHOST_WEAVE).build(null));
-
-    }
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
-        registry.register(LibBlockNames.TIMER_SPELL_TURRET, new RendererBlockItem(BlockRegistry.TIMER_SPELL_TURRET, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return TimerTurretRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.BASIC_SPELL_TURRET, new RendererBlockItem(BlockRegistry.BASIC_SPELL_TURRET, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return BasicTurretRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest.Item(BlockRegistry.ARCHWOOD_CHEST, defaultItemProperties()));
-        registry.register(LibBlockNames.SPELL_PRISM, getDefaultBlockItem(BlockRegistry.SPELL_PRISM));
-        registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new RendererBlockItem(BlockRegistry.WHIRLISPRIG_FLOWER, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return WhirlisprigFlowerRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.RELAY_COLLECTOR, new RendererBlockItem(BlockRegistry.RELAY_COLLECTOR, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return GenericRenderer.getISTER("source_collector");
-            }
-        });
-        registry.register(LibBlockNames.SCRYERS_CRYSTAL, getDefaultBlockItem(BlockRegistry.SCRYERS_CRYSTAL));
-        registry.register(LibBlockNames.SCRYERS_OCULUS, new RendererBlockItem(BlockRegistry.SCRYERS_OCULUS, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return ScryerOculusRenderer::getISTER;
-            }
-        }.withTooltip(Component.translatable("ars_nouveau.tooltip.scryers_oculus").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE))));
-
-        registry.register(LibBlockNames.POTION_DIFFUSER, getDefaultBlockItem(BlockRegistry.POTION_DIFFUSER));
-        registry.register(LibBlockNames.MENDOSTEEN_POD, new ItemNameBlockItem(BlockRegistry.MENDOSTEEN_POD, defaultItemProperties().food(ItemsRegistry.MENDOSTEEN_FOOD)));
-        registry.register(LibBlockNames.BASTION_POD, new ItemNameBlockItem(BlockRegistry.BASTION_POD, defaultItemProperties().food(ItemsRegistry.BASTION_FOOD)));
-        registry.register(LibBlockNames.BOMBEGRANATE_POD, new ItemNameBlockItem(BlockRegistry.BOMBEGRANTE_POD, defaultItemProperties().food(ItemsRegistry.BLASTING_FOOD)));
-        registry.register(LibBlockNames.FROSTAYA_POD, new ItemNameBlockItem(BlockRegistry.FROSTAYA_POD, defaultItemProperties().food(ItemsRegistry.FROSTAYA_FOOD)));
-
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
@@ -457,26 +343,6 @@ public class BlockRegistry {
         for (String s : LibBlockNames.DECORATIVE_SLABS) {
             registry.register(s, getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
         }
-        registry.register(LibBlockNames.ALTERATION_TABLE, new RendererBlockItem(BlockRegistry.ALTERATION_TABLE, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return AlterationTableRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.MOB_JAR, new MobJarItem(BlockRegistry.MOB_JAR, defaultItemProperties()));
-        registry.register(LibBlockNames.VOID_PRISM, getDefaultBlockItem(BlockRegistry.VOID_PRISM));
-
-        registry.register(LibBlockNames.REPOSITORY, new RendererBlockItem(BlockRegistry.REPOSITORY, defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return RepositoryRenderer::getISTER;
-            }
-        });
-        registry.register(LibBlockNames.GHOST_WEAVE, getDefaultBlockItem(BlockRegistry.GHOST_WEAVE));
-        registry.register(LibBlockNames.FALSE_WEAVE, getDefaultBlockItem(BlockRegistry.FALSE_WEAVE));
-        registry.register(LibBlockNames.MIRROR_WEAVE, getDefaultBlockItem(BlockRegistry.MIRROR_WEAVE));
-        registry.register(LibBlockNames.MAGEBLOOM_BLOCK, getDefaultBlockItem(BlockRegistry.MAGEBLOOM_BLOCK));
-
     }
 
     public static ModBlockItem getDefaultBlockItem(Block block) {
@@ -501,73 +367,40 @@ public class BlockRegistry {
     }
 
     //Somebody need to start it
-    public static final RegistryWrapper<Block> ROTATING_TURRET;
-    public static final RegistryObject<BlockEntityType<RotatingTurretTile>> ROTATING_TURRET_TILE;
-    public static final RegistryWrapper<ArcanePlatform> ARCANE_PLATFORM;
-    public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH;
-    public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY;
+    public static final RegistryWrapper<Block> ROTATING_TURRET = registerBlockAndItem(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new, (reg) ->  new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return BasicTurretRenderer::getISTER;
+        }
+    }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
 
-    public static final RegistryWrapper<CraftingLecternBlock> CRAFTING_LECTERN;
-    public static RegistryObject<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE;
-    public static RegistryObject<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE;
+    public static final RegistryWrapper<BlockEntityType<RotatingTurretTile>> ROTATING_TURRET_TILE = registerTile(LibBlockNames.ROTATING_SPELL_TURRET, RotatingTurretTile::new, ROTATING_TURRET);
+    public static final RegistryWrapper<ArcanePlatform> ARCANE_PLATFORM = registerBlockAndItem(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new, (reg) -> new ModBlockItem(reg.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
+    public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH = registerBlockAndItem(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
+    public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY = registerBlockAndItem(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
 
-    public static RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL;
+    public static final RegistryWrapper<CraftingLecternBlock> CRAFTING_LECTERN = registerBlockAndItem(LibBlockNames.STORAGE_LECTERN, CraftingLecternBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return LecternRenderer::getISTER;
+        }
+    });
+    public static final RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL = registerBlockAndItem(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
 
-    public static RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK;
-    public static RegistryWrapper<SkyWeave> SKY_WEAVE;
-    public static RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK;
-    public static RegistryWrapper<ItemDetector> ITEM_DETECTOR;
+    public static final RegistryWrapper<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE = registerTile(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestalTile::new, ARCANE_PEDESTAL);
+    public static final RegistryWrapper<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE = registerTile(LibBlockNames.MAGELIGHT_TORCH, MagelightTorchTile::new, MAGELIGHT_TORCH);
 
-    public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
-    public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
-    public static RegistryObject<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE;
-    public static RegistryObject<BlockEntityType<TemporaryTile>> TEMPORARY_TILE;
-    public static RegistryObject<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE;
-    public static RegistryObject<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE;
-    static {
-        ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
-        ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
-        MAGELIGHT_TORCH = registerBlock(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
-        ARCANE_PEDESTAL = registerBlock(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
-        BRAZIER_RELAY = registerBlock(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
-        RITUAL_BLOCK = registerBlock(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
-        SKY_WEAVE = registerBlock(LibBlockNames.SKY_WEAVE, () -> new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-        TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
-        CRAFTING_LECTERN = registerBlock(LibBlockNames.STORAGE_LECTERN, CraftingLecternBlock::new);
-        ITEM_DETECTOR = registerBlock(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
-        ITEMS.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> new RendererBlockItem(ROTATING_TURRET.get(), defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return BasicTurretRenderer::getISTER;
-            }
-        }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
+    public static final RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK = registerBlockAndItem(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
+    public static final RegistryWrapper<SkyWeave> SKY_WEAVE = registerBlockAndItem(LibBlockNames.SKY_WEAVE, () ->  new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
+    public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlockAndItem(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)), (reg) -> new ModBlockItem(reg.get(), new Item.Properties()));
+    public static final RegistryWrapper<ItemDetector> ITEM_DETECTOR = registerBlockAndItem(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
 
-        ITEMS.register(LibBlockNames.ARCANE_PEDESTAL, () -> getDefaultBlockItem(ARCANE_PEDESTAL.get()));
-
-        ITEMS.register(LibBlockNames.MINI_PEDESTAL, () -> new ModBlockItem(BlockRegistry.ARCANE_PLATFORM.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
-        ITEMS.register(LibBlockNames.MAGELIGHT_TORCH, () -> getDefaultBlockItem(BlockRegistry.MAGELIGHT_TORCH.get()));
-        ITEMS.register(LibBlockNames.BRAZIER_RELAY, () -> getDefaultBlockItem(BlockRegistry.BRAZIER_RELAY.get()));
-        ITEMS.register(LibBlockNames.RITUAL_BRAZIER, () -> getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK.get()));
-        ITEMS.register(LibBlockNames.SKY_WEAVE, () -> getDefaultBlockItem(BlockRegistry.SKY_WEAVE.get()));
-        ITEMS.register(LibBlockNames.TEMPORARY_BLOCK, () -> new ModBlockItem(BlockRegistry.TEMPORARY_BLOCK.get(), new Item.Properties()));
-        ITEMS.register(LibBlockNames.STORAGE_LECTERN, () -> new RendererBlockItem((BlockRegistry.CRAFTING_LECTERN.get()), defaultItemProperties()) {
-            @Override
-            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                return LecternRenderer::getISTER;
-            }
-        });
-        ITEMS.register(LibBlockNames.ITEM_DETECTOR, () -> getDefaultBlockItem(BlockRegistry.ITEM_DETECTOR.get()));
-
-        ROTATING_TURRET_TILE = BLOCK_ENTITIES.register(LibBlockNames.ROTATING_SPELL_TURRET, () -> BlockEntityType.Builder.of(RotatingTurretTile::new, ROTATING_TURRET.get()).build(null));
-        ARCANE_PEDESTAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null));
-        MAGELIGHT_TORCH_TILE = BLOCK_ENTITIES.register(LibBlockNames.MAGELIGHT_TORCH, () -> BlockEntityType.Builder.of(MagelightTorchTile::new, MAGELIGHT_TORCH.get()).build(null));
-        BRAZIER_RELAY_TILE = BLOCK_ENTITIES.register(LibBlockNames.BRAZIER_RELAY, () -> BlockEntityType.Builder.of(BrazierRelayTile::new, BRAZIER_RELAY.get()).build(null));
-        RITUAL_TILE = BLOCK_ENTITIES.register(LibBlockNames.RITUAL_BRAZIER, () -> BlockEntityType.Builder.of(RitualBrazierTile::new, RITUAL_BLOCK.get()).build(null));
-        SKYWEAVE_TILE = BLOCK_ENTITIES.register(LibBlockNames.SKY_WEAVE, () -> BlockEntityType.Builder.of(SkyBlockTile::new, SKY_WEAVE.get()).build(null));
-        TEMPORARY_TILE = BLOCK_ENTITIES.register(LibBlockNames.TEMPORARY_BLOCK, () -> BlockEntityType.Builder.of(TemporaryTile::new, TEMPORARY_BLOCK.get()).build(null));
-        CRAFTING_LECTERN_TILE = BLOCK_ENTITIES.register(LibBlockNames.STORAGE_LECTERN, () -> BlockEntityType.Builder.of(CraftingLecternTile::new, CRAFTING_LECTERN.get()).build(null));
-        ITEM_DETECTOR_TILE = BLOCK_ENTITIES.register(LibBlockNames.ITEM_DETECTOR, () -> BlockEntityType.Builder.of(ItemDetectorTile::new, ITEM_DETECTOR.get()).build(null));
-    }
+    public static final RegistryWrapper<BlockEntityType<RitualBrazierTile>> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
+    public static final RegistryWrapper<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
+    public static final RegistryWrapper<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE = registerTile(LibBlockNames.SKY_WEAVE, SkyBlockTile::new, SKY_WEAVE);
+    public static final RegistryWrapper<BlockEntityType<TemporaryTile>> TEMPORARY_TILE = registerTile(LibBlockNames.TEMPORARY_BLOCK, TemporaryTile::new, TEMPORARY_BLOCK);
+    public static final RegistryWrapper<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE = registerTile(LibBlockNames.STORAGE_LECTERN, CraftingLecternTile::new, CRAFTING_LECTERN);
+    public static final RegistryWrapper<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
 
     public static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
         return new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
