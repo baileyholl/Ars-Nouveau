@@ -34,7 +34,10 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -402,18 +405,18 @@ public class BlockRegistry {
     public static final RegistryWrapper<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE = registerTile(LibBlockNames.STORAGE_LECTERN, CraftingLecternTile::new, CRAFTING_LECTERN);
     public static final RegistryWrapper<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
 
-    public static RegistryWrapper registerBlock(String name, Supplier<Block> blockSupp) {
+    public static <T extends Block>RegistryWrapper<T> registerBlock(String name, Supplier<T> blockSupp) {
         return new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
     }
 
-    public static RegistryWrapper registerBlockAndItem(String name, Supplier<Block> blockSupp) {
-        RegistryWrapper<Block> blockReg = new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
+    public static <T extends Block>RegistryWrapper<T> registerBlockAndItem(String name, Supplier<T> blockSupp) {
+        RegistryWrapper<T> blockReg = new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
         ITEMS.register(name, () -> getDefaultBlockItem(blockReg.get()));
         return blockReg;
     }
 
-    public static RegistryWrapper registerBlockAndItem(String name, Supplier<Block> blockSupp, Function<RegistryWrapper<Block>, Item> blockItemFunc) {
-        RegistryWrapper<Block> blockReg = new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
+    public static <T extends Block>RegistryWrapper<T> registerBlockAndItem(String name, Supplier<T> blockSupp, Function<RegistryWrapper<T>, Item> blockItemFunc) {
+        RegistryWrapper<T> blockReg = new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
         ITEMS.register(name, () -> blockItemFunc.apply(blockReg));
         return blockReg;
     }
@@ -426,11 +429,11 @@ public class BlockRegistry {
         return pot;
     }
 
-    public static BlockEntityType<?> buildTile(BlockEntityType.BlockEntitySupplier<?> supplier, Block... blocks) {
+    public static BlockEntityType buildTile(BlockEntityType.BlockEntitySupplier<?> supplier, Block... blocks) {
         return BlockEntityType.Builder.of(supplier, blocks).build(null);
     }
 
-    public static RegistryWrapper registerTile(String regName, BlockEntityType.BlockEntitySupplier<?> tile, RegistryWrapper<? extends Block> block){
-        return new RegistryWrapper<>(BLOCK_ENTITIES.register(regName, () -> buildTile(tile, block.get())));
+    public static <T extends BlockEntityType>RegistryWrapper<T> registerTile(String regName, BlockEntityType.BlockEntitySupplier tile, RegistryWrapper<? extends Block> block){
+        return new RegistryWrapper(BLOCK_ENTITIES.register(regName, () -> BlockEntityType.Builder.of(tile, block.get()).build(null)));
     }
 }
