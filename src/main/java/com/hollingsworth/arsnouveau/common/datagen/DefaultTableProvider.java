@@ -93,10 +93,10 @@ public class DefaultTableProvider extends LootTableProvider {
                 dropPottedContents(pot);
             }
 
-            registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES.get(), BlockRegistry.BLAZING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES.get(), BlockRegistry.BLAZING_SAPLING.get());
             registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE.get(), BlockRegistry.CASCADING_SAPLING.get());
-            registerLeavesAndSticks(BlockRegistry.FLOURISHING_LEAVES, BlockRegistry.FLOURISHING_SAPLING);
-            registerLeavesAndSticks(BlockRegistry.VEXING_LEAVES, BlockRegistry.VEXING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.FLOURISHING_LEAVES.get(), BlockRegistry.FLOURISHING_SAPLING.get());
+            registerLeavesAndSticks(BlockRegistry.VEXING_LEAVES.get(), BlockRegistry.VEXING_SAPLING.get());
 
 
             registerDropSelf(BlockRegistry.BLAZING_WOOD);
@@ -106,7 +106,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.ARCHWOOD_BUTTON);
             registerDropSelf(BlockRegistry.ARCHWOOD_STAIRS);
-            registerSlabItemTable(BlockRegistry.ARCHWOOD_SLABS);
+            registerSlabItemTable(BlockRegistry.ARCHWOOD_SLABS.get());
             registerDropSelf(BlockRegistry.MAGELIGHT_TORCH);
 
             // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
@@ -122,7 +122,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_RED);
             registerDropSelf(BlockRegistry.STRIPPED_AWLOG_PURPLE);
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
-            registerDropDoor(BlockRegistry.ARCHWOOD_DOOR);
+            registerDropDoor(BlockRegistry.ARCHWOOD_DOOR.get());
             registerDropSelf(BlockRegistry.SOURCE_GEM_BLOCK);
 
             registerDropSelf(BlockRegistry.POTION_MELDER);
@@ -196,10 +196,10 @@ public class DefaultTableProvider extends LootTableProvider {
                                     .copy("locked", "BlockEntityTag.locked", CopyNbtFunction.MergeStrategy.REPLACE)
                                     .copy("potionNames", "potionNames", CopyNbtFunction.MergeStrategy.REPLACE)
                                     .copy("currentFill", "fill", CopyNbtFunction.MergeStrategy.REPLACE))
-                            .apply(SetContainerContents.setContents(BlockRegistry.POTION_JAR_TYPE)
+                            .apply(SetContainerContents.setContents(BlockRegistry.POTION_JAR_TYPE.get())
                                     .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                     );
-            add(BlockRegistry.POTION_JAR, LootTable.lootTable().withPool(potionJarBuilder));
+            add(BlockRegistry.POTION_JAR.get(), LootTable.lootTable().withPool(potionJarBuilder));
             add(BlockRegistry.BASTION_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD)));
             add(BlockRegistry.MENDOSTEEN_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.MENDOSTEEN_POD.asItem(), BlockRegistry.MENDOSTEEN_POD)));
             add(BlockRegistry.FROSTAYA_POD, LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.FROSTAYA_POD.asItem(), BlockRegistry.FROSTAYA_POD)));

@@ -63,11 +63,11 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.VOLCANIC_BLOCK.get(),
                 BlockRegistry.LAVA_LILY.get(),
                 BlockRegistry.WIXIE_CAULDRON.get(),
-                BlockRegistry.SOURCE_GEM_BLOCK,
+                BlockRegistry.SOURCE_GEM_BLOCK.get(),
                 BlockRegistry.RITUAL_BLOCK.get(),
-                BlockRegistry.POTION_JAR,
-                BlockRegistry.POTION_MELDER,
-                BlockRegistry.SCONCE_BLOCK,
+                BlockRegistry.POTION_JAR.get(),
+                BlockRegistry.POTION_MELDER.get(),
+                BlockRegistry.SCONCE_BLOCK.get(),
                 BlockRegistry.DRYGMY_BLOCK,
                 BlockRegistry.ALCHEMICAL_BLOCK,
                 BlockRegistry.VITALIC_BLOCK,
@@ -90,28 +90,28 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.CASCADING_LOG.get(),
                 BlockRegistry.CASCADING_WOOD.get(),
                 BlockRegistry.BLAZING_LOG.get(),
-                BlockRegistry.BLAZING_WOOD,
-                BlockRegistry.VEXING_LOG,
-                BlockRegistry.VEXING_WOOD,
-                BlockRegistry.FLOURISHING_LOG,
-                BlockRegistry.FLOURISHING_WOOD,
-                BlockRegistry.ARCHWOOD_PLANK,
-                BlockRegistry.ARCHWOOD_BUTTON,
-                BlockRegistry.ARCHWOOD_STAIRS,
-                BlockRegistry.ARCHWOOD_SLABS,
-                BlockRegistry.ARCHWOOD_FENCE_GATE,
-                BlockRegistry.ARCHWOOD_TRAPDOOR,
-                BlockRegistry.ARCHWOOD_PPlate,
-                BlockRegistry.ARCHWOOD_FENCE,
-                BlockRegistry.ARCHWOOD_DOOR,
-                BlockRegistry.STRIPPED_AWLOG_BLUE,
-                BlockRegistry.STRIPPED_AWWOOD_BLUE,
-                BlockRegistry.STRIPPED_AWLOG_GREEN,
-                BlockRegistry.STRIPPED_AWWOOD_GREEN,
-                BlockRegistry.STRIPPED_AWLOG_RED,
-                BlockRegistry.STRIPPED_AWWOOD_RED,
-                BlockRegistry.STRIPPED_AWLOG_PURPLE,
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE,
+                BlockRegistry.BLAZING_WOOD.get(),
+                BlockRegistry.VEXING_LOG.get(),
+                BlockRegistry.VEXING_WOOD.get(),
+                BlockRegistry.FLOURISHING_LOG.get(),
+                BlockRegistry.FLOURISHING_WOOD.get(),
+                BlockRegistry.ARCHWOOD_PLANK.get(),
+                BlockRegistry.ARCHWOOD_BUTTON.get(),
+                BlockRegistry.ARCHWOOD_STAIRS.get(),
+                BlockRegistry.ARCHWOOD_SLABS.get(),
+                BlockRegistry.ARCHWOOD_FENCE_GATE.get(),
+                BlockRegistry.ARCHWOOD_TRAPDOOR.get(),
+                BlockRegistry.ARCHWOOD_PPlate.get(),
+                BlockRegistry.ARCHWOOD_FENCE.get(),
+                BlockRegistry.ARCHWOOD_DOOR.get(),
+                BlockRegistry.STRIPPED_AWLOG_BLUE.get(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.get(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.get(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.get(),
+                BlockRegistry.STRIPPED_AWLOG_RED.get(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.get(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.get(),
                 BlockRegistry.CRAFTING_LECTERN.get(),
                 BlockRegistry.ARCHWOOD_CHEST,
                 BlockRegistry.ALTERATION_TABLE,
@@ -121,8 +121,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE.get(),
                 BlockRegistry.BLAZING_LEAVES.get(),
-                BlockRegistry.FLOURISHING_LEAVES,
-                BlockRegistry.VEXING_LEAVES
+                BlockRegistry.FLOURISHING_LEAVES.get(),
+                BlockRegistry.VEXING_LEAVES.get()
         );
         this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST);
         this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST);
@@ -168,16 +168,16 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
         this.tag(MAGIC_SAPLINGS).add(
-                BlockRegistry.BLAZING_SAPLING,
+                BlockRegistry.BLAZING_SAPLING.get(),
                 BlockRegistry.CASCADING_SAPLING.get(),
-                BlockRegistry.FLOURISHING_SAPLING,
-                BlockRegistry.VEXING_SAPLING
+                BlockRegistry.FLOURISHING_SAPLING.get(),
+                BlockRegistry.VEXING_SAPLING.get()
         );
         this.tag(BlockTags.SAPLINGS).add(
-                BlockRegistry.BLAZING_SAPLING,
+                BlockRegistry.BLAZING_SAPLING.get(),
                 BlockRegistry.CASCADING_SAPLING.get(),
-                BlockRegistry.FLOURISHING_SAPLING,
-                BlockRegistry.VEXING_SAPLING
+                BlockRegistry.FLOURISHING_SAPLING.get(),
+                BlockRegistry.VEXING_SAPLING.get()
         );
 
         this.tag(MAGIC_PLANTS).addTag(MAGIC_SAPLINGS).add(
@@ -189,70 +189,70 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.BOMBEGRANTE_POD
         );
 
-        this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
-        this.tag(Tags.Blocks.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE);
+        this.tag(Tags.Blocks.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
+        this.tag(Tags.Blocks.FENCES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE.get());
 
-        this.tag(Tags.Blocks.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE);
-        this.tag(Tags.Blocks.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE);
+        this.tag(Tags.Blocks.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
+        this.tag(Tags.Blocks.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
 
         this.tag(BlockTags.LOGS).add(
-                BlockRegistry.VEXING_LOG,
+                BlockRegistry.VEXING_LOG.get(),
                 BlockRegistry.CASCADING_LOG.get(),
-                BlockRegistry.FLOURISHING_LOG,
+                BlockRegistry.FLOURISHING_LOG.get(),
                 BlockRegistry.BLAZING_LOG.get(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE,
-                BlockRegistry.STRIPPED_AWWOOD_BLUE,
-                BlockRegistry.STRIPPED_AWLOG_GREEN,
-                BlockRegistry.STRIPPED_AWWOOD_GREEN,
-                BlockRegistry.STRIPPED_AWLOG_RED,
-                BlockRegistry.STRIPPED_AWWOOD_RED,
-                BlockRegistry.STRIPPED_AWLOG_PURPLE,
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE);
-        this.tag(BlockTags.LOGS_THAT_BURN).add(BlockRegistry.VEXING_LOG,
+                BlockRegistry.STRIPPED_AWLOG_BLUE.get(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.get(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.get(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.get(),
+                BlockRegistry.STRIPPED_AWLOG_RED.get(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.get(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
+        this.tag(BlockTags.LOGS_THAT_BURN).add(BlockRegistry.VEXING_LOG.get(),
                 BlockRegistry.CASCADING_LOG.get(),
-                BlockRegistry.FLOURISHING_LOG,
+                BlockRegistry.FLOURISHING_LOG.get(),
                 BlockRegistry.BLAZING_LOG.get(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE,
-                BlockRegistry.STRIPPED_AWWOOD_BLUE,
-                BlockRegistry.STRIPPED_AWLOG_GREEN,
-                BlockRegistry.STRIPPED_AWWOOD_GREEN,
-                BlockRegistry.STRIPPED_AWLOG_RED,
-                BlockRegistry.STRIPPED_AWWOOD_RED,
-                BlockRegistry.STRIPPED_AWLOG_PURPLE,
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE);
-        this.tag(BlockTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK);
-        this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE);
-        this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
-        this.tag(BlockTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE);
+                BlockRegistry.STRIPPED_AWLOG_BLUE.get(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.get(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.get(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.get(),
+                BlockRegistry.STRIPPED_AWLOG_RED.get(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.get(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
+        this.tag(BlockTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK.get());
+        this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
+        this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
+        this.tag(BlockTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
         TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves"));
         this.tag(ARCHWOOD_LEAVES)
-                .add(BlockRegistry.VEXING_LEAVES,
+                .add(BlockRegistry.VEXING_LEAVES.get(),
                         BlockRegistry.CASCADING_LEAVE.get(),
                         BlockRegistry.BLAZING_LEAVES.get(),
-                        BlockRegistry.FLOURISHING_LEAVES);
-        this.tag(BlockTags.LEAVES).add(BlockRegistry.VEXING_LEAVES,
+                        BlockRegistry.FLOURISHING_LEAVES.get());
+        this.tag(BlockTags.LEAVES).add(BlockRegistry.VEXING_LEAVES.get(),
                 BlockRegistry.CASCADING_LEAVE.get(),
                 BlockRegistry.BLAZING_LEAVES.get(),
-                BlockRegistry.FLOURISHING_LEAVES);
+                BlockRegistry.FLOURISHING_LEAVES.get());
 
         this.tag(BlockTags.BEE_GROWABLES).add(BlockRegistry.MAGE_BLOOM_CROP.get());
-        this.tag(BlockTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON);
+        this.tag(BlockTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.get());
         this.tag(BlockTags.CROPS).add(BlockRegistry.MAGE_BLOOM_CROP.get());
-        this.tag(BlockTags.SLABS).add(BlockRegistry.ARCHWOOD_SLABS);
-        this.tag(BlockTags.STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS);
-        this.tag(BlockTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR);
-        this.tag(BlockTags.WOODEN_BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON);
-        this.tag(BlockTags.WOODEN_DOORS).add(BlockRegistry.ARCHWOOD_DOOR);
-        this.tag(BlockTags.DOORS).add(BlockRegistry.ARCHWOOD_DOOR);
-        this.tag(BlockTags.WOODEN_SLABS).add(BlockRegistry.ARCHWOOD_SLABS);
-        this.tag(BlockTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS);
-        this.tag(BlockTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR);
+        this.tag(BlockTags.SLABS).add(BlockRegistry.ARCHWOOD_SLABS.get());
+        this.tag(BlockTags.STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.get());
+        this.tag(BlockTags.TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.get());
+        this.tag(BlockTags.WOODEN_BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.get());
+        this.tag(BlockTags.WOODEN_DOORS).add(BlockRegistry.ARCHWOOD_DOOR.get());
+        this.tag(BlockTags.DOORS).add(BlockRegistry.ARCHWOOD_DOOR.get());
+        this.tag(BlockTags.WOODEN_SLABS).add(BlockRegistry.ARCHWOOD_SLABS.get());
+        this.tag(BlockTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.get());
+        this.tag(BlockTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.get());
 
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR.get(),
                 BlockRegistry.REDSTONE_AIR.get(),
                 BlockRegistry.MAGE_BLOCK.get(),
-                BlockRegistry.SCONCE_BLOCK,
+                BlockRegistry.SCONCE_BLOCK.get(),
                 BlockRegistry.LIGHT_BLOCK.get(),
                 BlockRegistry.T_LIGHT_BLOCK.get(),
                 BlockRegistry.GHOST_WEAVE,

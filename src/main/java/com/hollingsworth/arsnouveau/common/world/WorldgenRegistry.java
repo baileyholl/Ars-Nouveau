@@ -109,9 +109,9 @@ public class WorldgenRegistry {
         HolderGetter<ConfiguredFeature<?, ?>> features = context.lookup(Registries.CONFIGURED_FEATURE);
         context.register(PLACED_BERRY_BUSH, new PlacedFeature(features.get(PATCH_BERRY_BUSH).get(), List.of(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome())));
         context.register(PLACED_NATURAL_CASCADING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_CASCADING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING.get()))));
-        context.register(PLACED_NATURAL_BLAZING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_BLAZING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING))));
-        context.register(PLACED_NATURAL_VEXING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_VEXING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING))));
-        context.register(PLACED_NATURAL_FLOURISHING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_FLOURISHING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING))));
+        context.register(PLACED_NATURAL_BLAZING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_BLAZING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING.get()))));
+        context.register(PLACED_NATURAL_VEXING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_VEXING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING.get()))));
+        context.register(PLACED_NATURAL_FLOURISHING_TREE, new PlacedFeature(features.get(NATURAL_CONFIGURED_FLOURISHING_TREE).get(), List.of(PlacementUtils.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING.get()))));
         context.register(PLACED_MIX_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE))));
         context.register(PLACED_MOJANK_GRASS, new PlacedFeature(features.get(VegetationFeatures.PATCH_GRASS).get(),worldSurfaceSquaredWithCount(2)));
         context.register(PLACED_MOJANK_FLOWERS, new PlacedFeature(features.get(VegetationFeatures.FLOWER_DEFAULT).get(), List.of(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome())));

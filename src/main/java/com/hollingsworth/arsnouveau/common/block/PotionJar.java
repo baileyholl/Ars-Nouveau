@@ -51,6 +51,10 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
+    public PotionJar(){
+        this(ModBlock.defaultProperties().noOcclusion());
+    }
+
     @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
@@ -143,7 +147,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        context.getLevel().scheduleTick(context.getClickedPos(), BlockRegistry.POTION_JAR, 1);
+        context.getLevel().scheduleTick(context.getClickedPos(), BlockRegistry.POTION_JAR.get(), 1);
         return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 

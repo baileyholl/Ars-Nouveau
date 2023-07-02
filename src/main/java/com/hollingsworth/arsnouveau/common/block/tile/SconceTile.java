@@ -30,7 +30,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     public boolean lit;
 
     public SconceTile(BlockPos pos, BlockState state) {
-        this(BlockRegistry.SCONCE_TILE, pos, state);
+        super(BlockRegistry.SCONCE_TILE, pos, state);
     }
 
     public SconceTile(BlockEntityType type, BlockPos pos, BlockState state) {

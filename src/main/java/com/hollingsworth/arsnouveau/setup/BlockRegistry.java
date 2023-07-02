@@ -45,6 +45,7 @@ import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.ITEMS;
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
 public class BlockRegistry {
+    public static Block.Properties woodProp = BlockBehaviour.Properties.of().strength(2.0F, 3.0F).ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD);
 
     //TODO Switch to these for 1.20
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ArsNouveau.MODID);
@@ -152,80 +153,49 @@ public class BlockRegistry {
     public static RegistryWrapper<BlockEntityType<WixieCauldronTile>> WIXIE_CAULDRON_TYPE = registerTile(LibBlockNames.WIXIE_CAULDRON, WixieCauldronTile::new, WIXIE_CAULDRON);
     public static RegistryWrapper<CreativeSourceJar> CREATIVE_SOURCE_JAR = registerBlockAndItem(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJar::new);
     public static RegistryWrapper<BlockEntityType<CreativeSourceJarTile>> CREATIVE_SOURCE_JAR_TILE = registerTile(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJarTile::new, CREATIVE_SOURCE_JAR);
-    public static RegistryWrapper<StrippableLog> CASCADING_LOG = registerBlockAndItem(LibBlockNames.CASCADING_LOG, () ->  new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_BLUE));
+    public static RegistryWrapper<StrippableLog> CASCADING_LOG = registerBlockAndItem(LibBlockNames.CASCADING_LOG, () ->  new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_BLUE));
     public static RegistryWrapper<MagicLeaves> CASCADING_LEAVE = registerBlockAndItem(LibBlockNames.CASCADING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_BLUE));
     public static RegistryWrapper<SaplingBlock> CASCADING_SAPLING = registerBlockAndItem(LibBlockNames.CASCADING_SAPLING, () -> new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_CASCADING_TREE), SAP_PROP));
-    public static RegistryWrapper<StrippableLog> CASCADING_WOOD = registerBlockAndItem(LibBlockNames.CASCADING_WOOD, () -> new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_BLUE));
-    public static RegistryWrapper<StrippableLog> BLAZING_LOG = registerBlockAndItem(LibBlockNames.BLAZING_LOG, () -> new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_RED));
+    public static RegistryWrapper<StrippableLog> CASCADING_WOOD = registerBlockAndItem(LibBlockNames.CASCADING_WOOD, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWWOOD_BLUE));
+    public static RegistryWrapper<StrippableLog> BLAZING_LOG = registerBlockAndItem(LibBlockNames.BLAZING_LOG, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_RED));
     public static RegistryWrapper<MagicLeaves> BLAZING_LEAVES = registerBlockAndItem(LibBlockNames.BLAZING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_RED));
-    @ObjectHolder(value = prepend + LibBlockNames.BLAZING_SAPLING, registryName = BlockRegistryKey)
-    public static SaplingBlock BLAZING_SAPLING;
-    @ObjectHolder(value = prepend + LibBlockNames.BLAZING_WOOD, registryName = BlockRegistryKey)
-    public static StrippableLog BLAZING_WOOD;
-    @ObjectHolder(value = prepend + LibBlockNames.VEXING_LOG, registryName = BlockRegistryKey)
-    public static StrippableLog VEXING_LOG;
-    @ObjectHolder(value = prepend + LibBlockNames.VEXING_LEAVES, registryName = BlockRegistryKey)
-    public static MagicLeaves VEXING_LEAVES;
-    @ObjectHolder(value = prepend + LibBlockNames.VEXING_SAPLING, registryName = BlockRegistryKey)
-    public static SaplingBlock VEXING_SAPLING;
-    @ObjectHolder(value = prepend + LibBlockNames.VEXING_WOOD, registryName = BlockRegistryKey)
-    public static StrippableLog VEXING_WOOD;
-    @ObjectHolder(value = prepend + LibBlockNames.FLOURISHING_LOG, registryName = BlockRegistryKey)
-    public static StrippableLog FLOURISHING_LOG;
-    @ObjectHolder(value = prepend + LibBlockNames.FLOURISHING_LEAVES, registryName = BlockRegistryKey)
-    public static MagicLeaves FLOURISHING_LEAVES;
-    @ObjectHolder(value = prepend + LibBlockNames.FLOURISHING_SAPLING, registryName = BlockRegistryKey)
-    public static SaplingBlock FLOURISHING_SAPLING;
-    @ObjectHolder(value = prepend + LibBlockNames.FLOURISHING_WOOD, registryName = BlockRegistryKey)
-    public static StrippableLog FLOURISHING_WOOD;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_PLANK, registryName = BlockRegistryKey)
-    public static ModBlock ARCHWOOD_PLANK;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_BUTTON, registryName = BlockRegistryKey)
-    public static ButtonBlock ARCHWOOD_BUTTON;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_STAIRS, registryName = BlockRegistryKey)
-    public static StairBlock ARCHWOOD_STAIRS;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_SLABS, registryName = BlockRegistryKey)
-    public static SlabBlock ARCHWOOD_SLABS;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_FENCE_GATE, registryName = BlockRegistryKey)
-    public static FenceGateBlock ARCHWOOD_FENCE_GATE;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_TRAPDOOR, registryName = BlockRegistryKey)
-    public static TrapDoorBlock ARCHWOOD_TRAPDOOR;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_PRESSURE_PLATE, registryName = BlockRegistryKey)
-    public static PressurePlateBlock ARCHWOOD_PPlate;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_FENCE, registryName = BlockRegistryKey)
-    public static FenceBlock ARCHWOOD_FENCE;
-    @ObjectHolder(value = prepend + LibBlockNames.ARCHWOOD_DOOR, registryName = BlockRegistryKey)
-    public static DoorBlock ARCHWOOD_DOOR;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_BLUE, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWLOG_BLUE;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_BLUE, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWWOOD_BLUE;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_GREEN, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWLOG_GREEN;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_GREEN, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWWOOD_GREEN;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_RED, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWLOG_RED;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_RED, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWWOOD_RED;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWLOG_PURPLE, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWLOG_PURPLE;
-    @ObjectHolder(value = prepend + LibBlockNames.STRIPPED_AWWOOD_PURPLE, registryName = BlockRegistryKey)
-    public static RotatedPillarBlock STRIPPED_AWWOOD_PURPLE;
-    @ObjectHolder(value = prepend + LibBlockNames.SOURCE_GEM_BLOCK, registryName = BlockRegistryKey)
-    public static ModBlock SOURCE_GEM_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.POTION_JAR_BLOCK, registryName = BlockRegistryKey)
-    public static PotionJar POTION_JAR;
-    @ObjectHolder(value = prepend + LibBlockNames.POTION_JAR_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<PotionJarTile> POTION_JAR_TYPE;
-    @ObjectHolder(value = prepend + LibBlockNames.POTION_MELDER_BLOCK, registryName = BlockRegistryKey)
-    public static PotionMelder POTION_MELDER;
-    @ObjectHolder(value = prepend + LibBlockNames.POTION_MELDER_BLOCK, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<PotionMelderTile> POTION_MELDER_TYPE;
-    @ObjectHolder(value = prepend + LibBlockNames.SCONCE, registryName = BlockRegistryKey)
-    public static SconceBlock SCONCE_BLOCK;
-    @ObjectHolder(value = prepend + LibBlockNames.SCONCE, registryName = BlockEntityRegistryKey)
-    public static BlockEntityType<SconceTile> SCONCE_TILE;
+
+    public static RegistryWrapper<SaplingBlock> BLAZING_SAPLING = registerBlockAndItem(LibBlockNames.BLAZING_SAPLING, () -> new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_BLAZING_TREE), SAP_PROP));
+    public static RegistryWrapper<StrippableLog> BLAZING_WOOD = registerBlockAndItem(LibBlockNames.BLAZING_WOOD, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWWOOD_RED));
+    public static RegistryWrapper<StrippableLog> VEXING_LOG = registerBlockAndItem(LibBlockNames.VEXING_LOG, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_PURPLE));
+    public static RegistryWrapper<MagicLeaves> VEXING_LEAVES = registerBlockAndItem(LibBlockNames.VEXING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_PURPLE));
+    public static RegistryWrapper<SaplingBlock> VEXING_SAPLING = registerBlockAndItem(LibBlockNames.VEXING_SAPLING, () -> new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_VEXING_TREE), SAP_PROP));
+    public static RegistryWrapper<StrippableLog> VEXING_WOOD = registerBlockAndItem(LibBlockNames.VEXING_WOOD, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWWOOD_PURPLE));
+    public static RegistryWrapper<StrippableLog> FLOURISHING_LOG = registerBlockAndItem(LibBlockNames.FLOURISHING_LOG, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_GREEN));
+    public static RegistryWrapper<MagicLeaves> FLOURISHING_LEAVES = registerBlockAndItem(LibBlockNames.FLOURISHING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_GREEN));
+    public static RegistryWrapper<SaplingBlock> FLOURISHING_SAPLING = registerBlockAndItem(LibBlockNames.FLOURISHING_SAPLING, () -> new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_FLOURISHING_TREE), SAP_PROP));
+    public static RegistryWrapper<StrippableLog> FLOURISHING_WOOD = registerBlockAndItem(LibBlockNames.FLOURISHING_WOOD, () -> new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWWOOD_GREEN));
+    public static RegistryWrapper<ModBlock> ARCHWOOD_PLANK = registerBlockAndItem(LibBlockNames.ARCHWOOD_PLANK, () -> new ModBlock(LOG_PROP));
+    public static RegistryWrapper<ButtonBlock> ARCHWOOD_BUTTON = registerBlockAndItem(LibBlockNames.ARCHWOOD_BUTTON, () -> new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD), BlockSetType.OAK, 30, true));
+    public static RegistryWrapper<StairBlock> ARCHWOOD_STAIRS = registerBlockAndItem(LibBlockNames.ARCHWOOD_STAIRS, () ->  new StairBlock(() -> ARCHWOOD_PLANK.defaultBlockState(), woodProp));
+    public static RegistryWrapper<SlabBlock> ARCHWOOD_SLABS = registerBlockAndItem(LibBlockNames.ARCHWOOD_SLABS, () -> new SlabBlock(woodProp));
+    public static RegistryWrapper<FenceGateBlock> ARCHWOOD_FENCE_GATE = registerBlockAndItem(LibBlockNames.ARCHWOOD_FENCE_GATE, () -> new FenceGateBlock(woodProp, WoodType.OAK));
+    public static RegistryWrapper<TrapDoorBlock> ARCHWOOD_TRAPDOOR = registerBlockAndItem(LibBlockNames.ARCHWOOD_TRAPDOOR, () ->  new TrapDoorBlock(woodProp, BlockSetType.OAK));
+
+    public static RegistryWrapper<PressurePlateBlock> ARCHWOOD_PPlate = registerBlockAndItem(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProp, BlockSetType.OAK));
+    public static RegistryWrapper<FenceBlock> ARCHWOOD_FENCE = registerBlockAndItem(LibBlockNames.ARCHWOOD_FENCE, () -> new FenceBlock(woodProp));
+    public static RegistryWrapper<DoorBlock> ARCHWOOD_DOOR = registerBlockAndItem(LibBlockNames.ARCHWOOD_DOOR, () -> new DoorBlock(woodProp, BlockSetType.OAK));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWLOG_BLUE = registerBlockAndItem(LibBlockNames.STRIPPED_AWLOG_BLUE, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWWOOD_BLUE = registerBlockAndItem(LibBlockNames.STRIPPED_AWWOOD_BLUE, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWLOG_GREEN = registerBlockAndItem(LibBlockNames.STRIPPED_AWLOG_GREEN, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWWOOD_GREEN = registerBlockAndItem(LibBlockNames.STRIPPED_AWWOOD_GREEN, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWLOG_RED = registerBlockAndItem(LibBlockNames.STRIPPED_AWLOG_RED, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWWOOD_RED = registerBlockAndItem(LibBlockNames.STRIPPED_AWWOOD_RED, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWLOG_PURPLE = registerBlockAndItem(LibBlockNames.STRIPPED_AWLOG_PURPLE, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<RotatedPillarBlock> STRIPPED_AWWOOD_PURPLE = registerBlockAndItem(LibBlockNames.STRIPPED_AWWOOD_PURPLE, () -> new RotatedPillarBlock(LOG_PROP));
+    public static RegistryWrapper<ModBlock> SOURCE_GEM_BLOCK = registerBlockAndItem(LibBlockNames.SOURCE_GEM_BLOCK, () -> new ModBlock(ModBlock.defaultProperties().noOcclusion().lightLevel(s -> 6)));
+    public static RegistryWrapper<PotionJar> POTION_JAR = registerBlockAndItem(LibBlockNames.POTION_JAR_BLOCK, PotionJar::new);
+    public static RegistryWrapper<BlockEntityType<PotionJarTile>> POTION_JAR_TYPE = registerTile(LibBlockNames.POTION_JAR_BLOCK, PotionJarTile::new, POTION_JAR);
+    public static RegistryWrapper<PotionMelder> POTION_MELDER = registerBlockAndItem(LibBlockNames.POTION_MELDER_BLOCK, PotionMelder::new);
+    public static RegistryWrapper<BlockEntityType<PotionMelderTile>> POTION_MELDER_TYPE = registerTile(LibBlockNames.POTION_MELDER_BLOCK, PotionMelderTile::new, POTION_MELDER);
+    public static RegistryWrapper<SconceBlock> SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SCONCE, SconceBlock::new);
+    public static RegistryWrapper<BlockEntityType<SconceTile>> SCONCE_TILE = registerTile(LibBlockNames.SCONCE, SconceTile::new, SCONCE_BLOCK);
+
     @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockRegistryKey)
     public static DrygmyStone DRYGMY_BLOCK;
     @ObjectHolder(value = prepend + LibBlockNames.DRYGMY_STONE, registryName = BlockEntityRegistryKey)
@@ -388,41 +358,8 @@ public class BlockRegistry {
         registry.register(LibBlockNames.SCRYERS_OCULUS, new ScryersOculus());
         registry.register(LibBlockNames.SCRYERS_CRYSTAL, new ScryerCrystal());
 
-
-        registry.register(LibBlockNames.BLAZING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_BLAZING_TREE), SAP_PROP));
-        registry.register(LibBlockNames.VEXING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_VEXING_TREE), SAP_PROP));
-        registry.register(LibBlockNames.FLOURISHING_SAPLING, new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_FLOURISHING_TREE), SAP_PROP));
-
-        registry.register(LibBlockNames.FLOURISHING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_GREEN));
-        registry.register(LibBlockNames.FLOURISHING_LEAVES, createLeavesBlock(MapColor.COLOR_LIGHT_GREEN));
-        registry.register(LibBlockNames.VEXING_LOG, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWLOG_PURPLE));
-        registry.register(LibBlockNames.VEXING_LEAVES, createLeavesBlock(MapColor.COLOR_PURPLE));
-
-        registry.register(LibBlockNames.VEXING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_PURPLE));
-        registry.register(LibBlockNames.FLOURISHING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_GREEN));
-        registry.register(LibBlockNames.BLAZING_WOOD, new StrippableLog(LOG_PROP, () -> BlockRegistry.STRIPPED_AWWOOD_RED));
-        registry.register(LibBlockNames.ARCHWOOD_PLANK, new ModBlock(LOG_PROP));
-        registry.register(LibBlockNames.ARCHWOOD_BUTTON, new ButtonBlock(BlockBehaviour.Properties.of().noCollission().strength(0.5F).sound(SoundType.WOOD), BlockSetType.OAK, 30, true));
-        registry.register(LibBlockNames.ARCHWOOD_STAIRS, new StairBlock(() -> ARCHWOOD_PLANK.defaultBlockState(), woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_SLABS, new SlabBlock(woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, new FenceGateBlock(woodProp, WoodType.OAK));
-        registry.register(LibBlockNames.ARCHWOOD_FENCE, new FenceBlock(woodProp));
-        registry.register(LibBlockNames.ARCHWOOD_DOOR, new DoorBlock(woodProp, BlockSetType.OAK));
-        registry.register(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, woodProp, BlockSetType.OAK));
-        registry.register(LibBlockNames.ARCHWOOD_TRAPDOOR, new TrapDoorBlock(woodProp, BlockSetType.OAK));
         registry.register(LibBlockNames.ARCHWOOD_CHEST, new ArchwoodChest());
 
-        registry.register(LibBlockNames.STRIPPED_AWLOG_BLUE, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_BLUE, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWLOG_GREEN, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_GREEN, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWLOG_RED, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_RED, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWLOG_PURPLE, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_PURPLE, new RotatedPillarBlock(LOG_PROP));
-        registry.register(LibBlockNames.SOURCE_GEM_BLOCK, new ModBlock(ModBlock.defaultProperties().noOcclusion().lightLevel(s -> 6)));
-        registry.register(LibBlockNames.POTION_JAR_BLOCK, new PotionJar(ModBlock.defaultProperties().noOcclusion()));
-        registry.register(LibBlockNames.POTION_MELDER_BLOCK, new PotionMelder(ModBlock.defaultProperties().noOcclusion()));
 
 
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new AlchemicalSourcelinkBlock());
@@ -431,12 +368,11 @@ public class BlockRegistry {
 
 
         registry.register(LibBlockNames.WHIRLISPRIG_BLOCK, new WhirlisprigFlower());
-        registry.register(LibBlockNames.SCONCE, new SconceBlock());
         registry.register(LibBlockNames.DRYGMY_STONE, new DrygmyStone());
 
 
-        registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG));
-        registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG));
+        registry.register(LibBlockNames.MENDOSTEEN_POD, new ArchfruitPod(() -> FLOURISHING_LOG.get()));
+        registry.register(LibBlockNames.BASTION_POD, new ArchfruitPod(() -> VEXING_LOG.get()));
         registry.register(LibBlockNames.FROSTAYA_POD, new ArchfruitPod(() -> CASCADING_LOG.get()));
         registry.register(LibBlockNames.BOMBEGRANATE_POD, new ArchfruitPod(() -> BLAZING_LOG.get()));
         registry.register(LibBlockNames.POTION_DIFFUSER, new PotionDiffuserBlock());
@@ -465,10 +401,10 @@ public class BlockRegistry {
         registry.register(LibBlockNames.MAGEBLOOM_BLOCK, new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
 
         registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
-        registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING));
+        registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.CASCADING_SAPLING), createPottedBlock(() -> CASCADING_SAPLING.get()));
-        registry.register(LibBlockNames.Pot(LibBlockNames.FLOURISHING_SAPLING), createPottedBlock(() -> FLOURISHING_SAPLING));
-        registry.register(LibBlockNames.Pot(LibBlockNames.VEXING_SAPLING), createPottedBlock(() -> VEXING_SAPLING));
+        registry.register(LibBlockNames.Pot(LibBlockNames.FLOURISHING_SAPLING), createPottedBlock(() -> FLOURISHING_SAPLING.get()));
+        registry.register(LibBlockNames.Pot(LibBlockNames.VEXING_SAPLING), createPottedBlock(() -> VEXING_SAPLING.get()));
 
     }
 
@@ -479,9 +415,6 @@ public class BlockRegistry {
 
     @SuppressWarnings("ConstantConditions")
     public static void onTileEntityRegistry(IForgeRegistry<BlockEntityType<?>> registry) {
-        registry.register(LibBlockNames.POTION_JAR_BLOCK, BlockEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null));
-        registry.register(LibBlockNames.POTION_MELDER_BLOCK, BlockEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null));
-        registry.register(LibBlockNames.SCONCE, BlockEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null));
         registry.register(LibBlockNames.DRYGMY_STONE, BlockEntityType.Builder.of(DrygmyTile::new, BlockRegistry.DRYGMY_BLOCK).build(null));
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, BlockEntityType.Builder.of(AlchemicalSourcelinkTile::new, BlockRegistry.ALCHEMICAL_BLOCK).build(null));
         registry.register(LibBlockNames.VITALIC_SOURCELINK, BlockEntityType.Builder.of(VitalicSourcelinkTile::new, BlockRegistry.VITALIC_BLOCK).build(null));
@@ -518,42 +451,6 @@ public class BlockRegistry {
                 return GenericRenderer.getISTER("source_deposit");
             }
         });
-        registry.register(LibBlockNames.VEXING_LEAVES, getDefaultBlockItem(BlockRegistry.VEXING_LEAVES));
-        registry.register(LibBlockNames.VEXING_LOG, getDefaultBlockItem(BlockRegistry.VEXING_LOG));
-        registry.register(LibBlockNames.VEXING_SAPLING, getDefaultBlockItem(BlockRegistry.VEXING_SAPLING));
-        registry.register(LibBlockNames.VEXING_WOOD, getDefaultBlockItem(BlockRegistry.VEXING_WOOD));
-        registry.register(LibBlockNames.FLOURISHING_LEAVES, getDefaultBlockItem(BlockRegistry.FLOURISHING_LEAVES));
-        registry.register(LibBlockNames.FLOURISHING_LOG, getDefaultBlockItem(BlockRegistry.FLOURISHING_LOG));
-        registry.register(LibBlockNames.FLOURISHING_SAPLING, getDefaultBlockItem(BlockRegistry.FLOURISHING_SAPLING));
-        registry.register(LibBlockNames.FLOURISHING_WOOD, getDefaultBlockItem(BlockRegistry.FLOURISHING_WOOD));
-        registry.register(LibBlockNames.BLAZING_SAPLING, getDefaultBlockItem(BlockRegistry.BLAZING_SAPLING));
-        registry.register(LibBlockNames.BLAZING_WOOD, getDefaultBlockItem(BlockRegistry.BLAZING_WOOD));
-        registry.register(LibBlockNames.ARCHWOOD_PLANK, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK));
-
-        registry.register(LibBlockNames.ARCHWOOD_BUTTON, getDefaultBlockItem(BlockRegistry.ARCHWOOD_BUTTON));
-        registry.register(LibBlockNames.ARCHWOOD_STAIRS, getDefaultBlockItem(BlockRegistry.ARCHWOOD_STAIRS));
-        registry.register(LibBlockNames.ARCHWOOD_SLABS, getDefaultBlockItem(BlockRegistry.ARCHWOOD_SLABS));
-        registry.register(LibBlockNames.ARCHWOOD_FENCE_GATE, getDefaultBlockItem(BlockRegistry.ARCHWOOD_FENCE_GATE));
-        registry.register(LibBlockNames.ARCHWOOD_TRAPDOOR, getDefaultBlockItem(BlockRegistry.ARCHWOOD_TRAPDOOR));
-        registry.register(LibBlockNames.ARCHWOOD_PRESSURE_PLATE, getDefaultBlockItem(BlockRegistry.ARCHWOOD_PPlate));
-        registry.register(LibBlockNames.ARCHWOOD_FENCE, getDefaultBlockItem(BlockRegistry.ARCHWOOD_FENCE));
-        registry.register(LibBlockNames.ARCHWOOD_DOOR, getDefaultBlockItem(BlockRegistry.ARCHWOOD_DOOR));
-
-        registry.register(LibBlockNames.STRIPPED_AWLOG_BLUE, getDefaultBlockItem(BlockRegistry.STRIPPED_AWLOG_BLUE));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_BLUE, getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_BLUE));
-        registry.register(LibBlockNames.STRIPPED_AWLOG_GREEN, getDefaultBlockItem(BlockRegistry.STRIPPED_AWLOG_GREEN));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_GREEN, getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_GREEN));
-        registry.register(LibBlockNames.STRIPPED_AWLOG_RED, getDefaultBlockItem(BlockRegistry.STRIPPED_AWLOG_RED));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_RED, getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_RED));
-        registry.register(LibBlockNames.STRIPPED_AWLOG_PURPLE, getDefaultBlockItem(BlockRegistry.STRIPPED_AWLOG_PURPLE));
-        registry.register(LibBlockNames.STRIPPED_AWWOOD_PURPLE, getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_PURPLE));
-
-        registry.register(LibBlockNames.SOURCE_GEM_BLOCK, getDefaultBlockItem(BlockRegistry.SOURCE_GEM_BLOCK));
-
-        registry.register(LibBlockNames.POTION_JAR_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_JAR));
-        registry.register(LibBlockNames.POTION_MELDER_BLOCK, getDefaultBlockItem(BlockRegistry.POTION_MELDER));
-
-        registry.register(LibBlockNames.SCONCE, getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK));
         registry.register(LibBlockNames.DRYGMY_STONE, getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK));
         registry.register(LibBlockNames.ALCHEMICAL_SOURCELINK, new RendererBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, defaultItemProperties()) {
             @Override
@@ -661,8 +558,6 @@ public class BlockRegistry {
     private static boolean isntSolid(BlockState state, BlockGetter reader, BlockPos pos) {
         return false;
     }
-
-    static Block.Properties woodProp = BlockBehaviour.Properties.of().strength(2.0F, 3.0F).ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD);
 
 
     public static Block getBlock(String s) {

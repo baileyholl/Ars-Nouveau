@@ -47,14 +47,14 @@ public class RitualAwakening extends AbstractRitual {
                 destroyTree(world, blazing);
                 return;
             }
-            Set<BlockPos> flourishing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.FLOURISHING_LOG || b.getBlock() == BlockRegistry.FLOURISHING_LEAVES);
+            Set<BlockPos> flourishing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.FLOURISHING_LOG.get() || b.getBlock() == BlockRegistry.FLOURISHING_LEAVES.get());
             if (flourishing.size() >= 50) {
                 entity = ModEntities.ENTITY_FLOURISHING_WEALD.get();
                 foundPos = p;
                 destroyTree(world, flourishing);
                 return;
             }
-            Set<BlockPos> vexing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.VEXING_LOG || b.getBlock() == BlockRegistry.VEXING_LEAVES);
+            Set<BlockPos> vexing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.VEXING_LOG.get() || b.getBlock() == BlockRegistry.VEXING_LEAVES.get());
             if (vexing.size() >= 50) {
                 entity = ModEntities.ENTITY_VEXING_WEALD.get();
                 foundPos = p;

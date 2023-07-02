@@ -71,7 +71,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE.get(), IntangibleAirRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE.get(), VolcanicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.IMBUEMENT_TILE.get(), ImbuementRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE.get(), PotionMelderRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
@@ -216,24 +216,16 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
-    public static void registerLayers(EntityRenderersEvent.AddLayers addLayers) {
-//        GeoArmorRenderer.registerArmorRenderer(LightArmor.class, () -> new ArmorRenderer(new GenericModel<>("light_armor", "items/light_armor").withEmptyAnim()));
-//        GeoArmorRenderer.registerArmorRenderer(MediumArmor.class, () -> new ArmorRenderer(new GenericModel<>("medium_armor", "items/medium_armor").withEmptyAnim()));
-//        GeoArmorRenderer.registerArmorRenderer(HeavyArmor.class, () -> new ArmorRenderer(new GenericModel<>("heavy_armor", "items/heavy_armor").withEmptyAnim()));
-
-    }
-
-    @SubscribeEvent
     public static void initBlockColors(final RegisterColorHandlersEvent.Block event) {
         event.register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile jarTile
                         ? jarTile.getColor()
-                        : -1, BlockRegistry.POTION_JAR);
+                        : -1, BlockRegistry.POTION_JAR.get());
 
         event.register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionMelderTile melderTile
                         ? melderTile.getColor()
-                        : -1, BlockRegistry.POTION_MELDER);
+                        : -1, BlockRegistry.POTION_MELDER.get());
 
         event.register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getBlockEntity(pos) instanceof MageBlockTile mageBlockTile
