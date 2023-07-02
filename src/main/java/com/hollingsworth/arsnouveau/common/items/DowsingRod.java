@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.scrying.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualScrying;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 public class DowsingRod extends ModItem {
     public DowsingRod(Properties properties) {
         super(properties);
+        withTooltip(Component.translatable("tooltip.ars_nouveau.dowsing_rod"));
     }
 
     public DowsingRod() {

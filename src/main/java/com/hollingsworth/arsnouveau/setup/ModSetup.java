@@ -12,7 +12,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
@@ -49,6 +48,7 @@ public class ModSetup {
         ItemsRegistry.ITEMS.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
         BlockRegistry.BLOCK_ENTITIES.register(modEventBus);
+        BlockRegistry.BS_PROVIDERS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
         ModPotions.POTIONS.register(modEventBus);
@@ -71,7 +71,6 @@ public class ModSetup {
 
     }
 
-    //TODO:Switch to DeferredReg where possible
     public static void registerEvents(RegisterEvent event) {
         if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS)) {
             IForgeRegistry<Block> registry = Objects.requireNonNull(event.getForgeRegistry());
@@ -81,11 +80,6 @@ public class ModSetup {
             IForgeRegistry<Item> registry = Objects.requireNonNull(event.getForgeRegistry());
             BlockRegistry.onBlockItemsRegistry(registry);
             ItemsRegistry.onItemRegistry(registry);
-        }
-
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_STATE_PROVIDER_TYPES)) {
-            IForgeRegistry<BlockStateProviderType<?>> registry = Objects.requireNonNull(event.getForgeRegistry());
-            BlockRegistry.registerBlockProvider(registry);
         }
     }
 }

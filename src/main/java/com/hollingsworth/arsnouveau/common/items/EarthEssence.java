@@ -15,12 +15,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class EarthEssence extends ModItem {
-    public EarthEssence(Properties properties) {
-        super(properties);
-    }
 
     public EarthEssence() {
         super();
+        withTooltip(Component.translatable("tooltip.ars_nouveau.essences"));
     }
 
     @Override

@@ -15,6 +15,7 @@ public class StarbuncleShard extends ModItem{
 
     public StarbuncleShard(){
         super();
+        withTooltip(Component.translatable("tooltip.starbuncle_shard"));
     }
 
     @Override

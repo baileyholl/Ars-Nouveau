@@ -5,13 +5,16 @@ import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 public class AmethystGolemCharm extends AbstractSummonCharm {
+
     public AmethystGolemCharm() {
         super();
+        withTooltip(Component.translatable("tooltip.ars_nouveau.amethyst_charm"));
     }
 
     @Override

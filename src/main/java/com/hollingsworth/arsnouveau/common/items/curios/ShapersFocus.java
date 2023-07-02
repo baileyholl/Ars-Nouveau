@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -21,10 +22,7 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
 
     public ShapersFocus(Properties properties) {
         super(properties);
-    }
-
-    public ShapersFocus() {
-        super();
+        withTooltip(Component.translatable("tooltip.ars_nouveau.shapers_focus"));
     }
 
     public static void tryPropagateEntitySpell(EnchantedFallingBlock fallingblockentity, Level level, LivingEntity shooter, SpellContext spellContext, SpellResolver resolver) {

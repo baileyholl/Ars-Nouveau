@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +22,7 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
 
     public StarbuncleShades() {
         super();
+        withTooltip(Component.translatable("tooltip.starbuncle_shades"));
     }
 
     @Override

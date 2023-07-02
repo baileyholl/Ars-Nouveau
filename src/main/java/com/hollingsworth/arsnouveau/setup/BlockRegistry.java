@@ -34,10 +34,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,14 +48,10 @@ public class BlockRegistry {
 
     public static Block.Properties woodProp = BlockBehaviour.Properties.of().strength(2.0F, 3.0F).ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD);
 
-    //TODO Switch to these for 1.20
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ArsNouveau.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ArsNouveau.MODID);
-
-    static final String prepend = ArsNouveau.MODID + ":";
-
-    @ObjectHolder(value = prepend + LibBlockNames.STATE_PROVIDER, registryName = "minecraft:worldgen/block_state_provider_type")
-    public static BlockStateProviderType<?> stateProviderType;
+    public static final DeferredRegister<BlockStateProviderType<?>> BS_PROVIDERS = DeferredRegister.create(ForgeRegistries.BLOCK_STATE_PROVIDER_TYPES, ArsNouveau.MODID);
+    public static final RegistryObject<BlockStateProviderType<?>> stateProviderType = BS_PROVIDERS.register(LibBlockNames.STATE_PROVIDER, () -> new BlockStateProviderType<>(SupplierBlockStateProvider.CODEC));
 
     public static BlockBehaviour.Properties LOG_PROP = BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0F, 3.0F).ignitedByLava().sound(SoundType.WOOD);
     public static BlockBehaviour.Properties SAP_PROP = BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY);
@@ -305,6 +298,40 @@ public class BlockRegistry {
     public static RegistryWrapper<GhostWeave> GHOST_WEAVE = registerBlockAndItem(LibBlockNames.GHOST_WEAVE, GhostWeave::new);
     public static RegistryWrapper<BlockEntityType<GhostWeaveTile>> GHOST_WEAVE_TILE = registerTile(LibBlockNames.GHOST_WEAVE, GhostWeaveTile::new, GHOST_WEAVE);
     public static RegistryWrapper<ModBlock> MAGEBLOOM_BLOCK = registerBlockAndItem(LibBlockNames.MAGEBLOOM_BLOCK, () -> new ModBlock(BlockBehaviour.Properties.of().strength(0.1F).sound(SoundType.WOOL)));
+    public static final RegistryWrapper<Block> ROTATING_TURRET = registerBlockAndItem(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new, (reg) ->  new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return BasicTurretRenderer::getISTER;
+        }
+    }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
+
+    public static final RegistryWrapper<BlockEntityType<RotatingTurretTile>> ROTATING_TURRET_TILE = registerTile(LibBlockNames.ROTATING_SPELL_TURRET, RotatingTurretTile::new, ROTATING_TURRET);
+    public static final RegistryWrapper<ArcanePlatform> ARCANE_PLATFORM = registerBlockAndItem(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new, (reg) -> new ModBlockItem(reg.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
+    public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH = registerBlockAndItem(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
+    public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY = registerBlockAndItem(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
+
+    public static final RegistryWrapper<CraftingLecternBlock> CRAFTING_LECTERN = registerBlockAndItem(LibBlockNames.STORAGE_LECTERN, CraftingLecternBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return LecternRenderer::getISTER;
+        }
+    });
+    public static final RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL = registerBlockAndItem(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
+
+    public static final RegistryWrapper<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE = registerTile(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestalTile::new, ARCANE_PEDESTAL);
+    public static final RegistryWrapper<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE = registerTile(LibBlockNames.MAGELIGHT_TORCH, MagelightTorchTile::new, MAGELIGHT_TORCH);
+
+    public static final RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK = registerBlockAndItem(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
+    public static final RegistryWrapper<SkyWeave> SKY_WEAVE = registerBlockAndItem(LibBlockNames.SKY_WEAVE, () ->  new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
+    public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlockAndItem(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)), (reg) -> new ModBlockItem(reg.get(), new Item.Properties()));
+    public static final RegistryWrapper<ItemDetector> ITEM_DETECTOR = registerBlockAndItem(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
+
+    public static final RegistryWrapper<BlockEntityType<RitualBrazierTile>> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
+    public static final RegistryWrapper<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
+    public static final RegistryWrapper<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE = registerTile(LibBlockNames.SKY_WEAVE, SkyBlockTile::new, SKY_WEAVE);
+    public static final RegistryWrapper<BlockEntityType<TemporaryTile>> TEMPORARY_TILE = registerTile(LibBlockNames.TEMPORARY_BLOCK, TemporaryTile::new, TEMPORARY_BLOCK);
+    public static final RegistryWrapper<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE = registerTile(LibBlockNames.STORAGE_LECTERN, CraftingLecternTile::new, CRAFTING_LECTERN);
+    public static final RegistryWrapper<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
 
     public static void onBlocksRegistry(final IForgeRegistry<Block> registry) {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
@@ -352,10 +379,6 @@ public class BlockRegistry {
         return new ModBlockItem(block, defaultItemProperties());
     }
 
-    public static void registerBlockProvider(IForgeRegistry<BlockStateProviderType<?>> registry) {
-        registry.register(new ResourceLocation(ArsNouveau.MODID, LibBlockNames.STATE_PROVIDER), new BlockStateProviderType<>(SupplierBlockStateProvider.CODEC));
-    }
-
     private static Boolean allowsSpawnOnLeaves(BlockState state, BlockGetter reader, BlockPos pos, EntityType<?> entity) {
         return entity == EntityType.OCELOT || entity == EntityType.PARROT;
     }
@@ -368,42 +391,6 @@ public class BlockRegistry {
     public static Block getBlock(String s) {
         return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
     }
-
-    //Somebody need to start it
-    public static final RegistryWrapper<Block> ROTATING_TURRET = registerBlockAndItem(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new, (reg) ->  new RendererBlockItem(reg, defaultItemProperties()) {
-        @Override
-        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return BasicTurretRenderer::getISTER;
-        }
-    }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
-
-    public static final RegistryWrapper<BlockEntityType<RotatingTurretTile>> ROTATING_TURRET_TILE = registerTile(LibBlockNames.ROTATING_SPELL_TURRET, RotatingTurretTile::new, ROTATING_TURRET);
-    public static final RegistryWrapper<ArcanePlatform> ARCANE_PLATFORM = registerBlockAndItem(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new, (reg) -> new ModBlockItem(reg.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
-    public static final RegistryWrapper<MagelightTorch> MAGELIGHT_TORCH = registerBlockAndItem(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
-    public static final RegistryWrapper<BrazierRelay> BRAZIER_RELAY = registerBlockAndItem(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
-
-    public static final RegistryWrapper<CraftingLecternBlock> CRAFTING_LECTERN = registerBlockAndItem(LibBlockNames.STORAGE_LECTERN, CraftingLecternBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
-        @Override
-        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return LecternRenderer::getISTER;
-        }
-    });
-    public static final RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL = registerBlockAndItem(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
-
-    public static final RegistryWrapper<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE = registerTile(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestalTile::new, ARCANE_PEDESTAL);
-    public static final RegistryWrapper<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE = registerTile(LibBlockNames.MAGELIGHT_TORCH, MagelightTorchTile::new, MAGELIGHT_TORCH);
-
-    public static final RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK = registerBlockAndItem(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
-    public static final RegistryWrapper<SkyWeave> SKY_WEAVE = registerBlockAndItem(LibBlockNames.SKY_WEAVE, () ->  new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-    public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlockAndItem(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)), (reg) -> new ModBlockItem(reg.get(), new Item.Properties()));
-    public static final RegistryWrapper<ItemDetector> ITEM_DETECTOR = registerBlockAndItem(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
-
-    public static final RegistryWrapper<BlockEntityType<RitualBrazierTile>> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
-    public static final RegistryWrapper<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
-    public static final RegistryWrapper<BlockEntityType<SkyBlockTile>> SKYWEAVE_TILE = registerTile(LibBlockNames.SKY_WEAVE, SkyBlockTile::new, SKY_WEAVE);
-    public static final RegistryWrapper<BlockEntityType<TemporaryTile>> TEMPORARY_TILE = registerTile(LibBlockNames.TEMPORARY_BLOCK, TemporaryTile::new, TEMPORARY_BLOCK);
-    public static final RegistryWrapper<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE = registerTile(LibBlockNames.STORAGE_LECTERN, CraftingLecternTile::new, CRAFTING_LECTERN);
-    public static final RegistryWrapper<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
 
     public static <T extends Block>RegistryWrapper<T> registerBlock(String name, Supplier<T> blockSupp) {
         return new RegistryWrapper<>(BLOCKS.register(name, blockSupp));
@@ -427,10 +414,6 @@ public class BlockRegistry {
         FlowerPotBlock pot = new FlowerPotBlock(() -> (FlowerPotBlock)Blocks.FLOWER_POT, block, BlockBehaviour.Properties.of().instabreak().noOcclusion());
         flowerPots.put(() -> ForgeRegistries.BLOCKS.getKey(block.get()), pot);
         return pot;
-    }
-
-    public static BlockEntityType buildTile(BlockEntityType.BlockEntitySupplier<?> supplier, Block... blocks) {
-        return BlockEntityType.Builder.of(supplier, blocks).build(null);
     }
 
     public static <T extends BlockEntityType>RegistryWrapper<T> registerTile(String regName, BlockEntityType.BlockEntitySupplier tile, RegistryWrapper<? extends Block> block){

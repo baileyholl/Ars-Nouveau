@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,6 +17,7 @@ public class WornNotebook extends ModItem {
 
     public WornNotebook() {
         super(ItemsRegistry.defaultItemProperties().stacksTo(1));
+        withTooltip(Component.translatable("tooltip.worn_notebook"));
     }
 
    @NotNull

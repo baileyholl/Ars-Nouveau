@@ -12,12 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FireEssence extends ModItem {
-    public FireEssence(Properties properties) {
-        super(properties);
-    }
 
     public FireEssence() {
         super();
+        withTooltip(Component.translatable("tooltip.ars_nouveau.essences"));
     }
 
     @Override

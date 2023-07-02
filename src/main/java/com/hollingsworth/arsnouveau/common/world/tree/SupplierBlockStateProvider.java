@@ -22,7 +22,7 @@ public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvid
 
     @Override
     protected BlockStateProviderType<?> type() {
-        return BlockRegistry.stateProviderType;
+        return BlockRegistry.stateProviderType.get();
     }
 
 }

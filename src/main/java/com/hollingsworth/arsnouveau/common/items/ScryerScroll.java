@@ -16,12 +16,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ScryerScroll extends ModItem {
-    public ScryerScroll(Properties properties) {
-        super(properties);
-    }
 
     public ScryerScroll() {
         super();
+        withTooltip(Component.translatable("tooltip.ars_nouveau.scryer_scroll"));
     }
 
     @Override

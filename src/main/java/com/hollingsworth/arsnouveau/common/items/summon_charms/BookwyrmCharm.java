@@ -18,6 +18,7 @@ import java.util.List;
 public class BookwyrmCharm extends ModItem {
     public BookwyrmCharm() {
         super();
+        withTooltip("ars_nouveau.tooltip.bookwyrm");
     }
 
 

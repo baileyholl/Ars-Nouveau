@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.items;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -13,12 +12,9 @@ import java.util.List;
 
 public class ManipulationEssence extends ModItem{
 
-    public ManipulationEssence(Item.Properties properties) {
-        super(properties);
-    }
-
     public ManipulationEssence() {
         super();
+        withTooltip(Component.translatable("tooltip.ars_nouveau.essences"));
     }
 
     @Override
