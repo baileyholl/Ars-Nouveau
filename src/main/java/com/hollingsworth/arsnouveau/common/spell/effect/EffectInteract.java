@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -62,43 +63,57 @@ public class EffectInteract extends AbstractEffect {
         return player instanceof ANFakePlayer ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 
-    public boolean handleBucket(ItemStack item, BucketItem bucket, Player player, BlockState state, Level world, BlockPos pos, BlockHitResult rayTraceResult) {
+    public boolean handleBucket(ItemStack item, BucketItem bucket, Player player, BlockState state, Level world, BlockPos pos, BlockHitResult rayTraceResult, InteractionHand hand) {
         if (bucket.getFluid() == Fluids.EMPTY) {
             boolean isBucketPickup = state.getBlock() instanceof BucketPickup && world.getFluidState(pos) != Fluids.EMPTY.defaultFluidState();
             BlockPos target = isBucketPickup ? pos : pos.relative(rayTraceResult.getDirection());
-            if (world.getFluidState(target) == Fluids.EMPTY.defaultFluidState()) return false;
+            if (world.getFluidState(target) == Fluids.EMPTY.defaultFluidState()) {
+                return false;
+            }
             BlockState targetState = world.getBlockState(target);
-            if (targetState.getBlock() instanceof BucketPickup bp) {
-                ItemStack pickup = bp.pickupBlock(world, target, targetState);
-                if (!pickup.isEmpty() && !player.getAbilities().instabuild) {
-                    bp.getPickupSound(targetState).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
-                    world.gameEvent(player, GameEvent.FLUID_PICKUP, target);
-                    ItemStack result = ItemUtils.createFilledResult(item, player, pickup);
-
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        CriteriaTriggers.FILLED_BUCKET.trigger(serverPlayer, item);
-                    }
-
-                    player.awardStat(Stats.ITEM_USED.get(bucket));
-
-                    player.setItemInHand(InteractionHand.OFF_HAND, result);
-                }
-                return !pickup.isEmpty();
+            if (!(targetState.getBlock() instanceof BucketPickup bp)) {
+                return false;
             }
-        } else {
-            boolean placed = bucket.emptyContents(player, world, pos, rayTraceResult);
-            if (placed) {
-                if (!player.getAbilities().instabuild) {
-                    player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.BUCKET));
-                }
+            ItemStack pickup = bp.pickupBlock(world, target, targetState);
+            if (!pickup.isEmpty() && !player.getAbilities().instabuild) {
+                bp.getPickupSound(targetState).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
+                world.gameEvent(player, GameEvent.FLUID_PICKUP, target);
+                ItemStack result = ItemUtils.createFilledResult(item, player, pickup);
+
                 if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, item);
+                    CriteriaTriggers.FILLED_BUCKET.trigger(serverPlayer, item);
                 }
+
                 player.awardStat(Stats.ITEM_USED.get(bucket));
+                if(player.getItemInHand(hand).isEmpty()){
+                    player.setItemInHand(hand, result);
+                }else{
+                    if(!player.addItem(result)){
+                        player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), result));
+                    }
+                }
             }
-            return placed;
+            return !pickup.isEmpty();
+
         }
-        return false;
+        boolean placed = bucket.emptyContents(player, world, pos, rayTraceResult, item);
+        if (placed) {
+            if (!player.getAbilities().instabuild) {
+                ItemStack result = ItemUtils.createFilledResult(item, player, new ItemStack(Items.BUCKET));
+                if(player.getItemInHand(hand).isEmpty()){
+                    player.setItemInHand(hand, result);
+                }else{
+                    if(!player.addItem(result)){
+                        player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), result));
+                    }
+                }
+            }
+            if (player instanceof ServerPlayer serverPlayer) {
+                CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, item);
+            }
+            player.awardStat(Stats.ITEM_USED.get(bucket));
+        }
+        return placed;
     }
 
     public void useOnEntity(Player player, SpellStats spellStats, Entity target) {
@@ -121,7 +136,7 @@ public class EffectInteract extends AbstractEffect {
         if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
             if (item.getItem() instanceof BucketItem bucket) {
-                handleBucket(item, bucket, player, state, world, pos, rayTraceResult);
+                handleBucket(item, bucket, player, state, world, pos, rayTraceResult, getHand(player));
                 return;
             }
             UseOnContext context = new UseOnContext(player, getHand(player), rayTraceResult);
@@ -145,6 +160,9 @@ public class EffectInteract extends AbstractEffect {
             player = setupFakeInventory(spellContext, world);
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
             for(ItemStack i : player.inventory.items){
+                manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
+            }
+            for(ItemStack i : player.inventory.offhand){
                 manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
             }
         }
