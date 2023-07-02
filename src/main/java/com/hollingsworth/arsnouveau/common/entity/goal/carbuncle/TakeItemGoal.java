@@ -21,11 +21,11 @@ public class TakeItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoal
     @Override
     public boolean canUse() {
         boolean superCan = super.canUse();
-        if(!superCan)
+        if(!superCan || behavior.FROM_LIST.isEmpty())
             return false;
         if(getDestination() == null){
             starbuncle.addGoalDebug(this, new DebugEvent("NoTakeDestination", "No valid take destination"));
-            starbuncle.setBackOff(20);
+            starbuncle.setBackOff(5 + starbuncle.level.random.nextInt(20));
             return false;
         }
         if(behavior.isBedPowered()){
