@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.MNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +49,7 @@ public class PathJobMoveToLocation extends AbstractPathJob {
     }
 
     @Override
-    protected BlockPos getPathTargetPos(final ModNode finalNode) {
+    protected BlockPos getPathTargetPos(final MNode finalNode) {
         return destination;
     }
 
@@ -65,7 +65,7 @@ public class PathJobMoveToLocation extends AbstractPathJob {
      * @return true if has been reached.
      */
     @Override
-    protected boolean isAtDestination(final ModNode n) {
+    protected boolean isAtDestination(final MNode n) {
         if (destinationSlack <= DESTINATION_SLACK_NONE) {
             return n.pos.getX() == destination.getX()
                     && n.pos.getY() == destination.getY()
@@ -85,8 +85,8 @@ public class PathJobMoveToLocation extends AbstractPathJob {
      * @return double of the distance.
      */
     @Override
-    protected double getNodeResultScore(final ModNode n) {
+    protected double getNodeResultScore(final MNode n) {
         //  For Result Score lower is better
-        return destination.distSqr(n.pos);
+        return destination.distManhattan(n.pos);
     }
 }

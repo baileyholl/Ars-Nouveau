@@ -5,9 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class PathJobMoveToPathable extends PathJobMoveToLocation {
 
@@ -29,17 +27,17 @@ public class PathJobMoveToPathable extends PathJobMoveToLocation {
 
     @Override
     protected Path search() {
-        Path path = null;
-        for (BlockPos p : destinations) {
-            this.destination = p;
-            totalNodesVisited = 0;
-            nodesOpen = new PriorityQueue<>(500);
-            nodesVisited = new HashMap<>();
-            path = super.search();
-            if (path.canReach())
-                return path;
-        }
-        destination = destinations.get(0);
+//        Path path = null;
+//        for (BlockPos p : destinations) {
+//            this.destination = p;
+//            totalNodesVisited = 0;
+//            nodesOpen = new PriorityQueue<>(500);
+//            nodesVisited = new HashMap<>();
+//            path = super.search();
+//            if (path.canReach())
+//                return path;
+//        }
+//        destination = destinations.get(0);
         return super.search();
     }
 }

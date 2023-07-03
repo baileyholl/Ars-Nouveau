@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.MNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -65,7 +65,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
      * @return true if so.
      */
     @Override
-    protected boolean isAtDestination(@NotNull final ModNode n)
+    protected boolean isAtDestination(@NotNull final MNode n)
     {
         return Math.sqrt(avoid.distSqr(n.pos)) > avoidDistance;
     }
@@ -77,7 +77,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
      * @return double amount.
      */
     @Override
-    protected double getNodeResultScore(@NotNull final ModNode n)
+    protected double getNodeResultScore(@NotNull final MNode n)
     {
         return -avoid.distSqr(n.pos);
     }

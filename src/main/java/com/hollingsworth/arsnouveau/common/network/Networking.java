@@ -217,6 +217,9 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), PacketSummonLily.class, PacketSummonLily::toBytes, PacketSummonLily::new, PacketSummonLily::handle);
         INSTANCE.registerMessage(nextID(), PacketJoinedServer.class, PacketJoinedServer::toBytes, PacketJoinedServer::new, PacketJoinedServer.Handler::handle);
         INSTANCE.registerMessage(nextID(), PacketUnsummonLily.class, PacketUnsummonLily::toBytes, PacketUnsummonLily::new, PacketUnsummonLily::handle);
+
+        INSTANCE.registerMessage(nextID(), SyncPathMessage.class, SyncPathMessage::toBytes, SyncPathMessage::new, SyncPathMessage.Handler::handle);
+        INSTANCE.registerMessage(nextID(), SyncPathReachedMessage.class, SyncPathReachedMessage::toBytes, SyncPathReachedMessage::new, SyncPathReachedMessage.Handler::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
