@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.utils;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
 public final class TintedVertexConsumer implements VertexConsumer {
     private final VertexConsumer wrapped;
@@ -68,11 +66,5 @@ public final class TintedVertexConsumer implements VertexConsumer {
     public void unsetDefaultColor() {
         wrapped.unsetDefaultColor();
     }
-
-    //TODO Hope this works
-    public VertexFormat getVertexFormat() {
-        return DefaultVertexFormat.BLOCK;
-    }
-
 
 }

@@ -169,7 +169,7 @@ public class FamiliarEntity extends PathfinderMob implements GeoEntity, IFamilia
         return holderID;
     }
 
-    @Override // TODO: Make abstract
+    @Override
     public void setHolderID(ResourceLocation id) {
         this.holderID = id;
     }

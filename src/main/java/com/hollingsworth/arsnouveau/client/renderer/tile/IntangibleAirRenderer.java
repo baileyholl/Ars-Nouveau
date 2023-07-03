@@ -68,7 +68,6 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
                 f1 = 1f;
                 f2 = 1f;
             }
-            // TODO: check this?
             builder.putBulkData(matrixEntry, bakedquad, f, f1, f2, alpha, combinedLightsIn, combinedOverlayIn, true);
         }
     }
@@ -93,7 +92,6 @@ public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirT
 
         for (Direction direction : Direction.values()) {
             if (!(tileEntityIn.getLevel().getBlockState(tileEntityIn.getBlockPos().relative(direction)).getBlock() instanceof IntangibleAirBlock)) {
-                //TODO: Check
                 renderModelBrightnessColorQuads(matrixStackIn.last(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float) scale, ibakedmodel.getQuads(renderState, direction,
                         RandomSource.create(Mth.getSeed(tileEntityIn.getBlockPos())), ModelData.EMPTY, null), combinedLightIn, combinedOverlayIn);
             }

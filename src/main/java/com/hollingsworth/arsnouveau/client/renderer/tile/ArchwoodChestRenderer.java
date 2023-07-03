@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -108,14 +109,15 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
     }
 
     protected Material getMaterial(T tileEntity, ChestType chestType) {
+        String type = "archwood";
         switch (chestType) {
             case LEFT:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau", "entity/archwood_chest_left"));
+                return new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/left"));
             case RIGHT:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau", "entity/archwood_chest_right"));
+                return new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/right"));
             case SINGLE:
             default:
-                return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau", "entity/archwood_chest"));
+                return new Material(Sheets.CHEST_SHEET,new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/" + type));
         }
     }
 }

@@ -41,6 +41,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new WorldgenProvider(output, provider));
+        event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, event.getExistingFileHelper()));
     }
 
 }

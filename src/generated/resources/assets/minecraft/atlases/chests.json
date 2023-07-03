@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "ars_nouveau:model/chest/archwood/archwood"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "ars_nouveau:model/chest/archwood/left"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "ars_nouveau:model/chest/archwood/right"
+    }
+  ]
+}
