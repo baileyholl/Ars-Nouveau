@@ -224,40 +224,5 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [
-		{
-			"name": "VoxelShapes",
-			"origin": [0, 0, 0],
-			"color": 0,
-			"children": [
-				0,
-				1,
-				{
-					"name": "bone",
-					"origin": [0, 0, 0],
-					"color": 0,
-					"children": [2, 3, 4]
-				},
-				{
-					"name": "bone",
-					"origin": [0, 0, 0],
-					"color": 0,
-					"children": [5, 6, 7]
-				},
-				{
-					"name": "bone",
-					"origin": [0, 0, 0],
-					"color": 0,
-					"children": [8, 9, 10]
-				},
-				{
-					"name": "bone",
-					"origin": [0, 0, 0],
-					"color": 0,
-					"children": [11, 12, 13]
-				}
-			]
-		}
-	]
+	}
 }
