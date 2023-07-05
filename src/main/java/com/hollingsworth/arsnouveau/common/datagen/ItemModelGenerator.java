@@ -85,6 +85,11 @@ public class ItemModelGenerator extends ItemModelProvider {
         getBuilder(LibBlockNames.YELLOW_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.YELLOW_SBED));
         getBuilder(LibBlockNames.ORANGE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ORANGE_SBED));
         getBuilder(LibBlockNames.PURPLE_SBED).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.PURPLE_SBED));
+        getBuilder(LibBlockNames.AGRONOMIC_SOURCELINK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AGRONOMIC_SOURCELINK));
+        getBuilder(LibBlockNames.VOLCANIC_SOURCELINK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.VOLCANIC_SOURCELINK));
+        getBuilder(LibBlockNames.VITALIC_SOURCELINK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.VITALIC_SOURCELINK));
+        getBuilder(LibBlockNames.MYCELIAL_SOURCELINK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MYCELIAL_SOURCELINK));
+        getBuilder(LibBlockNames.ALCHEMICAL_SOURCELINK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ALCHEMICAL_SOURCELINK));
         blockAsItem(LibBlockNames.MENDOSTEEN_POD);
         blockAsItem(LibBlockNames.BASTION_POD);
         blockAsItem(LibBlockNames.FROSTAYA_POD);

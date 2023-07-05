@@ -33,6 +33,11 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerOnlyState(BlockRegistry.ORANGE_SBED, LibBlockNames.ORANGE_SBED);
         registerOnlyState(BlockRegistry.PURPLE_SBED, LibBlockNames.PURPLE_SBED);
         registerOnlyState(BlockRegistry.POTION_DIFFUSER, LibBlockNames.POTION_DIFFUSER);
+        registerOnlyState(BlockRegistry.AGRONOMIC_SOURCELINK.get(), LibBlockNames.AGRONOMIC_SOURCELINK);
+        registerOnlyState(BlockRegistry.ALCHEMICAL_BLOCK.get(), LibBlockNames.ALCHEMICAL_SOURCELINK);
+        registerOnlyState(BlockRegistry.MYCELIAL_BLOCK.get(), LibBlockNames.MYCELIAL_SOURCELINK);
+        registerOnlyState(BlockRegistry.VITALIC_BLOCK.get(), LibBlockNames.VITALIC_SOURCELINK);
+        registerOnlyState(BlockRegistry.VOLCANIC_BLOCK.get(), LibBlockNames.VOLCANIC_SOURCELINK);
         for (var pot : BlockRegistry.flowerPots.entrySet()){
             registerOnlyState(pot.getValue(), "pots/" + LibBlockNames.Pot(pot.getKey().get().getPath()));
         }

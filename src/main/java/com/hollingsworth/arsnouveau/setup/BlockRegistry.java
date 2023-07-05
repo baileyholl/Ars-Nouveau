@@ -63,12 +63,7 @@ public class BlockRegistry {
 
     public static RegistryWrapper<TempLightBlock> T_LIGHT_BLOCK = registerBlockAndItem(LibBlockNames.T_LIGHT_BLOCK, TempLightBlock::new);
     public static RegistryWrapper<BlockEntityType<TempLightTile>> T_LIGHT_TILE = registerTile(LibBlockNames.T_LIGHT_BLOCK, TempLightTile::new, T_LIGHT_BLOCK);
-    public static RegistryWrapper<AgronomicSourcelinkBlock> AGRONOMIC_SOURCELINK = registerBlockAndItem(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkBlock::new, (reg) ->  new RendererBlockItem(reg.get(), defaultItemProperties()) {
-        @Override
-        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return AgronomicRenderer::getISTER;
-        }
-    });
+    public static RegistryWrapper<AgronomicSourcelinkBlock> AGRONOMIC_SOURCELINK = registerBlockAndItem(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkBlock::new);
     public static RegistryWrapper<BlockEntityType<AgronomicSourcelinkTile>> AGRONOMIC_SOURCELINK_TILE = registerTile(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkTile::new, AGRONOMIC_SOURCELINK);
 
 
@@ -136,12 +131,7 @@ public class BlockRegistry {
     public static RegistryWrapper<RedstoneAir> REDSTONE_AIR = registerBlock(LibBlockNames.REDSTONE_AIR, RedstoneAir::new);
     public static RegistryWrapper<IntangibleAirBlock> INTANGIBLE_AIR = registerBlock(LibBlockNames.INTANGIBLE_AIR, IntangibleAirBlock::new);
     public static RegistryWrapper<BlockEntityType<IntangibleAirTile>> INTANGIBLE_AIR_TYPE = registerTile(LibBlockNames.INTANGIBLE_AIR, IntangibleAirTile::new, INTANGIBLE_AIR);
-    public static RegistryWrapper<VolcanicSourcelinkBlock> VOLCANIC_BLOCK = registerBlockAndItem(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkBlock::new, (reg) -> new RendererBlockItem(BlockRegistry.VOLCANIC_BLOCK, defaultItemProperties().fireResistant()) {
-        @Override
-        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return VolcanicRenderer::getISTER;
-        }
-    });
+    public static RegistryWrapper<VolcanicSourcelinkBlock> VOLCANIC_BLOCK = registerBlockAndItem(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkBlock::new);
     public static RegistryWrapper<BlockEntityType<VolcanicSourcelinkTile>> VOLCANIC_TILE = registerTile(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkTile::new, VOLCANIC_BLOCK);
 
     public static RegistryWrapper<LavaLily> LAVA_LILY = registerBlockAndItem(LibBlockNames.LAVA_LILY, LavaLily::new, (reg) ->new FluidBlockItem(reg.get(), defaultItemProperties().fireResistant()));
@@ -318,7 +308,7 @@ public class BlockRegistry {
     });
     public static final RegistryWrapper<ArcanePedestal> ARCANE_PEDESTAL = registerBlockAndItem(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestal::new);
 
-    public static final RegistryWrapper<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE = registerTile(LibBlockNames.ARCANE_PEDESTAL, ArcanePedestalTile::new, ARCANE_PEDESTAL);
+    public static final RegistryWrapper<BlockEntityType<ArcanePedestalTile>> ARCANE_PEDESTAL_TILE = new RegistryWrapper<>(BLOCK_ENTITIES.register(LibBlockNames.ARCANE_PEDESTAL, () -> BlockEntityType.Builder.of(ArcanePedestalTile::new, ARCANE_PEDESTAL.get(), ARCANE_PLATFORM.get()).build(null)));
     public static final RegistryWrapper<BlockEntityType<MagelightTorchTile>> MAGELIGHT_TORCH_TILE = registerTile(LibBlockNames.MAGELIGHT_TORCH, MagelightTorchTile::new, MAGELIGHT_TORCH);
 
     public static final RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK = registerBlockAndItem(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
