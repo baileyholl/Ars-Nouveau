@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.world.WorldgenRegistry;
-import com.hollingsworth.arsnouveau.common.world.biome.BiomeRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.WorldgenRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BiomeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SoundButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
-import com.hollingsworth.arsnouveau.setup.SoundRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -75,7 +75,7 @@ public class SoundScreen extends BaseBook {
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 22;
         int adjustedXPlaced = 0;
-        List<SpellSound> sounds = ArsNouveauAPI.getInstance().getSpellSoundsRegistry().values().stream().toList();
+        List<SpellSound> sounds = SpellSoundRegistry.getSpellSoundsRegistry().values().stream().toList();
         for (int i = 0; i < sounds.size(); i++) {
             SpellSound part = sounds.get(i);
 

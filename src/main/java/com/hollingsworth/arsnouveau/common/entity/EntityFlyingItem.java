@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.util.EasingManager;
 import com.hollingsworth.arsnouveau.common.util.EasingType;
+import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

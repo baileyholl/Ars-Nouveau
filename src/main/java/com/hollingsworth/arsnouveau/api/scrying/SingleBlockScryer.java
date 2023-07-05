@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.scrying;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.RegistryHelper;
+import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class SpotlightPage extends AbstractPage {
 

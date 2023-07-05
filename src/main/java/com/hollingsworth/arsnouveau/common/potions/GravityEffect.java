@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class GravityEffect extends MobEffect {
 
-    protected GravityEffect() {
+    public GravityEffect() {
         super(MobEffectCategory.HARMFUL, 2039587);
     }
 

@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -127,10 +127,9 @@ public class AnnotatedCodex extends ModItem {
         public CodexData(ItemStack stack) {
             this.stack = stack;
             CompoundTag tag = stack.getOrCreateTag();
-            ArsNouveauAPI api = ArsNouveauAPI.getInstance();
             for (ResourceLocation s : NBTUtil.readResourceLocations(tag, "glyph_")) {
-                if (api.getSpellpartMap().containsKey(s)) {
-                    glyphs.add(api.getSpellpartMap().get(s));
+                if (GlyphRegistry.getSpellpartMap().containsKey(s)) {
+                    glyphs.add(GlyphRegistry.getSpellpartMap().get(s));
                 }
             }
             playerName = tag.contains("playerName") ? tag.getString("playerName") : null;

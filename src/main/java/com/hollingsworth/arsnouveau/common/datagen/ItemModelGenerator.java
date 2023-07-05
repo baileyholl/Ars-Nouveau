@@ -2,14 +2,17 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -20,7 +23,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.function.Supplier;
 
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class ItemModelGenerator extends ItemModelProvider {
 
@@ -32,7 +35,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        for (Supplier<Glyph> i : ArsNouveauAPI.getInstance().getGlyphItemMap().values()) {
+        for (Supplier<Glyph> i : GlyphRegistry.getGlyphItemMap().values()) {
             try {
                 if(i.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.get().spellPart.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i.get()));
@@ -41,7 +44,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 System.out.println("No texture for " + i.get());
             }
         }
-        for (RitualTablet i : ArsNouveauAPI.getInstance().getRitualItemMap().values()) {
+        for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
             try {
                 if(i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.ritual.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
@@ -49,7 +52,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 System.out.println("No texture for " + i);
             }
         }
-        for (FamiliarScript i : ArsNouveauAPI.getInstance().getFamiliarScriptMap().values()) {
+        for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
             try {
                 if(i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.familiar.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
@@ -58,7 +61,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             }
          }
 
-        for (PerkItem i : ArsNouveauAPI.getInstance().getPerkItemMap().values()) {
+        for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
             try {
                 if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.perk.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));

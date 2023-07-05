@@ -12,7 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 public class MagicFindEffect extends MobEffect {
-    protected MagicFindEffect() {
+
+    public MagicFindEffect() {
         super(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor());
     }
 

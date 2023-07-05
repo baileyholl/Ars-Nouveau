@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.book.GlyphUnlockMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
@@ -65,9 +66,9 @@ public class UnlockGlyphButton extends Button {
             }
 
             if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
-                if (parent.api.getSpellpartMap().containsKey(this.spellPart.getRegistryName())) {
+                if (GlyphRegistry.getSpellpartMap().containsKey(this.spellPart.getRegistryName())) {
                     List<Component> tip = new ArrayList<>();
-                    AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.spellPart.getRegistryName());
+                    AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(this.spellPart.getRegistryName());
                     tip.add(Component.translatable(spellPart.getLocalizationKey()));
                     if (Screen.hasShiftDown()) {
                         tip.add(spellPart.getBookDescLang());

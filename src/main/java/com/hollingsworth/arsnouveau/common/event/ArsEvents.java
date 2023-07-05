@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
-import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

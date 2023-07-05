@@ -13,14 +13,13 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
+import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.defaultItemProperties;
 
 public class EnchantersShield extends ShieldItem implements GeoItem {
 

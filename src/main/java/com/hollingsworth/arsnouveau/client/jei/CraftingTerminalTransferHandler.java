@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client.jei;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
-import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;

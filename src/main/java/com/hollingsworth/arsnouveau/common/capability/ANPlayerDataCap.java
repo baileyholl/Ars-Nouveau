@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -111,11 +111,10 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
         CompoundTag glyphsTag = nbt.getCompound("glyphs");
         for (int i = 0; i < glyphsTag.getInt("size"); i++) {
             ResourceLocation id = new ResourceLocation(glyphsTag.getString("glyph" + i));
-            AbstractSpellPart part = api.getSpellPart(id);
+            AbstractSpellPart part = GlyphRegistry.getSpellPart(id);
             if (part != null)
                 glyphs.add(part);
         }

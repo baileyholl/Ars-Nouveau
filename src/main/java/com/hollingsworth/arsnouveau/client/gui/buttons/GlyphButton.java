@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
@@ -59,9 +60,9 @@ public class GlyphButton extends Button {
 
         RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty(), 0);
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
-            if (parent.api.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
+            if (GlyphRegistry.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
                 List<Component> tip = new ArrayList<>();
-                AbstractSpellPart spellPart = parent.api.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
+                AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
                 tip.add(Component.translatable(spellPart.getLocalizationKey()));
                 for (SpellValidationError ve : validationErrors) {
                     tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));

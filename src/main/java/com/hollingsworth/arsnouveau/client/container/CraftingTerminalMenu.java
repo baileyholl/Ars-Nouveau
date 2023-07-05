@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.container;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
-import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

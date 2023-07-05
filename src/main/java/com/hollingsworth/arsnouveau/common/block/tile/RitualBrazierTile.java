@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IInvProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -16,11 +16,11 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.util.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -210,7 +210,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         String ritualIDString = tag.getString("ritualID");
         if (!ritualIDString.isEmpty()) {
             ResourceLocation ritualID = new ResourceLocation(ritualIDString);
-            ritual = ArsNouveauAPI.getInstance().getRitual(ritualID);
+            ritual = RitualRegistry.getRitual(ritualID);
             if (ritual != null) {
                 ritual.tile = this;
                 ritual.read(tag);
@@ -249,7 +249,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     public void setRitual(ResourceLocation selectedRitual) {
-        this.ritual = ArsNouveauAPI.getInstance().getRitual(selectedRitual);
+        this.ritual = RitualRegistry.getRitual(selectedRitual);
         if (ritual != null) {
             this.ritual.tile = this;
             Level world = getLevel();

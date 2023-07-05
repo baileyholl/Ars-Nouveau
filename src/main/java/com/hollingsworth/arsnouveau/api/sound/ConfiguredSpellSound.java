@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
-import com.hollingsworth.arsnouveau.setup.SoundRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nullable;

@@ -6,7 +6,8 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
 public class FreezingEffect extends MobEffect {
-    protected FreezingEffect() {
+
+    public FreezingEffect() {
         super(MobEffectCategory.HARMFUL, new ParticleColor(0, 0, 250).getColor());
     }
 

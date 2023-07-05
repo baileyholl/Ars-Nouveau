@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +28,7 @@ public abstract class AbstractFamiliarHolder {
     public abstract IFamiliar getSummonEntity(Level world, CompoundTag tag);
 
     public ItemStack getOutputItem() {
-        return new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem(getRegistryName()));
+        return new ItemStack(FamiliarRegistry.getFamiliarScriptMap().get(getRegistryName()));
     }
 
     public ResourceLocation getRegistryName() {

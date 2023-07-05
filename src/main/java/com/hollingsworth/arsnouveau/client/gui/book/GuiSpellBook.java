@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
@@ -12,14 +14,14 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
@@ -88,9 +90,9 @@ public class GuiSpellBook extends BaseBook {
         ItemStack heldStack = Minecraft.getInstance().player.getItemInHand(hand);
         List<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : new ArrayList<>(cap.getKnownGlyphs().stream().filter(AbstractSpellPart::shouldShowInSpellBook).toList());
         maxManaCache = ManaUtil.getMaxMana(Minecraft.getInstance().player);
-        parts.addAll(api.getDefaultStartingSpells());
+        parts.addAll(GlyphRegistry.getDefaultStartingSpells());
         if (heldStack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK.get())
-            parts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
+            parts = new ArrayList<>(GlyphRegistry.getSpellpartMap().values());
         int tier = 1;
         if(heldStack.getItem() instanceof SpellBook book){
             tier = book.getTier().value;
@@ -113,7 +115,7 @@ public class GuiSpellBook extends BaseBook {
         //Crafting slots
         for (int i = 0; i < numLinks; i++) {
             int offset = i >= 5 ? 14 : 0;
-            CraftingButton cell = new CraftingButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
+            CraftingButton cell = new CraftingButton(this, bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, this::onCraftingSlotClick);
             addRenderableWidget(cell);
             craftingCells.add(cell);
         }
@@ -292,7 +294,7 @@ public class GuiSpellBook extends BaseBook {
             for (Renderable w : renderables) {
                 if (w instanceof GlyphButton glyphButton) {
                     if (glyphButton.abstractSpellPart.getRegistryName() != null) {
-                        AbstractSpellPart part = api.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
+                        AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName());
                         if (part != null) {
                             glyphButton.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -398,7 +400,7 @@ public class GuiSpellBook extends BaseBook {
             familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.getRegistryName()).collect(Collectors.toList());
         }
         Collection<ResourceLocation> finalFamiliarHolders = familiarHolders;
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, FamiliarRegistry.getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
     }
 
     public void onCraftingSlotClick(Button button) {
@@ -411,8 +413,8 @@ public class GuiSpellBook extends BaseBook {
 
         if (button1.validationErrors.isEmpty()) {
             for (CraftingButton b : craftingCells) {
-                if (b.abstractSpellPart == null) {
-                    b.abstractSpellPart = button1.abstractSpellPart;
+                if (b.getAbstractSpellPart() == null) {
+                    b.setAbstractSpellPart(button1.abstractSpellPart);
                     b.spellTag = button1.abstractSpellPart.getRegistryName();
                     validate();
                     return;
@@ -436,11 +438,11 @@ public class GuiSpellBook extends BaseBook {
         List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
-            slot.spellTag = ArsNouveauAPI.EMPTY_KEY;
-            slot.abstractSpellPart = null;
+            slot.spellTag = null;
+            slot.setAbstractSpellPart(null);
             if (recipe != null && i < recipe.size()) {
                 slot.spellTag = recipe.get(i).getRegistryName();
-                slot.abstractSpellPart = recipe.get(i);
+                slot.setAbstractSpellPart(recipe.get(i));
             }
         }
     }
@@ -449,8 +451,9 @@ public class GuiSpellBook extends BaseBook {
         boolean allWereEmpty = true;
 
         for (CraftingButton slot : craftingCells) {
-            if (!slot.spellTag.equals(ArsNouveauAPI.EMPTY_KEY))
+            if (slot.spellTag != null) {
                 allWereEmpty = false;
+            }
             slot.clear();
         }
 
@@ -464,7 +467,7 @@ public class GuiSpellBook extends BaseBook {
         if (validationErrors.isEmpty()) {
             Spell spell = new Spell();
             for (CraftingButton slot : craftingCells) {
-                AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(slot.spellTag);
+                AbstractSpellPart spellPart = slot.getAbstractSpellPart();
                 if (spellPart != null) {
                     spell.add(spellPart);
                 }
@@ -544,8 +547,8 @@ public class GuiSpellBook extends BaseBook {
     private int getCurrentManaCost() {
         Spell spell = new Spell();
         for (CraftingButton button : craftingCells) {
-            if (button.spellTag != ArsNouveauAPI.EMPTY_KEY) {
-                AbstractSpellPart part = ArsNouveauAPI.getInstance().getSpellpartMap().get(button.spellTag);
+            if (button.spellTag != null) {
+                AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(button.spellTag);
                 if (part != null) {
                     spell.add(part);
                 }
@@ -566,13 +569,13 @@ public class GuiSpellBook extends BaseBook {
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton b = craftingCells.get(i);
             b.validationErrors.clear();
-            if (b.spellTag == ArsNouveauAPI.EMPTY_KEY) {
+            if (b.spellTag == null) {
                 // The validator can cope with null. Insert it to preserve glyph indices.
                 recipe.add(null);
                 // Also note where we found the first blank.  Used later for the glyph buttons.
                 if (firstBlankSlot < 0) firstBlankSlot = i;
             } else {
-                recipe.add(api.getSpellpartMap().get(b.spellTag));
+                recipe.add(GlyphRegistry.getSpellpartMap().get(b.spellTag));
             }
         }
 
@@ -606,7 +609,7 @@ public class GuiSpellBook extends BaseBook {
         glyphButton.validationErrors.clear();
 
         // Simulate adding the glyph to the current spell
-        recipe.add(api.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
+        recipe.add(GlyphRegistry.getSpellpartMap().get(glyphButton.abstractSpellPart.getRegistryName()));
 
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(

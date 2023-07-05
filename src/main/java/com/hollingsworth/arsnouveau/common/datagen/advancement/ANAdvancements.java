@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.datagen.advancement;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.ConsumeItemTrigger;
@@ -54,7 +54,7 @@ public class ANAdvancements implements ForgeAdvancementProvider.AdvancementGener
 
         Advancement rituals = saveBasicItem(BlockRegistry.RITUAL_BLOCK, root);
         saveBasicItem(ItemsRegistry.AMETHYST_GOLEM_CHARM, rituals);
-        builder("familiar").display(ArsNouveauAPI.getInstance().getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)), FrameType.GOAL)
+        builder("familiar").display(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)), FrameType.GOAL)
                 .addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.FAMILIAR.getId(),ContextAwarePredicate.ANY)).parent(rituals).save(con);
         var jars = saveBasicItem(BlockRegistry.MOB_JAR, rituals);
         builder("shrunk_starbuncle").display(ItemsRegistry.STARBUNCLE_CHARM, FrameType.CHALLENGE, true).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.SHRUNK_STARBY.getId(),ContextAwarePredicate.ANY)).parent(jars).save(con);

@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 
-import com.hollingsworth.arsnouveau.client.ShaderRegistry;
+import com.hollingsworth.arsnouveau.client.registry.ShaderRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
-import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

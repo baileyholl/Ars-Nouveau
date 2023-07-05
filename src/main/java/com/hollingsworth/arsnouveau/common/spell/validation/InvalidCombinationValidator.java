@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.validation;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +24,7 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
             partCounts.put(spellPart.getRegistryName(), 1);
         }
         for(ResourceLocation invalidPart : spellPart.invalidCombinations){
-            AbstractSpellPart offendingPart = ArsNouveauAPI.getInstance().getSpellPart(invalidPart);
+            AbstractSpellPart offendingPart = GlyphRegistry.getSpellPart(invalidPart);
             if(offendingPart == null)
                 continue;
             if(partCounts.containsKey(invalidPart)){
@@ -34,7 +34,7 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
             }
         }
         for(ResourceLocation location : partCounts.keySet()){
-            AbstractSpellPart part = ArsNouveauAPI.getInstance().getSpellPart(location);
+            AbstractSpellPart part = GlyphRegistry.getSpellPart(location);
             if(part == null)
                 return;
             if(part.invalidCombinations.contains(spellPart.getRegistryName())){

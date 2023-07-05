@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -62,7 +62,7 @@ public class SpellSound {
             return null;
 
         ResourceLocation id = new ResourceLocation(tag.getString("id"));
-        return ArsNouveauAPI.getInstance().getSpellSoundsRegistry().get(id);
+        return SpellSoundRegistry.getSpellSoundsRegistry().get(id);
     }
 
     public ResourceLocation getTexturePath() {

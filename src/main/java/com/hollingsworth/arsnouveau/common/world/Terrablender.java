@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.world.biome.ArchwoodRegion;
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.resources.ResourceLocation;
 import terrablender.api.Regions;
 

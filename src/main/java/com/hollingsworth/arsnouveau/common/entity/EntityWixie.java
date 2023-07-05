@@ -11,7 +11,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindPotionGoal;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -99,7 +100,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         return manager;
     }
 
-    protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
+    public EntityWixie(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
         this.moveControl = new FlyingMoveControl(this, 10, true);
     }

@@ -7,7 +7,7 @@
 //import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 //import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 //import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
-//import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+//import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 //import net.minecraft.world.item.crafting.RecipeType;
 //import net.minecraft.resources.ResourceLocation;
 //import org.openzen.zencode.java.ZenCodeType;

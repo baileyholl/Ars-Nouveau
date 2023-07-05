@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client;
 
-import com.hollingsworth.arsnouveau.client.util.ColorPos;
+import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;

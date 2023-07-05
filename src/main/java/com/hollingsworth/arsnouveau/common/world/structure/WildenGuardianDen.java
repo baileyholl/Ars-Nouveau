@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.world.structure;
 
-import com.hollingsworth.arsnouveau.setup.StructureRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.StructureRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;

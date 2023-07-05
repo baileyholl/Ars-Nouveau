@@ -1,17 +1,31 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
+import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Collections;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientEvents {
@@ -38,4 +52,35 @@ public class ClientEvents {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void overlayEvent(RenderGuiOverlayEvent.Pre event) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu && event.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type()) {
+            event.setCanceled(true);
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onTooltip(final ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT.get(), stack);
+        if (level > 0 && new ReactiveCaster(stack).getSpell().isValid()) {
+            Spell spell = new ReactiveCaster(stack).getSpell();
+            event.getToolTip().add(Component.literal(spell.getDisplayString()));
+        }
+
+        Collections.addAll(event.getToolTip(), ClientInfo.storageTooltip);
+    }
+
+    public static Component localize(String key, Object... params) {
+        for (int i = 0; i < params.length; ++i) {
+            Object parameter = params[i]; //to avoid ij dataflow warning
+            if (parameter instanceof Component component && component.getContents() instanceof TranslatableContents translatableContents)
+                params[i] = localize(translatableContents.getKey(), translatableContents.getArgs());
+        }
+        return Component.translatable(key, params);
+    }
+
+
 }

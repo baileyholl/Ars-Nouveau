@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonElement;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.ItemLike;
@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class DyeRecipeDatagen extends SimpleDataProvider {
     List<FileObj> files = new ArrayList<>();

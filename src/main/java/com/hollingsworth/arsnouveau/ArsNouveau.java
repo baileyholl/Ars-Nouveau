@@ -1,29 +1,27 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.registry.CasterTomeRegistry;
+import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
-import com.hollingsworth.arsnouveau.client.events.ClientHandler;
+import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.entity.DataSerializers;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
-import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
-import com.hollingsworth.arsnouveau.setup.*;
+import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.proxy.ClientProxy;
+import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
+import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
+import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -58,14 +56,6 @@ public class ArsNouveau {
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
-
-    public static CreativeModeTab itemGroup = CreativeModeTab.builder()
-            .icon(() -> ItemsRegistry.CREATIVE_SPELLBOOK.get().getDefaultInstance())
-            .build();
-
-    public static CreativeModeTab glyphGroup = CreativeModeTab.builder()
-            .icon(() -> ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE).getDefaultInstance())
-            .build();
 
     public ArsNouveau(){
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
@@ -103,9 +93,7 @@ public class ArsNouveau {
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         event.enqueueWork(ModEntities::registerPlacements);
-        event.enqueueWork(() -> {
-            EntityDataSerializers.registerSerializer(DataSerializers.VEC3);
-        });
+        event.enqueueWork(DataSerializers::init);
         if (terrablenderLoaded && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             event.enqueueWork(Terrablender::registerBiomes);
         }
@@ -135,7 +123,7 @@ public class ArsNouveau {
                 flowerPot.addPlant(pot.getKey().get(), pot::getValue);
             }
 
-            for (RitualTablet tablet : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
+            for (RitualTablet tablet : RitualRegistry.getRitualItemMap().values()){
                 DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
             }
 

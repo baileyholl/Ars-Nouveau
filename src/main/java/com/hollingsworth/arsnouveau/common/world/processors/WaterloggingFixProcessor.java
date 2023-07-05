@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.world.processors;
 
-import com.hollingsworth.arsnouveau.setup.StructureRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.StructureRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;

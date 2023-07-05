@@ -13,7 +13,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.RandomStorageVisitGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -42,7 +43,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -63,14 +63,13 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     public BlockPos lecternPos;
     public int backoffTicks;
 
-    protected EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
+    public EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
     public EntityBookwyrm(Level p_i50190_2_) {
-        super(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), p_i50190_2_);
-        this.moveControl = new FlyingMoveControl(this, 10, true);
+        this(ModEntities.ENTITY_BOOKWYRM_TYPE.get(), p_i50190_2_);
     }
 
     public EntityBookwyrm(Level world, BlockPos lecternPos) {

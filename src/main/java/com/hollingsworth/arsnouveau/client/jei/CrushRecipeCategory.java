@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.jei;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import mezz.jei.api.constants.VanillaTypes;
@@ -30,7 +29,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
     public CrushRecipeCategory(IGuiHelper helper) {
         background = helper.createBlankDrawable(120, 8 + 16 * 3);
-        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE).getDefaultInstance());
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, EffectCrush.INSTANCE.glyphItem.getDefaultInstance());
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {

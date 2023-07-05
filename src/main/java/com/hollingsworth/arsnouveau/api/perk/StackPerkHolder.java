@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.nbt.ItemstackData;
+import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.hollingsworth.arsnouveau.common.util.SerializationUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +38,7 @@ public abstract class StackPerkHolder extends ItemstackData implements IPerkHold
                 CompoundTag perkTag = perkTagList.getCompound(i);
                 String perkName = perkTag.getString("perk");
                 CompoundTag perkData = perkTag.getCompound("data");
-                IPerk iPerk = ArsNouveauAPI.getInstance().getPerkMap().getOrDefault(new ResourceLocation(perkName), StarbunclePerk.INSTANCE);
+                IPerk iPerk = PerkRegistry.getPerkMap().getOrDefault(new ResourceLocation(perkName), StarbunclePerk.INSTANCE);
                 perkList.add(iPerk);
                 this.perkTags.put(iPerk, perkData);
             }

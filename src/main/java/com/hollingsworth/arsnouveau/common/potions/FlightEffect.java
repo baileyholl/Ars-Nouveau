@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -10,10 +11,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.player.Player;
 
 public class FlightEffect extends MobEffect {
-    protected FlightEffect() {
+
+    public FlightEffect() {
         super(MobEffectCategory.BENEFICIAL, 2039587);
     }
-
 
     @Override
     public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
+import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -19,7 +20,7 @@ import java.util.List;
 public class PerkUtil {
 
     public static @Nullable IPerkHolder<ItemStack> getPerkHolder(ItemStack stack){
-        IPerkProvider<ItemStack> holder = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
+        IPerkProvider<ItemStack> holder = PerkRegistry.getPerkProvider(stack.getItem());
         return holder == null ? null : holder.getPerkHolder(stack);
     }
 
@@ -40,7 +41,7 @@ public class PerkUtil {
         }
         for(IPerk perk : holder.getPerks()){
             ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-            PerkItem item = api.getPerkItemMap().get(perk.getRegistryName());
+            PerkItem item = PerkRegistry.getPerkItemMap().get(perk.getRegistryName());
             if(item != null){
                 perkItems.add(item);
             }

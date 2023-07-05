@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.mixin.structure;
 
-import com.hollingsworth.arsnouveau.setup.StructureRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.StructureRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;

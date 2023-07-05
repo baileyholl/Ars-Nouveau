@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
-import com.hollingsworth.arsnouveau.api.RegistryHelper;
+import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 

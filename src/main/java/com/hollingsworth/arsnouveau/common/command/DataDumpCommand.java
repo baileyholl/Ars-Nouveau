@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -44,7 +44,7 @@ public class DataDumpCommand {
      * Creates a CSV file at {@link DataDumpCommand#PATH_AUGMENT_COMPATIBILITY} all augment compatibility information
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
-        Map<ResourceLocation, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpellpartMap();
+        Map<ResourceLocation, AbstractSpellPart> spells = GlyphRegistry.getSpellpartMap();
 
         // Collect the Augments
         List<AbstractAugment> augments = spells.values().stream()

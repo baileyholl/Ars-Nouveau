@@ -1,13 +1,12 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
@@ -20,7 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class GlyphRecipeProvider extends SimpleDataProvider {
 
@@ -130,8 +129,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
     }
 
     public GlyphRecipe get(AbstractSpellPart spellPart) {
-        return new GlyphRecipe(spellPart.getRegistryName(),
-                ArsNouveauAPI.getInstance().getGlyphItem(spellPart).getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
+        return new GlyphRecipe(spellPart.getRegistryName(), spellPart.glyphItem.getDefaultInstance(), new ArrayList<>(), getExpFromTier(spellPart));
     }
 
     public int getExpFromTier(AbstractSpellPart spellPart) {

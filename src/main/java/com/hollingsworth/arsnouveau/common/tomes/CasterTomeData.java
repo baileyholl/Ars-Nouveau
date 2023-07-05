@@ -3,7 +3,8 @@ package com.hollingsworth.arsnouveau.common.tomes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -11,8 +12,8 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class CasterTomeData implements Recipe<Container> {
 
@@ -94,7 +95,7 @@ public class CasterTomeData implements Recipe<Container> {
         if (this.particleColor != -1)
             spell.color = ParticleColor.fromInt(this.particleColor);
         for (ResourceLocation rl : this.spell) {
-            AbstractSpellPart part = ArsNouveauAPI.getInstance().getSpellpartMap().get(rl);
+            AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(rl);
             if (part != null)
                 spell.recipe.add(part);
         }
@@ -159,7 +160,7 @@ public class CasterTomeData implements Recipe<Container> {
             ConfiguredSpellSound sound = ConfiguredSpellSound.DEFAULT;
             if (json.has("sound")){
                 JsonObject object = json.getAsJsonObject("sound");
-                SpellSound family = ArsNouveauAPI.getInstance().getSpellSoundsRegistry().get(ResourceLocation.tryParse(object.get("family").getAsString()));
+                SpellSound family = SpellSoundRegistry.getSpellSoundsRegistry().get(ResourceLocation.tryParse(object.get("family").getAsString()));
                 sound = new ConfiguredSpellSound(family, object.get("volume").getAsFloat(), object.get("pitch").getAsFloat());
             }
             return new CasterTomeData(recipeId, name, parsedSpell, type, flavourText, color, sound);

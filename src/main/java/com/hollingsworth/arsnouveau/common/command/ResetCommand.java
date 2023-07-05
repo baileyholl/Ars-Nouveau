@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

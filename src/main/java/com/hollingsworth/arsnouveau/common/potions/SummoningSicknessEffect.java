@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SummoningSicknessEffect extends MobEffect {
-    protected SummoningSicknessEffect() {
+    public SummoningSicknessEffect() {
         super(MobEffectCategory.HARMFUL, 2039587);
     }
 

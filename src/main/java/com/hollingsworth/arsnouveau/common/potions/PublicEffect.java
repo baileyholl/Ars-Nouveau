@@ -11,14 +11,14 @@ import java.util.List;
  */
 public class PublicEffect extends MobEffect {
 
-    List<ItemStack> curativeItems;
+    public final List<ItemStack> curativeItems;
 
     public PublicEffect(MobEffectCategory p_i50391_1_, int p_i50391_2_) {
-        super(p_i50391_1_, p_i50391_2_);
+        this(p_i50391_1_, p_i50391_2_, null);
     }
 
     public PublicEffect(MobEffectCategory type, int color, List<ItemStack> curativeItems) {
-        this(type, color);
+        super(type, color);
         this.curativeItems = curativeItems;
     }
 

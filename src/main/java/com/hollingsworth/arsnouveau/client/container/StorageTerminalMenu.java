@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
-import com.hollingsworth.arsnouveau.common.menu.MenuRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import net.minecraft.nbt.CompoundTag;

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;
+import static com.hollingsworth.arsnouveau.setup.registry.BlockRegistry.PORTAL_TILE_TYPE;
 
 public class PortalTile extends ModdedTile implements ITickable, ITooltipProvider {
     public BlockPos warpPos;

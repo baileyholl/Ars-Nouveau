@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ArmorUpgradeRecipe;
 import com.hollingsworth.arsnouveau.api.perk.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.api.perk.IPerkProvider;
+import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.armor.AnimatedMagicArmor;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -35,7 +35,7 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
         List<Ingredient> inputs = provider.input();
         double angleBetweenEach = 360.0 / inputs.size();
 
-        List<ItemStack> stacks = ArsNouveauAPI.getInstance().getPerkProviderItems().stream().filter(item -> item instanceof AnimatedMagicArmor ama && ama.getMinTier() < recipe.tier).map(Item::getDefaultInstance).toList();
+        List<ItemStack> stacks = PerkRegistry.getPerkProviderItems().stream().filter(item -> item instanceof AnimatedMagicArmor ama && ama.getMinTier() < recipe.tier).map(Item::getDefaultInstance).toList();
         List<ItemStack> outputs = new ArrayList<>();
 
         if (!focuses.isEmpty()){
@@ -50,7 +50,7 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
         }
         for (ItemStack stack: stacks){
             ItemStack copy = stack.copy();
-            IPerkProvider<ItemStack> perkProvider = ArsNouveauAPI.getInstance().getPerkProvider(stack.getItem());
+            IPerkProvider<ItemStack> perkProvider = PerkRegistry.getPerkProvider(stack.getItem());
             if (perkProvider != null) {
                 if (perkProvider.getPerkHolder(stack) instanceof ArmorPerkHolder armorPerkHolder) {
                     armorPerkHolder.setTier(recipe.tier-1);

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.world.biome;
 
+import com.hollingsworth.arsnouveau.setup.registry.BiomeRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;

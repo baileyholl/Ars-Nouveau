@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,7 @@ public class Glyph extends ModItem {
         }
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
         if (playerDataCap != null) {
-            if (playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)) {
+            if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                 playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
                 return super.use(worldIn, playerIn, handIn);
             } else if (playerDataCap.unlockGlyph(spellPart)) {
@@ -81,7 +81,7 @@ public class Glyph extends ModItem {
 
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
         if (playerDataCap != null) {
-            if (playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)) {
+            if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));
             } else {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));

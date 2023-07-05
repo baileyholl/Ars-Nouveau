@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
+import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -17,14 +17,14 @@ public class FamiliarData {
     public CompoundTag entityTag;
 
     public FamiliarData(ResourceLocation entityID) {
-        this.familiarHolder = ArsNouveauAPI.getInstance().getFamiliarHolderMap().get(entityID);
+        this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().get(entityID);
         this.entityTag = new CompoundTag();
     }
 
     public FamiliarData(CompoundTag tag) {
         this.entityTag = tag.contains(ENTITY_TAG) ? tag.getCompound(ENTITY_TAG) : new CompoundTag();
-        this.familiarHolder = ArsNouveauAPI.getInstance().getFamiliarHolderMap().getOrDefault(new ResourceLocation(tag.getString(FAMILIAR_ID)),
-                ArsNouveauAPI.getInstance().getFamiliarHolderMap().get(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_WIXIE)));
+        this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().getOrDefault(new ResourceLocation(tag.getString(FAMILIAR_ID)),
+                FamiliarRegistry.getFamiliarHolderMap().get(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_WIXIE)));
     }
 
     public CompoundTag toTag() {
