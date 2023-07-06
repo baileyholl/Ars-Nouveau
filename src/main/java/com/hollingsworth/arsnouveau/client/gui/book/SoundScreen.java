@@ -59,7 +59,7 @@ public class SoundScreen extends BaseBook {
         testButton.soundDisabled = true;
         addRenderableWidget(testButton);
 
-        selectedButton = new SoundButton(this, bookLeft + 69, bookTop + 131, selectedSound, (b) -> {
+        selectedButton = new SoundButton(bookLeft + 69, bookTop + 131, selectedSound, (b) -> {
             ((SoundButton) b).sound = SoundRegistry.EMPTY_SPELL_SOUND;
             selectedSound = SoundRegistry.EMPTY_SPELL_SOUND;
         });
@@ -94,7 +94,7 @@ public class SoundScreen extends BaseBook {
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
 
-            SoundButton cell = new SoundButton(this, xStart + xOffset, yPlace, part, this::onSoundClick);
+            SoundButton cell = new SoundButton(xStart + xOffset, yPlace, part, this::onSoundClick);
             addRenderableWidget(cell);
             adjustedXPlaced++;
         }
@@ -122,11 +122,10 @@ public class SoundScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104, graphics);
+        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
         int color = -8355712;
-        graphics.drawString(font, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color);
-        graphics.drawString(font, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color);
-
+        graphics.drawString(font, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);
+        graphics.drawString(font, Component.translatable("ars_nouveau.sounds.test").getString(), 102, 160, color, false);
     }
 }

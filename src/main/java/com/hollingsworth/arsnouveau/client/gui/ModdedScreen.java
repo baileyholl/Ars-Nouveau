@@ -1,18 +1,22 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import vazkii.patchouli.client.base.PersistentData;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModdedScreen extends Screen {
 
     public int maxScale;
     public float scaleFactor;
-    public List<Component> tooltip;
 
     public ModdedScreen(Component titleIn) {
         super(titleIn);
@@ -22,10 +26,10 @@ public class ModdedScreen extends Screen {
     public void init() {
         super.init();
         Window res = this.minecraft.getWindow();
-        double oldGuiScale = (double)res.calculateScale((Integer)this.minecraft.options.guiScale().get(), this.minecraft.isEnforceUnicode());
+        double oldGuiScale = res.calculateScale(this.minecraft.options.guiScale().get(), this.minecraft.isEnforceUnicode());
         this.maxScale = this.getMaxAllowedScale();
         int persistentScale = Math.min(PersistentData.data.bookGuiScale, this.maxScale);
-        double newGuiScale = (double)res.calculateScale(persistentScale, this.minecraft.isEnforceUnicode());
+        double newGuiScale = res.calculateScale(persistentScale, this.minecraft.isEnforceUnicode());
         if (persistentScale > 0 && newGuiScale != oldGuiScale) {
             this.scaleFactor = (float)newGuiScale / (float)res.getGuiScale();
             res.setGuiScale(newGuiScale);
@@ -35,24 +39,36 @@ public class ModdedScreen extends Screen {
         } else {
             this.scaleFactor = 1.0F;
         }
-
-//        this. = this.width / 2 - 136;
-//        this.bookTop = this.height / 2 - 90;
-    }
-
-    public boolean isMouseInRelativeRange(int mouseX, int mouseY, int x, int y, int w, int h) {
-
-        return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
 
     public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {
-        if (tooltip != null && !tooltip.isEmpty()) {
+        List<Component> tooltip = new ArrayList<>();
+        collectTooltips(stack, mouseX, mouseY, tooltip);
+        if (!tooltip.isEmpty()) {
             stack.renderComponentTooltip(font, tooltip, mouseX, mouseY);
         }
     }
 
-    public final void resetTooltip() {
-        tooltip = null;
+    public void collectTooltips(GuiGraphics stack, int mouseX, int mouseY, List<Component> tooltip){
+        for(Renderable renderable : renderables){
+            if(renderable instanceof AbstractWidget widget && renderable instanceof ITooltipProvider tooltipProvider){
+                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+                    tooltipProvider.getTooltip(tooltip);
+                    break;
+                }
+            }
+        }
+    }
+
+    public @Nullable Renderable getHoveredRenderable(int mouseX, int mouseY){
+        for(Renderable renderable : renderables){
+            if(renderable instanceof AbstractWidget widget){
+                if(GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)){
+                    return renderable;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

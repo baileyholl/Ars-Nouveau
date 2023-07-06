@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.gui.book.GlyphUnlockMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -24,7 +25,9 @@ public class PacketOpenGlyphCraft {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> GlyphUnlockMenu.open(scribePos));
+        ctx.get().enqueueWork(() ->{
+            Minecraft.getInstance().setScreen(new GlyphUnlockMenu(scribePos));
+        });
         ctx.get().setPacketHandled(true);
     }
 

@@ -45,10 +45,8 @@ public class GuiColorScreen extends BaseBook {
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
         addRenderableWidget(new GuiImageButton(bookLeft + 55, bookBottom - 36, 0, 0, 37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
-        addPresets();
-    }
 
-    public void addPresets() {
+
         // Default
         addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 44, 0, 0, 48, 11, 48, 11,
                 "textures/gui/default_color_icon.png", (_2) -> setFromPreset(255, 25, 180)));
@@ -104,7 +102,7 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104, graphics);
+        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
         int color = -8355712;
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.title").getString(), 51, 24, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.presets").getString(), 159, 24, color, false);

@@ -1,15 +1,11 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,31 +16,27 @@ public class GuiSpellSlot extends GuiImageButton {
 
     public int slotNum;
     public boolean isSelected;
-
-    public GuiSpellSlot(GuiSpellBook parent, int x, int y, int slotNum) {
-        super(x, y, 0, 0, 18, 13, 18, 13, "textures/gui/spell_tab.png", parent::onSlotChange);
-        this.parent = parent;
+    public String spellName;
+    public GuiSpellSlot(int x, int y, int slotNum, String spellName, OnPress onPress) {
+        super(x, y, 0, 0, 18, 13, 18, 13, "textures/gui/spell_tab.png", onPress);
         this.slotNum = slotNum;
         this.isSelected = false;
+        this.spellName = spellName;
     }
 
     @Override
     public void render(GuiGraphics graphics, int parX, int parY, float partialTicks) {
         if (visible) {
-            if (parent.isMouseInRelativeRange(parX, parY, x, y, width, height)) {
-                ISpellCaster caster = CasterUtil.getCaster(((GuiSpellBook) parent).bookStack);
-                String name = caster.getSpellName(slotNum);
-                if (!name.isEmpty()) {
-                    List<Component> tip = new ArrayList<>();
-                    tip.add(Component.literal(name));
-                    parent.tooltip = tip;
-                }
-            }
-
-            ResourceLocation image;
             image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_tab_selected.png") : new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_tab.png");
-            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, graphics);
+            super.render(graphics, parX, parY, partialTicks);
             graphics.drawCenteredString(Minecraft.getInstance().font, String.valueOf(this.slotNum + 1), x + 8, y + 3, 16777215); // White
+        }
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+        if (!spellName.isEmpty()) {
+            tooltip.add(Component.literal(spellName));
         }
     }
 }

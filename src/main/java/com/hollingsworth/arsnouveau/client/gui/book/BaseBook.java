@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
@@ -26,7 +25,6 @@ public class BaseBook extends ModdedScreen {
     public int bookRight;
     public int bookBottom;
     public List<SpellValidationError> validationErrors = new ArrayList<>();
-    public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
 
     public BaseBook() {
         super(Component.literal(""));
@@ -60,11 +58,7 @@ public class BaseBook extends ModdedScreen {
     }
 
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        drawFromTexture(background, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, graphics);
-    }
-
-    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int uOffset, int vOffset, int width, int height, int fileWidth, int fileHeight, GuiGraphics graphics) {
-        graphics.blit(resourceLocation, x, y, uOffset, vOffset, width, height, fileWidth, fileHeight);
+        graphics.blit(background, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT);
     }
 
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
@@ -72,7 +66,6 @@ public class BaseBook extends ModdedScreen {
     }
 
     public void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        resetTooltip();
         renderBackground(graphics);
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();

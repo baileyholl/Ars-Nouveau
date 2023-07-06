@@ -92,14 +92,14 @@ public class GlyphUnlockMenu extends BaseBook {
         searchBar.setBordered(false);
         searchBar.setTextColor(12694931);
         searchBar.onClear = (val) -> {
-            this.onSearchChanged("", filterSelected);
+            this.onSearchChanged("");
             return null;
         };
         if (searchBar.getValue().isEmpty())
             searchBar.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
-        searchBar.setResponder((val) -> this.onSearchChanged(val, filterSelected));
+        searchBar.setResponder((val) -> this.onSearchChanged(val));
         addRenderableWidget(searchBar);
-        addRenderableWidget(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onSelectClick));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 50, 12, new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_icon.png"), this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 10, false, this::onPageDec, true));
         updateNextPageButtons();
@@ -116,15 +116,15 @@ public class GlyphUnlockMenu extends BaseBook {
         }
 
         all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(this, Component.translatable("ars_nouveau.all_glyphs"));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, Component.translatable("ars_nouveau.all_glyphs").getString())).withTooltip(Component.translatable("ars_nouveau.all_glyphs"));
         all.isSelected = true;
         tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(this, Component.translatable("ars_nouveau.tier", 1));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 1).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 1));
 
         tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(this, Component.translatable("ars_nouveau.tier", 2));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) -> this.setFilter(Filter.TIER2, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 2).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 2));
         tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23, 20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
-                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(this, Component.translatable("ars_nouveau.tier", 3));
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) -> this.setFilter(Filter.TIER3, (SelectableButton) b, Component.translatable("ars_nouveau.tier", 3).getString())).withTooltip(Component.translatable("ars_nouveau.tier", 3));
         filterButtons.add(all);
         filterButtons.add(tier2);
         filterButtons.add(tier1);
@@ -142,7 +142,7 @@ public class GlyphUnlockMenu extends BaseBook {
         this.filterSelected = filter;
         button.isSelected = true;
         this.orderingTitle = displayTitle;
-        onSearchChanged(this.searchBar.value, filterSelected);
+        onSearchChanged(this.searchBar.value);
         resetPageState();
     }
 
@@ -152,7 +152,6 @@ public class GlyphUnlockMenu extends BaseBook {
             Minecraft.getInstance().setScreen(null);
         }
     }
-
 
     public void updateNextPageButtons() {
         if (displayedGlyphs.size() < maxPerPage) {
@@ -164,11 +163,7 @@ public class GlyphUnlockMenu extends BaseBook {
         }
     }
 
-    public static void open(BlockPos scribePos) {
-        Minecraft.getInstance().setScreen(new GlyphUnlockMenu(scribePos));
-    }
-
-    public void onSearchChanged(String str, Filter filter) {
+    public void onSearchChanged(String str) {
         previousString = str;
         if (!str.isEmpty()) {
             searchBar.setSuggestion("");
@@ -252,7 +247,7 @@ public class GlyphUnlockMenu extends BaseBook {
             }
             int xOffset = 20 * ((adjustedXPlaced) % PER_ROW) + (nextPage ? 134 : 0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
-            UnlockGlyphButton cell = new UnlockGlyphButton(this, xStart + xOffset, yPlace, false, part);
+            UnlockGlyphButton cell = new UnlockGlyphButton(xStart + xOffset, yPlace, false, part, this::onGlyphClick);
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
             if (cap != null) {
                 if (cap.knowsGlyph(part) || GlyphRegistry.getDefaultStartingSpells().contains(part)) {
@@ -336,6 +331,9 @@ public class GlyphUnlockMenu extends BaseBook {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.hoveredRecipe = null;
+        if(getHoveredRenderable(mouseX, mouseY) instanceof UnlockGlyphButton button){
+            this.hoveredRecipe = button.recipe;
+        }
         super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
@@ -345,23 +343,24 @@ public class GlyphUnlockMenu extends BaseBook {
 
         graphics.drawString(font, orderingTitle, tier1Row > 7 ? 154 : 20, 5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712, false);
 
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, graphics);
+        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
 
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15, graphics);
+        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712, false);
     }
 
     public void drawTooltip(GuiGraphics stack, int mouseX, int mouseY) {
-        if (tooltip != null && !tooltip.isEmpty()) {
-            if (hoveredRecipe != null) {
-                MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
-                tooltip.add(component);
-            }
-            List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
-            if (hoveredRecipe != null)
-                components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
-            renderTooltipInternal(stack, components, mouseX, mouseY);
+        List<Component> tooltip = new ArrayList<>();
+        super.collectTooltips(stack, mouseX, mouseY, tooltip);
+        if (hoveredRecipe != null) {
+            MutableComponent component = Component.translatable("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+            tooltip.add(component);
         }
+        List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font));
+        if (hoveredRecipe != null)
+            components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
+        renderTooltipInternal(stack, components, mouseX, mouseY);
+
     }
 
     public void renderTooltipInternal(GuiGraphics graphics, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {

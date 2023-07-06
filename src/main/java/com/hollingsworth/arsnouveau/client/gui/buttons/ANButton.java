@@ -1,12 +1,19 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
-public class ANButton extends Button {
+import java.util.List;
+
+public class ANButton extends Button implements ITooltipProvider {
 
 	public ANButton(int x, int y, int w, int h, Component text, OnPress onPress) {
 		super(x, y, w, h, text, onPress, Button.DEFAULT_NARRATION);
+	}
+
+	public ANButton(int x, int y, int w, int h, OnPress onPress) {
+		this(x, y, w, h, Component.empty(), onPress);
 	}
 
 	public void setX(int i) {
@@ -29,4 +36,7 @@ public class ANButton extends Button {
 		this.x = x;
 		this.y = y;
 	}
+
+	@Override
+	public void getTooltip(List<Component> tooltip) {}
 }

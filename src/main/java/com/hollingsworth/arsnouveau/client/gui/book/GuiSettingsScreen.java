@@ -37,10 +37,10 @@ public class GuiSettingsScreen extends BaseBook {
             SelectableButton button = (SelectableButton) b;
             button.isSelected = !button.isSelected;
             LightManager.toggleLightsAndConfig(!Config.DYNAMIC_LIGHTS_ENABLED.get());
-            button.withTooltip(this, Component.translatable(button.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
+            button.withTooltip(Component.translatable(button.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
         });
         dynamicButton.isSelected = Config.DYNAMIC_LIGHTS_ENABLED.get();
-        dynamicButton.withTooltip(this, Component.translatable(dynamicButton.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
+        dynamicButton.withTooltip(Component.translatable(dynamicButton.isSelected ? "ars_nouveau.dynamic_lights.button_on" : "ars_nouveau.dynamic_lights.button_off"));
 
         addRenderableWidget(dynamicButton);
         if(ClientInfo.isSupporter) {
@@ -48,13 +48,13 @@ public class GuiSettingsScreen extends BaseBook {
                 Networking.sendToServer(new PacketSummonLily());
 
             });
-            lilyButton.withTooltip(this, Component.translatable("ars_nouveau.settings.summon_lily"));
+            lilyButton.withTooltip(Component.translatable("ars_nouveau.settings.summon_lily"));
 
             GuiImageButton unsummonLily = new GuiImageButton(bookLeft + 60, bookTop + 34, 0, 0, 16, 16, 16, 16, new ResourceLocation(ArsNouveau.MODID, "textures/gui/settings_unsummon_lily.png"), (b) -> {
                 Networking.sendToServer(new PacketUnsummonLily());
 
             });
-            unsummonLily.withTooltip(this, Component.translatable("ars_nouveau.settings.unsummon_lily"));
+            unsummonLily.withTooltip(Component.translatable("ars_nouveau.settings.unsummon_lily"));
 
             addRenderableWidget(lilyButton);
             addRenderableWidget(unsummonLily);
@@ -64,7 +64,7 @@ public class GuiSettingsScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15, graphics);
+        graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15, 56, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.settings.title").getString(), 51, 24, -8355712, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712, false);
     }

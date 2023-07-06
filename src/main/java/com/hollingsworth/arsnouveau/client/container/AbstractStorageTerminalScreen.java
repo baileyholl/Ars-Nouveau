@@ -523,7 +523,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	@Override
 	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		graphics.blit(getGui(), this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-		BaseBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15, graphics);
+		graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15);
 	}
 
 	protected void onUpdateSearch(String text) {}
