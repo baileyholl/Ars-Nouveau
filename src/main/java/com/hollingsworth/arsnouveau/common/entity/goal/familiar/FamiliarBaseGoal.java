@@ -11,26 +11,6 @@ public class FamiliarBaseGoal extends Goal {
     }
 
     @Override
-    public boolean canContinueToUse() {
-        return super.canContinueToUse();
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-    }
-
-    @Override
-    public void start() {
-        super.start();
-    }
-
-    @Override
     public boolean canUse() {
         return false;
     }

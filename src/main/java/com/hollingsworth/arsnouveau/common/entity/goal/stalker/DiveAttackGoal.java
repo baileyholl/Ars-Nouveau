@@ -56,9 +56,6 @@ public class DiveAttackGoal extends Goal {
         if (stalker.getBoundingBox().inflate(0.2F).intersects(livingentity.getBoundingBox())) {
             stalker.doHurtTarget(livingentity);
             stalker.setFlying(false);
-//            if (!PhantomEntity.this.isSilent()) {
-//                PhantomEntity.this.world.playEvent(1039, PhantomEntity.this.getPosition(), 0);
-//            }
         } else if (stalker.horizontalCollision || stalker.hurtTime > 0) {
             stalker.setFlying(false);
         }

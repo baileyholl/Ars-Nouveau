@@ -44,7 +44,7 @@ public class CasterTome extends ModItem implements ICasterTool {
         } else {
             spell.addDiscount(spell.getDiscountedCost() / 2);
         }
-        return caster.castSpell(worldIn, playerIn, handIn, Component.translatable(""), spell);
+        return caster.castSpell(worldIn, playerIn, handIn, Component.empty(), spell);
     }
 
     @Override

@@ -43,11 +43,6 @@ public class WildenSummon extends Goal {
     }
 
     @Override
-    public void stop() {
-        super.stop();
-    }
-
-    @Override
     public boolean isInterruptable() {
         return false;
     }

@@ -119,7 +119,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     public float rotForSlot(EquipmentSlot slot) {
         return switch (slot) {
             case HEAD -> 0.3f;
-            case CHEST -> 0;
             case LEGS -> -0.2f;
             case FEET -> -0.6f;
             default -> 0;

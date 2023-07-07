@@ -17,11 +17,6 @@ public class SmashGoal extends AnimatedAttackGoal {
     }
 
     @Override
-    public void start() {
-        super.start();
-    }
-
-    @Override
     public void stop() {
         super.stop();
         walker.getEntityData().set(WealdWalker.SMASHING, false);

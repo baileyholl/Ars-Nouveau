@@ -180,19 +180,7 @@ public interface ISpellCaster {
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
-    //TODO: 1.19.3 remove this
-    @Deprecated(forRemoval = true)
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable Component invalidMessage, @NotNull Spell spell) {
-        return castSpell(worldIn, (LivingEntity) playerIn, handIn, invalidMessage, spell);
-    }
-
     default InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity playerIn, InteractionHand handIn, Component invalidMessage) {
-        return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
-    }
-
-    //TODO: 1.19.3 remove this
-    @Deprecated(forRemoval = true)
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, Component invalidMessage) {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
@@ -205,12 +193,6 @@ public interface ISpellCaster {
 
     default SpellResolver getSpellResolver(SpellContext context, Level worldIn, LivingEntity playerIn, InteractionHand handIn) {
         return new SpellResolver(context);
-    }
-
-    //TODO: 1.19.3 remove this
-    @Deprecated(forRemoval = true)
-    default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn) {
-        return getSpellResolver(context, worldIn, (LivingEntity) playerIn, handIn);
     }
 
     default void playSound(BlockPos pos, Level worldIn, @Nullable Entity playerIn, ConfiguredSpellSound configuredSound, SoundSource source) {

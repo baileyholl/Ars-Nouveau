@@ -43,7 +43,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, event.getExistingFileHelper()));
 
 
-        
+
 
         DatapackBuiltinEntriesProvider datapackProvider = new WorldgenProvider(output, provider);
         event.getGenerator().addProvider(event.includeServer(), datapackProvider);

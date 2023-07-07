@@ -74,11 +74,6 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     }
 
     @Override
-    public void stop() {
-        super.stop();
-    }
-
-    @Override
     public boolean canUse() {
         if (wixie.cauldronPos == null)
             return false;

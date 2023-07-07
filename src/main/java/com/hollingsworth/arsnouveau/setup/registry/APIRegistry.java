@@ -167,8 +167,7 @@ public class APIRegistry {
 
     //register things only in dev, safe from production
     private static void registerWip() {
-        //registerPerk(BondedPerk.INSTANCE);
-        //registerFamiliar(new JabberwogFamiliar());
+
     }
 
     public static void postInit() {

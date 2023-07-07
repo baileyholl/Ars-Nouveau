@@ -153,7 +153,7 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
             }
             Player player = entity instanceof Player thisPlayer ? thisPlayer : ANFakePlayer.getPlayer((ServerLevel) worldIn);
             IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
-            SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, (LivingEntity) player, handIn);
+            SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
             ITurretBehavior behavior = BasicSpellTurret.TURRET_BEHAVIOR_MAP.get(spell.getCastMethod());
             if(behavior == null){
                 PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.invalid_behavior"));

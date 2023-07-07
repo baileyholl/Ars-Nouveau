@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
@@ -40,7 +39,7 @@ public class RitualWarp extends AbstractRitual {
                 List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(5));
 
                 ItemStack i = getConsumedItems().get(0);
-                WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(i);
+                WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(i);
                 BlockPos b = data.getPos();
                 for (Entity a : entities) {
                     if (b != null)
@@ -64,15 +63,10 @@ public class RitualWarp extends AbstractRitual {
     }
 
     @Override
-    public ParticleColor getCenterColor() {
-        return super.getCenterColor();
-    }
-
-    @Override
     public boolean canConsumeItem(ItemStack stack) {
         if (!(stack.getItem() instanceof WarpScroll) || !getConsumedItems().isEmpty())
             return false;
-        WarpScroll.WarpScrollData data = new WarpScroll.WarpScrollData(stack);
+        WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
         return data.isValid() && data.canTeleportWithDim(tile.getLevel());
     }
 

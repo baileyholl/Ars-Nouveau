@@ -24,11 +24,6 @@ public class StartFlightGoal extends Goal {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
     public boolean canUse() {
         return stalker.getTarget() != null && !stalker.isFlying() && stalker.getLeapCooldown() == 0;
     }

@@ -6,7 +6,6 @@ import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
-import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageTabButton;
@@ -41,7 +40,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 	private static final LoadingCache<StoredItemStack, List<String>> tooltipCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(new CacheLoader<>() {
 
 		@Override
-		public List<String> load(StoredItemStack key) throws Exception {
+		public List<String> load(StoredItemStack key) {
 			return key.getStack().getTooltipLines(Minecraft.getInstance().player, getTooltipFlag()).stream().map(Component::getString).collect(Collectors.toList());
 		}
 
@@ -244,6 +243,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 					}
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			Collections.sort(getMenu().itemListClientSorted, menu.noSort ? sortComp : comparator);
 			if(!searchLast.equals(searchString)) {
@@ -382,9 +382,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
 	protected boolean drawSlot(GuiGraphics st, SlotStorage slot, int mouseX, int mouseY) {
 		if (slot.stack != null) {
-//			this.setBlitOffset(100);
-//			this.itemRenderer.blitOffset = 100.0F;
-
 			ItemStack stack = slot.stack.getStack().copy().split(1);
 			int i = slot.xDisplayPosition, j = slot.yDisplayPosition;
 
@@ -392,9 +389,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 			st.renderItemDecorations(this.font, stack, i, j, null);
 
 			drawStackSize(st, getFont(), slot.stack.getQuantity(), i, j);
-
-//			this.itemRenderer.blitOffset = 0.0F;
-//			this.setBlitOffset(0);
 		}
 
 		if (mouseX >= getGuiLeft() + slot.xDisplayPosition - 1 && mouseY >= getGuiTop() + slot.yDisplayPosition - 1 && mouseX < getGuiLeft() + slot.xDisplayPosition + 17 && mouseY < getGuiTop() + slot.yDisplayPosition + 17) {

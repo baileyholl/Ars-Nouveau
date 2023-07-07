@@ -45,8 +45,6 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     @Override
     public void tick() {
         super.tick();
-//        if(groundMax == 0)
-//            groundMax = 60 + random.nextInt(60);
         if (!level.isClientSide && this.inGroundTime >= 1) {
             this.remove(RemovalReason.DISCARDED);
         }

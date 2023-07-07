@@ -232,7 +232,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                                 sk.setOwner(new GameProfile(null, this.blockData.getString("SkullOwner")));
                             }
                         } catch (Exception exception) {
-
+                            exception.printStackTrace();
                         }
 
                         blockentity.setChanged();

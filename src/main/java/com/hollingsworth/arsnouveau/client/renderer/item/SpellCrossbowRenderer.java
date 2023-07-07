@@ -47,7 +47,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
 
         int speedOffset = 72000;
         if (currentItemStack.getItem() instanceof SpellCrossbow spellCrossbow) {
-            int timeHeld = speedOffset - (int) (Minecraft.getInstance().player.getUseItemRemainingTicks());
+            int timeHeld = speedOffset - Minecraft.getInstance().player.getUseItemRemainingTicks();
             if (SpellCrossbow.isCharged(currentItemStack) || Minecraft.getInstance().player.getUseItemRemainingTicks() <= 0 && Minecraft.getInstance().player.isUsingItem()) {
                 right.setRotY((float) (-Math.toRadians(35)));
                 left.setRotY((float) (Math.toRadians(35)));
@@ -118,7 +118,7 @@ public class SpellCrossbowRenderer extends FixedGeoItemRenderer<SpellCrossbow> {
         if (currentItemStack.hasTag()) {
             color = animatable.getSpellCaster(currentItemStack).getColor();
         }
-        return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);
+        return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }
 
     @Override

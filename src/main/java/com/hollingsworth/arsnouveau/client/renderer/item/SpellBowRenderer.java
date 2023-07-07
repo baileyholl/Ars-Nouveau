@@ -43,7 +43,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
         if (currentItemStack.hasTag()) {
             color = animatable.getSpellCaster(currentItemStack).getColor();
         }
-        return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);
+        return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<SpellBow> {
 
         if (Minecraft.getInstance().player.getMainHandItem().equals(currentItemStack)) {
             // System.out.println(72000 - Minecraft.getInstance().player.getItemInUseCount());
-            int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks());
+            int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
 
             if (timeHeld != 0 && timeHeld != 72000) {
                 top.setRotZ((float) (Math.toRadians(-10) - Math.toRadians(timeHeld) * 2.0f));

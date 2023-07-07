@@ -50,8 +50,6 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         HIGH,
         HIGHEST
     }
-    @Deprecated(forRemoval = true)
-    public static String ITEM_PREFIX = "item_";
 
     @Override
     public boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack) {
@@ -79,7 +77,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
             if (tag == null || tag.isEmpty())
                 return;
             for (String s : tag.getAllKeys()) {
-                if (s.contains(ITEM_PREFIX)) {
+                if (s.contains("item_")) {
                     items.add(ItemStack.of(tag.getCompound(s)));
                 }
             }
@@ -120,7 +118,7 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         }
 
         public String getItemKey(ItemStack stack) {
-            return ITEM_PREFIX + RegistryHelper.getRegistryName(stack.getItem()).toString();
+            return "item_" + RegistryHelper.getRegistryName(stack.getItem()).toString();
         }
 
         @Override

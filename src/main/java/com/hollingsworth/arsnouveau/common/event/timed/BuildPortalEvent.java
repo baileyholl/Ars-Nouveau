@@ -143,14 +143,4 @@ public class BuildPortalEvent implements ITimedEvent {
     public CompoundTag serialize(CompoundTag tag) {
         return ITimedEvent.super.serialize(tag);
     }
-
-    @Override
-    public Void onPacketHandled() {
-        return ITimedEvent.super.onPacketHandled();
-    }
-
-    @Override
-    public String getID() {
-        return ITimedEvent.super.getID();
-    }
 }

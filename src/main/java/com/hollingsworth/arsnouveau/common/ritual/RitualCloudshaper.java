@@ -37,13 +37,6 @@ public class RitualCloudshaper extends AbstractRitual {
 
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
     public boolean isStorm() {
         return didConsumeItem(Items.LAPIS_BLOCK);
     }

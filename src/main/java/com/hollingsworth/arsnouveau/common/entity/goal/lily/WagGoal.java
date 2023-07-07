@@ -47,11 +47,6 @@ public class WagGoal extends Goal {
     }
 
     @Override
-    public void start() {
-        super.start();
-    }
-
-    @Override
     public boolean canContinueToUse() {
         return wagAtTicks > 0;
     }

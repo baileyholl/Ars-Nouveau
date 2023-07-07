@@ -49,11 +49,6 @@ public class RitualPillagerRaid extends AbstractRitual {
     }
 
     @Override
-    public ParticleColor getOuterColor() {
-        return super.getOuterColor();
-    }
-
-    @Override
     public void onItemConsumed(ItemStack stack) {
         super.onItemConsumed(stack);
     }

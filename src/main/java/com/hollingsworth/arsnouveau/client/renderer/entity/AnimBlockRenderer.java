@@ -112,7 +112,7 @@ public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityR
     public Color getRenderColor(BOBBY animatable, float partialTick, int packedLight) {
         if (animatable != null) {
             ParticleColor color = ParticleColor.fromInt(animatable.getColor());
-            return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);
+            return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
         }
         return super.getRenderColor(animatable, partialTick, packedLight);
     }

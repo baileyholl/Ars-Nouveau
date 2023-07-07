@@ -14,11 +14,7 @@ public class SpellDamageEvent extends Event {
     public Entity target;
     public float damage;
 
-    /**
-     * This constructor is becoming private in favor of PRE and POST.
-     */
-    @Deprecated(forRemoval = true, since = "1.19.2")
-    public SpellDamageEvent(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
+    private SpellDamageEvent(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
         this.damageSource = source;
         this.caster = shooter;
         this.target = entity;

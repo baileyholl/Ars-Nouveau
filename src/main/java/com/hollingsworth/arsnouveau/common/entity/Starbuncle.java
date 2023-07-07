@@ -634,6 +634,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
                 this.data.bio = contributorStarby.bio;
                 this.data.adopter = contributorStarby.adopter;
             }catch (Exception e){
+                e.printStackTrace();
             }
         }else {
             this.setColor(carbyColors[randomSource.nextInt(carbyColors.length)]);

@@ -41,13 +41,6 @@ public class RitualMoonfall extends AbstractRitual {
 
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
     @Override
     public String getLangName() {
         return "Moonfall";

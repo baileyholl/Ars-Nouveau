@@ -133,34 +133,6 @@ public class CameraController {
         }
     }
 
-    public static void zoomIn(ScryerCamera cam) {
-//		if (!cam.zooming)
-//			Minecraft.getInstance().level.playLocalSound(cam.blockPosition(), SCSounds.CAMERAZOOMIN.event, SoundSource.BLOCKS, 1.0F, 1.0F, true);
-
-        cam.zooming = true;
-        cam.zoomAmount = Math.max(cam.zoomAmount - 0.1F, 0.1F);
-    }
-
-    public static void zoomOut(ScryerCamera cam) {
-//		if (!cam.zooming)
-//			Minecraft.getInstance().level.playLocalSound(cam.blockPosition(), SCSounds.CAMERAZOOMIN.event, SoundSource.BLOCKS, 1.0F, 1.0F, true);
-
-        cam.zooming = true;
-        cam.zoomAmount = Math.min(cam.zoomAmount + 0.1F, 1.4F);
-    }
-
-//	public static void emitRedstone(ScryerCamera cam) {
-//		if (cam.redstoneCooldown == 0) {
-//			cam.toggleRedstonePower();
-//			cam.redstoneCooldown = 30;
-//		}
-//	}
-//
-//	public static void giveNightVision(ScryerCamera cam) {
-//		if (cam.toggleNightVisionCooldown == 0)
-//			cam.toggleNightVision();
-//	}
-
     public static ClientChunkCache.Storage getCameraStorage() {
         return cameraStorage;
     }

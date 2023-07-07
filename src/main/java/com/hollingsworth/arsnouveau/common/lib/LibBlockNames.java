@@ -168,7 +168,6 @@ public class LibBlockNames {
 
     public static final List<String> DECORATIVE_STAIRS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
     public static final List<String> DECORATIVE_SLABS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
-//    public static final List<String> DECORATIVE_WALLS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
     static {
         for(String s : DECORATIVE_SOURCESTONE) {
             DECORATIVE_STAIRS.add(s + "_stairs");
@@ -176,9 +175,6 @@ public class LibBlockNames {
         for(String s : DECORATIVE_SOURCESTONE) {
             DECORATIVE_SLABS.add(s + "_slab");
         }
-//        for(String s : DECORATIVE_SOURCESTONE) {
-//            DECORATIVE_WALLS.add(s + "_wall");
-//        }
     }
 
     public static final List<String> DIRECTIONAL_SOURCESTONE = List.of(GILDED_SOURCESTONE_LARGE_BRICKS, SMOOTH_GILDED_SOURCESTONE_LARGE_BRICKS);

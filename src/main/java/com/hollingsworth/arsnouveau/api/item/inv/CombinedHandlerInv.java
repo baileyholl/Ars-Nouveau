@@ -44,7 +44,7 @@ public class CombinedHandlerInv implements IItemHandler {
     {
         if (index < 0 || index >= itemHandler.length)
         {
-            return (IItemHandlerModifiable) EmptyHandler.INSTANCE;
+            return EmptyHandler.INSTANCE;
         }
         return itemHandler[index];
     }

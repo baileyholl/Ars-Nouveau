@@ -45,9 +45,6 @@ public class CompleteCraftingGoal extends ExtendedRangeGoal {
             if (ticksNearby >= 40) {
                 BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
                 if (tileEntity instanceof WixieCauldronTile cauldronTile && cauldronTile.isCraftingDone()) {
-//                    if(cauldronTile.craftManager != null && (!cauldronTile.craftManager.outputStack.isEmpty() || cauldronTile.craftManager.potionOut != null)){
-//                        hasCast = true;
-//                    }
                     cauldronTile.attemptFinish();
                 }
             }

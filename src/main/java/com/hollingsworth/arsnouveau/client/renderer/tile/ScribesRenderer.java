@@ -100,8 +100,6 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         }
         super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         stack.popPose();
-//        if(!isReRender)
-//            renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), stack, bufferSource, packedLight, packedOverlay, ClientInfo.ticksInGame + partialTick);
     }
 
 

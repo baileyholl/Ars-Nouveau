@@ -82,8 +82,6 @@ public class PacketNoSpamChatMessage {
                 ChatComponentAccessor chatComponentAccessor = (ChatComponentAccessor) gui;
                 chatComponentAccessor.getAllMessages().removeIf(m -> m.signature() != null && m.signature().equals(AN_SIGNATURE));
                 gui.rescaleChat();
-//                chatComponentAccessor.getTrimmedMessages().removeIf(m -> m.signature() != null && m.signature().equals(AN_SIGNATURE));
-//                gui.deleteMessage(AN_SIGNATURE);
                 gui.addMessage(message.plainCopy().setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), AN_SIGNATURE, GuiMessageTag.system());
 
             }

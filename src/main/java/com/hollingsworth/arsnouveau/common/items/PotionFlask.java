@@ -119,11 +119,6 @@ public abstract class PotionFlask extends ModItem implements IPotionProvider {
         return 0.0f;
     }
 
-    @Override
-    public boolean canBeDepleted() {
-        return super.canBeDepleted();
-    }
-
     /**
      * How long it takes to use or consume an item
      */

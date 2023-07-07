@@ -31,7 +31,7 @@ public class WandRenderer extends FixedGeoItemRenderer<Wand> {
         if (currentItemStack.hasTag()) {
             color = animatable.getSpellCaster(currentItemStack).getColor();
         }
-        return Color.ofRGBA(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b, 200);
+        return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }
 
     @Override

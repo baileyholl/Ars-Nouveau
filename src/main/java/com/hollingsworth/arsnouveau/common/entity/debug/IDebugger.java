@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.debug;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 
 public interface IDebugger {
@@ -11,5 +10,5 @@ public interface IDebugger {
 
     void addEntityEvent(DebugEvent event, boolean storeDuplicate);
 
-    void writeFile(PrintWriter writer) throws IOException;
+    void writeFile(PrintWriter writer);
 }

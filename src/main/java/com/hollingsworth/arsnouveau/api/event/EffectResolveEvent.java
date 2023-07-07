@@ -18,12 +18,7 @@ public class EffectResolveEvent extends Event {
     public SpellStats spellStats;
     public SpellResolver resolver;
 
-    /**
-     * Becoming private, use PRE and POST.
-     * This doesnt actually even fire!
-     */
-    @Deprecated(forRemoval = false)
-    public EffectResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+    private EffectResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
         this.world = world;
         this.shooter = shooter;
         this.rayTraceResult = result;

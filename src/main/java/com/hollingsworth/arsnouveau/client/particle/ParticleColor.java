@@ -127,14 +127,6 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }
 
-    // See ParticleColorRegistry
-    @Deprecated(forRemoval = true)
-    public static ParticleColor deserialize(CompoundTag tag) {
-        if (tag == null || tag.isEmpty())
-            return defaultParticleColor();
-        return new ParticleColor(tag.getInt("r"), tag.getInt("g"), tag.getInt("b"));
-    }
-
     @Override
     public ParticleColor clone() {
         try {

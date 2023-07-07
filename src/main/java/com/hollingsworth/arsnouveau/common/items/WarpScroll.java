@@ -63,7 +63,7 @@ public class WarpScroll extends ModItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        WarpScrollData data = new WarpScrollData(stack);
+        WarpScrollData data = WarpScrollData.get(stack);
         if (hand == InteractionHand.OFF_HAND)
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
@@ -129,10 +129,6 @@ public class WarpScroll extends ModItem {
         private String dimension;
         private Vec2 rotation;
 
-        /**
-         * Use static get method.
-         */
-        @Deprecated(forRemoval = false)
         public WarpScrollData(ItemStack stack) {
             super(stack);
             CompoundTag tag1 = getItemTag(stack);

@@ -166,8 +166,7 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<FamiliarAmethystGolem>> FAMILIAR_AMETHYST_GOLEM = registerEntity(LibEntityNames.FAMILIAR_AMETHYST_GOLEM, EntityType.Builder.of(FamiliarAmethystGolem::new, MobCategory.CREATURE)
             .sized(1.0f, 1.0f).setTrackingRange(10));
-//    public static final RegistryObject<EntityType<FamiliarJabberwog>> ENTITY_FAMILIAR_JABBERWOG = registerEntity(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
-//            .sized(0.5f, 0.5f).setTrackingRange(10));
+
     public static final RegistryObject<EntityType<EntityLingeringSpell>> LINGER_SPELL = registerEntity(
             LibEntityNames.LINGER,
             EntityType.Builder.<EntityLingeringSpell>of(EntityLingeringSpell::new, MobCategory.MISC)

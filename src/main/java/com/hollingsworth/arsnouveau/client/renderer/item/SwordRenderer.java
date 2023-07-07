@@ -48,7 +48,7 @@ public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
             if (currentItemStack.getOrCreateTag().contains("ars_nouveau:caster")) {
                 color = animatable.getSpellCaster(currentItemStack).getColor();
             }
-        return Color.ofRGB(color.toWrapper().r, color.toWrapper().g, color.toWrapper().b);
+        return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }
 
     @Override

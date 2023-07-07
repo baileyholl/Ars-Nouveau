@@ -41,7 +41,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (player.getItemInHand(handIn).getItem() instanceof WarpScroll) {
-            BlockPos aimPos = new WarpScroll.WarpScrollData(player.getItemInHand(handIn)).getPos();
+            BlockPos aimPos = WarpScroll.WarpScrollData.get(player.getItemInHand(handIn)).getPos();
             if (player.level().getBlockEntity(pos) instanceof RotatingTurretTile tile) {
                 tile.aim(aimPos, player);
             }

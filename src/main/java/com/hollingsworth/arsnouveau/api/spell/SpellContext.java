@@ -143,6 +143,7 @@ public class SpellContext implements Cloneable {
     public @NotNull IWrappedCaster getCaster(){
         return wrappedCaster;
     }
+    
     public ItemStack getCasterTool(){ return casterTool;}
 
     @Deprecated(forRemoval = true, since = "3.4.0")

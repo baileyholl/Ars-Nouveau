@@ -25,12 +25,6 @@ import java.util.List;
 
 public class RitualDisintegration extends AbstractRitual {
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     @Override
     protected void tick() {
         Level world = getWorld();

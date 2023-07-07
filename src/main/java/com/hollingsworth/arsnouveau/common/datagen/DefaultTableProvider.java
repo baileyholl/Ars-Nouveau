@@ -58,11 +58,6 @@ public class DefaultTableProvider extends LootTableProvider {
         super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)));
     }
 
-    @Override
-    public List<SubProviderEntry> getTables() {
-        return super.getTables();
-    }
-
     private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
 
     public static class BlockLootTable extends BlockLootSubProvider {
