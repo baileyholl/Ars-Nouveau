@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRendere
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -151,7 +150,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
         matrixStack.mulPose(quat);
         matrixStack.scale(0.6f, 0.6f, 0.3f);
-        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(MethodProjectile.INSTANCE.glyphItem), ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, Minecraft.getInstance().renderBuffers().bufferSource(), tile.getLevel(), (int) tile.getBlockPos().asLong());
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemToRender, ItemDisplayContext.FIXED, packedLight, packedOverlay, matrixStack, Minecraft.getInstance().renderBuffers().bufferSource(), tile.getLevel(), (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
         if (tile.recipe != null && !tile.crafting) {
             List<Ingredient> inputs = tile.getRemainingRequired();
