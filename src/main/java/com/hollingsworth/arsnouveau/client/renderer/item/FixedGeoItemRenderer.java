@@ -8,5 +8,6 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 public class FixedGeoItemRenderer<T extends Item & GeoItem> extends GeoItemRenderer<T> {
     public FixedGeoItemRenderer(GeoModel modelProvider) {
         super(modelProvider);
+        this.useAlternateGuiLighting();
     }
 }

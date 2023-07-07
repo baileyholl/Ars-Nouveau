@@ -186,7 +186,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
     implementation fg.deobf("curse.maven:curios-309927:4583413")
-    shade fg.deobf("curse.maven:geckolib-388172:4573048")
+    shade fg.deobf("curse.maven:geckolib-388172:4627674")
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
     implementation fg.deobf("curse.maven:jade-324717:4573193") // jade

@@ -19,10 +19,7 @@ public abstract class ArsGeoBlockRenderer<T extends BlockEntity & GeoBlockEntity
 
     public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         try {
-            poseStack.pushPose();
-            poseStack.translate(0.0F, -0.01F, 0.0F);
             super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-            poseStack.popPose();
         }catch (Exception e) {
             e.printStackTrace();
         }
