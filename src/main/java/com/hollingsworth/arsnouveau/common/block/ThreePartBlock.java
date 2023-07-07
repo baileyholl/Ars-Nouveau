@@ -8,7 +8,7 @@ public enum ThreePartBlock implements StringRepresentable {
     OTHER("other");
     private final String name;
 
-    private ThreePartBlock(String pName) {
+    ThreePartBlock(String pName) {
         this.name = pName;
     }
 

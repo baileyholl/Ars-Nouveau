@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 public class CastSpellGoal extends CastGoal<WealdWalker> {
     WealdWalker walker;
 
-    public CastSpellGoal(WealdWalker entity, double speed, int attackInterval, float attackRange, Supplier<Boolean> canUse, int animId, int delayTicks) {
-        super(entity, speed, attackInterval, attackRange, canUse, animId, delayTicks);
+    public CastSpellGoal(WealdWalker entity, double speed, float attackRange, Supplier<Boolean> canUse, int animId, int delayTicks) {
+        super(entity, speed, attackRange, canUse, animId, delayTicks);
         this.walker = entity;
     }
 

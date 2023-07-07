@@ -42,7 +42,7 @@ public class NumberFormatUtil {
 		}
 
 		String withPrecision = format.format(last / DIVISION_BASE) + postFix;
-		String withoutPrecision = Long.toString(base) + postFix;
+		String withoutPrecision = base + postFix;
 
 		String slimResult = (withPrecision.length() <= width) ? withPrecision : withoutPrecision;
 		assert slimResult.length() <= width;

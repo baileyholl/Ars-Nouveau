@@ -314,5 +314,5 @@ public class EasingManager {
         }
 
         return stepArray;
-    };
+    }
 }

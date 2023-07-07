@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.registry.BiomeRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -15,8 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static net.minecraft.tags.BiomeTags.IS_OVERWORLD;
-import static net.minecraft.tags.BiomeTags.IS_TAIGA;
+import static net.minecraft.tags.BiomeTags.*;
 
 public class BiomeTagProvider  extends BiomeTagsProvider {
     public static TagKey<Biome> SUMMON_SPAWN_TAG = TagKey.create(Registries.BIOME, new ResourceLocation(ArsNouveau.MODID, "summon_spawn"));
@@ -34,13 +34,13 @@ public class BiomeTagProvider  extends BiomeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-//        addTagToTags(ARCHWOOD_BIOME_TAG, IS_FOREST, IS_OVERWORLD, HAS_VILLAGE_PLAINS);
+        this.tag(ARCHWOOD_BIOME_TAG).add(BiomeRegistry.ARCHWOOD_FOREST);
+        addTagToTags(ARCHWOOD_BIOME_TAG, IS_FOREST, IS_OVERWORLD, HAS_VILLAGE_PLAINS);
         this.tag(SUMMON_SPAWN_TAG).addTags(IS_OVERWORLD);
-//        this.tag(ARCHWOOD_BIOME_TAG).add(ModBiomes.ARCHWOOD_FOREST);
         this.tag(NO_MOB_SPAWN).addTags(Tags.Biomes.IS_MUSHROOM).add(Biomes.DEEP_DARK);
 
         addTagToTags(IS_TAIGA, BERRY_SPAWN);
-//        this.tag(BERRY_SPAWN).add(ModBiomes.ARCHWOOD_FOREST);
+        this.tag(BERRY_SPAWN).add(BiomeRegistry.ARCHWOOD_FOREST);
 
     }
 

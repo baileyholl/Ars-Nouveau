@@ -56,18 +56,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         outerModel =  new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
     }
 
-    @Override
-    public void preRender(PoseStack poseStack, AlterationTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.preRender(poseStack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-//        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE)
-//            return;
-//        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-//            return;
-//
-//        this.renderArmorStack(tile, poseStack, ClientInfo.ticksInGame, bufferSource, buffer, packedLight, packedOverlay, partialTick);
-//        this.renderPerks(tile, poseStack,  ClientInfo.ticksInGame, bufferSource, buffer, packedLight, packedOverlay, partialTick);
-    }
-
     public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float partialTicks) {
         matrixStack.pushPose();
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());

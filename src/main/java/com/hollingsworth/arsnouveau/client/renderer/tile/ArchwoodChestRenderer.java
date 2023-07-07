@@ -23,8 +23,6 @@ import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 
-import java.util.Calendar;
-
 public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> implements BlockEntityRenderer<T> {
 
     private final ModelPart lid;
@@ -36,14 +34,9 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
     private final ModelPart doubleRightLid;
     private final ModelPart doubleRightBottom;
     private final ModelPart doubleRightLock;
-    private boolean xmasTextures;
-    public static Block invBlock = null;
+
 
     public ArchwoodChestRenderer(BlockEntityRendererProvider.Context context) {
-        Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26) {
-            this.xmasTextures = true;
-        }
         ModelPart modelpart = context.bakeLayer(ModelLayers.CHEST);
         this.bottom = modelpart.getChild("bottom");
         this.lid = modelpart.getChild("lid");

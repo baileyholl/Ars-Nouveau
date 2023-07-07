@@ -43,7 +43,7 @@ public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
 
     @Override
     public Color getRenderColor(EnchantersSword animatable, float partialTick, int packedLight) {
-        ParticleColor color = ParticleColor.defaultParticleColor();;
+        ParticleColor color = ParticleColor.defaultParticleColor();
         if (currentItemStack.hasTag())
             if (currentItemStack.getOrCreateTag().contains("ars_nouveau:caster")) {
                 color = animatable.getSpellCaster(currentItemStack).getColor();

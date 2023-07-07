@@ -16,7 +16,6 @@ import java.util.function.Predicate;
 
 public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
     protected final Starbuncle mob;
-    private final double walkSpeedModifier;
     private final double sprintSpeedModifier;
     protected T toAvoid;
     protected final float maxDist;
@@ -27,16 +26,15 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
 
     private final TargetingConditions avoidEntityTargeting;
 
-    public AvoidEntityGoalMC(Starbuncle carby, Class<T> avoidClass, float maxDist, double walkModifier, double sprintModifier) {
-        this(carby, avoidClass, (p_200828_0_) -> true, maxDist, walkModifier, sprintModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
+    public AvoidEntityGoalMC(Starbuncle carby, Class<T> avoidClass, float maxDist, double sprintModifier) {
+        this(carby, avoidClass, (p_200828_0_) -> true, maxDist, sprintModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
     }
 
-    public AvoidEntityGoalMC(Starbuncle carby, Class<T> avoidClass, Predicate<LivingEntity> avoidPredicate, float maxDist, double walkModifier, double sprintModifier, Predicate<LivingEntity> selectPredicate) {
+    public AvoidEntityGoalMC(Starbuncle carby, Class<T> avoidClass, Predicate<LivingEntity> avoidPredicate, float maxDist, double sprintModifier, Predicate<LivingEntity> selectPredicate) {
         this.mob = carby;
         this.avoidClass = avoidClass;
         this.avoidPredicate = avoidPredicate;
         this.maxDist = maxDist;
-        this.walkSpeedModifier = walkModifier;
         this.sprintSpeedModifier = sprintModifier;
         this.pathNav = carby.getNavigation();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));

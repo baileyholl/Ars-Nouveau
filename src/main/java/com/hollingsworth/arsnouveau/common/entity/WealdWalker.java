@@ -196,7 +196,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new SmashGoal(this, true, () -> smashCooldown <= 0 && !this.entityData.get(BABY), Animations.SMASH.ordinal(), 25, 5));
-        this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d, 20, 15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
+        this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d,  15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
     }
 
     @Override

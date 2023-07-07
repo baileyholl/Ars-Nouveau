@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ArcaneCoreRenderer extends ArsGeoBlockRenderer<ArcaneCoreTile> {
-    public static GeoModel model = new GenericModel("arcane_core");
+    public static GeoModel model = new GenericModel<>("arcane_core");
 
     public ArcaneCoreRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         this(rendererDispatcherIn, model);

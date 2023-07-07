@@ -19,7 +19,7 @@ import software.bernie.geckolib.util.RenderUtils;
 
 public class AmethystGolemRenderer extends GeoEntityRenderer<AmethystGolem> {
     public AmethystGolemRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new AmethystGolemModel());
+        super(renderManager, new AmethystGolemModel<>());
     }
 
     AmethystGolem golem;

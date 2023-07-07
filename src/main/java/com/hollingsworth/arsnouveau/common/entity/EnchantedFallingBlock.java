@@ -382,7 +382,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             if (i < 0) {
                 return false;
             } else {
-                Predicate<Entity> predicate = EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE);;
+                Predicate<Entity> predicate = EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE);
                 DamageSource damagesource;
                 if (this.blockState.getBlock() instanceof Fallable fallable) {
                     damagesource = fallable.getFallDamageSource(this);

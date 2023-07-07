@@ -13,9 +13,8 @@ import java.util.function.Supplier;
 public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
     private final T mob;
     private final double speedModifier;
-    private int attackIntervalMin;
+
     private final float attackRadiusSqr;
-    private int attackTime = -1;
     private int seeTime;
     private boolean strafingClockwise;
     private boolean strafingBackwards;
@@ -27,10 +26,9 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
     boolean done;
     Supplier<Boolean> canUse;
 
-    public CastGoal(T entity, double speed, int attackInterval, float attackRange, Supplier<Boolean> canUse, int animId, int delayTicks) {
+    public CastGoal(T entity, double speed, float attackRange, Supplier<Boolean> canUse, int animId, int delayTicks) {
         this.mob = entity;
         this.speedModifier = speed;
-        this.attackIntervalMin = attackInterval;
         this.attackRadiusSqr = attackRange * attackRange;
         this.canUse = canUse;
         this.animId = animId;
@@ -55,7 +53,6 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
         super.stop();
         this.mob.setAggressive(false);
         this.seeTime = 0;
-        this.attackTime = -1;
         animatedTicks = 0;
         done = false;
         hasAnimated = false;

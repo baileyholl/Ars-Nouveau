@@ -119,7 +119,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 	}
 
 	public enum SlotAction {
-		PULL_OR_PUSH_STACK, PULL_ONE, SPACE_CLICK, SHIFT_PULL, GET_HALF, GET_QUARTER;//CRAFT
+		PULL_OR_PUSH_STACK, PULL_ONE, SPACE_CLICK, SHIFT_PULL, GET_HALF, GET_QUARTER //CRAFT
 	}
 
 	@Override

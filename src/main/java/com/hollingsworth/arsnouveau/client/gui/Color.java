@@ -103,7 +103,7 @@ public class Color {
      * @see #getRGB
      */
     public int getBlue() {
-        return (getRGB() >> 0) & 0xff;
+        return getRGB() & 0xff;
     }
 
     /**
@@ -245,7 +245,7 @@ public class Color {
     }
 
     protected Color setBlueUnchecked(int b) {
-        this.value = (this.value & 0xff_ffff00) | ((b & 0xff) << 0);
+        this.value = (this.value & 0xff_ffff00) | (b & 0xff);
         return this;
     }
 
@@ -284,7 +284,7 @@ public class Color {
                 ((int) (a1 + (a2 - a1) * w) << 24) +
                         ((int) (r1 + (r2 - r1) * w) << 16) +
                         ((int) (g1 + (g2 - g1) * w) << 8) +
-                        ((int) (b1 + (b2 - b1) * w) << 0);
+                        ((int) (b1 + (b2 - b1) * w));
     }
 
     public static Color rainbowColor(int timeStep) {

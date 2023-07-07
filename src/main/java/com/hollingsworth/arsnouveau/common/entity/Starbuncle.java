@@ -383,7 +383,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Player.class, 3.0F, 0.02F)));
             list.add(new WrappedGoal(4, new LookAtPlayerGoal(this, Mob.class, 8.0F)));
             list.add(new WrappedGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.2D)));
-            list.add(new WrappedGoal(2, new AvoidEntityGoalMC<>(this, Player.class, 16.0F, 2.0D, 1.2D)));
+            list.add(new WrappedGoal(2, new AvoidEntityGoalMC<>(this, Player.class, 16.0F, 1.2D)));
             list.add(new WrappedGoal(0, new FloatGoal(this)));
         }else{
             list.addAll(dynamicBehavior.goals);

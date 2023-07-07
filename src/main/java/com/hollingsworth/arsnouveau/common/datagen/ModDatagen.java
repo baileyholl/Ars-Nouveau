@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.APIRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -32,7 +33,6 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new EntityTagProvider(output, provider, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(output, provider, event.getExistingFileHelper()));
         event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));
@@ -40,8 +40,15 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, event.getExistingFileHelper()));
-        event.getGenerator().addProvider(event.includeServer(), new WorldgenProvider(output, provider));
         event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, event.getExistingFileHelper()));
+
+
+        
+
+        DatapackBuiltinEntriesProvider datapackProvider = new WorldgenProvider(output, provider);
+        event.getGenerator().addProvider(event.includeServer(), datapackProvider);
+        CompletableFuture<HolderLookup.Provider> lookupProvider = datapackProvider.getRegistryProvider();
+        event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(output, lookupProvider, event.getExistingFileHelper()));
     }
 
 }
