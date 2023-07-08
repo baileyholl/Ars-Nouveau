@@ -34,7 +34,7 @@ import static com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingCons
  * Abstract class for Jobs that run in the multithreaded path finder.
  */
 public abstract class AbstractPathJob implements Callable<Path> {
-    public static boolean DEBUG_DRAW = true;
+    public static boolean DEBUG_DRAW = false;
     public static Set<ModNode> lastDebugNodesVisited;
     public static Set<ModNode> lastDebugNodesNotVisited;
     public static Set<ModNode> lastDebugNodesPath;
