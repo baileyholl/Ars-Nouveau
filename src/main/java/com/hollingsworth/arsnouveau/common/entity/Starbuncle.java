@@ -145,6 +145,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
             this.pathNavigate.getPathingOptions().onPathCost = 0.1D;
             this.pathNavigate.getPathingOptions().withRoadState(this::isOnRoad);
+
         }
         return pathNavigate;
     }
