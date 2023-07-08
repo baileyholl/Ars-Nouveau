@@ -1040,23 +1040,25 @@ public abstract class AbstractPathJob implements Callable<Path> {
         }
 
         //  Check for headroom in the target space
-        if (!isPassable(pos.above(2), false, parent)) {
+        boolean isSmall = pathingOptions.canFitInOneCube();
+        int headSpace = isSmall ? 1 : 2;
+        if (!isPassable(pos.above(headSpace), false, parent)) {
             final VoxelShape bb1 = world.getBlockState(pos).getCollisionShape(world, pos);
-            final VoxelShape bb2 = world.getBlockState(pos.above(2)).getCollisionShape(world, pos.above(2));
-            if ((pos.above(2).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < 2) {
+            final VoxelShape bb2 = world.getBlockState(pos.above(headSpace)).getCollisionShape(world, pos.above(headSpace));
+            if ((pos.above(headSpace).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < headSpace) {
                 return -100;
             }
         }
 
-        if (!canLeaveBlock(pos.above(2), parent, true)) {
+        if (!canLeaveBlock(pos.above(headSpace), parent, true)) {
             return -100;
         }
 
         //  Check for jump room from the origin space
-        if (!isPassable(parent.pos.above(2), false, parent)) {
+        if (!isPassable(parent.pos.above(headSpace), false, parent)) {
             final VoxelShape bb1 = world.getBlockState(pos).getCollisionShape(world, pos);
-            final VoxelShape bb2 = world.getBlockState(parent.pos.above(2)).getCollisionShape(world, parent.pos.above(2));
-            if ((parent.pos.above(2).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < 2) {
+            final VoxelShape bb2 = world.getBlockState(parent.pos.above(headSpace)).getCollisionShape(world, parent.pos.above(headSpace));
+            if ((parent.pos.above(headSpace).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < headSpace) {
                 return -100;
             }
         }
@@ -1069,13 +1071,13 @@ public abstract class AbstractPathJob implements Callable<Path> {
         double parentMaxY = parentY + parent.pos.below().getY();
         final double targetMaxY = target.getCollisionShape(world, pos).max(Direction.Axis.Y) + pos.getY();
         if (targetMaxY - parentMaxY < MAX_JUMP_HEIGHT) {
-            return pos.getY() + 1;
+            return pos.getY() + (isSmall ? 0 : 1);
         }
         if (target.getBlock() instanceof StairBlock
                 && parentY - HALF_A_BLOCK < MAX_JUMP_HEIGHT
                 && target.getValue(StairBlock.HALF) == Half.BOTTOM
                 && getXZFacing(parent.pos, pos) == target.getValue(StairBlock.FACING)) {
-            return pos.getY() + 1;
+            return pos.getY() + (isSmall ? 0 : 1);
         }
         return -100;
     }
@@ -1115,10 +1117,11 @@ public abstract class AbstractPathJob implements Callable<Path> {
         }
 
         if (parent != null) {
+            BlockPos posAbove = isSmall ? pos : pos.above();
             final BlockState hereState = world.getBlockState(localPos.below());
             final VoxelShape bb1 = world.getBlockState(pos).getCollisionShape(world, pos);
-            final VoxelShape bb2 = world.getBlockState(localPos.above()).getCollisionShape(world, localPos.above());
-            if ((localPos.above().getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) >= 2) {
+            final VoxelShape bb2 = world.getBlockState(posAbove).getCollisionShape(world, posAbove);
+            if ((posAbove.getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) >= 2) {
                 return false;
             }
 

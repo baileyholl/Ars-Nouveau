@@ -118,7 +118,7 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
-        maxUpStep = 2f;
+        maxUpStep = 1.1f;
         dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
         reloadGoals();
         this.moveControl = new MovementHandler(this);
@@ -142,9 +142,9 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             if(this.isTamed()) {
                 this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
             }
-//            this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
-//            this.pathNavigate.getPathingOptions().onPathCost = 0.1D;
-//            this.pathNavigate.getPathingOptions().withRoadState(this::isOnRoad);
+            this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
+            this.pathNavigate.getPathingOptions().onPathCost = 0.1D;
+            this.pathNavigate.getPathingOptions().withRoadState(this::isOnRoad);
 
         }
         return pathNavigate;
