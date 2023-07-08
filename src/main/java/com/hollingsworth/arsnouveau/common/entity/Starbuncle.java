@@ -139,10 +139,13 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDecoratab
             this.pathNavigate.setSwimSpeedFactor(2.0);
             this.pathNavigate.getPathingOptions().setEnterDoors(true);
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
-            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+            if(this.isTamed()) {
+                this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+            }
 //            this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
 //            this.pathNavigate.getPathingOptions().onPathCost = 0.1D;
 //            this.pathNavigate.getPathingOptions().withRoadState(this::isOnRoad);
+
         }
         return pathNavigate;
     }

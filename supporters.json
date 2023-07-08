@@ -6,7 +6,8 @@
   "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
   "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff", "a337102a-eeb3-4967-9deb-a5263b5b6231",
   "838dd85f-95b9-4a9d-a785-7694e8c7c8b1", "99a814a0-bff4-4526-bee6-4af5c74a6824", "966ebb69-a63d-4bb2-ac90-ed39d8c64b80",
-  "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d", "490b090b-ee3f-4a2b-a135-5b4b98f87f0a"],
+  "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d", "490b090b-ee3f-4a2b-a135-5b4b98f87f0a", "1a9776a0-be9b-4155-a99b-9931d0f7325f"
+  , "27aee4ea-a286-433b-879b-7c4c2ab3fd4b", "cf1f2cfc-1a85-40a6-aaf4-a17355ac6579", "bfc0f715-54f5-45bb-b4cd-16dfb3dd1f10"],
   "starbuncleAdoptions": [
     {
       "name": "Xephyr",
@@ -115,6 +116,16 @@
       "color": "cyan",
       "adopter": "Firel",
       "bio": "Spends their time gazing at the open sky, and loves taking rides with Elytra-fliers."
+    },{
+      "name": "Dusty",
+      "color": "brown",
+      "adopter": "Coda Vanistok",
+      "bio": "This peculular hoarder was found huddled up between a few thrown pillows and a fireplace settled in Coda's study, relishing in the ambient heat before being discovered trying to store away every bit of gold found around the room over a period of a few days undiscovered. A feisty little critter that ducks away from offered affection, they're most appropriately described as an adorable troublemaker."
+    },{
+      "name": "Shade",
+      "color": "black",
+      "adopter": "VampyKillerClown",
+      "bio": "Once a necromancer's Familiar now a wondering soul looking for its next master, waiting for the return of his first."
     }
   ]
 }

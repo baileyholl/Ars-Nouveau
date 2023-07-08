@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.IItemHandler;
@@ -71,11 +72,12 @@ public class TakeItemGoal<T extends StarbyTransportBehavior> extends GoToPosGoal
             return true;
         }
         for (int j = 0; j < iItemHandler.getSlots() && starbuncle.getHeldStack().isEmpty(); j++) {
-            if (!iItemHandler.getStackInSlot(j).isEmpty()) {
+            ItemStack stack = iItemHandler.getStackInSlot(j);
+            if (!stack.isEmpty()) {
                 int count = behavior.getMaxTake(iItemHandler.getStackInSlot(j));
                 if (count <= 0)
                     continue;
-                starbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
+                starbuncle.setHeldStack(iItemHandler.extractItem(j, Math.min(count, stack.getMaxStackSize()), false));
                 starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + count + "x " + starbuncle.getHeldStack().getHoverName().getString() + " from " + targetPos.toString()));
                 starbuncle.level.playSound(null, starbuncle.getX(), starbuncle.getY(), starbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
