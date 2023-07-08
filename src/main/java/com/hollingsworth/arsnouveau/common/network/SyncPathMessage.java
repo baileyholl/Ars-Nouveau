@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.renderer.world.PathfindingDebugRenderer;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.MNode;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -17,17 +17,17 @@ public class SyncPathMessage
     /**
      * Set of visited nodes.
      */
-    public Set<MNode> lastDebugNodesVisited = new HashSet<>();
+    public Set<ModNode> lastDebugNodesVisited = new HashSet<>();
 
     /**
      * Set of not visited nodes.
      */
-    public Set<MNode> lastDebugNodesNotVisited  = new HashSet<>();
+    public Set<ModNode> lastDebugNodesNotVisited  = new HashSet<>();
 
     /**
      * Set of chosen nodes for the path.
      */
-    public Set<MNode> lastDebugNodesPath  = new HashSet<>();
+    public Set<ModNode> lastDebugNodesPath  = new HashSet<>();
 
     /**
      * Default constructor.
@@ -40,7 +40,7 @@ public class SyncPathMessage
     /**
      * Create a new path message with the filled pathpoints.
      */
-    public SyncPathMessage(final Set<MNode> lastDebugNodesVisited, final Set<MNode> lastDebugNodesNotVisited, final Set<MNode>  lastDebugNodesPath)
+    public SyncPathMessage(final Set<ModNode> lastDebugNodesVisited, final Set<ModNode> lastDebugNodesNotVisited, final Set<ModNode>  lastDebugNodesPath)
     {
         super();
         this.lastDebugNodesVisited = lastDebugNodesVisited;
@@ -51,19 +51,19 @@ public class SyncPathMessage
     public void toBytes(final FriendlyByteBuf buf)
     {
         buf.writeInt(lastDebugNodesVisited.size());
-        for (final MNode node : lastDebugNodesVisited)
+        for (final ModNode node : lastDebugNodesVisited)
         {
             node.serializeToBuf(buf);
         }
 
         buf.writeInt(lastDebugNodesNotVisited.size());
-        for (final MNode node : lastDebugNodesNotVisited)
+        for (final ModNode node : lastDebugNodesNotVisited)
         {
             node.serializeToBuf(buf);
         }
 
         buf.writeInt(lastDebugNodesPath.size());
-        for (final MNode node : lastDebugNodesPath)
+        for (final ModNode node : lastDebugNodesPath)
         {
             node.serializeToBuf(buf);
         }
@@ -74,19 +74,19 @@ public class SyncPathMessage
         int size = buf.readInt();
         for (int i = 0; i < size; i++)
         {
-            lastDebugNodesVisited.add(new MNode(buf));
+            lastDebugNodesVisited.add(new ModNode(buf));
         }
 
         size = buf.readInt();
         for (int i = 0; i < size; i++)
         {
-            lastDebugNodesNotVisited.add(new MNode(buf));
+            lastDebugNodesNotVisited.add(new ModNode(buf));
         }
 
         size = buf.readInt();
         for (int i = 0; i < size; i++)
         {
-            lastDebugNodesPath.add(new MNode(buf));
+            lastDebugNodesPath.add(new ModNode(buf));
         }
     }
 

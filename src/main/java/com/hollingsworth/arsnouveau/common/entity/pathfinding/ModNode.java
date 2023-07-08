@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Nodes used in pathfinding.
  */
-public class MNode implements Comparable<MNode> {
+public class ModNode implements Comparable<ModNode> {
     /**
      * Values used in the generation of the hash of the node.
      */
@@ -31,7 +31,7 @@ public class MNode implements Comparable<MNode> {
      * The parent of the node (Node preceding this node).
      */
     @Nullable
-    public MNode parent;
+    public ModNode parent;
 
     /**
      * Added counter.
@@ -99,7 +99,7 @@ public class MNode implements Comparable<MNode> {
      * @param pos       coordinates of node.
      * @param heuristic heuristic estimate.
      */
-    public MNode(@NotNull final BlockPos pos, final double heuristic)
+    public ModNode(@NotNull final BlockPos pos, final double heuristic)
     {
         this(null, pos, 0, heuristic, heuristic);
     }
@@ -113,7 +113,7 @@ public class MNode implements Comparable<MNode> {
      * @param heuristic heuristic estimate.
      * @param score     node total score.
      */
-    public MNode(@Nullable final MNode parent, @NotNull final BlockPos pos, final double cost, final double heuristic, final double score)
+    public ModNode(@Nullable final ModNode parent, @NotNull final BlockPos pos, final double cost, final double heuristic, final double score)
     {
         this.parent = parent;
         this.pos = pos;
@@ -128,11 +128,11 @@ public class MNode implements Comparable<MNode> {
      * Create an MNode from a bytebuf.
      * @param byteBuf the buffer to load it from.
      */
-    public MNode(final FriendlyByteBuf byteBuf)
+    public ModNode(final FriendlyByteBuf byteBuf)
     {
         if (byteBuf.readBoolean())
         {
-            this.parent = new MNode(byteBuf.readBlockPos(), 0);
+            this.parent = new ModNode(byteBuf.readBlockPos(), 0);
         }
         this.pos = byteBuf.readBlockPos();
         this.cost = byteBuf.readDouble();
@@ -161,7 +161,7 @@ public class MNode implements Comparable<MNode> {
     }
 
     @Override
-    public int compareTo(@NotNull final MNode o)
+    public int compareTo(@NotNull final ModNode o)
     {
         //  Comparing doubles and returning value as int; can't simply cast the result
         if (score < o.score)
@@ -199,7 +199,7 @@ public class MNode implements Comparable<MNode> {
     {
         if (o != null && o.getClass() == this.getClass())
         {
-            @Nullable final MNode other = (MNode) o;
+            @Nullable final ModNode other = (ModNode) o;
             return pos.getX() == other.pos.getX()
                     && pos.getY() == other.pos.getY()
                     && pos.getZ() == other.pos.getZ();

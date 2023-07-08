@@ -105,9 +105,9 @@ public final class Pathfinding {
         RenderSystem.disableBlend();
 //        RenderSystem.disableLighting();
 
-        final Set<MNode> debugNodesNotVisited;
-        final Set<MNode> debugNodesVisited;
-        final Set<MNode> debugNodesPath;
+        final Set<ModNode> debugNodesNotVisited;
+        final Set<ModNode> debugNodesVisited;
+        final Set<ModNode> debugNodesPath;
 
         synchronized (PathingConstants.debugNodeMonitor) {
             debugNodesNotVisited = AbstractPathJob.lastDebugNodesNotVisited;
@@ -116,15 +116,15 @@ public final class Pathfinding {
         }
 
         try {
-            for (final MNode n : debugNodesNotVisited) {
+            for (final ModNode n : debugNodesNotVisited) {
                 debugDrawNode(n, 1.0F, 0F, 0F, matrixStack);
             }
 
-            for (final MNode n : debugNodesVisited) {
+            for (final ModNode n : debugNodesVisited) {
                 debugDrawNode(n, 0F, 0F, 1.0F, matrixStack);
             }
 
-            for (final MNode n : debugNodesPath) {
+            for (final ModNode n : debugNodesPath) {
                 if (n.isReachedByWorker()) {
                     debugDrawNode(n, 1F, 0.4F, 0F, matrixStack);
                 } else {
@@ -143,7 +143,7 @@ public final class Pathfinding {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void debugDrawNode(final MNode n, final float r, final float g, final float b, final PoseStack matrixStack) {
+    public static void debugDrawNode(final ModNode n, final float r, final float g, final float b, final PoseStack matrixStack) {
         matrixStack.pushPose();
         matrixStack.translate((double) n.pos.getX() + 0.375, (double) n.pos.getY() + 0.375, (double) n.pos.getZ() + 0.375);
 
@@ -216,7 +216,7 @@ public final class Pathfinding {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void renderDebugText(final MNode n, final PoseStack matrixStack) {
+    public static void renderDebugText(final ModNode n, final PoseStack matrixStack) {
         final String s1 = String.format("F: %.3f [%d]", n.getCost(), n.getCounterAdded());
         final String s2 = String.format("G: %.3f [%d]", n.getScore(), n.getCounterVisited());
         final Font fontrenderer = Minecraft.getInstance().font;

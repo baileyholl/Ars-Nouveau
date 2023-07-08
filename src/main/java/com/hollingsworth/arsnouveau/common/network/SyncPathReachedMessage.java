@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.renderer.world.PathfindingDebugRenderer;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.MNode;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -69,7 +69,7 @@ public class SyncPathReachedMessage
                 // Use anon - lambda causes classloading issues
                 @Override
                 public void run() {
-                    for (final MNode node : PathfindingDebugRenderer.lastDebugNodesPath)
+                    for (final ModNode node : PathfindingDebugRenderer.lastDebugNodesPath)
                     {
                         if (m.reached.contains(node.pos))
                         {

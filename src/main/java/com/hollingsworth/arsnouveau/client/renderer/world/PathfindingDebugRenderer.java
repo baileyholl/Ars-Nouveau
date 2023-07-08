@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.world;
 
 
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.MNode;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.mojang.math.Matrix4f;
@@ -19,17 +19,17 @@ public class PathfindingDebugRenderer
     /**
      * Set of visited nodes.
      */
-    public static Set<MNode> lastDebugNodesVisited = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesVisited = new HashSet<>();
 
     /**
      * Set of not visited nodes.
      */
-    public static Set<MNode> lastDebugNodesNotVisited  = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesNotVisited  = new HashSet<>();
 
     /**
      * Set of nodes that belong to the chosen path.
      */
-    public static Set<MNode> lastDebugNodesPath = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesPath = new HashSet<>();
 
     /**
      * Render debugging information for the pathfinding system.
@@ -40,17 +40,17 @@ public class PathfindingDebugRenderer
     {
         try
         {
-            for (final MNode n : lastDebugNodesVisited)
+            for (final ModNode n : lastDebugNodesVisited)
             {
                 debugDrawNode(n, 0xffff0000, ctx);
             }
 
-            for (final MNode n : lastDebugNodesNotVisited)
+            for (final ModNode n : lastDebugNodesNotVisited)
             {
                 debugDrawNode(n, 0xff0000ff, ctx);
             }
 
-            for (final MNode n : lastDebugNodesPath)
+            for (final ModNode n : lastDebugNodesPath)
             {
                 if (n.isReachedByWorker())
                 {
@@ -68,7 +68,7 @@ public class PathfindingDebugRenderer
         }
     }
 
-    private static void debugDrawNode(final MNode n, final int argbColor, final WorldEventContext ctx)
+    private static void debugDrawNode(final ModNode n, final int argbColor, final WorldEventContext ctx)
     {
         ctx.poseStack.pushPose();
 //        ctx.poseStack.translate(n.pos.getX() + 0.375d, n.pos.getY() + 0.375d, n.pos.getZ() + 0.375d);
@@ -100,7 +100,7 @@ public class PathfindingDebugRenderer
         ctx.poseStack.popPose();
     }
 
-    private static void renderDebugText(@NotNull final MNode n, final WorldEventContext ctx)
+    private static void renderDebugText(@NotNull final ModNode n, final WorldEventContext ctx)
     {
         final Font fontrenderer = Minecraft.getInstance().font;
 
