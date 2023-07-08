@@ -115,13 +115,11 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
-        super.getDefaultAugmentLimits(defaults);
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
-        return defaults;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         Set<AbstractAugment> augments = new HashSet<>(getPotionAugments());

@@ -169,6 +169,9 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     // Augment limits only apply to cast forms and effects, but not augments.
     public SpellPartConfigUtil.AugmentLimits augmentLimits;
 
+    // Augment limits only apply to cast forms and effects, but not augments.
+    public SpellPartConfigUtil.AugmentCosts augmentCosts;
+
     /**
      * Registers the glyph_limits configuration entry for augmentation limits.
      */
@@ -176,15 +179,16 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
 
-    /**
-     * Override this method to provide defaults for the augmentation limits configuration.
-     */
-    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
-        addDefaultAugmentLimits(defaults);
-        return defaults;
+    protected void buildAugmentCostOverrideConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        this.augmentCosts = SpellPartConfigUtil.buildAugmentCosts(builder, defaults);
     }
 
+    /**
+     * Adds default augment limits to the given map, used to generate the config.
+     */
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {}
+
+    protected void addAugmentCostOverrides(Map<ResourceLocation, Integer> defaults) {}
 
     // Default value for the starter spell config
     public boolean defaultedStarterGlyph() {

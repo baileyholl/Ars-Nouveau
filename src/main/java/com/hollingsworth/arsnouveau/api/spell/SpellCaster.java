@@ -65,16 +65,6 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
-    public void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot) {
-        if (spells.containsKey(slot)) {
-            spells.get(slot).setRecipe(spellRecipe);
-        } else {
-            spells.put(slot, new Spell(spellRecipe));
-        }
-        writeItem(stack);
-    }
-
-    @Override
     public ParticleColor getColor(int slot) {
         return this.getSpell(slot).color;
     }

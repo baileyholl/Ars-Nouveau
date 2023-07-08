@@ -112,10 +112,9 @@ public class EffectInfuse extends AbstractEffect {
     }
 
     @Override
-    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         defaults.put(AugmentAOE.INSTANCE.getRegistryName(), 1);
         defaults.put(AugmentExtendTime.INSTANCE.getRegistryName(), 1);
-        return super.getDefaultAugmentLimits(defaults);
     }
 
     @Override

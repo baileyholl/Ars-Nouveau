@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spell implements Cloneable {
-    @Deprecated(forRemoval = true)
-    public static final Spell EMPTY = new Spell();
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
     public String name = "";
@@ -30,7 +28,7 @@ public class Spell implements Cloneable {
 
 
     public Spell(List<AbstractSpellPart> recipe) {
-        this.recipe = recipe == null ? new ArrayList<>() : recipe; // Safe check for tiles initializing a null
+        this.recipe = recipe == null ? new ArrayList<>() : new ArrayList<>(recipe); // Safe check for tiles initializing a null
     }
 
     public Spell() {

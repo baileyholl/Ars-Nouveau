@@ -32,7 +32,6 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,8 +70,6 @@ public interface ISpellCaster {
     void setSpell(Spell spell, int slot);
 
     void setSpell(Spell spell);
-
-    void setSpellRecipe(List<AbstractSpellPart> spellRecipe, int slot);
 
     @NotNull
     ParticleColor getColor(int slot);
@@ -118,16 +115,9 @@ public interface ISpellCaster {
     Map<Integer, Spell> getSpells();
 
     @NotNull
-    @Deprecated(forRemoval = true)
-    default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster) {
-        return caster.getSpell();
-    }
-
-    @NotNull
     default Spell getSpell(Level world, LivingEntity playerEntity, InteractionHand hand, ISpellCaster caster) {
         return caster.getSpell();
     }
-
 
     default Spell modifySpellBeforeCasting(Level worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell) {
         return spell;

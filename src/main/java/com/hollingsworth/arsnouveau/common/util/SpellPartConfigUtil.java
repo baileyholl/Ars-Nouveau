@@ -75,6 +75,18 @@ public class SpellPartConfigUtil {
     }
 
     /**
+     * Builds a "augment_limits" configuration item using the provided {@link ForgeConfigSpec.Builder} and returns an
+     * {@link AugmentLimits} instance to encapsulate it.
+     */
+    public static AugmentCosts buildAugmentCosts(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        ForgeConfigSpec.ConfigValue<List<? extends String>> configValue = builder
+                .comment("How much an augment should cost when used on this effect or form. This overrides the default cost in the augment config.", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=50\"")
+                .defineList("augment_cost_overrides", writeConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
+
+        return new AugmentCosts(configValue);
+    }
+
+    /**
      * Produces a list of tag=limit strings suitable for saving to the configuration.
      */
     private static List<String> writeConfig(Map<ResourceLocation, Integer> augmentLimits) {
@@ -91,5 +103,45 @@ public class SpellPartConfigUtil {
             return AUGMENT_LIMITS_PATTERN.matcher((CharSequence) rawConfig).matches();
         }
         return false;
+    }
+
+    /**
+     * Class used to encapsulate the logic around parsing and printing the augment limit configuration.
+     * <p>
+     * Used by {@link com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart} to handle configuring augmentation
+     * limitations.
+     */
+    public static class AugmentCosts {
+        private Map<ResourceLocation, Integer> costs = null;
+        private ForgeConfigSpec.ConfigValue<List<? extends String>> configValue;
+
+        /**
+         * Create a new AugmentLimits from the given ConfigValue
+         */
+        private AugmentCosts(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+            this.configValue = configValue;
+        }
+
+        /**
+         * Retrieves the cost of the augment given an effect or form.
+         */
+        public int getAugmentCost(ResourceLocation augmentTag, int fallback) {
+            // No caching so /reload works
+            costs = parseAugmentCosts();
+            return costs.getOrDefault(augmentTag, fallback);
+        }
+
+        /**
+         * Parse glyph_limits into a Map from augment glyph tags to limits.
+         */
+        private Map<ResourceLocation, Integer> parseAugmentCosts() {
+            return configValue.get().stream()
+                    .map(AUGMENT_LIMITS_PATTERN::matcher)
+                    .filter(Matcher::matches)
+                    .collect(Collectors.toMap(
+                            m -> new ResourceLocation(m.group(1)),
+                            m -> Integer.valueOf(m.group(2))
+                    ));
+        }
     }
 }

@@ -12,6 +12,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractCastMethod extends AbstractSpellPart {
 
@@ -52,6 +53,12 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
+        Map<ResourceLocation, Integer> defaultAugmentLimits = new HashMap<>();
+        addDefaultAugmentLimits(defaultAugmentLimits);
+        buildAugmentLimitsConfig(builder, defaultAugmentLimits);
+
+        Map<ResourceLocation, Integer> defaultAugmentCosts = new HashMap<>();
+        addAugmentCostOverrides(defaultAugmentCosts);
+        buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
     }
 }
