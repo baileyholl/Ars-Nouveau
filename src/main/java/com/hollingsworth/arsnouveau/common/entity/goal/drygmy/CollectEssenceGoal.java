@@ -13,11 +13,12 @@ import java.util.EnumSet;
 
 public class CollectEssenceGoal extends Goal {
 
-    EntityDrygmy drygmy;
-    LivingEntity target;
-    boolean complete;
-    boolean approached;
-    int timeChanneling;
+    public EntityDrygmy drygmy;
+    public LivingEntity target;
+    public boolean complete;
+    public boolean approached;
+    public int timeChanneling;
+    public int timePathing;
 
     public CollectEssenceGoal(EntityDrygmy drygmy) {
         this.drygmy = drygmy;
@@ -44,6 +45,7 @@ public class CollectEssenceGoal extends Goal {
         complete = false;
         approached = false;
         timeChanneling = 0;
+        timePathing = 0;
     }
 
     @Override
@@ -54,18 +56,25 @@ public class CollectEssenceGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
+
         if (complete || target == null)
             return;
 
-        if (!approached && BlockUtil.distanceFrom(drygmy.position, target.position) >= 2) {
+        if(timePathing > 20 * 8){
+            approached = true;
+            drygmy.getNavigation().stop();
+        }
+        if (!approached && BlockUtil.distanceFrom(drygmy.position, target.position) >= 2.3) {
+            timePathing++;
             Path path = drygmy.getNavigation().createPath(target.getX(), target.getY(), target.getZ(), 1);
             if (path == null || !path.canReach()) {
                 approached = true;
                 drygmy.getNavigation().stop();
-                return;
+            }else {
+                drygmy.getNavigation().moveTo(path, 1.0);
             }
-            drygmy.getNavigation().moveTo(path, 1.0);
-        } else {
+        }
+        if(approached) {
             drygmy.setChannelingEntity(target.getId());
             drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
             drygmy.getNavigation().stop();

@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -193,5 +194,10 @@ public class AlterationTable extends TableBlock{
         BlockState horizontalState = context.getLevel().getBlockState(blockpos1);
         BlockState aboveState = context.getLevel().getBlockState(blockpos.above());
         return horizontalState.canBeReplaced(context) && aboveState.canBeReplaced(context) ? this.defaultBlockState().setValue(FACING, direction) : null;
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+        return false;
     }
 }

@@ -26,14 +26,7 @@ public class ModdedScreen extends Screen {
         int persistentScale = Math.min(0, maxScale);
         double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
 
-        if (persistentScale > 0 && newGuiScale != oldGuiScale) {
-            scaleFactor = (float) newGuiScale / (float) res.getGuiScale();
-
-            res.setGuiScale(newGuiScale);
-            width = res.getGuiScaledWidth();
-            height = res.getGuiScaledHeight();
-            res.setGuiScale(oldGuiScale);
-        } else scaleFactor = 1;
+        scaleFactor = 1;
     }
 
     public boolean isMouseInRelativeRange(int mouseX, int mouseY, int x, int y, int w, int h) {
