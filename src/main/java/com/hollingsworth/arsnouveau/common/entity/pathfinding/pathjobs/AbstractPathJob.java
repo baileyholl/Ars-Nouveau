@@ -1,14 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.*;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.SyncPathMessage;
-import com.hollingsworth.arsnouveau.common.network.SyncPathReachedMessage;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -1316,10 +1312,10 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @param mob the tracked mob.
      */
     public void synchToClient(final LivingEntity mob) {
-        for (final Player entry : mob.level.players()) {
-                Networking.sendToPlayerClient(new SyncPathMessage(debugNodesVisited, debugNodesNotVisited, debugNodesPath), (ServerPlayer) entry);
-
-        }
+//        for (final Player entry : mob.level.players()) {
+//                Networking.sendToPlayerClient(new SyncPathMessage(debugNodesVisited, debugNodesNotVisited, debugNodesPath), (ServerPlayer) entry);
+//
+//        }
     }
 
     /**
@@ -1329,15 +1325,15 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @param mob     the tracked mob.
      */
     public static void synchToClient(final HashSet<BlockPos> reached, final Mob mob) {
-        if (reached.isEmpty()) {
-            return;
-        }
-
-        for (final Player entry : mob.level.players()) {
-//            if (entry.getValue().equals(mob.getUUID())) {
-                Networking.sendToPlayerClient(new SyncPathReachedMessage(reached), (ServerPlayer) entry);
-            }
+//        if (reached.isEmpty()) {
+//            return;
 //        }
+//
+//        for (final Player entry : mob.level.players()) {
+////            if (entry.getValue().equals(mob.getUUID())) {
+//                Networking.sendToPlayerClient(new SyncPathReachedMessage(reached), (ServerPlayer) entry);
+//            }
+////        }
     }
 
 }
