@@ -8,8 +8,6 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import static com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob.DEBUG_DRAW;
-
 /**
  * Used to handle client events.
  */
@@ -22,11 +20,16 @@ public class ClientEventHandler {
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
+//        WorldEventContext.INSTANCE.renderWorldLastEvent(event);
+//        if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_CUTOUT_MIPPED_BLOCKS_BLOCKS){
+//            PathfindingDebugRenderer.render(WorldEventContext.INSTANCE);
+//            WorldEventContext.bufferSource.endBatch();
+//        }
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
             ClientInfo.partialTicks = event.getPartialTick();
-            if (DEBUG_DRAW) {
-                Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
-            }
+//            if (DEBUG_DRAW) {
+//                Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
+//            }
             LightManager.updateAll(event.getLevelRenderer());
         }
     }
