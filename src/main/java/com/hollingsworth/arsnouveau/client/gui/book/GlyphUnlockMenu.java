@@ -77,6 +77,10 @@ public class GlyphUnlockMenu extends BaseBook {
         this.scribesPos = pos;
     }
 
+    public static void open(BlockPos scribePos) {
+        Minecraft.getInstance().setScreen(new GlyphUnlockMenu(scribePos));
+    }
+
     SelectableButton all;
     SelectableButton tier1;
     SelectableButton tier2;

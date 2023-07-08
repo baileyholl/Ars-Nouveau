@@ -20,6 +20,9 @@ public class PatchouliHandler {
     }
 
     public static boolean isPatchouliWorld() {
+        if(!ArsNouveau.patchouliLoaded){
+            return false;
+        }
         return Minecraft.getInstance().screen instanceof GuiBookEntry;
     }
 
