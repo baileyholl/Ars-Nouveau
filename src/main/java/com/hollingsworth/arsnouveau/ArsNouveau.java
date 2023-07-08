@@ -56,12 +56,14 @@ public class ArsNouveau {
     public static boolean terrablenderLoaded = false;
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
+    public static boolean patchouliLoaded = false;
 
     public ArsNouveau(){
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
+        patchouliLoaded = ModList.get().isLoaded("patchouli");
         APIRegistry.setup();
         ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(),MODID + "-server");
         ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);

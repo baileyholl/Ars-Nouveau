@@ -15,13 +15,14 @@ import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,8 +42,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.patchouli.api.PatchouliAPI;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -382,7 +381,15 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onDocumentationClick(Button button) {
-        PatchouliAPI.get().openBookGUI(ForgeRegistries.ITEMS.getKey(ItemsRegistry.WORN_NOTEBOOK.asItem()));
+        if(ArsNouveau.patchouliLoaded){
+            PatchouliHandler.openBookClient();
+        }else{
+            try {
+                Util.getPlatform().openUri(new URI("https://www.arsnouveau.wiki/"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void onColorClick(Button button) {
