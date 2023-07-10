@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "ars_nouveau:block/polished_sconce"
+		},
+		"facing=south": {
+			"model": "ars_nouveau:block/polished_sconce",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "ars_nouveau:block/polished_sconce",
+			"y": 270
+		},
+		"facing=east": {
+			"model": "ars_nouveau:block/polished_sconce",
+			"y": 90
+		}
+	}
+}

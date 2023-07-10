@@ -204,10 +204,24 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(Ingredient.of(Tags.Items.INGOTS_GOLD), 3)
                     .save(consumer);
 
-            shapelessBuilder(BlockRegistry.SCONCE_BLOCK)
+            shapelessBuilder(BlockRegistry.GOLD_SCONCE_BLOCK)
                     .requires(RecipeDatagen.SOURCE_GEM)
                     .requires(Ingredient.of(Tags.Items.NUGGETS_GOLD), 2)
                     .save(consumer);
+
+            shapelessBuilder(BlockRegistry.SOURCESTONE_SCONCE_BLOCK)
+                    .requires(RecipeDatagen.SOURCE_GEM)
+                    .requires(Ingredient.of(BlockRegistry.getBlock(LibBlockNames.SOURCESTONE)), 2)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.ARCHWOOD_SCONCE_BLOCK)
+                    .requires(RecipeDatagen.SOURCE_GEM)
+                    .requires(Ingredient.of(BlockRegistry.ARCHWOOD_PLANK), 2)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.POLISHED_SCONCE_BLOCK)
+                    .requires(BlockRegistry.SOURCESTONE_SCONCE_BLOCK)
+                    .save(consumer);
+
+            shapelessBuilder(BlockRegistry.SOURCESTONE_SCONCE_BLOCK).requires(BlockRegistry.POLISHED_SCONCE_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "polished_source_sconce"));
 
             shapelessBuilder(getRitualItem(RitualLib.MOONFALL))
                     .requires(BlockRegistry.CASCADING_LOG)

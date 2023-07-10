@@ -314,7 +314,9 @@ public class PatchouliProvider extends SimpleDataProvider{
 
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.SCONCE_BLOCK).withRecipe2(BlockRegistry.MAGELIGHT_TORCH)), getPath(RESOURCES, "magelighting"));
+                .withPage(new CraftingPage(BlockRegistry.GOLD_SCONCE_BLOCK).withRecipe2(BlockRegistry.SOURCESTONE_SCONCE_BLOCK))
+                .withPage(new CraftingPage(BlockRegistry.POLISHED_SCONCE_BLOCK).withRecipe2(BlockRegistry.ARCHWOOD_SCONCE_BLOCK))
+                .withPage(new CraftingPage(BlockRegistry.MAGELIGHT_TORCH)), getPath(RESOURCES, "magelighting"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)

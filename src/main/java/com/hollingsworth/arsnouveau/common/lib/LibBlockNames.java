@@ -77,7 +77,9 @@ public class LibBlockNames {
     public final static String POTION_MELDER_BLOCK = "potion_melder";
 
     public final static String SCONCE = "sconce";
-
+    public final static String SOURCESTONE_SCONCE = "sourcestone_sconce";
+    public final static String POLISHED_SCONCE = "polished_sconce";
+    public final static String ARCHWOOD_SCONCE = "archwood_sconce";
     public static final String SOURCESTONE = "sourcestone";
     public static final String SOURCESTONE_MOSAIC = "sourcestone_mosaic";
     public static final String SOURCESTONE_BASKET = "sourcestone_basketweave";
