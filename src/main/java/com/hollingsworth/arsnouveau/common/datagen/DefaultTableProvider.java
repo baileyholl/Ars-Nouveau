@@ -134,7 +134,6 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.ARCHWOOD_CHEST);
             registerDropSelf(BlockRegistry.SPELL_PRISM);
-            registerDropSelf(BlockRegistry.LAVA_LILY);
 
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
@@ -145,7 +144,6 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
             registerDropSelf(BlockRegistry.IMBUEMENT_BLOCK);
             registerDropSelf(BlockRegistry.VOLCANIC_BLOCK);
-            registerDropSelf(BlockRegistry.LAVA_LILY);
             registerDropSelf(BlockRegistry.BRAZIER_RELAY);
 
             registerDropSelf(BlockRegistry.RELAY_WARP);

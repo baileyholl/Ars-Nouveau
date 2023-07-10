@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-04T22:32:46.6166635	Recipes
+// 1.20.1	2023-07-09T19:49:36.9939898	Recipes
 53e7c7063857317940cff0f32c3e0bb2144ce88a data/ars_nouveau/advancements/recipes/building_blocks/archwood_button.json
 3b562128c61e177df4b6cadd7e13b0a7f2aae1df data/ars_nouveau/advancements/recipes/building_blocks/archwood_door.json
 e310e3ed620252904dbd7ad1ce31741843c2474e data/ars_nouveau/advancements/recipes/building_blocks/archwood_fence.json
@@ -144,7 +144,6 @@ fbd14ad9d760ec330d5d6fdef5a2ed6e2816e033 data/ars_nouveau/advancements/recipes/m
 57af0a239d2c797518d7ce02a589e68fedfff6e4 data/ars_nouveau/advancements/recipes/misc/horn_to_bonemeal.json
 306e42de4aeb93f81af9f61ad657a4a3dbd73efc data/ars_nouveau/advancements/recipes/misc/imbuement_chamber.json
 f4c746040408f6200447330841f0851e223bf292 data/ars_nouveau/advancements/recipes/misc/item_detector.json
-ce666244301047a93f201d0b630661310579069c data/ars_nouveau/advancements/recipes/misc/lava_lily.json
 9cae6c3ddc9f0a4402da7bc260ae143fcb665e73 data/ars_nouveau/advancements/recipes/misc/magebloom_block.json
 0c1c75a40eca890fbc5089b0f61956e239e18cf9 data/ars_nouveau/advancements/recipes/misc/magebloom_block_to_magebloom.json
 d2e8af1fe23a203626d3c0f9619a6dd99f9d03d1 data/ars_nouveau/advancements/recipes/misc/magebloom_fiber.json
@@ -340,7 +339,6 @@ f4d83d6fc0243993b2c58975f1f09289dcaf6d58 data/ars_nouveau/recipes/green_archwood
 0369323cc4c7f06bc9d31ebea5e333beab4553bf data/ars_nouveau/recipes/horn_to_bonemeal.json
 ec74ae1f4b47fd1a07d8f9fdf27443fa807003f0 data/ars_nouveau/recipes/imbuement_chamber.json
 e48d84d5207dd3b9feb7f7424ce40fa7d1cdc5ed data/ars_nouveau/recipes/item_detector.json
-301d48b2c8e19281162f18cfc881ede9d982dba0 data/ars_nouveau/recipes/lava_lily.json
 8eab511a9c2aa67beed27c3c64ecba58a209942d data/ars_nouveau/recipes/magebloom_block.json
 039ada39d384c58708b63b56d62a41c784f88aec data/ars_nouveau/recipes/magebloom_block_to_magebloom.json
 2dfb00604136b251f4a3ed3108d0e2491c6309e9 data/ars_nouveau/recipes/magebloom_fiber.json

@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-04T22:32:46.6032002	Loot Tables
+// 1.20.1	2023-07-09T19:49:36.9864777	Loot Tables
 4f70eae621815da8d08d3ea0b9fd479b48bad2d3 data/ars_nouveau/loot_tables/blocks/agronomic_sourcelink.json
 8a6d60f2b39de0408c7e4537b53e866a04236d22 data/ars_nouveau/loot_tables/blocks/alchemical_sourcelink.json
 8bdff8a0a49a9f3f21a822eb1d1d01a950d6ad1a data/ars_nouveau/loot_tables/blocks/alteration_table.json
@@ -51,7 +51,6 @@ a28c937d10a3fe9217162d764863964ce6d63c58 data/ars_nouveau/loot_tables/blocks/gre
 9881f7ab8a9fe67b52bc163b58fb2e9f1bb805b4 data/ars_nouveau/loot_tables/blocks/green_sbed.json
 e220cb0773c9e33776b5909041613d3291d06548 data/ars_nouveau/loot_tables/blocks/imbuement_chamber.json
 df5ba05995044413998b7cbbf02d6c7a63e7c583 data/ars_nouveau/loot_tables/blocks/item_detector.json
-0be071025a8aac1147da29d24e1232e6a9b0e896 data/ars_nouveau/loot_tables/blocks/lava_lily.json
 2af90b26f5f047e3168626ce05aad7a64f42d2ec data/ars_nouveau/loot_tables/blocks/magebloom_block.json
 072841a4552421b48e60a01206d4b1f42dd90da5 data/ars_nouveau/loot_tables/blocks/magelight_torch.json
 9d551107c336c6341450da44650d007e795ae962 data/ars_nouveau/loot_tables/blocks/mendosteen_pod.json

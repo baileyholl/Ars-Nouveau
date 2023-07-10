@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "loc=0": { "model": "ars_nouveau:block/lava_lily/lily_stone" },
-	"loc=1": { "model": "ars_nouveau:block/lava_lily/lily_magma" },
-	"loc=2": { "model": "ars_nouveau:block/lava_lily/lily_source" }
-  }
-}

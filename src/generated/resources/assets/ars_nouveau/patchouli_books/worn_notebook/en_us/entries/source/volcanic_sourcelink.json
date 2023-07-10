@@ -19,8 +19,7 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:volcanic_sourcelink",
-      "recipe2": "ars_nouveau:lava_lily"
+      "recipe": "ars_nouveau:volcanic_sourcelink"
     },
     {
       "type": "patchouli:text",

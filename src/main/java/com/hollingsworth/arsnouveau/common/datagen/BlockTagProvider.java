@@ -61,7 +61,6 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.RELAY_SPLITTER.get(),
                 BlockRegistry.ENCHANTED_SPELL_TURRET.get(),
                 BlockRegistry.VOLCANIC_BLOCK.get(),
-                BlockRegistry.LAVA_LILY.get(),
                 BlockRegistry.WIXIE_CAULDRON.get(),
                 BlockRegistry.SOURCE_GEM_BLOCK.get(),
                 BlockRegistry.RITUAL_BLOCK.get(),

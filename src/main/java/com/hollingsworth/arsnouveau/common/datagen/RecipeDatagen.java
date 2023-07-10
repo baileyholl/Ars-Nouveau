@@ -155,10 +155,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('s', SOURCE_GEM)
                     .define('i', Items.LAVA_BUCKET).save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, BlockRegistry.LAVA_LILY, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(Items.LILY_PAD, 1).requires(SOURCE_GEM, 8)
-                    .save(consumer);
-
             shapelessBuilder(BlockRegistry.ARCHWOOD_PLANK, 4).requires(ARCHWOOD_LOG).save(consumer);
             makeWood(BlockRegistry.VEXING_LOG, BlockRegistry.VEXING_WOOD, 3).save(consumer);
             makeWood(BlockRegistry.CASCADING_LOG, BlockRegistry.CASCADING_WOOD, 3).save(consumer);
