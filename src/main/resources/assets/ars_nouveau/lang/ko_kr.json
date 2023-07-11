@@ -107,7 +107,7 @@
   "ars_nouveau.bound_script": "결속 스크립트: %s",
   "ars_nouveau.bow.invalid": "형태를 포함하지 않은 주문만 가능합니다.",
   "ars_nouveau.brazier_relay.connected": "화로가 연결되었습니다.",
-  "ars_nouveau.camera.exit": "%s - Exit",
+  "ars_nouveau.camera.exit": "%s - 종료",
   "ars_nouveau.camera.move": "%1$s%2$s%3$s%4$s - 이동",
   "ars_nouveau.camera.not_loaded": "블록이 제거되었거나 청크로드되지 않았습니다.",
   "ars_nouveau.casting_cost": "시전 비용",
