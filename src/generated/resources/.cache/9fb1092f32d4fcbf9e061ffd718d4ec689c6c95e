@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-09T20:26:02.0343657	Recipes
+// 1.20.1	2023-07-10T12:34:06.3424301	Recipes
 53e7c7063857317940cff0f32c3e0bb2144ce88a data/ars_nouveau/advancements/recipes/building_blocks/archwood_button.json
 3b562128c61e177df4b6cadd7e13b0a7f2aae1df data/ars_nouveau/advancements/recipes/building_blocks/archwood_door.json
 e310e3ed620252904dbd7ad1ce31741843c2474e data/ars_nouveau/advancements/recipes/building_blocks/archwood_fence.json
@@ -111,7 +111,6 @@ e3b41e068773cbb256766d257fd8f15676991fbf data/ars_nouveau/advancements/recipes/m
 19fd57aa598b702f8aba57b08a5f05afc02f7ca8 data/ars_nouveau/advancements/recipes/misc/basic_spell_turret.json
 fd4084bfffc41ed2dd2215f8cc6edf794af801e9 data/ars_nouveau/advancements/recipes/misc/blank_parchment.json
 9a6c7f2b500414305b9deeafbf9d82ff4f563a75 data/ars_nouveau/advancements/recipes/misc/blank_thread.json
-4e08f9e29b3d4576101748507195c9b0e0172c8a data/ars_nouveau/advancements/recipes/misc/blaze_fiber.json
 b01d10fd9f474e90dff3f0998d93a106b9aef600 data/ars_nouveau/advancements/recipes/misc/blue_archwood_wood.json
 a3b4142bff32c81bb0d9674f2ce584fb7abbfc20 data/ars_nouveau/advancements/recipes/misc/blue_sbed.json
 1caa19ba9c45b8de13f2605198fde16667885edd data/ars_nouveau/advancements/recipes/misc/challenge_2.json
@@ -123,7 +122,6 @@ c2087ee717be66870836c7d322ff4f716fb63be4 data/ars_nouveau/advancements/recipes/m
 426ce745043da35a2481bec982d9a307346999f1 data/ars_nouveau/advancements/recipes/misc/dowsing_rod.json
 10e1d2334bf97d8ff0c68ca61638676e28c1e3e7 data/ars_nouveau/advancements/recipes/misc/dull_trinket.json
 2b6713c855391d9b950f7cdfef3e97f63fcf3ec7 data/ars_nouveau/advancements/recipes/misc/enchanting_apparatus.json
-dbd656629d2adb73e749f781fb6ec8efd8191da7 data/ars_nouveau/advancements/recipes/misc/end_fiber.json
 35ca16f4d136781aa388b2ffef009f248aa6ac44 data/ars_nouveau/advancements/recipes/misc/experience_gem.json
 f1ab6cb5b91a67b84e41a32efb2430d07307f0e6 data/ars_nouveau/advancements/recipes/misc/falseweave.json
 19b0b11001e3c877522c338eaa3f896a8b5a62a6 data/ars_nouveau/advancements/recipes/misc/fire_essence_to_charge.json
@@ -295,7 +293,6 @@ ed16bee8f4f2d424ad85b25119731623d2b1978b data/ars_nouveau/recipes/archwood_trapd
 fdb5ba6a8b71d06f4c8c062f487cd8f2d069c18c data/ars_nouveau/recipes/basic_spell_turret.json
 53f2944a8ff5f7c927e169974fd55467b568a01e data/ars_nouveau/recipes/blank_parchment.json
 f0e52e23dc621a6d7ec7ffbd49a89584c8d1e5ce data/ars_nouveau/recipes/blank_thread.json
-a9c20abf72def425fe8c1309896c209db24c16d7 data/ars_nouveau/recipes/blaze_fiber.json
 72fe03c5f61a29d3997cc666316949bc40630885 data/ars_nouveau/recipes/blue_archwood_wood.json
 6d11b2acd2de9a400a5a99c73d00fbb9f026895d data/ars_nouveau/recipes/blue_sbed.json
 8f370bd03973df1cbe6b5414577f9d38ddae98a7 data/ars_nouveau/recipes/challenge_2.json
@@ -307,7 +304,6 @@ c0ed2c399bd421f7b792c19fd7b1213c4280121d data/ars_nouveau/recipes/deny_scroll.js
 90c8f9a55e4098c748eee59cdaf107d2068da687 data/ars_nouveau/recipes/dowsing_rod.json
 723a8a864ce598871b31b941d28c37fc70068258 data/ars_nouveau/recipes/dull_trinket.json
 6ef13bcb5cf03c9cd583c8d277c0ddb3f70f0bca data/ars_nouveau/recipes/enchanting_apparatus.json
-3aa33a3948c86a30d338825365493680a380d671 data/ars_nouveau/recipes/end_fiber.json
 d2d12d2e6c17ac9f808657f450baa569a2782a1e data/ars_nouveau/recipes/experience_gem.json
 41e7eab320aaa1474989f86ee9ea426bdc8ebca2 data/ars_nouveau/recipes/falseweave.json
 086242e4fe6e1add8bb723e680f2854aae91c551 data/ars_nouveau/recipes/fire_essence_to_charge.json

@@ -57,16 +57,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE).requires(Items.BONE_MEAL).requires(ItemsRegistry.MAGE_FIBER)
                     .save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.BLAZE_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.MAGE_FIBER, 2)
-                    .requires(Items.BLAZE_POWDER)
-                    .save(consumer);
-
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.END_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.BLAZE_FIBER, 2)
-                    .requires(Items.POPPED_CHORUS_FRUIT)
-                    .save(consumer);
-
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlockRegistry.SOURCE_JAR).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("yyy")
                     .pattern("x x")
