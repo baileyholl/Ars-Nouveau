@@ -400,7 +400,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page5.wixie_charm", "Wixies will autocraft potions using nearby Potion Jars and items. Potions that require Water will be supplied by the Wixie. Potions that require another potion as a base will be taken from nearby Potion Jars. A Wixie will output 3 doses of a Potion into a nearby Potion Jar when complete. To begin, place down an empty Potion Jar, right click the cauldron with an Awkward Potion, and supply Nether Wart from a nearby chest.");
         add("ars_nouveau.page6.wixie_charm", "When using multiple Wixies, you may wish to lock a jar to a specific potion. Wixies will only output potion to jars that contain the same potion, or an unlocked empty potion. Each craft costs Source. See the section on the Potion Jar for more information.");
         add("entity.ars_nouveau.summon_horse", "Summoned Horse");
-        add("block.ars_nouveau.sconce", "Magelight Sconce");
+        add("block.ars_nouveau.sconce", "Gold Sconce");
+        add("block.ars_nouveau.archwood_sconce", "Archwood Sconce");
+        add("block.ars_nouveau.sourcestone_sconce", "Sourcestone Sconce");
+        add("block.ars_nouveau.polished_sconce", "Polished Sourcestone Sconce");
         add("block.ars_nouveau.ritual_brazier", "Ritual Brazier");
         add("ars_nouveau.tooltip.consumed", "Items Consumed:");
         add("ars_nouveau.tooltip.waiting", "Awaiting Activation");

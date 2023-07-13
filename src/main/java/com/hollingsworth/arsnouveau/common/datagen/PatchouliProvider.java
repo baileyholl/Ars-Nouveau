@@ -274,9 +274,6 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new CraftingPage(SOURCESTONE))
                 .withLocalizedText(), getPath(RESOURCES, "decorative"));
 
-        addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.LAVA_LILY)
-                .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.LAVA_LILY)), getPath(RESOURCES, "lava_lily"));
 
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.SOURCEBERRY_BUSH)
                 .withLocalizedText()
@@ -317,7 +314,9 @@ public class PatchouliProvider extends SimpleDataProvider{
 
         addPage(new PatchouliBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
                 .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.SCONCE_BLOCK).withRecipe2(BlockRegistry.MAGELIGHT_TORCH)), getPath(RESOURCES, "magelighting"));
+                .withPage(new CraftingPage(BlockRegistry.GOLD_SCONCE_BLOCK).withRecipe2(BlockRegistry.SOURCESTONE_SCONCE_BLOCK))
+                .withPage(new CraftingPage(BlockRegistry.POLISHED_SCONCE_BLOCK).withRecipe2(BlockRegistry.ARCHWOOD_SCONCE_BLOCK))
+                .withPage(new CraftingPage(BlockRegistry.MAGELIGHT_TORCH)), getPath(RESOURCES, "magelighting"));
 
         addPage(new PatchouliBuilder(EQUIPMENT, "spell_books")
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
@@ -417,7 +416,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withLocalizedText()
                 .withPage(new TextPage(getLangPath("volcanic_sourcelink", 2)).withTitle("ars_nouveau.active_generation"))
                 .withPage(new TextPage(getLangPath("volcanic_sourcelink", 3)).withTitle("ars_nouveau.heat"))
-                .withPage(new CraftingPage(BlockRegistry.VOLCANIC_BLOCK).withRecipe2(BlockRegistry.LAVA_LILY))
+                .withPage(new CraftingPage(BlockRegistry.VOLCANIC_BLOCK))
                 .withPage(new TextPage(getLangPath("volcanic_sourcelink", 4))), getPath(SOURCE, "volcanic_sourcelink"));
         addPage(new PatchouliBuilder(ENCHANTMENTS, "how_to_enchant")
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)

@@ -4,17 +4,16 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -122,7 +121,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.POTION_MELDER);
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
-            registerDropSelf(BlockRegistry.SCONCE_BLOCK);
+            registerDropSelf(BlockRegistry.GOLD_SCONCE_BLOCK);
             registerBedCondition(BlockRegistry.SCRIBES_BLOCK.get(), ScribesBlock.PART, ThreePartBlock.HEAD);
             registerDrop(BlockRegistry.DRYGMY_BLOCK.get(), Items.MOSSY_COBBLESTONE);
 
@@ -134,7 +133,6 @@ public class DefaultTableProvider extends LootTableProvider {
 
             registerDropSelf(BlockRegistry.ARCHWOOD_CHEST);
             registerDropSelf(BlockRegistry.SPELL_PRISM);
-            registerDropSelf(BlockRegistry.LAVA_LILY);
 
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
@@ -145,7 +143,6 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
             registerDropSelf(BlockRegistry.IMBUEMENT_BLOCK);
             registerDropSelf(BlockRegistry.VOLCANIC_BLOCK);
-            registerDropSelf(BlockRegistry.LAVA_LILY);
             registerDropSelf(BlockRegistry.BRAZIER_RELAY);
 
             registerDropSelf(BlockRegistry.RELAY_WARP);
@@ -217,7 +214,9 @@ public class DefaultTableProvider extends LootTableProvider {
                     .add(LootItem.lootTableItem(BlockRegistry.REPOSITORY)
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
             add(BlockRegistry.REPOSITORY.get(), LootTable.lootTable().withPool(repository));
-
+            registerDropSelf(BlockRegistry.SOURCESTONE_SCONCE_BLOCK.get());
+            registerDropSelf(BlockRegistry.POLISHED_SCONCE_BLOCK.get());
+            registerDropSelf(BlockRegistry.ARCHWOOD_SCONCE_BLOCK.get());
         }
 
         @Override
@@ -339,6 +338,7 @@ public class DefaultTableProvider extends LootTableProvider {
 
     public static class EntityLootTable extends EntityLootSubProvider {
         private final Map<EntityType<?>, Map<ResourceLocation, LootTable.Builder>> map = Maps.newHashMap();
+
         protected EntityLootTable() {
             super(FeatureFlags.REGISTRY.allFlags());
         }
@@ -385,24 +385,24 @@ public class DefaultTableProvider extends LootTableProvider {
             Set<ResourceLocation> set = Sets.newHashSet();
             this.getKnownEntityTypes().map(EntityType::builtInRegistryHolder).forEach((p_249003_) -> {
                 EntityType<?> entitytype = p_249003_.value();
-                    if (canHaveLootTable(entitytype)) {
-                        Map<ResourceLocation, LootTable.Builder> map = this.map.remove(entitytype);
-                        ResourceLocation resourcelocation = entitytype.getDefaultLootTable();
-                        if(map != null) {
-                            map.forEach((p_250376_, p_250972_) -> {
-                                if (!set.add(p_250376_)) {
-                                    throw new IllegalStateException(String.format(Locale.ROOT, "Duplicate loottable '%s' for '%s'", p_250376_, p_249003_.key().location()));
-                                } else {
-                                    p_251751_.accept(p_250376_, p_250972_);
-                                }
-                            });
-                        }
-                    } else {
-                        Map<ResourceLocation, LootTable.Builder> map1 = this.map.remove(entitytype);
-                        if (map1 != null) {
-                            throw new IllegalStateException(String.format(Locale.ROOT, "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot", map1.keySet().stream().map(ResourceLocation::toString).collect(Collectors.joining(",")), p_249003_.key().location()));
-                        }
+                if (canHaveLootTable(entitytype)) {
+                    Map<ResourceLocation, LootTable.Builder> map = this.map.remove(entitytype);
+                    ResourceLocation resourcelocation = entitytype.getDefaultLootTable();
+                    if (map != null) {
+                        map.forEach((p_250376_, p_250972_) -> {
+                            if (!set.add(p_250376_)) {
+                                throw new IllegalStateException(String.format(Locale.ROOT, "Duplicate loottable '%s' for '%s'", p_250376_, p_249003_.key().location()));
+                            } else {
+                                p_251751_.accept(p_250376_, p_250972_);
+                            }
+                        });
                     }
+                } else {
+                    Map<ResourceLocation, LootTable.Builder> map1 = this.map.remove(entitytype);
+                    if (map1 != null) {
+                        throw new IllegalStateException(String.format(Locale.ROOT, "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot", map1.keySet().stream().map(ResourceLocation::toString).collect(Collectors.joining(",")), p_249003_.key().location()));
+                    }
+                }
 
             });
         }

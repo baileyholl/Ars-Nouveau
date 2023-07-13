@@ -64,11 +64,8 @@ public class ItemsRegistry {
     public static final RegistryWrapper<SpellBook> ARCHMAGE_SPELLBOOK = register(LibItemNames.ARCHMAGE_SPELL_BOOK, () -> new SpellBook(SpellTier.THREE));
     public static final RegistryWrapper<SpellBook> CREATIVE_SPELLBOOK = register(LibItemNames.CREATIVE_SPELL_BOOK, () -> new SpellBook(SpellTier.CREATIVE));
     public static final RegistryWrapper<ModItem> BLANK_GLYPH = register(LibItemNames.BLANK_GLYPH);
-    public static final RegistryWrapper<ModItem> BUCKET_OF_SOURCE = register(LibItemNames.BUCKET_OF_SOURCE);
     public static final RegistryWrapper<ModItem> MAGE_BLOOM = register(LibItemNames.MAGE_BLOOM, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.magebloom")));
     public static final RegistryWrapper<ModItem> MAGE_FIBER = register(LibItemNames.MAGE_FIBER);
-    public static final RegistryWrapper<ModItem> BLAZE_FIBER = register(LibItemNames.BLAZE_FIBER);
-    public static final RegistryWrapper<ModItem> END_FIBER = register(LibItemNames.END_FIBER);
     public static final RegistryWrapper<ModItem> MUNDANE_BELT = register(LibItemNames.MUNDANE_BELT, () -> new ModItem().withTooltip(Component.translatable("ars_nouveau.tooltip.dull")));
     public static final RegistryWrapper<JarOfLight> JAR_OF_LIGHT = register(LibItemNames.JAR_OF_LIGHT, JarOfLight::new);
     public static final RegistryWrapper<BeltOfLevitation> BELT_OF_LEVITATION = register(LibItemNames.BELT_OF_LEVITATION, BeltOfLevitation::new);

@@ -37,28 +37,22 @@ public class SpellContext implements Cloneable {
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
 
-    /**
-     * Use wrapped caster version
-     */
-    @Deprecated(forRemoval = true, since = "3.4.0")
-    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster) {
+    // TODO: Convert usages to use casterTool
+    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
         this.level = level;
         this.spell = spell;
         this.caster = caster;
-        this.isCanceled = false;
-        this.currentIndex = 0;
         this.colors = spell.color.clone();
-        this.wrappedCaster = new LivingCaster(getUnwrappedCaster());
-    }
-
-    public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
-        this(level, spell, caster);
         this.wrappedCaster = wrappedCaster;
     }
 
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster, ItemStack casterTool) {
         this(level, spell, caster, wrappedCaster);
         this.casterTool = casterTool.copy();
+    }
+
+    public static SpellContext fromEntity(@NotNull Spell spell, @NotNull LivingEntity caster, ItemStack castingTool){
+        return new SpellContext(caster.level, spell, caster, LivingCaster.from(caster), castingTool);
     }
 
     public SpellContext withWrappedCaster(IWrappedCaster caster){
@@ -98,24 +92,8 @@ public class SpellContext implements Cloneable {
         return this;
     }
 
-    @Deprecated(forRemoval = true, since = "3.4.0")
-    public SpellContext withCastingTile(BlockEntity tile) {
-        this.castingTile = tile;
-        return this;
-    }
-    @Deprecated(forRemoval = true, since = "3.4.0")
-    public SpellContext withCaster(@Nullable LivingEntity caster) {
-        this.caster = caster;
-        return this;
-    }
-
     public SpellContext withColors(ParticleColor colors) {
         this.colors = colors;
-        return this;
-    }
-    @Deprecated(forRemoval = true, since = "3.4.0")
-    public SpellContext withType(CasterType type) {
-        this.type = type;
         return this;
     }
 
@@ -170,11 +148,11 @@ public class SpellContext implements Cloneable {
         isCanceled = canceled;
     }
 
-    public@NotNull Spell getSpell() {
+    public @NotNull Spell getSpell() {
         return spell == null ? new Spell() : spell;
     }
 
-    public@NotNull Spell getRemainingSpell() {
+    public @NotNull Spell getRemainingSpell() {
         if (getCurrentIndex() >= getSpell().recipe.size())
             return getSpell().clone().setRecipe(new ArrayList<>());
         return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));

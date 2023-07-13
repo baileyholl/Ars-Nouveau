@@ -109,6 +109,10 @@ public class ItemModelGenerator extends ItemModelProvider {
         getBuilder(LibBlockNames.MIRROR_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MIRROR_WEAVE));
         getBuilder(LibBlockNames.GHOST_WEAVE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.GHOST_WEAVE));
         getBuilder(LibBlockNames.MAGEBLOOM_BLOCK).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.MAGEBLOOM_BLOCK));
+        getBuilder(LibBlockNames.SCONCE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SCONCE));
+        getBuilder(LibBlockNames.ARCHWOOD_SCONCE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCHWOOD_SCONCE));
+        getBuilder(LibBlockNames.SOURCESTONE_SCONCE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.SOURCESTONE_SCONCE));
+        getBuilder(LibBlockNames.POLISHED_SCONCE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.POLISHED_SCONCE));
 
         getBuilder(LibBlockNames.RITUAL_BRAZIER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.RITUAL_BRAZIER));
         getBuilder(LibBlockNames.ITEM_DETECTOR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ITEM_DETECTOR));

@@ -10,7 +10,16 @@
     {
       "type": "patchouli:crafting",
       "recipe": "ars_nouveau:sconce",
-      "recipe2": "ars_nouveau:magelight_torch"
+      "recipe2": "ars_nouveau:sourcestone_sconce"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:polished_sconce",
+      "recipe2": "ars_nouveau:archwood_sconce"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:magelight_torch"
     }
   ]
 }

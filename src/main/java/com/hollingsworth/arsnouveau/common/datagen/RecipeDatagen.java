@@ -57,16 +57,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(ItemsRegistry.MANIPULATION_ESSENCE).requires(Items.BONE_MEAL).requires(ItemsRegistry.MAGE_FIBER)
                     .save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.BLAZE_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.MAGE_FIBER, 2)
-                    .requires(Items.BLAZE_POWDER)
-                    .save(consumer);
-
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.END_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.BLAZE_FIBER, 2)
-                    .requires(Items.POPPED_CHORUS_FRUIT)
-                    .save(consumer);
-
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlockRegistry.SOURCE_JAR).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("yyy")
                     .pattern("x x")
@@ -155,10 +145,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .define('s', SOURCE_GEM)
                     .define('i', Items.LAVA_BUCKET).save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, BlockRegistry.LAVA_LILY, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(Items.LILY_PAD, 1).requires(SOURCE_GEM, 8)
-                    .save(consumer);
-
             shapelessBuilder(BlockRegistry.ARCHWOOD_PLANK, 4).requires(ARCHWOOD_LOG).save(consumer);
             makeWood(BlockRegistry.VEXING_LOG, BlockRegistry.VEXING_WOOD, 3).save(consumer);
             makeWood(BlockRegistry.CASCADING_LOG, BlockRegistry.CASCADING_WOOD, 3).save(consumer);
@@ -208,10 +194,24 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(Ingredient.of(Tags.Items.INGOTS_GOLD), 3)
                     .save(consumer);
 
-            shapelessBuilder(BlockRegistry.SCONCE_BLOCK)
+            shapelessBuilder(BlockRegistry.GOLD_SCONCE_BLOCK)
                     .requires(RecipeDatagen.SOURCE_GEM)
                     .requires(Ingredient.of(Tags.Items.NUGGETS_GOLD), 2)
                     .save(consumer);
+
+            shapelessBuilder(BlockRegistry.SOURCESTONE_SCONCE_BLOCK)
+                    .requires(RecipeDatagen.SOURCE_GEM)
+                    .requires(Ingredient.of(BlockRegistry.getBlock(LibBlockNames.SOURCESTONE)), 2)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.ARCHWOOD_SCONCE_BLOCK)
+                    .requires(RecipeDatagen.SOURCE_GEM)
+                    .requires(Ingredient.of(BlockRegistry.ARCHWOOD_PLANK), 2)
+                    .save(consumer);
+            shapelessBuilder(BlockRegistry.POLISHED_SCONCE_BLOCK)
+                    .requires(BlockRegistry.SOURCESTONE_SCONCE_BLOCK)
+                    .save(consumer);
+
+            shapelessBuilder(BlockRegistry.SOURCESTONE_SCONCE_BLOCK).requires(BlockRegistry.POLISHED_SCONCE_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "polished_source_sconce"));
 
             shapelessBuilder(getRitualItem(RitualLib.MOONFALL))
                     .requires(BlockRegistry.CASCADING_LOG)

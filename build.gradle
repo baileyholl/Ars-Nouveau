@@ -26,7 +26,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '4.0.2'
+version = '4.1.0'
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -168,7 +168,7 @@ dependencies {
         jarJar.pin(it, "4.2.1")
     }
 
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")

@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
-import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
@@ -33,7 +32,10 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -133,8 +135,6 @@ public class BlockRegistry {
     public static RegistryWrapper<VolcanicSourcelinkBlock> VOLCANIC_BLOCK = registerBlockAndItem(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkBlock::new);
     public static RegistryWrapper<BlockEntityType<VolcanicSourcelinkTile>> VOLCANIC_TILE = registerTile(LibBlockNames.VOLCANIC_SOURCELINK, VolcanicSourcelinkTile::new, VOLCANIC_BLOCK);
 
-    public static RegistryWrapper<LavaLily> LAVA_LILY = registerBlockAndItem(LibBlockNames.LAVA_LILY, LavaLily::new, (reg) ->new FluidBlockItem(reg.get(), defaultItemProperties().fireResistant()));
-
     public static RegistryWrapper<SourceBerryBush> SOURCEBERRY_BUSH = registerBlockAndItem(LibBlockNames.SOURCEBERRY_BUSH, () -> new SourceBerryBush(BlockBehaviour.Properties.of().randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)), (reg) -> new BlockItem(reg.get(), defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)));
     public static RegistryWrapper<WixieCauldron> WIXIE_CAULDRON = registerBlockAndItem(LibBlockNames.WIXIE_CAULDRON, WixieCauldron::new);
     public static RegistryWrapper<BlockEntityType<WixieCauldronTile>> WIXIE_CAULDRON_TYPE = registerTile(LibBlockNames.WIXIE_CAULDRON, WixieCauldronTile::new, WIXIE_CAULDRON);
@@ -180,8 +180,11 @@ public class BlockRegistry {
     public static RegistryWrapper<BlockEntityType<PotionJarTile>> POTION_JAR_TYPE = registerTile(LibBlockNames.POTION_JAR_BLOCK, PotionJarTile::new, POTION_JAR);
     public static RegistryWrapper<PotionMelder> POTION_MELDER = registerBlockAndItem(LibBlockNames.POTION_MELDER_BLOCK, PotionMelder::new);
     public static RegistryWrapper<BlockEntityType<PotionMelderTile>> POTION_MELDER_TYPE = registerTile(LibBlockNames.POTION_MELDER_BLOCK, PotionMelderTile::new, POTION_MELDER);
-    public static RegistryWrapper<SconceBlock> SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SCONCE, SconceBlock::new);
-    public static RegistryWrapper<BlockEntityType<SconceTile>> SCONCE_TILE = registerTile(LibBlockNames.SCONCE, SconceTile::new, SCONCE_BLOCK);
+    public static RegistryWrapper<SconceBlock> GOLD_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SCONCE, SconceBlock::new);
+    public static RegistryWrapper<SconceBlock> SOURCESTONE_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.SOURCESTONE_SCONCE, SconceBlock::new);
+    public static RegistryWrapper<SconceBlock> POLISHED_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.POLISHED_SCONCE, SconceBlock::new);
+    public static RegistryWrapper<SconceBlock> ARCHWOOD_SCONCE_BLOCK = registerBlockAndItem(LibBlockNames.ARCHWOOD_SCONCE, SconceBlock::new);
+    public static RegistryWrapper<BlockEntityType<SconceTile>> SCONCE_TILE = new RegistryWrapper<>(BLOCK_ENTITIES.register(LibBlockNames.SCONCE, () -> BlockEntityType.Builder.of(SconceTile::new, GOLD_SCONCE_BLOCK.get(), SOURCESTONE_SCONCE_BLOCK.get(), POLISHED_SCONCE_BLOCK.get(), ARCHWOOD_SCONCE_BLOCK.get()).build(null)));
 
 
     public static RegistryWrapper<DrygmyStone> DRYGMY_BLOCK = registerBlockAndItem(LibBlockNames.DRYGMY_STONE, DrygmyStone::new);

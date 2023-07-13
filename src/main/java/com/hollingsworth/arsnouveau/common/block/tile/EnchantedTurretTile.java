@@ -18,7 +18,7 @@ public class EnchantedTurretTile extends BasicSpellTurretTile {
 
     @Override
     public int getManaCost() {
-        return getSpellCaster().getSpell().getDiscountedCost() / 2;
+        return getSpellCaster().getSpell().getCost() / 2;
     }
 
     @Override

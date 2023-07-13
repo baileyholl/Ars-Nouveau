@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
-import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
+import com.hollingsworth.arsnouveau.api.event.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
 import net.minecraft.tags.DamageTypeTags;
@@ -41,6 +38,15 @@ public class FamiliarEvents {
         for (FamiliarEntity entity : getFamiliars((f) -> f instanceof ISpellCastListener)) {
             if (entity instanceof ISpellCastListener) {
                 ((ISpellCastListener) entity).onCast(event);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void calcEvent(SpellCostCalcEvent event) {
+        for (FamiliarEntity entity : getFamiliars((f) -> f instanceof ISpellCastListener)) {
+            if (entity instanceof ISpellCastListener) {
+                ((ISpellCastListener) entity).onCostCalc(event);
             }
         }
     }

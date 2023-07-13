@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
@@ -99,13 +98,6 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
         if (level.isClientSide)
             return;
         AtomicBoolean set = new AtomicBoolean(false);
-        BlockPos.withinManhattanStream(worldPosition, 1, 0, 1).forEach(p -> {
-            if (!set.get() && level.getBlockState(p).isAir() && (level.getFluidState(p.below()).getType() == Fluids.LAVA || level.getFluidState(p.below()).getType() == Fluids.FLOWING_LAVA)) {
-                level.setBlockAndUpdate(p, BlockRegistry.LAVA_LILY.get().getState(level, p));
-                set.set(true);
-            }
-        });
-
 
         BlockPos magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
         if (magmaPos != null && progress >= 200) {

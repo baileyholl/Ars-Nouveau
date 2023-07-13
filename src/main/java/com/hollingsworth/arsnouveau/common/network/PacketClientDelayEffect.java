@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -72,7 +73,8 @@ public class PacketClientDelayEffect {
             } else {
                 result = new EntityHitResult(hitEntity);
             }
-            EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, spell, result, world, (LivingEntity) world.getEntity(shooterID), new SpellContext(world, spell, (LivingEntity) world.getEntity(shooterID))));
+            EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, spell, result, world, (LivingEntity) world.getEntity(shooterID),
+                    new SpellContext(world, spell, (LivingEntity) world.getEntity(shooterID), new LivingCaster((LivingEntity) world.getEntity(shooterID)))));
         });
         ctx.get().setPacketHandled(true);
     }

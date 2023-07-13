@@ -1,7 +1,8 @@
-// 1.20.1	2023-07-04T22:32:46.614664	Ars Nouveau Item Models
+// 1.20.1	2023-07-09T20:17:45.7295007	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
+89e2e712ca344bff16882883d45b8e62536ea0d5 assets/ars_nouveau/models/item/archwood_sconce.json
 f9eb0905e283cab647712716770a244a1bdb25f0 assets/ars_nouveau/models/item/bastion_pod.json
 84bdd95fc8506c6d9054e5ffb87c24c20b2ae628 assets/ars_nouveau/models/item/blank_thread.json
 a81ea25c1312389ff436100c29d1ae20d35b0a40 assets/ars_nouveau/models/item/blue_sbed.json
@@ -118,6 +119,7 @@ a869ede0c768f982722b00764902abac8e30fde9 assets/ars_nouveau/models/item/mirrorwe
 7df4c87bf98b125b9e890a368ec0b284d0c32eb2 assets/ars_nouveau/models/item/music_disc_thistle_the_sound_of_glass.json
 65fb3413e125a437efc88f8ed415abe97fb6ce87 assets/ars_nouveau/models/item/mycelial_sourcelink.json
 7f12abdda6ac867ceb9f3c3cca0b3529670ca9b4 assets/ars_nouveau/models/item/orange_sbed.json
+818bcb1048ef4519613b5e82724c8f7b40b9aaaa assets/ars_nouveau/models/item/polished_sconce.json
 c556576b522dd93927e5ca14d62f6afb27005eb6 assets/ars_nouveau/models/item/potion_diffuser.json
 6ae8eae13ac3fc5ab7cc3f91cb303584faf53255 assets/ars_nouveau/models/item/purple_sbed.json
 b77d7daa65f5d4a3af491e82aeebe9c020df980c assets/ars_nouveau/models/item/red_sbed.json
@@ -145,6 +147,7 @@ a0d589fc56eaa4ccac5aa47616497483a38f88f0 assets/ars_nouveau/models/item/ritual_r
 9356e2e8a4597f27f46e4163df57548435f21338 assets/ars_nouveau/models/item/ritual_sunrise.json
 954d4d93e373d1f4e07d59790f3a598ab7e29938 assets/ars_nouveau/models/item/ritual_warping.json
 21cd121f04479b877e8a16a66a03d10748eab8c7 assets/ars_nouveau/models/item/ritual_wilden_summon.json
+3dbc5ec6fbe1be8fed2933aa64364fd2e16cc313 assets/ars_nouveau/models/item/sconce.json
 411417734ff2f7b5588002d7b137e6392a66ce10 assets/ars_nouveau/models/item/smooth_gilded_sourcestone_alternating.json
 161f44d81ae019d9a362562e346db08b7db897fa assets/ars_nouveau/models/item/smooth_gilded_sourcestone_alternating_slab.json
 7ae1154ca382551351863c64b514cf389ffe7372 assets/ars_nouveau/models/item/smooth_gilded_sourcestone_alternating_stairs.json
@@ -191,6 +194,7 @@ a0cbe40039bd177a44c304b6f7bc183a44bd1fc3 assets/ars_nouveau/models/item/sourcest
 ae2ea78a62d7da3321ff6e05889e8f44944d7173 assets/ars_nouveau/models/item/sourcestone_mosaic.json
 df0fb36e8687177809598e61a39868d2d480f9b1 assets/ars_nouveau/models/item/sourcestone_mosaic_slab.json
 39872199db5fd6fec9284ce763a479e80d043341 assets/ars_nouveau/models/item/sourcestone_mosaic_stairs.json
+6e7b6129236fc0cc168e468623af052c542fd313 assets/ars_nouveau/models/item/sourcestone_sconce.json
 62ca13d333e90786c03a13b3df9a3071db867cb1 assets/ars_nouveau/models/item/sourcestone_slab.json
 fad002103bb7ccaea2998a2fe617fcf5fd54d416 assets/ars_nouveau/models/item/sourcestone_small_bricks.json
 6ef6a6b58d3b8fbc449f5f376d432eb4a8fb605e assets/ars_nouveau/models/item/sourcestone_small_bricks_slab.json

@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -45,18 +46,19 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public void onCast(SpellCastEvent event) {
+    public void onCostCalc(SpellCostCalcEvent event) {
         if (!isAlive())
             return;
 
-        if (getOwner() != null && getOwner().equals(event.getEntity())) {
+        if (getOwner() != null && getOwner().equals(event.context.getUnwrappedCaster())) {
             int discount = 0;
-            for (AbstractSpellPart part : event.spell.recipe) {
+            Spell spell = event.context.getSpell();
+            for (AbstractSpellPart part : spell.recipe) {
                 if (SpellSchools.ELEMENTAL_EARTH.isPartOfSchool(part)) {
                     discount += part.getCastingCost() * .5;
                 }
             }
-            event.spell.addDiscount(discount);
+            event.currentCost -= discount;
         }
     }
 

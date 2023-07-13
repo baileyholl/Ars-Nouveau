@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
@@ -33,7 +34,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool {
+public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool, IManaDiscountEquipment {
 
     public SpellCrossbow(Properties pProperties) {
         super(pProperties);
@@ -325,13 +325,9 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool 
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
-    @NotNull
     @Override
-    public ISpellCaster getSpellCaster(ItemStack stack) {
-        return new BasicReductionCaster(stack, (spell -> {
-            spell.addDiscount(MethodProjectile.INSTANCE.getCastingCost());
-            return spell;
-        }));
+    public int getManaDiscount(ItemStack i, Spell spell) {
+        return MethodProjectile.INSTANCE.getCastingCost();
     }
 
     @Override

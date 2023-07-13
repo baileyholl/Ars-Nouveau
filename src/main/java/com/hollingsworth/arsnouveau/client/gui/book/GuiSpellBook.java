@@ -558,7 +558,7 @@ public class GuiSpellBook extends BaseBook {
                 spell.add(part);
             }
         }
-        int cost = spell.getFinalCostAndReset() - getPlayerDiscounts(Minecraft.getInstance().player, spell);
+        int cost = spell.getCost() - getPlayerDiscounts(Minecraft.getInstance().player, spell, bookStack);
         return Math.max(cost, 0);
     }
 

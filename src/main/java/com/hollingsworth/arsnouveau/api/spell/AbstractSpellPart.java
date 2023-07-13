@@ -61,8 +61,15 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         compatibleAugments.addAll(getCompatibleAugments());
     }
 
-    public abstract int getDefaultManaCost();
+    /**
+     * The default cost generated for the config.
+     * This should not be used directly for calculations, but as a helper for a recommended value.
+     */
+    protected abstract int getDefaultManaCost();
 
+    /**
+     * The actual cost of the spell part after config is applied.
+     */
     public int getCastingCost() {
         return COST == null ? getDefaultManaCost() : COST.get();
     }

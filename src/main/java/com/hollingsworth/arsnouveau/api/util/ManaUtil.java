@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
 
-    public static int getPlayerDiscounts(LivingEntity e, Spell spell) {
+    public static int getPlayerDiscounts(LivingEntity e, Spell spell, ItemStack casterStack) {
         if (e == null) return 0;
         AtomicInteger discounts = new AtomicInteger();
         CuriosUtil.getAllWornItems(e).ifPresent(items -> {
@@ -32,6 +32,9 @@ public class ManaUtil {
         for (ItemStack armor : e.getArmorSlots()){
             if (armor.getItem() instanceof IManaDiscountEquipment discountItem)
                 discounts.addAndGet(discountItem.getManaDiscount(armor, spell));
+        }
+        if(casterStack.getItem() instanceof IManaDiscountEquipment discountEquipment){
+            discounts.addAndGet(discountEquipment.getManaDiscount(casterStack, spell));
         }
         return discounts.get();
     }

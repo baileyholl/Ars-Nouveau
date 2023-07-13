@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.EffectResolveEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
@@ -188,6 +189,7 @@ public class SpellResolver {
             for (PerkInstance perkInstance : perkInstances) {
                 if (perkInstance.getPerk() instanceof IEffectResolvePerk effectPerk) {
                     effectPerk.onPostResolve(this.hitResult, world, shooter, stats, spellContext, this, effect, perkInstance);
+
                 }
             }
 
@@ -203,8 +205,11 @@ public class SpellResolver {
     }
 
     public int getResolveCost() {
-        int cost = spellContext.getSpell().getFinalCostAndReset() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell);
-        return Math.max(cost, 0);
+        int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
+        SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext,  cost);
+        MinecraftForge.EVENT_BUS.post(event);
+        cost = Math.max(0, event.currentCost);
+        return cost;
     }
 
     /**
