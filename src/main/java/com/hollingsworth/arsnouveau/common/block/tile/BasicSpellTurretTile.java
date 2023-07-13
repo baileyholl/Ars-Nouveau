@@ -42,7 +42,7 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
     }
 
     public int getManaCost() {
-        return this.spellCaster.getSpell().getDiscountedCost();
+        return this.spellCaster.getSpell().getCost();
     }
 
     @Override

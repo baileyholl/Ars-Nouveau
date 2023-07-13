@@ -33,6 +33,10 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
     @Override
     public abstract int getDefaultManaCost();
 
+    public int getCostForPart(AbstractSpellPart spellPart) {
+        return augmentCosts.getAugmentCost(spellPart.getRegistryName(), this.getCastingCost());
+    }
+
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, LivingEntity shooter, SpellContext spellContext) {
         return applyModifiers(builder, spellPart);
     }

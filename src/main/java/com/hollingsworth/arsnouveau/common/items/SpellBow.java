@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBowRenderer;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeHooks;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class SpellBow extends BowItem implements GeoItem, ICasterTool {
+public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDiscountEquipment {
 
     public SpellBow(Properties properties) {
         super(properties);
@@ -284,12 +284,8 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool {
         });
     }
 
-    @NotNull
     @Override
-    public ISpellCaster getSpellCaster(ItemStack stack) {
-        return new BasicReductionCaster(stack, (spell -> {
-            spell.addDiscount(MethodProjectile.INSTANCE.getCastingCost());
-            return spell;
-        }));
+    public int getManaDiscount(ItemStack i, Spell spell) {
+        return MethodProjectile.INSTANCE.getCastingCost();
     }
 }

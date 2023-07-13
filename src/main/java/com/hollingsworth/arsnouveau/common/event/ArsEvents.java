@@ -1,20 +1,35 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.DispelEvent;
-import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
+import com.hollingsworth.arsnouveau.api.event.*;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsEvents {
+
+    @SubscribeEvent
+    public static void costCalc(SpellCostCalcEvent e){
+        if(e.context.getCasterTool().isEmpty()){
+            return;
+        }
+        if(e.context.getCaster() instanceof PlayerCaster livingCaster && e.context.getCasterTool().is(ItemsRegistry.CASTER_TOME.get())){
+            int maxMana = ManaUtil.getMaxMana(livingCaster.player);
+            if (e.currentCost > maxMana) {
+                e.currentCost = maxMana;
+            } else {
+                e.currentCost /= 2;
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void regenCalc(ManaRegenCalcEvent e) {

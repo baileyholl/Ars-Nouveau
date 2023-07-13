@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.MirrorRenderer;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, ISpellModifierItem {
+public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, ISpellModifierItem, IManaDiscountEquipment {
 
     public EnchantersMirror(Properties properties) {
         super(properties);
@@ -52,8 +53,12 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(stack);
-        caster.getSpell().addDiscount((int) (caster.getSpell().getDiscountedCost() * 0.25));
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.mirror.invalid"), caster.getSpell());
+    }
+
+    @Override
+    public int getManaDiscount(ItemStack i, Spell spell) {
+        return (int) (spell.getCost() * .25);
     }
 
     @Override

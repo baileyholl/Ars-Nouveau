@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.defaultItemProperties;
 
-public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem {
+public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, IManaDiscountEquipment {
 
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
         this(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
@@ -113,12 +113,8 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem {
         });
     }
 
-    @NotNull
     @Override
-    public ISpellCaster getSpellCaster(ItemStack stack) {
-        return new BasicReductionCaster(stack, (spell -> {
-            spell.addDiscount(AugmentAmplify.INSTANCE.getCastingCost());
-            return spell;
-        }));
+    public int getManaDiscount(ItemStack i, Spell spell) {
+        return AugmentAmplify.INSTANCE.getCastingCost();
     }
 }

@@ -14,5 +14,4 @@ public interface IManaDiscountEquipment {
     default int getManaDiscount(ItemStack i, Spell spell) {
         return 0;
     }
-
 }

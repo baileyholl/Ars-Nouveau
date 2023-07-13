@@ -125,10 +125,10 @@ public class SpellPartConfigUtil {
         /**
          * Retrieves the cost of the augment given an effect or form.
          */
-        public int getAugmentCost(ResourceLocation augmentTag, int fallback) {
+        public int getAugmentCost(ResourceLocation effectTag, int fallback) {
             // No caching so /reload works
             costs = parseAugmentCosts();
-            return costs.getOrDefault(augmentTag, fallback);
+            return costs.getOrDefault(effectTag, fallback);
         }
 
         /**
