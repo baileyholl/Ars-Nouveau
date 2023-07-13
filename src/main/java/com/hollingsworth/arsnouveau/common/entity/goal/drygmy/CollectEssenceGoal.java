@@ -60,20 +60,6 @@ public class CollectEssenceGoal extends Goal {
         if (complete || target == null)
             return;
 
-        if(timePathing > 20 * 8){
-            approached = true;
-            drygmy.getNavigation().stop();
-        }
-        if (!approached && BlockUtil.distanceFrom(drygmy.position, target.position) >= 2.3) {
-            timePathing++;
-            Path path = drygmy.getNavigation().createPath(target.getX(), target.getY(), target.getZ(), 1);
-            if (path == null || !path.canReach()) {
-                approached = true;
-                drygmy.getNavigation().stop();
-            }else {
-                drygmy.getNavigation().moveTo(path, 1.0);
-            }
-        }
         if(approached) {
             drygmy.setChannelingEntity(target.getId());
             drygmy.getLookControl().setLookAt(target, 10.0F, (float) drygmy.getMaxHeadXRot());
@@ -100,6 +86,23 @@ public class CollectEssenceGoal extends Goal {
                 drygmy.level.addFreshEntity(item);
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();
+            }
+        }else{
+            if(timePathing > 20 * 8){
+                approached = true;
+                drygmy.getNavigation().stop();
+            }
+            if(BlockUtil.distanceFrom(drygmy.position, target.position) <= 2.3){
+                approached = true;
+            }else{
+                timePathing++;
+                Path path = drygmy.getNavigation().createPath(target.getX(), target.getY(), target.getZ(), 1);
+                if (path == null || !path.canReach()) {
+                    approached = true;
+                    drygmy.getNavigation().stop();
+                }else {
+                    drygmy.getNavigation().moveTo(path, 1.0);
+                }
             }
         }
     }
