@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        maven { url 'https://files.minecraftforge.net/maven' }
         maven { url "https://maven.neoforged.net/releases" }
         mavenCentral()
         maven { url 'https://modmaven.dev/' }
@@ -10,14 +11,16 @@ buildscript {
         maven { url = 'https://maven.parchmentmc.org' }
     }
     dependencies {
-        classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.0.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.+', changing: true
+        //classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.0.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
         classpath 'org.parchmentmc:librarian:1.+'
     }
 
 }
 
-apply plugin: 'net.neoforged.gradle'
+apply plugin: 'net.minecraftforge.gradle'
+//apply plugin: 'net.neoforged.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -49,7 +52,7 @@ minecraft {
     mappings channel: 'parchment', version: '2023.07.02-1.20.1'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
+
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -155,7 +158,8 @@ jarJar.enable()
 
 dependencies {
 
-    minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    //minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
@@ -163,9 +167,11 @@ dependencies {
         jarJar.ranged(it, "[${mixin_extras_version},)")
     }
 
-    jarJar(group: 'software.bernie.geckolib', name: 'geckolib-forge-1.20', version: "[4.0,)") {
-        jarJar.pin(it, "4.2.1")
+    jarJar(group: 'software.bernie.geckolib', name: 'geckolib-forge-1.20.1', version: "[4.0,)") {
+        jarJar.pin(it, "${gecko_version}")
     }
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
+
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
@@ -176,8 +182,6 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
     implementation fg.deobf("curse.maven:curios-309927:4583413")
-    
-    implementation fg.deobf("curse.maven:geckolib-388172:4627674")
 
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
