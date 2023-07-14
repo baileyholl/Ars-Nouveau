@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url 'https://files.minecraftforge.net/maven' }
+        maven { url "https://maven.neoforged.net/releases" }
         mavenCentral()
         maven { url 'https://modmaven.dev/' }
         maven {
@@ -10,14 +10,14 @@ buildscript {
         maven { url = 'https://maven.parchmentmc.org' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.0.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
         classpath 'org.parchmentmc:librarian:1.+'
     }
 
 }
 
-apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'net.neoforged.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -155,8 +155,7 @@ jarJar.enable()
 
 dependencies {
 
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-
+    minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
