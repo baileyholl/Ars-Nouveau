@@ -18,7 +18,9 @@ buildscript {
     }
 
 }
-
+//plugins {
+//    id 'com.github.johnrengelman.shadow' version '7.1.2'
+//}
 apply plugin: 'net.minecraftforge.gradle'
 //apply plugin: 'net.neoforged.gradle'
 apply plugin: 'org.spongepowered.mixin'
@@ -29,8 +31,12 @@ apply plugin: 'maven-publish'
 
 
 
-version = '4.1.0'
-
+version = '4.2.0'
+//configurations {
+//    library
+//    shade // <- Create a 'shade' configuration
+//    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
+//}
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -39,6 +45,14 @@ archivesBaseName = 'ars_nouveau-1.20.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
+
+//// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
+//// If you have any module issues, check these files to make sure there are no duplicate dependencies
+//minecraft.runs.configureEach {
+//    lazyToken('minecraft_classpath') {
+//        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+//    }
+//}
 
 minecraft {
 
@@ -234,6 +248,23 @@ jar {
 // and then declare that to be published
 // Note you'll need to add a repository here
 
+//shadowJar {
+//    configurations = [project.configurations.shade] // <- Tell shadowJar to shade dependencies from 'shade'
+////    exclude 'software/bernie/example/**'
+////    exclude 'assets/geckolib3/**'
+////    exclude '**/*.java'
+////
+////    classifier ''
+////    relocate 'com.llamalad7', 'shadowed.llamalad7'
+////    relocate 'software.bernie.shadowed', 'software.bernie.ars_nouveau.shadowed'
+////    relocate 'software.bernie.geckolib', 'software.bernie.ars_nouveau.geckolib'
+//    finalizedBy 'reobfShadowJar' // <- Finish shading with reobfuscation
+//    mergeServiceFiles()
+//}
+//
+//reobf { // <- Add the output of shadowJar to reobfuscation, so shadowed content is reobfuscated
+//    shadowJar {}
+//}
 
 
 artifacts {
