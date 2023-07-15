@@ -9,7 +9,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +24,7 @@ import javax.annotation.Nullable;
 import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class LightBlock extends ModBlock implements EntityBlock, ITickableBlock, SimpleWaterloggedBlock {
+public class LightBlock extends ModBlock implements ITickableBlock, SimpleWaterloggedBlock {
 
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
