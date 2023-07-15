@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.item.ISpellModifier;
+import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -30,11 +31,21 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
         return augmentSetOf();
     }
 
-    @Override
-    public abstract int getDefaultManaCost();
-
+    /**
+     * Warning: semi-confusing.
+     * This method accesses the *other* parts AugmentCosts map instead of its own.
+     * This is because Methods and Effects store Augment Costs for the cost of an augment applied to it.
+     * This is done for config reasons, so augment costs for Break are found in break.
+     * Therefore, this method fetches the 'Break' part's AugmentCosts map and gets the cost for this augment if it is applied to the 'Break' part.
+     */
     public int getCostForPart(AbstractSpellPart spellPart) {
-        return augmentCosts == null ? this.getCastingCost() : augmentCosts.getAugmentCost(spellPart.getRegistryName(), this.getCastingCost());
+        if(spellPart instanceof AbstractAugment)
+            return this.getCastingCost();
+        SpellPartConfigUtil.AugmentCosts augmentCosts = spellPart.augmentCosts;
+        if(augmentCosts == null){
+            return this.getCastingCost();
+        }
+        return augmentCosts.getAugmentCost(spellPart.getRegistryName(), this.getCastingCost());
     }
 
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, LivingEntity shooter, SpellContext spellContext) {
