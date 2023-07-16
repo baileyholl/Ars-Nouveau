@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.client.registry.ShaderRegistry;
