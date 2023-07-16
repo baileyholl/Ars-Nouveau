@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.api.client.CosmeticRenderUtil;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
+import com.hollingsworth.arsnouveau.client.registry.ShaderRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -62,7 +63,11 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     }
 
     @Override
-    public RenderType getRenderType(Starbuncle animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityCutoutNoCull(texture);
+    public RenderType getRenderType(Starbuncle animatable, ResourceLocation textureLocation, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
+        // Jared's special shader, because adopter details aren't synced.
+        if(animatable.getName().getString().equals("Splonk")) {
+            return ShaderRegistry.blamed(textureLocation, true);
+        }
+        return RenderType.entityCutoutNoCull(textureLocation);
     }
 }
