@@ -15,7 +15,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,14 +53,14 @@ public class BlockStatePropertyMatcher implements StateMatcher {
         BlockState displayState = null;
         if (json.has("display")) {
             try {
-                displayState = BlockStateParser.parseForBlock(Registry.BLOCK, new StringReader(GsonHelper.getAsString(json, "display")), false).blockState();
+                displayState = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), new StringReader(GsonHelper.getAsString(json, "display")), false).blockState();
             } catch (CommandSyntaxException e) {
                 throw new IllegalArgumentException("Failed to parse BlockState from json member \"display\" for BlockStatePropertyMatcher.", e);
             }
         }
 
         try {
-            var result = BlockStateParser.parseForBlock(Registry.BLOCK, new StringReader(GsonHelper.getAsString(json, "block")), false);
+            var result = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), new StringReader(GsonHelper.getAsString(json, "block")), false);
 
             var props = convertProps(result.properties());
             return new BlockStatePropertyMatcher(displayState, result.blockState().getBlock(), Suppliers.memoize(() -> props));
@@ -73,9 +74,9 @@ public class BlockStatePropertyMatcher implements StateMatcher {
         try {
             BlockState displayState = null;
             if (buffer.readBoolean())
-                displayState = BlockStateParser.parseForBlock(Registry.BLOCK, new StringReader(buffer.readUtf()), false).blockState();
+                displayState = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), new StringReader(buffer.readUtf()), false).blockState();
 
-            var block = Registry.BLOCK.getOptional(buffer.readResourceLocation()).orElseThrow();
+            var block = ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
             var props = buffer.readMap(FriendlyByteBuf::readUtf, FriendlyByteBuf::readUtf);
 
             return new BlockStatePropertyMatcher(displayState, block, Suppliers.memoize(() -> props));
@@ -117,7 +118,7 @@ public class BlockStatePropertyMatcher implements StateMatcher {
         buffer.writeBoolean(this.displayState != null);
         if (this.displayState != null)
             buffer.writeUtf(BlockStateParser.serialize(this.displayState));
-        buffer.writeResourceLocation(Registry.BLOCK.getKey(this.block));
+        buffer.writeResourceLocation(ForgeRegistries.BLOCKS.getKey(this.block));
         buffer.writeMap(this.props.get(), FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeUtf);
     }
 

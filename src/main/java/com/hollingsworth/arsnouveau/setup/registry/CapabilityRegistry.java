@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import com.hollingsworth.arsnouveau.common.book.BookUnlockCapability;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerCapAttacher;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
@@ -10,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,11 +27,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 public class CapabilityRegistry {
-
+    public static final ResourceLocation BOOK_UNLOCK_ID = ArsNouveau.loc("book_unlock");
+    public static final ResourceLocation BOOK_STATE_ID = ArsNouveau.loc("book_state");
     public static final Capability<IManaCap> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
     public static final Capability<IPlayerCap> PLAYER_DATA_CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static Capability<BookUnlockCapability> BOOK_UNLOCK = CapabilityManager.get(new CapabilityToken<>() {
+    });
+
+
 
 
     public static final Direction DEFAULT_FACING = null;
@@ -73,9 +80,12 @@ public class CapabilityRegistry {
          */
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof Player) {
+            if (event.getObject() instanceof Player player) {
                 ManaCapAttacher.attach(event);
                 ANPlayerCapAttacher.attach(event);
+                if (!event.getObject().getCapability(BOOK_UNLOCK).isPresent()) {
+                    event.addCapability(BOOK_UNLOCK_ID, new BookUnlockCapability.Dispatcher(player));
+                }
             }
         }
 
@@ -83,6 +93,7 @@ public class CapabilityRegistry {
         public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
             event.register(IManaCap.class);
             event.register(IPlayerCap.class);
+            event.register(BookUnlockCapability.class);
         }
 
         /**
@@ -107,6 +118,15 @@ public class CapabilityRegistry {
                 playerDataCap.deserializeNBT(tag);
                 syncPlayerCap(event.getEntity());
             });
+            if (event.isWasDeath()) {
+                event.getOriginal().reviveCaps();
+
+                //copy capability to new player instance
+                event.getEntity().getCapability(BOOK_UNLOCK).ifPresent(newCap -> {
+                            event.getOriginal().getCapability(BOOK_UNLOCK).ifPresent(newCap::clone);
+                        }
+                );
+            }
             event.getOriginal().invalidateCaps();
         }
 

@@ -9,6 +9,7 @@ package com.hollingsworth.arsnouveau.common.book.page;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.common.book.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 public abstract class BookRecipePage<T extends Recipe<?>> extends BookPage {
+
 
     protected final RecipeType<? extends T> recipeType;
 
@@ -110,7 +112,7 @@ public abstract class BookRecipePage<T extends Recipe<?>> extends BookPage {
 
 
         if (tempRecipe == null) {
-//            Modonomicon.LOGGER.warn("Recipe {} (of type {}) not found.", recipeId, Registry.RECIPE_TYPE.getKey(this.recipeType));
+//            Modonomicon.LOGGER.warn("Recipe {} (of type {}) not found.", recipeId, ForgeRegistries.RECIPE_TYPES.getKey(this.recipeType));
         }
 
         return tempRecipe;
@@ -119,11 +121,19 @@ public abstract class BookRecipePage<T extends Recipe<?>> extends BookPage {
     protected abstract ItemStack getRecipeOutput(T recipe);
 
     private T getRecipe(ResourceLocation id) {
-
         var server = ServerLifecycleHooks.getCurrentServer();
         RecipeManager manager = server != null ? server.getRecipeManager() : Minecraft.getInstance().level.getRecipeManager();
-
         return (T) manager.byKey(id).filter(recipe -> recipe.getType() == this.recipeType).orElse(null);
+    }
+
+    /**
+     * Get the registry access for the current server or client.
+     * Not very clean, but it works and prevents us from handing registry access around.
+     */
+    protected RegistryAccess getRegistryAccess() {
+        var server = ServerLifecycleHooks.getCurrentServer();
+        var access = server != null ? server.registryAccess() : Minecraft.getInstance().level.registryAccess();
+        return access;
     }
 
     @Override

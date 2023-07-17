@@ -1,7 +1,12 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.book.SyncBookDataMessage;
+import com.hollingsworth.arsnouveau.common.book.SyncBookUnlockCapabilityMessage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,8 +16,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.filters.VanillaPacketSplitter;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Networking {
@@ -220,6 +227,8 @@ public class Networking {
 
         INSTANCE.registerMessage(nextID(), SyncPathMessage.class, SyncPathMessage::toBytes, SyncPathMessage::new, SyncPathMessage.Handler::handle);
         INSTANCE.registerMessage(nextID(), SyncPathReachedMessage.class, SyncPathReachedMessage::toBytes, SyncPathReachedMessage::new, SyncPathReachedMessage.Handler::handle);
+        INSTANCE.registerMessage(nextID(), SyncBookDataMessage.class, SyncBookDataMessage::encode, SyncBookDataMessage::new, SyncBookDataMessage::handle);
+        INSTANCE.registerMessage(nextID(), SyncBookUnlockCapabilityMessage.class, SyncBookUnlockCapabilityMessage::encode, SyncBookUnlockCapabilityMessage::new, SyncBookUnlockCapabilityMessage::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {
@@ -236,6 +245,14 @@ public class Networking {
 
     public static void sendToPlayerClient(Object msg, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+    }
+
+
+    public static <T> void sendToSplit(ServerPlayer player, T message) {
+        Packet<?> vanillaPacket = INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT);
+        var packets = new ArrayList<Packet<?>>();
+        VanillaPacketSplitter.appendPackets(ConnectionProtocol.PLAY, PacketFlow.CLIENTBOUND, vanillaPacket, packets);
+        packets.forEach(player.connection::send);
     }
 
     public static void sendToServer(Object msg) {

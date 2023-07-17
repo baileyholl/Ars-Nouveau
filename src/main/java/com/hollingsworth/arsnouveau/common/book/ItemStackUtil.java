@@ -7,18 +7,16 @@
 package com.hollingsworth.arsnouveau.common.book;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.Optional;
-
 public class ItemStackUtil {
+
 
     public static Triple<ResourceLocation, Integer, CompoundTag> parseItemStackString(String res) {
         String nbt = "";
@@ -59,11 +57,10 @@ public class ItemStackUtil {
         var key = parsed.getLeft();
         var count = parsed.getMiddle();
         var nbt = parsed.getRight();
-        Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
-        if (maybeItem.isEmpty()) {
+        var item = ForgeRegistries.ITEMS.getValue(key);
+        if (item == null) {
             throw new RuntimeException("Unknown item ID: " + key);
         }
-        Item item = maybeItem.get();
         ItemStack stack = new ItemStack(item, count);
 
         if (nbt != null) {

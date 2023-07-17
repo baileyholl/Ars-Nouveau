@@ -14,7 +14,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -40,7 +40,7 @@ public class DisplayOnlyMatcher implements StateMatcher {
 
     public static DisplayOnlyMatcher fromJson(JsonObject json) {
         try {
-            var displayState = BlockStateParser.parseForBlock(Registry.BLOCK, new StringReader(GsonHelper.getAsString(json, "display")), false).blockState();
+            var displayState = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), new StringReader(GsonHelper.getAsString(json, "display")), false).blockState();
             return new DisplayOnlyMatcher(displayState);
         } catch (CommandSyntaxException e) {
             throw new IllegalArgumentException("Failed to parse BlockState from json member \"display\" for DisplayOnlyMatcher.", e);
@@ -49,7 +49,7 @@ public class DisplayOnlyMatcher implements StateMatcher {
 
     public static DisplayOnlyMatcher fromNetwork(FriendlyByteBuf buffer) {
         try {
-            var displayState = BlockStateParser.parseForBlock(Registry.BLOCK, new StringReader(buffer.readUtf()), false).blockState();
+            var displayState = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), new StringReader(buffer.readUtf()), false).blockState();
             return new DisplayOnlyMatcher(displayState);
         } catch (CommandSyntaxException e) {
             throw new IllegalArgumentException("Failed to parse DisplayOnlyMatcher from network.", e);

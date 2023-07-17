@@ -7,6 +7,7 @@
 package com.hollingsworth.arsnouveau.common.book.conditions;
 
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.common.book.BookUnlockCapability;
 import com.hollingsworth.arsnouveau.common.book.ModonomiconConstants;
 import com.hollingsworth.arsnouveau.common.book.conditions.context.BookConditionContext;
 import com.hollingsworth.arsnouveau.common.book.conditions.context.BookConditionEntryContext;

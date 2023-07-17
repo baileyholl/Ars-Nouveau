@@ -12,6 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.Nullable;
@@ -121,7 +122,7 @@ public class BookCommand {
             player.sendSystemMessage(Component.translatable(failureMessage).withStyle(ChatFormatting.RED));
             return;
         } else {
-            var commandSourceStack = new CommandSourceStack(player, player.position(),player.getRotationVector(), player.getLevel(), this.permissionLevel, player.getName().getString(), player.getDisplayName(), player.server, player);
+            var commandSourceStack = new CommandSourceStack(player, player.position(),player.getRotationVector(), (ServerLevel) player.level(), this.permissionLevel, player.getName().getString(), player.getDisplayName(), player.server, player);
 
             BookUnlockCapability.setRunFor(player, this);
 
@@ -133,7 +134,7 @@ public class BookCommand {
                 }
             }
             catch (Exception e){
-                Modonomicon.LOGGER.error("Running command [" + this.id.toString() + "] failed: ", e);
+//                Modonomicon.LOGGER.error("Running command [" + this.id.toString() + "] failed: ", e);
             }
         }
 

@@ -59,7 +59,7 @@ public class BookDataManager extends SimpleJsonResourceReloadListener {
         return this.books.get(id);
     }
 
-    public Message getSyncMessage() {
+    public SyncBookDataMessage getSyncMessage() {
         return new SyncBookDataMessage(this.books);
     }
 
@@ -77,7 +77,7 @@ public class BookDataManager extends SimpleJsonResourceReloadListener {
 
         this.tryBuildBooks(); //lazily build books when first client connects
 
-        Message syncMessage = this.getSyncMessage();
+        SyncBookDataMessage syncMessage = this.getSyncMessage();
 
         if (event.getPlayer() != null) {
             Networking.sendToSplit(event.getPlayer(), syncMessage);

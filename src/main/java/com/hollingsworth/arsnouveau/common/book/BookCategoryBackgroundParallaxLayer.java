@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -24,7 +25,7 @@ public class BookCategoryBackgroundParallaxLayer {
             builder.group(
                     ResourceLocation.CODEC.fieldOf("background").forGetter((overlay) -> overlay.background),
                     Codec.FLOAT.optionalFieldOf("speed", 0.5f).forGetter((overlay) -> overlay.speed),
-                    Codec.FLOAT.optionalFieldOf("vanish_zoom", -1.0f).forGetter((overlay) -> overlay.vanishZoom)
+                    Codec.FLOAT.optionalFieldOf("vanishZoom", -1.0f).forGetter((overlay) -> overlay.vanishZoom)
             ).apply(builder, BookCategoryBackgroundParallaxLayer::new));
 
     /**
@@ -65,11 +66,11 @@ public class BookCategoryBackgroundParallaxLayer {
 
 
     public static BookCategoryBackgroundParallaxLayer fromNetwork(FriendlyByteBuf buffer) {
-        return buffer.readWithCodec(BookCategoryBackgroundParallaxLayer.CODEC);
+        return buffer.readWithCodec(NbtOps.INSTANCE, BookCategoryBackgroundParallaxLayer.CODEC);
     }
 
     public void toNetwork(FriendlyByteBuf buffer) {
-        buffer.writeWithCodec(BookCategoryBackgroundParallaxLayer.CODEC, this);
+        buffer.writeWithCodec(NbtOps.INSTANCE, BookCategoryBackgroundParallaxLayer.CODEC, this);
     }
 
     public ResourceLocation getBackground() {
@@ -83,5 +84,6 @@ public class BookCategoryBackgroundParallaxLayer {
     public float getVanishZoom() {
         return this.vanishZoom;
     }
+
 
 }

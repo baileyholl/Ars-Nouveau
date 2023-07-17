@@ -8,6 +8,7 @@ package com.hollingsworth.arsnouveau.common.book.conditions;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.hollingsworth.arsnouveau.common.book.ModonomiconConstants;
 import com.hollingsworth.arsnouveau.common.book.conditions.context.BookConditionContext;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -54,7 +55,7 @@ public class BookAndCondition extends BookCondition {
 
     @Override
     public ResourceLocation getType() {
-        return Condition.AND;
+        return ModonomiconConstants.Data.Condition.AND;
     }
 
     @Override

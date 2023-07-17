@@ -39,7 +39,7 @@ public class BookCraftingRecipePage extends BookRecipePage<Recipe<?>> {
             return ItemStack.EMPTY;
         }
 
-        return recipe.getResultItem();
+        return recipe.getResultItem(getRegistryAccess());
     }
 
     @Override
