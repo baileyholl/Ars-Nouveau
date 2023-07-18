@@ -21,6 +21,8 @@ public class ClientInfo {
     public static float reservedOverlayMana = 0.15F;
 
     public static float partialTicks = 0.0f;
+    public static float totalTicks = 0.0f;
+    public static float deltaTicks = 0.0f;
     public static List<BlockPos> scryingPositions = new ArrayList<>();
 
     public static List<ColorPos> highlightPositions = new ArrayList<>();

@@ -8,6 +8,9 @@ package com.hollingsworth.arsnouveau.common.book.client;
 
 
 import com.hollingsworth.arsnouveau.common.book.*;
+import com.hollingsworth.arsnouveau.common.book.client.button.CategoryButton;
+import com.hollingsworth.arsnouveau.common.book.client.button.ReadAllButton;
+import com.hollingsworth.arsnouveau.common.book.client.button.SearchButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;

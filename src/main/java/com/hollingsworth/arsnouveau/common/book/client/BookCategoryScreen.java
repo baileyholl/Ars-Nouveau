@@ -9,6 +9,7 @@ package com.hollingsworth.arsnouveau.common.book.client;
 
 import com.hollingsworth.arsnouveau.common.book.BookCategory;
 import com.hollingsworth.arsnouveau.common.book.BookCategoryBackgroundParallaxLayer;
+import com.hollingsworth.arsnouveau.common.book.BookEntry;
 import com.hollingsworth.arsnouveau.common.book.BookUnlockCapability;
 import com.hollingsworth.arsnouveau.common.book.conditions.context.BookConditionEntryContext;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -20,7 +21,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import vazkii.patchouli.client.book.EntryDisplayState;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -69,7 +69,7 @@ public class BookCategoryScreen {
     }
 
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if (ClientConfig.get().qolCategory.enableSmoothZoom.get()) {
+        if (true) {
             float diff = this.targetZoom - this.currentZoom;
             this.currentZoom = this.currentZoom + Math.min(pPartialTick * (2 / 3f), 1) * diff;
         } else

@@ -6,28 +6,20 @@
 
 package com.hollingsworth.arsnouveau.common.book.client;
 
-import com.klikli_dev.modonomicon.Modonomicon;
-import com.klikli_dev.modonomicon.api.ModonomiconConstants.I18n.Gui;
-import com.klikli_dev.modonomicon.book.*;
-import com.klikli_dev.modonomicon.book.page.BookPage;
-import com.klikli_dev.modonomicon.capability.BookStateCapability;
-import com.klikli_dev.modonomicon.capability.BookUnlockCapability;
-import com.klikli_dev.modonomicon.client.ClientTicks;
-import com.klikli_dev.modonomicon.client.gui.book.button.ArrowButton;
-import com.klikli_dev.modonomicon.client.gui.book.button.BackButton;
-import com.klikli_dev.modonomicon.client.gui.book.button.ExitButton;
-import com.klikli_dev.modonomicon.client.gui.book.markdown.ItemLinkRenderer;
-import com.klikli_dev.modonomicon.client.render.FluidRenderHelper;
-import com.klikli_dev.modonomicon.client.render.page.BookPageRenderer;
-import com.klikli_dev.modonomicon.client.render.page.PageRendererRegistry;
-import com.klikli_dev.modonomicon.config.ClientConfig;
-import com.klikli_dev.modonomicon.data.BookDataManager;
-import com.klikli_dev.modonomicon.integration.ModonomiconJeiIntegration;
-import com.klikli_dev.modonomicon.integration.ModonomiconPatchouliIntegration;
-import com.klikli_dev.modonomicon.network.Networking;
-import com.klikli_dev.modonomicon.network.messages.ClickCommandLinkMessage;
-import com.klikli_dev.modonomicon.network.messages.SaveEntryStateMessage;
-import com.klikli_dev.modonomicon.util.ItemStackUtil;
+
+import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.common.book.Book;
+import com.hollingsworth.arsnouveau.common.book.BookDataManager;
+import com.hollingsworth.arsnouveau.common.book.BookEntry;
+import com.hollingsworth.arsnouveau.common.book.BookUnlockCapability;
+import com.hollingsworth.arsnouveau.common.book.client.button.ArrowButton;
+import com.hollingsworth.arsnouveau.common.book.client.button.BackButton;
+import com.hollingsworth.arsnouveau.common.book.client.button.ExitButton;
+import com.hollingsworth.arsnouveau.common.book.client.page.BookPageRenderer;
+import com.hollingsworth.arsnouveau.common.book.client.page.PageRendererRegistry;
+import com.hollingsworth.arsnouveau.common.book.markdown.ItemLinkRenderer;
+import com.hollingsworth.arsnouveau.common.book.page.BookPage;
+import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -132,11 +124,11 @@ public class BookContentScreen extends Screen implements BookScreenWithButtons {
     }
 
     public static void playTurnPageSound(Book book) {
-        if (ClientTicks.ticks - lastTurnPageSoundTime > 6) {
+        if (ClientInfo.ticksInGame - lastTurnPageSoundTime > 6) {
             //TODO: make mod loader agnostic
             var sound = ForgeRegistries.SOUND_EVENTS.getValue(book.getTurnPageSound());
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, (float) (0.7 + Math.random() * 0.3)));
-            lastTurnPageSoundTime = ClientTicks.ticks;
+            lastTurnPageSoundTime = ClientInfo.ticksInGame;
         }
     }
 
@@ -306,8 +298,8 @@ public class BookContentScreen extends Screen implements BookScreenWithButtons {
                 }
             }
         } else {
-            Modonomicon.LOGGER.warn("Tried to change to page index {} corresponding with " +
-                    "openPagesIndex {} but max open pages index is {}.", pageIndex, openPagesIndex, this.maxOpenPagesIndex);
+//            Modonomicon.LOGGER.warn("Tried to change to page index {} corresponding with " +
+//                    "openPagesIndex {} but max open pages index is {}.", pageIndex, openPagesIndex, this.maxOpenPagesIndex);
         }
     }
 

@@ -18,9 +18,9 @@ buildscript {
     }
 
 }
-//plugins {
-//    id 'com.github.johnrengelman.shadow' version '7.1.2'
-//}
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 apply plugin: 'net.minecraftforge.gradle'
 //apply plugin: 'net.neoforged.gradle'
 apply plugin: 'org.spongepowered.mixin'
@@ -32,11 +32,11 @@ apply plugin: 'maven-publish'
 
 
 version = '4.2.0'
-//configurations {
-//    library
-//    shade // <- Create a 'shade' configuration
-//    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
-//}
+configurations {
+    library
+    shade // <- Create a 'shade' configuration
+    implementation.extendsFrom(shade) // <- Add the shade configuration to implementation
+}
 
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
@@ -49,11 +49,11 @@ java.withSourcesJar()
 
 //// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
 //// If you have any module issues, check these files to make sure there are no duplicate dependencies
-//minecraft.runs.configureEach {
-//    lazyToken('minecraft_classpath') {
-//        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-//    }
-//}
+minecraft.runs.configureEach {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
 
 minecraft {
 
@@ -202,6 +202,17 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
     implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
+
+    //commonmark
+    jarJar(group: 'org.commonmark', name: 'commonmark', version: '0.21.0') {
+        jarJar.pin(it, '0.21.0')
+    }
+    jarJar(group: 'org.commonmark', name: 'commonmark-ext-ins', version: '0.21.0') {
+        jarJar.pin(it,'0.21.0')
+    }
+    implementation fg.deobf("org.commonmark:commonmark:${commonmark_version}")
+    implementation fg.deobf("org.commonmark:commonmark-ext-gfm-strikethrough:${commonmark_version}")
+    implementation fg.deobf("org.commonmark:commonmark-ext-ins:${commonmark_version}")
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
 //    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental

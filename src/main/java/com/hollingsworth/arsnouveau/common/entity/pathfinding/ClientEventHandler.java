@@ -26,7 +26,10 @@ public class ClientEventHandler {
 //            WorldEventContext.bufferSource.endBatch();
 //        }
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+            float oldTotal = ClientInfo.totalTicks;
             ClientInfo.partialTicks = event.getPartialTick();
+            ClientInfo.totalTicks = ClientInfo.ticksInGame + ClientInfo.partialTicks;
+            ClientInfo.deltaTicks = ClientInfo.totalTicks - oldTotal;
 //            if (DEBUG_DRAW) {
 //                Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
 //            }
