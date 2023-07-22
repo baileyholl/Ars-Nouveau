@@ -79,7 +79,6 @@ public class ArsNouveau {
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
-        ModSetup.initGeckolib();
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);

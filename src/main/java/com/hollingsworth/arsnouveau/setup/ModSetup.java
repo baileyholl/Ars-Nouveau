@@ -2,11 +2,6 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import com.hollingsworth.arsnouveau.setup.registry.WorldgenRegistry;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.core.registries.Registries;
@@ -17,7 +12,6 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.registries.*;
-import software.bernie.geckolib.GeckoLib;
 import top.theillusivec4.curios.Curios;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
@@ -35,10 +29,6 @@ public class ModSetup {
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BELT.getMessageBuilder().build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("an_focus").size(1).icon(new ResourceLocation(Curios.MODID, "slot/empty_curio_slot")).build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.NECKLACE.getMessageBuilder().build());
-    }
-
-    public static void initGeckolib() {
-        GeckoLib.shadowInit();
     }
 
     public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE_DEFERRED_REGISTER = DeferredRegister.createOptional(Registries.TRUNK_PLACER_TYPE, MODID);
