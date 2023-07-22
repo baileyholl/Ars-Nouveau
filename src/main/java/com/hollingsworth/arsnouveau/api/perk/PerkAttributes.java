@@ -26,7 +26,7 @@ public class PerkAttributes {
 
     public static final RegistryObject<Attribute> FLAT_MANA_BONUS = registerAttribute("ars_nouveau.perk.flat_max_mana",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true), "22980b24-83e5-4683-a215-8997c4011389");
 
-    public static final RegistryObject<Attribute> SPELL_DAMAGE_BONUS = registerAttribute("ars_nouveau.perk.spell_damage",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10.0D).setSyncable(true), "50b50137-9c92-4e64-b350-6044e9e609de");
+    public static final RegistryObject<Attribute> SPELL_DAMAGE_BONUS = registerAttribute("ars_nouveau.perk.spell_damage",(id) -> new RangedAttribute(id, 0.0D, 0.0D, 10000.0D).setSyncable(true), "50b50137-9c92-4e64-b350-6044e9e609de");
     public static final RegistryObject<Attribute> WHIRLIESPRIG = registerAttribute("ars_nouveau.perk.saturation",(id) -> new RangedAttribute(id, 1.0, 0.0D, 10000.0D).setSyncable(true), "152810f7-0d01-484e-a512-73fe70af3db7");
     public static final RegistryObject<Attribute> WIXIE = registerAttribute("ars_nouveau.perk.wixie",(id) -> new RangedAttribute(id, 1.0D, 0.0D, 1024.0D).setSyncable(true), "bae5d566-c9f6-4abf-9fe0-6ac140a34db1");
 

@@ -1113,6 +1113,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.manipulation_essence.tooltip", "Can be scribed onto a Spell Parchment or caster tool to permanently hide the spell.");
         add("ars_nouveau.spell_hidden", "Spell is now hidden.");
         add("entity.minecraft.villager.ars_nouveau.shady_wizard", "Shady Wizard");
+        add("entity.minecraft.villager.shady_wizard", "Shady Wizard");
         add("death.attack.an_enchantedBlock", "%1$s was crushed by %2$s magic blocks");
         add("death.attack.freeze.item", "%1$s was frozen to death by %2$s using %3$");
         add("block.ars_nouveau.magelight_torch", "Magelight Torch");
