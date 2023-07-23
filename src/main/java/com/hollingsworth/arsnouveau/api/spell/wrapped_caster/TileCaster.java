@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -52,5 +53,10 @@ public class TileCaster implements IWrappedCaster{
             }
         }
         return null;
+    }
+
+    @Override
+    public Vec3 getPosition() {
+        return new Vec3(tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ());
     }
 }

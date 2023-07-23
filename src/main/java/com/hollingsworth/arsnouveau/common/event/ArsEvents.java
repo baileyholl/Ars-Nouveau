@@ -1,12 +1,10 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.DispelEvent;
-import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellDamageEvent;
-import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
+import com.hollingsworth.arsnouveau.api.event.*;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectInvisibility;
 import net.minecraft.world.phys.BlockHitResult;
@@ -15,6 +13,11 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsEvents {
+
+    @SubscribeEvent
+    public static void castEvent(SpellCastEvent castEvent) {
+        SpellSensorTile.onSpellCast(castEvent);
+    }
 
     @SubscribeEvent
     public static void regenCalc(ManaRegenCalcEvent e) {

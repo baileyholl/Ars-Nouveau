@@ -183,21 +183,19 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     public void playParticles() {
-        for (int i = 0; i < 1; i++) {
-            double deltaX = getX() - xOld;
-            double deltaY = getY() - yOld;
-            double deltaZ = getZ() - zOld;
-            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
-            for (double j = 0; j < dist; j++) {
-                double coeff = j / dist;
-                level.addParticle(GlowParticleData.createData(getParticleColor()),
-                        (float) (xo + deltaX * coeff),
-                        (float) (yo + deltaY * coeff) + 0.1, (float)
-                                (zo + deltaZ * coeff),
-                        0.0125f * (random.nextFloat() - 0.5f),
-                        0.0125f * (random.nextFloat() - 0.5f),
-                        0.0125f * (random.nextFloat() - 0.5f));
-            }
+        double deltaX = getX() - xOld;
+        double deltaY = getY() - yOld;
+        double deltaZ = getZ() - zOld;
+        double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
+        for (double j = 0; j < dist; j++) {
+            double coeff = j / dist;
+            level.addParticle(GlowParticleData.createData(getParticleColor()),
+                    (float) (xo + deltaX * coeff),
+                    (float) (yo + deltaY * coeff) + 0.1, (float)
+                            (zo + deltaZ * coeff),
+                    0.0125f * (random.nextFloat() - 0.5f),
+                    0.0125f * (random.nextFloat() - 0.5f),
+                    0.0125f * (random.nextFloat() - 0.5f));
         }
     }
 

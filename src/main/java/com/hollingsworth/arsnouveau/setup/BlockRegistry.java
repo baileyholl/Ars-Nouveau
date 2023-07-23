@@ -824,6 +824,7 @@ public class BlockRegistry {
     public static RegistryWrapper<SkyWeave> SKY_WEAVE;
     public static RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK;
     public static RegistryWrapper<ItemDetector> ITEM_DETECTOR;
+    public static RegistryWrapper<SpellSensor> SPELL_SENSOR = registerBlock(LibBlockNames.SPELL_SENSOR, SpellSensor::new);
 
     public static RegistryObject<BlockEntityType<RitualBrazierTile>> RITUAL_TILE;
     public static RegistryObject<BlockEntityType<BrazierRelayTile>> BRAZIER_RELAY_TILE;
@@ -831,6 +832,9 @@ public class BlockRegistry {
     public static RegistryObject<BlockEntityType<TemporaryTile>> TEMPORARY_TILE;
     public static RegistryObject<BlockEntityType<CraftingLecternTile>> CRAFTING_LECTERN_TILE;
     public static RegistryObject<BlockEntityType<ItemDetectorTile>> ITEM_DETECTOR_TILE;
+    public static RegistryObject<BlockEntityType<SpellSensorTile>> SPELL_SENSOR_TILE = BLOCK_ENTITIES.register(LibBlockNames.SPELL_SENSOR, () -> BlockEntityType.Builder.of(SpellSensorTile::new, SPELL_SENSOR.get()).build(null));;
+
+    public static RegistryObject<ModBlockItem> SPELL_SENSOR_ITEM = ITEMS.register(LibBlockNames.SPELL_SENSOR, () -> getDefaultBlockItem(BlockRegistry.SPELL_SENSOR.get()));
     static {
         ROTATING_TURRET = registerBlock(LibBlockNames.ROTATING_SPELL_TURRET, RotatingSpellTurret::new);
         ARCANE_PLATFORM = registerBlock(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new);
