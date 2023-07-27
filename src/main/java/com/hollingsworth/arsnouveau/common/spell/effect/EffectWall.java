@@ -14,12 +14,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class EffectWall extends AbstractEffect {
+public class EffectWall extends AbstractEffect implements IContextManipulator {
     public static EffectWall INSTANCE = new EffectWall();
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
-        invalidCombinations.add(EffectLinger.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectLinger.INSTANCE.getRegistryName());
+        invalidNestings.add(this.getRegistryName());
     }
 
     @Override
@@ -27,11 +28,10 @@ public class EffectWall extends AbstractEffect {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityWallSpell entityWallSpell = new EntityWallSpell(world, shooter);
-        spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        Spell newSpell = spellContext.getRemainingSpell();
+        Spell newSpell = spellContext.getInContextSpell();
         SpellContext newContext = spellContext.clone().withSpell(newSpell);
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
@@ -47,6 +47,9 @@ public class EffectWall extends AbstractEffect {
         entityWallSpell.setPos(hit.x, hit.y, hit.z);
         entityWallSpell.setColor(spellContext.getColors());
         world.addFreshEntity(entityWallSpell);
+
+        //update spell context past this manipulator
+        spellContext.setPostContext();
     }
 
 
@@ -71,15 +74,14 @@ public class EffectWall extends AbstractEffect {
         return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE);
     }
 
-    @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
-        super.buildConfig(builder);
-        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
-    }
-
     @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
+    }
+
+    @Override
+    public boolean isEscapable() {
+        return true;
     }
 }

@@ -26,6 +26,8 @@ public class StandardSpellValidator implements ISpellValidator {
     private static final ISpellValidator AUGMENT_COMPATIBILITY = new AugmentCompatibilityValidator();
     private static final ISpellValidator INVALID_COMBINATION_POLICY = new InvalidCombinationValidator();
 
+    private static final ISpellValidator INVALID_NESTING_POLICY = new InvalidNestingValidator();
+
     public final ISpellValidator combinedValidator;
 
     /**
@@ -48,6 +50,7 @@ public class StandardSpellValidator implements ISpellValidator {
             validators.add(EFFECT_AUGMENTATION_POLICY);
             validators.add(GLYPH_OCCURRENCES_POLICY);
             validators.add(INVALID_COMBINATION_POLICY);
+            validators.add(INVALID_NESTING_POLICY);
         }
 
         // Validators only applicable at casting time

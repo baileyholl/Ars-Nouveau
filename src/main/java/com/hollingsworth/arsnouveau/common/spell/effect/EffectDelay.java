@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectDelay extends AbstractEffect {
+public class EffectDelay extends AbstractEffect implements IContextManipulator{
     public static EffectDelay INSTANCE = new EffectDelay();
 
     private EffectDelay() {
@@ -86,5 +86,10 @@ public class EffectDelay extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
+    }
+
+    @Override
+    public boolean isEscapable() {
+        return false;
     }
 }

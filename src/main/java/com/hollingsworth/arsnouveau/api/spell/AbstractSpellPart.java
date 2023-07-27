@@ -47,6 +47,13 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      */
     public Set<ResourceLocation> invalidCombinations = ConcurrentHashMap.newKeySet();
 
+    /**
+     * A list of context manipulating glyphs that cannot be nested with this glyph
+     * Useful to prevent something being inside linger or burst, without banning them from a spell entirely
+     * Note: you can add a glyph to it's own invalid nestings, which in some cases is preferable to a max count
+     */
+    public Set<ResourceLocation> invalidNestings = ConcurrentHashMap.newKeySet();
+
     public AbstractSpellPart(String registryName, String name) {
         this(new ResourceLocation(ArsNouveau.MODID, registryName), name);
     }

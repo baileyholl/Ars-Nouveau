@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class EffectRune extends AbstractEffect {
+public class EffectRune extends AbstractEffect implements IContextManipulator{
 
     public static EffectRune INSTANCE = new EffectRune();
 
@@ -28,8 +28,7 @@ public class EffectRune extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
-        spellContext.setCanceled(true);
-        Spell newSpell = spellContext.getRemainingSpell();
+        Spell newSpell = spellContext.getInContextSpell();
         if (world.getBlockState(pos).canBeReplaced()) {
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {
@@ -42,6 +41,9 @@ public class EffectRune extends AbstractEffect {
                 runeTile.isSensitive = spellStats.isSensitive();
             }
         }
+
+        //update spell context past this manipulator
+        spellContext.setPostContext();
     }
 
     @Override
@@ -65,5 +67,10 @@ public class EffectRune extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return setOf(AugmentSensitive.INSTANCE);
+    }
+
+    @Override
+    public boolean isEscapable() {
+        return true;
     }
 }

@@ -23,6 +23,7 @@ public class InvalidCombinationValidator extends ScanningSpellValidator<Map<Reso
         } else {
             partCounts.put(spellPart.getRegistryName(), 1);
         }
+
         for(ResourceLocation invalidPart : spellPart.invalidCombinations){
             AbstractSpellPart offendingPart = GlyphRegistry.getSpellPart(invalidPart);
             if(offendingPart == null)

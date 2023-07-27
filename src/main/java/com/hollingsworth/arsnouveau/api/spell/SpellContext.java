@@ -152,10 +152,77 @@ public class SpellContext implements Cloneable {
         return spell == null ? new Spell() : spell;
     }
 
+    /**
+     * WARNING: don't use this for context manipulating spells
+     * Make use of getInContextSpell and getPostContextSpell
+     * To ensure that context escape applies correctly
+     */
     public @NotNull Spell getRemainingSpell() {
         if (getCurrentIndex() >= getSpell().recipe.size())
             return getSpell().clone().setRecipe(new ArrayList<>());
         return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
+    }
+
+    public @NotNull Spell getInContextSpell() {
+        int contextPos = getCurrentIndex();
+        if (contextPos >= getSpell().recipe.size())
+            return getSpell().clone().setRecipe(new ArrayList<>());
+
+        int pushCount = 0;
+
+        while(contextPos < getSpell().recipe.size()){
+            AbstractSpellPart part = getSpell().recipe.get(contextPos);
+            if(part instanceof IContextManipulator manip){
+                if(manip.isEscapable()){
+                    pushCount +=1;
+                }
+            }
+            else if (part instanceof IContextEscape){
+                pushCount -=1;
+                if(pushCount < 0){
+                    break;
+                }
+            }
+
+            contextPos +=1;
+
+        }
+
+        return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), contextPos)));
+    }
+
+    public SpellContext setPostContext(){
+        this.spell = getPostContextSpell();
+        this.currentIndex = 0;
+        return this;
+    }
+
+    private @NotNull Spell getPostContextSpell(){
+        int contextPos = getCurrentIndex();
+        if (contextPos >= getSpell().recipe.size())
+            return getSpell().clone().setRecipe(new ArrayList<>());
+
+        int pushCount = 0;
+
+        while(contextPos < getSpell().recipe.size()){
+            AbstractSpellPart part = getSpell().recipe.get(contextPos);
+            if(part instanceof IContextManipulator manip){
+                if(manip.isEscapable()){
+                    pushCount +=1;
+                }
+            }
+            else if (part instanceof IContextEscape){
+                pushCount -=1;
+                if(pushCount < 0){
+                    break;
+                }
+            }
+
+            contextPos +=1;
+
+        }
+
+        return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(contextPos,getSpell().recipe.size())));
     }
 
     @Override

@@ -19,14 +19,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class EffectBurst extends AbstractEffect {
+public class EffectBurst extends AbstractEffect implements IContextManipulator{
 
     public static final EffectBurst INSTANCE = new EffectBurst("burst", "Burst");
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
-        invalidCombinations.add(EffectLinger.INSTANCE.getRegistryName());
-        invalidCombinations.add(EffectWall.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectLinger.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectWall.INSTANCE.getRegistryName());
+        invalidNestings.add(this.getRegistryName());
     }
 
     @Override
@@ -45,9 +46,11 @@ public class EffectBurst extends AbstractEffect {
     }
 
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
-        spellContext.setCanceled(true);
         if (spellContext.getRemainingSpell().isEmpty()) return;
-        SpellContext newContext = resolver.spellContext.clone().withSpell(spellContext.getRemainingSpell());
+        SpellContext newContext = resolver.spellContext.clone().withSpell(spellContext.getInContextSpell());
+
+
+
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);
         if (spellStats.isSensitive()) {
@@ -63,12 +66,9 @@ public class EffectBurst extends AbstractEffect {
                 }
             }
         }
-    }
 
-    @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
-        super.buildConfig(builder);
-        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
+        //update spell context past this manipulator
+        spellContext.setPostContext();
     }
 
     @Override
@@ -84,6 +84,11 @@ public class EffectBurst extends AbstractEffect {
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentSensitive.INSTANCE, AugmentDampen.INSTANCE);
+    }
+
+    @Override
+    public boolean isEscapable() {
+        return true;
     }
 
 }

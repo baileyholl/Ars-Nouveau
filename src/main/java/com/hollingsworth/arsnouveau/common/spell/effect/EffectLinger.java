@@ -13,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class EffectLinger extends AbstractEffect {
+public class EffectLinger extends AbstractEffect implements IContextManipulator{
     public static EffectLinger INSTANCE = new EffectLinger();
 
     private EffectLinger() {
         super(GlyphLib.EffectLingerID, "Linger");
+        invalidNestings.add(this.getRegistryName());
     }
 
     @Override
@@ -25,10 +26,13 @@ public class EffectLinger extends AbstractEffect {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityLingeringSpell entityLingeringSpell = new EntityLingeringSpell(world, shooter);
-        spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = spellContext.getRemainingSpell();
+
+        Spell newSpell = spellContext.getInContextSpell();
+
+
+
         SpellContext newContext = spellContext.clone().withSpell(newSpell);
         entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityLingeringSpell.setSensitive(spellStats.isSensitive());
@@ -39,6 +43,9 @@ public class EffectLinger extends AbstractEffect {
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
         entityLingeringSpell.setColor(spellContext.getColors());
         world.addFreshEntity(entityLingeringSpell);
+
+        //update spell context past this manipulator
+        spellContext.setPostContext();
     }
 
 
@@ -63,15 +70,14 @@ public class EffectLinger extends AbstractEffect {
         return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE);
     }
 
-    @Override
-    public void buildConfig(ForgeConfigSpec.Builder builder) {
-        super.buildConfig(builder);
-        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1, 1);
-    }
-
    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
+    }
+
+    @Override
+    public boolean isEscapable() {
+        return true;
     }
 }
