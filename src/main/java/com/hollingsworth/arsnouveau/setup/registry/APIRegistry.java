@@ -104,6 +104,7 @@ public class APIRegistry {
         registerSpell(EffectWindshear.INSTANCE);
         registerSpell(EffectEvaporate.INSTANCE);
         registerSpell(EffectLinger.INSTANCE);
+        registerSpell(EffectPlane.INSTANCE);
         registerSpell(EffectSenseMagic.INSTANCE);
         registerSpell(EffectInfuse.INSTANCE);
         registerSpell(EffectRotate.INSTANCE);

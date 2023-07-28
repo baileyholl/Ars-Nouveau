@@ -25,7 +25,7 @@ public class EffectBurst extends AbstractEffect implements IContextManipulator{
 
     public EffectBurst(String tag, String description) {
         super(tag, description);
-        invalidNestings.add(EffectLinger.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectPlane.INSTANCE.getRegistryName());
         invalidNestings.add(EffectWall.INSTANCE.getRegistryName());
         invalidNestings.add(this.getRegistryName());
     }
@@ -73,7 +73,7 @@ public class EffectBurst extends AbstractEffect implements IContextManipulator{
 
     @Override
     public int getDefaultManaCost() {
-        return 500;
+        return 300;
     }
 
     @Override

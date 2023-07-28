@@ -19,7 +19,7 @@ public class EffectWall extends AbstractEffect implements IContextManipulator {
 
     private EffectWall() {
         super(GlyphLib.EffectWallId, "Wall");
-        invalidNestings.add(EffectLinger.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectPlane.INSTANCE.getRegistryName());
         invalidNestings.add(this.getRegistryName());
     }
 

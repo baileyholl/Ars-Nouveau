@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -11,14 +12,18 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
-public class EffectLinger extends AbstractEffect implements IContextManipulator{
+public class EffectLinger extends AbstractEffect implements IContextManipulator {
     public static EffectLinger INSTANCE = new EffectLinger();
 
     private EffectLinger() {
         super(GlyphLib.EffectLingerID, "Linger");
         invalidNestings.add(this.getRegistryName());
+        invalidNestings.add(EffectPlane.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectWall.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectBurst.INSTANCE.getRegistryName());
     }
 
     @Override
@@ -34,8 +39,6 @@ public class EffectLinger extends AbstractEffect implements IContextManipulator{
 
 
         SpellContext newContext = spellContext.clone().withSpell(newSpell);
-        entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
-        entityLingeringSpell.setSensitive(spellStats.isSensitive());
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
         entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
         entityLingeringSpell.setShouldFall(!spellStats.hasBuff(AugmentDampen.INSTANCE));
@@ -51,12 +54,12 @@ public class EffectLinger extends AbstractEffect implements IContextManipulator{
 
     @Override
     public String getBookDescription() {
-        return "Creates a lingering field that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. AOE will expand the effective range, Accelerate will cast spells faster, Dampen will ignore gravity, and Extend Time will increase the duration.";
+        return "Creates a small lingering cloud that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. Accelerate will cast spells faster, Dampen will ignore gravity, and Extend Time will increase the duration.";
     }
 
     @Override
     public int getDefaultManaCost() {
-        return 500;
+        return 300;
     }
 
     @Override
@@ -67,10 +70,16 @@ public class EffectLinger extends AbstractEffect implements IContextManipulator{
    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE);
+        return augmentSetOf( AugmentAccelerate.INSTANCE, AugmentDecelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE);
     }
 
-   @NotNull
+    @Override
+    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+        super.buildAugmentLimitsConfig(builder, defaults);
+        defaults.put(AugmentAccelerate.INSTANCE.getRegistryName(),2);
+    }
+
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
