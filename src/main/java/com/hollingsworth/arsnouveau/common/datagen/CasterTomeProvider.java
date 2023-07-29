@@ -203,7 +203,12 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectFreeze.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
                 , "Fire at a body of water to create a Ice bubble in the depths.", new ParticleColor(0,0,255)));
-
+        tomes.add(buildTome("chems", "Chem's Scientific Repulsion Runes", new Spell(MethodProjectile.INSTANCE)
+                .add(EffectLinger.INSTANCE)
+                        .add(AugmentSensitive.INSTANCE)
+                        .add(EffectRune.INSTANCE)
+                        .add(EffectLaunch.INSTANCE, 4),
+                "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.", new ParticleColor(61, 207, 248)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
