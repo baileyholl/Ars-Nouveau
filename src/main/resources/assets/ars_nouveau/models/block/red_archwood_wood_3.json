@@ -1,0 +1,7 @@
+{
+	"parent":"block/cube_all",
+	"textures":{
+		"all":"ars_nouveau:block/red_archwood_log_3",
+		"particle":"ars_nouveau:block/red_archwood_log_3"
+	}
+}
