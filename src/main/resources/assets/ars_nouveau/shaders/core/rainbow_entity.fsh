@@ -20,9 +20,6 @@ in vec4 normal;
 
 out vec4 fragColor;
 
-// https://stackoverflow.com/a/51586455
-const float tau = acos(-1.)*2.;
-
 void main() {
 
     vec4 color = texture(Sampler0, texCoord0);
@@ -33,7 +30,7 @@ void main() {
         discard;
     }
     if (mask.a > 0.1) {
-        vec3 rain = sqrt(sin((time + vec3(0, 2, 1) / 3.) * tau) * .5 + .5);
+        vec3 rain = sqrt(sin((time + vec3(0, 2, 1) / 3.) * (acos(-1.)*2.)) * .5 + .5);
         color = mix(vec4(rain, 1.), mask, 0.5);
     }
     color *= vertexColor * ColorModulator;
