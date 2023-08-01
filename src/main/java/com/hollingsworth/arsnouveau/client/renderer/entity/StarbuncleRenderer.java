@@ -50,6 +50,7 @@ public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
                 Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack,
                         cosmeticBuffer, animatable.level, (int) animatable.getOnPos().asLong());
             }
+            cosmeticBuffer.endBatch();
             stack.popPose();
         }
         if (animatable.getCosmeticItem().getItem() instanceof ICosmeticItem cosmetic && cosmetic.getBone().equals(bone.getName())) {
