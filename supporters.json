@@ -10,7 +10,8 @@
     "27aee4ea-a286-433b-879b-7c4c2ab3fd4b", "cf1f2cfc-1a85-40a6-aaf4-a17355ac6579", "bfc0f715-54f5-45bb-b4cd-16dfb3dd1f10",
     "98105ad8-080a-4d70-a5da-0cc27a833309", "3bf32666-f9ba-4060-af02-53bdb0df38fc", "d183e5a2-a087-462a-963e-c3d7295f9ec5",
   "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
-  "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8"],
+  "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
+  "b9694497-80b7-4412-b00e-2c9bc2705fd1"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -177,6 +178,16 @@
       "color": "white",
       "adopter": "Weiss",
       "bio": "Found on the shore near a chest, Aki seems to have been forgotten by a prior mage, She hates loud noises, and Skeletons. A note on her neck reads \"please give her a better life on the land then I could on the sea\""
+    },{
+      "name": "Snowflake",
+      "color": "light_blue",
+      "adopter": "DerringerCubed",
+      "bio": "On the far-flung plane of Alfheim, in the eternally frozen retreat of the fae of the Winter Court, amid a patch of preternaturally-tall, luminous crocus, DerringerCubed met this warm, soft fluffball curled up for a moment's rest. She is deterred by neither the long nights and relentless snows of deep winter nor the lingering traces of unnatural magic that always seem to surround her new friend.",
+    },{
+      "name": "Rhaast",
+      "color": "black",
+      "adopter": "NUK3 redemption",
+      "bio": "A misguided spirit who is searching for her wizard companion"
     }
   ]
 }
