@@ -14,7 +14,11 @@
   "placement": {
     "type": "minecraft:random_spread",
     "salt": 1224466880,
-    "spacing": 12,
-    "separation": 8
+    "spacing": 36,
+    "separation": 18,
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:villages"
+    }
   }
 }
