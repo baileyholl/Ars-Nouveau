@@ -59,10 +59,10 @@ public class BlockRegistry {
 
     public static RegistryWrapper<MageBlock> MAGE_BLOCK = registerBlockAndItem(LibBlockNames.MAGE_BLOCK, MageBlock::new);
     public static RegistryWrapper<BlockEntityType<MageBlockTile>> MAGE_BLOCK_TILE = registerTile(LibBlockNames.MAGE_BLOCK, MageBlockTile::new, MAGE_BLOCK);
-    public static RegistryWrapper<LightBlock> LIGHT_BLOCK = registerBlockAndItem(LibBlockNames.LIGHT_BLOCK, LightBlock::new);
+    public static RegistryWrapper<LightBlock> LIGHT_BLOCK = registerBlock(LibBlockNames.LIGHT_BLOCK, LightBlock::new);
     public static RegistryWrapper<BlockEntityType<LightTile>> LIGHT_TILE = registerTile(LibBlockNames.LIGHT_BLOCK, LightTile::new, LIGHT_BLOCK);
 
-    public static RegistryWrapper<TempLightBlock> T_LIGHT_BLOCK = registerBlockAndItem(LibBlockNames.T_LIGHT_BLOCK, TempLightBlock::new);
+    public static RegistryWrapper<TempLightBlock> T_LIGHT_BLOCK = registerBlock(LibBlockNames.T_LIGHT_BLOCK, TempLightBlock::new);
     public static RegistryWrapper<BlockEntityType<TempLightTile>> T_LIGHT_TILE = registerTile(LibBlockNames.T_LIGHT_BLOCK, TempLightTile::new, T_LIGHT_BLOCK);
     public static RegistryWrapper<AgronomicSourcelinkBlock> AGRONOMIC_SOURCELINK = registerBlockAndItem(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkBlock::new);
     public static RegistryWrapper<BlockEntityType<AgronomicSourcelinkTile>> AGRONOMIC_SOURCELINK_TILE = registerTile(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkTile::new, AGRONOMIC_SOURCELINK);
@@ -315,7 +315,7 @@ public class BlockRegistry {
 
     public static final RegistryWrapper<RitualBrazierBlock> RITUAL_BLOCK = registerBlockAndItem(LibBlockNames.RITUAL_BRAZIER, RitualBrazierBlock::new);
     public static final RegistryWrapper<SkyWeave> SKY_WEAVE = registerBlockAndItem(LibBlockNames.SKY_WEAVE, () ->  new SkyWeave(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion()));
-    public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlockAndItem(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)), (reg) -> new ModBlockItem(reg.get(), new Item.Properties()));
+    public static final RegistryWrapper<TemporaryBlock> TEMPORARY_BLOCK = registerBlock(LibBlockNames.TEMPORARY_BLOCK, () -> new TemporaryBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
     public static final RegistryWrapper<ItemDetector> ITEM_DETECTOR = registerBlockAndItem(LibBlockNames.ITEM_DETECTOR, ItemDetector::new);
 
     public static final RegistryWrapper<BlockEntityType<RitualBrazierTile>> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
