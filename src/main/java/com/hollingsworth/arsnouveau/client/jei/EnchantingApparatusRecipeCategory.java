@@ -50,6 +50,6 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
     public void draw(EnchantingApparatusRecipe recipe,@NotNull IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
         if (recipe.consumesSource())
-            guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0, 100, 10);
+            guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0, 100, 10,false);
     }
 }
