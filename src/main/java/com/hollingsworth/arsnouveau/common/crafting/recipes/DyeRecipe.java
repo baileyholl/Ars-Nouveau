@@ -111,7 +111,7 @@ public class DyeRecipe extends ShapelessRecipe {
                 ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItem(recipe.getResultItem(null));
+            buffer.writeItem(recipe.getResultItem(RegistryAccess.EMPTY));
         }
     }
 }

@@ -52,8 +52,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 	@Override
 	public @Nullable IRecipeTransferError transferRecipe(AbstractContainerMenu container, CraftingRecipe recipe,
 			IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
-		if (container instanceof IAutoFillTerminal) {
-			IAutoFillTerminal term = (IAutoFillTerminal) container;
+		if (container instanceof IAutoFillTerminal term) {
 			List<IRecipeSlotView> missing = new ArrayList<>();
 			List<IRecipeSlotView> views = recipeSlots.getSlotViews();
 			List<ItemStack[]> inputs = new ArrayList<>();

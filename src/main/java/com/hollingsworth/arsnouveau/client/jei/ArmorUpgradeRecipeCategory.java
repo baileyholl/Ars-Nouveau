@@ -83,9 +83,9 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
     @Override
     public void draw(ArmorUpgradeRecipe recipe, @NotNull IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        graphics.drawString(renderer, Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10);
+        graphics.drawString(renderer, Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10,false);
 
         if (recipe.consumesSource())
-            graphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0, 100, 10);
+            graphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost), 0, 100, 10,false);
     }
 }
