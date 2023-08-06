@@ -43,7 +43,7 @@ jobs:
         commit_message: "ci: bump version"
     - uses: Kir-Antipov/mc-publish@v3.2
       with:
-        modrinth-id: kMpXC38Q
+        modrinth-id: TKB6INcv
         modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
         curseforge-id: 401955
         curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
