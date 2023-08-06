@@ -40,6 +40,7 @@ public class DyeRecipeCategory implements ICraftingCategoryExtension {
             List<DyeColor> colors = focus.isEmpty() ? Arrays.stream(recipe.getIngredients().get(0).getItems()).map(DyeColor::getColor).toList() : focus.stream().map(DyeColor::getColor).toList();
 
             for (DyeColor color : colors) {
+                if (color == null) continue;
                 ItemStack copy = resultItem.copy();
                 toDye.onDye(copy, color);
                 results.add(copy);
