@@ -7,10 +7,15 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class RitualCloudshaper extends AbstractRitual {
+    public static final IntProvider RAIN_DELAY = UniformInt.of(12000, 180000);
+    public static final IntProvider RAIN_DURATION = UniformInt.of(12000, 24000);
+    public static final IntProvider THUNDER_DURATION = UniformInt.of(3600, 15600);
     @Override
     protected void tick() {
         ParticleUtil.spawnRitualSkyEffect(this, tile, rand, getCenterColor().toWrapper());
@@ -19,16 +24,16 @@ public class RitualCloudshaper extends AbstractRitual {
             if (getProgress() >= 18) {
                 ServerLevel world = (ServerLevel) getWorld();
                 if (!isStorm() && !isRain()) {
-                    world.setWeatherParameters(12000, 0, false, false);
+                    world.setWeatherParameters(RAIN_DELAY.sample(world.getRandom()), 0, false, false);
                     setFinished();
                 }
                 if (isStorm()) {
-                    world.setWeatherParameters(0, 1200, true, true);
+                    world.setWeatherParameters(0, THUNDER_DURATION.sample(world.getRandom()), true, true);
                     setFinished();
                 }
 
                 if (isRain()) {
-                    world.setWeatherParameters(0, 1200, true, false);
+                    world.setWeatherParameters(0, RAIN_DURATION.sample(world.getRandom()), true, false);
                     setFinished();
                 }
 
