@@ -13,7 +13,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -73,7 +72,7 @@ public class EffectBurst extends AbstractEffect implements IContextManipulator{
 
     @Override
     public int getDefaultManaCost() {
-        return 300;
+        return 400;
     }
 
     @Override

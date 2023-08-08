@@ -10,7 +10,7 @@
   },
   "spell": [
     "ars_nouveau:glyph_projectile",
-    "ars_nouveau:glyph_wall",
+    "ars_nouveau:glyph_lingering_wall",
     "ars_nouveau:glyph_sensitive",
     "ars_nouveau:glyph_aoe",
     "ars_nouveau:glyph_firework",

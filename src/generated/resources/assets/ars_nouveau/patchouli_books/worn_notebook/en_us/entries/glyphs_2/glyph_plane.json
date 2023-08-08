@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_plane",
+  "name": "ars_nouveau.glyph_name.glyph_plane",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_plane"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_plane"
+    }
+  ],
+  "sortnum": 2
+}

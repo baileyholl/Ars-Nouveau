@@ -225,14 +225,14 @@ public class ModEntities {
             .sized(0.6F, 0.63F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
 
-    public static final RegistryObject<EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
+    public static final RegistryObject<EntityType<EntityLingeringWall>> WALL_SPELL = registerEntity(
             LibEntityNames.WALL,
-            EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
+            EntityType.Builder.<EntityLingeringWall>of(EntityLingeringWall::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f)
                     .setTrackingRange(20)
                     .noSave()
                     .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(120).setCustomClientFactory(EntityWallSpell::new));
+                    .setUpdateInterval(120).setCustomClientFactory(EntityLingeringWall::new));
 
     public static final RegistryObject<EntityType<AnimBlockSummon>> ANIMATED_BLOCK = registerEntity(
             "animated_block",

@@ -79,14 +79,16 @@ public class GlyphLib {
     public static final String EffectBounceID = prependGlyph("bounce");
     public static final String EffectEvaporate = prependGlyph("evaporate");
     public static final String AugmentSensitiveID = prependGlyph("sensitive");
+
     public static final String EffectLingerID = prependGlyph("linger");
     public static final String EffectPlaneID = prependGlyph("plane");
+    public static final String EffectWallID = prependGlyph("wall");
+    public static final String EffectLingeringPlaneID = prependGlyph("lingering_plane");
+    public static final String EffectLingeringWallID = prependGlyph("lingering_wall");
+
     public static final String EffectSenseMagicID = prependGlyph("sense_magic");
     public static final String EffectInfuseID = prependGlyph("infuse");
-
     public static final String EffectRotateID = prependGlyph("rotate");
-    public static final String EffectWallId = prependGlyph("wall");
-
     public static final String EffectContextEscapeID = prependGlyph("context_escape");
 
 

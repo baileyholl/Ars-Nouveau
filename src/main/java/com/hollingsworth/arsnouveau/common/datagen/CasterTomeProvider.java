@@ -150,7 +150,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         tomes.add(buildTome("xacris_2", "Xacris's Firework Display", new Spell()
                 .add(MethodProjectile.INSTANCE)
-                .add(EffectWall.INSTANCE)
+                .add(EffectLingeringWall.INSTANCE)
                 .add(AugmentSensitive.INSTANCE)
                 .add(AugmentAOE.INSTANCE)
                 .add(EffectFirework.INSTANCE)
@@ -160,14 +160,14 @@ public class CasterTomeProvider extends SimpleDataProvider {
         tomes.add(buildTome("othy", "Othy's Death By 100 Pricks", new Spell()
                 .add(MethodProjectile.INSTANCE)
                 .add(AugmentPierce.INSTANCE, 2)
-                .add(EffectLinger.INSTANCE)
+                .add(EffectLingeringPlane.INSTANCE)
                 .add(AugmentSensitive.INSTANCE)
                 .add(EffectSummonVex.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
 
         tomes.add(buildTome("aurellia", "Aurellia's Bite Storm", new Spell()
                         .add(MethodProjectile.INSTANCE)
-                        .add(EffectLinger.INSTANCE)
+                        .add(EffectLingeringPlane.INSTANCE)
                         .add(AugmentSensitive.INSTANCE)
                         .add(EffectFangs.INSTANCE)
                         .add(EffectLightning.INSTANCE)

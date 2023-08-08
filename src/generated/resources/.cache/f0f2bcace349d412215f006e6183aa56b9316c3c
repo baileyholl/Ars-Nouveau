@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-04T22:32:46.5996896	Glyph Recipes
+// 1.20.1	2023-08-08T10:33:45.2523953	Glyph Recipes
 4a93ce36d7592e183a340b759dd8354f02aaa6c3 data/ars_nouveau/recipes/burst.json
 9350ccacd4478fc29cbb997b18a01b45d14c0bde data/ars_nouveau/recipes/glyph_accelerate.json
 3c24bcec44204ae8e60321ee54866cf60dc7dd87 data/ars_nouveau/recipes/glyph_amplify.json
@@ -46,7 +46,8 @@ fe0c64893495b2cba18083c2a75b405031bf450b data/ars_nouveau/recipes/glyph_invisibi
 724106e07ef7114d3a3606d227223a5993b275d3 data/ars_nouveau/recipes/glyph_leap.json
 4fa94cb8710e39e414647907e2596d0b867f6e6a data/ars_nouveau/recipes/glyph_light.json
 e17147e4f7d94cd137f66e9f238d1ee2df0f31e8 data/ars_nouveau/recipes/glyph_lightning.json
-94e1c59e578d5aba80082c3f461b5140ab0604a9 data/ars_nouveau/recipes/glyph_linger.json
+ec10d8518955f41f00deda00d492c52cf023e7f6 data/ars_nouveau/recipes/glyph_linger.json
+7f91baeabfceffdd6f4af66f320f9c453564f03e data/ars_nouveau/recipes/glyph_lingering_wall.json
 65d8c21bf86eec06abbfa22c57e0d738df57a80e data/ars_nouveau/recipes/glyph_name.json
 7c58bb859070f1dd17873ed38cddae31cc500e53 data/ars_nouveau/recipes/glyph_orbit.json
 e479a4b5876f3d9c043211f1a5e2b1237b2ec51a data/ars_nouveau/recipes/glyph_phantom_block.json
@@ -73,6 +74,5 @@ a16de95a4fd3f588f272a4ca0aa78b3654be5ad0 data/ars_nouveau/recipes/glyph_summon_v
 a76647ba95afa16f11715e13bf309d95a36c384a data/ars_nouveau/recipes/glyph_toss.json
 fdaeeea6ff76220054dc9ee6a9d9744bb02136f3 data/ars_nouveau/recipes/glyph_touch.json
 f71678a159afeb629fd22d92ebe1392a5cdb2594 data/ars_nouveau/recipes/glyph_underfoot.json
-c7bd4171820b1b273044d122de1de0d355bc74b8 data/ars_nouveau/recipes/glyph_wall.json
 346e5a3585ab4ead62d72eb02693ac33b4c925cb data/ars_nouveau/recipes/glyph_wind_shear.json
 1a59e8eb83b348ebb1d9a7d1c63026020e0da92d data/ars_nouveau/recipes/glyph_wither.json

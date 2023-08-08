@@ -67,12 +67,12 @@ public class EffectPlane extends AbstractEffect implements IContextManipulator {
 
     @Override
     public int getDefaultManaCost() {
-        return 300;
+        return 400;
     }
 
     @Override
     public SpellTier defaultTier() {
-        return SpellTier.THREE;
+        return SpellTier.TWO;
     }
 
     @NotNull

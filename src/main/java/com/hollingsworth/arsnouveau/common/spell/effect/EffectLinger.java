@@ -24,6 +24,8 @@ public class EffectLinger extends AbstractEffect implements IContextManipulator 
         invalidNestings.add(EffectPlane.INSTANCE.getRegistryName());
         invalidNestings.add(EffectWall.INSTANCE.getRegistryName());
         invalidNestings.add(EffectBurst.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectLingeringPlane.INSTANCE.getRegistryName());
+        invalidNestings.add(EffectLingeringWall.INSTANCE.getRegistryName());
     }
 
     @Override
@@ -59,12 +61,12 @@ public class EffectLinger extends AbstractEffect implements IContextManipulator 
 
     @Override
     public int getDefaultManaCost() {
-        return 300;
+        return 400;
     }
 
     @Override
     public SpellTier defaultTier() {
-        return SpellTier.THREE;
+        return SpellTier.TWO;
     }
 
    @NotNull

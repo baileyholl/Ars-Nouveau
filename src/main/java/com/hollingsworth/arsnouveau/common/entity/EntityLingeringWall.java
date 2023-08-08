@@ -26,29 +26,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class EntityWallSpell extends EntityProjectileSpell {
+public class EntityLingeringWall extends EntityProjectileSpell {
 
-    public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Direction> DIRECTION = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.DIRECTION);
-    public static final EntityDataAccessor<Boolean> SHOULD_FALL = SynchedEntityData.defineId(EntityWallSpell.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityLingeringWall.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> AOE = SynchedEntityData.defineId(EntityLingeringWall.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityLingeringWall.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityLingeringWall.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Direction> DIRECTION = SynchedEntityData.defineId(EntityLingeringWall.class, EntityDataSerializers.DIRECTION);
+    public static final EntityDataAccessor<Boolean> SHOULD_FALL = SynchedEntityData.defineId(EntityLingeringWall.class, EntityDataSerializers.BOOLEAN);
     public double extendedTime;
     public int maxProcs = 100;
     public int totalProcs;
     List<EntityHit> hitEntities = new ArrayList<>();
     public float growthFactor = 1.0f;
 
-    public EntityWallSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
+    public EntityLingeringWall(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
         super(ModEntities.WALL_SPELL.get(), worldIn);
     }
 
-    public EntityWallSpell(Level worldIn, double x, double y, double z) {
+    public EntityLingeringWall(Level worldIn, double x, double y, double z) {
         super(ModEntities.WALL_SPELL.get(), worldIn, x, y, z);
     }
 
-    public EntityWallSpell(Level worldIn, LivingEntity shooter) {
+    public EntityLingeringWall(Level worldIn, LivingEntity shooter) {
         super(ModEntities.WALL_SPELL.get(), worldIn, shooter);
     }
 
@@ -173,7 +173,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
         ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0), 10);
     }
 
-    public EntityWallSpell(PlayMessages.SpawnEntity packet, Level world) {
+    public EntityLingeringWall(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.WALL_SPELL.get(), world);
     }
 

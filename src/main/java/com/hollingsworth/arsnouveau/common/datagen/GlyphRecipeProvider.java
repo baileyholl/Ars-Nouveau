@@ -88,9 +88,7 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectLeap.INSTANCE).withItem(ItemsRegistry.AIR_ESSENCE).withItem(ItemsRegistry.WILDEN_WING, 3));
         add(get(EffectLight.INSTANCE).withItem(Items.LANTERN).withItem(Items.TORCH));
         add(get(EffectLightning.INSTANCE).withItem(ItemsRegistry.AIR_ESSENCE).withItem(Items.LIGHTNING_ROD, 3).withItem(Items.HEART_OF_THE_SEA));
-        add(get(EffectLinger.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
-                .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
-                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+
         add(get(EffectPhantomBlock.INSTANCE).withIngredient(Tags.Items.GLASS, 8));
         add(get(EffectPickup.INSTANCE).withItem(Items.HOPPER, 2));
         add(get(EffectPull.INSTANCE).withItem(Items.FISHING_ROD, 1));
@@ -112,7 +110,19 @@ public class GlyphRecipeProvider extends SimpleDataProvider {
         add(get(EffectName.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.NAME_TAG));
         add(get(EffectSenseMagic.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(ItemsRegistry.DOWSING_ROD).withItem(ItemsRegistry.STARBUNCLE_SHARD));
         add(get(EffectInfuse.INSTANCE).withItem(ItemsRegistry.ABJURATION_ESSENCE).withItem(Items.GLASS_BOTTLE).withIngredient(Tags.Items.RODS_BLAZE, 1));
-        add(get(EffectWall.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
+        add(get(EffectLinger.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.GUNPOWDER,3)
+                .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+        add(get(EffectWall.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT,3)
+                .withIngredient(Ingredient.of(Tags.Items.OBSIDIAN))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+        add(get(EffectPlane.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.TNT,3)
+                .withIngredient(Ingredient.of(Tags.Items.OBSIDIAN))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+        add(get(EffectLingeringPlane.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
+                .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
+                .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
+        add(get(EffectLingeringWall.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE).withItem(Items.DRAGON_BREATH)
                 .withIngredient(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withIngredient(Ingredient.of(Tags.Items.RODS_BLAZE), 2));
         add(get(EffectRotate.INSTANCE).withItem(ItemsRegistry.MANIPULATION_ESSENCE));
