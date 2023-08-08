@@ -84,7 +84,7 @@ public class EffectWall extends AbstractEffect implements IContextManipulator {
 
     @Override
     public int getDefaultManaCost() {
-        return 400;
+        return 300;
     }
 
     @Override
