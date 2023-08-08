@@ -1,4 +1,4 @@
-// 1.20.1	2023-08-08T10:33:45.2623686	Ars Nouveau Item Models
+// 1.20.1	2023-08-08T10:59:29.124574	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
@@ -42,7 +42,7 @@ e90b0d3b7816c04c63969ee51f69f521d44d5444 assets/ars_nouveau/models/item/glyph_an
 c3de1abdd00608d7f5b4b71953119d218787f318 assets/ars_nouveau/models/item/glyph_break.json
 25e3368d3a84c449ff2d6c7ca27f76377fa2b3a7 assets/ars_nouveau/models/item/glyph_cold_snap.json
 715f6e40e53b95cd4c4bd566ab43e226872ed02b assets/ars_nouveau/models/item/glyph_conjure_water.json
-a163c9ce1e63e428f3fa804b66e491b455f18540 assets/ars_nouveau/models/item/glyph_context_escape.json
+f5d91a4d26b6d06a0b9a593f2109714e388352a4 assets/ars_nouveau/models/item/glyph_context_escape.json
 f72d7e2b785b1eb940997edfedb3edf7386cc026 assets/ars_nouveau/models/item/glyph_craft.json
 b4e6a1291bc03fe1e9ffcf78c5a8360c443fc67e assets/ars_nouveau/models/item/glyph_crush.json
 53a812ac2b161a979ccfe98a8775572a823eb157 assets/ars_nouveau/models/item/glyph_cut.json
@@ -81,15 +81,15 @@ e3b974bab5c8be7489356151f62e5fad349bf6fe assets/ars_nouveau/models/item/glyph_le
 680c18d8c12fd96d76bc3b26b535f0bfe86eca5e assets/ars_nouveau/models/item/glyph_light.json
 e7f54893e02f4e74cfb8d6942c3e334e46b46cbe assets/ars_nouveau/models/item/glyph_lightning.json
 01efb621125fc242e1a803e81a8bf9e219e71984 assets/ars_nouveau/models/item/glyph_linger.json
-a163c9ce1e63e428f3fa804b66e491b455f18540 assets/ars_nouveau/models/item/glyph_lingering_plane.json
-a163c9ce1e63e428f3fa804b66e491b455f18540 assets/ars_nouveau/models/item/glyph_lingering_wall.json
+2cc3c0831e1f2b386955f18a0a6f4dd9cd6c7be4 assets/ars_nouveau/models/item/glyph_lingering_plane.json
+a007c70d9613124eb2b7baf70462a9f174ee60cc assets/ars_nouveau/models/item/glyph_lingering_wall.json
 fbfe10752f07a26aebd57e6484d5f00a053c4636 assets/ars_nouveau/models/item/glyph_name.json
 3a292eab2d9aca2dbdc6267d346c0261d7476dce assets/ars_nouveau/models/item/glyph_orbit.json
 65a10959b3e356b62f457e98109dfe3b06a179d1 assets/ars_nouveau/models/item/glyph_phantom_block.json
 1c5bddc31dfc2beb8898de056ec11219e5fb64a1 assets/ars_nouveau/models/item/glyph_pickup.json
 0b8d3bc964187373a08a2f9ca02665f5485eb410 assets/ars_nouveau/models/item/glyph_pierce.json
 9ba86517b6eff6389269b76ef79b0c30cdaa7d83 assets/ars_nouveau/models/item/glyph_place_block.json
-a163c9ce1e63e428f3fa804b66e491b455f18540 assets/ars_nouveau/models/item/glyph_plane.json
+eaf5f78069fbda202d286c7bd2f0faf8def61987 assets/ars_nouveau/models/item/glyph_plane.json
 7b5f192bbbfab3508efba29f9c2c99f7cb34792f assets/ars_nouveau/models/item/glyph_projectile.json
 4aae4d9c31df4e7c77ab9281b31bd227a249c7fa assets/ars_nouveau/models/item/glyph_pull.json
 597b7e7e70a00c4c0aa0fd311e72e5ad3dc95215 assets/ars_nouveau/models/item/glyph_redstone_signal.json
