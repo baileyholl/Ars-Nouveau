@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -28,7 +29,7 @@ public class SpellSensor extends TickableModBlock{
     }
 
     public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        if(pBlockAccess.getBlockEntity(pPos) instanceof SpellSensorTile sensorTile){
+        if(pBlockAccess.getBlockEntity(pPos) instanceof SpellSensorTile sensorTile && sensorTile.outputDuration > 0){
             return sensorTile.outputStrength;
         }
         return 0;
@@ -44,6 +45,7 @@ public class SpellSensor extends TickableModBlock{
             if(pLevel.getBlockEntity(pPos) instanceof SpellSensorTile sensorTile){
                 sensorTile.parchment = heldStack.copy();
                 sensorTile.updateBlock();
+                pPlayer.sendSystemMessage(Component.translatable("ars_nouveau.sensor.set_spell"));
                 return InteractionResult.SUCCESS;
             }
         }

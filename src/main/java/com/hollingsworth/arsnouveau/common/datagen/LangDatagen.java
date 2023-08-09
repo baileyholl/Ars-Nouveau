@@ -1223,6 +1223,9 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.music_disc_thistle_the_sound_of_glass.desc", "Thistle - The Sound of Glass");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt", "Music Disc");
         add("item.ars_nouveau.music_disc_firel_the_wild_hunt.desc", "Firel - The Wild Hunt");
+        add("ars_nouveau.sensor.set_spell", "Sensor will now trigger on this spell only.");
+        add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
+        add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);

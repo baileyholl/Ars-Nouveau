@@ -84,6 +84,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         if(BlockUtil.distanceFrom(pos, thisPos) > listenRange || isOccluded(level, thisPos, pos)){
             return;
         }
+        var str = 0;
         if(!this.parchment.isEmpty()){
             // Compare spell to parchment
             if(this.parchment.getItem() instanceof SpellParchment spellParchment){
@@ -94,9 +95,12 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
                     return;
                 }
             }
+            str = 15;
+        }else{
+            str = spell.recipe.size();
         }
-        outputDuration = 20;
-        outputStrength = 15;
+        outputDuration = 40;
+        this.outputStrength = str;
         updateBlock();
         level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
     }
