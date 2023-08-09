@@ -71,7 +71,7 @@ public class BlockUtil {
     public static double distanceFromCenter(BlockPos start, BlockPos end) {
         if (start == null || end == null)
             return 0;
-        return distanceFrom(new Vec3(start.getX() + 0.5, start.getY(), start.getZ() + 0.5), new Vec3(end.getX() + 0.5, end.getY(), end.getZ() + 0.5));
+        return distanceFrom(new Vec3(start.getX() + 0.5, start.getY() + 0.5, start.getZ() + 0.5), new Vec3(end.getX() + 0.5, end.getY() + 0.5, end.getZ() + 0.5));
     }
 
     public static double distanceFrom(Vec3 start, BlockPos end) {

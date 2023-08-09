@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,10 @@ public class LevelPosMap {
     }
 
     public void applyForRange(Level level, BlockPos atPos, double distanceFrom, Function<BlockPos, Boolean> breakEarlyFunction){
+        applyForRange(level, new Vec3(atPos.getX(), atPos.getY(), atPos.getZ()), distanceFrom, breakEarlyFunction);
+    }
+
+    public void applyForRange(Level level, Vec3 atPos, double distanceFrom, Function<BlockPos, Boolean> breakEarlyFunction){
         String key = level.dimension().location().toString();
         if (!posMap.containsKey(key))
             return;
@@ -32,7 +37,7 @@ public class LevelPosMap {
         for (BlockPos p : worldList) {
             if (!level.isLoaded(p))
                 continue;
-            if (BlockUtil.distanceFrom(p, atPos) <= distanceFrom){
+            if (BlockUtil.distanceFrom(atPos, new Vec3(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5)) <= distanceFrom){
                 if(removeFunction.apply(level, p)){
                     stale.add(p);
                 }else if(breakEarlyFunction.apply(p)){
