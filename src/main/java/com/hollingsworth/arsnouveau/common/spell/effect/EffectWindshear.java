@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -38,19 +40,20 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
                 pos = pos.below();
                 numBlocks++;
             }
-            attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(world, shooter), (float) (DAMAGE.get() + numBlocks)); //converted DamageSource FALL into playerAttack
-            Vec3 vec = rayTraceResult.getEntity().position;
-            for (int i = 0; i < 10; i++) {
-                ((ServerLevel) world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y + 0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2), 30,
-                        ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), 0.3);
+
+            if (attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(world, shooter), (float) (DAMAGE.get() + numBlocks))) {//converted DamageSource FALL into playerAttack
+                Vec3 vec = rayTraceResult.getEntity().position;
+                for (int i = 0; i < 10; i++) {
+                    ((ServerLevel) world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y + 0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2), 30,
+                            ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), ParticleUtil.inRange(-0.2, 0.2), 0.3);
+                }
             }
         }
     }
 
-    // TODO: Restore windshear damage type?
     @Override
     public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return world.damageSources().fall();
+        return DamageUtil.source(world, DamageTypesRegistry.WINDSHEAR, shooter);
     }
 
     @Override

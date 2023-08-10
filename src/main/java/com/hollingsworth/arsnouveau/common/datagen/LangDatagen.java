@@ -999,7 +999,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.warding", "Warding");
         add("ars_nouveau.perk.mana_regen", "Mana Regen");
         add("ars_nouveau.perk.percent_max_mana", "Max Mana");
-        add("ars_nouveau.perk.flat_max_mana", "Max Mana");
+        add("ars_nouveau.perk.max_mana", "Max Mana");
         add("ars_nouveau.perk.spell_damage", "Spell Power");
         add("ars_nouveau.perk.saturation", "Bonus Saturation");
         add("ars_nouveau.perk.wixie", "Potion Duration");

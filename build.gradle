@@ -11,8 +11,7 @@ buildscript {
         maven { url = 'https://maven.parchmentmc.org' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.+', changing: true
-        //classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.0.+', changing: true
+        classpath group: 'net.neoforged', name: 'NeoGradle', version: '6.0.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
         classpath 'org.parchmentmc:librarian:1.+'
     }
@@ -21,8 +20,7 @@ buildscript {
 //plugins {
 //    id 'com.github.johnrengelman.shadow' version '7.1.2'
 //}
-apply plugin: 'net.minecraftforge.gradle'
-//apply plugin: 'net.neoforged.gradle'
+apply plugin: 'net.neoforged.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -32,7 +30,7 @@ apply plugin: 'maven-publish'
 
 
 
-version = '4.2.5'
+version = '4.3.0.0'
 //configurations {
 //    library
 //    shade // <- Create a 'shade' configuration
@@ -174,8 +172,7 @@ jarJar.enable()
 
 dependencies {
 
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    //minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
+    minecraft "net.neoforged:forge:${mc_version}-${forge_version}"
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
@@ -203,6 +200,11 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
     implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
+
+    implementation fg.deobf("curse.maven:placebo-283644:4691637")
+    implementation fg.deobf("curse.maven:aphoattr-898963:4688147")
+
+
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
 //    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental

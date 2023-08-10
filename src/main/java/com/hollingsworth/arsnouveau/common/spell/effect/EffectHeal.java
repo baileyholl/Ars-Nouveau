@@ -1,10 +1,13 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +38,6 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             if (entity.isInvertedHealAndHarm()) {
-                // TODO: use magic damage source
                 attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter), healVal);
             } else {
                 if(entity instanceof Player player){
@@ -45,6 +47,11 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
             }
 
         }
+    }
+
+    @Override
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
+        return DamageUtil.source(world, DamageTypes.MAGIC, shooter);
     }
 
     @Override

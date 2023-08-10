@@ -1,0 +1,5 @@
+// 1.20.1	2023-08-11T00:44:18.508379	Tags for minecraft:damage_type mod id ars_nouveau
+c07768ed08384f5d693ed8bed719a825a531b78e data/minecraft/tags/damage_type/bypasses_armor.json
+4eb8deadc24e4e017387ef06cfa6543373cea902 data/minecraft/tags/damage_type/is_fall.json
+c03f05d0cd54c703078c47781e29b30b316ed23d data/minecraft/tags/damage_type/is_fire.json
+df18c48c123c4f2586bbcec49ba5d5768308be5a data/minecraft/tags/damage_type/is_freezing.json

@@ -59,20 +59,15 @@ public class ManaUtil {
         if (mana == null)
             return new Mana(0, 0f);
 
-        int max = ServerConfig.INIT_MAX_MANA.get();
-
-        max += PerkUtil.perkValue(e, PerkAttributes.FLAT_MANA_BONUS.get());
-
-        for(ItemStack i : e.getAllSlots()){
-            max += (ServerConfig.MANA_BOOST_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.get()));
-        }
+        double rawMax = PerkUtil.perkValue(e, PerkAttributes.MAX_MANA.get());
 
         int tier = mana.getBookTier();
         int numGlyphs = mana.getGlyphBonus();
-        max += numGlyphs * ServerConfig.GLYPH_MAX_BONUS.get();
-        max += tier * ServerConfig.TIER_MAX_BONUS.get();
+        rawMax += numGlyphs * ServerConfig.GLYPH_MAX_BONUS.get();
+        rawMax += tier * ServerConfig.TIER_MAX_BONUS.get();
 
-        max *= PerkUtil.perkValue(e, PerkAttributes.MAX_MANA_BONUS.get());
+        int max = (int) rawMax;
+
         MaxManaCalcEvent event = new MaxManaCalcEvent(e, max);
         MinecraftForge.EVENT_BUS.post(event);
         max = event.getMax();
@@ -90,20 +85,16 @@ public class ManaUtil {
         IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
 
         if(mana == null) return 0;
-        double regen = ServerConfig.INIT_MANA_REGEN.get();
+        double regen = 0;
 
         if (e.getAttribute(PerkAttributes.MANA_REGEN_BONUS.get()) != null)
             regen += e.getAttributeValue(PerkAttributes.MANA_REGEN_BONUS.get());
 
-        for(ItemStack i : e.getAllSlots()){
-            regen += ServerConfig.MANA_REGEN_ENCHANT_BONUS.get() * i.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.get());
-        }
         int tier = mana.getBookTier();
         double numGlyphs = mana.getGlyphBonus();
         regen += numGlyphs * ServerConfig.GLYPH_REGEN_BONUS.get();
         regen += tier * ServerConfig.TIER_REGEN_BONUS.get();
-        if (e.hasEffect(ModPotions.MANA_REGEN_EFFECT.get()))
-            regen += ServerConfig.MANA_REGEN_POTION.get() * (1 + e.getEffect(ModPotions.MANA_REGEN_EFFECT.get()).getAmplifier());
+
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();

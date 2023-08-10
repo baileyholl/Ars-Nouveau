@@ -23,7 +23,7 @@ public class MagicCapacityPerk extends Perk {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot pEquipmentSlot, ItemStack stack, int slotValue) {
-        return attributeBuilder().put(PerkAttributes.MAX_MANA_BONUS.get(), new AttributeModifier(PERK_UUID, "MagicCapacity",  0.1 * slotValue, AttributeModifier.Operation.MULTIPLY_TOTAL)).build();
+        return attributeBuilder().put(PerkAttributes.MAX_MANA.get(), new AttributeModifier(PERK_UUID, "MagicCapacity",  0.1 * slotValue, AttributeModifier.Operation.MULTIPLY_TOTAL)).build();
     }
 
     @Override

@@ -27,7 +27,7 @@ public abstract class AbstractManaCurio extends ArsNouveauCurio implements IMana
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> attributes = super.getAttributeModifiers(slotContext, uuid, stack);
-        attributes.put(PerkAttributes.FLAT_MANA_BONUS.get(), new AttributeModifier(uuid, "max_mana_modifier_curio" ,this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION) );
+        attributes.put(PerkAttributes.MAX_MANA.get(), new AttributeModifier(uuid, "max_mana_modifier_curio" ,this.getMaxManaBoost(stack), AttributeModifier.Operation.ADDITION) );
         attributes.put(PerkAttributes.MANA_REGEN_BONUS.get(), new AttributeModifier(uuid, "mana_regen_modifier_curio" ,this.getManaRegenBonus(stack), AttributeModifier.Operation.ADDITION) );
         return attributes;
     }
