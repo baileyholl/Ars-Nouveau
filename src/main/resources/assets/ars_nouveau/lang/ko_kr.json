@@ -226,7 +226,7 @@
   "ars_nouveau.glyph_desc.glyph_glide": "활공 효과를 부여하여 사용자가 겉날개를 착용한 것 처럼 날아다닐 수 있습니다. ",
   "ars_nouveau.glyph_desc.glyph_gravity": "블록과 엔티티를 추락시킵니다. 시간 연장으로 강화되면 효과를 받은 플레이어는 비행이 비활성화되며 중력효과를 얻습니다. 중력의 영향을 받는 동안 엔티티는 빠르게 낙하하며 낙하 피해를 두 배로 입습니다.",
   "ars_nouveau.glyph_desc.glyph_grow": "뼛가루를 사용한 것과 같이 식물의 성장을 가속화시킵니다.",
-  "ars_nouveau.glyph_desc.glyph_gust": "대상 도는 블럭을 시전자로부터 짧은 거리 밀쳐냅니다. Sensitive는 이 주문이 블록을 발사하는 것을 막습니다.",
+  "ars_nouveau.glyph_desc.glyph_gust": "대상 도는 블럭을 시전자로부터 짧은 거리 밀쳐냅니다. 섬세함은 이 주문이 블록을 발사하는 것을 막습니다.",
   "ars_nouveau.glyph_desc.glyph_harm": "시작과 함께 사용가능한 주문. 피해를 입힙니다. 증폭으로 피해량을 증가시키거나 시간 연장으로 독 효과를 적용시킬 수 있습니다. 지연이 없는 다중 피해는 무적 시간으로 인해 적용되지 않습니다.",
   "ars_nouveau.glyph_desc.glyph_harvest": "완전히 자란 작물에게 시전하면 작물을 파괴하지 않고 수확합니다.",
   "ars_nouveau.glyph_desc.glyph_heal": "시전자의 허기를 대가로 소량의 체력 회복을 제공합니다. 언데드에게 사용하면 회복량과 동일한 양의 피해를 줍니다.",
