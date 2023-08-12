@@ -22,13 +22,7 @@ public class Rewards {
 
     public static void init() {
         try {
-            JsonObject object;
-
-            try {
-                object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/baileyholl/Ars-Nouveau/main/supporters.json"))).getAsJsonObject();
-            } catch (Exception e) {
-                object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/Alexthw46/Ars-Nouveau/breaking-changes/supporters.json"))).getAsJsonObject();
-            }
+            JsonObject object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/baileyholl/Ars-Nouveau/main/supporters.json"))).getAsJsonObject();
 
             JsonArray supporters = object.getAsJsonArray("uuids");
             for (JsonElement element : supporters) {

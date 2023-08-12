@@ -64,7 +64,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        ((IPotionEffect)this).applyConfigPotion(living, MobEffects.MOVEMENT_SLOWDOWN, spellStats);
+        this.applyConfigPotion(living, MobEffects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
     /**

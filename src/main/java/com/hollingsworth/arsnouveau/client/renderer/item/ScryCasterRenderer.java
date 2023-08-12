@@ -50,7 +50,7 @@ public class ScryCasterRenderer extends FixedGeoItemRenderer<ScryCaster>{
             if (currentItemStack.getOrCreateTag().contains("ars_nouveau:caster")) {
                 color = animatable.getSpellCaster(currentItemStack).getColor();
             }
-        return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
+        return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.85f).brighter(1.2f);
     }
 
     @Override
