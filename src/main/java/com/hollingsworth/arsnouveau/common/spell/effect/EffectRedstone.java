@@ -30,6 +30,7 @@ public class EffectRedstone extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+
         BlockState state = BlockRegistry.REDSTONE_AIR.defaultBlockState();
         int signalModifier = (int) spellStats.getAmpMultiplier() + 10;
         if (signalModifier < 1)
@@ -41,6 +42,8 @@ public class EffectRedstone extends AbstractEffect {
         if (!(world.getBlockState(pos).getMaterial() == Material.AIR && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)) {
             return;
         }
+        if(!world.isInWorldBounds(pos))
+            return;
         int timeBonus = (int) spellStats.getDurationMultiplier();
         world.setBlockAndUpdate(pos, state);
         int delay = Math.max(GENERIC_INT.get() + timeBonus * BONUS_TIME.get(), 2);

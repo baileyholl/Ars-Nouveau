@@ -42,6 +42,8 @@ public class EffectPlaceBlock extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos1 : posList) {
+            if(!world.isInWorldBounds(pos1))
+                continue;
             pos1 = rayTraceResult.isInside() ? pos1 : pos1.relative(rayTraceResult.getDirection());
             boolean notReplaceable = !world.getBlockState(pos1).getMaterial().isReplaceable();
             if (notReplaceable || MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer)))
