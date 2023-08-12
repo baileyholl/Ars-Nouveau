@@ -98,12 +98,14 @@ public class Config {
                 .defineList("entity_lights", ConfigUtil.writeConfig(getDefaultEntityLight()), ConfigUtil::validateMap);
         ITEM_LIGHT_CONFIG = CLIENT_BUILDER.comment("Light level an item should emit when held when dynamic lights are on", "Example entry: minecraft:stick=15")
                 .defineList("item_lights", ConfigUtil.writeConfig(getDefaultItemLight()), ConfigUtil::validateMap);
+        CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Overlay").push("overlays");
         TOOLTIP_X_OFFSET = CLIENT_BUILDER.comment("X offset for the tooltip").defineInRange("xTooltip", 20, Integer.MIN_VALUE, Integer.MAX_VALUE);
         TOOLTIP_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the tooltip").defineInRange("yTooltip", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_X_OFFSET = CLIENT_BUILDER.comment("X offset for the Mana Bar").defineInRange("xManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         MANABAR_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Mana Bar").defineInRange("yManaBar", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
+        CLIENT_BUILDER.pop();
         CLIENT_BUILDER.comment("Misc").push("misc");
         ALTERNATE_PORTAL_RENDER = CLIENT_BUILDER.comment("Use simplified renderer for Warp Portals").define("no_end_portal_render", false);
         DISABLE_SKY_SHADER = CLIENT_BUILDER.comment("Disables the skyweave renderer. Disable if your sky is broken with shaders.").define("disable_skyweave", false);
