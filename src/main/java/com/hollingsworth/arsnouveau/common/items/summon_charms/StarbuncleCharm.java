@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
-import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
-import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -27,7 +27,8 @@ public class StarbuncleCharm extends AbstractSummonCharm {
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         Starbuncle carbuncle = new Starbuncle(world, true);
         Starbuncle.StarbuncleData data = new Starbuncle.StarbuncleData(context.getItemInHand().getOrCreateTag());
-        carbuncle.setPos(pos.getX() + 0.5, pos.above().getY(), pos.getZ() + 0.5);
+        pos = pos.relative(context.getClickedFace());
+        carbuncle.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
         carbuncle.data = data;
         world.addFreshEntity(carbuncle);
         carbuncle.restoreFromTag();

@@ -72,9 +72,11 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context) {
         FireworkRocketEntity fireworkrocketentity;
-        if (context.getType() == SpellContext.CasterType.TURRET) {
+        if (context.getCaster().getCasterType() == SpellContext.CasterType.TURRET) {
             BlockPos pos = rayTraceResult.getBlockPos();
-            Direction direction = rayTraceResult.getDirection().getOpposite();
+            Direction direction = rayTraceResult.getDirection();
+            if (direction != Direction.UP && direction != Direction.DOWN)
+                direction = rayTraceResult.getDirection().getOpposite();
             fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true);
             fireworkrocketentity.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), 0.5F, 1.0F);
         } else {
