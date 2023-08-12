@@ -5,10 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.SimpleContainer;
@@ -52,15 +49,20 @@ public class EffectSmelt extends AbstractEffect {
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+
+        if (!spellStats.isSensitive()) {
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+            for (BlockPos pos : posList) {
+                if (!canBlockBeHarvested(spellStats, world, pos))
+                    continue;
+                smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
+            }
+        }
+
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 
-        for (BlockPos pos : posList) {
-            if (!canBlockBeHarvested(spellStats, world, pos))
-                continue;
-            smeltBlock(world, pos, shooter, rayTraceResult, spellStats, spellContext, resolver);
-        }
+
     }
 
 
@@ -113,13 +115,13 @@ public class EffectSmelt extends AbstractEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentAOE.INSTANCE, AugmentPierce.INSTANCE
+                AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSensitive.INSTANCE
         );
     }
 
     @Override
     public String getBookDescription() {
-        return "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness.";
+        return "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness, Sensitive will make it only smelt items and not blocks.";
     }
 
     @Override

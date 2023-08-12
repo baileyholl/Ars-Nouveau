@@ -1,14 +1,9 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
-import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -38,7 +33,7 @@ public class PerkAttributes {
     public static final RegistryObject<Attribute> WIXIE = registerAttribute("ars_nouveau.perk.wixie", (id) -> new RangedAttribute(id, 1.0D, 0.0D, 1024.0D).setSyncable(true), "bae5d566-c9f6-4abf-9fe0-6ac140a34db1");
 
     public static final RegistryObject<Attribute> FEATHER = registerAttribute("ars_nouveau.perk.feather", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1.0D).setSyncable(true), "ee3a4090-c5f5-4a26-a9c2-69837237b35f");
-    public static final RegistryObject<Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");
+    //public static final RegistryObject<Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");
 
     public static RegistryObject<Attribute> registerAttribute(String name, Function<String, Attribute> attribute, String uuid) {
         return registerAttribute(name, attribute, UUID.fromString(uuid));

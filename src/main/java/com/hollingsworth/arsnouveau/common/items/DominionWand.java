@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,8 +23,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,18 +36,18 @@ public class DominionWand extends ModItem {
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-        if(!pIsSelected || pLevel.isClientSide || pLevel.getGameTime() % 5 != 0){
+        if (!pIsSelected || pLevel.isClientSide || pLevel.getGameTime() % 5 != 0) {
             return;
         }
         DominionData data = new DominionData(pStack);
         BlockPos pos = data.storedPos;
-        if(pos != null){
-            if(pLevel.getBlockEntity(pos) instanceof IWandable wandable){
+        if (pos != null) {
+            if (pLevel.getBlockEntity(pos) instanceof IWandable wandable) {
                 Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
             }
             return;
         }
-        if(data.getEntity(pLevel) instanceof IWandable wandable){
+        if (data.getEntity(pLevel) instanceof IWandable wandable) {
             Networking.sendToPlayerClient(new HighlightAreaPacket(wandable.getWandHighlight(new ArrayList<>()), 10), (ServerPlayer) pEntity);
         }
     }
@@ -116,18 +117,19 @@ public class DominionWand extends ModItem {
 
         if (!data.hasStoredData()) {
             data.setStoredPos(pos.immutable());
+            data.setFacing(context.getClickedFace());
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.dominion_wand.position_set"));
             return InteractionResult.SUCCESS;
         }
 
         if (data.getStoredPos() != null && world.getBlockEntity(data.getStoredPos()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
+            wandable.onFinishedConnectionFirst(pos, data.getFace(), (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
         }
         if (world.getBlockEntity(pos) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionLast(data.getStoredPos(), (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
+            wandable.onFinishedConnectionLast(data.getStoredPos(), data.getFace(), (LivingEntity) world.getEntity(data.getStoredEntityID()), playerEntity);
         }
         if (data.getStoredEntityID() != -1 && world.getEntity(data.getStoredEntityID()) instanceof IWandable wandable) {
-            wandable.onFinishedConnectionFirst(pos, null, playerEntity);
+            wandable.onFinishedConnectionFirst(pos, data.getFace(), null, playerEntity);
         }
 
         clear(stack, playerEntity);
@@ -138,15 +140,15 @@ public class DominionWand extends ModItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         DominionData data = new DominionData(stack);
-        if(data.getStoredEntityID() == -1){
+        if (data.getStoredEntityID() == -1) {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_entity"));
-        }else{
+        } else {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.entity_stored"));
         }
 
-        if(data.getStoredPos() == null){
+        if (data.getStoredPos() == null) {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_location"));
-        }else{
+        } else {
             tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getPosString(data.getStoredPos())));
         }
     }
@@ -155,8 +157,14 @@ public class DominionWand extends ModItem {
         return Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
     }
 
-    public static class DominionData extends ItemstackData{
+    public static class DominionData extends ItemstackData {
         private BlockPos storedPos;
+
+        public Direction getFace() {
+            return facing;
+        }
+
+        private Direction facing = Direction.NORTH;
         private int storedEntityID;
 
         public DominionData(ItemStack stack) {
@@ -167,6 +175,7 @@ public class DominionWand extends ModItem {
             }
             storedPos = NBTUtil.getNullablePos(tag, "stored");
             storedEntityID = tag.getInt("entityID");
+            facing = Direction.from3DDataValue(tag.getInt("facing"));
         }
 
         public boolean hasStoredData() {
@@ -195,6 +204,11 @@ public class DominionWand extends ModItem {
             writeItem();
         }
 
+        public void setFacing(Direction facing) {
+            this.facing = facing;
+            writeItem();
+        }
+
         @Override
         public String getTagString() {
             return "an_dominion_wand";
@@ -202,10 +216,14 @@ public class DominionWand extends ModItem {
 
         @Override
         public void writeToNBT(CompoundTag tag) {
-            if(storedPos != null) {
+            if (storedPos != null) {
                 NBTUtil.storeBlockPos(tag, "stored", storedPos);
             }
+            tag.putInt("facing", facing == null ? -1 : facing.get3DDataValue());
             tag.putInt("entityID", storedEntityID);
         }
+    }
+
+    public record WrappedBlockPos(BlockPos pos, @Nullable Direction facing) {
     }
 }
