@@ -24,7 +24,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.gui.ScreenUtils;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
@@ -124,28 +123,6 @@ public class GuiEntityInfoHUD {
     public static final Color VANILLA_TOOLTIP_BORDER_2 = new Color(0x50_28007f, true);
     public static final Color VANILLA_TOOLTIP_BACKGROUND =  new Color(0xf0_100010, true);
 
-
-    public static void drawHoveringText(GuiGraphics mStack, List<? extends FormattedText> textLines, int mouseX,
-                                        int mouseY, int screenWidth, int screenHeight, int maxTextWidth, Font font) {
-        drawHoveringText(mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-                ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
-                font);
-    }
-
-    public static void drawHoveringText(GuiGraphics mStack, List<? extends FormattedText> textLines, int mouseX,
-                                        int mouseY, int screenWidth, int screenHeight, int maxTextWidth, int backgroundColor, int borderColorStart,
-                                        int borderColorEnd, Font font) {
-        drawHoveringText(ItemStack.EMPTY, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-                backgroundColor, borderColorStart, borderColorEnd, font);
-    }
-
-    public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics mStack,
-                                        List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
-                                        int maxTextWidth, Font font) {
-        drawHoveringText(stack, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-                ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
-                font);
-    }
 
     public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics graphics,
                                         List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
@@ -247,23 +224,23 @@ public class GuiEntityInfoHUD {
         pStack.pushPose();
         Matrix4f mat = pStack.last()
                 .pose();
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
+        graphics.fillGradient(tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
                 tooltipY - 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3,
+        graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 3,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
+        graphics.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
                 tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
+        graphics.fillGradient(tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
                 backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
+        graphics.fillGradient(tooltipX + tooltipTextWidth + 3, tooltipY - 3,
                 tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
+        graphics.fillGradient(tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
                 tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
+        graphics.fillGradient(tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
+        graphics.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
                 tooltipY - 3 + 1, borderColorStart, borderColorStart);
-        ScreenUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2,
+        graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
 
         MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()
