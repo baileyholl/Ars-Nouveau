@@ -1,16 +1,15 @@
 package com.hollingsworth.arsnouveau.common.mixin.elytra;
 
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Player.class)
 public class ElytraPlayerMixin {
-    @Redirect(
+    @ModifyExpressionValue(
             method = "tryToStartFallFlying",
             at = @At(
                     value = "INVOKE",
@@ -18,7 +17,7 @@ public class ElytraPlayerMixin {
                     remap = false
             )
     )
-    public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return EffectGlide.canGlide(entity) || stack.canElytraFly(entity);
+    public boolean elytraOverride(boolean original) {
+        return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 }
