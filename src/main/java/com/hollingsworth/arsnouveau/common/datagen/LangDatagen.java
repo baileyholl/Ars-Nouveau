@@ -1091,6 +1091,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.adv.desc.mob_jar", "Acquire a Containment Jar");
         add("ars_nouveau.adv.title.shrunk_starbuncle", "Honey I Shrunk the Starbuncle");
         add("ars_nouveau.adv.desc.shrunk_starbuncle", "Put a Starbuncle in a Containment Jar");
+        add("ars_nouveau.adv.title.familiar", "You're Grounded");
+        add("ars_nouveau.adv.desc.familiar", "Be affected by a Ritual of Gravity");
         add("block.ars_nouveau.void_prism", "Void Prism");
         add("ars_nouveau.page.void_prism", "Destroys any spell projectiles that pass through it.");
         add("item.ars_nouveau.music_disc_aria_biblio", "Music Disc");
