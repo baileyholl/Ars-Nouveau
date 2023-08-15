@@ -44,7 +44,6 @@ public class EffectWall extends AbstractEffect {
 
 
         Direction facingDirection = spellContext.getCaster().getFacingDirection();
-
         entityWallSpell.setDirection(facingDirection == UP || facingDirection == DOWN ? facingDirection : facingDirection.getClockWise());
         entityWallSpell.spellResolver = new SpellResolver(newContext);
         entityWallSpell.setPos(hit.x, hit.y, hit.z);
