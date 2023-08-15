@@ -30,7 +30,10 @@ public class EffectRune extends AbstractEffect {
         pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
         spellContext.setCanceled(true);
         Spell newSpell = spellContext.getRemainingSpell();
+
         if (world.getBlockState(pos).canBeReplaced()) {
+            if(!world.isInWorldBounds(pos))
+                return;
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {
                 if (shooter instanceof Player) {

@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+import static net.minecraft.core.Direction.DOWN;
+import static net.minecraft.core.Direction.UP;
+
 public class EffectWall extends AbstractEffect {
     public static EffectWall INSTANCE = new EffectWall();
 
@@ -24,7 +27,6 @@ public class EffectWall extends AbstractEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Vec3 hit = safelyGetHitPos(rayTraceResult);
         EntityWallSpell entityWallSpell = new EntityWallSpell(world, shooter);
         spellContext.setCanceled(true);
@@ -42,7 +44,7 @@ public class EffectWall extends AbstractEffect {
 
 
         Direction facingDirection = spellContext.getCaster().getFacingDirection();
-        entityWallSpell.setDirection(facingDirection.getClockWise());
+        entityWallSpell.setDirection(facingDirection == UP || facingDirection == DOWN ? facingDirection : facingDirection.getClockWise());
         entityWallSpell.spellResolver = new SpellResolver(newContext);
         entityWallSpell.setPos(hit.x, hit.y, hit.z);
         entityWallSpell.setColor(spellContext.getColors());

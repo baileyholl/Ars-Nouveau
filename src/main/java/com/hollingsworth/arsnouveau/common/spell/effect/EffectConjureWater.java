@@ -50,6 +50,8 @@ public class EffectConjureWater extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
+            if(!world.isInWorldBounds(pos1))
+                continue;
             BlockState hitState = world.getBlockState(pos1);
             if (hitState.getBlock() instanceof LiquidBlockContainer liquidBlockContainer && liquidBlockContainer.canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)) {
                 liquidBlockContainer.placeLiquid(world, pos1, hitState, Fluids.WATER.getSource(true));

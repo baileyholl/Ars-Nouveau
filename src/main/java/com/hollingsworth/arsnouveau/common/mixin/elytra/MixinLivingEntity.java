@@ -1,16 +1,15 @@
 package com.hollingsworth.arsnouveau.common.mixin.elytra;
 
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LivingEntity.class)
 public class MixinLivingEntity {
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "updateFallFlying",
             at = @At(
                     value = "INVOKE",
@@ -18,11 +17,11 @@ public class MixinLivingEntity {
                     remap = false
             )
     )
-    public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return EffectGlide.canGlide(entity) || stack.canElytraFly(entity);
+    public boolean elytraOverride(boolean original) {
+        return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "updateFallFlying",
             at = @At(
                     value = "INVOKE",
@@ -30,7 +29,7 @@ public class MixinLivingEntity {
                     remap = false
             )
     )
-    public boolean eytraValidOverride(ItemStack stack, LivingEntity entity, int flightTicks) {
-        return EffectGlide.canGlide(entity) || stack.elytraFlightTick(entity, flightTicks);
+    public boolean eytraValidOverride(boolean original) {
+        return  original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
     }
 }
