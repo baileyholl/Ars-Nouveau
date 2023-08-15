@@ -72,7 +72,7 @@ public class EffectBlink extends AbstractEffect {
             } else {
                 shooter.teleportTo(vec.x(), vec.y(), vec.z());
             }
-        } else if (spellContext.getType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
+        } else if (spellContext.getCaster().getCasterType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
             blinkForward(world, living, distance);
         }
     }

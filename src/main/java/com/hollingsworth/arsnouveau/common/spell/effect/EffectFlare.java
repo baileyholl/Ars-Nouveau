@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -36,9 +38,8 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         double range = 3 + spellStats.getAoeMultiplier();
         int fireSec = (int) (5.0 + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
         // TODO: Fix flare fire damage type
-        DamageSource source = buildDamageSource(world, shooter);//.setIsFire();
-        if (livingEntity.isOnFire()) {
-            attemptDamage(world, shooter, spellStats, spellContext, resolver, livingEntity, source, damage);
+        DamageSource source = buildDamageSource(world, shooter);
+        if (livingEntity.isOnFire() && attemptDamage(world, shooter, spellStats, spellContext, resolver, livingEntity, source, damage)) {
             ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
             for (Entity e : world.getEntities(shooter, new AABB(
@@ -50,10 +51,16 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
                 vec = e.position();
                 ((ServerLevel) world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y + 0.5, vec.z, 50,
                         ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
+
             }
         }
     }
 
+
+    @Override
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
+        return DamageUtil.source(world, DamageTypesRegistry.FLARE, shooter);
+    }
 
     @Override
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
@@ -73,7 +80,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         return 40;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -94,7 +101,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_FIRE);

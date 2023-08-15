@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
-import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
-import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

@@ -1,14 +1,18 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
@@ -52,7 +56,12 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level level,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         float damage = (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), level.damageSources().cramming(), damage);
+        attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, shooter), damage);
+    }
+
+    @Override
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
+        return DamageUtil.source(world, DamageTypesRegistry.CRUSH, shooter);
     }
 
     @Override
@@ -137,7 +146,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
         addAmpConfig(builder, 1.0);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -167,7 +176,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);

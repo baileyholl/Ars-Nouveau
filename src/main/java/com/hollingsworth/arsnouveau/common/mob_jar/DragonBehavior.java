@@ -24,7 +24,7 @@ public class DragonBehavior extends JarBehavior<EnderDragon> {
             pPlayer.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 1.0F, 1.0F);
             pPlayer.level.gameEvent(pPlayer, GameEvent.FLUID_PICKUP, pPlayer.position());
             pPlayer.awardStat(Stats.ITEM_USED.get(itemstack.getItem()));
-            ItemUtils.createFilledResult(itemstack, pPlayer, new ItemStack(Items.DRAGON_BREATH));
+            pPlayer.setItemInHand(pHand, ItemUtils.createFilledResult(itemstack, pPlayer, new ItemStack(Items.DRAGON_BREATH)));
         }
     }
 }

@@ -30,24 +30,24 @@ public class PerkEvents {
 
     @SubscribeEvent
     public static void equipmentChangedEvent(final LivingEquipmentChangeEvent event) {
-        if(!event.getEntity().level.isClientSide && event.getEntity() instanceof Player player){
-            if(event.getSlot().getType() != EquipmentSlot.Type.ARMOR )
+        if (!event.getEntity().level.isClientSide && event.getEntity() instanceof Player player) {
+            if (event.getSlot().getType() != EquipmentSlot.Type.ARMOR)
                 return;
             List<PerkInstance> perkInstances = PerkUtil.getPerksFromItem(event.getFrom());
             List<PerkInstance> toInstances = PerkUtil.getPerksFromItem(event.getTo());
-            if(perkInstances.equals(toInstances))
+            if (perkInstances.equals(toInstances))
                 return;
 
             List<IPerk> playerPerks = new ArrayList<>(PerkUtil.getPerksFromPlayer(player).stream().map(PerkInstance::getPerk).toList());
             List<IPerk> itemPerks = PerkUtil.getPerksFromItem(event.getTo()).stream().map(PerkInstance::getPerk).toList();
             // This event is called after the item is equipped, and the player contains the perks already from the item that was equipped.
             // Remove them, so we can detect actual duplicate.
-            for(IPerk perk : itemPerks){
+            for (IPerk perk : itemPerks) {
                 playerPerks.remove(perk);
             }
 
-            for(IPerk equippedPerks : playerPerks){
-                if(itemPerks.contains(equippedPerks)){
+            for (IPerk equippedPerks : playerPerks) {
+                if (itemPerks.contains(equippedPerks)) {
                     PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.perks.duplicated"));
                     return;
                 }
@@ -57,9 +57,9 @@ public class PerkEvents {
 
     @SubscribeEvent
     public static void spellDamageEvent(final SpellDamageEvent.Post event) {
-        if(event.caster instanceof Player player){
+        if (event.caster instanceof Player player && !event.isCanceled()) {
             int vampLevel = PerkUtil.countForPerk(VampiricPerk.INSTANCE, player);
-            if(vampLevel > 0){
+            if (vampLevel > 0) {
                 float healAmount = event.damage * (0.2f * vampLevel);
                 player.heal(healAmount);
             }
@@ -67,21 +67,21 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void totemEvent(final LivingDeathEvent event){
+    public static void totemEvent(final LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        if(entity instanceof  Player player) {
+        if (entity instanceof Player player) {
             IPerkHolder<ItemStack> holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, player);
-            if(holder == null)
+            if (holder == null)
                 return;
             TotemPerk.Data perkData = new TotemPerk.Data(holder);
-            if(!perkData.isActive())
+            if (!perkData.isActive())
                 return;
             entity.setHealth(1.0F);
             entity.removeAllEffects();
             entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
-            entity.level.broadcastEntityEvent(entity, (byte)35);
+            entity.level.broadcastEntityEvent(entity, (byte) 35);
             perkData.setActive(false);
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.totem_perk.trigger"));
             event.setCanceled(true);
@@ -89,10 +89,10 @@ public class PerkEvents {
     }
 
     @SubscribeEvent
-    public static void sleepEvent(final SleepFinishedTimeEvent event){
-        for(Player p : event.getLevel().players()){
+    public static void sleepEvent(final SleepFinishedTimeEvent event) {
+        for (Player p : event.getLevel().players()) {
             IPerkHolder<ItemStack> holder = PerkUtil.getHolderForPerk(TotemPerk.INSTANCE, p);
-            if(holder == null)
+            if (holder == null)
                 continue;
             TotemPerk.Data perkData = new TotemPerk.Data(holder);
             perkData.setActive(true);

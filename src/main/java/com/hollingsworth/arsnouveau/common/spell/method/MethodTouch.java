@@ -60,7 +60,7 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(target));
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.getColors().toWrapper()));
         addFadingLight(caster.level(), target.blockPosition().getX() + 0.5, target.blockPosition().getY() + 0.5, target.blockPosition().getZ() + 0.5);
-        return spellContext.getType() != SpellContext.CasterType.RUNE ? CastResolveType.SUCCESS : CastResolveType.SUCCESS_NO_EXPEND;
+        return spellContext.getCaster().getCasterType() != SpellContext.CasterType.RUNE ? CastResolveType.SUCCESS : CastResolveType.SUCCESS_NO_EXPEND;
     }
 
     public void addFadingLight(Level level, double x, double y, double z) {

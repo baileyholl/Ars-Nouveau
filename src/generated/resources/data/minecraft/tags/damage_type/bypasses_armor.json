@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "ars_nouveau:crush",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:windshear",
+      "required": false
+    }
+  ]
+}
