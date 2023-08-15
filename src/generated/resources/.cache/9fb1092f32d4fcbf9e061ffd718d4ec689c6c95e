@@ -1,4 +1,4 @@
-// 1.19.2	2023-08-15T22:55:03.373688589	Recipes
+// 1.19.2	2023-08-15T23:47:02.74155862	Recipes
 2f8defc056cb514d0403c026bd216faabe8c59b5 data/ars_nouveau/advancements/recipes/ars_nouveau/agronomic_sourcelink.json
 5b27f030ed9411ac9c3b4a160363aee9e4fd7454 data/ars_nouveau/advancements/recipes/ars_nouveau/alchemical_sourcelink.json
 24b2148fcda9c3b3704f9625a7d00338b764f512 data/ars_nouveau/advancements/recipes/ars_nouveau/allow_scroll.json
@@ -106,6 +106,7 @@ e368d2b88ea6ce6098f147929bb6c1c1f38bfb4d data/ars_nouveau/advancements/recipes/a
 a2b6d26a3e91928d6ba1fcb20dd4b3c5e231d927 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_flight.json
 2586b6ec935c78126da8b118b63e3308601784db data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_flowering.json
 2355909404015d1b57a7b5feaabff807ba04697c data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_forestation.json
+14417c1c204ed18f017ad58a0dcbd1546b2d4d52 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_gravity.json
 667a4ebbecab9f5a8a3194edfb6b3fdb87652150 data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_harvest.json
 0ad549f4b283da2ace0a958a160ca83859f3e1bf data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_moonfall.json
 f40985e34947a6f9539f8a6fe7d72cac6078b0bc data/ars_nouveau/advancements/recipes/ars_nouveau/ritual_overgrowth.json
@@ -393,6 +394,7 @@ e3c386f1c24a3e35aa3774f31c59e82514cc521a data/ars_nouveau/recipes/ritual_contain
 f654cc1179bd0d7f1b8ca1d2e4b45f6c5ae251c2 data/ars_nouveau/recipes/ritual_flight.json
 371026f47160edff84f8e45fc4a9149ef6ea9d8f data/ars_nouveau/recipes/ritual_flowering.json
 58eb4de8b4bff3e683e39db077527939a1da1d8c data/ars_nouveau/recipes/ritual_forestation.json
+06ae6a848413c26d676dfc69e5663cdc1a20107d data/ars_nouveau/recipes/ritual_gravity.json
 839b1fd527960b9d799378f3cd5e2f31ee599a92 data/ars_nouveau/recipes/ritual_harvest.json
 3ea59e12df62f4e3d3521cba067b4392b298834d data/ars_nouveau/recipes/ritual_moonfall.json
 3a8017fa844fe9e5af0640ee9b70ba82298091d3 data/ars_nouveau/recipes/ritual_overgrowth.json
