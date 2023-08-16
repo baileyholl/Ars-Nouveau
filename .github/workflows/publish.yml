@@ -48,7 +48,7 @@ jobs:
         curseforge-id: 401955
         curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        name: ars_artifice-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
+        name: ars_nouveau-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
         version: ${{ inputs.version }}
         game-versions: |
           ${{ env.MINECRAFT_VERSION }}
