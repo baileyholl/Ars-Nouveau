@@ -42,6 +42,7 @@ jobs:
           files-secondary: build/libs/*-@(dev|sources).jar
           version-type: release
           loaders: forge
-          name: ars_nouveau-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
-          version: ${{ inputs.version }}
+          name: Ars Nouveau ${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
+          version:  ars_nouveau-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
+          game-version: ${{ env.MINECRAFT_VERSION }}
           changelog: ""
