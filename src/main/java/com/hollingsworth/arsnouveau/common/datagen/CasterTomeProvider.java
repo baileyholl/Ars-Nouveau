@@ -209,6 +209,12 @@ public class CasterTomeProvider implements DataProvider {
                         .add(EffectRune.INSTANCE)
                         .add(EffectLaunch.INSTANCE, 4),
                 "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.", new ParticleColor(61, 207, 248)));
+
+        tomes.add(buildTome("ivy", "Ivy", new Spell(MethodTouch.INSTANCE)
+                .add(EffectAnimate.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE, 7)
+                .add(EffectName.INSTANCE), "Now you never have to be lonely again! You will always have a friend with you! Feel free to change their name to whatever you want! :D",
+                new ParticleColor(255, 105, 180)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
