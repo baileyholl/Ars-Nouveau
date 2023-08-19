@@ -517,7 +517,7 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.familiar_amethyst_golem", "Amethyst Golem Familiar");
         add("ars_nouveau.mirror.invalid", "Invalid spell. Mirrors accept Effects and Augments only.");
         add("item.ars_nouveau.enchanters_mirror", "Enchanter's Mirror");
-        add("ars_nouveau.page.enchanters_mirror", "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Strength -> Heal.");
+        add("ars_nouveau.page.enchanters_mirror", "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Heal -> Heal.");
         add("block.ars_nouveau.bookwyrm_lectern", "Bookwyrm Lectern");
         add("ars_nouveau.seconds", "%s seconds");
         add("block.ars_nouveau.basic_spell_turret", "Basic Spell Turret");
