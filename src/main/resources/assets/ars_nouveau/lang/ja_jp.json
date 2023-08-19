@@ -426,7 +426,7 @@
   "ars_nouveau.page.dominion_wand": "ソースリレーと自動化エンティティを設定するためのツールです。転送パスを設定するには、まずソースを送信させたいオブジェクトに主権の杖を使用し、次にソースを受け取らせたいブロックに杖を使用します。例えばソース瓶からソースリレー、ソースリレーからソースリレー、またはソースリレーからソース瓶といった具合です。接続を解除するには、スニークしながら杖を対象に使用します。",
   "ars_nouveau.page.dowsing_rod": "ダウジングロッドを使用すると、芽生えたアメジストの透視と魔法探知の効果を短時間得て、75ブロック以内の魔法生物を光らせることができるようになります。ダウジングロッドは使用回数に制限があります。",
   "ars_nouveau.page.enchanters_eye": "眺望のクリスタルから瞳の中に刻まれた魔術を遠隔で放つ。魔法使いの瞳を願望のクリスタルに使用することで瞳とクリスタルを繋ぐことができる。眺望の羊皮紙をオフハンドに持っている場合、そちらの眺望のクリスタルから優先して魔術を放つ。放たれた魔術は魔術タレットと同じように射出されるが、この魔法使いの瞳を使用したプレイヤーが魔術発動者として扱われる。拠点への転移や持ち物の転送などに便利。",
-  "ars_nouveau.page.enchanters_mirror": "「セルフ」のスペルを使用者に適用する。この鏡で唱えたスペルのマナ消費は減少し、すべてのグリフに追加のボーナス持続時間を得る。スクライブテーブルで、Strength -> Healのようなフォームを含まないスペルを適用する。",
+  "ars_nouveau.page.enchanters_mirror": "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Heal -> Heal.",
   "ars_nouveau.page.enchanters_shield": "ダメージを防ぐと、短時間の「マナ再生」と「スペルダメージ上昇」を得ることができる。さらに、この盾は装着者のマナを使用して時間経過とともに修復される。",
   "ars_nouveau.page.enchanters_sword": "対象物にダメージを与える前に「タッチ」のスペルを適用する。さらに、すべてのスペルは、スペルの最後の効果に1つの追加の「増幅」オーグメントを得る。スクライブテーブルで「着火」 -> 「効果時間延長」のようなフォームを含まないスペルを適用する。",
   "ars_nouveau.page.flask_cannons": "フラスクキャノン",
