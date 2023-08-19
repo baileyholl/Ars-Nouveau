@@ -1,9 +1,17 @@
 name: Publish action
 
 on:
-  create:
-    tag:
-      - '*'
+  workflow_dispatch:
+    branches: [ "main" ]
+    inputs:
+      version:
+        description: 'Mod Version'
+        required: true
+        type: string
+
+env:
+  MINECRAFT_VERSION: 1.19.2
+  JAVA_VERSION: 17
 
 jobs:
   build:
@@ -34,6 +42,6 @@ jobs:
           files-secondary: build/libs/*-@(dev|sources).jar
           version-type: release
           loaders: forge
-          version: ${{ github.ref_name }}
-          name: ""
+          name: ars_nouveau-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
+          version: ${{ inputs.version }}
           changelog: ""
