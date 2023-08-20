@@ -28,9 +28,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-
-
-version = '4.3.0.0'
+version = '4.3.0'
 //configurations {
 //    library
 //    shade // <- Create a 'shade' configuration
@@ -198,7 +196,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
-    implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
+    implementation fg.deobf("curse.maven:jade-324717:4711195") // jade
     implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
 
     implementation fg.deobf("curse.maven:placebo-283644:4691637")

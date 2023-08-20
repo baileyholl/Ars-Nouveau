@@ -74,11 +74,6 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
         return entityData.get(ACCELERATES);
     }
 
-    @Deprecated(forRemoval = true)
-    public void setAoe(int aoe) {
-        entityData.set(AOE, (float) aoe);
-    }
-
     public void setAoe(float aoe) {
         entityData.set(AOE, aoe);
     }

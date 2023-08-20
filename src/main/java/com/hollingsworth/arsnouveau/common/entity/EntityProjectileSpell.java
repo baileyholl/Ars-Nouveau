@@ -12,7 +12,9 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -31,6 +33,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
@@ -38,12 +41,15 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile {
+public class EntityProjectileSpell extends ColoredProjectile implements IEntityAdditionalSpawnData {
 
     public int age;
     public SpellResolver spellResolver;
     public int pierceLeft;
+    //to use if you want the bounce augment indipendent from the pierce augment
+    //public int bouncesLeft;
     public int numSensitive;
+
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
@@ -168,15 +174,16 @@ public class EntityProjectileSpell extends ColoredProjectile {
      * Moves the projectile to the next position
      */
     public void tickNextPosition() {
+
         Vec3 vec3d = this.getDeltaMovement();
         double x = this.getX() + vec3d.x;
         double y = this.getY() + vec3d.y;
         double z = this.getZ() + vec3d.z;
         if (!this.isNoGravity()) {
-            Vec3 vec3d1 = this.getDeltaMovement();
-            this.setDeltaMovement(vec3d1.x, vec3d1.y, vec3d1.z);
+            setDeltaMovement(vec3d.x * 0.96, (vec3d.y > 0 ? vec3d.y * 0.97 : vec3d.y) - 0.03f, vec3d.z * 0.96);
         }
         this.setPos(x, y, z);
+
     }
 
     public int getParticleDelay() {
@@ -238,6 +245,10 @@ public class EntityProjectileSpell extends ColoredProjectile {
         super.setRemoved(reason);
     }
 
+    public EntityProjectileSpell setGravity(boolean noGravity) {
+        isNoGravity = !noGravity;
+        return this;
+    }
 
     @Override
     public boolean isNoGravity() {
@@ -254,6 +265,30 @@ public class EntityProjectileSpell extends ColoredProjectile {
         if (this.pierceLeft < 0) {
             this.level.broadcastEntityEvent(this, (byte) 3);
             this.remove(RemovalReason.DISCARDED);
+        }
+    }
+
+    public boolean canBounce() {
+        return !isNoGravity() && pierceLeft > 0;
+    }
+
+    public void bounce(BlockHitResult blockHitResult) {
+        Direction direction = blockHitResult.getDirection();
+        float factor = -0.9F;
+        // bounce off the block according to the face hit and reduce momentum
+        switch (direction) {
+            case UP, DOWN -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(vel.x(), factor * vel.y(), vel.z());
+            }
+            case EAST, WEST -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(factor * vel.x(), vel.y(), vel.z());
+            }
+            case NORTH, SOUTH -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(vel.x(), vel.y(), factor * vel.z());
+            }
         }
     }
 
@@ -288,6 +323,12 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 this.onHitBlock(blockraytraceresult);
             }
 
+            if (canBounce()) {
+                bounce(blockraytraceresult);
+                pierceLeft--; //to replace with bounce field eventually
+                if (numSensitive > 1) return;
+            }
+
             if (this.spellResolver != null) {
                 this.hitList.add(blockraytraceresult.getBlockPos());
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
@@ -310,6 +351,16 @@ public class EntityProjectileSpell extends ColoredProjectile {
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public void writeSpawnData(FriendlyByteBuf buffer) {
+        buffer.writeBoolean(isNoGravity);
+        buffer.writeInt(numSensitive);
+    }
+
+    public void readSpawnData(FriendlyByteBuf additionalData) {
+        isNoGravity = additionalData.readBoolean();
+        numSensitive = additionalData.readInt();
     }
 
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
