@@ -205,6 +205,7 @@ dependencies {
     implementation fg.deobf("curse.maven:jade-324717:4681833") // jade
     implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
 
+    implementation fg.deobf("curse.maven:rubidium-574856:4684247")
     implementation fg.deobf("dev.shadowsoffire:Placebo:${mc_version}-8.3.5")
     implementation fg.deobf("dev.shadowsoffire:ApothicAttributes:${mc_version}-1.0.4")
 
