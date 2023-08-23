@@ -27,10 +27,10 @@ public class RelayCollectorTile extends RelayTile {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if(this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()){
+                if(this.getToPos() != null && level.isLoaded(this.getToPos().getFirst()) && this.getToPos().getFirst() == provider.getCurrentPos()){
                     continue;
                 }
-                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getBlockEntity(this.getFromPos()) == provider.getSource()){
+                if(this.getFromPos() != null && level.isLoaded(this.getFromPos().getFirst()) && this.getFromPos().getFirst() == provider.getCurrentPos()){
                     continue;
                 }
 

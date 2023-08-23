@@ -2,17 +2,24 @@ package com.hollingsworth.arsnouveau.api.source;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractSourceMachine extends ModdedTile implements ISourceTile {
-
     private int source = 0;
     private int maxSource = 0;
     public static String SOURCE_TAG = "source";
     public static String MAX_SOURCE_TAG = "max_source";
+
+    private LazyOptional<ISourceTile> sourceTileOptional;
 
     public AbstractSourceMachine(BlockEntityType<?> manaTile, BlockPos pos, BlockState state) {
         super(manaTile, pos, state);
@@ -34,6 +41,23 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         super.saveAdditional(tag);
         tag.putInt(SOURCE_TAG, getSource());
         tag.putInt(MAX_SOURCE_TAG, getMaxSource());
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        sourceTileOptional = LazyOptional.of(() -> this);
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        return CapabilityRegistry.SOURCE_TILE.orEmpty(cap, sourceTileOptional);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        sourceTileOptional.invalidate();
     }
 
     @Override
@@ -79,12 +103,28 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         return maxSource;
     }
 
+    @Override
     public boolean canAcceptSource() {
         return this.getSource() < this.getMaxSource();
     }
 
+    @Override
+    public boolean canProvideSource() {
+        return false;
+    }
+
     public boolean canAcceptSource(int source) {
         return this.getSource() + source <= this.getMaxSource();
+    }
+
+    @Override
+    public boolean sourcelinksCanProvideSource() {
+        return false;
+    }
+
+    @Override
+    public boolean machinesCanTakeSource() {
+        return false;
     }
 
     /**
@@ -95,6 +135,8 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
      */
     public int transferSource(ISourceTile from, ISourceTile to) {
         int transferRate = getTransferRate(from, to);
+        if (transferRate == 0)
+            return 0;
         from.removeSource(transferRate);
         to.addSource(transferRate);
         return transferRate;
@@ -104,6 +146,9 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
      * Gets the maximum amount of source that can be transferred from one tile to another.
      */
     public int getTransferRate(ISourceTile from, ISourceTile to) {
+        if(!from.canProvideSource() || !to.canAcceptSource()){
+            return 0;//tiles don't support transferc
+        }
         return Math.min(Math.min(from.getTransferRate(), from.getSource()), to.getMaxSource() - to.getSource());
     }
 

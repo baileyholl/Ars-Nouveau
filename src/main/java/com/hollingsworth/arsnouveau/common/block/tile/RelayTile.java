@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -13,13 +14,17 @@ import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -29,6 +34,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+import com.mojang.datafixers.util.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -47,28 +53,28 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         super(type.get(), pos, state);
     }
 
-    public BlockPos getToPos() {
+    public Pair<BlockPos, Direction> getToPos() {
         return toPos;
     }
 
-    public void setToPos(BlockPos toPos) {
+    public void setToPos(Pair<BlockPos, Direction> toPos) {
         this.toPos = toPos;
     }
 
-    public BlockPos getFromPos() {
+    public Pair<BlockPos, Direction> getFromPos() {
         return fromPos;
     }
 
-    public void setFromPos(BlockPos fromPos) {
+    public void setFromPos(Pair<BlockPos, Direction> fromPos) {
         this.fromPos = fromPos;
     }
 
-    private BlockPos toPos;
-    private BlockPos fromPos;
+    private Pair<BlockPos, Direction> toPos;
+    private Pair<BlockPos, Direction> fromPos;
     public boolean disabled;
 
-    public boolean setTakeFrom(BlockPos pos) {
-        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
+    public boolean setTakeFrom(Pair<BlockPos, Direction> pos) {
+        if (BlockUtil.distanceFrom(pos.getFirst(), this.worldPosition) > getMaxDistance() || pos.getFirst().equals(getBlockPos())) {
             return false;
         }
         this.fromPos = pos;
@@ -76,8 +82,8 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         return true;
     }
 
-    public boolean setSendTo(BlockPos pos) {
-        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos()) || !(level.getBlockEntity(pos) instanceof AbstractSourceMachine)) {
+    public boolean setSendTo(Pair<BlockPos, Direction> pos) {
+        if (BlockUtil.distanceFrom(pos.getFirst(), this.worldPosition) > getMaxDistance() || pos.getFirst().equals(getBlockPos()) || !(level.getBlockEntity(pos.getFirst()) instanceof AbstractSourceMachine)) {
             return false;
         }
         this.toPos = pos;
@@ -105,16 +111,22 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         return 1000;
     }
 
+    @Override
+    public boolean canProvideSource() {
+        return true;
+    }
+
     public boolean closeEnough(BlockPos pos) {
         return BlockUtil.distanceFrom(pos, this.worldPosition) <= getMaxDistance() && !pos.equals(getBlockPos());
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction direction, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine))
             return;
+        direction = direction == null ? Direction.UP : direction;
         // Let relays take from us, no action needed.
-        if (this.setSendTo(storedPos.immutable())) {
+        if (this.setSendTo(Pair.of(storedPos.immutable(),direction))) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
             ParticleUtil.beam(storedPos, worldPosition, level);
         } else {
@@ -123,11 +135,11 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos,  @Nullable Direction direction, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos == null || storedPos.equals(getBlockPos()) || level.getBlockEntity(storedPos) instanceof RelayTile || !(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine))
             return;
-
-        if (this.setTakeFrom(storedPos.immutable())) {
+        direction = direction == null ? Direction.UP : direction;
+        if (this.setTakeFrom(Pair.of(storedPos.immutable(),direction))) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
         } else {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
@@ -143,10 +155,10 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
         if (toPos != null) {
-            list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
+            list.add(ColorPos.centered(toPos.getFirst(), ParticleColor.TO_HIGHLIGHT));
         }
         if(fromPos != null){
-            list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
+            list.add(ColorPos.centered(fromPos.getFirst(), ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
     }
@@ -160,49 +172,97 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (level.getGameTime() % 20 != 0)
             return;
 
-        if (fromPos != null && level.isLoaded(fromPos)) {
-            // Block has been removed
-            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)) {
+        if (fromPos != null && level.isLoaded(fromPos.getFirst())) {
+            BlockEntity fromBE = level.getBlockEntity(fromPos.getFirst());
+            if (fromBE == null) {
+                //block has been removed
                 fromPos = null;
                 updateBlock();
-                return;
-            } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
-                // Transfer mana fromPos to this
-                if (transferSource(fromTile, this) > 0) {
-                    updateBlock();
-                    ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
-                }
+            } else {
+                LazyOptional<ISourceTile> cap = fromBE.getCapability(CapabilityRegistry.SOURCE_TILE);
+
+                cap.resolve().ifPresentOrElse(
+                        (otherTile) -> {
+                            if (transferSource(otherTile, this) > 0) {
+                                updateBlock();
+                                ParticleUtil.spawnFollowProjectile(level, fromPos.getFirst(), worldPosition);
+                            }
+                        },
+                        () -> {
+                            //capability is no longer present
+                            fromPos = null;
+                            updateBlock();
+                        }
+                );
             }
         }
 
-        if (toPos != null && level.isLoaded(toPos)) {
-            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)) {
+        if (toPos != null && level.isLoaded(toPos.getFirst())) {
+            BlockEntity toBE = level.getBlockEntity(toPos.getFirst());
+            if (toBE == null) {
+                //block has been removed
                 toPos = null;
                 updateBlock();
-                return;
-            }
-            AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
-            if (transferSource(this, toTile) > 0) {
-                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+            } else {
+                LazyOptional<ISourceTile> cap = toBE.getCapability(CapabilityRegistry.SOURCE_TILE);
+
+                cap.resolve().ifPresentOrElse(
+                        (otherTile) -> {
+                            if (transferSource(this, otherTile) > 0) {
+                                updateBlock();
+                                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos.getFirst());
+                            }
+                        },
+                        () -> {
+                            //capability is no longer present
+                            toPos = null;
+                            updateBlock();
+                        }
+                );
             }
         }
     }
 
     String TO = "to_";
     String FROM = "from";
+    String DIR_SUFFIX = "dir_";
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         this.toPos = null;
         this.fromPos = null;
+
+        BlockPos toBlockPos = null;
+        Direction toDir = null;
+        BlockPos fromBlockPos = null;
+        Direction fromDir = null;
         
         if (NBTUtil.hasBlockPos(tag, TO)) {
-            this.toPos = NBTUtil.getBlockPos(tag, TO);
+            toBlockPos = NBTUtil.getBlockPos(tag, TO);
         }
         if (NBTUtil.hasBlockPos(tag, FROM)) {
-            this.fromPos = NBTUtil.getBlockPos(tag, FROM);
+            fromBlockPos = NBTUtil.getBlockPos(tag, FROM);
         }
+        if(tag.contains(TO + DIR_SUFFIX)){
+            toDir = Direction.byName(tag.getString(TO + DIR_SUFFIX));
+        }
+        if(tag.contains(FROM + DIR_SUFFIX)){
+            fromDir = Direction.byName(tag.getString(FROM + DIR_SUFFIX));
+        }
+
+        //default directions to not break existing worlds
+        toDir = toDir == null ? Direction.UP : toDir;
+        fromDir = fromDir == null ? Direction.UP : fromDir;
+
+        //assemble pairs
+        if(toBlockPos != null){
+            toPos = Pair.of(toBlockPos,toDir);
+        }
+        if(fromBlockPos != null){
+            fromPos = Pair.of(fromBlockPos,fromDir);
+        }
+
         this.disabled = tag.getBoolean("disabled");
     }
 
@@ -210,13 +270,15 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (toPos != null) {
-            NBTUtil.storeBlockPos(tag, TO, toPos.immutable());
+            NBTUtil.storeBlockPos(tag, TO, toPos.getFirst().immutable());
+            tag.putString(TO + DIR_SUFFIX, toPos.getSecond().getName());
         } else {
             NBTUtil.removeBlockPos(tag, TO);
         }
 
         if (fromPos != null) {
-            NBTUtil.storeBlockPos(tag, FROM, fromPos.immutable());
+            NBTUtil.storeBlockPos(tag, FROM, fromPos.getFirst().immutable());
+            tag.putString(FROM + DIR_SUFFIX, fromPos.getSecond().getName());
         } else {
             NBTUtil.removeBlockPos(tag, FROM);
         }

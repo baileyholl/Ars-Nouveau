@@ -33,6 +33,21 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
     }
 
     @Override
+    public boolean canProvideSource() {
+        return true;
+    }
+
+    @Override
+    public boolean sourcelinksCanProvideSource() {
+        return true;
+    }
+
+    @Override
+    public boolean machinesCanTakeSource() {
+        return true;
+    }
+
+    @Override
     public boolean updateBlock() {
         super.updateBlock();
         BlockState state = level.getBlockState(worldPosition);

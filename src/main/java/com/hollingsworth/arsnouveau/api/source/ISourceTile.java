@@ -9,6 +9,12 @@ public interface ISourceTile {
 
     boolean canAcceptSource();
 
+    boolean sourcelinksCanProvideSource();
+
+    boolean canProvideSource();
+
+    boolean machinesCanTakeSource();
+
     int getSource();
 
     int getMaxSource();
