@@ -31,8 +31,9 @@ public class EffectWall extends AbstractEffect implements IContextManipulator {
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        Spell newSpell = spellContext.getInContextSpell();
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
+        //prepare spell context for manipulation
+        spellContext.prepareContextForManipulation();
+        SpellContext newContext = spellContext.getInnerContext();
 
         entityWallSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityWallSpell.setSensitive(spellStats.isSensitive());

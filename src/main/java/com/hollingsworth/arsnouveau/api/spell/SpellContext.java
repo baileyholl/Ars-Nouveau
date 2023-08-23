@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class SpellContext implements Cloneable {
 
@@ -36,6 +37,10 @@ public class SpellContext implements Cloneable {
 
     public CompoundTag tag = new CompoundTag();
     private IWrappedCaster wrappedCaster;
+
+    private boolean contextManipulatable = false;
+
+    Stack<SpellContext> contextStack = new Stack<SpellContext>();
 
     // TODO: Convert usages to use casterTool
     public SpellContext(Level level,@NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
@@ -153,9 +158,9 @@ public class SpellContext implements Cloneable {
     }
 
     /**
-     * WARNING: don't use this for context manipulating spells
-     * Make use of getInContextSpell and getPostContextSpell
-     * To ensure that context escape applies correctly
+     * WARNING: don't use this for context escapable spells
+     * Make use of getInnerContext and getPostContextSpell
+     * To ensure that any context escape glyphs work correctly
      */
     public @NotNull Spell getRemainingSpell() {
         if (getCurrentIndex() >= getSpell().recipe.size())
@@ -163,66 +168,161 @@ public class SpellContext implements Cloneable {
         return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), getSpell().recipe.size())));
     }
 
-    public @NotNull Spell getInContextSpell() {
-        int contextPos = getCurrentIndex();
-        if (contextPos >= getSpell().recipe.size())
-            return getSpell().clone().setRecipe(new ArrayList<>());
+    /**
+     * The stack representing what spell contexts spawned this one.
+     * @return the context stack of this spell context
+     */
+    public Stack<SpellContext> getContextStack(){
+        return contextStack;
+    }
+
+    /**
+     * call this before calling any of the following methods:
+     * getInnerContext
+     * getConditionalInnerContext
+     * setPostContext
+     */
+    public void prepareContextForManipulation(){
+        if(contextManipulatable){
+            System.err.println("context manipulator prepared for manipulation while being modified");
+        }
+        //for now doesn't really do anything
+        //but could be used to cache the positions of context escapes to speed up the other methods
+        contextManipulatable = true;
+    }
+
+    /**
+     * Call in a context maniupator to get the inner context
+     * be sure to all
+     */
+    public SpellContext getInnerContext(){
+        if(!contextManipulatable){
+            throw new IllegalStateException("cannot modify context without calling prepareContextForManipulation!");
+        }
+        SpellContext newContext = this.clone();
+        Spell spell =getSpell().clone().setRecipe(new ArrayList<>());
+        IContextEscape escape = null;
+
+        for(int i = getCurrentIndex()+1; i<spell.recipe.size();i++){
+            if(spell.recipe.get(i) instanceof IContextEscape contextEscape && contextEscape.shouldProvideSpell(this,i)){
+                escape = contextEscape;
+                spell = contextEscape.getInContextSpell(this,i);
+                break;
+            }
+        }
+
+        newContext.currentIndex = 0;
+        newContext.spell = spell;
+
+        if(escape != null){
+            escape.modifyInnerContext(newContext);
+        }
+
+        newContext.contextStack.push(this);
+        return newContext;
+    }
+
+    public SpellContext getConditionalInnerContext(){
+        if(!contextManipulatable){
+            throw new IllegalStateException("cannot modify context without calling prepareContextForManipulation!");
+        }
+        SpellContext newContext = this.clone();
+        Spell spell =getSpell().clone().setRecipe(new ArrayList<>());
+        IConditionalContextEscape conditional = null;
 
         int pushCount = 0;
 
+        int contextPos = getCurrentIndex();
         while(contextPos < getSpell().recipe.size()){
             AbstractSpellPart part = getSpell().recipe.get(contextPos);
             if(part instanceof IContextManipulator manip){
-                if(manip.isEscapable()){
-                    pushCount +=1;
+                pushCount = manip.push(pushCount,this,contextPos);
+            }
+            else if (part instanceof IConditionalContextEscape escape){
+                pushCount = escape.pop(pushCount,this,contextPos);
+                if(pushCount <= 0){
+                    if(escape.shouldProvideSpell(this,contextPos)) {
+                        spell = escape.getSecondConditionSpell(this,contextPos);
+                        break;
+                    }
+                    else if(pushCount < 0){
+                        break;
+                    }
                 }
             }
-            else if (part instanceof IContextEscape){
-                pushCount -=1;
-                if(pushCount < 0){
-                    break;
+            else if (part instanceof IContextEscape escape){
+                pushCount = escape.pop(pushCount,this,contextPos);
+                if(pushCount <= 0){
+                    //either context escape consumes escape, or we've popped too far
+                    if(escape.shouldProvideSpell(this,contextPos) || pushCount < 0) {
+                        break;
+                    }
                 }
             }
-
             contextPos +=1;
-
         }
 
-        return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(getCurrentIndex(), contextPos)));
+        newContext.currentIndex = 0;
+        newContext.spell = spell;
+
+        if(conditional != null){
+            conditional.modifySecondContext(newContext);
+        }
+
+        newContext.contextStack.push(this);
+        return newContext;
     }
 
+    /**
+    * Call at the end of a context manipulator to advance the spell to the next glyph after the context ends.
+     */
     public SpellContext setPostContext(){
-        this.spell = getPostContextSpell();
-        this.currentIndex = 0;
-        return this;
-    }
+        if(!contextManipulatable){
+            throw new IllegalStateException("cannot modify context without calling prepareContextForManipulation!");
+        }
+        Spell spell = getSpell().clone().setRecipe(new ArrayList<>());
+        IContextEscape contextEscape = null;
 
-    private @NotNull Spell getPostContextSpell(){
         int contextPos = getCurrentIndex();
-        if (contextPos >= getSpell().recipe.size())
-            return getSpell().clone().setRecipe(new ArrayList<>());
+        if (contextPos >= getSpell().recipe.size()) {
+            this.setCanceled(true);
+            return this;
+        }
 
         int pushCount = 0;
 
         while(contextPos < getSpell().recipe.size()){
             AbstractSpellPart part = getSpell().recipe.get(contextPos);
             if(part instanceof IContextManipulator manip){
-                if(manip.isEscapable()){
-                    pushCount +=1;
-                }
+                pushCount = manip.push(pushCount,this,contextPos);
             }
-            else if (part instanceof IContextEscape){
-                pushCount -=1;
-                if(pushCount < 0){
-                    break;
+            else if (part instanceof IContextEscape escape){
+                pushCount = escape.pop(pushCount,this,contextPos);
+                if(pushCount <= 0){
+                    if(escape.shouldProvideSpell(this,contextPos)) {
+                        //get post context spell from matching post context
+                        spell = escape.getPostContextSpell(this,contextPos);
+                        contextEscape = escape;
+                        break;
+                    }
+                    else if(pushCount < 0){
+                        break;
+                    }
                 }
             }
 
             contextPos +=1;
-
         }
 
-        return getSpell().clone().setRecipe(new ArrayList<>(getSpell().recipe.subList(contextPos,getSpell().recipe.size())));
+        this.spell = spell;
+        this.currentIndex = 0;
+
+        if(contextEscape!=null){
+            contextEscape.modifyPostContext(this);
+        }
+
+        this.contextManipulatable = false;//so the next context manipulator declares its intentions
+        return this;
     }
 
     @Override
@@ -238,6 +338,7 @@ public class SpellContext implements Cloneable {
             clone.type = this.type;
             clone.level = this.level;
             clone.wrappedCaster = this.wrappedCaster;
+            clone.contextStack = (Stack<SpellContext>) this.contextStack.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

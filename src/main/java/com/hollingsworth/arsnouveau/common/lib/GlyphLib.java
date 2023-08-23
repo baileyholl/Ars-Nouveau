@@ -88,6 +88,9 @@ public class GlyphLib {
 
     public static final String EffectContextEscapeID = prependGlyph("context_escape");
 
+    public static final String EffectElseID = prependGlyph("else");
+    public static final String EffectExampleFilter = prependGlyph("an_example_filter");
+
 
     public static String prependGlyph(String glyph) {
         return "glyph_" + glyph;

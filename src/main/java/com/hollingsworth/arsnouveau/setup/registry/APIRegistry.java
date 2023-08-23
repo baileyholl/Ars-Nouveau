@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectContextEscape;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -110,7 +111,14 @@ public class APIRegistry {
         registerSpell(EffectWall.INSTANCE);
         registerSpell(EffectAnimate.INSTANCE);
         registerSpell(EffectBurst.INSTANCE);
+
+
+        //not sure if these will be in the final PR
         registerSpell(EffectContextEscape.INSTANCE);
+        registerSpell(EffectElse.INSTANCE);
+        //definitely won't be in the final PR
+        registerSpell(ANExampleFilter.INSTANCE);
+
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());

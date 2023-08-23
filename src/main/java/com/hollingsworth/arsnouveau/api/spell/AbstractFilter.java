@@ -32,12 +32,32 @@ public abstract class AbstractFilter extends AbstractEffect implements IFilter {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!shouldResolveOnEntity(rayTraceResult)) spellContext.setCanceled(true);
+        spellContext.prepareContextForManipulation();
+        SpellContext yesContext = spellContext.getInnerContext();
+        SpellContext noContext = spellContext.getConditionalInnerContext();
+
+        if (shouldResolveOnEntity(rayTraceResult)){
+            resolver.getNewResolver(yesContext).onResolveEffect(world,rayTraceResult);
+        }
+        else{
+            resolver.getNewResolver(noContext).onResolveEffect(world,rayTraceResult);
+        }
+        spellContext.setPostContext();
     }
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!shouldResolveOnBlock(rayTraceResult)) spellContext.setCanceled(true);
+        spellContext.prepareContextForManipulation();
+        SpellContext yesContext = spellContext.getInnerContext();
+        SpellContext noContext = spellContext.getConditionalInnerContext();
+
+        if (shouldResolveOnBlock(rayTraceResult)){
+            resolver.getNewResolver(yesContext).onResolveEffect(world,rayTraceResult);
+        }
+        else{
+            resolver.getNewResolver(noContext).onResolveEffect(world,rayTraceResult);
+        }
+        spellContext.setPostContext();
     }
 
 }

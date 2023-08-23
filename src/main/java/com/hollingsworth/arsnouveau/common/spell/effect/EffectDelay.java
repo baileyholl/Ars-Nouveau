@@ -32,7 +32,7 @@ public class EffectDelay extends AbstractEffect implements IContextManipulator{
         spellContext.setCanceled(true);
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = spellContext.getRemainingSpell();
+        Spell newSpell = spellContext.getRemainingSpell();//delay doesn't have an inner context
         SpellContext newContext = spellContext.clone().withSpell(newSpell);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20;
         int decreasedTime = EXTEND_TIME.get() * 10 * spellStats.getBuffCount(AugmentDurationDown.INSTANCE);

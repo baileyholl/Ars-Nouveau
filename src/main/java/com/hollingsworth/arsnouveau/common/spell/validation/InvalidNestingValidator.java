@@ -21,7 +21,6 @@ public class InvalidNestingValidator extends ScanningSpellValidator<Stack<Abstra
 
     @Override
     protected void digestSpellPart(Stack<AbstractSpellPart> context, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
-
         for(ResourceLocation invalidPart : spellPart.invalidNestings){
             AbstractSpellPart offendingPart = GlyphRegistry.getSpellPart(invalidPart);
             if(offendingPart == null)
@@ -45,7 +44,7 @@ public class InvalidNestingValidator extends ScanningSpellValidator<Stack<Abstra
         //which is most nesting glyphs
         if(spellPart instanceof IContextManipulator manip){
             if(manip.isEscapable()){
-                context.push(spellPart);
+                manip.push(context, spellPart, position, validationErrors);
             }
         }
         else if(spellPart instanceof IContextEscape escape){
@@ -54,7 +53,7 @@ public class InvalidNestingValidator extends ScanningSpellValidator<Stack<Abstra
                 validationErrors.add(new InvalidContextEscapeValidationError(position,spellPart));
             }
             else{
-                context.pop();
+                escape.pop(context, spellPart, position, validationErrors);
             }
         }
     }

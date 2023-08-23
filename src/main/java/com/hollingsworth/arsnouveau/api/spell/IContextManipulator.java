@@ -1,11 +1,40 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.common.spell.validation.BaseSpellValidationError;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Stack;
+
 public interface IContextManipulator {
 
     /**
-     * most context manipulators, such as linger or burst, should return true so they work with context escape.
-     * context manipulators that directly continue the spell, such as delay, should return false to not waste glyph slots or confuse players
+     * return true if the context manipulator has an inner context, I.E. if it is escapable with escape context
+     * most context manipulators, such as linger, should return true
      */
 
-    public boolean isEscapable();
+    boolean isEscapable();
+
+    /**
+     * used by context escapes when calculating the inner and post context spell.
+     * allows a context escape to pop the context by a custom amount.
+     * should not modify the context in any way
+     * @return the new push count in the traversal after this escape context
+     */
+    default int push(int currentPushCount, @Nullable SpellContext context, int posInRecipe){
+        return isEscapable() ? currentPushCount + 1 : currentPushCount;
+    }
+
+    /**
+     * used by the spell validator
+     * @param stack the current stack to modify
+     * @param part this as an abstract spell part
+     * @param posInRecipe the position of the spell part in the recipe
+     * @param validationErrors a list of validation errors that can optionally be appended to
+     */
+    default void push(Stack<AbstractSpellPart> stack, AbstractSpellPart part, int posInRecipe, List<SpellValidationError> validationErrors) {
+        if(isEscapable()) {
+            stack.push(part);
+        }
+    }
 }

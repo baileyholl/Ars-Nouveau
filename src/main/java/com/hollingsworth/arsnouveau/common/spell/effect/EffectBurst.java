@@ -47,9 +47,9 @@ public class EffectBurst extends AbstractEffect implements IContextManipulator{
 
     public void makeSphere(BlockPos center, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
         if (spellContext.getRemainingSpell().isEmpty()) return;
-        SpellContext newContext = resolver.spellContext.clone().withSpell(spellContext.getInContextSpell());
-
-
+        //prepare spell context for manipulation
+        spellContext.prepareContextForManipulation();
+        SpellContext newContext = spellContext.getInnerContext();
 
         int radius = (int) (1 + spellStats.getAoeMultiplier());
         Predicate<Double> Sphere = spellStats.hasBuff(AugmentDampen.INSTANCE) ? (distance) -> distance <= radius + 0.5 && distance >= radius - 0.5 : (distance) -> (distance <= radius + 0.5);

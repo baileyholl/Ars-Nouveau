@@ -28,7 +28,10 @@ public class EffectRune extends AbstractEffect implements IContextManipulator{
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
         pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
-        Spell newSpell = spellContext.getInContextSpell();
+        //prepare spell context for manipulation
+        spellContext.prepareContextForManipulation();
+        //needs to use getInnerContext so that escape context works right
+        Spell newSpell = spellContext.getInnerContext().getRemainingSpell();
         if (world.getBlockState(pos).canBeReplaced()) {
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {
@@ -41,7 +44,6 @@ public class EffectRune extends AbstractEffect implements IContextManipulator{
                 runeTile.isSensitive = spellStats.isSensitive();
             }
         }
-
         //update spell context past this manipulator
         spellContext.setPostContext();
     }

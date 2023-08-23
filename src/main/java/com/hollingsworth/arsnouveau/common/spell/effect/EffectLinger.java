@@ -29,11 +29,11 @@ public class EffectLinger extends AbstractEffect implements IContextManipulator{
         if (spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
 
-        Spell newSpell = spellContext.getInContextSpell();
+        //prepare spell context for manipulation
+        spellContext.prepareContextForManipulation();
 
+        SpellContext newContext = spellContext.getInnerContext();
 
-
-        SpellContext newContext = spellContext.clone().withSpell(newSpell);
         entityLingeringSpell.setAoe((float) spellStats.getAoeMultiplier());
         entityLingeringSpell.setSensitive(spellStats.isSensitive());
         entityLingeringSpell.setAccelerates((int) spellStats.getAccMultiplier());
