@@ -37,6 +37,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class RelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, GeoBlockEntity, ITickable {
 
@@ -77,9 +78,15 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     public boolean setSendTo(BlockPos pos, Direction dir) {
-        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos()) || !(level.getBlockEntity(pos) instanceof AbstractSourceMachine)) {
+        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
         }
+
+        BlockEntity be = Objects.requireNonNull(level).getBlockEntity(pos);
+        if (be == null || !be.getCapability(CapabilityRegistry.SOURCE_TILE, dir).isPresent()) {
+            return false;
+        }
+
         this.toPos = pos;
         this.toDir = dir;
         updateBlock();
@@ -117,8 +124,9 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction direction, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine))
+        if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()))
             return;
+
         direction = direction == null ? Direction.UP : direction;
         // Let relays take from us, no action needed.
         if (this.setSendTo(storedPos.immutable(),direction)) {
@@ -131,7 +139,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos,  @Nullable Direction direction, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null || storedPos.equals(getBlockPos()) || level.getBlockEntity(storedPos) instanceof RelayTile || !(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine))
+        if (storedPos == null || storedPos.equals(getBlockPos()) || level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
         direction = direction == null ? Direction.UP : direction;
         if (this.setTakeFrom(storedPos.immutable(),direction)) {
