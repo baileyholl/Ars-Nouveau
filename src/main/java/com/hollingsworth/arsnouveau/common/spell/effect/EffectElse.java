@@ -12,7 +12,7 @@ import java.util.Stack;
 
 public class EffectElse extends AbstractEffect implements IConditionalContextEscape {
 
-    public static EffectElse INSTANCE = new EffectElse(GlyphLib.EffectExampleFilter,"Example Filter");
+    public static EffectElse INSTANCE = new EffectElse(GlyphLib.EffectElseID,"Else");
 
     public EffectElse(String tag, String description) {
         super(tag, description);
