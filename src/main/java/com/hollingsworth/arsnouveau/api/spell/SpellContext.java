@@ -236,6 +236,11 @@ public class SpellContext implements Cloneable {
             contextPos +=1;
         }
 
+        //if there are no context escapes, in context spell is the rest of the spell.
+        if(contextEscape == null){
+            spell = getSpell().clone().setRecipe(getSpell().recipe.subList(getCurrentIndex(),getSpell().recipe.size()));
+        }
+
         newContext.currentIndex = 0;
         newContext.spell = spell;
 
@@ -287,6 +292,8 @@ public class SpellContext implements Cloneable {
             }
             contextPos +=1;
         }
+
+        //if there are no escape context glyphs, the second inner context spell can remain empty because the rest of the spell is the inner context
 
         newContext.currentIndex = 0;
         newContext.spell = spell;
@@ -340,6 +347,8 @@ public class SpellContext implements Cloneable {
 
             contextPos +=1;
         }
+
+        //if there are no escape context glyphs, the post context spell can remain empty because the rest of the spell is the inner context
 
         this.spell = spell;
         this.currentIndex = 0;

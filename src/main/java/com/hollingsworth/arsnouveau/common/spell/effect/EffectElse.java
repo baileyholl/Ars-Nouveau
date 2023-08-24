@@ -32,6 +32,11 @@ public class EffectElse extends AbstractEffect implements IConditionalContextEsc
     }
 
     @Override
+    public String getBookDescription() {
+        return "Works in combination with filter glyphs to allow casting different effects if the filter fails. An escape context glyph after this will run regardless of the results of the filter. ";
+    }
+
+    @Override
     public Spell getSecondConditionSpell(SpellContext context, int posInRecipe) {
         LoggerContext.getContext().getLogger(getClass()).info("second condition spell called");
         int elsePos = posInRecipe;
