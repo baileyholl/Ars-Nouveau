@@ -97,9 +97,11 @@ public class SourceUtil {
                     .filter(tile -> tile.getSource() >= source && tile.machinesCanTakeSource())
                     .isPresent();
         });
+
         if(loc.isPresent()){
             return true;
         }
+
         return SourceManager.INSTANCE.hasSourceNearby(pos, world, range, source) != null;
     }
 

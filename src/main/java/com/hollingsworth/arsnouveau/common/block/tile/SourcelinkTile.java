@@ -53,6 +53,16 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
+    public boolean canProvideSource() {
+        return true;
+    }
+
+    @Override
+    public boolean machinesCanTakeSource() {
+        return false;
+    }
+
+    @Override
     public void tick() {
         if (level.isClientSide)
             return;
