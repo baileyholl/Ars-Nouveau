@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.common.spell.validation.InvalidNestingValidator;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public interface IContextEscape {
      * @param posInRecipe the position of the spell part in the recipe
      * @param validationErrors a list of validation errors that can optionally be appended to
      */
-    default void pop(Stack<AbstractSpellPart> stack, AbstractSpellPart part, int posInRecipe, List<SpellValidationError> validationErrors){
+    default void pop(InvalidNestingValidator.NestingContextStack stack, AbstractSpellPart part, int posInRecipe, List<SpellValidationError> validationErrors){
         stack.pop();
     }
 

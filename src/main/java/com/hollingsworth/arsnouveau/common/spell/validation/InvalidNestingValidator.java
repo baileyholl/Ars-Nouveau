@@ -1,26 +1,57 @@
 package com.hollingsworth.arsnouveau.common.spell.validation;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.spi.LoggerContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class InvalidNestingValidator extends ScanningSpellValidator<Stack<AbstractSpellPart>> {
+public class InvalidNestingValidator extends ScanningSpellValidator<InvalidNestingValidator.NestingContextStack> {
 
     @Override
-    protected Stack<AbstractSpellPart> initContext() {
-        return new Stack<>();
+    protected NestingContextStack initContext() {
+        return new NestingContextStack();
+    }
+
+    public class NestingContextStack extends Stack<AbstractSpellPart>{
+        List<SpellValidationError> errors = new ArrayList<>();
+        @Override
+        public AbstractSpellPart push(AbstractSpellPart item) {
+            if(item instanceof IContextManipulator) {
+                return super.push(item);
+            }
+            else{
+                throw new IllegalArgumentException("item must extend IContextManipulator");
+            }
+        }
+
+        @Override
+        public synchronized AbstractSpellPart pop() {
+            AbstractSpellPart part = super.pop();
+            try {
+                ((IContextManipulator) part).onPopped(this);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                return part;
+            }
+        }
+
+        public synchronized AbstractSpellPart popWithoutEffects(){
+            return super.pop();
+        }
+
+        public void AddValidatorError(SpellValidationError error){
+            errors.add(error);
+        }
     }
 
     @Override
-    protected void digestSpellPart(Stack<AbstractSpellPart> context, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
+    protected void digestSpellPart(NestingContextStack context, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
         for(ResourceLocation invalidPart : spellPart.invalidNestings){
             AbstractSpellPart offendingPart = GlyphRegistry.getSpellPart(invalidPart);
             if(offendingPart == null)
@@ -39,7 +70,6 @@ public class InvalidNestingValidator extends ScanningSpellValidator<Stack<Abstra
                 validationErrors.add(new InvalidNestingCombinationValidationError(position,part,spellPart));
             }
         }
-
         //we have to add AFTER validation so that a glyph still works if it cannot nest with itself
         //which is most nesting glyphs
         if(spellPart instanceof IContextManipulator manip){
@@ -47,7 +77,7 @@ public class InvalidNestingValidator extends ScanningSpellValidator<Stack<Abstra
                 manip.push(context, spellPart, position, validationErrors);
             }
         }
-        else if(spellPart instanceof IContextEscape escape){
+        if(spellPart instanceof IContextEscape escape){
             if(context.empty()){
                 //can't have an escape context without matching context manipulator
                 validationErrors.add(new InvalidContextEscapeValidationError(position,spellPart));
@@ -59,11 +89,11 @@ public class InvalidNestingValidator extends ScanningSpellValidator<Stack<Abstra
     }
 
     @Override
-    protected void finish(Stack<AbstractSpellPart> context, List<SpellValidationError> validationErrors) {
-
+    protected void finish(NestingContextStack context, List<SpellValidationError> validationErrors) {
+        validationErrors.addAll(context.errors);
     }
 
-    private static class InvalidContextEscapeValidationError extends BaseSpellValidationError{
+    public static class InvalidContextEscapeValidationError extends BaseSpellValidationError{
         public InvalidContextEscapeValidationError(int position, AbstractSpellPart part) {
             super(
                     position,

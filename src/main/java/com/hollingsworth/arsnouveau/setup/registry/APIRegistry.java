@@ -114,8 +114,12 @@ public class APIRegistry {
 
 
         //not sure if these will be in the final PR
+        //on the one hand, I can see them being confusing to new players
+        //on the other hand, multiple addons are going to want to add them
+        //so there's going to be a ton of duplicate glyphs if these aren't in base ars
         registerSpell(EffectContextEscape.INSTANCE);
         registerSpell(EffectElse.INSTANCE);
+
         //definitely won't be in the final PR
         registerSpell(ANExampleFilter.INSTANCE);
 

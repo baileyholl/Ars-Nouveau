@@ -200,22 +200,47 @@ public class SpellContext implements Cloneable {
             throw new IllegalStateException("cannot modify context without calling prepareContextForManipulation!");
         }
         SpellContext newContext = this.clone();
-        Spell spell =getSpell().clone().setRecipe(new ArrayList<>());
-        IContextEscape escape = null;
 
-        for(int i = getCurrentIndex()+1; i<spell.recipe.size();i++){
-            if(spell.recipe.get(i) instanceof IContextEscape contextEscape && contextEscape.shouldProvideSpell(this,i)){
-                escape = contextEscape;
-                spell = contextEscape.getInContextSpell(this,i);
-                break;
+        Spell spell = getSpell().clone().setRecipe(new ArrayList<>());
+        IContextEscape contextEscape = null;
+
+        int contextPos = getCurrentIndex();
+        if (contextPos >= getSpell().recipe.size()) {
+            this.setCanceled(true);
+            return this;
+        }
+
+        int pushCount = 0;
+
+        while(contextPos < getSpell().recipe.size()){
+            AbstractSpellPart part = getSpell().recipe.get(contextPos);
+            if(part instanceof IContextManipulator manip){
+                pushCount = manip.push(pushCount,this,contextPos);
             }
+            //intentionally not an else if, glyphs can implement both manipulator and escape
+            if (part instanceof IContextEscape escape){
+                pushCount = escape.pop(pushCount,this,contextPos);
+                if(pushCount <= 0){
+                    if(escape.shouldProvideSpell(this,contextPos)) {
+                        //get in context spell from matching context escape
+                        spell = escape.getInContextSpell(this,contextPos);
+                        contextEscape = escape;
+                        break;
+                    }
+                    else if(pushCount < 0){
+                        break;
+                    }
+                }
+            }
+
+            contextPos +=1;
         }
 
         newContext.currentIndex = 0;
         newContext.spell = spell;
 
-        if(escape != null){
-            escape.modifyInnerContext(newContext);
+        if(contextEscape != null){
+            contextEscape.modifyInnerContext(newContext);
         }
 
         newContext.contextStack.push(this);
@@ -238,7 +263,8 @@ public class SpellContext implements Cloneable {
             if(part instanceof IContextManipulator manip){
                 pushCount = manip.push(pushCount,this,contextPos);
             }
-            else if (part instanceof IConditionalContextEscape escape){
+            //intentionally not an else if, glyphs can implement both manipulator and escape
+            if (part instanceof IConditionalContextEscape escape){
                 pushCount = escape.pop(pushCount,this,contextPos);
                 if(pushCount <= 0){
                     if(escape.shouldProvideSpell(this,contextPos)) {
@@ -296,11 +322,12 @@ public class SpellContext implements Cloneable {
             if(part instanceof IContextManipulator manip){
                 pushCount = manip.push(pushCount,this,contextPos);
             }
-            else if (part instanceof IContextEscape escape){
+            //intentionally not an else if, glyphs can implement both manipulator and escape
+            if (part instanceof IContextEscape escape){
                 pushCount = escape.pop(pushCount,this,contextPos);
                 if(pushCount <= 0){
                     if(escape.shouldProvideSpell(this,contextPos)) {
-                        //get post context spell from matching post context
+                        //get post context spell from matching context escape
                         spell = escape.getPostContextSpell(this,contextPos);
                         contextEscape = escape;
                         break;

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.common.spell.validation.BaseSpellValidationError;
+import com.hollingsworth.arsnouveau.common.spell.validation.InvalidNestingValidator;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,9 +33,17 @@ public interface IContextManipulator {
      * @param posInRecipe the position of the spell part in the recipe
      * @param validationErrors a list of validation errors that can optionally be appended to
      */
-    default void push(Stack<AbstractSpellPart> stack, AbstractSpellPart part, int posInRecipe, List<SpellValidationError> validationErrors) {
+    default void push(InvalidNestingValidator.NestingContextStack stack, AbstractSpellPart part, int posInRecipe, List<SpellValidationError> validationErrors) {
         if(isEscapable()) {
             stack.push(part);
         }
+    }
+
+    /**
+     * called when this context manipulator is popped of the manipulator stack during spell validation
+     * @param stack the context manipulator stack this was popped from
+     */
+    default void onPopped(InvalidNestingValidator.NestingContextStack stack){
+
     }
 }

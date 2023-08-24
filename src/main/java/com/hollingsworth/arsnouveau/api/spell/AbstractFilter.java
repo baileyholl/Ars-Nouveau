@@ -12,10 +12,15 @@ import java.util.Set;
 /**
  * Base class for interfacing with filter glyphs from addons and making your own. Based off TooManyGlyphs.
  */
-public abstract class AbstractFilter extends AbstractEffect implements IFilter {
+public abstract class AbstractFilter extends AbstractEffect implements IFilter, IContextManipulator {
 
     public AbstractFilter(ResourceLocation registryName, String name) {
         super(registryName, name);
+    }
+
+    @Override
+    public boolean isEscapable() {
+        return true;
     }
 
     @Override
