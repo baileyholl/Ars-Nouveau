@@ -179,7 +179,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
                 fromPos = null;
                 updateBlock();
             } else {
-                LazyOptional<ISourceTile> cap = fromBE.getCapability(CapabilityRegistry.SOURCE_TILE);
+                LazyOptional<ISourceTile> cap = fromBE.getCapability(CapabilityRegistry.SOURCE_TILE, fromPos.getSecond());
 
                 cap.resolve().ifPresentOrElse(
                         (otherTile) -> {
@@ -204,7 +204,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
                 toPos = null;
                 updateBlock();
             } else {
-                LazyOptional<ISourceTile> cap = toBE.getCapability(CapabilityRegistry.SOURCE_TILE);
+                LazyOptional<ISourceTile> cap = toBE.getCapability(CapabilityRegistry.SOURCE_TILE, toPos.getSecond());
 
                 cap.resolve().ifPresentOrElse(
                         (otherTile) -> {
