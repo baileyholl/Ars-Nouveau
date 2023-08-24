@@ -26,10 +26,10 @@ public class RelayDepositTile extends RelayTile {
                 if (this.getSource() <= 0)
                     break;
 
-                if(this.getToPos() != null && level.isLoaded(this.getToPos().getFirst()) &&  this.getToPos().getFirst() == provider.getCurrentPos()){
+                if(this.getToPos() != null && level.isLoaded(this.getToPos()) &&  this.getToPos() == provider.getCurrentPos()){
                     continue;
                 }
-                if(this.getFromPos() != null && level.isLoaded(this.getFromPos().getFirst()) && this.getFromPos().getFirst() == provider.getCurrentPos()){
+                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && this.getFromPos() == provider.getCurrentPos()){
                     continue;
                 }
 

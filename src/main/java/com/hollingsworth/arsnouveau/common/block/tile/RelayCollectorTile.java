@@ -22,15 +22,14 @@ public class RelayCollectorTile extends RelayTile {
             return;
         if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
             List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
-
             for (ISpecialSourceProvider provider : takeList) {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if(this.getToPos() != null && level.isLoaded(this.getToPos().getFirst()) && this.getToPos().getFirst() == provider.getCurrentPos()){
+                if(this.getToPos() != null && level.isLoaded(this.getToPos()) && this.getToPos() == provider.getCurrentPos()){
                     continue;
                 }
-                if(this.getFromPos() != null && level.isLoaded(this.getFromPos().getFirst()) && this.getFromPos().getFirst() == provider.getCurrentPos()){
+                if(this.getFromPos() != null && level.isLoaded(this.getFromPos()) && this.getFromPos() == provider.getCurrentPos()){
                     continue;
                 }
 
