@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-09T20:17:45.7295007	Ars Nouveau Item Models
+// 1.20.1	2023-08-23T17:44:41.6604212	Ars Nouveau Item Models
 11ee554b11a3a830e89b742762e5b754c2ecb5ee assets/ars_nouveau/models/item/agronomic_sourcelink.json
 339a05323ebef7efc5c70db708a2e7a24708e9bc assets/ars_nouveau/models/item/alchemical_sourcelink.json
 a0214090201827dd5f954d0b33e64e4df6e53764 assets/ars_nouveau/models/item/alchemists_crown.json
@@ -36,12 +36,14 @@ af33ffce50ea2887f7d0077adc78b9bf386b4bd1 assets/ars_nouveau/models/item/gilded_s
 928a556e4a323a8f1675b3d12a9f824e1f25fb7f assets/ars_nouveau/models/item/glyph_accelerate.json
 0b970e2a75901a3042dacfcd1a263ceab9a58207 assets/ars_nouveau/models/item/glyph_amplify.json
 e90b0d3b7816c04c63969ee51f69f521d44d5444 assets/ars_nouveau/models/item/glyph_animate_block.json
+a163c9ce1e63e428f3fa804b66e491b455f18540 assets/ars_nouveau/models/item/glyph_an_example_filter.json
 1c1ed0488d4ff12373d07e7b17b99b17d81e9714 assets/ars_nouveau/models/item/glyph_aoe.json
 8ad4f1e52ce9f588136032f323a0d76fc4849101 assets/ars_nouveau/models/item/glyph_blink.json
 7441fa49080a68e1d9dfdaeb277d9b17229aac87 assets/ars_nouveau/models/item/glyph_bounce.json
 c3de1abdd00608d7f5b4b71953119d218787f318 assets/ars_nouveau/models/item/glyph_break.json
 25e3368d3a84c449ff2d6c7ca27f76377fa2b3a7 assets/ars_nouveau/models/item/glyph_cold_snap.json
 715f6e40e53b95cd4c4bd566ab43e226872ed02b assets/ars_nouveau/models/item/glyph_conjure_water.json
+f5d91a4d26b6d06a0b9a593f2109714e388352a4 assets/ars_nouveau/models/item/glyph_context_escape.json
 f72d7e2b785b1eb940997edfedb3edf7386cc026 assets/ars_nouveau/models/item/glyph_craft.json
 b4e6a1291bc03fe1e9ffcf78c5a8360c443fc67e assets/ars_nouveau/models/item/glyph_crush.json
 53a812ac2b161a979ccfe98a8775572a823eb157 assets/ars_nouveau/models/item/glyph_cut.json
@@ -50,6 +52,7 @@ b4e6a1291bc03fe1e9ffcf78c5a8360c443fc67e assets/ars_nouveau/models/item/glyph_cr
 210c0c73a22a120955905ed8988bbd693a40f7c9 assets/ars_nouveau/models/item/glyph_delay.json
 b54e84e6f0c091648fe3d6602805d9383c4e12c2 assets/ars_nouveau/models/item/glyph_dispel.json
 2bd57a51ea648ff766c3895f7a6fe2373baa7912 assets/ars_nouveau/models/item/glyph_duration_down.json
+03abae333f96a718145e735c60e08811816b7710 assets/ars_nouveau/models/item/glyph_else.json
 118233d436c4f3c21daeb945c671c8f8582de00e assets/ars_nouveau/models/item/glyph_ender_inventory.json
 0159c5cd5f684c5951fdfc8c43a6beeaa6e396fd assets/ars_nouveau/models/item/glyph_evaporate.json
 8c4eb3caeb78fb0b5a536bc83eadf2872e7be4be assets/ars_nouveau/models/item/glyph_exchange.json

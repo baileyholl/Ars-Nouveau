@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_an_example_filter",
+  "name": "ars_nouveau.glyph_name.glyph_an_example_filter",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_an_example_filter"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_an_example_filter"
+    }
+  ],
+  "sortnum": 2
+}
