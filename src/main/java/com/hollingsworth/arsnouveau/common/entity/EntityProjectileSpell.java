@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
+import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -33,6 +34,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -295,33 +297,42 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     @Override
     protected void onHit(HitResult result) {
         result = transformHitResult(result);
-        if (!level.isClientSide && result instanceof EntityHitResult entityHitResult) {
-            if (entityHitResult.getEntity().equals(this.getOwner())) return;
-            if (this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(level, result);
-                Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
-                attemptRemoval();
-            }
-        }
 
-        if (!level.isClientSide && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
+        if (!level.isClientSide) {
 
-            BlockState state = level.getBlockState(blockraytraceresult.getBlockPos());
-
-            if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
-                prismaticBlock.onHit((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
+            SpellProjectileHitEvent event = new SpellProjectileHitEvent(this, result);
+            MinecraftForge.EVENT_BUS.post(event);
+            if (event.isCanceled()) {
                 return;
             }
 
-            if (state.is(BlockTags.PORTALS)) {
-                state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
-                return;
+            if (result instanceof EntityHitResult entityHitResult) {
+                if (entityHitResult.getEntity().equals(this.getOwner())) return;
+                if (this.spellResolver != null) {
+                    this.spellResolver.onResolveEffect(level, result);
+                    Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                            BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
+                    attemptRemoval();
+                }
             }
 
-            if (state.getBlock() instanceof TargetBlock) {
-                this.onHitBlock(blockraytraceresult);
-            }
+            if (result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
+
+                BlockState state = level.getBlockState(blockraytraceresult.getBlockPos());
+
+                if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
+                    prismaticBlock.onHit((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
+                    return;
+                }
+
+                if (state.is(BlockTags.PORTALS)) {
+                    state.getBlock().entityInside(state, level, blockraytraceresult.getBlockPos(), this);
+                    return;
+                }
+
+                if (state.getBlock() instanceof TargetBlock) {
+                    this.onHitBlock(blockraytraceresult);
+                }
 
             if (canBounce()) {
                 bounce(blockraytraceresult);
