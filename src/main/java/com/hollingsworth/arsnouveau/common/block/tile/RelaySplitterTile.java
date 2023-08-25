@@ -136,7 +136,7 @@ public class RelaySplitterTile extends RelayTile {
             BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
             Direction dir = null;
             if(tag.contains("from_dir_"+counter)){
-                dir = Direction.valueOf(tag.getString("from_dir_"+counter));
+                dir = Direction.byName(tag.getString("from_dir_"+counter));
             }
             dir = dir == null ? Direction.UP : dir;
 
@@ -149,7 +149,7 @@ public class RelaySplitterTile extends RelayTile {
             BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
             Direction dir = null;
             if(tag.contains("to_dir_"+counter)){
-                dir = Direction.valueOf(tag.getString("to_dir_"+counter));
+                dir = Direction.byName(tag.getString("to_dir_"+counter));
             }
             dir = dir == null ? Direction.UP : dir;
 
