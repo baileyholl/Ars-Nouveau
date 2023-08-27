@@ -159,13 +159,12 @@ public class CasterTomeProvider implements DataProvider {
                 .add(AugmentExtendTime.INSTANCE, 4)
                 .add(AugmentAmplify.INSTANCE), "Light up the sky", new ParticleColor(25, 255, 255)));
 
-        tomes.add(buildTome("othy", "Othy's Death By 100 Pricks", new Spell()
-                .add(MethodProjectile.INSTANCE)
-                .add(AugmentPierce.INSTANCE, 2)
-                .add(EffectLinger.INSTANCE)
-                .add(AugmentSensitive.INSTANCE)
-                .add(EffectSummonVex.INSTANCE)
-                .add(AugmentExtendTime.INSTANCE), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
+        tomes.add(buildTome("othy", "Othy's Misdirection", new Spell()
+                .add(MethodSelf.INSTANCE)
+                .add(AugmentExtendTime.INSTANCE)
+                .add(EffectSummonDecoy.INSTANCE)
+                .add(EffectBlink.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2), "Swarm your enemies with bladed spirits.", new ParticleColor(255, 255, 255)));
 
         tomes.add(buildTome("aurellia", "Aurellia's Bite Storm", new Spell()
                         .add(MethodProjectile.INSTANCE)
