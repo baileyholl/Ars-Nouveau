@@ -112,17 +112,6 @@ public class APIRegistry {
         registerSpell(EffectAnimate.INSTANCE);
         registerSpell(EffectBurst.INSTANCE);
 
-
-        //not sure if these will be in the final PR
-        //on the one hand, I can see them being confusing to new players
-        //on the other hand, multiple addons are going to want to add them
-        //so there's going to be a ton of duplicate glyphs if these aren't in base ars
-        registerSpell(EffectContextEscape.INSTANCE);
-        registerSpell(EffectElse.INSTANCE);
-
-        //definitely won't be in the final PR
-        registerSpell(ANExampleFilter.INSTANCE);
-
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -180,7 +169,15 @@ public class APIRegistry {
 
     //register things only in dev, safe from production
     private static void registerWip() {
+        //not sure if these will be in the final version
+        //on the one hand, I can see them being confusing to new players
+        //on the other hand, multiple addons are going to want to add them
+        //so there's going to be a ton of duplicate glyphs if these aren't in base ars
+        registerSpell(EffectContextEscape.INSTANCE);
+        registerSpell(EffectElse.INSTANCE);
 
+        //definitely won't be in the final version but useful for testing
+        registerSpell(ANExampleFilter.INSTANCE);
     }
 
     public static void postInit() {
