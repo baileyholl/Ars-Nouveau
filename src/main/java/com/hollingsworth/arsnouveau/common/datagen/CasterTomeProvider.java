@@ -214,6 +214,17 @@ public class CasterTomeProvider implements DataProvider {
                 .add(AugmentExtendTime.INSTANCE, 7)
                 .add(EffectName.INSTANCE), "Now you never have to be lonely again! You will always have a friend with you! Feel free to change their name to whatever you want! :D",
                 new ParticleColor(255, 105, 180)));
+
+        tomes.add(buildTome("darkfira","Darkfira's Flash Freeze", new Spell(MethodProjectile.INSTANCE)
+                .add(EffectBurst.INSTANCE)
+                .add(AugmentSensitive.INSTANCE)
+                .add(AugmentAOE.INSTANCE, 3)
+                .add(EffectConjureWater.INSTANCE)
+                .add(EffectFreeze.INSTANCE)
+                .add(EffectLightning.INSTANCE)
+                        .add(AugmentAmplify.INSTANCE)
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND, 1.69f, 1.9f)), "Encases your enemies or friends in a tomb of ice. Guaranteed to leave them shocked and confused.",
+                new ParticleColor(25, 255, 255)));
         Path output = this.generator.getOutputFolder();
         for (CasterTomeData g : tomes) {
             Path path = getRecipePath(output, g.getId().getPath());
