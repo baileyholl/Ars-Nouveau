@@ -1390,7 +1390,7 @@
   "mob_jar.allay.title": "アレイの挙動",
   "mob_jar.chicken": "時折卵を産む。",
   "mob_jar.cow": "ミルクを絞ることができる。",
-  "mob_jar.dummy": "A player dummy in a jar will attract nearby mobs.",
+  "mob_jar.dummy": "自分のデコイ入り瓶は周囲のモブを引き付ける。",
   "mob_jar.ender_dragon": "瓶を使用してドラゴンブレスを採取できる。",
   "mob_jar.frog": "近くのスライムを食べる。",
   "mob_jar.mooshroom": "ボウルを使用してキノコシチューを入手できる。ハサミを使うと普通の牛に変化する。",
