@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.tomes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
@@ -16,6 +17,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -44,7 +46,7 @@ public class CasterTomeData implements Recipe<Container> {
     List<ResourceLocation> spell;
     ResourceLocation type;
     String flavorText;
-    public int particleColor;
+    public ParticleColor particleColor;
     ConfiguredSpellSound sound;
 
 
@@ -52,13 +54,13 @@ public class CasterTomeData implements Recipe<Container> {
                           List<ResourceLocation> spell,
                           ResourceLocation type,
                           String flavorText,
-                          int particleColor, ConfiguredSpellSound sound) {
+                          CompoundTag particleColor, ConfiguredSpellSound sound) {
         this.name = name;
         this.spell = spell;
         this.id = id;
         this.type = type;
         this.flavorText = flavorText;
-        this.particleColor = particleColor;
+        this.particleColor = ParticleColorRegistry.from(particleColor);
         this.sound = sound;
     }
 
@@ -92,8 +94,8 @@ public class CasterTomeData implements Recipe<Container> {
         if (tomeType == null) tomeType = ItemsRegistry.CASTER_TOME.asItem();
         Spell spell = new Spell();
         spell.name = this.name;
-        if (this.particleColor != -1)
-            spell.color = ParticleColor.fromInt(this.particleColor);
+        if (this.particleColor != null)
+            spell.color = this.particleColor;
         for (ResourceLocation rl : this.spell) {
             AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(rl);
             if (part != null)
@@ -130,7 +132,13 @@ public class CasterTomeData implements Recipe<Container> {
         jsonobject.addProperty("tome_type", type.toString());
         jsonobject.addProperty("name", name);
         jsonobject.addProperty("flavour_text", flavorText);
-        jsonobject.addProperty("color", particleColor);
+        JsonObject color = new JsonObject();
+        CompoundTag colorData = particleColor.serialize();
+        color.addProperty("type", colorData.getString("type"));
+        color.addProperty("red", colorData.getInt("r"));
+        color.addProperty("green", colorData.getInt("g"));
+        color.addProperty("blue", colorData.getInt("b"));
+        jsonobject.add("color", color);
         JsonArray array = new JsonArray();
         for (ResourceLocation part : spell) {
             array.add(part.toString());
@@ -150,7 +158,14 @@ public class CasterTomeData implements Recipe<Container> {
             ResourceLocation type = json.has("tome_type") ? ResourceLocation.tryParse(json.get("tome_type").getAsString()) : ItemsRegistry.CASTER_TOME.registryObject.getId();
             String name = json.get("name").getAsString();
             String flavourText = json.has("flavour_text") ? json.get("flavour_text").getAsString() : "";
-            int color = json.has("color") ? json.get("color").getAsInt() : -1;
+            JsonObject color = json.has("color") ? json.get("color").getAsJsonObject() : null;
+            CompoundTag colorData = new CompoundTag();
+            if (color != null) {
+                colorData.putString("type", color.get("type").getAsString());
+                colorData.putInt("r", color.get("red").getAsInt());
+                colorData.putInt("g", color.get("green").getAsInt());
+                colorData.putInt("b", color.get("blue").getAsInt());
+            }
             JsonArray spell = GsonHelper.getAsJsonArray(json, "spell");
             List<ResourceLocation> parsedSpell = new ArrayList<>();
             for (JsonElement e : spell) {
@@ -163,7 +178,7 @@ public class CasterTomeData implements Recipe<Container> {
                 SpellSound family = SpellSoundRegistry.getSpellSoundsRegistry().get(ResourceLocation.tryParse(object.get("family").getAsString()));
                 sound = new ConfiguredSpellSound(family, object.get("volume").getAsFloat(), object.get("pitch").getAsFloat());
             }
-            return new CasterTomeData(recipeId, name, parsedSpell, type, flavourText, color, sound);
+            return new CasterTomeData(recipeId, name, parsedSpell, type, flavourText, colorData, sound);
         }
 
 
@@ -177,7 +192,7 @@ public class CasterTomeData implements Recipe<Container> {
         public CasterTomeData fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             ItemStack itemStack = buffer.readItem();
             ISpellCaster caster = CasterUtil.getCaster(itemStack);
-            return new CasterTomeData(recipeId, caster.getSpellName(), caster.getSpell().recipe.stream().map(AbstractSpellPart::getRegistryName).toList(), getRegistryName(itemStack.getItem()) ,caster.getFlavorText(), caster.getColor().getColor(), caster.getCurrentSound());
+            return new CasterTomeData(recipeId, caster.getSpellName(), caster.getSpell().recipe.stream().map(AbstractSpellPart::getRegistryName).toList(), getRegistryName(itemStack.getItem()), caster.getFlavorText(), caster.getColor().serialize(), caster.getCurrentSound());
         }
     }
 }

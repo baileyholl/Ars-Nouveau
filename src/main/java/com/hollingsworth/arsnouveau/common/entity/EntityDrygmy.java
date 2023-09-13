@@ -166,7 +166,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
             tamingTime++;
             if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
+                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.ORANGE));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD, 1 + level.random.nextInt(2));

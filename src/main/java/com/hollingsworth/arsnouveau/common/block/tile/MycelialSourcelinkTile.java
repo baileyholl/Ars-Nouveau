@@ -45,7 +45,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
                     }
                     Networking.sendToNearby(level, getBlockPos(),
-                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 255, 255)));
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor(255, 255, 255)));
                 }
             }
             for (ArcanePedestalTile i : getSurroundingPedestals()) {
@@ -56,7 +56,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
                     Networking.sendToNearby(level, getBlockPos(),
-                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor.IntWrapper(255, 255, 255)));
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor(255, 255, 255)));
                 }
             }
         }

@@ -159,7 +159,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if (this.getSource() >= recipe.source && craftTicks <= 0) {
             this.setItem(0, recipe.output.copy());
             this.addSource(-recipe.source);
-            ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleUtil.defaultParticleColorWrapper());
+            ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleColor.defaultParticleColor());
             updateBlock();
         }
     }

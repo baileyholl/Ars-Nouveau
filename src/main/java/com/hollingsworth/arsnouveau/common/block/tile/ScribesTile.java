@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
@@ -94,7 +95,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
                     copyStack.setCount(1);
                     consumedStacks.add(copyStack);
                     e.getItem().shrink(1);
-                    ParticleUtil.spawnTouchPacket(level, e.getOnPos(), ParticleUtil.defaultParticleColorWrapper());
+                    ParticleUtil.spawnTouchPacket(level, e.getOnPos(), ParticleColor.defaultParticleColor());
                     updateBlock();
                     foundStack = true;
                     break;
@@ -154,7 +155,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             return false;
         ItemStack copyStack = stack.split(1);
         consumedStacks.add(copyStack);
-        ParticleUtil.spawnTouchPacket(level, getBlockPos().above(), ParticleUtil.defaultParticleColorWrapper());
+        ParticleUtil.spawnTouchPacket(level, getBlockPos().above(), ParticleColor.defaultParticleColor());
         updateBlock();
         return true;
     }

@@ -90,7 +90,7 @@ public class BuildPortalEvent implements ITimedEvent {
                     tile.updateBlock();
                 }
                 level.playSound(null, pos, BlockRegistry.getBlock(LibBlockNames.SOURCESTONE).getSoundType(level.getBlockState(pos)).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
-                ParticleUtil.spawnTouchPacket(level, pos, ParticleColor.makeRandomColor(255, 255, 255, level.random).toWrapper());
+                ParticleUtil.spawnTouchPacket(level, pos, ParticleColor.makeRandomColor(255, 255, 255, level.random));
                 placedBlocks.add(pos);
                 return;
             }else{

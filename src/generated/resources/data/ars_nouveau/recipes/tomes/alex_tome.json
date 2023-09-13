@@ -1,6 +1,11 @@
 {
   "type": "ars_nouveau:caster_tome",
-  "color": 16777215,
+  "color": {
+    "type": "ars_nouveau:rainbow",
+    "blue": 255,
+    "green": 1,
+    "red": 48
+  },
   "flavour_text": "For those who can't settle with just a tiny hut.",
   "name": "Alex's Magnificent Mansion",
   "sound": {

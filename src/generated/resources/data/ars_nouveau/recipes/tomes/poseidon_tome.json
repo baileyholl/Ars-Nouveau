@@ -1,6 +1,11 @@
 {
   "type": "ars_nouveau:caster_tome",
-  "color": 255,
+  "color": {
+    "type": "ars_nouveau:constant",
+    "blue": 255,
+    "green": 1,
+    "red": 1
+  },
   "flavour_text": "Fire at a body of water to create a Ice bubble in the depths.",
   "name": "Poseidon's Refuge",
   "sound": {

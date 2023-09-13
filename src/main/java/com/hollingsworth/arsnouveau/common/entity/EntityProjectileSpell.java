@@ -56,7 +56,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     public boolean canTraversePortals = true;
     public int prismRedirect;
     @Deprecated
-    public int expireTime = 60*20;
+    public int expireTime = 60 * 20;
 
     public Set<BlockPos> hitList = new HashSet<>();
 
@@ -147,7 +147,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
             this.hasImpulse = true;
         }
         if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
-                && canTraversePortals()) {
+            && canTraversePortals()) {
             BlockRegistry.PORTAL_BLOCK.get().onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
                     blockHitResult, this);
 
@@ -158,7 +158,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
      * Override this to transform the hit result before resolving.
      */
     public @Nullable HitResult transformHitResult(@Nullable HitResult hitResult) {
-        if(hitResult instanceof BlockHitResult hitResult1){
+        if (hitResult instanceof BlockHitResult hitResult1) {
             return new BlockHitResult(hitResult1.getLocation(), hitResult1.getDirection(), hitResult1.getBlockPos(), false);
         }
         return hitResult;
@@ -311,7 +311,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
                 if (this.spellResolver != null) {
                     this.spellResolver.onResolveEffect(level, result);
                     Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                            BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
+                            BlockPos.containing(result.getLocation()), getParticleColor()));
                     attemptRemoval();
                 }
             }
@@ -334,19 +334,20 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
                     this.onHitBlock(blockraytraceresult);
                 }
 
-            if (canBounce()) {
-                bounce(blockraytraceresult);
-                pierceLeft--; //to replace with bounce field eventually
-                if (numSensitive > 1) return;
-            }
+                if (canBounce()) {
+                    bounce(blockraytraceresult);
+                    pierceLeft--; //to replace with bounce field eventually
+                    if (numSensitive > 1) return;
+                }
 
-            if (this.spellResolver != null) {
-                this.hitList.add(blockraytraceresult.getBlockPos());
-                this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
+                if (this.spellResolver != null) {
+                    this.hitList.add(blockraytraceresult.getBlockPos());
+                    this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
+                }
+                Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                        BlockPos.containing(result.getLocation()).below(), getParticleColor()));
+                attemptRemoval();
             }
-            Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    BlockPos.containing(result.getLocation()).below(), getParticleColorWrapper()));
-            attemptRemoval();
         }
     }
 
