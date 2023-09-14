@@ -16,11 +16,6 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "inv",
-                  "target": "BlockEntityTag.inv"
-                },
-                {
-                  "op": "replace",
                   "source": "source",
                   "target": "BlockEntityTag.source"
                 }
