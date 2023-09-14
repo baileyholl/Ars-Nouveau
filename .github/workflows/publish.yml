@@ -32,7 +32,7 @@ jobs:
       - name: build
         run: ./gradlew build
       - name: Publish Minecraft Mods Forge
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: 401955
           modrinth-id: TKB6INcv
