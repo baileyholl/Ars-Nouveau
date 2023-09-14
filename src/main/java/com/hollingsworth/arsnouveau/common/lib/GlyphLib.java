@@ -86,6 +86,8 @@ public class GlyphLib {
     public static final String EffectRotateID = prependGlyph("rotate");
     public static final String EffectWallId = prependGlyph("wall");
 
+    public static final String EffectBurstID = prependGlyph("burst");
+
 
     public static String prependGlyph(String glyph) {
         return "glyph_" + glyph;
