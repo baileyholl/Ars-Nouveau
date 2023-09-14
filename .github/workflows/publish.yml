@@ -44,5 +44,6 @@ jobs:
           loaders: forge
           name: Ars Nouveau 1.20.1-${{ inputs.version }}
           version:  ars_nouveau-1.20.1-${{ inputs.version }}
-          game-version: [1.20.1]
+          game-version: | 
+            "[1.20.1,]"
           changelog: ""
