@@ -44,5 +44,5 @@ jobs:
           loaders: forge
           name: Ars Nouveau ${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
           version:  ars_nouveau-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
-          game-version: ${{ env.MINECRAFT_VERSION }}
+          game-version: [1.19.2]
           changelog: ""
