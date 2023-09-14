@@ -18,11 +18,11 @@ public class SpellProjectileHitEvent extends EntityEvent {
         hit = result;
     }
 
-    public EntityProjectileSpell getProjectile() {
+    public EntityProjectileSpell getProjectile(){
         return projectile;
     }
 
-    public HitResult getHitResult() {
+    public HitResult getHitResult(){
         return hit;
     }
 

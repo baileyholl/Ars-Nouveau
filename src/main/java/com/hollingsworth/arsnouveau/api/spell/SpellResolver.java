@@ -204,6 +204,10 @@ public class SpellResolver {
         CapabilityRegistry.getMana(spellContext.getUnwrappedCaster()).ifPresent(mana -> mana.removeMana(totalCost));
     }
 
+    /**
+     * Simulates the cost required to cast a spell
+     * When expending mana, please call getResolveCostAndResetDiscounts instead
+     */
     public int getResolveCost() {
         int cost = spellContext.getSpell().getCost() - getPlayerDiscounts(spellContext.getUnwrappedCaster(), spell, spellContext.getCasterTool());
         SpellCostCalcEvent event = new SpellCostCalcEvent(spellContext,  cost);

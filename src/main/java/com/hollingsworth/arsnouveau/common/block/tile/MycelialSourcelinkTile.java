@@ -65,7 +65,9 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     public int getSourceValue(ItemStack i) {
         if (i.getItem().isEdible()) {
             int mana = 0;
-            FoodProperties food = i.getItem().getFoodProperties();
+            FoodProperties food = i.getItem().getFoodProperties(i, null);
+            if(food == null)
+                return 0;
             mana += 11 * food.getNutrition();
             mana += 30 * food.getSaturationModifier();
             progress += 1;

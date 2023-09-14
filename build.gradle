@@ -27,7 +27,6 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-
 version = '4.3.0'
 //configurations {
 //    library
@@ -62,7 +61,7 @@ minecraft {
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
     mappings channel: 'parchment', version: '2023.07.02-1.20.1'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -76,7 +75,7 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config=" + "ars_nouveau" + ".mixins.json"
+            arg "-mixin.config="+"ars_nouveau"+".mixins.json"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -93,7 +92,7 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config=" + "ars_nouveau" + ".mixins.json"
+            arg "-mixin.config="+"ars_nouveau"+".mixins.json"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -131,13 +130,6 @@ repositories {
     maven {
         url = "https://maven.theillusivec4.top/"
     }
-    /* currently down, killing the importing
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-     */
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
@@ -145,10 +137,6 @@ repositories {
     }
     maven {
         url "https://maven.blamejared.com"
-    }
-    maven {
-        // Shadows_of_Fire's Maven
-        url "https://maven.shadowsoffire.dev/releases"
     }
     maven {
         url "https://www.cursemaven.com"
@@ -202,12 +190,12 @@ dependencies {
 
     implementation fg.deobf("curse.maven:terrablender-563928:4590487")
 
-    implementation fg.deobf("curse.maven:jade-324717:4681833") // jade
+    implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
     implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
 
-    implementation fg.deobf("curse.maven:rubidium-574856:4684247")
-    implementation fg.deobf("dev.shadowsoffire:Placebo:${mc_version}-8.3.5")
-    implementation fg.deobf("dev.shadowsoffire:ApothicAttributes:${mc_version}-1.0.4")
+    implementation fg.deobf("curse.maven:placebo-283644:4691637")
+    implementation fg.deobf("curse.maven:aphoattr-898963:4688147")
+
 
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
@@ -239,14 +227,14 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "ArsNouveau",
-                "Specification-Vendor"    : "baileyh",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "baileyh",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "ars_nouveau.mixins.json"
+            "Specification-Title": "ArsNouveau",
+            "Specification-Vendor": "baileyh",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"baileyh",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "ars_nouveau.mixins.json"
         ])
     }
 }

@@ -1,5 +1,4 @@
-
-name: Publish on GitHub, CurseForge and Modrinth
+name: Publish action
 
 on:
   workflow_dispatch:
@@ -11,45 +10,40 @@ on:
         type: string
 
 env:
-  MINECRAFT_VERSION: 1.19.2
+  MINECRAFT_VERSION: 1.20.1
   JAVA_VERSION: 17
-
-permissions:
-  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'temurin'
-    - shell: bash
-      env:
-        VERSION: ${{ inputs.version }}
-      run: |
-        echo "$VERSION" > version
-        mkdir -p ~/.gradle/caches/fabric-loom/assets
-    - name: Setup and Build with Gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: clean runData build
-    - uses: GuillaumeFalourd/git-commit-push@v1.3
-      with:
-        commit_message: "ci: bump version"
-    - uses: Kir-Antipov/mc-publish@v3.2
-      with:
-        modrinth-id: TKB6INcv
-        modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-        curseforge-id: 401955
-        curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        name: ars_artifice-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
-        version: ${{ inputs.version }}
-        game-versions: |
-          ${{ env.MINECRAFT_VERSION }}
-        version-resolver: exact
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: "17"
+      - name: make gradle wrapper executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+      - name: build
+        run: ./gradlew build
+      - name: Publish Minecraft Mods Forge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          curseforge-id: 401955
+          modrinth-id: TKB6INcv
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files-primary: build/libs/!(*-@(dev|sources)).jar
+          files-secondary: build/libs/*-@(dev|sources).jar
+          version-type: release
+          loaders: forge
+          name: Ars Nouveau 1.20.1-${{ inputs.version }}
+          version:  ars_nouveau-1.20.1-${{ inputs.version }}
+          game-version: | 
+            "[1.20.1,]"
+          changelog: ""

@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
@@ -28,8 +30,13 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class StarbyTransportBehavior extends StarbyListBehavior {
+    public static Cache<BlockPos, List<ItemEntity>> frameCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(20, TimeUnit.SECONDS)
+            .build();
+
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(ArsNouveau.MODID, "starby_transport");
 
     public ItemStack itemScroll;
@@ -91,6 +98,9 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             if (pref.ordinal() > foundPref.ordinal()) {
                 foundPref = pref;
                 returnPos = b;
+                if(foundPref == ItemScroll.SortPref.HIGHEST){
+                    return returnPos;
+                }
             }
         }
         return returnPos;
