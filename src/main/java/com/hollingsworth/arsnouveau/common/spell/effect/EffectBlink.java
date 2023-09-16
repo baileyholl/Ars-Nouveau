@@ -84,7 +84,7 @@ public class EffectBlink extends AbstractEffect {
             Event event = ForgeEventFactory.onEnderTeleport(living, warpScrollData.getPos().getX(),  warpScrollData.getPos().getY(),  warpScrollData.getPos().getZ());
             if (event.isCanceled()) return;
         }
-        ServerLevel dimension = warpScrollData.getDimension((ServerLevel) entity.level);
+        ServerLevel dimension = PortalTile.getServerLevel(warpScrollData.getDimension(), (ServerLevel) entity.level);
         if(dimension == null)
             return;
         PortalTile.teleportEntityTo(entity, dimension, warpScrollData.getPos(), warpScrollData.getRotation());
