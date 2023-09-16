@@ -47,3 +47,5 @@ jobs:
           game-version: | 
             "[1.20.1,]"
           changelog: ""
+          version-resolver: exact
+
