@@ -46,3 +46,4 @@ jobs:
           version:  ars_nouveau-1.19.2-${{ inputs.version }}
           game-version: [1.19.2]
           changelog: ""
+          version-resolver: exact
