@@ -33,9 +33,10 @@ public class ImbuementRenderer extends ArsGeoBlockRenderer<ImbuementTile> {
             entityItem.setYHeadRot(tileEntityIn.frames);
             entityItem.age = (int) tileEntityIn.frames;
             matrixStack.pushPose();
+            matrixStack.translate(-0.5, 0, -0.5);
             matrixStack.scale(0.75f, 0.75f, 0.75f);
             float offset = 0.5f * 0.75f + 0.31f;
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, offset, 0.3, offset, entityItem.yRot, 0, matrixStack, bufferSource, packedLight);
+            Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, offset, 0.3, offset, entityItem.yRot, partialTick, matrixStack, bufferSource, packedLight);
             matrixStack.popPose();
         }
     }
