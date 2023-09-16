@@ -46,7 +46,7 @@ public class EffectBlink extends AbstractEffect {
 
         if (spellContext.getCaster() instanceof TileCaster) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
-            SlotReference reference = manager.findItem(i -> i.getItem() == ItemsRegistry.WARP_SCROLL.asItem(), InteractType.EXTRACT);
+            SlotReference reference = manager.findItem(i -> (i.getItem() == ItemsRegistry.WARP_SCROLL.asItem() || i.getItem() == ItemsRegistry.STABLE_WARP_SCROLL.asItem()), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
                 WarpScroll.WarpScrollData data = WarpScroll.WarpScrollData.get(stack);
