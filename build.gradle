@@ -192,11 +192,8 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jade-324717:4573193") // jade
     implementation fg.deobf("curse.maven:caelus-308989:4581481") // caelus
-
     implementation fg.deobf("curse.maven:placebo-283644:4691637")
     implementation fg.deobf("curse.maven:aphoattr-898963:4688147")
-
-
 //    runtimeOnly fg.deobf("curse.maven:byg-247560:4027228") // BYG
 //    runtimeOnly fg.deobf("curse.maven:bop-220318:4034263") // BOP
 //    compileOnly fg.deobf("curse.maven:ars_elemental-561470:4345275") // ars elemental

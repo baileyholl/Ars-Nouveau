@@ -30,6 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -42,6 +43,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import org.jline.reader.Widget;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -81,7 +83,15 @@ public class GuiSpellBook extends BaseBook {
 
     public int maxManaCache = 0;
     int currentCostCache = 0;
+
     public CreateSpellButton createSpellButton;
+
+    public boolean setFocusOnLoad = true;
+    public Renderable hoveredWidget = null;
+    @Deprecated(forRemoval = true) // TODO: remove in 1.20
+    public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
+        this(InteractionHand.MAIN_HAND);
+    }
 
     public GuiSpellBook(InteractionHand hand){
         super();
@@ -441,6 +451,24 @@ public class GuiSpellBook extends BaseBook {
         validate();
     }
 
+    @Override
+    public boolean charTyped(char pCodePoint, int pModifiers) {
+        if(hoveredWidget instanceof GlyphButton glyphButton && glyphButton.validationErrors.isEmpty()){
+            // check if char is a number
+            if(pCodePoint >= '0' && pCodePoint <= '9'){
+                int num = Integer.parseInt(String.valueOf(pCodePoint));
+                if(num == 0){
+                    num = 10;
+                }
+                num -= 1;
+                this.craftingCells.get(num).setAbstractSpellPart(glyphButton.abstractSpellPart);
+                validate();
+                return true;
+            }
+        }
+        return super.charTyped(pCodePoint, pModifiers);
+    }
+
     public void updateCraftingSlots(int bookSlot) {
         //Crafting slots
         List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
@@ -625,12 +653,20 @@ public class GuiSpellBook extends BaseBook {
         recipe.remove(recipe.size() - 1);
     }
 
-    /**
-     * Draws the screen and all the components in it.
-     */
     @Override
     public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
+        if(this.setFocusOnLoad){
+            this.setFocusOnLoad = false;
+            this.setInitialFocus(searchBar);
+        }
+        hoveredWidget = null;
+        for(Renderable widget : renderables){
+            if(widget instanceof AbstractWidget abstractWidget && GuiUtils.isMouseInRelativeRange(mouseX, mouseY, abstractWidget)){
+                hoveredWidget = widget;
+                break;
+            }
+        }
         spell_name.setSuggestion(spell_name.getValue().isEmpty() ? Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString() : "");
     }
 

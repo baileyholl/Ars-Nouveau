@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-10T12:34:06.3424301	Recipes
+// 1.20.1	2023-09-17T11:58:47.388671	Recipes
 53e7c7063857317940cff0f32c3e0bb2144ce88a data/ars_nouveau/advancements/recipes/building_blocks/archwood_button.json
 3b562128c61e177df4b6cadd7e13b0a7f2aae1df data/ars_nouveau/advancements/recipes/building_blocks/archwood_door.json
 e310e3ed620252904dbd7ad1ce31741843c2474e data/ars_nouveau/advancements/recipes/building_blocks/archwood_fence.json
@@ -266,6 +266,7 @@ a66848b94a51024926adb434394bb6bbb60bbbab data/ars_nouveau/advancements/recipes/m
 15901f8fc05c80de35deac17e6c2296213557a13 data/ars_nouveau/advancements/recipes/misc/wilden_summon_alt.json
 0ac01eddacece874a06bb4504ee360fc8a05b7f6 data/ars_nouveau/advancements/recipes/misc/wing_to_leather.json
 05dbd663b8f0ce65f779545637e634ad831fdf9e data/ars_nouveau/advancements/recipes/misc/wipe_spell_parchment.json
+ddaea8f63238386dd7f628579997298ce660ff91 data/ars_nouveau/advancements/recipes/misc/wipe_starby_shard.json
 3546cf9f7c96679879ae001d6369227bac401892 data/ars_nouveau/advancements/recipes/misc/wixie_hat.json
 48483202be5f979239c021d230f0f5bb1f11f3e5 data/ars_nouveau/advancements/recipes/misc/worn_notebook.json
 686b7026638d821c6ed293cbac11e14e612e8cee data/ars_nouveau/advancements/recipes/misc/yellow_sbed.json
@@ -536,6 +537,7 @@ d8e64d0c8b1f74d6e8e6bc26941b2e27956d1118 data/ars_nouveau/recipes/water_essence_
 b4ad39bc045b261d56ccb7e0986f80977faeac9f data/ars_nouveau/recipes/wilden_summon_alt.json
 56e2ad0a4cccb91dc81c3d9947ed0d9d3c2e8ede data/ars_nouveau/recipes/wing_to_leather.json
 a80d6fd5fdc53764124cdd9b9b9dc2e22e4cb4de data/ars_nouveau/recipes/wipe_spell_parchment.json
+8ffb544702c8fe2dabb7256d878e27e8d2b1ace7 data/ars_nouveau/recipes/wipe_starby_shard.json
 aaee980d0bd3ebf36b4c0c322f182af8739162cb data/ars_nouveau/recipes/wixie_hat.json
 101f88c002780d0a9eaacb9388268fb3ea2627a7 data/ars_nouveau/recipes/worn_notebook.json
 85ee0bd3155a5ae82a7f5fbedb0724841bb0f9da data/ars_nouveau/recipes/yellow_sbed.json
