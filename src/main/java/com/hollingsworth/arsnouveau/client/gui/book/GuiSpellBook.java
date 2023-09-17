@@ -19,11 +19,13 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
+import com.hollingsworth.arsnouveau.common.util.GuiUtils;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
@@ -79,7 +81,7 @@ public class GuiSpellBook extends BaseBook {
     public int maxManaCache = 0;
     int currentCostCache = 0;
     public boolean setFocusOnLoad = true;
-
+    public Widget hoveredWidget = null;
     @Deprecated(forRemoval = true) // TODO: remove in 1.20
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
         this(InteractionHand.MAIN_HAND);
@@ -435,6 +437,25 @@ public class GuiSpellBook extends BaseBook {
         validate();
     }
 
+    @Override
+    public boolean charTyped(char pCodePoint, int pModifiers) {
+        if(hoveredWidget instanceof GlyphButton glyphButton && glyphButton.validationErrors.isEmpty()){
+            // check if char is a number
+            if(pCodePoint >= '0' && pCodePoint <= '9'){
+                int num = Integer.parseInt(String.valueOf(pCodePoint));
+                if(num == 0){
+                    num = 10;
+                }
+                num -= 1;
+                this.craftingCells.get(num).abstractSpellPart = glyphButton.abstractSpellPart;
+                this.craftingCells.get(num).spellTag = glyphButton.abstractSpellPart.getRegistryName();
+                validate();
+                return true;
+            }
+        }
+        return super.charTyped(pCodePoint, pModifiers);
+    }
+
     public void updateCraftingSlots(int bookSlot) {
         //Crafting slots
         List<AbstractSpellPart> recipe = CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe;
@@ -630,15 +651,19 @@ public class GuiSpellBook extends BaseBook {
         recipe.remove(recipe.size() - 1);
     }
 
-    /**
-     * Draws the screen and all the components in it.
-     */
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
         if(this.setFocusOnLoad){
             this.setFocusOnLoad = false;
             this.setInitialFocus(searchBar);
+        }
+        hoveredWidget = null;
+        for(Widget widget : renderables){
+            if(widget instanceof AbstractWidget abstractWidget && GuiUtils.isMouseInRelativeRange(mouseX, mouseY, abstractWidget)){
+                hoveredWidget = widget;
+                break;
+            }
         }
         spell_name.setSuggestion(spell_name.getValue().isEmpty() ? Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString() : "");
     }
