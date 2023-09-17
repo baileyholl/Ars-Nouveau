@@ -78,6 +78,7 @@ public class GuiSpellBook extends BaseBook {
 
     public int maxManaCache = 0;
     int currentCostCache = 0;
+    public boolean setFocusOnLoad = true;
 
     @Deprecated(forRemoval = true) // TODO: remove in 1.20
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
@@ -635,6 +636,10 @@ public class GuiSpellBook extends BaseBook {
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
+        if(this.setFocusOnLoad){
+            this.setFocusOnLoad = false;
+            this.setInitialFocus(searchBar);
+        }
         spell_name.setSuggestion(spell_name.getValue().isEmpty() ? Component.translatable("ars_nouveau.spell_book_gui.spell_name").getString() : "");
     }
 
