@@ -20,7 +20,7 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
         super(entityType, world);
     }
 
-    public EntityHomingProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world, SpellResolver resolver) {
+    public EntityHomingProjectileSpell(Level world, SpellResolver resolver) {
         super(ModEntities.SPELL_PROJ_HOM.get(), world, resolver);
     }
 
