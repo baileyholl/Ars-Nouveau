@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.radial_menu;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -28,6 +30,7 @@ public class GuiRadialMenu<T> extends Screen {
     private static final int MAX_SLOTS = 20;
 
     private boolean closing;
+    private boolean holdToOpenGUI;
     private RadialMenu<T> radialMenu;
     private List<RadialMenuSlot<T>> radialMenuSlots;
     final float OPEN_ANIMATION_LENGTH = 0.40f;
@@ -45,6 +48,7 @@ public class GuiRadialMenu<T> extends Screen {
         this.radialMenu = radialMenu;
         this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
+        this.holdToOpenGUI = !Config.TOGGLE_RADIAL_HUD.get();
         this.minecraft = Minecraft.getInstance();
         this.selectedItem = -1;
         itemRenderer = Minecraft.getInstance().getItemRenderer();
@@ -77,6 +81,17 @@ public class GuiRadialMenu<T> extends Screen {
     public void tick() {
         if (totalTime != OPEN_ANIMATION_LENGTH){
             extraTick++;
+        }
+
+        if(holdToOpenGUI){
+            int openRadialKey = ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
+            boolean radialKeyIsDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), openRadialKey);
+            if(!radialKeyIsDown){
+                if (this.selectedItem != -1) {
+                    radialMenu.setCurrentSlot(selectedItem);
+                }
+                minecraft.player.closeContainer();
+            }
         }
     }
 
