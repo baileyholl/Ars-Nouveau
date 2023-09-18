@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -177,6 +176,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 "The bite from this storm is worse than its bark.",
                 new ParticleColor(255, 119, 203)));
 
+        /* Moved to non-datagen to not screw GitHub
         tomes.add(buildTome("alex", "Alex's Magnificent Mansion", new Spell(MethodSelf.INSTANCE)
                         .add(EffectBurst.INSTANCE)
                         .add(AugmentSensitive.INSTANCE)
@@ -189,6 +189,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 "For those who can't settle with just a tiny hut.",
                 new RainbowParticleColor(255, 255, 255, 10))
         );
+         */
 
         tomes.add(buildTome("poseidon", "Poseidon's Refuge", new Spell(MethodProjectile.INSTANCE)
                         .add(AugmentSensitive.INSTANCE)
