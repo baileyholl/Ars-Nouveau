@@ -19,7 +19,7 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 
 public class ColorParticleTypeData implements ParticleOptions {
 
-    private ParticleType<ColorParticleTypeData> type;
+    protected ParticleType<? extends ColorParticleTypeData> type;
     public static final Codec<ColorParticleTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
                     Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
@@ -58,11 +58,11 @@ public class ColorParticleTypeData implements ParticleOptions {
         this(ModParticles.GLOW_TYPE.get(), color, disableDepthTest, size, alpha, age);
     }
 
-    public ColorParticleTypeData(ParticleType<ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest) {
+    public ColorParticleTypeData(ParticleType<? extends ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest) {
         this(particleTypeData, color, disableDepthTest, 0.25f, 1.0f, 36);
     }
 
-    public ColorParticleTypeData(ParticleType<ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest, float size, float alpha, int age) {
+    public ColorParticleTypeData(ParticleType<? extends ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest, float size, float alpha, int age) {
         this.type = particleTypeData;
         this.color = color;
         this.disableDepthTest = disableDepthTest;
@@ -73,7 +73,7 @@ public class ColorParticleTypeData implements ParticleOptions {
 
 
     @Override
-    public ParticleType<ColorParticleTypeData> getType() {
+    public ParticleType<? extends ColorParticleTypeData> getType() {
         return type;
     }
 

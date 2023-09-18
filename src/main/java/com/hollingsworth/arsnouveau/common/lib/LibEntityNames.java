@@ -2,6 +2,10 @@ package com.hollingsworth.arsnouveau.common.lib;
 
 public class LibEntityNames {
     public static final String SPELL_PROJ = "spell_proj";
+    public static final String SPELL_PROJ_ARC = "arcing_spell_proj";
+
+    public static final String SPELL_PROJ_HOM = "homing_spell_proj";
+
     public static final String LINGER = "linger";
     public static final String FANGS = "fangs";
 

@@ -13,7 +13,9 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -33,6 +35,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
@@ -40,17 +43,20 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityProjectileSpell extends ColoredProjectile {
+public class EntityProjectileSpell extends ColoredProjectile implements IEntityAdditionalSpawnData {
 
     public int age;
     public SpellResolver spellResolver;
     public int pierceLeft;
+    //to use if you want the bounce augment indipendent from the pierce augment
+    //public int bouncesLeft;
     public int numSensitive;
+
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
     @Deprecated
-    public int expireTime = 60*20;
+    public int expireTime = 60 * 20;
 
     public Set<BlockPos> hitList = new HashSet<>();
 
@@ -141,7 +147,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             this.hasImpulse = true;
         }
         if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
-                && canTraversePortals()) {
+            && canTraversePortals()) {
             BlockRegistry.PORTAL_BLOCK.get().onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
                     blockHitResult, this);
 
@@ -152,7 +158,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
      * Override this to transform the hit result before resolving.
      */
     public @Nullable HitResult transformHitResult(@Nullable HitResult hitResult) {
-        if(hitResult instanceof BlockHitResult hitResult1){
+        if (hitResult instanceof BlockHitResult hitResult1) {
             return new BlockHitResult(hitResult1.getLocation(), hitResult1.getDirection(), hitResult1.getBlockPos(), false);
         }
         return hitResult;
@@ -170,15 +176,16 @@ public class EntityProjectileSpell extends ColoredProjectile {
      * Moves the projectile to the next position
      */
     public void tickNextPosition() {
+
         Vec3 vec3d = this.getDeltaMovement();
         double x = this.getX() + vec3d.x;
         double y = this.getY() + vec3d.y;
         double z = this.getZ() + vec3d.z;
         if (!this.isNoGravity()) {
-            Vec3 vec3d1 = this.getDeltaMovement();
-            this.setDeltaMovement(vec3d1.x, vec3d1.y, vec3d1.z);
+            setDeltaMovement(vec3d.x * 0.96, (vec3d.y > 0 ? vec3d.y * 0.97 : vec3d.y) - 0.03f, vec3d.z * 0.96);
         }
         this.setPos(x, y, z);
+
     }
 
     public int getParticleDelay() {
@@ -240,6 +247,10 @@ public class EntityProjectileSpell extends ColoredProjectile {
         super.setRemoved(reason);
     }
 
+    public EntityProjectileSpell setGravity(boolean noGravity) {
+        isNoGravity = !noGravity;
+        return this;
+    }
 
     @Override
     public boolean isNoGravity() {
@@ -259,15 +270,39 @@ public class EntityProjectileSpell extends ColoredProjectile {
         }
     }
 
+    public boolean canBounce() {
+        return !isNoGravity() && pierceLeft > 0;
+    }
+
+    public void bounce(BlockHitResult blockHitResult) {
+        Direction direction = blockHitResult.getDirection();
+        float factor = -0.9F;
+        // bounce off the block according to the face hit and reduce momentum
+        switch (direction) {
+            case UP, DOWN -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(vel.x(), factor * vel.y(), vel.z());
+            }
+            case EAST, WEST -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(factor * vel.x(), vel.y(), vel.z());
+            }
+            case NORTH, SOUTH -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(vel.x(), vel.y(), factor * vel.z());
+            }
+        }
+    }
+
     @Override
     protected void onHit(HitResult result) {
         result = transformHitResult(result);
 
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
 
-            SpellProjectileHitEvent event = new SpellProjectileHitEvent(this,result);
+            SpellProjectileHitEvent event = new SpellProjectileHitEvent(this, result);
             MinecraftForge.EVENT_BUS.post(event);
-            if(event.isCanceled()){
+            if (event.isCanceled()) {
                 return;
             }
 
@@ -276,7 +311,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 if (this.spellResolver != null) {
                     this.spellResolver.onResolveEffect(level, result);
                     Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                            BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
+                            BlockPos.containing(result.getLocation()), getParticleColor()));
                     attemptRemoval();
                 }
             }
@@ -299,12 +334,18 @@ public class EntityProjectileSpell extends ColoredProjectile {
                     this.onHitBlock(blockraytraceresult);
                 }
 
+                if (canBounce()) {
+                    bounce(blockraytraceresult);
+                    pierceLeft--; //to replace with bounce field eventually
+                    if (numSensitive > 1) return;
+                }
+
                 if (this.spellResolver != null) {
                     this.hitList.add(blockraytraceresult.getBlockPos());
                     this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
                 }
                 Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()).below(), getParticleColorWrapper()));
+                        BlockPos.containing(result.getLocation()).below(), getParticleColor()));
                 attemptRemoval();
             }
         }
@@ -322,6 +363,16 @@ public class EntityProjectileSpell extends ColoredProjectile {
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public void writeSpawnData(FriendlyByteBuf buffer) {
+        buffer.writeBoolean(isNoGravity);
+        buffer.writeInt(numSensitive);
+    }
+
+    public void readSpawnData(FriendlyByteBuf additionalData) {
+        isNoGravity = additionalData.readBoolean();
+        numSensitive = additionalData.readInt();
     }
 
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {

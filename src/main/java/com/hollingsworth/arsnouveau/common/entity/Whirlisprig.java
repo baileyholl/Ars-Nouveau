@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
@@ -262,7 +263,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         if (this.droppingShards) {
             tamingTime++;
             if (tamingTime % 20 == 0 && !level.isClientSide())
-                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
+                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.GREEN));
 
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS, 1 + level.random.nextInt(1));

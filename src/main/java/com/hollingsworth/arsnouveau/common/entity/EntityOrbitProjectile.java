@@ -21,6 +21,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityOrbitProjectile extends EntityProjectileSpell {
     public Entity wardedEntity;
@@ -72,11 +73,6 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
 
     public int getAccelerates() {
         return entityData.get(ACCELERATES);
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setAoe(int aoe) {
-        entityData.set(AOE, (float) aoe);
     }
 
     public void setAoe(float aoe) {
@@ -138,8 +134,8 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     }
 
     @Override
-    protected void onHit(HitResult result) {
-        if (level.isClientSide || result == null)
+    protected void onHit(@NotNull HitResult result) {
+        if (level.isClientSide || result.getType() == HitResult.Type.MISS)
             return;
 
         if (result.getType() == HitResult.Type.ENTITY) {
@@ -147,7 +143,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
             if (this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, result);
                 Networking.sendToNearby(level, BlockPos.containing(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        BlockPos.containing(result.getLocation()), getParticleColorWrapper()));
+                        BlockPos.containing(result.getLocation()), getParticleColor()));
                 attemptRemoval();
             }
         } else if (numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()) {
@@ -155,7 +151,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
                 this.spellResolver.onResolveEffect(this.level, blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    BlockPos.containing(result.getLocation()).below(), getParticleColorWrapper()));
+                    BlockPos.containing(result.getLocation()).below(), getParticleColor()));
             attemptRemoval();
         }
     }

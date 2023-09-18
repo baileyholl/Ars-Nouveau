@@ -257,12 +257,12 @@ public class ItemsRegistry {
             }
         }
 
-        registry.register(LibItemNames.DRYGMY_SE, new ForgeSpawnEggItem(ModEntities.ENTITY_DRYGMY, 10051392, 0xFFE633, defaultItemProperties()));
-        registry.register(LibItemNames.STARBUNCLE_SE, new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
-        registry.register(LibItemNames.SYLPH_SE, new ForgeSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
-        registry.register(LibItemNames.WILDEN_HUNTER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
-        registry.register(LibItemNames.WILDEN_GUARDIAN_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
-        registry.register(LibItemNames.WILDEN_STALKER_SE, new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
+        ITEMS.register(LibItemNames.DRYGMY_SE, () -> new ForgeSpawnEggItem(ModEntities.ENTITY_DRYGMY, 10051392, 0xFFE633, defaultItemProperties()));
+        ITEMS.register(LibItemNames.STARBUNCLE_SE, () -> new ForgeSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
+        ITEMS.register(LibItemNames.SYLPH_SE, () -> new ForgeSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
+        ITEMS.register(LibItemNames.WILDEN_HUNTER_SE, () -> new ForgeSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
+        ITEMS.register(LibItemNames.WILDEN_GUARDIAN_SE, () -> new ForgeSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
+        ITEMS.register(LibItemNames.WILDEN_STALKER_SE, () -> new ForgeSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
     }
 
 

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -186,7 +187,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                         .add(AugmentPierce.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
                 "For those who can't settle with just a tiny hut.",
-                new ParticleColor(255, 255, 255))
+                new RainbowParticleColor(255, 255, 255, 10))
         );
 
         tomes.add(buildTome("poseidon", "Poseidon's Refuge", new Spell(MethodProjectile.INSTANCE)
@@ -242,12 +243,12 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                spell.color.getColor(), spell.sound);
+                spell.color.serialize(), spell.sound);
     }
 
     public CasterTomeData buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
         CasterTomeData data = buildTome(id, name, spell, flavorText);
-        data.particleColor = color.getColor();
+        data.particleColor = color;
         return data;
     }
 

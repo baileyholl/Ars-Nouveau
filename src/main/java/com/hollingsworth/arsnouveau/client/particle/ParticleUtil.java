@@ -82,10 +82,6 @@ public class ParticleUtil {
         }
     }
 
-    public static ParticleColor.IntWrapper defaultParticleColorWrapper() {
-        return new ParticleColor.IntWrapper(255, 25, 180);
-    }
-
     public static void spawnPoof(ServerLevel world, BlockPos pos) {
         for (int i = 0; i < 10; i++) {
             double d0 = pos.getX() + 0.5;
@@ -108,7 +104,7 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnTouchPacket(Level world, BlockPos pos, ParticleColor.IntWrapper color) {
+    public static void spawnTouchPacket(Level world, BlockPos pos, ParticleColor color) {
         Networking.sendToNearby(world, pos,
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }

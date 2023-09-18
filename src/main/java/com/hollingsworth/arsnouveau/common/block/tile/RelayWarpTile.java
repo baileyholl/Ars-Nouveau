@@ -22,8 +22,8 @@ public class RelayWarpTile extends RelaySplitterTile {
     @Override
     public void createParticles(BlockPos from, BlockPos to) {
         if (level.getBlockEntity(to) instanceof RelayWarpTile) {
-            ParticleUtil.spawnTouchPacket(level, getBlockPos(), new ParticleColor.IntWrapper(220, 50, 220));
-            ParticleUtil.spawnTouchPacket(level, to, new ParticleColor.IntWrapper(220, 50, 220));
+            ParticleUtil.spawnTouchPacket(level, getBlockPos(), new ParticleColor(220, 50, 220));
+            ParticleUtil.spawnTouchPacket(level, to, new ParticleColor(220, 50, 220));
         } else {
             super.createParticles(from, to);
         }
