@@ -33,10 +33,15 @@ public class EffectDispel extends AbstractEffect {
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
             var blacklist = Registry.MOB_EFFECT.getTag(PotionEffectTags.DISPEL_DENY);
+            var whitelist = Registry.MOB_EFFECT.getTag(PotionEffectTags.DISPEL_ALLOW);
             for (MobEffectInstance e : array) {
-                if (e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
-                    if (blacklist.isEmpty() || blacklist.get().stream().anyMatch(effect -> effect.get() == e.getEffect()))
-                        entity.removeEffect(e.getEffect());
+                if (e.isCurativeItem(new ItemStack(Items.MILK_BUCKET))) {
+                    if (blacklist.isPresent() && blacklist.get().stream().anyMatch(effect -> effect.get() == e.getEffect()))
+                        return;
+                    entity.removeEffect(e.getEffect());
+                } else if (whitelist.isPresent() && whitelist.get().stream().anyMatch(effect -> effect.get() == e.getEffect())) {
+                    entity.removeEffect(e.getEffect());
+                }
             }
             if (!entity.isAlive() || entity.getHealth() <= 0 || entity.isRemoved()) {
                 return;
