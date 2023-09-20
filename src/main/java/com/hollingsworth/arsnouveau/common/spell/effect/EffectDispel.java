@@ -37,13 +37,14 @@ public class EffectDispel extends AbstractEffect {
             for (MobEffectInstance e : array) {
                 if (e.isCurativeItem(new ItemStack(Items.MILK_BUCKET))) {
                     if (blacklist.isPresent() && blacklist.get().stream().anyMatch(effect -> effect.get() == e.getEffect()))
-                        return;
+                        continue;
                     entity.removeEffect(e.getEffect());
                 } else if (whitelist.isPresent() && whitelist.get().stream().anyMatch(effect -> effect.get() == e.getEffect())) {
                     entity.removeEffect(e.getEffect());
                 }
             }
             if (!entity.isAlive() || entity.getHealth() <= 0 || entity.isRemoved()) {
+                //TODO dispel loot table?
                 return;
             }
             if (MinecraftForge.EVENT_BUS.post(new DispelEvent.Pre(rayTraceResult, world, shooter, spellStats, spellContext)))
